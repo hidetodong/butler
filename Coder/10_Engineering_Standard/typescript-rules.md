@@ -1,3 +1,9 @@
+---
+title: TypeScript 建模规则
+audience: AI / 开发者
+scope: TypeScript 类型建模顺序、分层建议与边界表达原则
+---
+
 # TypeScript Rules
 
 ## 1. 类型建模优先级

@@ -1,3 +1,9 @@
+---
+title: 验收导向生命周期
+audience: AI / 开发者
+scope: 非极小任务的阶段状态机、阶段产物与回退规则
+---
+
 # Workflow Lifecycle
 
 ## 1. 目标
@@ -28,6 +34,7 @@ AI 必须回答：
 - 是否存在需要先澄清的问题？
 
 若任务属于新项目接入、显式要求部署基地车，或需要建立跨会话维护设施，应在 P1 同步参考 `mcv-deployment.md` 完成侦察与部署判断。
+若任务涉及已有 `.ai/` 维护文件的升级、迁移或归档整理，应在 P1 同步参考 `mcv-update.md` 完成升级判断。
 
 ### P2 Acceptance
 
@@ -41,7 +48,7 @@ AI 必须回答：
 强制规则：
 
 - **必须等待用户 ACK，才能进入 P3。**
-- 长任务或多子任务场景下，P2 结束后应形成一次阶段 checkpoint，明确当前 AC、验证映射与下一步入口。
+- 长任务或多子任务场景下，P2 结束后应形成一次阶段 checkpoint，具体结构与触发规范参考 `40_Context_Management/checkpoint.md`。
 
 ### P3 Design
 
@@ -56,7 +63,7 @@ AI 必须回答：
 强制规则：
 
 - **必须等待用户 ACK，才能进入 P4。**
-- 若任务链路较长，应在 P3 结束时明确子任务拆分、handoff 方式与状态同步策略。
+- 若任务链路较长，应在 P3 结束时明确子任务拆分、handoff 方式与状态同步策略，具体接力规则参考 `progressive-handoff.md` 与 `40_Context_Management/state-tracking.md`。
 
 ### P4 Execute
 

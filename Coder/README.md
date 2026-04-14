@@ -1,3 +1,9 @@
+---
+title: Coder 子系统入口
+audience: AI / 开发者
+scope: Coder 子系统的目录导航、读取顺序与规则分工总览
+---
+
 # Coder
 
 `Coder/` 是 butler 体系中的工程开发与 AI 协作子系统入口。
@@ -33,6 +39,7 @@
     acceptance-schema.md
     progressive-handoff.md
     mcv-deployment.md
+    mcv-update.md
     maintenance-boundaries.md
 
   /30_Quality_Gate
@@ -64,6 +71,7 @@
 其中：
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议。
+- `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `40_Context_Management/handoff-spec.md` 负责 `SESSION_HANDOFF.md` 的高密度结构约束。
 

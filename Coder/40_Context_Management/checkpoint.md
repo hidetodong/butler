@@ -1,3 +1,9 @@
+---
+title: Checkpoint 规范
+audience: AI / 开发者
+scope: 阶段结论快照的触发时机、最小结构与 clean-slate 续接规则
+---
+
 # Checkpoint
 
 ## 1. 目标

@@ -17,6 +17,7 @@
 若任务包含新项目接入、显式的基地车部署指令，或已经进入跨会话协作阶段，应重点读取：
 
 - `20_Workflow_Lifecycle/mcv-deployment.md`
+- `20_Workflow_Lifecycle/mcv-update.md`
 - `20_Workflow_Lifecycle/maintenance-boundaries.md`
 - `40_Context_Management/handoff-spec.md`
 

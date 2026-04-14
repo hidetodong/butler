@@ -1,3 +1,9 @@
+---
+title: Linting 质量门禁
+audience: AI / 开发者
+scope: 提交前自检清单、不可提交信号与规则仓一致性检查
+---
+
 # Linting Gate
 
 ## 1. 目标

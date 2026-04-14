@@ -1,10 +1,16 @@
+---
+title: 渐进式交接规范
+audience: AI / 开发者
+scope: 长链路任务的拆分、接力时机与交接要求
+---
+
 # Progressive Handoff
 
 ## 1. 目标
 
 长链路任务不能只依赖单轮对话持续推进，而应通过可交接、可续接、可验证的方式逐步完成。
 
-本规则定义任务拆分、阶段交接与 handoff 输出要求。
+本规则定义任务拆分、阶段接力与 handoff 触发要求，不负责 `SESSION_HANDOFF.md` 的具体文件结构。
 
 ## 2. 任务原子化
 
@@ -26,19 +32,9 @@
 - 会话准备结束但任务尚未整体完成
 - 执行者、模式或工作入口将切换时
 
-## 4. SUMMARY_FOR_HANDOFF
+发生 handoff 时，应输出一个可续接的最小交接摘要；若需要落盘为 `SESSION_HANDOFF.md`，其字段与结构以 `40_Context_Management/handoff-spec.md` 为准。
 
-交接时必须形成 `SUMMARY_FOR_HANDOFF` 风格的最小上下文包，至少包含：
-
-- 当前任务目标
-- 已完成的子任务
-- 已确认的技术共识
-- 已修改文件
-- 未完成项
-- 剩余风险
-- 下一步建议入口
-
-## 5. 文档与代码同步
+## 4. 交付要求
 
 - 禁止只写代码不沉淀关键结论。
 - 若代码已经改变了结构、契约或边界，相关文档必须同步。
@@ -53,8 +49,9 @@
 - 验证动作可回溯
 - 风险暴露而非隐藏
 
-## 7. 与其他规则的关系
+## 5. 与其他规则的关系
 
-- 本规则关注“流程中的接力动作”。
-- `40_Context_Management/checkpoint.md` 关注“阶段结论快照”。
-- `40_Context_Management/state-tracking.md` 关注“运行时状态同步”。
+- 本规则关注“长链路任务何时拆分、何时接力”。
+- `40_Context_Management/checkpoint.md` 负责“阶段结论快照”。
+- `40_Context_Management/state-tracking.md` 负责“运行时状态同步”。
+- `40_Context_Management/handoff-spec.md` 负责 `SESSION_HANDOFF.md` 的文件结构。

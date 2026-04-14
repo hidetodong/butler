@@ -1,8 +1,12 @@
 ---
-title: 交接文件规范 (Handoff Spec)
+title: 交接文件规范
+audience: AI / 开发者
+scope: SESSION_HANDOFF.md 的内容结构、精简约束与字段要求
 ---
 
 # 会话交接快照规范
+
+本文件是 `SESSION_HANDOFF.md` 的唯一结构契约。其他规则若提到 handoff 且涉及文件字段，应以本文件为准。
 
 每个 `SESSION_HANDOFF.md` 必须保持精简（控制在 500 Tokens 以内），且包含：
 

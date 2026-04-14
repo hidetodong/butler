@@ -1,3 +1,9 @@
+---
+title: Vue 3 工程规范
+audience: AI / 开发者
+scope: Vue 3 组件、响应式状态、Composable 与分层职责约束
+---
+
 # Vue 3 Standard
 
 ## 1. 基线

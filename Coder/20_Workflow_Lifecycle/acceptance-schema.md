@@ -1,3 +1,9 @@
+---
+title: 验收清单规范
+audience: AI / 开发者
+scope: P2 阶段验收清单的模板、编写规则与完成判定口径
+---
+
 # Acceptance Schema
 
 ## 1. 目标

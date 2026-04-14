@@ -1,3 +1,9 @@
+---
+title: 测试与验证策略
+audience: AI / 开发者
+scope: 测试分层、最小验证集合、验收映射与验证结论回写要求
+---
+
 # Testing Strategy
 
 ## 1. 目标

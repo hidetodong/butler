@@ -1,7 +1,7 @@
 ---
 title: 基地车 (MCV) 部署协议
-trigger: 新项目接入 或 显式指令 "Deploy Base Vehicle"
-priority: High
+audience: AI / 开发者
+scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展开与本地化适配
 ---
 
 # 基地车部署协议 (MCV Deployment)
@@ -19,7 +19,7 @@ priority: High
 在项目根目录强制创建 `.ai/` 文件夹，并初始化以下“黑匣子”组件：
 
 - `01_CHANGELOG.md`：需求增量与架构决策。
-- `02_SESSION_HANDOFF.md`：跨会话状态锚点。
+- `02_SESSION_HANDOFF.md`：跨会话状态锚点，内容结构继续参考 `40_Context_Management/handoff-spec.md`。
 - `03_BUG_LOG.md`：高价值逻辑坑位记录。
 
 ### 3. 本地化适配 (Local Adaptation)

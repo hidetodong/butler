@@ -1,3 +1,9 @@
+---
+title: 状态追踪规范
+audience: AI / 开发者
+scope: 长任务中的运行时状态外化、状态载体协议与同步时机
+---
+
 # State Tracking
 
 ## 1. 目标

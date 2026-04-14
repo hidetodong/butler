@@ -1,3 +1,9 @@
+---
+title: 模式切换规范
+audience: AI / 开发者
+scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
+---
+
 # Mode Switch
 
 ## 1. 目标

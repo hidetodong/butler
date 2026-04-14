@@ -1,3 +1,9 @@
+---
+title: 构建工具规范
+audience: AI / 开发者
+scope: Vue 3 / TypeScript 工程中的构建基线、配置原则与协作边界
+---
+
 # Build Tooling
 
 ## 1. 技术栈基线
