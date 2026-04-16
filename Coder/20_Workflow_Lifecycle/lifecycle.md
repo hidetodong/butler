@@ -129,10 +129,11 @@ AI 必须回答：
 - 若本阶段涉及 `.ai/` 维护文件写入，应遵守 `maintenance-boundaries.md` 中定义的触发阈值与批处理策略。
 - 领域执行细则只来自已在 P1 / P3 明确激活的 profile，不默认套用前端或特定技术栈规则。
 - 若缺少明确探测命令或环境能力不足，应先向用户确认验证方式。
+- 若任务命中 `40_Context_Management/context-persistence.md` 中定义的激活条件（新项目接入、跨会话继续、多阶段推进、需要等待 ACK 或外部结果、无法单轮闭合等），执行过程中**必须**按其"运行时增量"规则同步 `.ai/task-state.md`，不得仅依赖对话记忆保留阶段状态。
 
 ### P5 Verify
 
-**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，并落在项目根目录 `deliveries/` 下。
+**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。
 
 **输入来源**：从 `.ai/AC_LIST.md` 逐项回填验证结果。
 

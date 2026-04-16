@@ -34,7 +34,9 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 # Gate Coverage
 - 通用质量门禁：已验证项
-- Active Profiles：已验证项
+- Active Profiles：已验证项（仅命中时填，未命中可省略）
+- Tech Plan Alignment：TECH_PLAN 中 Design Decisions 的兑现情况
+- References Compliance：.ai/references/ 下已处理参考资料的规格遵守情况（无参考资料时标注 N/A）
 
 # Remaining Risks
 - 当前未关闭风险
@@ -48,7 +50,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 - 必须按 AC 回填，不得只给笼统结论。
 - 验证方式应尽量具体到命令、检查动作或人工确认口径。
-- 若存在 active profiles，应区分“通用质量门禁”与“profile 验证依据”。
+- `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
 
 ## 5. 与执行流程的关系

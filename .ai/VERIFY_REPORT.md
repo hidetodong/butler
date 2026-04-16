@@ -1,46 +1,42 @@
 # Verification Summary
 
-- 覆盖范围：Bucket E 的 2 条 Should Fix，涉及 2 个文件 2 处 edit。
+- 覆盖范围：Bucket B 的 3 条 Should Fix，涉及 2 个规则文件共 4 处 edit。
 - 总体结论：**全部通过**。
 
 # AC Status
 
-- [x] **E-1** `scripts/setup.sh` 的 `sed -i` 跨平台兼容 — 已满足
-- [x] **E-2** `logic-protocol.md § 4.2` 参考资料 skill 失败时的 Fallback 规则（方案 β）— 已满足
+- [x] **B-1** `verify-schema.md` 扩展 `Gate Coverage` 分 4 类 — 已满足
+- [x] **B-2** `lifecycle.md` P4 补 `.ai/task-state.md` 同步硬约束 — 已满足
+- [x] **B-3** `lifecycle.md` P5 对 Delivery Summary 触发条件加指针 — 已满足
 
 # Verification Results
 
-- **E-1**：
-  - `bash -n scripts/setup.sh` 语法检查通过；
-  - `grep -nE 'OSTYPE|sed -i' scripts/setup.sh` 显示 `[[ "$OSTYPE" == "darwin"* ]]` 分支结构存在，sed 调用在 if 分支内（macOS 用 `sed -i ''`、非 darwin 用 `sed -i`）；
-  - Linux 真机验证受限（本地无环境），以代码评审为准，`sed -i "s|...|...|"` 为 GNU sed 标准语法。
-- **E-2**：
-  - `grep -n 'Fallback' Coder/00_System_Prompt/logic-protocol.md` 命中 L105 和 L110，Fallback 段落结构完整；
-  - `grep -n '不得.*WebFetch' logic-protocol.md` 命中 L107，核心约束"**不得**越权访问外部资源"明确落地；
-  - 通读 § 4.2，Fallback 段与原表格"存储位置"口径一致（命名前缀 `api-` / `design-` / `insight-` / 无前缀 不变）；
-  - `External References` 标注要求（"用户手动提供"）与 `acceptance-schema.md` / `tech-plan-schema.md` 现有字段兼容。
+- **B-1**：`grep -n 'Tech Plan Alignment\|References Compliance' verify-schema.md` 命中 3 处（L38 / L39 模板示例 + L53 编写规则），模板示例与编写规则口径一致；"无参考资料时标注 N/A" 的兜底描述同时出现在两处，保证简化路径不会卡壳。
+- **B-2**：`grep -n 'task-state' lifecycle.md` 命中 L132（P4 执行原则新增硬约束）和 L166（P4/P5 之外的旧引用）。L132 新增条目包含完整激活条件枚举 + **必须**级别措辞 + 明确落盘文件（`.ai/task-state.md`），符合 TECH_PLAN 要求。
+- **B-3**：`grep -n 'delivery-summary.md § 2' lifecycle.md` 命中 L136，P5 必须产物段加粗指针 `**具体触发条件参考 \`delivery-summary.md § 2 触发时机\`**` 已就位；读者从 P5 可一跳定位到 SSOT。
 
 # Gate Coverage
 
-- **通用质量门禁**（linting）：
-  - 改动聚焦、无无关混入 ✅
-  - 所有改动可映射回 2 条 AC ✅
-  - setup.sh 仍满足 `set -euo pipefail` 严格模式 ✅
-- **Active Profiles**：无命中。
-- **Review 简要自评**（P5 默认触发）：
-  - Must Fix：无。
-  - Should Fix：无新发现。
-  - Nice to Have（观察）：`logic-protocol.md § 4.2` 现在有"表格 + 处理规则 + Fallback"三段，已接近 H3 小节的信息量。未来若 § 4.2 继续扩充，可考虑拆成 H4 子标题（`#### 主路径 / #### Fallback`），本轮不处理。
+- **通用质量门禁**：改动聚焦、无无关混入；4 处 edit 全部可映射回 3 条 AC；规则文件 frontmatter 完整性保持。
+- **Active Profiles**：本轮无命中（规则仓本身非 Vue3 / TypeScript 项目）。
+- **Tech Plan Alignment**：
+  - TECH_PLAN § Design Decisions 1（B-1 方案 B 落地位置）→ § 3 + § 4 双重落位 ✅
+  - TECH_PLAN § Design Decisions 2（B-2 硬约束强度与位置）→ L132 "必须" 级别、插入在 "执行原则" 列表末尾 ✅
+  - TECH_PLAN § Design Decisions 3（B-3 指针措辞）→ 使用加粗内嵌指针，不新增段落 ✅
+  - TECH_PLAN § Design Decisions 4（向下兼容）→ 本轮 VERIFY_REPORT 按新 schema 填写（含 4 类 Gate Coverage），已自举验证 ✅
+- **References Compliance**：N/A（本轮无 `.ai/references/` 下的外部参考资料）
 
 # Remaining Risks
 
-- **代码评审替代真机**：E-1 的 Linux 分支未经真机测试。生产中第一个 Linux 用户会是事实上的验证人；若发现问题，快速回退成本极低（加一条 `$OSTYPE` 分支）。
-- 无其他新暴露风险。
+- 无新暴露风险。
+- 本轮产物（就是你现在看的这份 VERIFY_REPORT）已经按新 schema 的 4 类 Gate Coverage 填写，完成 dogfooding 自举验证。
 
 # Handoff / Next Step
 
 - 本轮任务已完整闭合。
 - 产物链：`.ai/CONCEPT.md` → `.ai/AC_LIST.md` → `.ai/TECH_PLAN.md` → 本文件。
-- 交付总结：`deliveries/2026-04-17-should-fix-bucket-e.md`。
-- 后续 Should Fix 剩余：Bucket B（3 条，产物链字段补全）、Bucket C（1 条，Mode 术语消歧）、Bucket D（1 条，模板重复消除）。
-- 建议下一步 **Bucket B**（需要 schema 字段新增，但在主产物链上，修完后审计闭环更完整）。
+- 交付总结：`deliveries/2026-04-17-should-fix-bucket-b.md`。
+- 后续 Should Fix 剩余：
+  - Bucket C（Mode 术语消歧，1 条）
+  - Bucket D（模板重复消除，1 条）
+- 建议下一步 Bucket C（相对独立，改动小）；Bucket D 最后处理（需设计新的模板引用机制）。

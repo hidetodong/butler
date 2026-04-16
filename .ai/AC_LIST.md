@@ -1,73 +1,96 @@
 # Goal
 
-- 修复 Bucket E（平台与回退健壮性）2 条 Should Fix。
+- 修复 Bucket B（产物链字段与阶段描述补全）3 条 Should Fix。
 
 # In Scope
 
-- E-1: `scripts/setup.sh` 的 `sed -i` 跨平台兼容（macOS/BSD 与 Linux 都能正确工作）。
-- E-2: `Coder/00_System_Prompt/logic-protocol.md § 4.2` 参考资料注入表，补充 skill 不可用时的 fallback 规则。
+- B-1: `verify-schema.md` 补足对 TECH_PLAN（Design Decisions）与 references（规格）是否被落实的验证口径。
+- B-2: `lifecycle.md` P4 章节显式补充"长任务必须同步 `.ai/task-state.md`"的触发约束。
+- B-3: `lifecycle.md` P5 章节明确 Delivery Summary 的触发判断，与 `delivery-summary.md § 2` 保持单一来源。
 
 # Out of Scope
 
-- Bucket B / C / D（其余 5 条 Should Fix）。
-- 不重构 setup.sh 整体逻辑，仅改 sed 调用。
-- 不修改 `.ai/references/` 存储路径或命名约定。
+- Bucket C（Mode 术语消歧）与 Bucket D（模板重复消除）。
+- 不修改 delivery-summary.md 本体（它继续是触发条件的 SSOT）。
+- 不新增 `.ai/` 目录下的运行态文件类型。
 
 # Acceptance Checklist
 
-- [ ] **E-1** `scripts/setup.sh` 在 macOS 与 Linux 下 `sed -i` 调用均能成功（不报 `extra characters at end of command` 或 `unknown option` 类错误）
-- [ ] **E-2** `logic-protocol.md § 4.2` 明确定义当 `confluence-api-extractor` / `mastergo-codegen` 等 skill 不可用时的 fallback 路径，方案待拍板
+- [ ] **B-1** `verify-schema.md` 新增或扩展字段明确覆盖 "TECH_PLAN Design Decisions 是否兑现" 与 "references 的规格是否遵守"，方案待拍板
+- [ ] **B-2** `lifecycle.md` P4 段落显式要求"命中 `40_Context_Management/context-persistence.md` 触发条件时必须同步 `.ai/task-state.md`"
+- [ ] **B-3** `lifecycle.md` P5 段落明确 Delivery Summary 触发判断，方案待拍板（指针 vs 内联）
 
 # Verification Method
 
-- **E-1**：
-  - 阅读 setup.sh 修复后的 sed 段，确认包含平台检测分支或等价兼容写法；
-  - `bash -n scripts/setup.sh` 通过语法检查；
-  - 在 macOS 下执行 dry-run（或 trace）确认既有路径未变；Linux 真机验证受限（本地无环境），仅做代码评审。
-- **E-2**：
-  - `logic-protocol.md § 4.2` 在表格下方或作为新段落包含"fallback / 回退"关键字；
-  - fallback 规则明确三种 skill 失效场景（skill 未安装 / 认证失败 / 超时）的处理；
-  - 最终产物落盘路径与现有 `.ai/references/` 约定一致，不变更命名前缀（`api-` / `design-` / `insight-` / 无前缀）。
+- **B-1**：
+  - 通读 `verify-schema.md`，确认有字段或小节专门要求回答 "Design Decision 是否落实" 与 "references 规格是否兑现"；
+  - `grep -n 'Design Decision\|Plan Alignment\|References Compliance' verify-schema.md` 命中新字段。
+- **B-2**：
+  - `grep -n 'task-state' Coder/20_Workflow_Lifecycle/lifecycle.md` 在 P4 章节（L108-132 附近）有命中，措辞为"必须 / 应"级别的硬约束。
+- **B-3**：
+  - `grep -nE 'delivery-summary\.md|Delivery Summary' lifecycle.md` 在 P5 章节附近有清晰的触发条件表述（指针或内联），不再让读者猜测。
 
 # Open Questions / Risks
 
-## ❓ 待拍板 - E-2 方案选择
+## ❓ 待拍板 - B-1 方案选择
 
-**问题**：`logic-protocol.md` 定义了 Confluence / MasterGo 等参考资料通过专用 skill 提取。但：
-- 不是所有 AI 环境都装了 `confluence-api-extractor` 或 `mastergo-codegen` skill
-- skill 可能因认证失败、网络超时等运行时原因返回错误
-- 当前规则对此没有明确的回退路径，AI 可能直接卡住或擅自跳过参考资料
+**问题**：`verify-schema.md` 当前必填字段是 `Verification Summary / AC Status / Verification Results / Gate Coverage / Remaining Risks / Handoff / Next Step`。要让 VERIFY_REPORT 也校验 TECH_PLAN 的 Design Decisions 与 references 的规格，字段如何落位？
 
-### 方案 α — 降级链：先 skill → 失败时 AI 用通用工具 → 都失败时问用户
+### 方案 A — 新增两个顶级字段：`Plan Alignment`、`References Compliance`
 
-- 第 1 层：优先调用对应 skill。
-- 第 2 层：skill 不可用或失败时，AI 用通用工具（WebFetch 读取公开链接、Read 读取本地文件）自行提取结构化信息。
-- 第 3 层：通用工具也失败时（比如需要认证、格式复杂），提示用户手动提供文本并粘贴到对话。
-- AI 无论走哪条路径，产物必须落盘到 `.ai/references/`，命名和元信息（source URL、处理方式）保留，供后续审计。
+- schema 顶层字段数从 6 增加到 8。
+- **优点**：语义最清晰，字段名见名知义。
+- **缺点**：模板变沉；AI 在 P5 填写时模板更重。
 
-### 方案 β（推荐）— 降级链：先 skill → 失败时问用户
+### 方案 B（推荐）— 扩展 `Gate Coverage`，加两个子类
 
-- 第 1 层：优先调用对应 skill。
-- 第 2 层：skill 不可用或失败时，**不越权用 WebFetch/网络请求**，直接提示用户手动提取后粘贴（"请把 XX 页面的内容贴给我"）。
-- AI 只落盘用户提供的文本，不自作主张访问外部资源。
-- **理由**：AI 主动网络请求可能越过权限边界，尤其在企业环境下（Confluence 多带鉴权）。交由用户提供避免权限/安全风险。
+- 保持 6 个顶级字段不变。
+- 将 `Gate Coverage` 的分类从"通用质量门禁 / Active Profiles"扩展为"通用质量门禁 / Active Profiles / Tech Plan Alignment / References Compliance"四类。
+- **优点**：顶级字段不膨胀；`Gate Coverage` 语义原本就是"验证覆盖性"，新增类别天然契合。
+- **缺点**：`Gate Coverage` 一词从"门禁"语义略微扩展到"对齐"，但不冲突。
 
-### 方案 γ — 硬失败
+### 方案 C — 在 `Verification Results` 里逐项标注
 
-- skill 不可用时报错并暂停任务，要求用户先安装 skill。
-- **缺点**：对轻量场景过苛（用户可能只是想临时引用一次）；不推荐。
+- 每个 AC 的 verification result 下要求分别回答"对应 Design Decision 是否兑现""对应 references 规格是否遵守"。
+- **优点**：最小改动；细粒度追踪。
+- **缺点**：结果分散，没有汇总视图；当某些 AC 不涉及 Design Decision 或 references 时产生冗余。
+
+---
+
+## ❓ 待拍板 - B-3 方案选择
+
+**问题**：`lifecycle.md` P5 章节目前只有一句"若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结"。AI 需要跳转到 `delivery-summary.md § 2` 才能看到完整 5 条触发条件。
+
+### 方案 α（推荐）— 显式指针
+
+- `lifecycle.md` P5 改为："具体触发条件参考 `delivery-summary.md § 2`"。
+- **优点**：SSOT 归 delivery-summary；和 Bucket A 的 SSOT 原则一致；避免将来两处漂移。
+- **缺点**：AI 读 lifecycle 时还要一次跳转。
+
+### 方案 β — 内联 5 条触发条件
+
+- 把 delivery-summary.md § 2 的 5 条触发条件完整抄到 lifecycle.md P5。
+- **优点**：lifecycle 自给自足，不用跳转。
+- **缺点**：两处维护，未来可能漂移。
+
+### 方案 γ — 在 lifecycle 给关键摘要 + 指针细节
+
+- 内联 2-3 句关键判据（"已完成主要目标、已达可验收、有明确验证结论"），后接指针"完整 5 条判断见 delivery-summary.md § 2"。
+- **优点**：平衡自给自足与 SSOT。
+- **缺点**：轻度重复风险；"关键摘要"这个折中在规则维护上偏软。
 
 ---
 
 ## 风险
 
-- 改动均为规则文本 + shell 脚本兼容，无运行时行为变更。
-- setup.sh 的 Linux 验证受限（本地无 Linux 环境），只能靠代码评审。生产中第一个 Linux 用户会实测到。
+- 改动均为 schema / lifecycle 文本，无运行时行为变更。
+- B-1 方案 B 需要 `verify-schema.md § 3 标准模板` 与 § 4 编写规则同步更新，确保模板示例与字段描述一致。
 
 ---
 
 # 请回复
 
-1. **E-2 方案选择**：α / β / γ
+1. **B-1 方案选择**：A / B / C
+2. **B-3 方案选择**：α / β / γ
 
-E-1 无设计取舍，按 `bash if/else + $OSTYPE` 方案直接实施。回复方案选择后我进入 P3。
+B-2 无设计取舍，按 `必须 / 应` 级别的硬约束直接补充。两个方案都拍板后我进 P3。

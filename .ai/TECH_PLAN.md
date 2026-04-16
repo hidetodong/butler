@@ -1,75 +1,115 @@
 # Goal
 
-- 按 E-1（平台检测 if/else）与 E-2 方案 β（skill 失败直接问用户，不越权网络请求），对 Bucket E 2 条 Should Fix 执行最小范围修复。
+- 按 B-1 方案 B（扩展 `Gate Coverage` 分 4 类）、B-2（P4 补 `.ai/task-state.md` 同步约束）、B-3 方案 α（P5 对 Delivery Summary 触发条件加指针），对 Bucket B 3 条 Should Fix 执行最小范围修复。
 
 # Files / Modules to Change
 
 | # | 文件 | 涉及 AC | 改动点 |
 |---|---|---|---|
-| 1 | `scripts/setup.sh` | E-1 | 1（`sed -i` 改为 `$OSTYPE` 分支） |
-| 2 | `Coder/00_System_Prompt/logic-protocol.md` | E-2 | 1（§ 4.2 末尾追加 Fallback 段） |
+| 1 | `Coder/20_Workflow_Lifecycle/verify-schema.md` | B-1 | 2（§ 3 标准模板 + § 4 编写规则） |
+| 2 | `Coder/20_Workflow_Lifecycle/lifecycle.md` | B-2 + B-3 | 2（P4 执行原则 + P5 必须产物指针） |
 
-共 2 个文件，2 处 edit。
+共 2 个文件，4 处 edit。
 
 # Interface / Contract
 
-- E-1：脚本行为不变（更新语义一致），只修复 Linux 下的兼容性。
-- E-2：规则新增 **Fallback 段落**，明确 skill 失败时 AI **必须**转向用户手动提供而非越权访问网络。属于行为约束增强，不改已有存储路径 / 命名前缀。
+- **verify-schema.md**：
+  - `Gate Coverage` 字段从"通用质量门禁 / Active Profiles" 2 类扩展到"通用质量门禁 / Active Profiles / Tech Plan Alignment / References Compliance" 4 类。
+  - 顶级字段列表、`Verification Summary` / `AC Status` / `Verification Results` / `Remaining Risks` / `Handoff / Next Step` 等其他字段**不动**，保持现有产物向下兼容。
+- **lifecycle.md**：
+  - P4 新增一条执行原则约束（硬约束 `必须`）。
+  - P5 必须产物段增加一个显式指针 `delivery-summary.md § 2 触发时机`。
 
 # State / Boundary
 
-- 不动 `templates/`、`.ai/references/` 命名约定、其他规则文件。
-- 不重构 setup.sh 的 awk 段（已跨平台）、CLAUDE_GLOBAL_MD 处理、shell rc 检测逻辑。
+- 不动 `delivery-summary.md` 本体（它继续是触发条件 SSOT）。
+- 不动 concept-schema / acceptance-schema / tech-plan-schema（Bucket B 不涉及 P1/P2/P3 schema）。
+- 不动 `context-persistence.md`（P4 是引用它，不修改它）。
 
 # Design Decisions
 
-1. **E-1 使用 `$OSTYPE` 判断**：macOS 下 `$OSTYPE == "darwin20"` 等，统一 `darwin*` glob 匹配；Linux 下多为 `linux-gnu`。其他平台（WSL、Cygwin、FreeBSD）默认走 Linux 分支（GNU sed 语法）。
-2. **E-2 β 方案落地位置**：作为新段放在 § 4.2 末尾（"处理规则"列表之后、`## 5. 流程总调度`之前），保留表格与处理规则的原有结构；不引入新的 H3 子标题，降低目录层级复杂度。
-3. **E-2 提示语示例采用 `confluence-api-extractor` 作为占位**，便于读者直接套用；MasterGo 等其他 skill 失败时替换名字即可。
+1. **B-1 方案 B 落地位置**：在 § 3 标准模板的 `Gate Coverage` 段内列出 4 个子类别；在 § 4 编写规则中加一条说明 4 类的用途。保持字段顺序与现有模板一致，减少读者重新适应成本。
+2. **B-2 约束强度与位置**：使用"必须"（硬约束）；插入位置选在 P4 "执行原则" 列表末尾，与同列表的其他"必须"级别约束风格一致。
+3. **B-3 指针措辞**：采用"**具体触发条件参考 `delivery-summary.md § 2 触发时机`**"的内嵌式指针（不新增段落），保留 P5 段落的现有结构。
+4. **兼容性**：VERIFY_REPORT 新字段对**已存在的 VERIFY_REPORT 产物**是向下兼容的 —— 旧 VERIFY_REPORT 仍然合法，只是缺少新字段；未来 P5 按新 schema 填。本轮 **不**回填 `.ai/VERIFY_REPORT.md`（它是 Bucket B 自己的产物，按新 schema 一次到位即可）。
 
 # Execution Steps
 
-## Edit 1 — `scripts/setup.sh` L22-25
+## Edit 1 — `verify-schema.md § 3 标准模板`
 
-将 `sed -i '' "..."` 单行调用扩展为 `$OSTYPE` 分支：
+扩展 `Gate Coverage` 段示例：
 
-```bash
-  if grep -q 'BUTLER_PATH' "$SHELL_RC" 2>/dev/null; then
-    # 更新已有的 BUTLER_PATH（macOS/BSD 与 Linux sed -i 语法不同）
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      sed -i '' "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
-    else
-      sed -i "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
-    fi
-    echo "[更新] $SHELL_RC 中的 BUTLER_PATH 已更新"
+**old**:
+```
+# Gate Coverage
+- 通用质量门禁：已验证项
+- Active Profiles：已验证项
 ```
 
-## Edit 2 — `logic-protocol.md` § 4.2 末尾追加 Fallback 段
+**new**:
+```
+# Gate Coverage
+- 通用质量门禁：已验证项
+- Active Profiles：已验证项（仅命中时填，未命中可省略）
+- Tech Plan Alignment：TECH_PLAN 中 Design Decisions 的兑现情况
+- References Compliance：.ai/references/ 下已处理参考资料的规格遵守情况（无参考资料时标注 N/A）
+```
 
-在当前 L103 "若参考资料在执行过程中被更新..."之后、L105 `## 5. 流程总调度` 之前插入：
+## Edit 2 — `verify-schema.md § 4 编写规则`
 
-```markdown
-Fallback（skill 不可用或调用失败时）：
+扩展"若存在 active profiles..."这一条为更完整的 Gate Coverage 分类说明：
 
-- 若目标 skill 未安装、认证失败或调用超时，**不得**自行使用 WebFetch 等工具越权访问外部资源。
-- 应主动提示用户手动提取参考资料内容并粘贴到对话，例如："`confluence-api-extractor` skill 不可用，请将 <URL> 页面内容粘贴到对话，我将落盘到 `.ai/references/api-<name>.md`"。
-- 收到用户粘贴的文本后，按上表"存储位置"约定落盘，命名前缀保持一致（`api-` / `design-` / `insight-` / 无前缀）。
-- Fallback 路径产出的参考资料，在 `AC_LIST.md` / `TECH_PLAN.md` 的 `External References` 中必须标注"用户手动提供"，以便审计区分 skill 自动化产物与人工产物。
+**old**:
+```
+- 若存在 active profiles，应区分"通用质量门禁"与"profile 验证依据"。
+```
+
+**new**:
+```
+- `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。
+```
+
+## Edit 3 — `lifecycle.md` P4 执行原则补 task-state 约束
+
+在 P4 "执行原则" 列表的最后一条（"若缺少明确探测命令或环境能力不足..."）之后追加一条：
+
+**old**（匹配列表最后一条）:
+```
+- 若缺少明确探测命令或环境能力不足，应先向用户确认验证方式。
+```
+
+**new**:
+```
+- 若缺少明确探测命令或环境能力不足，应先向用户确认验证方式。
+- 若任务命中 `40_Context_Management/context-persistence.md` 中定义的激活条件（新项目接入、跨会话继续、多阶段推进、需要等待 ACK 或外部结果、无法单轮闭合等），执行过程中**必须**按其"运行时增量"规则同步 `.ai/task-state.md`，不得仅依赖对话记忆保留阶段状态。
+```
+
+## Edit 4 — `lifecycle.md` P5 必须产物段加指针
+
+**old**:
+```
+**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，并落在项目根目录 `deliveries/` 下。
+```
+
+**new**:
+```
+**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。
 ```
 
 # Verification Plan
 
-- **E-1**：
-  - `bash -n scripts/setup.sh` 语法检查通过。
-  - `grep -nE 'OSTYPE|sed -i' scripts/setup.sh` 显示 `$OSTYPE` 分支结构存在且 sed 调用在分支内。
-- **E-2**：
-  - `grep -n 'Fallback' Coder/00_System_Prompt/logic-protocol.md` 命中。
-  - `grep -n '不得.*WebFetch' Coder/00_System_Prompt/logic-protocol.md` 命中，关键约束"不越权"明确落地。
-  - 通读 § 4.2，确认 fallback 规则与表格"存储位置"口径一致（命名前缀不变）。
-- `git diff --stat` 应显示仅 2 个文件变更。
+- **B-1**：
+  - `grep -n 'Tech Plan Alignment\|References Compliance' verify-schema.md` 至少命中 2 处（模板示例 + 编写规则说明）；
+  - 通读 § 3 / § 4，两处用词一致，不出现冲突。
+- **B-2**：
+  - `grep -n 'task-state' Coder/20_Workflow_Lifecycle/lifecycle.md` 在 P4 章节（L108-140 附近）命中至少一次，带"必须"级别措辞。
+- **B-3**：
+  - `grep -n 'delivery-summary.md § 2' lifecycle.md` 在 P5 章节（L130-150 附近）命中；
+  - 读 P5 段落，能清楚看到触发条件的指针目标文件与章节。
+- `git diff --stat` 应仅显示 2 个规则文件变更。
 
 # Risks / Open Questions
 
-- **风险 1**：本地无 Linux 真机，E-1 的 Linux 分支只能靠代码评审。缓解：`$OSTYPE == "darwin"*` 之外即走 GNU sed 标准语法（`sed -i "..."`），这是 GNU sed 通用用法，代码评审足以确认正确性。
-- **风险 2**：`$OSTYPE` 在极少数非标准 shell 环境（老版 POSIX sh）可能未定义。setup.sh shebang 是 `#!/usr/bin/env bash` 且全文依赖 `[[`、`|=` 等 bash 特性，因此 `$OSTYPE` 在本脚本执行环境中总是可用。
+- **风险 1**：`Gate Coverage` 新增的 "Tech Plan Alignment / References Compliance" 子类，在**没有** TECH_PLAN 或 references 的简化路径任务中可能显得多余。缓解：§ 4 编写规则明确说"本轮无参考资料时标注 N/A"；简化路径本身已允许省略 VERIFY_REPORT，不受此字段约束。
+- **风险 2**：B-3 方案 α 在 P5 内嵌指针，如果读者只扫一眼可能仍错过。缓解：用加粗（`**...**`）提高视觉权重；SSOT 原则下跳转一次是必要成本。
 - **开放问题**：无。
