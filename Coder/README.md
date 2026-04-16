@@ -59,7 +59,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
   /40_Context_Management
     context-persistence.md
-    mode-switch.md
+    role-switch.md
     handoff-spec.md
 
   /50_Extension_Ideation

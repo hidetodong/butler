@@ -121,4 +121,4 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 - 本规则负责"何时写、写什么、写到哪"。
 - `handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的格式契约。
 - `20_Workflow_Lifecycle/progressive-handoff.md` 负责"长链路任务何时拆分与接力"。
-- `mode-switch.md` 负责模式切换时的职责边界。
+- `role-switch.md` 负责角色切换时的职责边界。

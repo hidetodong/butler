@@ -1,115 +1,94 @@
 # Goal
 
-- 按 B-1 方案 B（扩展 `Gate Coverage` 分 4 类）、B-2（P4 补 `.ai/task-state.md` 同步约束）、B-3 方案 α（P5 对 Delivery Summary 触发条件加指针），对 Bucket B 3 条 Should Fix 执行最小范围修复。
+- 按方案 Alpha 修复 Bucket C：把 `mode-switch.md` 重命名为 `role-switch.md`，内部 `Mode` → `Role`、`模式` → `角色` 全量替换，并同步 2 处外部文件名引用。
 
 # Files / Modules to Change
 
-| # | 文件 | 涉及 AC | 改动点 |
+| # | 文件/动作 | 涉及 AC | 改动点 |
 |---|---|---|---|
-| 1 | `Coder/20_Workflow_Lifecycle/verify-schema.md` | B-1 | 2（§ 3 标准模板 + § 4 编写规则） |
-| 2 | `Coder/20_Workflow_Lifecycle/lifecycle.md` | B-2 + B-3 | 2（P4 执行原则 + P5 必须产物指针） |
+| 1 | `Coder/40_Context_Management/mode-switch.md` → `role-switch.md` | C-1 | git mv 重命名 |
+| 2 | `Coder/40_Context_Management/role-switch.md` 内部 | C-1 | 2 次 replace_all（Mode → Role；模式 → 角色） |
+| 3 | `Coder/40_Context_Management/context-persistence.md:124` | C-2 | 1 处 edit（文件名 + 概念名） |
+| 4 | `Coder/README.md:62` | C-2 | 1 处 edit（目录结构） |
 
-共 2 个文件，4 处 edit。
+共 4 步，涉及 3 个文件。
 
 # Interface / Contract
 
-- **verify-schema.md**：
-  - `Gate Coverage` 字段从"通用质量门禁 / Active Profiles" 2 类扩展到"通用质量门禁 / Active Profiles / Tech Plan Alignment / References Compliance" 4 类。
-  - 顶级字段列表、`Verification Summary` / `AC Status` / `Verification Results` / `Remaining Risks` / `Handoff / Next Step` 等其他字段**不动**，保持现有产物向下兼容。
-- **lifecycle.md**：
-  - P4 新增一条执行原则约束（硬约束 `必须`）。
-  - P5 必须产物段增加一个显式指针 `delivery-summary.md § 2 触发时机`。
+- **文件名契约**：`Coder/40_Context_Management/` 下新增 `role-switch.md`，删除 `mode-switch.md`。git mv 保留历史血缘。
+- **术语契约**：
+  - `logic-protocol.md § 4 模块激活感知` 中 Standard/Ideation/Loop/Review "Mode" 术语**保持不变**（运行时能力概念）。
+  - 职责切换侧改为：`Architect Role / Coder Role / Reviewer Role / Verifier Role`（中文"角色"）。
+- `context-persistence.md § 7` 与本文件的关系声明从"模式切换时的职责边界"改为"角色切换时的职责边界"。
 
 # State / Boundary
 
-- 不动 `delivery-summary.md` 本体（它继续是触发条件 SSOT）。
-- 不动 concept-schema / acceptance-schema / tech-plan-schema（Bucket B 不涉及 P1/P2/P3 schema）。
-- 不动 `context-persistence.md`（P4 是引用它，不修改它）。
+- 不动 `logic-protocol.md`、`lifecycle.md`、`handoff-spec.md`、其他 schema、Extension 文件、`templates/`、`scripts/`。
+- 不修改 `deliveries/2026-04-17-must-fix-repair.md` 中的历史引用（作为历史记录保留）。
 
 # Design Decisions
 
-1. **B-1 方案 B 落地位置**：在 § 3 标准模板的 `Gate Coverage` 段内列出 4 个子类别；在 § 4 编写规则中加一条说明 4 类的用途。保持字段顺序与现有模板一致，减少读者重新适应成本。
-2. **B-2 约束强度与位置**：使用"必须"（硬约束）；插入位置选在 P4 "执行原则" 列表末尾，与同列表的其他"必须"级别约束风格一致。
-3. **B-3 指针措辞**：采用"**具体触发条件参考 `delivery-summary.md § 2 触发时机`**"的内嵌式指针（不新增段落），保留 P5 段落的现有结构。
-4. **兼容性**：VERIFY_REPORT 新字段对**已存在的 VERIFY_REPORT 产物**是向下兼容的 —— 旧 VERIFY_REPORT 仍然合法，只是缺少新字段；未来 P5 按新 schema 填。本轮 **不**回填 `.ai/VERIFY_REPORT.md`（它是 Bucket B 自己的产物，按新 schema 一次到位即可）。
+1. **使用 `git mv` 重命名**：保留文件历史血缘，便于 `git log --follow` 追溯。
+2. **两次 `replace_all` 一把过**：全文审查确认无 "Model"、"mode"（小写）等子串干扰，也无需保留任何"模式"字样作为不相关概念。
+3. **`Reviewer / Verifier Mode` 这种合并形式**：`replace_all` 会把 `Reviewer / Verifier Mode` 改成 `Reviewer / Verifier Role`，语义正确，保留合并表达。
+4. **frontmatter 不单独处理**：`title: 模式切换规范` 和 `scope: ... 模式职责 ...` 会被 `模式 → 角色` 的 replace_all 捕获，无需额外 edit。
 
 # Execution Steps
 
-## Edit 1 — `verify-schema.md § 3 标准模板`
+## Step 1 — `git mv` 重命名
 
-扩展 `Gate Coverage` 段示例：
-
-**old**:
-```
-# Gate Coverage
-- 通用质量门禁：已验证项
-- Active Profiles：已验证项
+```bash
+git mv Coder/40_Context_Management/mode-switch.md Coder/40_Context_Management/role-switch.md
 ```
 
-**new**:
-```
-# Gate Coverage
-- 通用质量门禁：已验证项
-- Active Profiles：已验证项（仅命中时填，未命中可省略）
-- Tech Plan Alignment：TECH_PLAN 中 Design Decisions 的兑现情况
-- References Compliance：.ai/references/ 下已处理参考资料的规格遵守情况（无参考资料时标注 N/A）
-```
+## Step 2 — 新文件内部术语全替换（2 次 replace_all）
 
-## Edit 2 — `verify-schema.md § 4 编写规则`
+对 `Coder/40_Context_Management/role-switch.md`：
+- `Mode` → `Role`（替换所有 7 处：H1 标题 1 次 + § 2 子标题 3 次 + § 3 条目 3 次）
+- `模式` → `角色`（替换所有 11 处：frontmatter 2 次 + 正文 9 次）
 
-扩展"若存在 active profiles..."这一条为更完整的 Gate Coverage 分类说明：
+## Step 3 — `context-persistence.md` 引用更新
 
 **old**:
 ```
-- 若存在 active profiles，应区分"通用质量门禁"与"profile 验证依据"。
+- `mode-switch.md` 负责模式切换时的职责边界。
 ```
 
 **new**:
 ```
-- `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。
+- `role-switch.md` 负责角色切换时的职责边界。
 ```
 
-## Edit 3 — `lifecycle.md` P4 执行原则补 task-state 约束
+## Step 4 — `Coder/README.md` 目录结构更新
 
-在 P4 "执行原则" 列表的最后一条（"若缺少明确探测命令或环境能力不足..."）之后追加一条：
-
-**old**（匹配列表最后一条）:
+**old**（L62 附近的目录结构块）:
 ```
-- 若缺少明确探测命令或环境能力不足，应先向用户确认验证方式。
+    mode-switch.md
 ```
 
 **new**:
 ```
-- 若缺少明确探测命令或环境能力不足，应先向用户确认验证方式。
-- 若任务命中 `40_Context_Management/context-persistence.md` 中定义的激活条件（新项目接入、跨会话继续、多阶段推进、需要等待 ACK 或外部结果、无法单轮闭合等），执行过程中**必须**按其"运行时增量"规则同步 `.ai/task-state.md`，不得仅依赖对话记忆保留阶段状态。
-```
-
-## Edit 4 — `lifecycle.md` P5 必须产物段加指针
-
-**old**:
-```
-**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，并落在项目根目录 `deliveries/` 下。
-```
-
-**new**:
-```
-**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。
+    role-switch.md
 ```
 
 # Verification Plan
 
-- **B-1**：
-  - `grep -n 'Tech Plan Alignment\|References Compliance' verify-schema.md` 至少命中 2 处（模板示例 + 编写规则说明）；
-  - 通读 § 3 / § 4，两处用词一致，不出现冲突。
-- **B-2**：
-  - `grep -n 'task-state' Coder/20_Workflow_Lifecycle/lifecycle.md` 在 P4 章节（L108-140 附近）命中至少一次，带"必须"级别措辞。
-- **B-3**：
-  - `grep -n 'delivery-summary.md § 2' lifecycle.md` 在 P5 章节（L130-150 附近）命中；
-  - 读 P5 段落，能清楚看到触发条件的指针目标文件与章节。
-- `git diff --stat` 应仅显示 2 个规则文件变更。
+- **文件系统**：
+  - `ls Coder/40_Context_Management/` 包含 `role-switch.md`，不包含 `mode-switch.md`。
+  - `git log --follow Coder/40_Context_Management/role-switch.md | head` 能追溯到原 `mode-switch.md` 历史。
+- **术语扫描**：
+  - `grep -n 'Mode' Coder/40_Context_Management/role-switch.md` 返回 0。
+  - `grep -n '模式' Coder/40_Context_Management/role-switch.md` 返回 0。
+  - `grep -n 'Role' Coder/40_Context_Management/role-switch.md` 命中至少 7 处。
+  - `grep -n '角色' Coder/40_Context_Management/role-switch.md` 命中至少 11 处。
+- **引用一致性**：
+  - `grep -rn 'mode-switch' Coder/ --include='*.md'` 零命中（排除 `.claude/` 和 `deliveries/`）。
+  - `grep -rn 'role-switch' Coder/ --include='*.md'` 命中至少 2 处（context-persistence + README）。
+- **保留区**：
+  - `grep -n 'Standard Mode\|Ideation Mode\|Ralph-Loop Mode\|Review Mode' Coder/00_System_Prompt/logic-protocol.md` 维持原有命中数（logic-protocol 侧的 Mode 术语未动）。
 
 # Risks / Open Questions
 
-- **风险 1**：`Gate Coverage` 新增的 "Tech Plan Alignment / References Compliance" 子类，在**没有** TECH_PLAN 或 references 的简化路径任务中可能显得多余。缓解：§ 4 编写规则明确说"本轮无参考资料时标注 N/A"；简化路径本身已允许省略 VERIFY_REPORT，不受此字段约束。
-- **风险 2**：B-3 方案 α 在 P5 内嵌指针，如果读者只扫一眼可能仍错过。缓解：用加粗（`**...**`）提高视觉权重；SSOT 原则下跳转一次是必要成本。
+- **风险 1**：`replace_all "Mode" -> "Role"` 若遗漏子串检查会误改 `Model`/`mode` 等词。已手工通读全文确认只有"Architect/Coder/Reviewer/Verifier Mode"和"# Mode Switch"两种形式，无误伤。
+- **风险 2**：`replace_all "模式" -> "角色"` 同样通读确认全文 11 处均属职责切换语义，无其他"模式"一词（如"设计模式"、"观察者模式"）。
 - **开放问题**：无。

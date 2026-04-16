@@ -1,20 +1,20 @@
 ---
-title: 模式切换规范
+title: 角色切换规范
 audience: AI / 开发者
-scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
+scope: Architect / Coder / Reviewer 角色职责、限制与阶段映射
 ---
 
-# Mode Switch
+# Role Switch
 
 ## 1. 目标
 
 长任务中最常见的问题之一，是把需求理解、方案设计、代码实现与结果验证混在同一轮注意力里处理，导致边界失焦。
 
-本规则要求按职责切换模式，降低上下文污染与执行漂移。
+本规则要求按职责切换角色，降低上下文污染与执行漂移。
 
-## 2. 模式定义
+## 2. 角色定义
 
-### 2.1 Architect Mode
+### 2.1 Architect Role
 
 职责：
 
@@ -28,7 +28,7 @@ scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
 - 不直接承担具体业务代码实现
 - 不跳过验收与设计直接进入编码
 
-### 2.2 Coder Mode
+### 2.2 Coder Role
 
 职责：
 
@@ -42,7 +42,7 @@ scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
 - 不擅自重写目标
 - 不在未回到设计阶段前扩张影响范围
 
-### 2.3 Reviewer / Verifier Mode
+### 2.3 Reviewer / Verifier Role
 
 职责：
 
@@ -58,20 +58,20 @@ scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
 
 ## 3. 切换时机
 
-- 进入 P1 / P2 / P3 时，以 Architect Mode 为主
-- 进入 P4 时，切换到 Coder Mode
-- 进入 P5 时，切换到 Reviewer / Verifier Mode
-- 当目标、验收或设计发生变化时，应退出当前模式并回到对应阶段
+- 进入 P1 / P2 / P3 时，以 Architect Role 为主
+- 进入 P4 时，切换到 Coder Role
+- 进入 P5 时，切换到 Reviewer / Verifier Role
+- 当目标、验收或设计发生变化时，应退出当前角色并回到对应阶段
 
 ## 4. 协作规则
 
-- 不同模式应共享同一份已确认约束，而不是共享冗长对话历史。
-- 若任务已命中 `40_Context_Management/` 的激活条件，则模式切换前应按 `context-persistence.md` 同步状态文件或执行阶段结晶。
+- 不同角色应共享同一份已确认约束，而不是共享冗长对话历史。
+- 若任务已命中 `40_Context_Management/` 的激活条件，则角色切换前应按 `context-persistence.md` 同步状态文件或执行阶段结晶。
 - 若本次切换会导致跨会话继续或执行入口切换，应补充 handoff summary；若需要落盘，则写入 `02_SESSION_HANDOFF.md`。
-- 若采用多 Agent / 多实例协作，应按模式分工，而不是让所有实例同时承担全链路职责。
+- 若采用多 Agent / 多实例协作，应按角色分工，而不是让所有实例同时承担全链路职责。
 
 ## 5. 使用原则
 
-- 模式切换的目标是收敛职责，不是增加流程表演。
-- 模式越清晰，交付越稳定。
-- 若任务极小，可由同一执行者完成多个模式，但仍要在思维上区分当前职责。
+- 角色切换的目标是收敛职责，不是增加流程表演。
+- 角色越清晰，交付越稳定。
+- 若任务极小，可由同一执行者完成多个角色，但仍要在思维上区分当前职责。

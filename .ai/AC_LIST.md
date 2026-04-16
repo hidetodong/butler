@@ -1,96 +1,71 @@
 # Goal
 
-- 修复 Bucket B（产物链字段与阶段描述补全）3 条 Should Fix。
+- 修复 Bucket C（Mode 术语双关消歧）1 条 Should Fix。
 
 # In Scope
 
-- B-1: `verify-schema.md` 补足对 TECH_PLAN（Design Decisions）与 references（规格）是否被落实的验证口径。
-- B-2: `lifecycle.md` P4 章节显式补充"长任务必须同步 `.ai/task-state.md`"的触发约束。
-- B-3: `lifecycle.md` P5 章节明确 Delivery Summary 的触发判断，与 `delivery-summary.md § 2` 保持单一来源。
+- `Coder/40_Context_Management/mode-switch.md` 中 "Mode" 术语的改名（或文件改名）。
+- 同步更新 `context-persistence.md` 和 `Coder/README.md` 中的文件名引用（若重命名）。
 
 # Out of Scope
 
-- Bucket C（Mode 术语消歧）与 Bucket D（模板重复消除）。
-- 不修改 delivery-summary.md 本体（它继续是触发条件的 SSOT）。
-- 不新增 `.ai/` 目录下的运行态文件类型。
+- `logic-protocol.md § 4 模块激活感知` 的 Standard/Ideation/Loop/Review Mode 术语保持不变（该处 Mode 术语与命令绑定深入）。
+- lifecycle.md 的 P1-P5 阶段定义不动。
 
 # Acceptance Checklist
 
-- [ ] **B-1** `verify-schema.md` 新增或扩展字段明确覆盖 "TECH_PLAN Design Decisions 是否兑现" 与 "references 的规格是否遵守"，方案待拍板
-- [ ] **B-2** `lifecycle.md` P4 段落显式要求"命中 `40_Context_Management/context-persistence.md` 触发条件时必须同步 `.ai/task-state.md`"
-- [ ] **B-3** `lifecycle.md` P5 段落明确 Delivery Summary 触发判断，方案待拍板（指针 vs 内联）
+- [ ] **C-1** `mode-switch.md` 内部 "Mode" 术语消歧，方案待拍板
+- [ ] **C-2** 所有对该文件的引用（文件名、概念名）全部同步到新术语，无遗漏
 
 # Verification Method
 
-- **B-1**：
-  - 通读 `verify-schema.md`，确认有字段或小节专门要求回答 "Design Decision 是否落实" 与 "references 规格是否兑现"；
-  - `grep -n 'Design Decision\|Plan Alignment\|References Compliance' verify-schema.md` 命中新字段。
-- **B-2**：
-  - `grep -n 'task-state' Coder/20_Workflow_Lifecycle/lifecycle.md` 在 P4 章节（L108-132 附近）有命中，措辞为"必须 / 应"级别的硬约束。
-- **B-3**：
-  - `grep -nE 'delivery-summary\.md|Delivery Summary' lifecycle.md` 在 P5 章节附近有清晰的触发条件表述（指针或内联），不再让读者猜测。
+- **C-1**：根据选定方案，`grep 'Architect Mode\|Coder Mode\|Reviewer Mode\|Verifier Mode' Coder/40_Context_Management/*` 返回 0 命中（旧术语全部替换）。
+- **C-2**：`grep -rn 'mode-switch' Coder/ --include='*.md'` 返回的引用数与新文件名一致；若重命名则 `grep 'mode-switch\.md'` 除历史 `deliveries/` 外零命中活跃文件。
 
 # Open Questions / Risks
 
-## ❓ 待拍板 - B-1 方案选择
+## ❓ 待拍板 - 方案选择
 
-**问题**：`verify-schema.md` 当前必填字段是 `Verification Summary / AC Status / Verification Results / Gate Coverage / Remaining Risks / Handoff / Next Step`。要让 VERIFY_REPORT 也校验 TECH_PLAN 的 Design Decisions 与 references 的规格，字段如何落位？
+两个维度的决策组合：**(A)新术语中文 + (B)是否重命名文件**。
 
-### 方案 A — 新增两个顶级字段：`Plan Alignment`、`References Compliance`
+### 方案 Alpha（推荐）— 角色切换 + 重命名为 `role-switch.md`
 
-- schema 顶层字段数从 6 增加到 8。
-- **优点**：语义最清晰，字段名见名知义。
-- **缺点**：模板变沉；AI 在 P5 填写时模板更重。
+- 术语：英文 `Role Switch` / 中文 "角色切换"；三个子 Mode 改为 `Architect Role / Coder Role / Reviewer Role`。
+- 重命名：`mode-switch.md` → `role-switch.md`。
+- 同步更新：`context-persistence.md:124`、`Coder/README.md:62`。
+- **优点**：一次彻底消除术语与文件名歧义；"角色"与"帽子切换"直觉一致。
+- **代价**：4 处改动（文件重命名 + 内部术语 + 2 处引用）。
 
-### 方案 B（推荐）— 扩展 `Gate Coverage`，加两个子类
+### 方案 Beta — 角色切换 + 文件名不动（`mode-switch.md` 保留）
 
-- 保持 6 个顶级字段不变。
-- 将 `Gate Coverage` 的分类从"通用质量门禁 / Active Profiles"扩展为"通用质量门禁 / Active Profiles / Tech Plan Alignment / References Compliance"四类。
-- **优点**：顶级字段不膨胀；`Gate Coverage` 语义原本就是"验证覆盖性"，新增类别天然契合。
-- **缺点**：`Gate Coverage` 一词从"门禁"语义略微扩展到"对齐"，但不冲突。
+- 术语与 Alpha 相同。
+- 文件名保留 `mode-switch.md`，但文件内容明确说"本文件定义 Role Switch（历史原因保留 mode-switch 文件名）"。
+- **优点**：改动小，无 broken link 风险。
+- **缺点**：文件名继续误导读者（看文件名以为是 Extension Mode 切换）；术语一致性打折。
 
-### 方案 C — 在 `Verification Results` 里逐项标注
+### 方案 Gamma — 帽子切换（Hat Switch）+ 重命名为 `hat-switch.md`
 
-- 每个 AC 的 verification result 下要求分别回答"对应 Design Decision 是否兑现""对应 references 规格是否遵守"。
-- **优点**：最小改动；细粒度追踪。
-- **缺点**：结果分散，没有汇总视图；当某些 AC 不涉及 Design Decision 或 references 时产生冗余。
+- 术语：英文 `Hat Switch` / 中文 "帽子切换"；三个子 Mode 改为 `Architect Hat / Coder Hat / Reviewer Hat`。
+- **优点**：比喻生动直白；"戴不同帽子做不同事"的概念易懂。
+- **缺点**：偏俚语，正式度略低；"帽子"作为技术术语较非主流。
 
----
+### 方案 Delta — 两侧 Mode 都保留，加修饰词区分
 
-## ❓ 待拍板 - B-3 方案选择
-
-**问题**：`lifecycle.md` P5 章节目前只有一句"若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结"。AI 需要跳转到 `delivery-summary.md § 2` 才能看到完整 5 条触发条件。
-
-### 方案 α（推荐）— 显式指针
-
-- `lifecycle.md` P5 改为："具体触发条件参考 `delivery-summary.md § 2`"。
-- **优点**：SSOT 归 delivery-summary；和 Bucket A 的 SSOT 原则一致；避免将来两处漂移。
-- **缺点**：AI 读 lifecycle 时还要一次跳转。
-
-### 方案 β — 内联 5 条触发条件
-
-- 把 delivery-summary.md § 2 的 5 条触发条件完整抄到 lifecycle.md P5。
-- **优点**：lifecycle 自给自足，不用跳转。
-- **缺点**：两处维护，未来可能漂移。
-
-### 方案 γ — 在 lifecycle 给关键摘要 + 指针细节
-
-- 内联 2-3 句关键判据（"已完成主要目标、已达可验收、有明确验证结论"），后接指针"完整 5 条判断见 delivery-summary.md § 2"。
-- **优点**：平衡自给自足与 SSOT。
-- **缺点**：轻度重复风险；"关键摘要"这个折中在规则维护上偏软。
+- `logic-protocol` 的 Mode 改称 `Extension Mode`，`mode-switch` 的 Mode 改称 `Role Mode`。
+- **优点**：不伤及现有术语词根。
+- **缺点**：认知负担仍在（读者要记两种 Mode）；名字更长。
 
 ---
 
 ## 风险
 
-- 改动均为 schema / lifecycle 文本，无运行时行为变更。
-- B-1 方案 B 需要 `verify-schema.md § 3 标准模板` 与 § 4 编写规则同步更新，确保模板示例与字段描述一致。
+- 若选 Alpha 或 Gamma（重命名）：`Coder/README.md` 的目录结构展示需要同步；历史 `deliveries/*.md` 中的旧文件名引用保留不改（作为历史记录）。
+- `mode-switch.md` 的 frontmatter `title` 和 `scope` 字段也需同步更新术语。
 
 ---
 
 # 请回复
 
-1. **B-1 方案选择**：A / B / C
-2. **B-3 方案选择**：α / β / γ
+1. **方案选择**：Alpha / Beta / Gamma / Delta
 
-B-2 无设计取舍，按 `必须 / 应` 级别的硬约束直接补充。两个方案都拍板后我进 P3。
+拍板后进 P3 出具体 edit 清单。
