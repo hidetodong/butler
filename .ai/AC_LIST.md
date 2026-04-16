@@ -1,100 +1,73 @@
 # Goal
 
-- 修复 Bucket A（命名与读取顺序一致性）4 条 Should Fix。
+- 修复 Bucket E（平台与回退健壮性）2 条 Should Fix。
 
 # In Scope
 
-- AC-1: `/ideation` 触发词在三个文件中统一。
-- AC-2: README 读取顺序与 architecture-overview 启用顺序去重，确立 SSOT。
-- AC-3: mcv-deployment.md 标题层级对齐其他规则文件。
-- AC-4: mcv-update.md 升级后目录结构命名风格裂痕修复，并（可选）补充热/冷数据命名策略规则。
+- E-1: `scripts/setup.sh` 的 `sed -i` 跨平台兼容（macOS/BSD 与 Linux 都能正确工作）。
+- E-2: `Coder/00_System_Prompt/logic-protocol.md § 4.2` 参考资料注入表，补充 skill 不可用时的 fallback 规则。
 
 # Out of Scope
 
-- Bucket B/C/D/E（其余 7 条 Should Fix）。
-- 新增规则文件、目录结构调整、模板合并。
-- 对 Learner/Composer 的修改。
+- Bucket B / C / D（其余 5 条 Should Fix）。
+- 不重构 setup.sh 整体逻辑，仅改 sed 调用。
+- 不修改 `.ai/references/` 存储路径或命名约定。
 
 # Acceptance Checklist
 
-- [ ] **AC-1** `/ideation` 触发词在 `logic-protocol.md`、`ideation-engine.md`、`HUMAN_GUIDE.md` 三处完全一致（以 `ideation-engine.md` 为 SSOT）
-- [ ] **AC-2** README 读取顺序与 architecture-overview 启用顺序不再冗余，方案待拍板
-- [ ] **AC-3** `mcv-deployment.md` 的章节标题统一为 `##`（与其他规则文件一致），不再孤立使用 `###`
-- [ ] **AC-4** `mcv-update.md § 3` 升级后目录示例修复风格裂痕，方案待拍板
+- [ ] **E-1** `scripts/setup.sh` 在 macOS 与 Linux 下 `sed -i` 调用均能成功（不报 `extra characters at end of command` 或 `unknown option` 类错误）
+- [ ] **E-2** `logic-protocol.md § 4.2` 明确定义当 `confluence-api-extractor` / `mastergo-codegen` 等 skill 不可用时的 fallback 路径，方案待拍板
 
 # Verification Method
 
-- **AC-1**：grep 三个文件的 `/ideation` 触发词列表，关键词集合一致（脑暴 / 完善需求 / 想不清楚 / 还没想好）。
-- **AC-2**：选定 SSOT 后，另一个文件不再重复列出读取顺序清单；交叉指针清晰。
-- **AC-3**：`grep -n '^### [0-9]' Coder/20_Workflow_Lifecycle/mcv-deployment.md` 返回空，一级章节全为 `## [数字]`。
-- **AC-4**：`mcv-update.md § 3` 热数据区命名带数字前缀，归档区命名策略明确（若方案选择把规则落地，需在 mcv-update.md 中补一条说明）。
+- **E-1**：
+  - 阅读 setup.sh 修复后的 sed 段，确认包含平台检测分支或等价兼容写法；
+  - `bash -n scripts/setup.sh` 通过语法检查；
+  - 在 macOS 下执行 dry-run（或 trace）确认既有路径未变；Linux 真机验证受限（本地无环境），仅做代码评审。
+- **E-2**：
+  - `logic-protocol.md § 4.2` 在表格下方或作为新段落包含"fallback / 回退"关键字；
+  - fallback 规则明确三种 skill 失效场景（skill 未安装 / 认证失败 / 超时）的处理；
+  - 最终产物落盘路径与现有 `.ai/references/` 约定一致，不变更命名前缀（`api-` / `design-` / `insight-` / 无前缀）。
 
 # Open Questions / Risks
 
-## ❓ 待拍板 - AC-2 方案选择
+## ❓ 待拍板 - E-2 方案选择
 
-**问题**：`Coder/README.md § 读取顺序` 与 `Coder/architecture-overview.md § 3 启用顺序` 都描述了规则的读取与生效顺序，内容大面积重叠但细节有微差（architecture-overview 额外提到"在 P1 Analysis 识别项目类型"）。
+**问题**：`logic-protocol.md` 定义了 Confluence / MasterGo 等参考资料通过专用 skill 提取。但：
+- 不是所有 AI 环境都装了 `confluence-api-extractor` 或 `mastergo-codegen` skill
+- skill 可能因认证失败、网络超时等运行时原因返回错误
+- 当前规则对此没有明确的回退路径，AI 可能直接卡住或擅自跳过参考资料
 
-### 方案 A（推荐）— README 做 SSOT
+### 方案 α — 降级链：先 skill → 失败时 AI 用通用工具 → 都失败时问用户
 
-- `README.md § 读取顺序` 保持完整清单并吸收 architecture-overview 的补充细节（例如"P1 识别项目类型后再启用 10_Domain_Stack_Profiles"）。
-- `architecture-overview.md § 3` 删除完整列表，改写为"具体读取顺序以 `README.md § 读取顺序` 为准"，自身只保留"三层分工"等概念性说明。
-- **理由**：README 是入口文件（AI 必读），做 SSOT 天然路径最短；architecture-overview 定位为"补充说明"，应避免承担强约束。
+- 第 1 层：优先调用对应 skill。
+- 第 2 层：skill 不可用或失败时，AI 用通用工具（WebFetch 读取公开链接、Read 读取本地文件）自行提取结构化信息。
+- 第 3 层：通用工具也失败时（比如需要认证、格式复杂），提示用户手动提供文本并粘贴到对话。
+- AI 无论走哪条路径，产物必须落盘到 `.ai/references/`，命名和元信息（source URL、处理方式）保留，供后续审计。
 
-### 方案 B — architecture-overview 做 SSOT
+### 方案 β（推荐）— 降级链：先 skill → 失败时问用户
 
-- `architecture-overview.md § 3 启用顺序` 保留完整清单。
-- `README.md § 读取顺序` 改为指针"详见 architecture-overview.md § 3"。
-- **理由**：architecture-overview 的描述更完整（含 P1 识别步骤）。
-- **代价**：AI 读入口时还需跳转一次；README 的"读取顺序"章节消失会让入口显得单薄。
+- 第 1 层：优先调用对应 skill。
+- 第 2 层：skill 不可用或失败时，**不越权用 WebFetch/网络请求**，直接提示用户手动提取后粘贴（"请把 XX 页面的内容贴给我"）。
+- AI 只落盘用户提供的文本，不自作主张访问外部资源。
+- **理由**：AI 主动网络请求可能越过权限边界，尤其在企业环境下（Confluence 多带鉴权）。交由用户提供避免权限/安全风险。
 
----
+### 方案 γ — 硬失败
 
-## ❓ 待拍板 - AC-4 方案选择
-
-**问题**：AC-4 方案 A 把 `02_SESSION_HANDOFF.md` 统一加前缀后，`mcv-update.md § 3` 升级后目录示例出现风格裂痕：
-
-```
-.ai/
-  /archive/
-    CHANGELOG_2025.md
-    BUG_LOG_v1.md
-  CHANGELOG.md           ← 无前缀
-  02_SESSION_HANDOFF.md  ← 带前缀
-  BUG_LOG.md             ← 无前缀
-  INDEX.md
-```
-
-### 方案 α（推荐）— 热数据统一带前缀，归档不强求；并把该命名策略写入规则
-
-- 修改 `mcv-update.md § 3` 目录示例：热数据区（`.ai/` 根）的 `CHANGELOG.md` / `BUG_LOG.md` 都加前缀 → `01_CHANGELOG.md` / `03_BUG_LOG.md`；归档区（`.ai/archive/` 下）保持 `CHANGELOG_2025.md` / `BUG_LOG_v1.md`（按年份/版本分片，不强求前缀）。
-- 在 `mcv-update.md § 3` 或 `mcv-deployment.md` 补一条命名策略说明：
-  > 热数据（`.ai/` 根下）统一带数字前缀（`00_` / `01_` / `02_` / `03_`），与基地车部署命名一致。
-  > 归档数据（`.ai/archive/` 下）按年份、版本或主题分片，命名可灵活处理，不强求前缀。
-- **理由**：保留 AC-4 的一致性成果；归档命名的灵活性符合 mcv-update § 4.2 "Sharding" 的现有精神；同时把隐式约定变成显式规则。
-
-### 方案 β — 只修目录示例，不落地命名策略规则
-
-- 仅把 `CHANGELOG.md` / `BUG_LOG.md` 改为带前缀，不补充命名策略说明。
-- **优点**：改动最小。
-- **代价**：热/冷数据的命名差异仍然是隐式惯例，未来读者可能困惑。
-
-### 方案 γ — 不加前缀、修 AC-4（回滚 SESSION_HANDOFF 带前缀决议）
-
-- 本方案实质上是否定前一轮拍板，不推荐。
+- skill 不可用时报错并暂停任务，要求用户先安装 skill。
+- **缺点**：对轻量场景过苛（用户可能只是想临时引用一次）；不推荐。
 
 ---
 
 ## 风险
 
-- 本轮全部改动为规则文本，无运行时影响。
-- `.ai/CONCEPT.md` 和 `.ai/AC_LIST.md` 覆写了上一轮 Must Fix 的产物；原版本在 git commit `8febaf3` 中可追溯。
+- 改动均为规则文本 + shell 脚本兼容，无运行时行为变更。
+- setup.sh 的 Linux 验证受限（本地无 Linux 环境），只能靠代码评审。生产中第一个 Linux 用户会实测到。
 
 ---
 
 # 请回复
 
-1. **AC-2 方案选择**：A / B
-2. **AC-4 方案选择**：α / β / γ
+1. **E-2 方案选择**：α / β / γ
 
-拍板后我进入 P3 TECH_PLAN 出具体 edit 清单，再等 ACK 进入 P4。
+E-1 无设计取舍，按 `bash if/else + $OSTYPE` 方案直接实施。回复方案选择后我进入 P3。

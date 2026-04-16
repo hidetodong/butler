@@ -1,103 +1,75 @@
 # Goal
 
-- 按 AC-1 / AC-2 方案 A / AC-3 / AC-4 方案 α，对 Bucket A 的 4 条 Should Fix 执行最小范围修复。
+- 按 E-1（平台检测 if/else）与 E-2 方案 β（skill 失败直接问用户，不越权网络请求），对 Bucket E 2 条 Should Fix 执行最小范围修复。
 
 # Files / Modules to Change
 
 | # | 文件 | 涉及 AC | 改动点 |
 |---|---|---|---|
-| 1 | `Coder/00_System_Prompt/logic-protocol.md` | AC-1 | 1 |
-| 2 | `HUMAN_GUIDE.md` | AC-1 | 1 |
-| 3 | `Coder/README.md` | AC-2 | 2（10 profile 行 + 40 激活段落） |
-| 4 | `Coder/architecture-overview.md` | AC-2 | 1（§ 3 整段重写为指针） |
-| 5 | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` | AC-3 | 5（标题层级） |
-| 6 | `Coder/20_Workflow_Lifecycle/mcv-update.md` | AC-4 | 5（目录示例 × 2 + 说明 × 2 + 新增命名策略段） |
+| 1 | `scripts/setup.sh` | E-1 | 1（`sed -i` 改为 `$OSTYPE` 分支） |
+| 2 | `Coder/00_System_Prompt/logic-protocol.md` | E-2 | 1（§ 4.2 末尾追加 Fallback 段） |
 
-共 6 个文件，约 15 处 edit。
+共 2 个文件，2 处 edit。
 
 # Interface / Contract
 
-- 引入一条**新规则**（非契约变更，仅显式化隐式约定）：热数据命名策略 — `.ai/` 根下的运行态文件统一带数字前缀；`.ai/archive/` 下的归档文件不强求前缀。
-- 其余全是表述对齐，无契约变化。
+- E-1：脚本行为不变（更新语义一致），只修复 Linux 下的兼容性。
+- E-2：规则新增 **Fallback 段落**，明确 skill 失败时 AI **必须**转向用户手动提供而非越权访问网络。属于行为约束增强，不改已有存储路径 / 命名前缀。
 
 # State / Boundary
 
-- 修改仅限 6 个规则文本文件，不动 `scripts/`、`templates/`、`Coder/30_Quality_Gate/`、`Coder/10_Domain_Stack_Profiles/`、Extension 目录等。
+- 不动 `templates/`、`.ai/references/` 命名约定、其他规则文件。
+- 不重构 setup.sh 的 awk 段（已跨平台）、CLAUDE_GLOBAL_MD 处理、shell rc 检测逻辑。
 
 # Design Decisions
 
-1. **AC-1 SSOT**：`ideation-engine.md` 作为触发词权威源（无需改动），其他两处同步到 4 个词：脑暴 / 完善需求 / 想不清楚 / 还没想好。
-2. **AC-2 方案 A**：README 做 SSOT。architecture-overview § 3 完全简化为指针 + 极简概念说明，"40_Context_Management 激活时机"段落的完整语义迁移到 README（吸收 "checkpoint / handoff" 这个 README 原版缺失的关键词）。
-3. **AC-3**：5 个 `### N.` 章节全部升为 `## N.`，不引入其他层级调整。
-4. **AC-4 方案 α**：热数据区 `CHANGELOG.md` / `BUG_LOG.md` → `01_CHANGELOG.md` / `03_BUG_LOG.md`；`INDEX.md` 保留无前缀（它不在 0/1/2/3 序列里，是索引元文件）；归档示例 `CHANGELOG_2025.md` / `BUG_LOG_v1.md` 保留不变；在 § 3 结尾追加命名策略说明段。
+1. **E-1 使用 `$OSTYPE` 判断**：macOS 下 `$OSTYPE == "darwin20"` 等，统一 `darwin*` glob 匹配；Linux 下多为 `linux-gnu`。其他平台（WSL、Cygwin、FreeBSD）默认走 Linux 分支（GNU sed 语法）。
+2. **E-2 β 方案落地位置**：作为新段放在 § 4.2 末尾（"处理规则"列表之后、`## 5. 流程总调度`之前），保留表格与处理规则的原有结构；不引入新的 H3 子标题，降低目录层级复杂度。
+3. **E-2 提示语示例采用 `confluence-api-extractor` 作为占位**，便于读者直接套用；MasterGo 等其他 skill 失败时替换名字即可。
 
 # Execution Steps
 
-全部 15 个 edit 按文件分组，单次消息并发执行（不同文件之间无依赖，同文件 edit 使用精确 old_string 区分）。
+## Edit 1 — `scripts/setup.sh` L22-25
 
-## AC-1 同步触发词（2 edits）
+将 `sed -i '' "..."` 单行调用扩展为 `$OSTYPE` 分支：
 
-- **`logic-protocol.md:77`**
-  old: `当用户提到"脑暴"、"完善需求"、"想不清楚"或输入 \`/ideation\` 时开启。`
-  new: `当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 \`/ideation\` 时开启。`
+```bash
+  if grep -q 'BUTLER_PATH' "$SHELL_RC" 2>/dev/null; then
+    # 更新已有的 BUTLER_PATH（macOS/BSD 与 Linux sed -i 语法不同）
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sed -i '' "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
+    else
+      sed -i "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
+    fi
+    echo "[更新] $SHELL_RC 中的 BUTLER_PATH 已更新"
+```
 
-- **`HUMAN_GUIDE.md:114`**
-  old: `| **Ideation** | \`/ideation\` 或 "脑暴"、"想不清楚" | 需求脑暴与完善 |`
-  new: `| **Ideation** | \`/ideation\` 或 "脑暴"、"完善需求"、"想不清楚"、"还没想好" | 需求脑暴与完善 |`
+## Edit 2 — `logic-protocol.md` § 4.2 末尾追加 Fallback 段
 
-## AC-2 确立 README 为 SSOT（2 edits）
+在当前 L103 "若参考资料在执行过程中被更新..."之后、L105 `## 5. 流程总调度` 之前插入：
 
-- **`Coder/README.md` L98**（`## 读取顺序` 第 7 项）：在"与当前项目类型匹配的规则文档"后补"需先在 P1 Analysis 识别项目类型与技术栈后再启用"。
-- **`Coder/README.md` L100** 段落：原"40 激活时机"升级为吸收 `checkpoint / handoff` 关键词的完整版。
-- **`Coder/architecture-overview.md § 3`** 整段替换为：
-  ```
-  ## 3. 启用顺序
+```markdown
+Fallback（skill 不可用或调用失败时）：
 
-  具体读取顺序以 `README.md § 读取顺序` 为准。本文件仅负责说明三层分工的职责边界与 profile 条件生效的语义，不重复列出顺序清单，避免多处漂移。
-  ```
-
-## AC-3 mcv-deployment.md 标题层级（5 edits）
-
-5 个独立 Edit：
-- `### 0. Butler 路径发现 (Path Discovery)` → `## 0. Butler 路径发现 (Path Discovery)`
-- `### 1. 落地前侦察 (Scouting)` → `## 1. 落地前侦察 (Scouting)`
-- `### 2. 基础设施展开 (Scaffold)` → `## 2. 基础设施展开 (Scaffold)`
-- `### 3. 规则注入 (Rule Injection)` → `## 3. 规则注入 (Rule Injection)`
-- `### 4. 本地化适配 (Local Adaptation)` → `## 4. 本地化适配 (Local Adaptation)`
-
-## AC-4 mcv-update.md 修复（5 edits）
-
-- **L43**：目录示例 `  CHANGELOG.md` → `  01_CHANGELOG.md`
-- **L45**：目录示例 `  BUG_LOG.md` → `  03_BUG_LOG.md`
-- **L52**：说明 `` - `CHANGELOG.md` 只保留热数据 `` → `` - `01_CHANGELOG.md` 只保留热数据 ``
-- **L54**：说明 `` - `BUG_LOG.md` 只保留仍然活跃 `` → `` - `03_BUG_LOG.md` 只保留仍然活跃 ``
-- **§ 3 末尾追加命名策略段**：
-  ```
-  - 命名策略：热数据（`.ai/` 根下）统一保留数字前缀（`00_` / `01_` / `02_` / `03_`），与基地车部署命名一致；归档数据（`.ai/archive/` 下）按年份、版本或主题分片，命名可灵活处理，不强求前缀。
-  ```
-
-**保留简写位置**（不改）：
-- `mcv-update.md:18` `` `CHANGELOG`、`BUG_LOG`、`SESSION_HANDOFF` `` — 概念枚举
-- `mcv-update.md:100` `### 5.1 CHANGELOG` — 小节标题
-- `mcv-update.md:102/144/153` `` `CHANGELOG` `` — 概念代词
-- `mcv-update.md:132` `### 5.3 BUG_LOG` — 小节标题
-- `mcv-update.md:134/144/154/178` `` `BUG_LOG` `` — 概念代词
-
-**保留归档示例**（不改）：
-- `mcv-update.md:41-42` `CHANGELOG_2025.md` / `BUG_LOG_v1.md` — 归档文件（按方案 α，不强求前缀）
+- 若目标 skill 未安装、认证失败或调用超时，**不得**自行使用 WebFetch 等工具越权访问外部资源。
+- 应主动提示用户手动提取参考资料内容并粘贴到对话，例如："`confluence-api-extractor` skill 不可用，请将 <URL> 页面内容粘贴到对话，我将落盘到 `.ai/references/api-<name>.md`"。
+- 收到用户粘贴的文本后，按上表"存储位置"约定落盘，命名前缀保持一致（`api-` / `design-` / `insight-` / 无前缀）。
+- Fallback 路径产出的参考资料，在 `AC_LIST.md` / `TECH_PLAN.md` 的 `External References` 中必须标注"用户手动提供"，以便审计区分 skill 自动化产物与人工产物。
+```
 
 # Verification Plan
 
-- **AC-1**：`grep -nE '脑暴.*完善需求.*想不清楚.*还没想好' Coder/00_System_Prompt/logic-protocol.md Coder/50_Extension_Ideation/ideation-engine.md HUMAN_GUIDE.md` — 三个文件都匹配，关键词顺序一致。
-- **AC-2**：`grep -n '## 3\.' Coder/architecture-overview.md` 下面紧接的内容为指针而非清单；`grep -n '^[0-9]\. ' Coder/architecture-overview.md` 无输出（§ 3 下无编号列表）。
-- **AC-3**：`grep -nE '^### [0-9]' Coder/20_Workflow_Lifecycle/mcv-deployment.md` 返回空。
-- **AC-4**：
-  - `grep -nE '^\s+(CHANGELOG\.md|BUG_LOG\.md)$' Coder/20_Workflow_Lifecycle/mcv-update.md` 无输出（目录示例热数据区已改为带前缀）；
-  - `grep -n '命名策略' Coder/20_Workflow_Lifecycle/mcv-update.md` 命中新增命名策略段。
-- 完整 diff `git diff` 确认仅涉及 6 个文件，无无关改动。
+- **E-1**：
+  - `bash -n scripts/setup.sh` 语法检查通过。
+  - `grep -nE 'OSTYPE|sed -i' scripts/setup.sh` 显示 `$OSTYPE` 分支结构存在且 sed 调用在分支内。
+- **E-2**：
+  - `grep -n 'Fallback' Coder/00_System_Prompt/logic-protocol.md` 命中。
+  - `grep -n '不得.*WebFetch' Coder/00_System_Prompt/logic-protocol.md` 命中，关键约束"不越权"明确落地。
+  - 通读 § 4.2，确认 fallback 规则与表格"存储位置"口径一致（命名前缀不变）。
+- `git diff --stat` 应显示仅 2 个文件变更。
 
 # Risks / Open Questions
 
-- **风险 1**：architecture-overview § 3 大幅重写（从 14 行缩成 3 行），可能让原有读者产生"内容丢失"的错觉。缓解：新版本明确指针"以 README § 读取顺序为准"，迁移链路清晰。
-- **风险 2**：AC-4 目录示例里 `INDEX.md` 不加前缀与其他带前缀的热数据视觉不一致。合理化：INDEX 是元数据文件（索引/地图），不参与 00-03 运行态文件序列，保持无前缀更能体现其"元"属性。这个决策应在 `mcv-update.md` 的命名策略段落里隐含体现（通过"00_ / 01_ / 02_ / 03_" 的枚举明示只有这四种带前缀）。
+- **风险 1**：本地无 Linux 真机，E-1 的 Linux 分支只能靠代码评审。缓解：`$OSTYPE == "darwin"*` 之外即走 GNU sed 标准语法（`sed -i "..."`），这是 GNU sed 通用用法，代码评审足以确认正确性。
+- **风险 2**：`$OSTYPE` 在极少数非标准 shell 环境（老版 POSIX sh）可能未定义。setup.sh shebang 是 `#!/usr/bin/env bash` 且全文依赖 `[[`、`|=` 等 bash 特性，因此 `$OSTYPE` 在本脚本执行环境中总是可用。
 - **开放问题**：无。

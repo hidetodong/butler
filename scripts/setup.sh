@@ -20,8 +20,12 @@ fi
 
 if [[ -n "$SHELL_RC" ]]; then
   if grep -q 'BUTLER_PATH' "$SHELL_RC" 2>/dev/null; then
-    # 更新已有的 BUTLER_PATH
-    sed -i '' "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
+    # 更新已有的 BUTLER_PATH（macOS/BSD 与 Linux sed -i 语法不同）
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sed -i '' "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
+    else
+      sed -i "s|export BUTLER_PATH=.*|export BUTLER_PATH=\"$BUTLER_DIR\"|" "$SHELL_RC"
+    fi
     echo "[更新] $SHELL_RC 中的 BUTLER_PATH 已更新"
   else
     echo "" >> "$SHELL_RC"
