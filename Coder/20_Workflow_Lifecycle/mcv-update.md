@@ -40,19 +40,20 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
   /archive/
     CHANGELOG_2025.md
     BUG_LOG_v1.md
-  CHANGELOG.md
+  01_CHANGELOG.md
   02_SESSION_HANDOFF.md
-  BUG_LOG.md
+  03_BUG_LOG.md
   INDEX.md
 ```
 
 说明：
 
 - `archive/` 用于存放冷数据归档。
-- `CHANGELOG.md` 只保留热数据：最近一段时间的关键记录 + 历史语义快照。
+- `01_CHANGELOG.md` 只保留热数据：最近一段时间的关键记录 + 历史语义快照。
 - `02_SESSION_HANDOFF.md` 继续保持单文件覆写，因为它是状态锚点，不是历史仓库。
-- `BUG_LOG.md` 只保留仍然活跃、尚未被规则吸收的问题。
+- `03_BUG_LOG.md` 只保留仍然活跃、尚未被规则吸收的问题。
 - `INDEX.md` 负责告诉 AI 旧数据在哪里，以及什么场景下才需要继续追溯。
+- 命名策略：热数据（`.ai/` 根下）统一保留数字前缀（`00_` / `01_` / `02_` / `03_`），与基地车部署命名一致；归档数据（`.ai/archive/` 下）按年份、版本或主题分片，命名可灵活处理，不强求前缀。
 
 本规则只定义协议，不要求在当前规则仓中预置这些运行态文件。
 

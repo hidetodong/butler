@@ -6,7 +6,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 # 基地车部署协议 (MCV Deployment)
 
-### 0. Butler 路径发现 (Path Discovery)
+## 0. Butler 路径发现 (Path Discovery)
 
 部署前 AI 必须先确定 butler 仓库的绝对路径。按以下优先级依次尝试，命中即停：
 
@@ -16,7 +16,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 确定路径后，将其记为 `$BUTLER` 供后续步骤引用。若路径无效（目录不存在或缺少 `Coder/README.md`），中止部署并报错。
 
-### 1. 落地前侦察 (Scouting)
+## 1. 落地前侦察 (Scouting)
 
 在创建任何目录前，AI 必须执行以下动作并简要汇报：
 
@@ -25,7 +25,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - 识别当前项目命中的 domain / stack profile。
 - **批判性任务：** 如果发现当前项目环境与已选中的 profile 冲突，必须在部署报告中指出；若未命中任何 profile，则仅按通用 SOP 落地。
 
-### 2. 基础设施展开 (Scaffold)
+## 2. 基础设施展开 (Scaffold)
 
 在项目根目录强制创建 `.ai/` 与 `deliveries/` 两类基础目录，并分别承担不同职责：
 
@@ -60,7 +60,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - 处理规则参考 `00_System_Prompt/logic-protocol.md` 的参考资料注入规则。
 - `references/` 目录不在部署时创建，而是在用户首次提供外部参考资料时按需创建。
 
-### 3. 规则注入 (Rule Injection)
+## 3. 规则注入 (Rule Injection)
 
 在目标项目根目录生成 `CLAUDE.md`（或目标 AI 工具对应的配置文件），内容由两部分组成：
 
@@ -69,7 +69,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 若目标项目已存在 `CLAUDE.md`，不得覆盖，应将规则卡追加到现有内容末尾，并用分隔线标记 butler 规则区块。
 
-### 4. 本地化适配 (Local Adaptation)
+## 4. 本地化适配 (Local Adaptation)
 
 - 生成 `.ai/local-constraints.md`。
 - **逻辑：** 不要复制通用规则，而是通过”指针”引用。例如：”本项目遵循通用需求开发 SOP，并启用 TypeScript profile；针对 `/legacy` 目录下的旧代码，允许局部放宽类型检查。”

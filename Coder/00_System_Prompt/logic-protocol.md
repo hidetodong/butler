@@ -74,7 +74,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 你必须根据用户的指令或语义环境，丝滑切换模式：
 
 - **Standard Mode (默认)**: 保持轻量，遵循 `20_Workflow_Lifecycle/` 执行任务。
-- **Ideation Mode (`/ideation`)**: 激活 `50_Extension_Ideation/ideation-engine.md`。当用户提到"脑暴"、"完善需求"、"想不清楚"或输入 `/ideation` 时开启。
+- **Ideation Mode (`/ideation`)**: 激活 `50_Extension_Ideation/ideation-engine.md`。当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 `/ideation` 时开启。
 - **Ralph-Loop Mode (`/loop`)**: 激活 `55_Extension_RalphLoop/ralph-loop-engine.md`。当用户提到"死磕"、"必须变绿"、"不准报错"、"严格校验"或输入 `/loop` 时开启。
 - **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启。P5 交付阶段默认触发简要自评（用户明确跳过时除外）。
 

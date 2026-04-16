@@ -1,115 +1,103 @@
 # Goal
 
-- 按 AC-1 方案 A、AC-4 方案 A 与其余 5 条 Must Fix，对 butler 规则仓库执行最小范围、最高一致性的文本修复。
+- 按 AC-1 / AC-2 方案 A / AC-3 / AC-4 方案 α，对 Bucket A 的 4 条 Should Fix 执行最小范围修复。
 
 # Files / Modules to Change
 
-| # | 文件 | 涉及 AC | 修改点数 |
+| # | 文件 | 涉及 AC | 改动点 |
 |---|---|---|---|
-| 1 | `Coder/50_Extension_Ideation/ideation-engine.md` | AC-1 | 1 |
-| 2 | `Coder/00_System_Prompt/identity.md` | AC-2 | 1（补 frontmatter） |
-| 3 | `Coder/00_System_Prompt/logic-protocol.md` | AC-2 + AC-4 | 2 |
-| 4 | `Coder/README.md` | AC-3 + AC-4 | 1（列表编号 + 顺便改 SESSION_HANDOFF） |
-| 5 | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` | AC-5 | 1 |
-| 6 | `Coder/20_Workflow_Lifecycle/maintenance-boundaries.md` | AC-4 + AC-6 + AC-7 | 2（CHANGELOG + BUG_LOG 两行，顺便 SESSION_HANDOFF） |
-| 7 | `Coder/20_Workflow_Lifecycle/lifecycle.md` | AC-4 | 2 |
-| 8 | `Coder/20_Workflow_Lifecycle/mcv-update.md` | AC-4 | 3（目录结构、§ 5.2、§ 7） |
-| 9 | `Coder/20_Workflow_Lifecycle/verify-schema.md` | AC-4 | 1 |
-| 10 | `Coder/20_Workflow_Lifecycle/delivery-summary.md` | AC-4 | 1 |
-| 11 | `Coder/20_Workflow_Lifecycle/progressive-handoff.md` | AC-4 | 3 |
-| 12 | `Coder/40_Context_Management/handoff-spec.md` | AC-4 | 4（frontmatter + H1 + 两处正文） |
-| 13 | `Coder/40_Context_Management/context-persistence.md` | AC-4 | 5 |
-| 14 | `Coder/40_Context_Management/mode-switch.md` | AC-4 | 1 |
-| 15 | `HUMAN_GUIDE.md` | AC-4 | 2 |
+| 1 | `Coder/00_System_Prompt/logic-protocol.md` | AC-1 | 1 |
+| 2 | `HUMAN_GUIDE.md` | AC-1 | 1 |
+| 3 | `Coder/README.md` | AC-2 | 2（10 profile 行 + 40 激活段落） |
+| 4 | `Coder/architecture-overview.md` | AC-2 | 1（§ 3 整段重写为指针） |
+| 5 | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` | AC-3 | 5（标题层级） |
+| 6 | `Coder/20_Workflow_Lifecycle/mcv-update.md` | AC-4 | 5（目录示例 × 2 + 说明 × 2 + 新增命名策略段） |
 
-共 15 个文件，约 30 处 edit。
+共 6 个文件，约 15 处 edit。
 
 # Interface / Contract
 
-本次修复**不引入新字段、新文件、新目录**。涉及的"契约"变更仅限文件名统一：
-
-- **命名契约**：`SESSION_HANDOFF.md` → `02_SESSION_HANDOFF.md` 作为规范唯一文件名。
-- **概念名保留策略**：在表格列名、小节标题、概念枚举中（如 `mcv-update.md § 5.2` 标题），`SESSION_HANDOFF` 作为简写概念名保留，**不**加 `02_` 前缀；只有涉及具体文件路径（带 `.md` 后缀）的引用才统一带前缀。
+- 引入一条**新规则**（非契约变更，仅显式化隐式约定）：热数据命名策略 — `.ai/` 根下的运行态文件统一带数字前缀；`.ai/archive/` 下的归档文件不强求前缀。
+- 其余全是表述对齐，无契约变化。
 
 # State / Boundary
 
-- **修改范围限于规则文本**，不涉及 `scripts/setup.sh`、`templates/`（两个模板目前已用 `02_` 前缀，AC-4 无额外修改）。
-- **不涉及 `.claude/worktrees/` 下的历史快照**（由 git ignore 机制管理，非本轮工作对象）。
-- **不修改 `.ai/CONCEPT.md` 和 `.ai/AC_LIST.md`**（仅作产物链锚点，保留原貌）。
+- 修改仅限 6 个规则文本文件，不动 `scripts/`、`templates/`、`Coder/30_Quality_Gate/`、`Coder/10_Domain_Stack_Profiles/`、Extension 目录等。
 
 # Design Decisions
 
-1. **AC-1 方案 A**：在 `ideation-engine.md § 4` 增加一条"收敛后必须同步结晶 `.ai/CONCEPT.md`"，保持 `lifecycle.md` 的 P2 单入口约定不变。
-2. **AC-4 方案 A**：统一 `02_SESSION_HANDOFF.md`，与基地车其他运行态文件（`00/01/03`）命名风格一致。
-3. **AC-5**：将 `mcv-deployment.md § 2` 的"**运行态文件**（部署时初始化，随会话更新）"改为"**运行态文件**（按需产生，随会话更新）"，并在 § 2 开头明确"部署时仅创建 `.ai/` 与 `deliveries/` 目录，文件按任务推进或触发条件按需产生"。**同时删除** `00_IDEATION.md` 条目中"仅在 /ideation 模式激活后产生"的重复说明（改为与其他按需文件统一口径，仅说明用途）。
-4. **AC-6、AC-7**：只在 `maintenance-boundaries.md` 第一个表格补充触发条目，不动其他段落。
+1. **AC-1 SSOT**：`ideation-engine.md` 作为触发词权威源（无需改动），其他两处同步到 4 个词：脑暴 / 完善需求 / 想不清楚 / 还没想好。
+2. **AC-2 方案 A**：README 做 SSOT。architecture-overview § 3 完全简化为指针 + 极简概念说明，"40_Context_Management 激活时机"段落的完整语义迁移到 README（吸收 "checkpoint / handoff" 这个 README 原版缺失的关键词）。
+3. **AC-3**：5 个 `### N.` 章节全部升为 `## N.`，不引入其他层级调整。
+4. **AC-4 方案 α**：热数据区 `CHANGELOG.md` / `BUG_LOG.md` → `01_CHANGELOG.md` / `03_BUG_LOG.md`；`INDEX.md` 保留无前缀（它不在 0/1/2/3 序列里，是索引元文件）；归档示例 `CHANGELOG_2025.md` / `BUG_LOG_v1.md` 保留不变；在 § 3 结尾追加命名策略说明段。
 
 # Execution Steps
 
-按依赖顺序执行，避免中间态：
+全部 15 个 edit 按文件分组，单次消息并发执行（不同文件之间无依赖，同文件 edit 使用精确 old_string 区分）。
 
-## Phase 1 — 无依赖的原子修复（并行 6 个 Edit）
+## AC-1 同步触发词（2 edits）
 
-- Step 1: `identity.md` 补 frontmatter（AC-2）
-- Step 2: `logic-protocol.md` 补 frontmatter（AC-2）
-- Step 3: `ideation-engine.md § 4` 追加 CONCEPT.md 结晶规则（AC-1）
-- Step 4: `mcv-deployment.md § 2` 修正 00_IDEATION.md 时机矛盾（AC-5）
-- Step 5: `maintenance-boundaries.md` 表格 CHANGELOG / BUG_LOG 行补充触发（AC-6、AC-7）
-- Step 6: `Coder/README.md` 列表编号修复（AC-3）
+- **`logic-protocol.md:77`**
+  old: `当用户提到"脑暴"、"完善需求"、"想不清楚"或输入 \`/ideation\` 时开启。`
+  new: `当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 \`/ideation\` 时开启。`
 
-## Phase 2 — SESSION_HANDOFF 批量重命名（AC-4）
+- **`HUMAN_GUIDE.md:114`**
+  old: `| **Ideation** | \`/ideation\` 或 "脑暴"、"想不清楚" | 需求脑暴与完善 |`
+  new: `| **Ideation** | \`/ideation\` 或 "脑暴"、"完善需求"、"想不清楚"、"还没想好" | 需求脑暴与完善 |`
 
-按文件逐一 Edit。总计涉及 13 个文件，每处只改"带 `.md` 后缀的文件路径引用"。改动点逐一列出：
+## AC-2 确立 README 为 SSOT（2 edits）
 
-| 文件 | 行号 | 原文片段 | 新文本片段 |
-|---|---|---|---|
-| `HUMAN_GUIDE.md` | 148 | `SESSION_HANDOFF.md` | `02_SESSION_HANDOFF.md` |
-| `HUMAN_GUIDE.md` | 151 | `请生成 SESSION_HANDOFF.md` | `请生成 02_SESSION_HANDOFF.md` |
-| `Coder/README.md` | 110 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `Coder/00_System_Prompt/logic-protocol.md` | 19 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `lifecycle.md` | 149 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `lifecycle.md` | 165 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `maintenance-boundaries.md` | 19 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `mcv-update.md` | 44（目录结构）| `SESSION_HANDOFF.md` | `02_SESSION_HANDOFF.md` |
-| `mcv-update.md` | 53 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `mcv-update.md` | 165 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `verify-schema.md` | 58 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `delivery-summary.md` | 89 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `progressive-handoff.md` | 13 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `progressive-handoff.md` | 37 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `progressive-handoff.md` | 58 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `handoff-spec.md` | 4（frontmatter）| `SESSION_HANDOFF.md` 的唯一结构定义与字段约束 | `02_SESSION_HANDOFF.md` 的唯一结构定义与字段约束 |
-| `handoff-spec.md` | 7（H1）| `# SESSION_HANDOFF.md 格式契约` | `# 02_SESSION_HANDOFF.md 格式契约` |
-| `handoff-spec.md` | 9 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `handoff-spec.md` | 13 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `context-persistence.md` | 17 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `context-persistence.md` | 105 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `context-persistence.md` | 115 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `context-persistence.md` | 116 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `context-persistence.md` | 122 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
-| `mode-switch.md` | 70 | `` `SESSION_HANDOFF.md` `` | `` `02_SESSION_HANDOFF.md` `` |
+- **`Coder/README.md` L98**（`## 读取顺序` 第 7 项）：在"与当前项目类型匹配的规则文档"后补"需先在 P1 Analysis 识别项目类型与技术栈后再启用"。
+- **`Coder/README.md` L100** 段落：原"40 激活时机"升级为吸收 `checkpoint / handoff` 关键词的完整版。
+- **`Coder/architecture-overview.md § 3`** 整段替换为：
+  ```
+  ## 3. 启用顺序
 
-**保留简写的位置（不改）**：
-- `maintenance-boundaries.md:16` 表格列名 `**SESSION_HANDOFF**`
-- `mcv-update.md:18` "如何区分 `CHANGELOG`、`BUG_LOG`、`SESSION_HANDOFF` 的迁移方式"（概念枚举）
-- `mcv-update.md:115` `### 5.2 SESSION_HANDOFF`（小节标题）
-- `mcv-update.md:117` "`SESSION_HANDOFF` 永远不应演化为长历史日志"（概念代词）
+  具体读取顺序以 `README.md § 读取顺序` 为准。本文件仅负责说明三层分工的职责边界与 profile 条件生效的语义，不重复列出顺序清单，避免多处漂移。
+  ```
 
-这些位置在语义上指代**概念名**而非**文件路径**，保留简写更易读。
+## AC-3 mcv-deployment.md 标题层级（5 edits）
+
+5 个独立 Edit：
+- `### 0. Butler 路径发现 (Path Discovery)` → `## 0. Butler 路径发现 (Path Discovery)`
+- `### 1. 落地前侦察 (Scouting)` → `## 1. 落地前侦察 (Scouting)`
+- `### 2. 基础设施展开 (Scaffold)` → `## 2. 基础设施展开 (Scaffold)`
+- `### 3. 规则注入 (Rule Injection)` → `## 3. 规则注入 (Rule Injection)`
+- `### 4. 本地化适配 (Local Adaptation)` → `## 4. 本地化适配 (Local Adaptation)`
+
+## AC-4 mcv-update.md 修复（5 edits）
+
+- **L43**：目录示例 `  CHANGELOG.md` → `  01_CHANGELOG.md`
+- **L45**：目录示例 `  BUG_LOG.md` → `  03_BUG_LOG.md`
+- **L52**：说明 `` - `CHANGELOG.md` 只保留热数据 `` → `` - `01_CHANGELOG.md` 只保留热数据 ``
+- **L54**：说明 `` - `BUG_LOG.md` 只保留仍然活跃 `` → `` - `03_BUG_LOG.md` 只保留仍然活跃 ``
+- **§ 3 末尾追加命名策略段**：
+  ```
+  - 命名策略：热数据（`.ai/` 根下）统一保留数字前缀（`00_` / `01_` / `02_` / `03_`），与基地车部署命名一致；归档数据（`.ai/archive/` 下）按年份、版本或主题分片，命名可灵活处理，不强求前缀。
+  ```
+
+**保留简写位置**（不改）：
+- `mcv-update.md:18` `` `CHANGELOG`、`BUG_LOG`、`SESSION_HANDOFF` `` — 概念枚举
+- `mcv-update.md:100` `### 5.1 CHANGELOG` — 小节标题
+- `mcv-update.md:102/144/153` `` `CHANGELOG` `` — 概念代词
+- `mcv-update.md:132` `### 5.3 BUG_LOG` — 小节标题
+- `mcv-update.md:134/144/154/178` `` `BUG_LOG` `` — 概念代词
+
+**保留归档示例**（不改）：
+- `mcv-update.md:41-42` `CHANGELOG_2025.md` / `BUG_LOG_v1.md` — 归档文件（按方案 α，不强求前缀）
 
 # Verification Plan
 
-- **AC-1**：通读 `ideation-engine.md § 4`，语义闭合，且在 `acceptance-schema.md § 6` 和 `lifecycle.md P2` 不需要任何补丁即可与之自洽。
-- **AC-2**：`grep -l '^---$' Coder/00_System_Prompt/*.md` 返回两个文件。
-- **AC-3**：`grep -E '^[0-9]+ -' Coder/README.md` 无输出（不再有 `95 - / 96 -` 这类行）。
-- **AC-4**：`grep -rn 'SESSION_HANDOFF\.md' Coder/ HUMAN_GUIDE.md` 所有命中行都是 `02_SESSION_HANDOFF.md`（带前缀）；不带前缀的 `SESSION_HANDOFF.md` 零命中。
-- **AC-5**：通读 `mcv-deployment.md § 2` 开头与 `00_IDEATION.md` 条目描述，"部署时初始化"与"仅在 /ideation 激活后产生"的表面矛盾被消除。
-- **AC-6**：`grep -n 'Ralph-Loop 熔断' Coder/20_Workflow_Lifecycle/maintenance-boundaries.md` 命中 BUG_LOG 行。
-- **AC-7**：`grep -n 'Review' Coder/20_Workflow_Lifecycle/maintenance-boundaries.md` 命中 CHANGELOG 行。
+- **AC-1**：`grep -nE '脑暴.*完善需求.*想不清楚.*还没想好' Coder/00_System_Prompt/logic-protocol.md Coder/50_Extension_Ideation/ideation-engine.md HUMAN_GUIDE.md` — 三个文件都匹配，关键词顺序一致。
+- **AC-2**：`grep -n '## 3\.' Coder/architecture-overview.md` 下面紧接的内容为指针而非清单；`grep -n '^[0-9]\. ' Coder/architecture-overview.md` 无输出（§ 3 下无编号列表）。
+- **AC-3**：`grep -nE '^### [0-9]' Coder/20_Workflow_Lifecycle/mcv-deployment.md` 返回空。
+- **AC-4**：
+  - `grep -nE '^\s+(CHANGELOG\.md|BUG_LOG\.md)$' Coder/20_Workflow_Lifecycle/mcv-update.md` 无输出（目录示例热数据区已改为带前缀）；
+  - `grep -n '命名策略' Coder/20_Workflow_Lifecycle/mcv-update.md` 命中新增命名策略段。
+- 完整 diff `git diff` 确认仅涉及 6 个文件，无无关改动。
 
 # Risks / Open Questions
 
-- **风险 1**：批量 SESSION_HANDOFF 改名可能漏掉某处非标准引用。**缓解**：P5 用 grep 全仓扫描验证。
-- **风险 2**：`handoff-spec.md` H1 标题 `# 02_SESSION_HANDOFF.md 格式契约` 带数字前缀读起来略怪。**缓解**：可接受，为了命名一致性牺牲一点标题美观度；若后续觉得突兀，可把 H1 改为 `# 交接文件格式契约`（更抽象），单独作为 Nice to Have 处理，不在本轮范围。
-- **风险 3**：`.ai/CONCEPT.md` 和 `.ai/AC_LIST.md` 本身包含 `SESSION_HANDOFF` 字样，不改动（产物锚点原貌保留），grep 验证时需要排除 `.ai/`。
+- **风险 1**：architecture-overview § 3 大幅重写（从 14 行缩成 3 行），可能让原有读者产生"内容丢失"的错觉。缓解：新版本明确指针"以 README § 读取顺序为准"，迁移链路清晰。
+- **风险 2**：AC-4 目录示例里 `INDEX.md` 不加前缀与其他带前缀的热数据视觉不一致。合理化：INDEX 是元数据文件（索引/地图），不参与 00-03 运行态文件序列，保持无前缀更能体现其"元"属性。这个决策应在 `mcv-update.md` 的命名策略段落里隐含体现（通过"00_ / 01_ / 02_ / 03_" 的枚举明示只有这四种带前缀）。
 - **开放问题**：无。

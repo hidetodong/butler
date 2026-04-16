@@ -64,18 +64,7 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 
 ## 3. 启用顺序
 
-默认顺序如下：
-
-1. 先读取 `00_System_Prompt/`，建立协作身份与总调度协议。
-2. 再读取 `20_Workflow_Lifecycle/` 与 `30_Quality_Gate/`，建立通用 SOP 与验证口径。
-3. 长任务、多阶段任务或跨会话任务，再补充 `40_Context_Management/`。
-4. 检查 `99_Business_Extension/` 是否存在业务文档；如存在，视为最高优先级业务约束。
-5. 在 P1 Analysis 识别当前项目类型、技术栈与工程形态。
-6. 只有在命中时，才补充读取 `10_Domain_Stack_Profiles/` 中对应 profile。
-
-`40_Context_Management/` 的激活不是要求 AI 预知未来，而是要求 AI 识别高概率长链路信号。若任务一开始就满足以下任一条件，应立即激活：新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、明确需要等待用户 ACK 或外部结果。
-
-若开始时未命中，但执行过程中发现任务会持续积累中间状态，且这些状态无法仅靠最终代码恢复，也应在进入下一阶段前补激活。
+具体读取顺序以 `README.md § 读取顺序` 为准。本文件仅负责说明三层分工的职责边界与 profile 条件生效的语义，不重复列出顺序清单，避免多处漂移。
 
 ## 4. 生效规则
 
