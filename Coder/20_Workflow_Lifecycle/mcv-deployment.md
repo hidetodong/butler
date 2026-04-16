@@ -62,12 +62,15 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 3. 规则注入 (Rule Injection)
 
-在目标项目根目录生成 `CLAUDE.md`（或目标 AI 工具对应的配置文件），内容由两部分组成：
+在目标项目根目录生成 `CLAUDE.md`（或目标 AI 工具对应的配置文件）。流程：
 
-1. **内联规则卡**：从 butler 仓库的 `templates/rule-card.md` 读取浓缩规则，直接写入文件正文。内联而非引用，确保 AI 在高注意力区域读到核心约束。
-2. **完整规则指针**：附上 butler 仓库的绝对路径，列出深度阅读的文件清单（identity.md、logic-protocol.md、lifecycle.md 等）。路径在部署时由 AI 根据实际环境自动填入，不使用占位符。
+1. 读取模板骨架 `templates/CLAUDE.md.template`。
+2. 用 `templates/rule-card.md` 中 `## 角色` 起的章节内容替换 `{{RULE_CARD_CONTENT}}` 占位符（不包含 rule-card.md 的 H1 与顶部引述）；这是浓缩规则卡的内联，确保 AI 在高注意力区域读到核心约束。
+3. 用 butler 仓库的绝对路径替换 `{{BUTLER_PATH}}` 占位符，让深度阅读指针指向真实路径。
+4. 在"项目特定约束"段填入侦察结果（识别到的技术栈、project 类型、特殊约束等）。
+5. 写入目标项目根目录 `CLAUDE.md`。
 
-若目标项目已存在 `CLAUDE.md`，不得覆盖，应将规则卡追加到现有内容末尾，并用分隔线标记 butler 规则区块。
+若目标项目已存在 `CLAUDE.md`，不得覆盖，应将以上生成的内容追加到现有内容末尾，并用分隔线标记 butler 规则区块。
 
 ## 4. 本地化适配 (Local Adaptation)
 
