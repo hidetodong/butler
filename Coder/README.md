@@ -8,53 +8,82 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 `Coder/` 是 butler 体系中的工程开发与 AI 协作子系统入口。
 
-它承载当前这套通用规则体系，用于沉淀：
+它承载一套**通用需求开发 SOP**，并允许在识别到具体项目类型后，按需叠加对应领域的执行规则。
 
-- 系统提示
-- 工程规范
-- 验收导向流程
-- 质量门禁
-- 上下文治理
-- 业务扩展插槽
+其中：
 
-当其他应用或文件需要直接引用开发协作子系统时，应以 `Coder/README.md` 作为入口。
+- SOP Core 负责通用流程、质量门禁与上下文治理。
+- Domain / Stack Profiles 负责特定技术栈或工程形态下的执行细则。
+- Business Extension 负责业务侧最高优先级语义约束。
+
+当其他应用或文件需要直接引用开发协作子系统时，应以 `Coder/README.md` 作为主入口。
+
+`architecture-overview.md` 是入口补充说明文档，用于解释规则分层与启用关系；它位于 `Coder/` 根目录，不属于 `99_Business_Extension/`。
+
+## 入口文档
+
+- `README.md`：Coder 子系统主入口。
+- `architecture-overview.md`：规则分层与启用关系的补充说明，不属于 Business Extension。
 
 ## 目录结构
 
 ```txt
 /Coder
   README.md
+  architecture-overview.md
 
   /00_System_Prompt
     identity.md
     logic-protocol.md
 
-  /10_Engineering_Standard
+  /10_Domain_Stack_Profiles
     vue3-standard.md
     typescript-rules.md
     build-tooling.md
 
   /20_Workflow_Lifecycle
     lifecycle.md
+    concept-schema.md
     acceptance-schema.md
+    tech-plan-schema.md
+    verify-schema.md
+    delivery-summary.md
     progressive-handoff.md
     mcv-deployment.md
     mcv-update.md
     maintenance-boundaries.md
-
   /30_Quality_Gate
     linting.md
     testing-strategy.md
+    review-standard.md
 
   /40_Context_Management
-    state-tracking.md
-    checkpoint.md
+    context-persistence.md
     mode-switch.md
     handoff-spec.md
+
+  /50_Extension_Ideation
+    ideation-engine.md
+
+  /55_Extension_RalphLoop
+    ralph-loop-engine.md
+
+  /60_Extension_CodeReview
+    review-engine.md
 
   /99_Business_Extension
     .gitkeep
 ```
+
+规则目录说明：
+
+- `00_System_Prompt/`：协作身份与总调度协议。
+- `20_Workflow_Lifecycle/`：通用需求开发 SOP 的阶段状态机、阶段交付约束与人类可读交付总结规范。
+- `30_Quality_Gate/`：通用质量门禁与验证策略。
+- `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
+- `50_Extension_Ideation/`：仅在显式 `/ideation` 指令下启用的独立脑暴扩展模块。
+- `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
+- `99_Business_Extension/`：业务侧最高优先级约束目录。
 
 ## 读取顺序
 
@@ -62,24 +91,33 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 1. `00_System_Prompt/identity.md`
 2. `00_System_Prompt/logic-protocol.md`
-3. `10_Engineering_Standard/`
-4. `20_Workflow_Lifecycle/`
-5. `30_Quality_Gate/`
-6. `40_Context_Management/`（长任务、多阶段任务、上下文压缩前重点读取）
-7. `99_Business_Extension/*.md`（如存在）
+3. `20_Workflow_Lifecycle/`
+4. `30_Quality_Gate/`
+5. `40_Context_Management/`（长任务、多阶段任务、上下文压缩前重点读取）
+6. `99_Business_Extension/*.md`（如存在，视为最高优先级业务约束）
+7. `10_Domain_Stack_Profiles/` 中与当前项目类型匹配的规则文档
+
+`40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入、跨会话继续、多阶段推进、需要等待用户 ACK / 外部结果，或预计无法单轮闭合时，应立即激活。
 
 其中：
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
-- `40_Context_Management/handoff-spec.md` 负责 `SESSION_HANDOFF.md` 的高密度结构约束。
+- `55_Extension_RalphLoop/ralph-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，负责 P4 的自主纠错闭环与熔断规则。
+- `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。
+- `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范。
+- `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
+- `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
+- `60_Extension_CodeReview/review-engine.md` 在显式 `/review` 指令下执行完整审计，在 P5 交付阶段默认触发简要自评。
+- `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 
 ## 使用原则
 
-- 默认按通用工程规范执行。
+- 默认按通用需求开发 SOP 执行。
 - 若 `99_Business_Extension/` 下存在业务文档，则将其视为最高优先级业务约束。
-- 所有非极小任务默认遵循 `Plan -> Acceptance -> Design -> Execute -> Verify` 流程。
-- `20_Workflow_Lifecycle/` 负责流程推进、交付节奏与基地车部署约束。
+- 所有非极小任务默认遵循 `P1 Analysis -> P2 Acceptance -> P3 Design -> P4 Execute -> P5 Verify` 流程。
+- `20_Workflow_Lifecycle/` 负责流程推进、交付节奏、基地车部署约束，以及完整交付后的人类可读总结规则。
 - `40_Context_Management/` 负责长上下文、状态同步、阶段快照、交接规范与模式切换治理。
+- `10_Domain_Stack_Profiles/` 中的规则仅在当前项目类型命中后作为执行 profile 生效。
 - 质量校验必须可验证、可追踪、可回溯到验收项。

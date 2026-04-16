@@ -10,7 +10,7 @@ scope: 长链路任务的拆分、接力时机与交接要求
 
 长链路任务不能只依赖单轮对话持续推进，而应通过可交接、可续接、可验证的方式逐步完成。
 
-本规则定义任务拆分、阶段接力与 handoff 触发要求，不负责 `SESSION_HANDOFF.md` 的具体文件结构。
+本规则定义任务拆分、阶段接力与 handoff 触发要求，不负责 `02_SESSION_HANDOFF.md` 的具体文件结构。
 
 ## 2. 任务原子化
 
@@ -28,19 +28,21 @@ scope: 长链路任务的拆分、接力时机与交接要求
 以下情况应执行 handoff：
 
 - 一个子任务完成后
+- 需要等待用户 ACK、外部结果或后续回合
 - 上下文即将被压缩前
 - 会话准备结束但任务尚未整体完成
 - 执行者、模式或工作入口将切换时
+- 任务无法单轮闭合且已有中间状态需要保留时
 
-发生 handoff 时，应输出一个可续接的最小交接摘要；若需要落盘为 `SESSION_HANDOFF.md`，其字段与结构以 `40_Context_Management/handoff-spec.md` 为准。
+发生 handoff 时，应输出一个可续接的最小交接摘要；若需要落盘为 `02_SESSION_HANDOFF.md`，其字段与结构以 `40_Context_Management/handoff-spec.md` 为准。
 
-## 4. 交付要求
+## 4. 记录原则
 
 - 禁止只写代码不沉淀关键结论。
 - 若代码已经改变了结构、契约或边界，相关文档必须同步。
 - 对长任务而言，文档不是附属品，而是跨上下文继续执行的锚点。
 
-## 6. 交付要求
+## 5. 子任务交付标准
 
 每个子任务交付后，都应满足：
 
@@ -49,9 +51,8 @@ scope: 长链路任务的拆分、接力时机与交接要求
 - 验证动作可回溯
 - 风险暴露而非隐藏
 
-## 5. 与其他规则的关系
+## 6. 与其他规则的关系
 
 - 本规则关注“长链路任务何时拆分、何时接力”。
-- `40_Context_Management/checkpoint.md` 负责“阶段结论快照”。
-- `40_Context_Management/state-tracking.md` 负责“运行时状态同步”。
-- `40_Context_Management/handoff-spec.md` 负责 `SESSION_HANDOFF.md` 的文件结构。
+- `40_Context_Management/context-persistence.md` 负责”状态外化、阶段结晶与冷启动蒸馏”。
+- `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的文件结构。

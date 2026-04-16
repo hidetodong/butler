@@ -49,7 +49,7 @@ scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
 - 检查实现是否满足 AC
 - 核对验证动作与验证结果
 - 汇总剩余风险、例外与未覆盖点
-- 形成 checkpoint 或 handoff summary
+- 形成阶段结晶或 handoff summary
 
 限制：
 
@@ -66,7 +66,8 @@ scope: Architect / Coder / Reviewer 模式职责、限制与阶段映射
 ## 4. 协作规则
 
 - 不同模式应共享同一份已确认约束，而不是共享冗长对话历史。
-- 模式切换前，应同步状态文件或 checkpoint。
+- 若任务已命中 `40_Context_Management/` 的激活条件，则模式切换前应按 `context-persistence.md` 同步状态文件或执行阶段结晶。
+- 若本次切换会导致跨会话继续或执行入口切换，应补充 handoff summary；若需要落盘，则写入 `02_SESSION_HANDOFF.md`。
 - 若采用多 Agent / 多实例协作，应按模式分工，而不是让所有实例同时承担全链路职责。
 
 ## 5. 使用原则

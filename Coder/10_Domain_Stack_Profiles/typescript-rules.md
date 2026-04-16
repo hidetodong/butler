@@ -1,26 +1,31 @@
 ---
-title: TypeScript 建模规则
+title: TypeScript 执行 Profile
 audience: AI / 开发者
-scope: TypeScript 类型建模顺序、分层建议与边界表达原则
+scope: TypeScript 项目中的类型建模顺序、分层建议与边界表达原则；仅在命中 TypeScript 技术栈时启用
 ---
 
-# TypeScript Rules
+# TypeScript Profile
 
-## 1. 类型建模优先级
+## 1. 适用条件
+
+- 仅在当前项目明确使用 TypeScript 时启用。
+- 未命中 TypeScript 技术栈时，不应将本文件内容视为默认通用约束。
+
+## 2. 类型建模优先级
 
 1. 先定义领域模型。
 2. 再定义接口 DTO。
 3. 再定义视图态类型。
 4. 最后才是临时局部类型。
 
-## 2. 核心约束
+## 3. 核心约束
 
 - 核心模型禁止使用 `any`。
 - 函数参数与返回值需显式可推导。
 - 联合类型优于魔法字符串散落。
 - 优先使用字面量联合与 `as const` 表达有限集合。
 
-## 3. 分层建议
+## 4. 分层建议
 
 - `types/`：通用类型
 - `domain/`：领域模型与规则
@@ -28,7 +33,7 @@ scope: TypeScript 类型建模顺序、分层建议与边界表达原则
 - `components/`：展示或轻交互组件
 - `composables/`：组合式逻辑
 
-## 4. 建模原则
+## 5. 建模原则
 
 - 把稳定结构放进领域模型，而不是临时对象里。
 - DTO 不直接等同于领域对象。

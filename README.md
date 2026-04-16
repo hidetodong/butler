@@ -23,11 +23,21 @@
 ```txt
 /butler
   README.md
+  CLAUDE.md
+  HUMAN_GUIDE.md
+
+  /scripts
+    setup.sh
+
+  /templates
+    CLAUDE.md.template
+    rule-card.md
 
   /Coder
     README.md
+    architecture-overview.md
     /00_System_Prompt
-    /10_Engineering_Standard
+    /10_Domain_Stack_Profiles
     /20_Workflow_Lifecycle
     /30_Quality_Gate
     /40_Context_Management
@@ -45,3 +55,9 @@
 - 当目标是软件工程、编码协作、规则执行时，从 `Coder/` 进入。
 - 当目标是学习计划、知识沉淀、学习事务管理时，从 `Learner/` 进入。
 - 当目标属于其他生活/事务性杂项时，从 `Composer/` 进入。
+
+## 快速上手
+
+1. **一次性安装**：`./scripts/setup.sh` — 写入全局配置，之后所有项目自动发现 butler
+2. **接入新项目**：直接给任务 — AI 自动从入口读取规则，检测到新项目后自动部署基地车
+3. **详细说明**：阅读 `HUMAN_GUIDE.md`

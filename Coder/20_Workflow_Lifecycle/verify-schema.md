@@ -1,0 +1,59 @@
+---
+title: 验证报告模板
+audience: AI / 开发者
+scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
+---
+
+# Verify Schema
+
+## 1. 目标
+
+用于在交付前明确说明：哪些 AC 已满足、如何验证、还剩哪些风险。
+
+## 2. 交付约定
+
+- 必须产出：`.ai/VERIFY_REPORT.md`
+- 必填字段：`Verification Summary`、`AC Status`、`Verification Results`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
+
+## 3. 标准模板
+
+```md
+# Verification Summary
+- 本次验证覆盖范围
+- 总体验收结论
+
+# AC Status
+- [x] AC1: 已满足 / 未满足
+- [x] AC2: 已满足 / 未满足
+- [ ] AC3: 未满足原因
+
+# Verification Results
+- AC1: 使用了什么验证方式，结果如何
+- AC2: 使用了什么验证方式，结果如何
+- AC3: 为什么尚未关闭
+
+# Gate Coverage
+- 通用质量门禁：已验证项
+- Active Profiles：已验证项
+
+# Remaining Risks
+- 当前未关闭风险
+- 尚未覆盖的边界情况
+
+# Handoff / Next Step
+- 若任务未完全闭合，下一步从哪里继续
+```
+
+## 4. 编写规则
+
+- 必须按 AC 回填，不得只给笼统结论。
+- 验证方式应尽量具体到命令、检查动作或人工确认口径。
+- 若存在 active profiles，应区分“通用质量门禁”与“profile 验证依据”。
+- 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
+
+## 5. 与执行流程的关系
+
+- P5 阶段必须产出 `.ai/VERIFY_REPORT.md`，按 `.ai/AC_LIST.md` 逐项回填验证结果。
+- 若任务已闭合，可作为最终交付摘要的一部分。
+- 若任务未闭合，可继续衔接 checkpoint 或 `02_SESSION_HANDOFF.md`。
+- 简化路径下可简要验证，不强制产出此文件。

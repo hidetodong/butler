@@ -41,7 +41,7 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
     CHANGELOG_2025.md
     BUG_LOG_v1.md
   CHANGELOG.md
-  SESSION_HANDOFF.md
+  02_SESSION_HANDOFF.md
   BUG_LOG.md
   INDEX.md
 ```
@@ -50,7 +50,7 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 
 - `archive/` 用于存放冷数据归档。
 - `CHANGELOG.md` 只保留热数据：最近一段时间的关键记录 + 历史语义快照。
-- `SESSION_HANDOFF.md` 继续保持单文件覆写，因为它是状态锚点，不是历史仓库。
+- `02_SESSION_HANDOFF.md` 继续保持单文件覆写，因为它是状态锚点，不是历史仓库。
 - `BUG_LOG.md` 只保留仍然活跃、尚未被规则吸收的问题。
 - `INDEX.md` 负责告诉 AI 旧数据在哪里，以及什么场景下才需要继续追溯。
 
@@ -148,7 +148,7 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 当未来需要直接触发升级时，可对 AI 使用如下统一指令：
 
 > 检测到 `.ai/` 维护文件体积过大。启动“基地要塞”升级协议：
-> 
+>
 > 1. 创建 `/archive` 目录。
 > 2. 将半年前的 `CHANGELOG` 压缩为“决策快照”保留在原文件头部，原始数据移入归档。
 > 3. 清理已解决并已规则化的 `BUG_LOG`。
@@ -162,7 +162,8 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 
 - **首次部署：** 继续由 `mcv-deployment.md` 定义。
 - **写入频率与批处理策略：** 继续由 `maintenance-boundaries.md` 定义。
-- **`SESSION_HANDOFF.md` 的结构规范：** 继续由 `40_Context_Management/handoff-spec.md` 定义。
+- **`02_SESSION_HANDOFF.md` 的结构规范：** 继续由 `40_Context_Management/handoff-spec.md` 定义。
+- **`deliveries/` 下的人类交付总结：** 不属于 `.ai` 升级体系，继续由 `delivery-summary.md` 与交付收尾规则约束。
 
 因此：
 
