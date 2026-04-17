@@ -76,3 +76,45 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 - 生成 `.ai/local-constraints.md`，字段定义与最小模板参考 `local-constraints-schema.md`。
 - **逻辑：** 不要复制通用规则，而是通过”指针”引用。例如：”本项目遵循通用需求开发 SOP，并启用 TypeScript profile；针对 `/legacy` 目录下的旧代码，允许局部放宽类型检查。”
+
+## 5. Hook 注入 (Hook Injection)
+
+把 butler 的 PreToolUse hook 体系部署到目标项目的 `.claude/`。Hook 提供机制化的流程约束——源码路径写操作在 P1/P2/P3 产物缺失时被拦截、`99_Business_Extension/` 写操作被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+
+### 5.1 文件拷贝
+
+将 `$BUTLER/templates/hooks/` 除 `tests/` 子目录外的内容全部拷贝到 `<target>/.claude/hooks/`：
+
+- `butler_gate.py`
+- `rules/` 整目录
+- `lib/` 整目录
+- `README.md`
+
+若目标目录已存在同名文件，**以 butler 版本为准覆盖**（目标项目的 hooks 是 butler 的拷贝副本，不得本地改动；本地化需求应回流到 butler 仓库）。
+
+### 5.2 settings.json 幂等合并
+
+读 `$BUTLER/templates/settings.hooks-snippet.json`，合并进 `<target>/.claude/settings.json`：
+
+1. 若目标 `settings.json` 不存在 → 直接写入 snippet 内容。
+2. 若存在但无 `hooks.PreToolUse` 数组 → 添加 `hooks.PreToolUse = [snippet 中的条目]`。
+3. 若已有 `hooks.PreToolUse` 数组 → 检查是否已有 `matcher == “Edit|Write|MultiEdit”` 且 `command` 以 `python3 .claude/hooks/butler_gate.py` 结尾的条目；已有则跳过，否则追加。
+
+合并规则的去重键：`hooks.PreToolUse[*].matcher` 字面比较；AI 执行此步骤时必须幂等，重复部署不重复插入。
+
+### 5.3 验证
+
+部署完成后，在目标项目根执行：
+
+```bash
+echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$(pwd)"'"}' \
+  | python3 .claude/hooks/butler_gate.py
+echo "exit=$?"
+```
+
+- 若 `.ai/CONCEPT.md` 等产物尚未产生 → 期望 `exit=2` 且 stderr 含 `phase_gate`。
+- 这条验证命令写入部署报告。
+
+### 5.4 与 butler-upgrade 的联动（Follow-up）
+
+Hook 副本与 butler 仓库版本可能漂移。`butler-upgrade.md` 协议需要扩展以检测并同步 hook 副本；本协议本身只负责**首次部署路径**，不处理升级。
