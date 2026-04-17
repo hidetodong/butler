@@ -1,32 +1,37 @@
 # Goal
 
-- 修复 Butler Nice to Have Bucket F（低风险文档级精简与微调）5 条问题：`architecture-overview § 3` 空旷、`logic-protocol § 4.2` 三段已接近独立子节、`architecture-overview § 2.2` 硬编码 profile 文件名、`HUMAN_GUIDE` 规则速查图偏粗、`context-persistence § 3` task-state 双形式（JSON/MD）。
+- 修复 Butler Nice to Have Bucket G（N-5）：`.ai/local-constraints.md` 在其他产物（CONCEPT/AC_LIST/TECH_PLAN/VERIFY_REPORT）都有 schema 的情况下缺失 schema；新建 `local-constraints-schema.md` 让基地车部署产物链对称，为 AI 部署时填写 local-constraints 提供字段骨架。
 
 # Current Understanding
 
-- 本任务是 Butler 规则仓维护的第七轮（已通过 v0.0.8 里程碑）。
-- 5 条改动都是文档级精简或微调，无契约变更（除 N-7 task-state 单选算轻度契约调整）。
-- 其中 2 条存在设计取舍（N-1 § 3 处理方式、N-7 task-state 选 .md 还是保留双选），其他 3 条路径相对清晰，可作为推荐方案直接 ACK。
-- 本轮整体 ROI 高、成本低；主要用于把仓库进一步收敛到"无冗余、无空旷段、无双形式选项"的状态。
+- 本任务是 Butler 规则仓第八轮维护（v0.0.9 Bucket F 之后）。
+- `mcv-deployment.md § 4 本地化适配` 当前只有一句描述 + 一个示例，缺少字段定义。AI 部署时靠自由发挥填写 `.ai/local-constraints.md`。
+- 其他四个主要产物都有对应的 `*-schema.md` 文件（`concept-schema.md`、`acceptance-schema.md`、`tech-plan-schema.md`、`verify-schema.md`），位于 `Coder/20_Workflow_Lifecycle/`。
+- local-constraints 的性质与上述产物不同：
+  - 它不是 P1-P5 某阶段的产物，而是基地车部署时的一次性产物 + 任务执行中的增量更新。
+  - 它不是严格契约，而是"本项目相对于通用 SOP 的差异记录"。
+  - schema 应偏向轻量（必填字段少），避免让 AI 部署陷入过度填写负担。
+- 1 个主要设计取舍：**必填字段集**（最小 vs 中等）。
 
 # Constraints
 
 - 显性约束：
-  - 不重组 `10_Domain_Stack_Profiles/` 目录（属于 Bucket H 范畴，本轮 out of scope）。
-  - 不新增 schema 文件（属于 Bucket G 范畴，N-5 不在本轮）。
-  - 不改变 lifecycle / 产物链 / mcv-deployment 等核心规则的语义。
+  - 新建文件必须在 `Coder/README.md` 的目录结构与读取顺序中注册（`CLAUDE.md` 第 3 条项目约束）。
+  - frontmatter 必须含 `audience` 与 `scope`（`CLAUDE.md` 第 5 条）。
+  - 不破坏 `mcv-deployment.md § 4` 现有描述的语义。
+  - 不引入新的目录层级。
 - 隐性约束：
-  - 文档美观与可读性优先；任何改动都应该让规则更清晰、不更复杂。
+  - schema 命名风格与其他四个一致（`local-constraints-schema.md`）。
+  - 字段命名使用英文（与其他 schema 一致）。
 
 # Impact Scope
 
 预计修改文件：
-- `Coder/architecture-overview.md`（N-1 § 3 重构 + N-3 § 2.2 通用化）
-- `Coder/00_System_Prompt/logic-protocol.md`（N-2 § 4.2 拆 H4）
-- `HUMAN_GUIDE.md`（N-4 速查图扩展）
-- `Coder/40_Context_Management/context-persistence.md`（N-7 载体单选）
+- **新建** `Coder/20_Workflow_Lifecycle/local-constraints-schema.md`
+- `Coder/20_Workflow_Lifecycle/mcv-deployment.md § 4`（补一个指向 schema 的指针）
+- `Coder/README.md`（目录结构注册新文件）
 
-不影响：所有其他规则文件、templates、scripts、Extension、Domain Profiles、`.ai/` 产物链结构。
+不影响：其他 schema、lifecycle、其他规则文件、templates、scripts。
 
 # Project Type / Active Profiles
 
@@ -35,6 +40,5 @@
 
 # Open Questions
 
-- **N-1** `architecture-overview § 3` 处理方式需用户拍板。
-- **N-7** `task-state` 单选 `.md` 还是保留双选需用户拍板。
-- 其余 3 条（N-2 / N-3 / N-4）按推荐方案执行（详见 AC_LIST）。
+- **G-1** 必填字段集需用户拍板（最小 2 个 vs 中等 3 个）。
+- 可选字段、字段命名、schema 骨架均按推荐方案执行（详见 AC_LIST）。
