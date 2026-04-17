@@ -1,37 +1,38 @@
 # Goal
 
-- 修复 Butler Nice to Have Bucket G（N-5）：`.ai/local-constraints.md` 在其他产物（CONCEPT/AC_LIST/TECH_PLAN/VERIFY_REPORT）都有 schema 的情况下缺失 schema；新建 `local-constraints-schema.md` 让基地车部署产物链对称，为 AI 部署时填写 local-constraints 提供字段骨架。
+- 为 butler 新增**主动升级命令**：让已部署过 butler 的老项目能通过一条指令，把自己的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库的最新模板与规则，同时保护项目特定内容不被覆盖。
 
 # Current Understanding
 
-- 本任务是 Butler 规则仓第八轮维护（v0.0.9 Bucket F 之后）。
-- `mcv-deployment.md § 4 本地化适配` 当前只有一句描述 + 一个示例，缺少字段定义。AI 部署时靠自由发挥填写 `.ai/local-constraints.md`。
-- 其他四个主要产物都有对应的 `*-schema.md` 文件（`concept-schema.md`、`acceptance-schema.md`、`tech-plan-schema.md`、`verify-schema.md`），位于 `Coder/20_Workflow_Lifecycle/`。
-- local-constraints 的性质与上述产物不同：
-  - 它不是 P1-P5 某阶段的产物，而是基地车部署时的一次性产物 + 任务执行中的增量更新。
-  - 它不是严格契约，而是"本项目相对于通用 SOP 的差异记录"。
-  - schema 应偏向轻量（必填字段少），避免让 AI 部署陷入过度填写负担。
-- 1 个主要设计取舍：**必填字段集**（最小 vs 中等）。
+- 本任务是 Butler 规则仓第九轮维护 —— 但性质是**新增 feature**（不在 audit 清单中），非 bug 修复。
+- 用户痛点：butler 仓经过 v0.0.3 → v0.0.10 的大量变更，模板结构（CLAUDE.md.template 占位符）、`.ai/` 文件命名（02_SESSION_HANDOFF）、schema 新增（local-constraints-schema）等都与老部署项目脱节。手工同步成本高且易漏。
+- 已定的 4 个核心决策：
+  - **B**：升级范围 = `CLAUDE.md` + `.ai/` 结构（不涉及 `deliveries/` 历史）
+  - **β**：不引入 butler 版本戳，靠差异检测
+  - **x**：保护区标记（用户内容与 butler 内容用 HTML 注释边界分隔）
+  - **r**：命令触发 = 显式 slash `/butler-upgrade` + 语义词（"升级 butler" / "同步到新版"）
 
 # Constraints
 
 - 显性约束：
-  - 新建文件必须在 `Coder/README.md` 的目录结构与读取顺序中注册（`CLAUDE.md` 第 3 条项目约束）。
-  - frontmatter 必须含 `audience` 与 `scope`（`CLAUDE.md` 第 5 条）。
-  - 不破坏 `mcv-deployment.md § 4` 现有描述的语义。
-  - 不引入新的目录层级。
+  - 不破坏三层架构（SOP Core / Domain Profiles / Business Extension）。
+  - 不破坏现行 `mcv-deployment.md` 的初次部署语义 —— 升级协议与部署协议并列而非替代。
+  - 新规则文件必须在 `Coder/README.md` 注册；必须含 frontmatter（audience / scope）。
+  - 保护用户项目特定约束内容，不被覆盖式升级吞掉。
 - 隐性约束：
-  - schema 命名风格与其他四个一致（`local-constraints-schema.md`）。
-  - 字段命名使用英文（与其他 schema 一致）。
+  - 升级过程应**可审阅、可 ACK**（列出变更清单给用户确认后再动），不得直接静默覆盖。
+  - 老项目（无保护区标记）也要能升级，不能假设所有项目都是新规范。
 
 # Impact Scope
 
-预计修改文件：
-- **新建** `Coder/20_Workflow_Lifecycle/local-constraints-schema.md`
-- `Coder/20_Workflow_Lifecycle/mcv-deployment.md § 4`（补一个指向 schema 的指针）
-- `Coder/README.md`（目录结构注册新文件）
+预计新建/修改 5 个文件：
+- **新建** `Coder/20_Workflow_Lifecycle/butler-upgrade.md`（升级协议，与 `mcv-deployment.md` / `mcv-update.md` 并列）
+- **修改** `templates/CLAUDE.md.template`（引入 `<!-- butler-managed -->` / `<!-- /butler-managed -->` 保护区边界）
+- **修改** `Coder/20_Workflow_Lifecycle/mcv-deployment.md § 3`（部署时生成保护区标记，建立升级契约的起点）
+- **修改** `Coder/00_System_Prompt/logic-protocol.md § 4 Semantic Triggers`（注册 `/butler-upgrade` 命令与语义触发词）
+- **修改** `Coder/README.md`（注册新文件 + 目录结构 + "其中："说明）
 
-不影响：其他 schema、lifecycle、其他规则文件、templates、scripts。
+不影响：其他 schema、Extension、Domain Profiles、scripts、templates/rule-card.md（保持 SSOT 不动）。
 
 # Project Type / Active Profiles
 
@@ -40,5 +41,7 @@
 
 # Open Questions
 
-- **G-1** 必填字段集需用户拍板（最小 2 个 vs 中等 3 个）。
-- 可选字段、字段命名、schema 骨架均按推荐方案执行（详见 AC_LIST）。
+3 个细节设计需用户拍板（见 AC_LIST）：
+- **U-1** 保护区标记的"覆盖方向"（butler 区显式标 vs 用户区显式标）
+- **U-2** 老项目（无保护区标记）的首次升级策略
+- **U-3** `.ai/` 结构升级的范围粒度

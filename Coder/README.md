@@ -52,6 +52,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     progressive-handoff.md
     mcv-deployment.md
     mcv-update.md
+    butler-upgrade.md
     maintenance-boundaries.md
   /30_Quality_Gate
     linting.md
@@ -104,6 +105,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
+- `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `55_Extension_RalphLoop/ralph-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，负责 P4 的自主纠错闭环与熔断规则。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。

@@ -77,6 +77,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Ideation Mode (`/ideation`)**: 激活 `50_Extension_Ideation/ideation-engine.md`。当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 `/ideation` 时开启。
 - **Ralph-Loop Mode (`/loop`)**: 激活 `55_Extension_RalphLoop/ralph-loop-engine.md`。当用户提到"死磕"、"必须变绿"、"不准报错"、"严格校验"或输入 `/loop` 时开启。
 - **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启。P5 交付阶段默认触发简要自评（用户明确跳过时除外）。
+- **Butler Upgrade (`/butler-upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler-upgrade` 时开启。非持久 Mode，执行一次后返回 Standard Mode。
 
 若检测到任务复杂度极高（如核心算法、大规模重构），应主动询问："检测到逻辑复杂，是否需要开启 Ralph-Loop 模式进行自主迭代验证？"
 

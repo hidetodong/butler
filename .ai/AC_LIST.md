@@ -1,77 +1,137 @@
 # Goal
 
-- 修复 Bucket G（local-constraints schema 新增）1 条 Nice to Have。
+- 新增 butler 升级命令：`/butler-upgrade`（及语义触发），基于保护区标记 + 差异检测，把老项目同步到最新版 butler。
 
 # In Scope
 
-- 新建 `Coder/20_Workflow_Lifecycle/local-constraints-schema.md`。
-- `mcv-deployment.md § 4 本地化适配` 加一个指向新 schema 的指针。
-- `Coder/README.md` 目录结构与读取顺序注册新文件。
+- 新建 `Coder/20_Workflow_Lifecycle/butler-upgrade.md`（升级协议）
+- 修改 `templates/CLAUDE.md.template` 加保护区标记
+- 修改 `mcv-deployment.md § 3` 部署时建立保护区标记
+- 修改 `logic-protocol.md § 4` 注册新命令
+- 修改 `Coder/README.md` 注册新文件
 
 # Out of Scope
 
-- Bucket H（N-6 Domain_Stack_Profiles 目录重组）。
-- 其他 schema 的字段调整。
-- 不修改 `mcv-deployment.md § 4` 的部署语义本身。
+- Bucket H（profile 目录重组）
+- 不对已部署项目的 `deliveries/` 历史做任何处理
+- 不引入 butler 版本戳（决策 β 已定）
 
 # Acceptance Checklist
 
-- [ ] **G-1** 新建 `local-constraints-schema.md`，字段集按拍板方案；含 frontmatter（audience / scope）与完整五节结构（目标 / 交付约定 / 标准模板 / 编写规则 / 与执行流程的关系），风格与其他 schema 一致
-- [ ] **G-2** `mcv-deployment.md § 4` 在现有描述后追加指针句，引用新 schema
-- [ ] **G-3** `Coder/README.md` 目录结构包含新文件；读取顺序不变（schema 是被产物引用的模板，不进读取顺序主序列）
+- [ ] **U-1** 保护区标记方向，方案待拍板
+- [ ] **U-2** 老项目（无保护区标记）首次升级策略，方案待拍板
+- [ ] **U-3** `.ai/` 结构升级范围粒度，方案待拍板
+- [ ] **U-4** 新建 `butler-upgrade.md` 包含完整 6 段结构（目标 / 触发条件 / 侦察 / 对比与呈报 / 执行 / 验证与回退）
+- [ ] **U-5** `CLAUDE.md.template` 加入保护区标记 HTML 注释
+- [ ] **U-6** `mcv-deployment.md § 3` 部署步骤生成保护区标记
+- [ ] **U-7** `logic-protocol.md § 4` 注册 `/butler-upgrade` 命令与语义触发词
+- [ ] **U-8** `Coder/README.md` 目录结构 + "其中："说明 双处注册
 
 # Verification Method
 
-- **G-1**：`ls Coder/20_Workflow_Lifecycle/local-constraints-schema.md` 存在；`grep -n '^---$' local-constraints-schema.md` 返回 2 行 frontmatter；`grep -nE '^## [0-9]\.' local-constraints-schema.md` 至少 5 章（目标 / 交付约定 / 标准模板 / 编写规则 / 与执行流程的关系）。
-- **G-2**：`grep -n 'local-constraints-schema' mcv-deployment.md` 命中。
-- **G-3**：`grep -n 'local-constraints-schema' Coder/README.md` 命中目录结构块。
+- **U-4**：新 schema-level 文件通读，6 段齐全；frontmatter OK。
+- **U-5**：`grep 'butler-managed' templates/CLAUDE.md.template` 命中保护区标记。
+- **U-6**：`grep 'butler-managed' mcv-deployment.md` 命中部署步骤说明。
+- **U-7**：`grep 'butler-upgrade' logic-protocol.md` 命中 § 4 Semantic Triggers 区；`grep '升级 butler\|同步到新版' logic-protocol.md` 命中语义触发词。
+- **U-8**：`grep 'butler-upgrade' Coder/README.md` 命中 2 处。
 
 # Open Questions / Risks
 
-## ❓ 待拍板 - G-1 必填字段集
+## ❓ 待拍板 - U-1 保护区标记方向
 
-### 方案 α（推荐）— 最小必填：2 个字段
+### 方案 1 — `<!-- butler-managed -->` 标记 butler 区
 
-- 必填：
-  - `Project Type`（项目类型、主要语言与框架）
-  - `Active Profiles`（命中的 Domain / Stack Profiles，按 `10_Domain_Stack_Profiles/` 下实际文件列出；未命中时写"无，仅按通用 SOP"）
-- 可选：
-  - `Local Constraints`（本项目相对通用 SOP 的放宽 / 收紧，每条附原因）
-  - `Scope Exceptions`（不受某类通用规则约束的目录或文件）
-  - `External References`（高层指针：Confluence / 设计平台 / issue tracker 等）
-- **理由**：local-constraints 本质是"差异记录"，新项目接入时未必有 local 约束或例外；让 Local Constraints 等三项保持可选，避免 AI 硬填无意义内容。
+```markdown
+<!-- butler-managed -->
+# 项目工程协作规则
+...（rule-card 内容 + 深度阅读指针）
+<!-- /butler-managed -->
 
-### 方案 β — 中等必填：3 个字段
+## 项目特定约束
+- 用户自己加的约束写这里
+```
 
-- 必填多加 `Local Constraints`（至少填一条"无"或"本项目暂无本地化约束，完全按通用 SOP"）。
-- **理由**：强迫 AI 在部署时主动思考"有没有 local 约束"。
-- **缺点**：多数小项目会填"无"，字段膨胀。
+- 升级时：**只替换 butler-managed 区块**内容，外部保留。
+- **优点**：butler 区边界明确；用户能清楚看到 "这里是 butler 管的"。
+- **缺点**：用户若在 butler 区内部加了自定义内容（例如在"完整规则参考"后加一句备注），升级会覆盖之。
 
-### 方案 γ — 严格必填：5 个字段全部必填
+### 方案 2（推荐）— `<!-- user-managed -->` 标记用户区
 
-- 不推荐 — local-constraints 应偏轻量。
+```markdown
+# 项目工程协作规则
+...（rule-card 内容 + 深度阅读指针）
+
+<!-- user-managed -->
+## 项目特定约束
+- 用户自己加的约束写这里
+<!-- /user-managed -->
+```
+
+- 升级时：**保留 user-managed 区块**原样，外部完全按最新模板覆盖。
+- **优点**：语义更清晰 —— "你管你的，我管我的"；用户加内容只需要放到标记区内就不会丢。
+- **缺点**：butler 区没有边界标记，升级算法需"删到文件结尾、再把 user-managed 区接回来"。
+
+### 方案 3 — 双向标记（两者都有）
+
+- butler 区和用户区各有标记。
+- **缺点**：模板变复杂；对升级算法无额外收益。不推荐。
 
 ---
 
-## 推荐的非取舍项（直接执行）
+## ❓ 待拍板 - U-2 老项目（无保护区标记）首次升级策略
 
-- **字段命名**：英文（与其他 schema 一致，方便 AI 识别）；中文说明。
-- **frontmatter**：`title: 本地化约束模板` / `audience: AI / 开发者` / `scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板`。
-- **五节结构**：目标 / 交付约定 / 标准模板 / 编写规则 / 与执行流程的关系（与其他 schema 一致）。
-- **mcv-deployment § 4 指针**：追加一句"字段定义与最小模板参考 `local-constraints-schema.md`"。
-- **Coder/README.md 注册**：在目录结构 `/20_Workflow_Lifecycle` 下加入 `local-constraints-schema.md`，并在读取顺序说明中明确"schema 文件是产物模板，不进主读取序列，按需引用"。
+老项目的 `CLAUDE.md` 部署时还没有保护区标记（这次 feature 之后部署的才有）。首次升级如何处理？
+
+### 方案 a — 按章节识别
+
+- 按章节名识别：`## 项目特定约束` 整章视为用户区；其他全视为 butler 区。
+- **优点**：无需用户干预，自动完成。
+- **缺点**：若用户改了章节名（如 "## 本项目约束"），识别失败。
+
+### 方案 b（推荐）— 升级前备份 + 交互 ACK
+
+- 升级前自动备份旧文件（`CLAUDE.md.backup-YYYYMMDD`）；
+- AI 对比新旧文件，列出差异清单给用户 ACK："原文件的这些段落 butler 不认识，判断是你加的；是否保留？"
+- 用户 ACK 后按决策执行。
+- **优点**：零损失、用户全掌控；并且本次升级后新文件含标记，下次升级自动走保护区路径。
+- **缺点**：需要用户参与一次。
+
+### 方案 c — 完全重建
+
+- 不保留旧文件任何内容，重新跑基地车部署；
+- 用户需手工把项目特定约束粘回新文件。
+- **优点**：最简单。
+- **缺点**：老项目若累积了 local-constraints 等内容，会不便。
+
+---
+
+## ❓ 待拍板 - U-3 `.ai/` 结构升级范围粒度
+
+### 方案 i — 仅命名升级
+
+- 只处理文件重命名（如 `SESSION_HANDOFF.md` → `02_SESSION_HANDOFF.md`）；
+- 内容不动。
+
+### 方案 ii（推荐）— 命名 + schema 字段补齐
+
+- 除命名升级外，还对 `.ai/local-constraints.md` 按新 `local-constraints-schema.md` 补齐缺失必填字段（如缺 `Active Profiles` 则提示用户补）；
+- CHANGELOG / BUG_LOG 等累积型文件不动。
+
+### 方案 iii — 全面升级（不推荐）
+
+- 连 CHANGELOG / BUG_LOG 格式也升级。
+- **缺点**：破坏历史数据。
 
 ---
 
 ## 风险
 
-- 本轮全是文档级改动，无运行时影响。
-- 新 schema 文件对已部署项目无强制回填要求（旧 local-constraints.md 可逐步迁移到新字段集，不阻断）。
+- 本 feature 引入后，必须同步升级 butler 自身（因为规则仓自己的部署文件也未用保护区标记）。本轮不做 butler 仓自身的 dogfooding 迁移，作为 follow-up。
+- `.ai/local-constraints.md` 按方案 ii 补齐时，若旧文件字段集完全不对，自动补齐可能产生误判。方案 ii 会要求"模糊匹配时交互确认"。
+- 老项目升级需用户参与一次（方案 b），不是零人工成本。
 
 ---
 
 # 请回复
 
-1. **G-1 方案**：α / β / γ
-
-拍板后我进 P3 出具体 schema 骨架与 edit 清单。
+3 个方案：`U-1: 2, U-2: b, U-3: ii` 就是全部走推荐。或者告诉我你的组合。

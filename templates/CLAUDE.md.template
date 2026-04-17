@@ -30,9 +30,13 @@
 - P3: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/tech-plan-schema.md`
 - P5: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/verify-schema.md`
 
+<!-- user-managed -->
+
 ## 项目特定约束
 
 <!-- 在这里补充本项目的特定约束，例如：-->
 <!-- - 本项目使用 Vue 3 + TypeScript，启用对应 Domain Profile -->
 <!-- - 本项目的 API 文档在 Confluence: https://... -->
 <!-- - /legacy 目录下的旧代码允许局部放宽类型检查 -->
+
+<!-- /user-managed -->
