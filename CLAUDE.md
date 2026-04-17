@@ -10,7 +10,7 @@
 - `Learner/` — 学习事务管理
 - `Composer/` — 杂项事务
 - `HUMAN_GUIDE.md` — 面向人类用户的操作手册
-- `templates/` — 目标项目使用的 CLAUDE.md 模板与浓缩规则卡
+- `templates/` — 目标项目使用的 CLAUDE.md 模板、浓缩规则卡与 hook 体系（`hooks/`、`settings.hooks-snippet.json`）
 
 ## 编辑规则时的约束
 
