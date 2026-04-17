@@ -126,3 +126,38 @@ class TestBypassSuccess:
         assert not log_path.exists()
         evaluate_bypass(make_ctx(tmp_path), DENY)
         assert log_path.exists()
+
+    def test_run_log_pipe_char_sanitized(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("BUTLER_BYPASS", "1")
+        (tmp_path / ".ai").mkdir()
+        (tmp_path / ".ai" / "bypass-reason.md").write_text("a | b | c")
+        evaluate_bypass(make_ctx(tmp_path), DENY)
+        log = (tmp_path / ".ai" / "RUN_LOG.md").read_text()
+        # The reason column itself should not contain raw |
+        # Count of | separators should still be exactly 4 (five columns)
+        last_line = log.strip().splitlines()[-1]
+        assert last_line.count("|") == 4
+        assert "a / b / c" in last_line
+
+    def test_run_log_control_chars_sanitized(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("BUTLER_BYPASS", "1")
+        (tmp_path / ".ai").mkdir()
+        (tmp_path / ".ai" / "bypass-reason.md").write_text("hot\x01fix\x02done")
+        evaluate_bypass(make_ctx(tmp_path), DENY)
+        log = (tmp_path / ".ai" / "RUN_LOG.md").read_text()
+        assert "\x01" not in log
+        assert "\x02" not in log
+        assert "hot fix done" in log
+
+    def test_run_log_long_reason_truncated(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("BUTLER_BYPASS", "1")
+        (tmp_path / ".ai").mkdir()
+        long_reason = "x" * 500
+        (tmp_path / ".ai" / "bypass-reason.md").write_text(long_reason)
+        evaluate_bypass(make_ctx(tmp_path), DENY)
+        log = (tmp_path / ".ai" / "RUN_LOG.md").read_text()
+        last_line = log.strip().splitlines()[-1]
+        # reason col: 200 chars of x plus ellipsis
+        reason_col = last_line.split(" | ")[-1]
+        assert len(reason_col) == 201  # 200 + ellipsis
+        assert reason_col.endswith("…")

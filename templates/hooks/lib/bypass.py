@@ -7,6 +7,16 @@ from pathlib import Path
 
 from lib.io import Context, Decision
 
+_MAX_REASON_LEN = 200
+
+
+def _sanitize_reason(reason: str) -> str:
+    cleaned = "".join(" " if ord(c) < 0x20 else c for c in reason)
+    cleaned = cleaned.replace("|", "/")
+    if len(cleaned) > _MAX_REASON_LEN:
+        cleaned = cleaned[:_MAX_REASON_LEN] + "…"
+    return cleaned
+
 
 def evaluate_bypass(ctx: Context, decision: Decision) -> Decision:
     """Decide whether an environment-based bypass overrides a deny decision.
@@ -49,12 +59,15 @@ def evaluate_bypass(ctx: Context, decision: Decision) -> Decision:
 
 
 def _append_run_log(ctx: Context, decision: Decision, reason_first_line: str) -> None:
+    # Intentionally no try/except: write failures must propagate so the
+    # dispatcher can fail-closed (deny). Silent log loss would kill audit trail.
     log_path = Path(ctx.cwd) / ".ai" / "RUN_LOG.md"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    safe_reason = _sanitize_reason(reason_first_line)
     line = (
         f"{ts} | {decision.rule_id} | {ctx.tool_name} | "
-        f"{ctx.target_path.as_posix()} | {reason_first_line}\n"
+        f"{ctx.target_path.as_posix()} | {safe_reason}\n"
     )
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(line)
