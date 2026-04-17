@@ -58,6 +58,23 @@ class TestResolveTarget:
         result = resolve_target({"file_path": str(other / "x.ts")}, cwd=str(tmp_path))
         assert result == OUT_OF_CWD
 
+    def test_symlink_cwd_and_target_normalized_consistently(self, tmp_path):
+        """cwd and file_path may arrive with different symlink forms (e.g. macOS /tmp)."""
+        real_dir = tmp_path / "real"
+        real_dir.mkdir()
+        (real_dir / "src").mkdir()
+        (real_dir / "src" / "a.ts").write_text("x")
+
+        link_dir = tmp_path / "via_link"
+        link_dir.symlink_to(real_dir, target_is_directory=True)
+
+        # cwd points through the symlink; file_path is absolute via the real path
+        result = resolve_target(
+            {"file_path": str(real_dir / "src" / "a.ts")},
+            cwd=str(link_dir),
+        )
+        assert result == PurePosixPath("src/a.ts")
+
 
 class TestIsGated:
     def test_source_path_is_gated(self):
