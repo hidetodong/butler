@@ -180,7 +180,13 @@ Coder/
 │   ├── progressive-handoff.md # 渐进式交接
 │   └── maintenance-boundaries.md # 维护边界
 ├── 30_Quality_Gate/           # 质量门禁
+│   ├── linting.md             # 提交前自检清单
+│   ├── testing-strategy.md    # 测试分层与验收映射
+│   └── review-standard.md     # 通用审计准则
 ├── 40_Context_Management/     # 上下文治理（长任务必读）
+│   ├── context-persistence.md # 状态外化与阶段结晶
+│   ├── handoff-spec.md        # 02_SESSION_HANDOFF.md 格式契约
+│   └── role-switch.md         # Architect/Coder/Reviewer 角色切换
 ├── 50_Extension_Ideation/     # 脑暴扩展
 ├── 55_Extension_RalphLoop/    # 自主纠错扩展
 ├── 60_Extension_CodeReview/   # 代码审查扩展

@@ -40,9 +40,7 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 
 包含：
 
-- `10_Domain_Stack_Profiles/vue3-standard.md`
-- `10_Domain_Stack_Profiles/typescript-rules.md`
-- `10_Domain_Stack_Profiles/build-tooling.md`
+- `10_Domain_Stack_Profiles/` 下的所有 profile 文件，按当前项目命中的技术栈、语言或构建形态按需启用。
 
 职责：
 
@@ -62,11 +60,9 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 - 作为最高优先级业务约束参与当前任务。
 - 不替代 SOP Core，也不直接把技术实现细节提升为通用规则。
 
-## 3. 启用顺序
+## 3. 启用顺序与生效规则
 
-具体读取顺序以 `README.md § 读取顺序` 为准。本文件仅负责说明三层分工的职责边界与 profile 条件生效的语义，不重复列出顺序清单，避免多处漂移。
-
-## 4. 生效规则
+具体读取顺序以 `README.md § 读取顺序` 为准；本文件仅负责说明三层分工的职责边界与 profile 条件生效的语义。生效规则：
 
 - **默认生效**：SOP Core。
 - **条件生效**：Domain / Stack Profiles。
@@ -78,7 +74,7 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 - 再按业务约束决定任务为什么这样做。
 - 最后按命中的 profile 细化任务具体怎么落地。
 
-## 5. 在生命周期中的作用点
+## 4. 在生命周期中的作用点
 
 - **P1 Analysis**：识别项目类型，并决定是否启用 profile。
 - **P2 Acceptance**：只把已激活 profile 对应的完成定义纳入 AC。
@@ -86,7 +82,7 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 - **P4 Execute**：执行时只应用已激活的 profile 细则。
 - **P5 Verify**：按“通用质量门禁 + 已激活 profile”进行验证。
 
-## 6. 判断原则
+## 5. 判断原则
 
 当某条规则看起来像“前端规范”“Vue 规范”或“构建规范”时，不应默认套用到所有项目。
 

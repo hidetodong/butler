@@ -102,7 +102,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - 产物链（`AC_LIST.md`、`TECH_PLAN.md`）中必须标注引用了哪些参考资料。
 - 若参考资料在执行过程中被更新，应回退到受影响的阶段重新对齐。
 
-Fallback（skill 不可用或调用失败时）：
+#### Fallback（skill 不可用或调用失败时）
 
 - 若目标 skill 未安装、认证失败或调用超时，**不得**自行使用 WebFetch 等工具越权访问外部资源。
 - 应主动提示用户手动提取参考资料内容并粘贴到对话，例如："`confluence-api-extractor` skill 不可用，请将 <URL> 页面内容粘贴到对话，我将落盘到 `.ai/references/api-<name>.md`"。
