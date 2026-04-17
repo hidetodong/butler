@@ -107,9 +107,9 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 部署完成后，在目标项目根执行：
 
 ```bash
-echo '{“tool_name”:”Edit”,”tool_input”:{“file_path”:”src/x.ts”},”cwd”:”'”$(pwd)”'”}' \
+echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$(pwd)"'"}' \
   | python3 .claude/hooks/butler_gate.py
-echo “exit=$?”
+echo "exit=$?"
 ```
 
 - 若 `.ai/CONCEPT.md` 等产物尚未产生 → 期望 `exit=2` 且 stderr 含 `phase_gate`。
