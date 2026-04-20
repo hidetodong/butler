@@ -1,172 +1,48 @@
 # Goal
-
-- 按 U-1: 2 / U-2: b / U-3: ii 方案落地 `/butler-upgrade` feature：新建升级协议、引入 `<!-- user-managed -->` 保护区标记、注册命令触发、README 注册。
+- 支撑 AC1–AC10：新增 §8 对话层风格规则、补 lifecycle 引用、按 butler SOP 全链路产出 `.ai/` 与 `deliveries/`
 
 # Files / Modules to Change
-
-| # | 文件 | 动作 | 改动点 |
-|---|---|---|---|
-| 1 | `Coder/20_Workflow_Lifecycle/butler-upgrade.md` | Write（新建） | 完整协议文件（frontmatter + 8 段） |
-| 2 | `templates/CLAUDE.md.template` | Edit | 1（项目特定约束段用 user-managed 包裹） |
-| 3 | `Coder/20_Workflow_Lifecycle/mcv-deployment.md § 3` | Edit | 1（第 4 步措辞加保护区标记） |
-| 4 | `Coder/00_System_Prompt/logic-protocol.md § 4` | Edit | 1（注册 /butler-upgrade 触发） |
-| 5 | `Coder/README.md` | Edit | 2（目录结构 + "其中："说明） |
-
-共 5 个文件，6 处改动（1 new + 5 edit）。
+- `Coder/20_Workflow_Lifecycle/delivery-summary.md` — 追加 §8 对话内人话摘要，含 5 个子节
+- `Coder/20_Workflow_Lifecycle/lifecycle.md` — P5 Verify 段"必须产物"条目后追加一句 §8 引用
+- `.ai/CONCEPT.md` — 本任务 P1 决策记录（覆写）
+- `.ai/AC_LIST.md` — 本任务 P2 决策记录（覆写）
+- `.ai/TECH_PLAN.md` — 本任务 P3 决策记录（即本文件）
+- `.ai/VERIFY_REPORT.md` — 本任务 P5 验证结果（覆写）
+- `deliveries/2026-04-20-chat-recap-style.md` — 本任务 Delivery Summary（新建）
 
 # Interface / Contract
-
-- **新命令契约**：`/butler-upgrade` + 语义词（"升级 butler" / "同步到新版" / "同步 butler 规则"）触发升级协议。
-- **保护区契约**：`<!-- user-managed -->` 到 `<!-- /user-managed -->` 之间的内容由用户管理，butler 升级流程**永不触碰**；标记外的所有内容由 butler 管理，升级时按最新模板覆盖。
-- **升级协议与部署协议并列关系**：`butler-upgrade.md` 与 `mcv-deployment.md` / `mcv-update.md` 同级，共同构成基地车的"生命周期三阶段"（部署 / 升级 / 维护）。
-- **向下兼容**：老项目（无保护区标记）通过 § 4 首次升级流程（备份 + 交互 ACK）自动迁移，不留遗留负担。
-- **决策记录**：B（升级范围）/ β（不版本化）/ x（保护区）/ r（命令+语义）已在 CONCEPT 固化，TECH_PLAN 不重新讨论。
+- `delivery-summary.md §8` 对外承诺：任何 Delivery Summary 触发时刻，AI 的对话回应必须同时满足 §8.2 形式、§8.3 内容核心、§8.4 收尾引用三组约束
+- `lifecycle.md` P5 段承诺：生成 Delivery Summary 的场景下，AI 对话层输出受 §8 约束，不只受 §4 约束
+- `.ai/*.md` 承诺：严格符合各自 schema §2 必填字段清单
+- `deliveries/<date>-<slug>.md` 承诺：严格符合 `delivery-summary.md §4` 七小节结构
 
 # State / Boundary
-
-- 不改：`rule-card.md`（保持 SSOT）、其他 schema 文件、Extension、scripts、`mcv-update.md`（它是 `.ai/` 内部维护，非跨版本升级）。
-- 本轮**不**对 butler 仓库自身的 `CLAUDE.md`（butler 项目根）加保护区标记 —— butler 自身演进通过 audit 流程管理，不走 butler-upgrade 协议（避免自指复杂度；作为 follow-up 可单独做）。
-- 不实现自动 rollback；回退靠 git + 备份文件。
+- 状态边界：§8 仅在 Delivery Summary 触发时生效；不触发时沿用既有 checkpoint / handoff 口径
+- 模块职责边界：§8 管对话层、§4 管文件层，两者同源不同表达，不得互相替代
+- 不在范围内：P2 / P3 ACK、阶段 checkpoint、handoff、VERIFY_REPORT 本身的对话层风格
 
 # Design Decisions
-
-1. **协议文件位置**：`Coder/20_Workflow_Lifecycle/butler-upgrade.md`（与 mcv-deployment / mcv-update 同目录，构成"基地车协议族"）。
-2. **保护区标记格式**：HTML 注释（`<!-- user-managed -->` / `<!-- /user-managed -->`），原因：
-   - Markdown 渲染时不可见
-   - AI 可靠识别（字符串匹配即可）
-   - 与现有 templates 顶部注释风格一致
-3. **保护区包裹范围**：`## 项目特定约束` 整个章节（含标题、所有 placeholder 注释、用户自由填的内容）。这让用户加任何内容只要放在保护区内都安全。
-4. **首次升级策略（老项目）**：不自动猜测，永远走备份 + 交互 ACK；升级后新 `CLAUDE.md` 自带标记，后续走常规路径。
-5. **`.ai/` 升级范围**：命名（文件 rename）+ schema 必填字段补齐；不动 CHANGELOG / BUG_LOG 累积数据；不动任务产物（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）。
-6. **注册到 Semantic Triggers**：虽然 butler-upgrade 是一次性动作而非持久"Mode"，但用户触发方式与其他扩展一致（命令 + 语义词），统一在 `logic-protocol § 4` 注册，保持入口一致性。
+- 选择 A（§8 扩节）而非 B（delivery-summary.md 整体重构为对话层 + 文件层二分）或 C（新建 `chat-recap.md`）：改动成本最低、职责同源集中、不破坏既有锚点。若未来对话层约束 ≥ 3 条，再评估拆分到独立文件
+- 硬上限 "3–6 句" 而非 "≤ 150 字"：句数约束更贴合散文节奏，用户已在 brainstorming 阶段显式确认
+- "反模糊口径"（无风险必须显式写"本轮无剩余风险"）作为兜底，防止"讲人话"被误用为"可以不说风险"
+- 未命中任何 Domain / Stack Profile；仅按通用 SOP 推进
 
 # Execution Steps
-
-## Step 1 — Write `Coder/20_Workflow_Lifecycle/butler-upgrade.md`
-
-新文件，8 段结构：
-
-- frontmatter（title / audience / scope）
-- § 1 目标
-- § 2 触发条件（命令 + 语义词 + 不主动推断原则）
-- § 3 侦察（读 CLAUDE.md 判断有无保护区标记；扫 `.ai/` 结构；读 butler 仓最新状态）
-- § 4 首次升级（老项目无保护区标记）— 备份 + 生成新草稿 + 差异列表 + 用户 ACK + 写入
-- § 5 常规升级（有保护区标记）— 读 user-managed 区暂存 + 生成新框架 + 填入用户区 + ACK + 写入
-- § 6 `.ai/` 结构升级 — 命名升级 + schema 字段补齐；CHANGELOG / BUG_LOG 不动
-- § 7 验证与回退 — 检查保护区标记完整、用户区无丢失、`.ai/` 无过时命名；回退靠备份 + git
-- § 8 边界说明 — 不负责 deliveries 迁移、butler 自身升级、版本戳引入
-
-## Step 2 — Edit `templates/CLAUDE.md.template`
-
-在 `## 项目特定约束` 段上下加入 `<!-- user-managed -->` / `<!-- /user-managed -->` 包裹。
-
-**old**（模板末尾）:
-```
-## 项目特定约束
-
-<!-- 在这里补充本项目的特定约束，例如：-->
-<!-- - 本项目使用 Vue 3 + TypeScript，启用对应 Domain Profile -->
-<!-- - 本项目的 API 文档在 Confluence: https://... -->
-<!-- - /legacy 目录下的旧代码允许局部放宽类型检查 -->
-```
-
-**new**:
-```
-<!-- user-managed -->
-
-## 项目特定约束
-
-<!-- 在这里补充本项目的特定约束，例如：-->
-<!-- - 本项目使用 Vue 3 + TypeScript，启用对应 Domain Profile -->
-<!-- - 本项目的 API 文档在 Confluence: https://... -->
-<!-- - /legacy 目录下的旧代码允许局部放宽类型检查 -->
-
-<!-- /user-managed -->
-```
-
-注：`<!-- user-managed -->` 与 `<!-- /user-managed -->` 之间的空行是刻意保留，让 markdown 渲染干净。
-
-## Step 3 — Edit `mcv-deployment.md § 3`
-
-第 4 步措辞更新，明确部署时建立保护区标记。
-
-**old**:
-```
-4. 在"项目特定约束"段填入侦察结果（识别到的技术栈、project 类型、特殊约束等）。
-```
-
-**new**:
-```
-4. 在 `<!-- user-managed -->` 保护区内的"项目特定约束"段填入侦察结果（识别到的技术栈、project 类型、特殊约束等）。保护区标记由 `CLAUDE.md.template` 骨架提供，部署时原样保留，作为后续 `butler-upgrade.md` 协议的升级契约起点。
-```
-
-## Step 4 — Edit `logic-protocol.md § 4`
-
-在 Review Mode 条目后插入 Butler Upgrade 触发。
-
-**old**（§ 4 最后一条 Review Mode）:
-```
-- **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启。P5 交付阶段默认触发简要自评（用户明确跳过时除外）。
-```
-
-**new**（在 Review Mode 之后加一条）:
-```
-- **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启。P5 交付阶段默认触发简要自评（用户明确跳过时除外）。
-- **Butler Upgrade (`/butler-upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler-upgrade` 时开启。非持久 Mode，执行一次后返回 Standard Mode。
-```
-
-## Step 5 — Edit `Coder/README.md` 目录结构
-
-在 `/20_Workflow_Lifecycle` 目录下 `mcv-update.md` 后加入 `butler-upgrade.md`。
-
-**old**:
-```
-    mcv-deployment.md
-    mcv-update.md
-    maintenance-boundaries.md
-```
-
-**new**:
-```
-    mcv-deployment.md
-    mcv-update.md
-    butler-upgrade.md
-    maintenance-boundaries.md
-```
-
-## Step 6 — Edit `Coder/README.md` "其中："说明
-
-在 mcv-update.md 说明之后加一行 butler-upgrade.md 说明。
-
-**old**:
-```
-- `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
-- `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
-```
-
-**new**:
-```
-- `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
-- `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）。
-- `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
-```
+- Task 0: 产出 .ai/ P1–P3 产物（本文件 + CONCEPT + AC_LIST）
+- Task 1: 在 `delivery-summary.md` 追加 §8 完整内容，grep 验证字段覆盖，commit
+- Task 2: 在 `lifecycle.md` P5 段追加 §8 引用句，grep 验证，commit
+- Task 3: 产出 `.ai/VERIFY_REPORT.md` 与 `deliveries/2026-04-20-chat-recap-style.md`，按新 §8 输出对话摘要，commit
 
 # Verification Plan
-
-- **新文件**：`ls Coder/20_Workflow_Lifecycle/butler-upgrade.md` 存在；`grep -c '^## [0-9]\.' butler-upgrade.md` >= 8（8 段结构）；`grep -c '^---$' butler-upgrade.md` = 2（frontmatter）。
-- **保护区标记**：
-  - `grep -c 'user-managed' templates/CLAUDE.md.template` = 2（开闭两次）。
-  - `grep -n 'user-managed' mcv-deployment.md` 命中 § 3 第 4 步。
-- **命令注册**：
-  - `grep -n 'Butler Upgrade\|butler-upgrade' Coder/00_System_Prompt/logic-protocol.md` 命中 § 4。
-  - `grep -n '升级 butler\|同步到新版' logic-protocol.md` 命中语义触发词。
-- **README 注册**：
-  - `grep -n 'butler-upgrade' Coder/README.md` 命中 2 处（目录结构 + 说明）。
-- **整体一致性**：通读新 `butler-upgrade.md` 与 `mcv-deployment.md § 3` + `mcv-update.md`，三者在基地车生命周期角色边界上无矛盾（部署 / 升级 / 维护分工清晰）。
+- AC1–AC4：grep `delivery-summary.md` 的 §8 字段、关键词、固定格式（Task 1 Step 3 / Step 4）
+- AC5：grep `lifecycle.md` 的 §8 引用（Task 2 Step 3 / Step 4）
+- AC6：`git diff` 未改动文件（Task 3 Step 1）
+- AC7：人工通读 `delivery-summary.md`（Task 3 Step 2）
+- AC8：对照各 schema §2 逐项核查 `.ai/` 四份文件（Task 3 Step 4）
+- AC9：对照 `delivery-summary.md §4` 核查 deliveries 文件（Task 3 Step 5 前置）
+- AC10：对照 §8 核查本轮对话摘要（Task 3 Step 5 收尾时）
 
 # Risks / Open Questions
-
-- **风险 1**：保护区标记识别依赖字符串精确匹配，若用户误改了标记（如写成 `<!--user-managed-->` 无空格、或中文标点），升级流程可能误判。缓解：§ 3 侦察阶段 AI 做容错识别（tolerate whitespace / case variations），但若完全不认识，退化为 § 4 首次升级流程。本风险记录在 `butler-upgrade.md § 7 验证与回退` 的边界说明中。
-- **风险 2**：本 feature 不处理 butler 仓自身的 `CLAUDE.md`（butler 项目根，非目标项目部署）。follow-up：下次可选择在 `CLAUDE.md`（仓根）也引入保护区标记，但**现在不做**，避免本轮范围膨胀。
-- **风险 3**：升级协议本身还没有 dogfooding 过 —— 第一次实际跑是在有老项目需要升级时。缓解：规则本身按最清晰文档化标准写，减少首次执行的歧义。
-- **开放问题**：无。
+- 覆写 `.ai/` 会丢失 4/17 butler-upgrade 任务的产物内容，但 git 历史保留
+- 规则密度增长：`delivery-summary.md` 从 7 节扩到 8 节；通过 §8 紧凑编号（5 子节）控制
+- 无未决问题
