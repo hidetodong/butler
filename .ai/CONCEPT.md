@@ -1,30 +1,30 @@
 # Goal
-- 为 butler SOP 引入"迭代化需求管理"：增量迭代中每个迭代有确定的单调递增迭代号 `ITER-NNNN`，落下对应文档，并锁定该迭代的需求范围（"固定需求"）
+- 把"每个迭代的文档保持 scoped、有界"从软指令变成硬约束，堵死增量迭代中文档纵向堆积、越来越长不可控的风险
 
 # Current Understanding
-- 现状：`.ai/` 下只有单套阶段产物（`CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md`），每个新任务覆盖上一套，缺少"某次迭代固定了哪些需求、产出了哪套文档"的稳定身份
-- 增量历史只能靠 `01_CHANGELOG.md` 流水 + `deliveries/` 日期命名，无法按迭代号回溯
-- 预期产出：新增 `iteration-schema.md` 机制 SSOT；在 `lifecycle.md` / `mcv-deployment.md` / `delivery-summary.md` / `README.md` / `templates/rule-card.md` 中接入迭代号、台账、归档与收口纪律；并在 butler 自身 dogfood 验证
+- 现状（ITER-0002 引入迭代机制后）：分迭代隔离目前靠 AI 自觉"覆写"，无机制兜底；存在三处无界增长口子
+  1. 工作区四件套"覆写"是软指令，未明文禁止保留/追加上一迭代内容
+  2. `01_CHANGELOG.md` 是 append-only 全局日志，只靠 `mcv-update.md` 体积超标被动分片
+  3. `delivery-summary §4.7` 只写"可选引用"，未硬性禁止把 AC_LIST/TECH_PLAN 全文嵌入交付
+- 预期产出：在 `iteration-schema.md` / `lifecycle.md` / `delivery-summary.md` / `mcv-deployment.md` / `mcv-update.md` 把这三处改成硬约束，并 dogfood 收口 ITER-0003
 
 # Constraints
 - 显性约束：
-  - hook 不改：工作区四件套保持固定路径，`phase_gate` 校验的 `.ai/CONCEPT.md` 等路径不动
-  - 不破坏三层分层（SOP Core / Domain Profiles / Business Extension）与产物链
-  - 新增规则文件必须注册进 `Coder/README.md`（项目约束 #3）
-  - 浓缩规则 SSOT 是 `templates/rule-card.md`，不双写（项目约束 #4）
-  - 不回溯重命名历史 `deliveries/` 文件
+  - 不破坏既有产物链与三层分层；hook 不改
+  - 工作区四件套固定路径不变（仍保证 phase_gate 零改动）
+  - 历史靠 `iterations/ITER-NNNN/` 横向铺开，不纵向堆进单文件
 - 隐性约束：
-  - 归档目录在 `.ai/` 与 `deliveries/` 豁免区内，`is_gated` 不拦
-  - 迭代号单调不复用，同一时刻至多一个 active 迭代
+  - 改动须自洽：CHANGELOG 改为按迭代归档后，`mcv-update §5.1` 的体积分片要退化为兜底而非主路径
+  - overwrite-only 是规则强制，非 hook 强制（hook 难以判断"是否携带上一迭代内容"）
 
 # Impact Scope
-- 影响（规则层）：新增 `Coder/20_Workflow_Lifecycle/iteration-schema.md`；改 `lifecycle.md` / `mcv-deployment.md` / `delivery-summary.md` / `Coder/README.md` / `templates/rule-card.md`
-- 影响（dogfood）：新增 `.ai/ITERATIONS.md`、`.ai/iterations/ITER-0001..0002/`、`deliveries/ITER-0002-*.md`
-- 不影响：hook 体系（`templates/hooks/`）、其他 schema、`CLAUDE.md.template` 骨架（经占位符自动透传 rule-card）
+- 影响（规则层）：`iteration-schema.md`、`lifecycle.md`、`delivery-summary.md`、`mcv-deployment.md`、`mcv-update.md`
+- 影响（dogfood）：覆写 `.ai/` 四件套为 ITER-0003、归档 `.ai/iterations/ITER-0003/`、台账加行、`deliveries/ITER-0003-*.md`
+- 不影响：hook 体系、其他 schema、`templates/rule-card.md`（卡片已含迭代约束，本轮不动）、`README.md` / `HUMAN_GUIDE.md`（无目录结构新增）
 
 # Project Type / Active Profiles
 - 项目类型：Markdown 规则仓库（butler 自身）
-- 未命中任何 `10_Domain_Stack_Profiles/` profile，仅按通用 SOP 推进
+- 未命中任何 Domain / Stack Profile，仅按通用 SOP 推进
 
 # Open Questions
-- 无未决问题。三个核心设计决策已由用户拍板：落盘结构=工作区+收口归档；编号=递增零填充序号；锁定纪律=允许修订、扩张才开新迭代
+- 无未决问题。用户已确认"就这么落地"，三条硬约束方向已对齐

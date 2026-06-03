@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 交付 |
 |---|---|---|---|---|---|
+| ITER-0003 | 文档 scoped 有界硬约束 | closed | 2026-06-03 | 2026-06-03 | deliveries/ITER-0003-doc-scoping-hardening.md |
 | ITER-0002 | 迭代化需求管理 | closed | 2026-06-03 | 2026-06-03 | deliveries/ITER-0002-iteration-requirement-mgmt.md |
 | ITER-0001 | chat-recap-style 对话层风格约束 | closed | 2026-04-20 | 2026-04-20 | deliveries/2026-04-20-chat-recap-style.md |
 

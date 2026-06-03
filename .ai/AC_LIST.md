@@ -2,35 +2,32 @@
 - 无（本迭代需求一次冻结，无迭代内修订）
 
 # Goal
-- 让 butler SOP 支持迭代化需求管理：每个迭代有确定迭代号、落对应文档、锁定需求范围，并在 butler 自身验证机制自洽
+- 让"每个迭代文档 scoped 有界"成为硬约束，防止文档纵向堆积不可控
 
 # In Scope
-- 新增 `iteration-schema.md` 作为迭代机制 SSOT（迭代号、台账、三层落盘、锁定纪律）
-- `lifecycle.md` 接入迭代开启 / 冻结 / 修订 / 扩张 / 收口
-- `mcv-deployment.md` 把 `ITERATIONS.md` 列入运行态文件、`iterations/` 归档目录按需产生
-- `delivery-summary.md` 命名带迭代号、收口三步联动
-- `README.md` 注册新文件，`rule-card.md` 加精简迭代约束
-- dogfood：归档 ITER-0001、bootstrap 台账、收口 ITER-0002
+- Fix 1 工作区严格 overwrite-only：开新迭代时四件套必须整体覆写，禁止保留/追加上一迭代内容
+- Fix 2 CHANGELOG 收口归档：`01_CHANGELOG.md` 只承载当前活跃迭代热数据，收口随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`
+- Fix 3 deliveries 引用不嵌入：交付总结必须以指针引用 AC_LIST/TECH_PLAN/VERIFY_REPORT，不得全文嵌入
+- dogfood：覆写工作区为 ITER-0003、归档、收口
 
 # Out of Scope
-- 不修改 hook 体系（工作区固定路径不变）
-- 不回溯重命名历史 `deliveries/` 文件
-- 不为已存在的历史 deliveries 逐个补迭代号
+- 不改 hook（overwrite-only 是规则强制，非机制强制）
+- 不回溯重命名/迁移历史 deliveries 与既有归档
+- 不引入台账一致性 linter（顺延到后续候选）
 
 # Acceptance Checklist
-- [ ] AC1: 存在 `iteration-schema.md`，定义迭代号格式、台账字段、三层落盘关系与锁定纪律，并在 `README.md` 目录结构树与读取顺序说明中注册
-- [ ] AC2: `lifecycle.md` 在 P1（开启）、P2（ACK 冻结）、P5（收口三步）、§4（工作区/归档关系）、§5（修订 vs 扩张分流）均接入迭代语义
-- [ ] AC3: `mcv-deployment.md §2` 把 `ITERATIONS.md` 列入运行态文件、四件套标注当前迭代工作区、`iterations/` 归档目录按需产生
-- [ ] AC4: `delivery-summary.md` 命名口径带迭代号、§7 与 §8.4 与收口三步一致
-- [ ] AC5: `templates/rule-card.md` 含精简迭代约束，经占位符可透传到 `CLAUDE.md.template`
-- [ ] AC6: hook 体系零改动，且 `is_gated` 对 `.ai/iterations/` 与 `deliveries/` 仍为豁免
-- [ ] AC7: dogfood 自洽——`.ai/ITERATIONS.md` 台账与 `.ai/iterations/` 归档、`deliveries/` 交付三者一致，`current` 与状态列不矛盾
+- [ ] AC1: `iteration-schema.md` §5.1 明文规定开新迭代时工作区四件套整体覆写、禁止保留或追加上一迭代内容；§1 或 §3 含"文档有界、历史横向归档"不变量
+- [ ] AC2: `iteration-schema.md` §5.5 收口动作把当前迭代的 CHANGELOG 切片随四件套快照进 `iterations/ITER-NNNN/`；`01_CHANGELOG.md` 定义为活跃迭代热数据
+- [ ] AC3: `delivery-summary.md §4.7`（及编写原则）硬性规定只引用不嵌入 AC_LIST/TECH_PLAN/VERIFY_REPORT 全文
+- [ ] AC4: `lifecycle.md` P1 开启段含 overwrite-only 要点、P5 收口段含 CHANGELOG 随迭代归档
+- [ ] AC5: `mcv-deployment.md §2` 把 `01_CHANGELOG.md` 标注为当前迭代热数据、`iterations/ITER-NNNN/` 含可选 `CHANGELOG.md`
+- [ ] AC6: `mcv-update.md §5.1` 改为"CHANGELOG 按迭代收口自动归档，体积分片退化为兜底"，与新口径自洽
+- [ ] AC7: dogfood 自洽——工作区覆写为 ITER-0003（无 ITER-0002 残留）、归档/台账/交付三层一致、交付文件不含四件套全文嵌入
 
 # Verification Method
-- AC1-AC5: 阅读各目标文件，核对新增/修改段落与本清单逐项映射
-- AC6: 检查 `templates/hooks/` 无 diff；复核 `lib/io.py` 的 `GATED_BLACKLIST` 含 `.ai/`、`deliveries/`
-- AC7: 列出 `.ai/iterations/` 目录树，比对 `ITERATIONS.md` 行与 `deliveries/` 文件存在性
+- AC1-AC6: 阅读各目标文件，核对新增/修改段落与本清单逐项映射，确认规则间无自相矛盾
+- AC7: diff 确认工作区四件套为 ITER-0003 内容；列 `.ai/iterations/ITER-0003/`；grep 交付文件确认 AC_LIST/TECH_PLAN 仅以路径出现
 
 # Open Questions / Risks
-- 无未决问题；三项设计决策已拍板
-- 风险：工作区四件套固定路径与归档目录并存，若未来想改成纯迭代目录会触发 hook 改造，已在 `iteration-schema.md §3` 显式约束不得改路径
+- 风险：CHANGELOG 改为按迭代归档与 `mcv-update.md` 旧的体积分片口径并存，需确保不矛盾（AC6 兜底）
+- 无未决问题
