@@ -52,6 +52,14 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 **建议**：除非你非常确定任务很小，否则走完整流程。AI 倾向于高估自己的理解、低估任务复杂度。
 
+### 迭代号与固定需求
+
+每一轮 P1-P5 是一个**迭代**，有一个确定的迭代号 `ITER-NNNN`（单调递增，记在 `.ai/ITERATIONS.md` 台账里）。它的意义是把"这一轮固定了哪些需求、产出了哪套文档"钉死，方便回溯：
+
+- **固定需求**：你在 P2 ACK 验收清单后，这一迭代的范围就**冻结**了。之后小幅改动可以重新 ACK（记一条修订记录）；但影响面明显扩大时，AI 会开**下一个迭代号**承接，而不是把范围悄悄塞进当前迭代。
+- **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `deliveries/ITER-NNNN-<slug>.md` 交付总结。
+- **你的杠杆**：想开新一轮需求时，直接说"这算新迭代"；想确认当前进度时，让 AI 读 `.ai/ITERATIONS.md` 台账即可。
+
 ## 3. 安装（一次性）
 
 在 butler 仓库目录下执行：
@@ -91,10 +99,12 @@ AI 会自动走完整个链路：
 ```
 你的项目/
 ├── .ai/
-│   ├── CONCEPT.md          # P1 产物（按需产生）
-│   ├── AC_LIST.md           # P2 产物（按需产生）
-│   ├── TECH_PLAN.md         # P3 产物（按需产生）
-│   ├── VERIFY_REPORT.md     # P5 产物（按需产生）
+│   ├── CONCEPT.md          # P1 产物 = 当前迭代工作区
+│   ├── AC_LIST.md           # P2 产物 = 当前迭代工作区
+│   ├── TECH_PLAN.md         # P3 产物 = 当前迭代工作区
+│   ├── VERIFY_REPORT.md     # P5 产物 = 当前迭代工作区
+│   ├── ITERATIONS.md        # 迭代台账（迭代号/状态/交付链接）
+│   ├── iterations/          # 各迭代收口快照（ITER-NNNN/，按需产生）
 │   ├── local-constraints.md # 本地化约束
 │   ├── 00_IDEATION.md       # 脑暴产物（/ideation 模式）
 │   ├── 01_CHANGELOG.md      # 技术决策日志
@@ -102,7 +112,7 @@ AI 会自动走完整个链路：
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
 │   └── references/          # 外部参考资料（按需创建）
-└── deliveries/              # 完整交付总结归档
+└── deliveries/              # 完整交付总结归档（ITER-NNNN-<slug>.md）
 ```
 
 ## 5. 扩展模式
@@ -174,6 +184,7 @@ Coder/
 │   ├── acceptance-schema.md   # P2 产物模板
 │   ├── tech-plan-schema.md    # P3 产物模板
 │   ├── verify-schema.md       # P5 产物模板
+│   ├── iteration-schema.md    # 迭代号/台账/锁定纪律
 │   ├── delivery-summary.md    # 交付总结规范
 │   ├── mcv-deployment.md      # 基地车部署协议
 │   ├── mcv-update.md          # 基地车升级协议
