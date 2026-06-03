@@ -61,3 +61,5 @@
 1. **一次性安装**：`./scripts/setup.sh` — 写入全局配置，之后所有项目自动发现 butler
 2. **接入新项目**：直接给任务 — AI 自动从入口读取规则，检测到新项目后自动部署基地车
 3. **详细说明**：阅读 `HUMAN_GUIDE.md`
+
+> 开发按**迭代**推进：每个迭代有递增迭代号 `ITER-NNNN`，需求 ACK 后冻结，对应文档落盘并归档到 `.ai/iterations/`。机制详见 `Coder/20_Workflow_Lifecycle/iteration-schema.md`，用法详见 `HUMAN_GUIDE.md`。

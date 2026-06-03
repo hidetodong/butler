@@ -34,9 +34,10 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 ## 3. 存放位置与命名
 
 - 存放位置：项目根目录 `deliveries/`
-- 命名建议：`deliveries/YYYY-MM-DD-<task-slug>.md`
+- 命名建议：`deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）
+- 未开迭代号的简化路径任务，可沿用 `deliveries/YYYY-MM-DD-<task-slug>.md`
 
-`deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。
+`deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准。
 
 ## 4. 最小结构
 
@@ -108,6 +109,7 @@ Delivery Summary 不负责以下内容：
 - Delivery Summary 不是新阶段，只是 P5 完整交付后的收尾产物
 - `VERIFY_REPORT.md` 继续作为验证真源
 - Delivery Summary 应基于已确认的 AC、方案与验证结论进行人类可读汇总
+- 生成 Delivery Summary 是迭代收口三步之一（快照归档 + 交付总结 + 更新台账），三步以 `iteration-schema.md` §5.5 为准；只交付总结而不归档、不更新台账，视为收口不完整
 
 ## 8. 对话内人话摘要
 
@@ -135,10 +137,10 @@ Delivery Summary 不负责以下内容：
 对话摘要最后必须单独一行，按以下固定格式引用正式版文件：
 
 ```
-正式版：deliveries/YYYY-MM-DD-<slug>.md
+正式版：deliveries/ITER-NNNN-<slug>.md
 ```
 
-路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。
+路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `deliveries/YYYY-MM-DD-<slug>.md`。
 
 ### 8.5 与 §4 的关系
 

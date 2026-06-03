@@ -20,9 +20,10 @@
 1. `{{BUTLER_PATH}}/Coder/00_System_Prompt/identity.md`
 2. `{{BUTLER_PATH}}/Coder/00_System_Prompt/logic-protocol.md`
 3. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/lifecycle.md`
-4. `{{BUTLER_PATH}}/Coder/30_Quality_Gate/`
-5. `{{BUTLER_PATH}}/Coder/40_Context_Management/`（长任务时）
-6. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/mcv-deployment.md`（新项目接入时）
+4. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/iteration-schema.md`（迭代号 / 台账 / 锁定纪律）
+5. `{{BUTLER_PATH}}/Coder/30_Quality_Gate/`
+6. `{{BUTLER_PATH}}/Coder/40_Context_Management/`（长任务时）
+7. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/mcv-deployment.md`（新项目接入时）
 
 阶段产物模板：
 - P1: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/concept-schema.md`

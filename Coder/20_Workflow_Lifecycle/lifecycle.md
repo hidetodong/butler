@@ -59,6 +59,8 @@ AI 必须回答：
 
 P1 讨论可能跨多轮对话。讨论结束后，AI 必须将结论结晶为 `.ai/CONCEPT.md` 并呈交用户确认，而非依赖对话记忆衔接下一阶段。
 
+进入 P1 即开启一个迭代：从 `.ai/ITERATIONS.md` 领下一个迭代号 `ITER-NNNN` 并置 `active`，本迭代的 `CONCEPT.md` / `AC_LIST.md` 产在工作区四件套中。迭代号分配、台账字段与锁定纪律以 `iteration-schema.md` 为准。极小、零升级信号的简化路径任务可不单独开迭代号。
+
 若任务属于新项目接入、显式要求部署基地车，或需要建立跨会话维护设施，应在 P1 同步参考 `mcv-deployment.md` 完成侦察与部署判断。
 若任务涉及已有 `.ai/` 维护文件的升级、迁移或归档整理，应在 P1 同步参考 `mcv-update.md` 完成升级判断。
 若识别到明确技术栈或工程形态，应在 P1 记录本任务命中的 `10_Domain_Stack_Profiles/` profile，未命中时仅按通用 SOP 推进。
@@ -81,6 +83,7 @@ AI 必须回答：
 强制规则：
 
 - **必须等待用户 ACK，才能进入 P3。**
+- `AC_LIST.md` 被 ACK 即视为本迭代需求**冻结**：进入 P3/P4 后默认不再扩张范围。冻结后的修订与扩张分流规则参考 `iteration-schema.md` §5 与本文件 §5 回退规则。
 - 长任务或多子任务场景下，P2 结束后应形成一次阶段结晶，具体触发规范参考 `40_Context_Management/context-persistence.md`。
 - profile 相关验收项只在当前项目类型命中时纳入 AC，不得把无关领域规则前置成默认完成标准。
 
@@ -135,6 +138,8 @@ AI 必须回答：
 
 **必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
 
+**迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行三步，缺一不可（详见 `iteration-schema.md` §5.5）：① 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；② 生成 `deliveries/ITER-NNNN-<slug>.md` 交付总结；③ 在 `.ai/ITERATIONS.md` 把该迭代置 `closed`、填收口日期与交付链接、`current` 置 `none`。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
+
 **输入来源**：从 `.ai/AC_LIST.md` 逐项回填验证结果。
 
 AI 必须回答：
@@ -163,7 +168,9 @@ P5 → .ai/VERIFY_REPORT.md → 最终验证记录
 
 每个阶段**必须从上一阶段的产物文件读取**，不得仅凭对话记忆衔接。
 
-产物文件与运行态文件（`02_SESSION_HANDOFF.md`、`task-state.md`、`CHANGELOG.md` 等）职责不同：
+工作区四件套（`.ai/CONCEPT.md` 等固定路径）始终对应**当前活跃迭代**。迭代收口时，这四件套会被快照复制到 `.ai/iterations/ITER-NNNN/` 冻结归档，工作区原位保留供下一迭代覆写。迭代号、台账与归档机制以 `iteration-schema.md` 为准。
+
+产物文件与运行态文件（`02_SESSION_HANDOFF.md`、`task-state.md`、`CHANGELOG.md`、`ITERATIONS.md` 等）职责不同：
 
 - **产物文件**：决策记录，随任务存续，可复盘、可审计。
 - **运行态文件**：操作状态，随会话更新，任务结束后可归档。
@@ -176,6 +183,11 @@ P5 → .ai/VERIFY_REPORT.md → 最终验证记录
 - 验收标准变化：回到 P2，更新 `.ai/AC_LIST.md`。
 - 设计影响面扩大：回到 P3，更新 `.ai/TECH_PLAN.md`。
 - 新业务扩展文档出现：重新执行 Context Discovery，并至少回看 P1 / P2。
+
+回退发生在已冻结迭代内时，按"允许修订、扩张才开新迭代"分流（详见 `iteration-schema.md` §5）：
+
+- **小幅修订**（未突破原影响面）：在当前迭代号内更新 `AC_LIST.md`、重新等待 ACK，并在其顶部"修订记录"追加一行。
+- **影响面扩大**（命中上表的跨模块、契约级、关键路径变化）：先收口或废弃当前迭代，再开下一个迭代号承接，**不得**把扩张内容塞进已冻结迭代。拿不准时按扩张处理。
 
 ## 6. 研发与扩展原则
 
