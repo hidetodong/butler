@@ -39,7 +39,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 **运行态文件**（按需产生，随会话更新）：
 
 - `00_IDEATION.md`：`/ideation` 模式下的脑暴过程与中间结论；收敛后由 `CONCEPT.md` 承载进入 P2 的已确认结论。
-- `01_CHANGELOG.md`：记录经过确认的技术决策与需求增量。
+- `01_CHANGELOG.md`：记录经过确认的技术决策与需求增量，**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
 - `03_BUG_LOG.md`：Ralph-Loop 熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
@@ -56,8 +56,9 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 **迭代归档**（首次迭代收口时按需产生，只读快照）：
 
-- `iterations/ITER-NNNN/` 子目录：迭代收口时四件套的冻结快照，供复盘审计。归档机制以 `iteration-schema.md` 为准。
+- `iterations/ITER-NNNN/` 子目录：迭代收口时四件套的冻结快照（含本迭代 `CHANGELOG.md` 切片，若有），供复盘审计。归档机制以 `iteration-schema.md` 为准。
 - `iterations/` 目录不在部署时创建，而是在首次迭代收口时按需产生。
+- 每个 `ITER-NNNN/` 只承载该迭代内容，体量恒定；历史靠目录横向铺开，不纵向堆进单文件。
 
 **外部参考资料**（用户提供时按需处理并存入）：
 

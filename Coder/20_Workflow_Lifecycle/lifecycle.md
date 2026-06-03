@@ -59,7 +59,7 @@ AI 必须回答：
 
 P1 讨论可能跨多轮对话。讨论结束后，AI 必须将结论结晶为 `.ai/CONCEPT.md` 并呈交用户确认，而非依赖对话记忆衔接下一阶段。
 
-进入 P1 即开启一个迭代：从 `.ai/ITERATIONS.md` 领下一个迭代号 `ITER-NNNN` 并置 `active`，本迭代的 `CONCEPT.md` / `AC_LIST.md` 产在工作区四件套中。迭代号分配、台账字段与锁定纪律以 `iteration-schema.md` 为准。极小、零升级信号的简化路径任务可不单独开迭代号。
+进入 P1 即开启一个迭代：从 `.ai/ITERATIONS.md` 领下一个迭代号 `ITER-NNNN` 并置 `active`，本迭代的 `CONCEPT.md` / `AC_LIST.md` 产在工作区四件套中。**开启时工作区四件套必须以本迭代内容整体覆写，严禁保留或追加上一迭代内容**（overwrite-only，详见 `iteration-schema.md` §5.1）。迭代号分配、台账字段与锁定纪律以 `iteration-schema.md` 为准。极小、零升级信号的简化路径任务可不单独开迭代号。
 
 若任务属于新项目接入、显式要求部署基地车，或需要建立跨会话维护设施，应在 P1 同步参考 `mcv-deployment.md` 完成侦察与部署判断。
 若任务涉及已有 `.ai/` 维护文件的升级、迁移或归档整理，应在 P1 同步参考 `mcv-update.md` 完成升级判断。
@@ -138,7 +138,7 @@ AI 必须回答：
 
 **必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
 
-**迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行三步，缺一不可（详见 `iteration-schema.md` §5.5）：① 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；② 生成 `deliveries/ITER-NNNN-<slug>.md` 交付总结；③ 在 `.ai/ITERATIONS.md` 把该迭代置 `closed`、填收口日期与交付链接、`current` 置 `none`。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
+**迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行三步，缺一不可（详见 `iteration-schema.md` §5.5）：① 把工作区四件套（及 `01_CHANGELOG.md` 当前迭代切片，若有）快照归档到 `.ai/iterations/ITER-NNNN/`；② 生成 `deliveries/ITER-NNNN-<slug>.md` 交付总结，**只引用产物路径、不得全文嵌入四件套内容**；③ 在 `.ai/ITERATIONS.md` 把该迭代置 `closed`、填收口日期与交付链接、`current` 置 `none`，全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
 
 **输入来源**：从 `.ai/AC_LIST.md` 逐项回填验证结果。
 

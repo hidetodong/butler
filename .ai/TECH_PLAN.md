@@ -1,47 +1,43 @@
 # Goal
-- 支撑 AC1–AC7：新增迭代机制 SSOT 并把迭代号 / 台账 / 归档 / 收口纪律织进 SOP，再在 butler 自身 dogfood 验证
+- 支撑 AC1–AC7：把三处软指令改为硬约束并保持规则自洽，dogfood 收口 ITER-0003
 
 # Files / Modules to Change
-- `Coder/20_Workflow_Lifecycle/iteration-schema.md` — 新建：迭代号、台账字段、三层落盘、锁定纪律（机制 SSOT）
-- `Coder/20_Workflow_Lifecycle/lifecycle.md` — P1 开启、P2 ACK 冻结、§4 工作区/归档关系、P5 收口三步、§5 修订 vs 扩张分流
-- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — §2 把 `ITERATIONS.md` 列入运行态文件、四件套标注当前迭代工作区、`iterations/` 归档目录按需产生
-- `Coder/20_Workflow_Lifecycle/delivery-summary.md` — §3 命名带迭代号、§7 收口联动、§8.4 引用格式
-- `Coder/README.md` — 目录结构树 + 读取顺序说明注册 `iteration-schema.md`
-- `templates/rule-card.md` — 新增"迭代化需求"精简段
-- dogfood：`.ai/ITERATIONS.md`（新建）、`.ai/iterations/ITER-0001/`（归档 chat-recap-style）、`.ai/iterations/ITER-0002/`（归档本迭代）、`deliveries/ITER-0002-iteration-requirement-mgmt.md`（新建）、`.ai/{CONCEPT,AC_LIST,TECH_PLAN,VERIFY_REPORT}.md`（覆写为本迭代）
+- `Coder/20_Workflow_Lifecycle/iteration-schema.md` — §1 加"文档有界"不变量；§5.1 加 overwrite-only 硬约束；§5.5 收口加 CHANGELOG 归档
+- `Coder/20_Workflow_Lifecycle/lifecycle.md` — P1 开启段加 overwrite-only；P5 收口三步描述补 CHANGELOG 归档
+- `Coder/20_Workflow_Lifecycle/delivery-summary.md` — §4.7 + §6 硬性"引用不嵌入"
+- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — §2 `01_CHANGELOG.md` 标注热数据、归档目录含可选 CHANGELOG.md
+- `Coder/20_Workflow_Lifecycle/mcv-update.md` — §5.1 CHANGELOG 改为按迭代自动归档、体积分片退化兜底
+- dogfood：`.ai/{CONCEPT,AC_LIST,TECH_PLAN,VERIFY_REPORT}.md`（覆写 ITER-0003）、`.ai/iterations/ITER-0003/`、`.ai/ITERATIONS.md`、`deliveries/ITER-0003-doc-scoping-hardening.md`
 
 # Interface / Contract
-- `iteration-schema.md` 对外承诺：迭代号格式 `ITER-NNNN`、台账 `current` 指针 + 状态机（active/closed/abandoned）、收口三步（快照 + 交付 + 台账）
-- 工作区四件套路径契约不变：`.ai/CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md`，保证 hook `phase_gate` 零改动
-- `.ai/ITERATIONS.md` 承诺：`current` 与状态列一致、迭代号单调不复用
+- overwrite-only 契约：开新迭代 = 工作区四件套整体替换为本迭代内容，上一迭代内容仅存于 `iterations/ITER-NNNN/`
+- CHANGELOG 契约：`01_CHANGELOG.md` 作用域 = 当前活跃迭代；收口时切片归档，全局文件回到只含开放迭代热数据
+- delivery 契约：交付总结对 AC_LIST/TECH_PLAN/VERIFY_REPORT 仅引用路径，禁止全文嵌入
+- 工作区四件套路径不变 → hook 零改动
 
 # State / Boundary
-- 状态边界：迭代是套在 P1–P5 外层的需求锁定单元，不新增阶段
-- 模块职责边界：`iteration-schema.md` 管机制定义，`lifecycle.md` 管阶段接入点，二者引用不复制
-- 不在范围内：hook 体系、其他 schema、历史 deliveries 重命名、`CLAUDE.md.template` 骨架（占位符自动透传 rule-card）
+- 状态边界：三条约束都作用在"迭代开启"与"迭代收口"两个时刻，不新增阶段
+- 模块边界：`iteration-schema.md` 定机制，`lifecycle.md` 定阶段接入，`delivery-summary.md` 定交付层，`mcv-*` 定部署/升级层，引用不复制
+- 不在范围内：hook、rule-card、README/HUMAN_GUIDE（无结构变化）
 
 # Design Decisions
-- 落盘选"工作区 + 收口归档"而非"迭代目录即工作区"：保固定路径 → hook 一行不改，契合现有"热数据 + 冷归档"哲学（`mcv-update.md`）
-- 编号选递增零填充 `ITER-NNNN`：单调、可排序、无歧义，台账记号→标题映射
-- 锁定纪律选"允许修订、扩张才开新迭代"：迭代内小幅改 AC 重新 ACK + 修订记录；命中回退/升级信号的扩张才强制开新迭代
-- dogfood 把现有 chat-recap-style 归档为 ITER-0001、本次为 ITER-0002，验证机制端到端自洽
+- overwrite-only 用规则强制而非 hook：hook 无法可靠判断"内容是否携带上一迭代"，强行机制化代价高收益低；规则明文 + 归档兜底已足够
+- CHANGELOG 选"按迭代收口自动归档"而非"全局 + 被动体积分片"：让分片随迭代边界自动发生，体积超标分片退化为异常兜底，根治无界增长
+- delivery 选"硬禁嵌入"而非"建议引用"：把软约束升级为不得，AI 无解释空间
 - 未命中任何 Domain / Stack Profile；仅按通用 SOP 推进
 
 # Execution Steps
-- Task 1: 新建 `iteration-schema.md`（SSOT）
-- Task 2: 改 `lifecycle.md`（P1/P2/§4/P5/§5 五处接入）
-- Task 3: 改 `mcv-deployment.md §2`
-- Task 4: 改 `delivery-summary.md`（§3/§7/§8.4）
-- Task 5: 改 `README.md`（树 + 说明列表）
-- Task 6: 改 `rule-card.md`（迭代化需求段）
-- Task 7: dogfood — 归档 ITER-0001、覆写工作区为 ITER-0002、建台账、归档 ITER-0002、写交付、收口
+- Task 1: 改 `iteration-schema.md`（§1 不变量 + §5.1 overwrite-only + §5.5 CHANGELOG 归档）
+- Task 2: 改 `lifecycle.md`（P1 + P5）
+- Task 3: 改 `delivery-summary.md`（§4.7 + §6）
+- Task 4: 改 `mcv-deployment.md §2`
+- Task 5: 改 `mcv-update.md §5.1`
+- Task 6: dogfood — 写 VERIFY、归档 ITER-0003、台账加行收口、写交付
 
 # Verification Plan
-- AC1–AC5: 逐文件阅读核对新增/修改段落与 AC 映射
-- AC6: `git status -- templates/hooks/` 无改动；复核 `lib/io.py` `GATED_BLACKLIST`
-- AC7: 列 `.ai/iterations/` 目录树，比对 `ITERATIONS.md` 与 `deliveries/`
+- AC1–AC6: 逐文件阅读核对；交叉检查 CHANGELOG 三处口径（iteration-schema/mcv-deployment/mcv-update）无矛盾
+- AC7: `git diff` 工作区四件套为 ITER-0003；`ls .ai/iterations/ITER-0003/`；`grep -n 'AC_LIST\|TECH_PLAN' deliveries/ITER-0003-*.md` 仅路径
 
 # Risks / Open Questions
-- 覆写工作区四件套会丢失 chat-recap-style 工作区内容，但已先快照到 ITER-0001 且 git 历史保留
-- 台账长期增长需后续按 `mcv-update.md` 归档冷行；本迭代仅 2 行，暂不触发
+- CHANGELOG 口径分散在三文件，改动需同步，否则自相矛盾 → 由 AC6 交叉核对兜底
 - 无未决问题
