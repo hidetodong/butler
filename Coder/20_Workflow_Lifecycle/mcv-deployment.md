@@ -43,15 +43,21 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
 - `03_BUG_LOG.md`：Ralph-Loop 熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
+- `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/交付链接，字段参考 `iteration-schema.md`。
 
-**阶段产物**（任务推进时按需产生，决策记录，可复盘可审计）：
+**阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：
 
 - `CONCEPT.md`：P1 问题理解说明，字段参考 `concept-schema.md`。
 - `AC_LIST.md`：P2 验收清单，字段参考 `acceptance-schema.md`。
 - `TECH_PLAN.md`：P3 技术方案，字段参考 `tech-plan-schema.md`。
 - `VERIFY_REPORT.md`：P5 验证报告，字段参考 `verify-schema.md`。
 
-阶段产物不在部署时创建，而是随 `lifecycle.md` 状态机推进时强制产出。每个阶段从上一阶段的产物文件读取输入，不依赖对话记忆。
+这四件套是固定路径的活产物，始终对应当前活跃迭代。阶段产物不在部署时创建，而是随 `lifecycle.md` 状态机推进时强制产出。每个阶段从上一阶段的产物文件读取输入，不依赖对话记忆。
+
+**迭代归档**（首次迭代收口时按需产生，只读快照）：
+
+- `iterations/ITER-NNNN/` 子目录：迭代收口时四件套的冻结快照，供复盘审计。归档机制以 `iteration-schema.md` 为准。
+- `iterations/` 目录不在部署时创建，而是在首次迭代收口时按需产生。
 
 **外部参考资料**（用户提供时按需处理并存入）：
 

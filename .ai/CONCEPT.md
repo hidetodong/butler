@@ -1,47 +1,30 @@
 # Goal
-
-- 为 butler 新增**主动升级命令**：让已部署过 butler 的老项目能通过一条指令，把自己的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库的最新模板与规则，同时保护项目特定内容不被覆盖。
+- 为 butler SOP 引入"迭代化需求管理"：增量迭代中每个迭代有确定的单调递增迭代号 `ITER-NNNN`，落下对应文档，并锁定该迭代的需求范围（"固定需求"）
 
 # Current Understanding
-
-- 本任务是 Butler 规则仓第九轮维护 —— 但性质是**新增 feature**（不在 audit 清单中），非 bug 修复。
-- 用户痛点：butler 仓经过 v0.0.3 → v0.0.10 的大量变更，模板结构（CLAUDE.md.template 占位符）、`.ai/` 文件命名（02_SESSION_HANDOFF）、schema 新增（local-constraints-schema）等都与老部署项目脱节。手工同步成本高且易漏。
-- 已定的 4 个核心决策：
-  - **B**：升级范围 = `CLAUDE.md` + `.ai/` 结构（不涉及 `deliveries/` 历史）
-  - **β**：不引入 butler 版本戳，靠差异检测
-  - **x**：保护区标记（用户内容与 butler 内容用 HTML 注释边界分隔）
-  - **r**：命令触发 = 显式 slash `/butler-upgrade` + 语义词（"升级 butler" / "同步到新版"）
+- 现状：`.ai/` 下只有单套阶段产物（`CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md`），每个新任务覆盖上一套，缺少"某次迭代固定了哪些需求、产出了哪套文档"的稳定身份
+- 增量历史只能靠 `01_CHANGELOG.md` 流水 + `deliveries/` 日期命名，无法按迭代号回溯
+- 预期产出：新增 `iteration-schema.md` 机制 SSOT；在 `lifecycle.md` / `mcv-deployment.md` / `delivery-summary.md` / `README.md` / `templates/rule-card.md` 中接入迭代号、台账、归档与收口纪律；并在 butler 自身 dogfood 验证
 
 # Constraints
-
 - 显性约束：
-  - 不破坏三层架构（SOP Core / Domain Profiles / Business Extension）。
-  - 不破坏现行 `mcv-deployment.md` 的初次部署语义 —— 升级协议与部署协议并列而非替代。
-  - 新规则文件必须在 `Coder/README.md` 注册；必须含 frontmatter（audience / scope）。
-  - 保护用户项目特定约束内容，不被覆盖式升级吞掉。
+  - hook 不改：工作区四件套保持固定路径，`phase_gate` 校验的 `.ai/CONCEPT.md` 等路径不动
+  - 不破坏三层分层（SOP Core / Domain Profiles / Business Extension）与产物链
+  - 新增规则文件必须注册进 `Coder/README.md`（项目约束 #3）
+  - 浓缩规则 SSOT 是 `templates/rule-card.md`，不双写（项目约束 #4）
+  - 不回溯重命名历史 `deliveries/` 文件
 - 隐性约束：
-  - 升级过程应**可审阅、可 ACK**（列出变更清单给用户确认后再动），不得直接静默覆盖。
-  - 老项目（无保护区标记）也要能升级，不能假设所有项目都是新规范。
+  - 归档目录在 `.ai/` 与 `deliveries/` 豁免区内，`is_gated` 不拦
+  - 迭代号单调不复用，同一时刻至多一个 active 迭代
 
 # Impact Scope
-
-预计新建/修改 5 个文件：
-- **新建** `Coder/20_Workflow_Lifecycle/butler-upgrade.md`（升级协议，与 `mcv-deployment.md` / `mcv-update.md` 并列）
-- **修改** `templates/CLAUDE.md.template`（引入 `<!-- butler-managed -->` / `<!-- /butler-managed -->` 保护区边界）
-- **修改** `Coder/20_Workflow_Lifecycle/mcv-deployment.md § 3`（部署时生成保护区标记，建立升级契约的起点）
-- **修改** `Coder/00_System_Prompt/logic-protocol.md § 4 Semantic Triggers`（注册 `/butler-upgrade` 命令与语义触发词）
-- **修改** `Coder/README.md`（注册新文件 + 目录结构 + "其中："说明）
-
-不影响：其他 schema、Extension、Domain Profiles、scripts、templates/rule-card.md（保持 SSOT 不动）。
+- 影响（规则层）：新增 `Coder/20_Workflow_Lifecycle/iteration-schema.md`；改 `lifecycle.md` / `mcv-deployment.md` / `delivery-summary.md` / `Coder/README.md` / `templates/rule-card.md`
+- 影响（dogfood）：新增 `.ai/ITERATIONS.md`、`.ai/iterations/ITER-0001..0002/`、`deliveries/ITER-0002-*.md`
+- 不影响：hook 体系（`templates/hooks/`）、其他 schema、`CLAUDE.md.template` 骨架（经占位符自动透传 rule-card）
 
 # Project Type / Active Profiles
-
-- 项目类型：Markdown 规则仓库。
-- 未命中任何 Domain Profile。
+- 项目类型：Markdown 规则仓库（butler 自身）
+- 未命中任何 `10_Domain_Stack_Profiles/` profile，仅按通用 SOP 推进
 
 # Open Questions
-
-3 个细节设计需用户拍板（见 AC_LIST）：
-- **U-1** 保护区标记的"覆盖方向"（butler 区显式标 vs 用户区显式标）
-- **U-2** 老项目（无保护区标记）的首次升级策略
-- **U-3** `.ai/` 结构升级的范围粒度
+- 无未决问题。三个核心设计决策已由用户拍板：落盘结构=工作区+收口归档；编号=递增零填充序号；锁定纪律=允许修订、扩张才开新迭代

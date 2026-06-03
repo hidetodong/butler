@@ -47,6 +47,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     acceptance-schema.md
     tech-plan-schema.md
     verify-schema.md
+    iteration-schema.md
     local-constraints-schema.md
     delivery-summary.md
     progressive-handoff.md
@@ -109,6 +110,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `55_Extension_RalphLoop/ralph-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，负责 P4 的自主纠错闭环与熔断规则。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。
+- `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的字段与最小模板，在基地车部署的本地化适配步骤产出。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。

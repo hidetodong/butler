@@ -20,6 +20,10 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 
 每个阶段必须从上一阶段的产物文件读取输入，禁止仅凭对话记忆衔接。
 
+## 迭代化需求
+
+每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 被 ACK 即冻结需求：迭代内小幅修订可重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md` + 台账置 closed。
+
 ## 回退规则
 
 - 目标理解变化 → 回 P1
