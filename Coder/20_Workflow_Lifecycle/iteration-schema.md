@@ -88,7 +88,7 @@ current: ITER-0002
 
 ### 5.2 冻结 (Freeze)
 
-- 时机：`AC_LIST.md` 被用户 ACK 后。
+- 时机：`AC_LIST.md` 被用户 ACK 后。（`/dangerous` 危险模式下，改为模型过 `65_Extension_Dangerous/dangerous-engine.md` §5.1 自审门后自主 ACK 即冻结，冻结纪律不变。）
 - 含义：本迭代验收范围锁定，进入 P3/P4 后默认不再扩张。
 
 ### 5.3 迭代内修订 (Amend)
