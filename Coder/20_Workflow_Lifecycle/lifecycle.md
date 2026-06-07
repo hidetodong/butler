@@ -82,7 +82,7 @@ AI 必须回答：
 
 强制规则：
 
-- **必须等待用户 ACK，才能进入 P3。**
+- **必须等待用户 ACK，才能进入 P3。**（例外：仅在 `/dangerous` 危险模式下，该 ACK 由 `65_Extension_Dangerous/dangerous-engine.md` §5.1 的强制验收自审门替代，由模型自主 ACK，并照其 §7 留审计与回滚痕迹。）
 - `AC_LIST.md` 被 ACK 即视为本迭代需求**冻结**：进入 P3/P4 后默认不再扩张范围。冻结后的修订与扩张分流规则参考 `iteration-schema.md` §5 与本文件 §5 回退规则。
 - 长任务或多子任务场景下，P2 结束后应形成一次阶段结晶，具体触发规范参考 `40_Context_Management/context-persistence.md`。
 - profile 相关验收项只在当前项目类型命中时纳入 AC，不得把无关领域规则前置成默认完成标准。
@@ -102,7 +102,7 @@ AI 必须回答：
 
 强制规则：
 
-- **必须等待用户 ACK，才能进入 P4。**
+- **必须等待用户 ACK，才能进入 P4。**（例外：仅在 `/dangerous` 危险模式下，该 ACK 由 `65_Extension_Dangerous/dangerous-engine.md` §5.2 的强制设计自审门替代，由模型自主 ACK，并照其 §7 留审计与回滚痕迹。）
 - 若任务链路较长，应在 P3 结束时明确子任务拆分、handoff 方式与状态同步策略，具体接力规则参考 `progressive-handoff.md` 与 `40_Context_Management/context-persistence.md`。
 - 若未命中任何 profile，则仅按通用 SOP 与质量门禁设计方案。
 
@@ -149,7 +149,7 @@ AI 必须回答：
 - 是否还存在未关闭风险？
 - 当前验证依据中，哪些来自通用质量门禁，哪些来自已激活的 profile？
 
-P5 阶段默认触发 `60_Extension_CodeReview/review-engine.md` 简要自评（用户明确要求跳过时除外）。
+P5 阶段默认触发 `60_Extension_CodeReview/review-engine.md` 简要自评（用户明确要求跳过时除外）。在 `/dangerous` 危险模式下，该简评升级为**不可跳过的完整多维审查门**，Must Fix 阻断迭代收口，详见 `65_Extension_Dangerous/dangerous-engine.md` §7.3。
 
 长任务在 P5 结束后，应补充 checkpoint 或 handoff summary，确保验证结论可直接被下一阶段继承。
 若生成 `02_SESSION_HANDOFF.md`，其内容结构应符合 `40_Context_Management/handoff-spec.md`。
