@@ -43,7 +43,9 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
 - `03_BUG_LOG.md`：Ralph-Loop 熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
-- `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/交付链接，字段参考 `iteration-schema.md`。
+- `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
+- `MILESTONES.md`：里程碑台账，记录 `current` 指针与全部里程碑的号/标题/状态/含迭代/交付链接，字段参考 `milestone-schema.md`；首次开启里程碑时按需产生。
+- `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
 
 **阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：
 
@@ -59,6 +61,12 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `iterations/ITER-NNNN/` 子目录：迭代收口时四件套的冻结快照（含本迭代 `CHANGELOG.md` 切片，若有），供复盘审计。归档机制以 `iteration-schema.md` 为准。
 - `iterations/` 目录不在部署时创建，而是在首次迭代收口时按需产生。
 - 每个 `ITER-NNNN/` 只承载该迭代内容，体量恒定；历史靠目录横向铺开，不纵向堆进单文件。
+
+**里程碑归档**（首次里程碑收口时按需产生，只读快照）：
+
+- `milestones/MILE-NNNN/MILESTONE.md`：里程碑收口时 `.ai/MILESTONE.md` 的冻结快照，供复盘审计。归档机制以 `milestone-schema.md` 为准。
+- `milestones/` 目录不在部署时创建，而是在首次里程碑收口时按需产生。
+- 里程碑级人类交付落在项目根 `deliveries/milestones/MILE-NNNN-<slug>.md`，该子目录同样在首次里程碑收口时按需产生（迭代级交付仍平铺在 `deliveries/` 根，见 `delivery-summary.md` §3）。
 
 **外部参考资料**（用户提供时按需处理并存入）：
 

@@ -34,10 +34,11 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 ## 3. 存放位置与命名
 
 - 存放位置：项目根目录 `deliveries/`
-- 命名建议：`deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）
+- 迭代级（小版本）命名：`deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）。迭代交付**一律平铺在 `deliveries/` 根**，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条按号连续的时间线。
+- 里程碑级（大版本）命名：`deliveries/milestones/MILE-NNNN-<slug>.md`（里程碑收口时，里程碑号取自 `.ai/MILESTONES.md`）。版本级交付集中在 `deliveries/milestones/` 子目录，不污染迭代时间线。
 - 未开迭代号的简化路径任务，可沿用 `deliveries/YYYY-MM-DD-<task-slug>.md`
 
-`deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准。
+`deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份迭代级 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准；一份里程碑级 Delivery Summary 对应一次里程碑收口，里程碑号与版本级聚合机制以 `milestone-schema.md` 为准。
 
 ## 4. 最小结构
 
@@ -80,6 +81,15 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 
 **硬约束**：对 `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` 等产物，只能以**路径或链接指针**引用（如 `.ai/iterations/ITER-NNNN/AC_LIST.md`），**不得把其全文或大段内容复制嵌入交付总结**。Delivery Summary 是高层摘要，体量恒定；细节留在被引用的产物里。违反此约束会让交付文档随迭代膨胀，正是迭代化要消除的问题。
 
+### 4.8 里程碑级（大版本）交付的聚合口径
+
+里程碑级 Delivery Summary 是**版本级聚合**，在其下各迭代均已收口、里程碑收口时生成（触发与机制以 `milestone-schema.md` §7.4 为准）。它在 §4.1–§4.7 通用结构之上额外遵守：
+
+- **目标 / 已完成内容**：以大版本视角汇总，对应 `.ai/MILESTONE.md` 的范围评估与关键交付目标，而非复述单个迭代细节。
+- **聚合而非嵌入（硬约束）**：必须**只链接**其下各迭代交付（`deliveries/ITER-NNNN-<slug>.md`）与里程碑产物（`.ai/milestones/MILE-NNNN/MILESTONE.md`），**不得把迭代交付或四件套全文嵌入**。版本级交付是迭代交付之上的索引与总览，体量恒定。
+- **拆分路线图回填**：应对照 `.ai/MILESTONE.md` 拆分路线图，逐路线项说明落到哪个迭代、是否达成，让读者一眼看清大版本拆成了哪些小版本、各自结果如何。
+- **版本级剩余风险**：在迭代级风险之上，补充跨迭代、整体版本层面尚未关闭的风险或延后事项。
+
 ## 5. 非目标与边界
 
 Delivery Summary 不负责以下内容：
@@ -113,6 +123,7 @@ Delivery Summary 不负责以下内容：
 - `VERIFY_REPORT.md` 继续作为验证真源
 - Delivery Summary 应基于已确认的 AC、方案与验证结论进行人类可读汇总
 - 生成 Delivery Summary 是迭代收口三步之一（快照归档 + 交付总结 + 更新台账），三步以 `iteration-schema.md` §5.5 为准；只交付总结而不归档、不更新台账，视为收口不完整
+- 里程碑级 Delivery Summary 是里程碑收口三步之一（快照归档 + 版本级交付总结 + 更新里程碑台账），三步以 `milestone-schema.md` §7.4 为准；它在所属迭代各自收口交付之后、大版本收口时生成，不替代迭代级交付
 
 ## 8. 对话内人话摘要
 
@@ -143,7 +154,7 @@ Delivery Summary 不负责以下内容：
 正式版：deliveries/ITER-NNNN-<slug>.md
 ```
 
-路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `deliveries/YYYY-MM-DD-<slug>.md`。
+路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `deliveries/YYYY-MM-DD-<slug>.md`。里程碑收口时，引用行指向版本级交付，格式为 `正式版：deliveries/milestones/MILE-NNNN-<slug>.md`。
 
 ### 8.5 与 §4 的关系
 
