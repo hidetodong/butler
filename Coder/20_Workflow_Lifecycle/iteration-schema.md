@@ -48,7 +48,8 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 ### 4.1 必填字段
 
 - `current`：当前活跃迭代号；无活跃迭代时为 `none`。
-- 迭代表，每行一个迭代，含：`迭代号`、`标题`、`状态`、`开启日期`、`收口日期`、`交付链接`。
+- 迭代表，每行一个迭代，含：`迭代号`、`标题`、`状态`、`开启日期`、`收口日期`、`所属 milestone`、`交付链接`。
+- `所属 milestone`：该迭代归属的里程碑号（`MILE-NNNN`）；不归属任何里程碑的独立迭代填 `—`。本列与 `.ai/MILESTONES.md`「含迭代」列互为对账，机制以 `milestone-schema.md` 为准。本表是全量迭代时间线的真源：单调递增的迭代号给出时间线，`所属 milestone` 列给出版本归组，一张表同时承载两条轴。
 
 ### 4.2 状态取值
 
@@ -63,11 +64,13 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 
 current: ITER-0002
 
-| 迭代号 | 标题 | 状态 | 开启 | 收口 | 交付 |
-|---|---|---|---|---|---|
-| ITER-0002 | <本迭代标题> | active | YYYY-MM-DD | — | — |
-| ITER-0001 | <上一迭代标题> | closed | YYYY-MM-DD | YYYY-MM-DD | deliveries/ITER-0001-<slug>.md |
+| 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
+|---|---|---|---|---|---|---|
+| ITER-0002 | <本迭代标题> | active | YYYY-MM-DD | — | MILE-0001 | — |
+| ITER-0001 | <上一迭代标题> | closed | YYYY-MM-DD | YYYY-MM-DD | MILE-0001 | deliveries/ITER-0001-<slug>.md |
 ```
+
+不归属任何里程碑的独立迭代，「所属 milestone」列填 `—`。
 
 ### 4.4 编写规则
 
@@ -120,6 +123,7 @@ current: ITER-0002
 ## 6. 与执行流程的关系
 
 - 迭代不是新阶段，而是套在 `P1 -> P5` 状态机外层的需求锁定单元；阶段推进规则仍以 `lifecycle.md` 为准。
+- 迭代之上还可套一层**里程碑 (Milestone)** 作为大版本范围单元：处于 `active` 里程碑期间开启的迭代自动归属它，归属关系与版本级交付机制以 `milestone-schema.md` 为准。里程碑松耦合可选，迭代不依赖里程碑也能独立成立。
 - 工作区四件套字段仍分别以 `concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 为准。
 - 收口交付的文件层与对话层规则以 `delivery-summary.md` 为准。
 - 台账与归档目录的部署时机以 `mcv-deployment.md` 为准。
