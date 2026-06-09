@@ -78,6 +78,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /65_Extension_Dangerous
     dangerous-engine.md
 
+  /70_Extension_Preference
+    preference-probe-engine.md
+
   /99_Business_Extension
     .gitkeep
 ```
@@ -90,6 +93,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
 - `50_Extension_Ideation/`：仅在显式 `/ideation` 指令下启用的独立脑暴扩展模块。
 - `65_Extension_Dangerous/`：仅在显式 `/dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
+- `70_Extension_Preference/`：仅在显式 `/preference` 指令下启用的实验性偏好探针模块，采集决策信号、蒸馏跨项目通识并反哺无监督自决；外置存储、与本仓库解耦，默认关。
 - `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
 - `99_Business_Extension/`：业务侧最高优先级约束目录。
 
@@ -115,6 +119,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `55_Extension_RalphLoop/ralph-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，负责 P4 的自主纠错闭环与熔断规则。
 - `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用 Ralph-Loop，附审计、回滚与 P5 强制完整审查护栏。
+- `70_Extension_Preference/preference-probe-engine.md` 只在显式 `/preference` 指令下启用，是实验性偏好探针：采集高信号决策、按跨情境一致蒸馏为跨项目通识、反哺 `/dangerous` 自审门；数据外置（`$BUTLER_PREF`，与本仓库解耦）、先验非权威、绝不侵入迭代数据流，默认关。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
 - `20_Workflow_Lifecycle/milestone-schema.md` 定义里程碑号分配、`.ai/MILESTONES.md` 台账字段、`.ai/MILESTONE.md` 范围评估/理解阐释/拆分路线图产物、启动信号与版本级交付纪律；里程碑是套在迭代之上、松耦合可选、方向性不冻结的大版本范围单元。
