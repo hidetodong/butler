@@ -65,8 +65,8 @@ flowchart TB
 | 子系统 | 入口 | 用途 |
 |---|---|---|
 | 🛠 **Coder** | [`Coder/README.md`](Coder/README.md) | 工程开发与 AI 协作（核心） |
-| 📚 **Learner** | [`Learner/README.md`](Learner/README.md) | 学习事务管理 |
-| 🗂 **Composer** | [`Composer/README.md`](Composer/README.md) | 其他生活 / 事务性杂项 |
+| 📚 **Learner** | [`Learner/README.md`](Learner/README.md) | 学习事务管理 &nbsp;`🚧 WIP` |
+| 🗂 **Composer** | [`Composer/README.md`](Composer/README.md) | 其他生活 / 事务性杂项 &nbsp;`🚧 WIP` |
 
 ## 🧩 扩展模式
 
