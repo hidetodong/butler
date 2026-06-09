@@ -1,65 +1,126 @@
-# butler
+<div align="center">
 
-一个面向个人助理协作的 Markdown 仓库。
+# 🤖 Butler
 
-当前仓库包含三个可独立引用的子系统：
+**面向 AI 辅助工程开发的通用协作 SOP 规则仓库**
 
-- `Coder/`：工程开发与 AI 协作规则体系
-- `Learner/`：学习事务管理入口
-- `Composer/`：除开发与学习之外的杂项事务入口
+把 AI 从「自由发挥的编码助手」变成「按流程交付的工程协作者」
 
-## 子系统入口
+![type](https://img.shields.io/badge/type-rules--SOP-blue)
+![format](https://img.shields.io/badge/format-Markdown-lightgrey)
+![workflow](https://img.shields.io/badge/workflow-P1→P5-orange)
+![AI](https://img.shields.io/badge/AI-collaboration-brightgreen)
 
-每个子系统目录都可以被其他应用或文件直接引用作为入口，入口文件如下：
+</div>
 
-- `Coder/README.md`
-- `Learner/README.md`
-- `Composer/README.md`
+---
 
-根目录 `README.md` 只负责总览与分流，不替代各子系统自己的入口说明。
+Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需求开发 SOP，规范 AI 在真实项目中的协作流程：先对齐理解、再定义完成、再确认方案，最后才动手实现与验证。
 
-## 目录结构
+## ✨ 核心特性
 
-```txt
-/butler
-  README.md
-  CLAUDE.md
-  HUMAN_GUIDE.md
+| | 能力 | 说明 |
+|---|---|---|
+| ✅ | **验收导向 SOP** | `P1→P5` 五阶段状态机，P2/P3 双 ACK 门控质量 |
+| 🔁 | **迭代化** | `ITER-NNNN` 单调递增，需求 ACK 后冻结，文档归档可回溯 |
+| 🏔 | **里程碑** | 大版本范围单元，聚合多个迭代、产出版本级交付 |
+| 🧠 | **偏好蒸馏** | 采集你的设计取舍，蒸馏跨项目通识，反哺无监督自决 |
+| 🛡 | **Hook 门禁** | 阶段产物缺失时机械拦截源码写操作 |
+| 🧩 | **可插拔扩展** | 脑暴 / 自纠 / 审查 / 自治 / 偏好，按指令或语义触发 |
+| 📦 | **基地车部署** | 新项目零配置接入，自动展开 `.ai/` 基础设施 |
 
-  /scripts
-    setup.sh
+## 🔄 核心工作流
 
-  /templates
-    CLAUDE.md.template
-    rule-card.md
-
-  /Coder
-    README.md
-    architecture-overview.md
-    /00_System_Prompt
-    /10_Domain_Stack_Profiles
-    /20_Workflow_Lifecycle
-    /30_Quality_Gate
-    /40_Context_Management
-    /99_Business_Extension
-
-  /Learner
-    README.md
-
-  /Composer
-    README.md
+```mermaid
+flowchart LR
+    P1["🔍 P1 Analysis<br/>CONCEPT.md"] --> P2["✅ P2 Acceptance<br/>AC_LIST.md ✋ACK"]
+    P2 --> P3["📐 P3 Design<br/>TECH_PLAN.md ✋ACK"]
+    P3 --> P4["⚙️ P4 Execute<br/>代码 / 配置 / 文档"]
+    P4 --> P5["🧪 P5 Verify<br/>VERIFY_REPORT.md"]
 ```
 
-## 使用方式
+> 外层还套两层范围单元：若干 **迭代 `ITER-NNNN`**（小可交付版本）组成一个 **里程碑 `MILE-NNNN`**（大可交付版本）。每个阶段从上一阶段的产物文件读取，不依赖对话记忆。
 
-- 当目标是软件工程、编码协作、规则执行时，从 `Coder/` 进入。
-- 当目标是学习计划、知识沉淀、学习事务管理时，从 `Learner/` 进入。
-- 当目标属于其他生活/事务性杂项时，从 `Composer/` 进入。
+## 🧭 三个子系统
 
-## 快速上手
+每个子系统目录都可被独立引用作为入口；根 `README.md` 只负责总览与分流。
 
-1. **一次性安装**：`./scripts/setup.sh` — 写入全局配置，之后所有项目自动发现 butler
-2. **接入新项目**：直接给任务 — AI 自动从入口读取规则，检测到新项目后自动部署基地车
-3. **详细说明**：阅读 `HUMAN_GUIDE.md`
+| 子系统 | 入口 | 用途 |
+|---|---|---|
+| 🛠 **Coder** | [`Coder/README.md`](Coder/README.md) | 工程开发与 AI 协作（核心） |
+| 📚 **Learner** | [`Learner/README.md`](Learner/README.md) | 学习事务管理 |
+| 🗂 **Composer** | [`Composer/README.md`](Composer/README.md) | 其他生活 / 事务性杂项 |
 
-> 开发按**迭代**推进：每个迭代有递增迭代号 `ITER-NNNN`，需求 ACK 后冻结，对应文档落盘并归档到 `.ai/iterations/`。机制详见 `Coder/20_Workflow_Lifecycle/iteration-schema.md`，用法详见 `HUMAN_GUIDE.md`。
+## 🧩 扩展模式
+
+默认不启用，通过指令或语义触发：
+
+| 模式 | 触发 | 用途 |
+|---|---|---|
+| 💡 **Ideation** | `/ideation` | 需求脑暴与完善 |
+| 🔁 **Ralph-Loop** | `/loop` | 自主纠错闭环（执行-探测-反思-修正） |
+| 🔎 **Review** | `/review` | 代码审查 |
+| ⚠️ **Dangerous** | `/dangerous` | 无人值守长程自治（实验性） |
+| 🧠 **Preference** | `/preference` | 跨项目偏好蒸馏（实验性，默认关） |
+
+## 🚀 快速上手
+
+```bash
+# 1. 一次性全局安装（写入全局配置，之后所有项目自动发现 butler）
+./scripts/setup.sh
+
+# 2. 可选 · 启用偏好探针（opt-in，数据外置）
+./scripts/preference-init.sh
+```
+
+3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
+4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
+
+## 📂 目录结构
+
+```txt
+butler/
+├── README.md                       # 本文件 · 总览与分流
+├── CLAUDE.md                       # 给 AI 的仓库开发约定
+├── HUMAN_GUIDE.md                  # 面向人类的操作手册
+│
+├── scripts/
+│   ├── setup.sh                    # 一次性全局安装
+│   └── preference-init.sh          # 偏好探针存储初始化（opt-in）
+│
+├── templates/                      # 目标项目落地物
+│   ├── CLAUDE.md.template
+│   ├── rule-card.md                #   浓缩规则卡（强约束 SSOT）
+│   ├── hooks/                      #   PreToolUse 流程门禁
+│   ├── settings.hooks-snippet.json
+│   └── preference/                 #   偏好探针外置存储骨架
+│
+├── Coder/                          # 🛠 工程开发与 AI 协作（核心）
+│   ├── README.md                   #   子系统入口
+│   ├── architecture-overview.md    #   规则分层与启用关系
+│   ├── 00_System_Prompt/           #   身份与总调度
+│   ├── 10_Domain_Stack_Profiles/   #   技术栈 profile（按需启用）
+│   ├── 20_Workflow_Lifecycle/      #   P1-P5 状态机 · 迭代 · 里程碑 · 交付
+│   ├── 30_Quality_Gate/            #   质量门禁
+│   ├── 40_Context_Management/      #   长任务上下文治理
+│   ├── 50_Extension_Ideation/      #   脑暴        /ideation
+│   ├── 55_Extension_RalphLoop/     #   自主纠错    /loop
+│   ├── 60_Extension_CodeReview/    #   代码审查    /review
+│   ├── 65_Extension_Dangerous/     #   无人值守自治 /dangerous ⚠️
+│   ├── 70_Extension_Preference/    #   偏好探针    /preference ⚠️
+│   └── 99_Business_Extension/      #   业务约束（最高优先级）
+│
+├── Learner/                        # 📚 学习事务管理
+├── Composer/                       # 🗂 其他杂项事务
+└── deliveries/                     # butler 自身的交付总结归档（dogfooding）
+```
+
+---
+
+<div align="center">
+
+开发按**迭代**推进 · 需求 ACK 后**冻结** · 文档落盘**可回溯**
+
+机制详见 [`Coder/20_Workflow_Lifecycle/`](Coder/20_Workflow_Lifecycle/) · 用法详见 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)
+
+</div>
