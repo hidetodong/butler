@@ -69,6 +69,7 @@ $PREF/                       (默认 ~/.butler/preferences/)
 - `signals/<project>.md` **按项目分片**:每条带情境标签,单文件体量有界（契合"文档有界、横向铺开"），**跨项目背书**靠扫描整个 `signals/` 目录算出。
 - `profile.md` 是唯一的跨项目蒸馏产物,真源以 `signals/` 为准、可被重新蒸馏。
 - `config.md` 缺失时按 §6.4 默认值运行。
+- 首次 `/preference on` 时,可把 butler 仓库 `templates/preference/` 下的骨架（`config.md` / `profile.md` / `signals.example.md`）拷贝到 `$PREF` 作为起点;骨架只给可落地的初始结构,字段定义仍以本节为准。
 
 ### 4.3 `signals/<project>.md` 单条字段
 
