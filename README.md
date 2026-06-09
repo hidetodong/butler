@@ -32,14 +32,22 @@ Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需�
 ## 🔄 核心工作流
 
 ```mermaid
-flowchart LR
-    P1["🔍 P1 Analysis<br/>CONCEPT.md"] --> P2["✅ P2 Acceptance<br/>AC_LIST.md ✋ACK"]
-    P2 --> P3["📐 P3 Design<br/>TECH_PLAN.md ✋ACK"]
-    P3 --> P4["⚙️ P4 Execute<br/>代码 / 配置 / 文档"]
-    P4 --> P5["🧪 P5 Verify<br/>VERIFY_REPORT.md"]
+flowchart TB
+    subgraph MILE["🏔 Milestone · 大可交付版本 (MILE-NNNN)"]
+        direction TB
+        subgraph ITER1["🔁 Iteration · 小可交付版本 (ITER-NNNN)"]
+            direction LR
+            P1["🔍 P1<br/>CONCEPT.md"] --> P2["✅ P2<br/>AC_LIST.md ✋ACK"]
+            P2 --> P3["📐 P3<br/>TECH_PLAN.md ✋ACK"]
+            P3 --> P4["⚙️ P4<br/>代码/配置/文档"]
+            P4 --> P5["🧪 P5<br/>VERIFY_REPORT.md"]
+        end
+        ITER2["🔁 Iteration (ITER-NNNN+1) · P1 → P5 …"]
+        ITER1 -.下一迭代.-> ITER2
+    end
 ```
 
-> 外层还套两层范围单元：若干 **迭代 `ITER-NNNN`**（小可交付版本）组成一个 **里程碑 `MILE-NNNN`**（大可交付版本）。每个阶段从上一阶段的产物文件读取，不依赖对话记忆。
+> **两层范围单元**：每个 **迭代 `ITER-NNNN`** 跑一遍 `P1→P5`、独立交付；若干迭代组成一个 **里程碑 `MILE-NNNN`** 大版本，收口时聚合各迭代产出版本级交付。里程碑松耦合可选；每个阶段从上一阶段的产物文件读取，不依赖对话记忆。
 
 ## 🧭 三个子系统
 
