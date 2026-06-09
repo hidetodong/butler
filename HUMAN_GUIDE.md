@@ -103,8 +103,11 @@ AI 会自动走完整个链路：
 │   ├── AC_LIST.md           # P2 产物 = 当前迭代工作区
 │   ├── TECH_PLAN.md         # P3 产物 = 当前迭代工作区
 │   ├── VERIFY_REPORT.md     # P5 产物 = 当前迭代工作区
-│   ├── ITERATIONS.md        # 迭代台账（迭代号/状态/交付链接）
+│   ├── ITERATIONS.md        # 迭代台账（迭代号/状态/所属 milestone/交付链接）
 │   ├── iterations/          # 各迭代收口快照（ITER-NNNN/，按需产生）
+│   ├── MILESTONES.md        # 里程碑台账（大版本，按需产生）
+│   ├── MILESTONE.md         # 当前里程碑工作区：范围评估/理解阐释/拆分路线图（按需产生）
+│   ├── milestones/          # 各里程碑收口快照（MILE-NNNN/，按需产生）
 │   ├── local-constraints.md # 本地化约束
 │   ├── 00_IDEATION.md       # 脑暴产物（/ideation 模式）
 │   ├── 01_CHANGELOG.md      # 技术决策日志
@@ -112,18 +115,44 @@ AI 会自动走完整个链路：
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
 │   └── references/          # 外部参考资料（按需创建）
-└── deliveries/              # 完整交付总结归档（ITER-NNNN-<slug>.md）
+└── deliveries/              # 交付总结归档
+    ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
+    └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md
 ```
 
 ## 5. 扩展模式
 
-Butler 提供三个可选扩展模式，通过指令或语义触发：
+Butler 提供若干可选扩展模式，通过指令或语义触发，默认不启用：
 
 | 模式 | 触发方式 | 用途 |
 |---|---|---|
 | **Ideation** | `/ideation` 或 "脑暴"、"完善需求"、"想不清楚"、"还没想好" | 需求脑暴与完善 |
 | **Ralph-Loop** | `/loop` 或 "死磕"、"必须变绿" | 自主纠错闭环（执行-探测-反思-修正） |
 | **Review** | `/review` 或 "看看写得怎么样"、"代码审查" | 代码审计 |
+| **Dangerous** ⚠️ | `/dangerous` 或 "放手做"、"自己跑完"、"别等我确认" | 实验性无人值守长程自治：自动拆迭代连续推进、P2/P3 ACK 由自审门替代，附审计/回滚/P5 强制审查护栏。仅在可隔离、可回滚环境用 |
+| **Preference** ⚠️ | `/preference on` / `off` / `distill` | 实验性偏好探针：采集你的设计取舍、蒸馏跨项目通识、反哺无监督自决。默认关，详见下方 |
+
+### 里程碑（大版本）
+
+迭代之上还可套一层**里程碑** `MILE-NNNN`，作为"大可交付版本"。当一批需求跨多个迭代、需要先整体圈定范围再拆分推进时，AI 会提议开里程碑：先写一份范围评估 + 理解阐释 + 拆分路线图（`.ai/MILESTONE.md`），与你 soft 对齐后，期间开启的迭代自动归属它；大版本收口时聚合各迭代产出一份版本级交付（`deliveries/milestones/MILE-NNNN-<slug>.md`）。里程碑是可选、松耦合的：不影响你按迭代推进的习惯，迭代历史在 `deliveries/` 根仍是一条连续时间线。
+
+### `/preference` 偏好探针（实验性）
+
+让 AI 在长期协作中**学习你的设计风格**，并在无人值守编程时参考你过往怎么选。
+
+**它怎么工作**
+
+1. **采集**：开启后，AI 在你做关键决策时（选项选择、打回方案、直接纠正）把你的**取舍倾向**记成信号。
+2. **蒸馏**：在迭代/里程碑收口或你说 `/preference distill` 时，把信号归纳成偏好。**一条偏好要在 ≥2 个不同项目里一致出现，才会晋级为"跨项目通识"**——单个项目里的重复不算，避免把某项目的局部口味当成普适。
+3. **反哺**：之后在 `/dangerous` 无监督模式下，AI 自审时会多看一眼"这么做像不像你的选择"。
+
+**你需要知道的几点**
+
+- **默认关**。要它学到东西，你得**早开、长开**：在日常工作里 `/preference on` 放着，跨多个项目它才攒得出通识。
+- **数据存在 butler 仓库之外**（默认 `~/.butler/preferences/`，可用 `BUTLER_PREF` 环境变量指定），跨项目共用、与规则仓库解耦。只记决策倾向的抽象，**不记业务数据或敏感内容**。
+- **它只是参考，不是命令**。偏好永远压不过你当下的明确指令；你这次怎么说就怎么来，AI 还会把这次"偏好让位于指令"也记下来修正自己。
+- **不碰你的迭代**。探针是旁路观察者，从不写 `.ai/` 产物、不卡流程，坏了也不影响迭代推进。
+- 想看它学到了什么，让 AI 读 `~/.butler/preferences/profile.md` 的"通识层"即可。
 
 ## 6. 常见问题与对策
 
@@ -185,6 +214,7 @@ Coder/
 │   ├── tech-plan-schema.md    # P3 产物模板
 │   ├── verify-schema.md       # P5 产物模板
 │   ├── iteration-schema.md    # 迭代号/台账/锁定纪律
+│   ├── milestone-schema.md    # 里程碑（大版本）号/台账/路线图/版本级交付
 │   ├── delivery-summary.md    # 交付总结规范
 │   ├── mcv-deployment.md      # 基地车部署协议
 │   ├── mcv-update.md          # 基地车升级协议
@@ -201,5 +231,7 @@ Coder/
 ├── 50_Extension_Ideation/     # 脑暴扩展
 ├── 55_Extension_RalphLoop/    # 自主纠错扩展
 ├── 60_Extension_CodeReview/   # 代码审查扩展
+├── 65_Extension_Dangerous/    # 无人值守长程自治扩展（实验性）
+├── 70_Extension_Preference/   # 偏好探针扩展（实验性，外置存储）
 └── 99_Business_Extension/     # 业务约束（最高优先级）
 ```
