@@ -33,18 +33,27 @@ Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需�
 
 ```mermaid
 flowchart TB
-    subgraph MILE["🏔 Milestone · 大可交付版本 (MILE-NNNN)"]
+    subgraph MILE["🏔 &nbsp;Milestone · 大可交付版本 (MILE-NNNN)"]
         direction TB
-        subgraph ITER1["🔁 Iteration · 小可交付版本 (ITER-NNNN)"]
+        subgraph ITER1["🔁 &nbsp;Iteration · 小可交付版本 (ITER-NNNN)"]
             direction LR
-            P1["🔍 P1<br/>CONCEPT.md"] --> P2["✅ P2<br/>AC_LIST.md ✋ACK"]
-            P2 --> P3["📐 P3<br/>TECH_PLAN.md ✋ACK"]
-            P3 --> P4["⚙️ P4<br/>代码/配置/文档"]
-            P4 --> P5["🧪 P5<br/>VERIFY_REPORT.md"]
+            P1["🔍 P1 Analysis<br/><b>CONCEPT.md</b>"] --> P2["✅ P2 Acceptance<br/><b>AC_LIST.md</b><br/>✋ ACK"]
+            P2 --> P3["📐 P3 Design<br/><b>TECH_PLAN.md</b><br/>✋ ACK"]
+            P3 --> P4["⚙️ P4 Execute<br/>代码 / 配置 / 文档"]
+            P4 --> P5["🧪 P5 Verify<br/><b>VERIFY_REPORT.md</b>"]
         end
-        ITER2["🔁 Iteration (ITER-NNNN+1) · P1 → P5 …"]
-        ITER1 -.下一迭代.-> ITER2
+        ITER2["🔁 &nbsp;ITER-NNNN+1 · P1 → P5 …"]
+        ITER1 -. 下一迭代 .-> ITER2
     end
+
+    classDef phase fill:#eef2ff,stroke:#6366f1,stroke-width:1px,color:#312e81;
+    classDef gate fill:#fff7ed,stroke:#f59e0b,stroke-width:2px,color:#7c2d12;
+    classDef next fill:#f8fafc,stroke:#94a3b8,stroke-width:1px,color:#475569;
+    class P1,P4,P5 phase;
+    class P2,P3 gate;
+    class ITER2 next;
+    style MILE fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+    style ITER1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#065f46;
 ```
 
 > **两层范围单元**：每个 **迭代 `ITER-NNNN`** 跑一遍 `P1→P5`、独立交付；若干迭代组成一个 **里程碑 `MILE-NNNN`** 大版本，收口时聚合各迭代产出版本级交付。里程碑松耦合可选；每个阶段从上一阶段的产物文件读取，不依赖对话记忆。
