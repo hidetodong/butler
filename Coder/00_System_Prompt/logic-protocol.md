@@ -79,6 +79,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启。P5 交付阶段默认触发简要自评（用户明确跳过时除外）。
 - **Butler Upgrade (`/butler-upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler-upgrade` 时开启。非持久 Mode，执行一次后返回 Standard Mode。
 - **Dangerous Mode (`/dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以 Ralph-Loop 式闭环跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/dangerous` 时开启；`/dangerous off` 或"恢复确认"关闭。持久 Mode，跨迭代有效。
+- **Preference Mode (`/preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`，采集用户高信号决策、按跨情境一致蒸馏为跨项目通识、反哺 `/dangerous` 自审门。`/preference on` 开启、`/preference off` 关闭、`/preference distill` 手动蒸馏。**默认关**，需用户显式开启；数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。持久 Mode，跨迭代有效。
 
 若检测到任务复杂度极高（如核心算法、大规模重构），应主动询问："检测到逻辑复杂，是否需要开启 Ralph-Loop 模式进行自主迭代验证？"
 
