@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Butler 偏好探针存储初始化（opt-in，幂等）
-# 把 templates/preference/ 骨架拷到外置存储 $BUTLER_PREF，作为 /preference 的起点。
+# Butler 偏好探针存储初始化（可选·幂等）
+# 把 templates/preference/ 骨架拷到外置存储 $BUTLER_PREF。
+# 注：引擎在取得同意后首次采集时会自动惰性初始化；本脚本仅作可选的显式初始化。
 # 已存在的 config.md / profile.md 不覆盖，保护既有数据。
 
 BUTLER_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -41,6 +42,6 @@ if [[ ! -f "$PREF/signals.example.md" ]]; then
 fi
 
 echo ""
-echo "初始化完成。下一步："
-echo "  在 AI 会话中输入 /preference on 开启采集（默认关，需早开、长开才攒得出跨项目通识）。"
+echo "初始化完成（可选——引擎在取得同意后首次采集时也会自动惰性初始化）。"
+echo "  采集经一次性同意后默认常驻；反哺默认关，需 /preference reback on 才开、且仅作用于有监督工作。"
 echo "  真源为 $PREF/signals/，蒸馏产物为 $PREF/profile.md（通识层）。"
