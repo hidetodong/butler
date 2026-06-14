@@ -129,7 +129,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
-- `60_Extension_CodeReview/review-engine.md` 在显式 `/review` 指令下执行完整审计，在 P5 交付阶段默认触发简要自评。
+- `60_Extension_CodeReview/review-engine.md`：P5 默认触发同上下文简要自评；**独立复核（opt-in·fresh-context 子 agent·验证者≠实现者）**由手动 `/review` 或项目 `.ai/local-constraints.md` 的 `Review Policy: independent_review: on` 触发，spec-only 输入逐 AC 独立核对作者断言（refute 即阻断收口）。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 
 ## 使用原则
