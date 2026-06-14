@@ -17,7 +17,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 - 必须产出：`.ai/local-constraints.md`
 - 产出时机：基地车部署的 `mcv-deployment.md § 4 本地化适配` 步骤
 - 必填字段：`Project Type`、`Active Profiles`
-- 可选字段：`Local Constraints`、`Scope Exceptions`、`External References`
+- 可选字段：`Local Constraints`、`Scope Exceptions`、`External References`、`Review Policy`
 
 ## 3. 标准模板
 
@@ -41,6 +41,11 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 # External References
 - 外部资源指针（API 文档平台、设计稿、issue tracker 等）
 - 此处仅做高层指针；实际参考资料提取产物在 `.ai/references/` 下
+
+# Review Policy
+- independent_review: on | off（默认 off）
+- on 时：每次 P5 收口自动起独立复核（fresh-context 子 agent，见 `60_Extension_CodeReview/review-engine.md` §6）
+- 始终可手动 `/review` 单跑，与本字段无关
 ```
 
 ## 4. 编写规则
@@ -50,6 +55,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 - **引用而非复制**：profile 用文件名引用（如 `typescript-rules`），不复制 profile 内容。
 - **适度松散**：可选字段无内容时可省略；`Active Profiles` 未命中 profile 时写"无"，不强行凑内容。
 - **更新而非追加**：任务执行中发现新 local 约束或例外时应回到此文件更新，不得仅在对话中声明。
+- **Review Policy 默认 off**：仅在"本项目值得长期严格复核"时显式设 `independent_review: on`；它只影响 P5 收口是否自动起独立复核，不改变 P5 默认简评，也不妨碍随时手动 `/review`。
 
 ## 5. 与执行流程的关系
 
