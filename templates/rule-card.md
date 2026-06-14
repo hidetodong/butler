@@ -50,3 +50,7 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 - 不用 `any` 回避核心领域类型
 - 长任务必须外化关键状态到 `.ai/task-state.md`，不依赖对话记忆
 - 会话结束前若任务未完成，必须生成 `.ai/02_SESSION_HANDOFF.md`
+
+## 偏好采集（实验性·默认开·经同意）
+
+经一次性同意后，默认在后台把你的**决策倾向抽象**（不含业务数据/密钥）记到外置存储以学习风格，`/preference off` 随时全关；反哺默认关、`/preference reback on` 才开且仅作用于有监督工作。详见 `70_Extension_Preference/preference-probe-engine.md`。

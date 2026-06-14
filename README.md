@@ -78,7 +78,7 @@ flowchart TB
 | 🔁 **收敛闭环** | `/loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
 | 🔎 **Review** | `/review` | 代码审查 |
 | ⚠️ **Dangerous** | `/dangerous` | 无人值守长程自治（实验性） |
-| 🧠 **Preference** | `/preference` | 跨项目偏好蒸馏（实验性，默认关） |
+| 🧠 **Preference** | `/preference` | 跨项目偏好蒸馏（实验性 · 采集经同意默认开 / 反哺 opt-in） |
 
 ## 🚀 快速上手
 

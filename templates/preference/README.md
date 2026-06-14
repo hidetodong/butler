@@ -2,7 +2,7 @@
 
 本目录是 `70_Extension_Preference/preference-probe-engine.md` 定义的**外置偏好存储**的初始骨架。
 
-偏好数据**不存在 butler 仓库内**，而是落在仓库之外的 `$BUTLER_PREF`（默认 `~/.butler/preferences/`，路径发现见引擎 §4.1）。首次 `/preference on` 时，把本目录文件拷贝到该路径作为起点：
+偏好数据**不存在 butler 仓库内**，而是落在仓库之外的 `$BUTLER_PREF`（默认 `~/.butler/preferences/`，路径发现见引擎 §4.1）。**取得一次性同意后首次采集时，引擎会惰性把本目录文件拷贝到该路径作为起点**（无需先跑 `/preference on` 或脚本；也可手动跑 `preference-init.sh` 显式初始化）：
 
 ```
 $BUTLER_PREF/
@@ -11,7 +11,7 @@ $BUTLER_PREF/
 └── config.md                # 可调参数
 ```
 
-- `config.md`：缺失时引擎按其内默认值运行（见引擎 §6.4）。
+- `config.md`：记**同意状态(consent)** + 可调参数；缺失时引擎按其内默认值运行（见引擎 §6.4、§2.4）。
 - `profile.md`：首次蒸馏前两区为空，达标后由引擎写入。
 - `signals.example.md`：单条信号的格式示例，仅供参考，不拷入 `signals/`。
 
