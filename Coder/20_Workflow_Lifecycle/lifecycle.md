@@ -114,9 +114,9 @@ AI 必须回答：
 
 **输入来源**：从 `.ai/TECH_PLAN.md` 读取执行计划与边界约束。
 
-**标准执行**：根据方案编码，执行单次 Probe 验证。若报错，将原始错误反馈给用户。
+**标准执行（常驻）**：根据方案编码并探测验证，遵循 `30_Quality_Gate/correction-contract.md`（纠错收口契约）——修到探测真过、探测绑 AC、禁止降级修复；当连续无进展 / 缺外部条件 / 需用户决策时，按"诚实停"如实交还。此契约默认每次迭代生效，无需触发。
 
-**Loop 增强**：仅在用户显式激活 `55_Extension_RalphLoop/ralph-loop-engine.md` 时，进入"执行-探测-反思-修正"的闭环，直到验证全绿或触发熔断。
+**Loop 升档（opt-in）**：用户显式激活 `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 时，在上述契约之上叠加高强度死磕——`[Loop #N]` 标注、连续闭环、定量熔断（5 轮 / 死锁 / 环境阻塞）与 RCA 报告。
 
 执行阶段必须保证：
 

@@ -41,7 +41,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `00_IDEATION.md`：`/ideation` 模式下的脑暴过程与中间结论；收敛后由 `CONCEPT.md` 承载进入 P2 的已确认结论。
 - `01_CHANGELOG.md`：记录经过确认的技术决策与需求增量，**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
-- `03_BUG_LOG.md`：Ralph-Loop 熔断后的 RCA 报告或高价值逻辑坑位。
+- `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
 - `MILESTONES.md`：里程碑台账，记录 `current` 指针与全部里程碑的号/标题/状态/含迭代/交付链接，字段参考 `milestone-schema.md`；首次开启里程碑时按需产生。

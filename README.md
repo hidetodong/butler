@@ -75,7 +75,7 @@ flowchart TB
 | 模式 | 触发 | 用途 |
 |---|---|---|
 | 💡 **Ideation** | `/ideation` | 需求脑暴与完善 |
-| 🔁 **Ralph-Loop** | `/loop` | 自主纠错闭环（执行-探测-反思-修正） |
+| 🔁 **收敛闭环** | `/loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
 | 🔎 **Review** | `/review` | 代码审查 |
 | ⚠️ **Dangerous** | `/dangerous` | 无人值守长程自治（实验性） |
 | 🧠 **Preference** | `/preference` | 跨项目偏好蒸馏（实验性，默认关） |
@@ -121,7 +121,7 @@ butler/
 │   ├── 30_Quality_Gate/            #   质量门禁
 │   ├── 40_Context_Management/      #   长任务上下文治理
 │   ├── 50_Extension_Ideation/      #   脑暴        /ideation
-│   ├── 55_Extension_RalphLoop/     #   自主纠错    /loop
+│   ├── 55_Extension_ConvergenceLoop/ # 收敛闭环    /loop
 │   ├── 60_Extension_CodeReview/    #   代码审查    /review
 │   ├── 65_Extension_Dangerous/     #   无人值守自治 /dangerous ⚠️
 │   ├── 70_Extension_Preference/    #   偏好探针    /preference ⚠️

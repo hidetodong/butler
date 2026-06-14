@@ -14,7 +14,7 @@ scope: .ai 维护文件的更新触发阈值、批处理策略与低价值维护
 | :--- | :--- | :--- |
 | **CHANGELOG** | 记录琐碎的代码改动（变量名、样式）。 | 需求方向变更、AC 条目交付、引入新依赖、Review 审计产出的 Should Fix 条目。 |
 | **SESSION_HANDOFF** | 每一轮对话都同步。 | 准备结束会话、切换对话窗口、上下文预警。 |
-| **BUG_LOG** | 记录语法错误、拼写错误、Lint 报错。 | 解决耗时 >2 轮对话的逻辑暗坑、环境配置深坑；Ralph-Loop 熔断后的 RCA 报告。 |
+| **BUG_LOG** | 记录语法错误、拼写错误、Lint 报错。 | 解决耗时 >2 轮对话的逻辑暗坑、环境配置深坑；收敛闭环熔断后的 RCA 报告。 |
 
 说明：本文件只定义 `.ai/` 维护文件“何时更新”，不定义 `02_SESSION_HANDOFF.md` 的字段结构；结构规范继续由 `40_Context_Management/handoff-spec.md` 负责。Delivery Summary 属于 `deliveries/` 下的人类交付总结，不属于 `.ai` 维护文件，也不受本文件中的更新频率表约束。
 
