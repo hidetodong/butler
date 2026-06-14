@@ -60,6 +60,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     linting.md
     testing-strategy.md
     review-standard.md
+    correction-contract.md
 
   /40_Context_Management
     context-persistence.md
@@ -69,8 +70,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /50_Extension_Ideation
     ideation-engine.md
 
-  /55_Extension_RalphLoop
-    ralph-loop-engine.md
+  /55_Extension_ConvergenceLoop
+    convergence-loop-engine.md
 
   /60_Extension_CodeReview
     review-engine.md
@@ -117,8 +118,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
-- `55_Extension_RalphLoop/ralph-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，负责 P4 的自主纠错闭环与熔断规则。
-- `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用 Ralph-Loop，附审计、回滚与 P5 强制完整审查护栏。
+- `30_Quality_Gate/correction-contract.md`（纠错收口契约）是 P4 默认常驻的底线纪律——修到真过、探测绑 AC、禁止降级修复、诚实停，无需触发、每次迭代生效。
+- `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，是 P4 纠错的高强度升档（叠在常驻纠错收口契约之上），负责死磕式闭环与定量熔断规则。
+- `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用收敛闭环，附审计、回滚与 P5 强制完整审查护栏。
 - `70_Extension_Preference/preference-probe-engine.md` 只在显式 `/preference` 指令下启用，是实验性偏好探针：采集高信号决策、按跨情境一致蒸馏为跨项目通识、反哺 `/dangerous` 自审门；数据外置（`$BUTLER_PREF`，与本仓库解耦）、先验非权威、绝不侵入迭代数据流，默认关。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。

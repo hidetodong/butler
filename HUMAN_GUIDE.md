@@ -127,7 +127,7 @@ Butler 提供若干可选扩展模式，通过指令或语义触发，默认不�
 | 模式 | 触发方式 | 用途 |
 |---|---|---|
 | **Ideation** | `/ideation` 或 "脑暴"、"完善需求"、"想不清楚"、"还没想好" | 需求脑暴与完善 |
-| **Ralph-Loop** | `/loop` 或 "死磕"、"必须变绿" | 自主纠错闭环（执行-探测-反思-修正） |
+| **收敛闭环** | `/loop` 或 "死磕"、"必须变绿" | 高强度纠错升档（死磕到绿 + 定量熔断）；底线由常驻纠错收口契约保证 |
 | **Review** | `/review` 或 "看看写得怎么样"、"代码审查" | 代码审计 |
 | **Dangerous** ⚠️ | `/dangerous` 或 "放手做"、"自己跑完"、"别等我确认" | 实验性无人值守长程自治：自动拆迭代连续推进、P2/P3 ACK 由自审门替代，附审计/回滚/P5 强制审查护栏。仅在可隔离、可回滚环境用 |
 | **Preference** ⚠️ | `/preference on` / `off` / `distill` | 实验性偏好探针：采集你的设计取舍、蒸馏跨项目通识、反哺无监督自决。默认关，详见下方 |
@@ -223,13 +223,14 @@ Coder/
 ├── 30_Quality_Gate/           # 质量门禁
 │   ├── linting.md             # 提交前自检清单
 │   ├── testing-strategy.md    # 测试分层与验收映射
-│   └── review-standard.md     # 通用审计准则
+│   ├── review-standard.md     # 通用审计准则
+│   └── correction-contract.md # 纠错收口契约（P4 常驻底线）
 ├── 40_Context_Management/     # 上下文治理（长任务必读）
 │   ├── context-persistence.md # 状态外化与阶段结晶
 │   ├── handoff-spec.md        # 02_SESSION_HANDOFF.md 格式契约
 │   └── role-switch.md         # Architect/Coder/Reviewer 角色切换
 ├── 50_Extension_Ideation/     # 脑暴扩展
-├── 55_Extension_RalphLoop/    # 自主纠错扩展
+├── 55_Extension_ConvergenceLoop/ # 收敛闭环扩展（/loop 升档）
 ├── 60_Extension_CodeReview/   # 代码审查扩展
 ├── 65_Extension_Dangerous/    # 无人值守长程自治扩展（实验性）
 ├── 70_Extension_Preference/   # 偏好探针扩展（实验性，外置存储）

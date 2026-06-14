@@ -55,7 +55,7 @@ scope: 代码审查的激活条件、执行流程、评级标准与闭环控制�
 
 ## 4. 闭环控制
 
-- 若存在 **Must Fix** 条目，AI 必须建议启动修复。若当前处于 Ralph-Loop 模式，直接进入下一轮迭代修复；否则询问用户是否激活 Loop。
+- 若存在 **Must Fix** 条目，AI 必须建议启动修复。若当前处于收敛闭环模式，直接进入下一轮迭代修复；否则询问用户是否激活 `/loop`。
 - 修复完成后，应对 Must Fix 条目进行定点复查，不需要重跑全量审查。
 - 所有 Should Fix 条目应记录到 `.ai/01_CHANGELOG.md` 或反馈给用户，不得静默丢弃。
 
@@ -86,5 +86,5 @@ Butler 不主动调用该 skill，也不依赖其产出。Agent 增强是可选�
 
 - `30_Quality_Gate/review-standard.md` 提供通用审计准则。
 - `10_Domain_Stack_Profiles/` 提供技术栈专项审计规则。
-- `55_Extension_RalphLoop/ralph-loop-engine.md` 承接 Must Fix 的修复闭环。
+- `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 承接 Must Fix 的修复闭环。
 - `20_Workflow_Lifecycle/lifecycle.md` P5 阶段触发简要自评。
