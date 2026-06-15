@@ -79,3 +79,42 @@ class TestPhaseGate:
         d = phase_gate.evaluate(make_ctx(proj, "src/x.ts"))
         assert d.remediation
         assert "P1" in d.remediation
+
+
+class TestAcFreezeGate:
+    """D1: AC_LIST 冻结门——状态须为 ack-frozen 才放行源码写。"""
+
+    def _seed_full_ai(self, root: Path, ac_body: str) -> None:
+        ai = root / ".ai"
+        ai.mkdir(parents=True, exist_ok=True)
+        (ai / "CONCEPT.md").write_text("c", encoding="utf-8")
+        (ai / "TECH_PLAN.md").write_text("t", encoding="utf-8")
+        (ai / "AC_LIST.md").write_text(ac_body, encoding="utf-8")
+
+    def test_draft_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "---\n状态: draft\nACK 日期: —\n---\n# Goal\nx")
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert d.verdict == "deny"
+        assert "ack-frozen" in d.reason
+
+    def test_frozen_allows(self, tmp_path):
+        self._seed_full_ai(
+            tmp_path, "---\n状态: ack-frozen\nACK 日期: 2026-06-15\n---\n# Goal\nx"
+        )
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert d.verdict == "allow"
+
+    def test_legacy_no_status_field_allows(self, tmp_path):
+        self._seed_full_ai(tmp_path, "# Goal\n旧版 AC_LIST，无状态字段")
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert d.verdict == "allow"
+
+    def test_unknown_status_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "---\n状态: 进行中\n---\n# Goal\nx")
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert d.verdict == "deny"
+
+    def test_english_status_key_allows(self, tmp_path):
+        self._seed_full_ai(tmp_path, "---\nstatus: ack-frozen\n---\n# Goal\nx")
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert d.verdict == "allow"

@@ -1,6 +1,7 @@
 """Rule: require P1/P2/P3 artifacts before gated source edits."""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from lib.io import Context, Decision, OUT_OF_CWD, is_gated
@@ -12,6 +13,10 @@ REQUIRED_ARTIFACTS = [
     (".ai/AC_LIST.md", "P2", "先完成 P2 验收清单并产出 .ai/AC_LIST.md"),
     (".ai/TECH_PLAN.md", "P3", "先完成 P3 技术方案并产出 .ai/TECH_PLAN.md"),
 ]
+
+# D1: AC_LIST 冻结门。AC_LIST 顶部 `状态` 字段须为 ack-frozen 才放行源码写。
+FROZEN_STATE = "ack-frozen"
+_STATUS_RE = re.compile(r"^\s*(?:状态|status)\s*[:：]\s*(\S+)", re.IGNORECASE)
 
 
 def evaluate(ctx: Context) -> Decision:
@@ -36,6 +41,17 @@ def evaluate(ctx: Context) -> Decision:
                 reason=f"{phase} 产物缺失：{rel_path} 不存在或为空",
                 remediation=hint,
             )
+
+    # D1: AC_LIST 须已冻结（状态: ack-frozen）才放行源码写。
+    # 无 `状态` 字段 → legacy AC_LIST → 放行（向后兼容，不误杀已部署项目）。
+    ac_state = _ac_freeze_state(Path(ctx.cwd) / ".ai" / "AC_LIST.md")
+    if ac_state is not None and ac_state != FROZEN_STATE:
+        return Decision(
+            verdict="deny",
+            rule_id=RULE_ID,
+            reason=f"P2 未冻结：AC_LIST 状态={ac_state}，需用户 ACK 后置 ack-frozen",
+            remediation="用户 ACK 后把 .ai/AC_LIST.md 顶部 `状态` 改为 ack-frozen 再继续",
+        )
     return Decision(verdict="allow", rule_id=RULE_ID)
 
 
@@ -46,3 +62,20 @@ def _is_nonempty(path: Path) -> bool:
         return bool(path.read_text(encoding="utf-8").strip())
     except OSError:
         return False
+
+
+def _ac_freeze_state(path: Path) -> str | None:
+    """AC_LIST 冻结态：返回 `状态` 字段值（小写）；无该字段返回 None（legacy）。
+
+    扫描文本行取首个 `状态:`/`status:` 匹配，不引入 YAML 依赖，
+    保持 hook 零三方依赖、跨 Python 版本可移植。
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    for line in text.splitlines():
+        m = _STATUS_RE.match(line)
+        if m:
+            return m.group(1).strip().lower()
+    return None

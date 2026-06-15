@@ -114,7 +114,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 ## 5. 流程总调度
 
-除极小任务外，默认遵循 `20_Workflow_Lifecycle/lifecycle.md` 中定义的状态机：
+任务分流为 极小 / 简化 / 完整 三档，边界、分流记录与"低档→高档"升级转换以 `20_Workflow_Lifecycle/lifecycle.md §2` 为准：极小任务（单文件、纯文案、零契约、可单轮闭合）免强制产物，但仍须口头说明目标与验证方式；其余任务默认遵循状态机：
 
 `P1 Analysis -> P2 Acceptance -> P3 Design -> P4 Execute -> P5 Verify`
 

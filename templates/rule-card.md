@@ -8,11 +8,11 @@
 
 ## 强制工作流
 
-所有非极小任务必须走 P1-P5 流程。命中任一升级信号（需求歧义 / 多文件改动 / 契约变更 / 关键路径 / 跨模块影响 / 设计取舍）则走完整流程。零命中可走简化路径，但不可跳过目标理解、完成定义与验证。
+任务分三档（边界见 `lifecycle.md §2`）：**极小**（单文件 / 纯文案 / 零契约 / 单轮闭合）免产物但仍须口头说目标 + 验证；**简化**（零升级信号、非极小）合并产一份 `AC_LIST.md`；**完整**（命中任一升级信号：需求歧义 / 多文件改动 / 契约变更 / 关键路径 / 跨模块影响 / 设计取舍）走完整 P1-P5 产物链。非极小任务须在产物顶部留一行分流记录（完整→CONCEPT、简化→AC_LIST）。低档执行中命中升级信号必须就地升级补产物，不在原档硬撑。
 
 ```
 P1 Analysis   → 产出 .ai/CONCEPT.md   → 理解问题、约束、影响范围
-P2 Acceptance → 产出 .ai/AC_LIST.md   → 定义验收项 → ⚠️ 必须等用户 ACK
+P2 Acceptance → 产出 .ai/AC_LIST.md   → 定义验收项 → ⚠️ 用户 ACK 后置 `状态: ack-frozen` 冻结（hook 拦 draft）
 P3 Design     → 产出 .ai/TECH_PLAN.md → 技术方案   → ⚠️ 必须等用户 ACK
 P4 Execute    → 代码/配置/文档         → 按方案实现，不扩张范围
 P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
@@ -22,7 +22,7 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 
 ## 迭代化需求
 
-每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 被 ACK 即冻结需求：迭代内小幅修订可重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md` + 台账置 closed。
+每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md` + 台账置 closed。
 
 迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号（跨 ≥2 迭代 / 版本主题 / 先评估后拆分 / 显式里程碑）时，在第一个迭代 P1 前开里程碑：写 `.ai/MILESTONE.md`（范围评估 + 理解阐释 + 拆分路线图）并 soft 对齐；期间开启的迭代自动归属之。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（聚合链接各迭代交付）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
 

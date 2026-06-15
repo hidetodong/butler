@@ -63,6 +63,17 @@ class TestDenyPaths:
         assert "phase_gate" in r.stderr
         assert "CONCEPT.md" in r.stderr
 
+    def test_phase_gate_denies_when_ac_not_frozen(self, tmp_path):
+        ai = tmp_path / ".ai"
+        ai.mkdir()
+        (ai / "CONCEPT.md").write_text("c")
+        (ai / "TECH_PLAN.md").write_text("t")
+        (ai / "AC_LIST.md").write_text("---\n状态: draft\n---\n# Goal\nx")
+        r = run_gate(edit_payload(tmp_path, "src/auth.ts"), tmp_path)
+        assert r.returncode == 2
+        assert "phase_gate" in r.stderr
+        assert "ack-frozen" in r.stderr
+
     def test_protected_paths_denies_business_extension(self, tmp_project):
         proj = tmp_project("full-artifacts")
         r = run_gate(edit_payload(proj, "99_Business_Extension/policy.md"), proj)

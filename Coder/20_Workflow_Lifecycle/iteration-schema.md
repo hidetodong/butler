@@ -92,12 +92,13 @@ current: ITER-0002
 ### 5.2 冻结 (Freeze)
 
 - 时机：`AC_LIST.md` 被用户 ACK 后。（`/dangerous` 危险模式下，改为模型过 `65_Extension_Dangerous/dangerous-engine.md` §5.1 自审门后自主 ACK 即冻结，冻结纪律不变。）
+- 物化标志：冻结 = AC_LIST 顶部 `状态: ack-frozen`（字段定义见 `acceptance-schema.md §4`）。部署了 hook 的项目，未冻结（`draft`）时源码写操作会被 `phase_gate` 拦截，使"冻结"从对话约定变成可校验状态。
 - 含义：本迭代验收范围锁定，进入 P3/P4 后默认不再扩张。
 
 ### 5.3 迭代内修订 (Amend)
 
 - 适用：冻结后需求发生**小幅**变化，且未突破原影响面。
-- 动作：更新 `AC_LIST.md`，**重新等待用户 ACK**，并在 `AC_LIST.md` 顶部"修订记录"追加一行（含日期与一句变更摘要）。
+- 动作：更新 `AC_LIST.md`，把 `状态` 退回 `draft`、**重新等待用户 ACK**（再置 `ack-frozen` 并更新 `ACK 日期`），并在 `AC_LIST.md` 顶部"修订记录"追加一行（含日期与一句变更摘要）。
 - 修订仍属于同一迭代号，不另开迭代。
 
 ### 5.4 扩张转迭代 (Escalate)

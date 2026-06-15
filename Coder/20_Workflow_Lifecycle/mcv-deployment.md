@@ -94,7 +94,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 5. Hook 注入 (Hook Injection)
 
-把 butler 的 PreToolUse hook 体系部署到目标项目的 `.claude/`。Hook 提供机制化的流程约束——源码路径写操作在 P1/P2/P3 产物缺失时被拦截、`99_Business_Extension/` 写操作被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+把 butler 的 PreToolUse hook 体系部署到目标项目的 `.claude/`。Hook 提供机制化的流程约束——源码路径写操作在 P1/P2/P3 产物缺失时被拦截、AC_LIST 未冻结（`状态` 非 `ack-frozen`；无该字段的旧产物按 legacy 放行）时被拦截、`99_Business_Extension/` 写操作被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
 
 ### 5.1 文件拷贝
 
