@@ -1,37 +1,41 @@
-> 分流: 完整路径 | 命中升级信号: 多文件改动 / 契约变更 / 跨模块影响 / 设计取舍 | 2026-06-15
+> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约变更(里程碑产物链新增 Brief 录入载体) / 设计取舍(录入通道·命令面·迭代号预分配口径) | 2026-06-19
 
 # Goal
-- 把生命周期里两个最关键、却唯一没有外化的"控制决策"补成可观测、可审计的产物：① ACK/冻结状态（D1）② 入口分流判定（D4），堵上"内容全外化、控制状态只活在对话里"这个与系统根本原则矛盾的漏洞
+- 优化里程碑模式的**人机录入交互**：让用户能在一处一次性把"想推进的某个大版本"说清楚，由模型据此生成里程碑概述（`.ai/MILESTONE.md`：范围评估 + 理解阐释 + 拆分路线图），并把大版本拆成有序的迭代承接规划，方便后续逐个迭代开发。录入支持两通道：① 对话直接输入；② 在一个 md 文件里一次性阐述。操作风格走**轻量命令 `/milestone` + 现有语义触发并存**。
 
 # Current Understanding
-- review 结论：butler 把"想了什么"（理解/验收/方案）全外化成产物，却没把三个最关键的"控制决策"外化——分流判定、ACK/冻结、收口完成。这三者一旦丢失恰恰无法从产物重建，违反系统自己"不依赖对话记忆"的立身原则。本迭代只做其中两条：D1、D4。
-- D1（ACK/冻结状态外化）：`lifecycle.md` 的 P2→P3 / P3→P4 与 `iteration-schema.md §5.2` 的迭代"冻结"是锁定范围的枢纽，但 `phase_gate.py` 只校验产物存在且非空，`acceptance-schema.md` 的 AC_LIST 模板没有任何 ACK 状态字段。后果：会话恢复 / handoff 后无法判断当前 AC_LIST 是"已冻结"还是"等 ACK 的草稿"，hook 也拦不住"一口气写完三件套就改源码、全程零 ACK"。
-- D4（入口分流可审计 + 升级转换 + 档位收敛）：完整 vs 简化全靠 AI 自评 6 条升级信号且**不留任何记录**；其中"≥3 文件""跨模块影响"需在分析前估算、易误判；缺"简化→完整"的升级转换定义；存在 极小/简化/完整 三档却只定义了"简化 vs 完整"一个阈值，"极小"是无界逃生口。
-- 预期产出：给 AC_LIST 增加冻结状态字段并在生命周期/迭代/规则卡登记；让入口分流落一行可审计记录、定义"简化→完整"升级转换、收敛档位边界；按选定强度决定是否扩展 hook。
+- 现状：里程碑全靠 `milestone-schema.md §6.1` 四个启动信号语义触发 + AI 主动提议 + soft 对齐，开启/推进/收口全是散文驱动；**没有命令入口**（不像 `/ideation`、`/loop` 等扩展模式），也**没有一次性录入载体**——用户想表达大版本意图只能零散地在对话里说，模型再边问边拼。
+- 用户诉求拆成三步：① 一处说清（对话 or md 文件）；② 模型生成里程碑概述文件；③ 模型拆分路线图、规划迭代承接，方便后面开发。文件通道**不要**让用户手动在 `.ai/` 下建单个 brief 文件，而是 scaffolding 时就建好一个 `origin/` 收件箱，用户平时把原始概念文件丢进去，`/milestone` 从那儿读。`origin/` 是通用的"人类原始输入收件箱"，里程碑是它的首个消费者。
+- butler 的"命令"本质是规则里的**语义约定**（仓库无 `.claude/commands/` 文件），在引擎/schema 文件定义、在 `HUMAN_GUIDE.md` 与 `templates/rule-card.md` 成体登记。故 `/milestone` 同样是语义约定，不是真实 slash-command 文件。
+- 关键张力："拆分分配具体的迭代号" vs `milestone-schema.md §5.3` 的**不预先占号**纪律（迭代号单调递增、开启时才从台账绑定、路线图「实际 ITER」列留空）。预分配全局迭代号是脆的（中途插独立迭代 / 计划变更即失真）。倾向：路线图给主题切片 + 预计 ITER 跨度（方向性），真号开启时绑——既满足"拆好规划方便开发"，又不破坏单调计数纪律。
 
 # Constraints
 - 显性约束：
-  - 不破坏既有产物链与三层分层（SOP Core / Domain / Business）。
-  - 工作区四件套固定路径不变，保证 `phase_gate` 校验路径零改动。
-  - 模板 SSOT 是 `templates/rule-card.md`，凡改强制约束必须同步它（卡片已含 ACK 门与升级信号文案）。
-  - 新增 AC_LIST 状态字段须向后兼容：已部署项目的旧 AC_LIST 无该字段时不得被 hook 误杀。
+  - 不破坏三层分层（SOP Core / Domain / Business）与 P1→P5 产物链；新增规则/命令必须在 `Coder/README.md` 注册（CLAUDE.md 工程约束）。
+  - 模板 SSOT 是 `templates/rule-card.md`，经 `{{RULE_CARD_CONTENT}}` 占位符注入 `CLAUDE.md.template`，改强制约束只改 rule-card、不手工双写。
+  - 里程碑层**不冻结、不被 hook 拦截**（保持松耦合、方向性、可选）——本次优化不得给里程碑加冻结门或 hook 校验。
+  - `§5.3` 不预先占号纪律不得被推翻；`iteration-schema.md` 锁定纪律不受影响。
 - 隐性约束：
-  - 若 D1 选 hook 强制，须同步改 `phase_gate.py`（或激活 `artifact_chain.py`）+ 对应 tests + bypass 叙述；且要诚实认识 hook 只能校验"字段是否标记 frozen"，不能校验"人是否真的 ACK"——其价值在于卡住"忘了等 ACK"的纪律失误，而非防欺骗。
-  - 分流记录不得给简化路径增加过重负担，否则简化路径失去存在意义。
+  - 文档有界：brief 载体不得跨里程碑纵向堆积（与 `§3` 文档有界原则一致）。
+  - 轻量命令不得喧宾夺主——`/milestone` 是入口糖，触发的仍是既有生命周期，不新增阶段、不阻塞流程。
+  - brief 是非权威输入，合成后 `.ai/MILESTONE.md` 仍是唯一真源，避免双真源。
 
 # Impact Scope
-- 规则层（确定改）：`lifecycle.md`、`acceptance-schema.md`、`iteration-schema.md`、`logic-protocol.md`、`templates/rule-card.md`。
-- 规则层（D4 相关）：`concept-schema.md`（完整路径分流记录落点之一）。
-- hook 层（取决于 D1 强度选择）：`templates/hooks/rules/phase_gate.py` 或 `artifact_chain.py` + `templates/hooks/tests/`。
-- 文档层（按需）：`README.md` / `HUMAN_GUIDE.md` 仅在措辞涉及时同步。
-- dogfood：覆写 `.ai/` 四件套为 ITER-0004、收口归档 `.ai/iterations/ITER-0004/`、台账置 closed、`deliveries/ITER-0004-<slug>.md`。
-- 明确不影响：里程碑机制、Domain/Stack Profiles、Composer / Learner 子系统、其余三条 review 缺陷（D2/D3/D5/D6 本轮不动）。
+- 确定改：
+  - `Coder/20_Workflow_Lifecycle/milestone-schema.md`：新增"里程碑意图书(Brief)录入 + brief→MILESTONE.md 合成协议 + `/milestone` 命令"小节，并在 §6 启动/§7.1 开启处接入；文件通道源为 `origin/`。
+  - `Coder/20_Workflow_Lifecycle/mcv-deployment.md` §2 Scaffold：部署时新建 `origin/` 收件箱（定位为人类原始输入区，与 AI 处理的 `.ai/references/` 区分）。
+  - `templates/rule-card.md`：里程碑段补"一次性 brief 录入（对话 / `origin/` 文件）+ `/milestone` 命令"要点（SSOT，模板自动继承）。
+  - `HUMAN_GUIDE.md`：§4 目录结构补 `origin/`；§5 里程碑段更新使用方式；扩展模式表补 `/milestone` 行。
+  - `Coder/README.md`：milestone-schema 描述纳入 brief 录入与命令，登记 `/milestone`。
+  - `Coder/20_Workflow_Lifecycle/lifecycle.md` §P1 里程碑提议段：补一句命令等价路径（一句话级）。
+- 新增 input 载体：`origin/` 收件箱（scaffolding 时创建；存放用户原始概念文件；非权威、不属四层落盘、不归档、用户自管；AI 只读不重塑）。
+- 明确不影响：`iteration-schema.md` 锁定纪律、hook 体系（phase_gate 不变）、其它扩展模块（ideation/loop/review/dangerous/preference）、Composer/Learner 子系统。
 
 # Project Type / Active Profiles
 - 项目类型：Markdown 规则仓库（butler 自身）。
 - 未命中任何 Domain / Stack Profile，仅按通用 SOP 推进。
 
 # Open Questions
-- Q1（D1 强度）：仅"AC_LIST 加状态字段 + 规则纪律记录 ACK"，还是再加 `phase_gate` hook 强制（`status != ack-frozen` 时拦截源码写操作）？后者更强但要改 hook 代码 + 测试。
-- Q2（D4 档位）：把"极小"并入简化路径、收敛为两档（单一阈值）+ 一行轻量分流记录，还是保留三档并各自定义边界？
-- Q3（默认方案，可推翻）：分流记录落点——完整路径写进 `CONCEPT.md` 顶部、简化路径写进 `AC_LIST.md` 顶部；ACK 状态用 AC_LIST 顶部 `状态: draft | ack-frozen` + `ACK 日期` 字段表达。
+- Q1（origin 位置）：`origin/` 放项目根（与 `deliveries/` 平级，人类输入↔人类可读输出对称、不混入"AI 的 .ai/"）还是 `.ai/origin/`（与 `references/` 同居 .ai 下）？倾向**项目根 `origin/`**——它是人类自管的原始概念区、AI 只读不重塑，放根更贴近"你的空间"。需用户确认。
+- Q2（命令面范围）：核心是 `/milestone`（无参 = 开启/录入意图；可带意图文本或指向 brief 文件）。是否一并加只读看板 `/milestone status`（轻量、直接服务"方便后面开发"——看当前范围/路线图进度/含迭代/下一个 planned）？倾向：加，但保持最小。其余 close/abandon/evolve 仍走语义。
+- Q3（迭代号口径）：沿用 §5.3 不预先占号——路线图给主题切片 R1/R2… + 预计 ITER 跨度，「实际 ITER」开启时绑。即"拆分规划"而非"硬占全局号"。需用户确认是否接受（若坚持硬预分配，需另议且会动 §5.3）。

@@ -24,7 +24,7 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 
 每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md` + 台账置 closed。
 
-迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号（跨 ≥2 迭代 / 版本主题 / 先评估后拆分 / 显式里程碑）时，在第一个迭代 P1 前开里程碑：写 `.ai/MILESTONE.md`（范围评估 + 理解阐释 + 拆分路线图）并 soft 对齐；期间开启的迭代自动归属之。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（聚合链接各迭代交付）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
+迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号（跨 ≥2 迭代 / 版本主题 / 先评估后拆分 / 显式里程碑）时，在第一个迭代 P1 前开里程碑：写 `.ai/MILESTONE.md`（范围评估 + 理解阐释 + 拆分路线图）并 soft 对齐；期间开启的迭代自动归属之。**录入两通道**：对话直接讲清，或把原始概念文件投到项目根 `origin/` 收件箱让模型读取合成（brief 非权威，`.ai/MILESTONE.md` 为唯一真源）；**显式命令** `/milestone` 开启录入、`/milestone status` 只读看进度（与语义触发等价，open/status 之外仍走语义）。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（聚合链接各迭代交付）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
 
 ## 回退规则
 

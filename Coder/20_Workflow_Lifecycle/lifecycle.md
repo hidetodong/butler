@@ -83,7 +83,7 @@ P1 讨论可能跨多轮对话。讨论结束后，AI 必须将结论结晶为 `
 
 进入 P1 即开启一个迭代：从 `.ai/ITERATIONS.md` 领下一个迭代号 `ITER-NNNN` 并置 `active`，本迭代的 `CONCEPT.md` / `AC_LIST.md` 产在工作区四件套中。**开启时工作区四件套必须以本迭代内容整体覆写，严禁保留或追加上一迭代内容**（overwrite-only，详见 `iteration-schema.md` §5.1）。迭代号分配、台账字段与锁定纪律以 `iteration-schema.md` 为准。极小、零升级信号的简化路径任务可不单独开迭代号。
 
-若当前存在 `active` 里程碑，本迭代自动归属之：在 `.ai/ITERATIONS.md`「所属 milestone」列填该里程碑号，并按 `milestone-schema.md` §7.2 同步里程碑台账「含迭代」列与 `.ai/MILESTONE.md` 拆分路线图。若任务命中 `milestone-schema.md` §6.1 启动信号（跨 ≥2 迭代、版本主题、先评估后拆分、显式里程碑）而尚无 active 里程碑，应在 P1 之前先提议开里程碑并 soft 对齐；零信号则直接走独立迭代，不开里程碑。
+若当前存在 `active` 里程碑，本迭代自动归属之：在 `.ai/ITERATIONS.md`「所属 milestone」列填该里程碑号，并按 `milestone-schema.md` §7.2 同步里程碑台账「含迭代」列与 `.ai/MILESTONE.md` 拆分路线图。若任务命中 `milestone-schema.md` §6.1 启动信号（跨 ≥2 迭代、版本主题、先评估后拆分、显式里程碑）而尚无 active 里程碑，应在 P1 之前先提议开里程碑并 soft 对齐；零信号则直接走独立迭代，不开里程碑。用户也可用显式命令 `/milestone`（与语义触发等价，见 `milestone-schema.md` §6.5）主动开里程碑，录入通道与 brief 合成协议见其 §6.4。
 
 若任务属于新项目接入、显式要求部署基地车，或需要建立跨会话维护设施，应在 P1 同步参考 `mcv-deployment.md` 完成侦察与部署判断。
 若任务涉及已有 `.ai/` 维护文件的升级、迁移或归档整理，应在 P1 同步参考 `mcv-update.md` 完成升级判断。
