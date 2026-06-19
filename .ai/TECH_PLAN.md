@@ -1,58 +1,69 @@
 # Goal
-- 支撑 AC0–AC11：在不破坏里程碑松耦合/不冻结/不被 hook 拦定位的前提下，落地"`origin/` 收件箱 + 两通道 brief 录入 + brief→MILESTONE.md 合成协议 + `/milestone` 与 `/milestone status` 命令"，并经 SSOT 传播到模板与人类文档。
+- 支撑 AC1–AC13：把 butler 持久运行模式外化为 `.ai/local-constraints.md`「Butler 功能开关」段（dangerous / independent_review），接线会话起始读取，改写 dangerous-engine §3 跨会话语义为"声明后自动生效"，显式化里程碑 active 归属 / closed 不写入，并经 SSOT 传播。
 
 # Files / Modules to Change
-- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — §2 Scaffold 加 `origin/`（部署时创建，与 references 区分）。【AC0】
-- `Coder/20_Workflow_Lifecycle/milestone-schema.md` — 新增 §6.4 Brief 录入与合成、§6.5 命令；§7.1 开启交叉引用 §6.4。【AC1/AC2/AC3/AC4/AC5】
-- `templates/rule-card.md` — 里程碑段（现 L27）补 brief 录入 + 命令要点（SSOT 单写）。【AC6】
-- `HUMAN_GUIDE.md` — §4 目录树加 `origin/`；§5 里程碑段更新用法 + 成体登记命令。【AC7】
-- `Coder/README.md` — milestone-schema 职责描述（现 L127）纳入 brief/命令；mcv-deployment 描述（现 L117）提 `origin/`。【AC8】
-- `Coder/20_Workflow_Lifecycle/lifecycle.md` — §P1 里程碑提议段（现 L86）补一句 `/milestone` 等价入口。【AC9】
-- `.ai/`（dogfood）— ITER-0005 四件套 + 收口归档 + 台账 + `deliveries/ITER-0005-<slug>.md`。【AC11】
-- **零改动（守 AC10）**：`iteration-schema.md`、`templates/hooks/**`、`acceptance-schema.md`、其它扩展模块。
+- `Coder/20_Workflow_Lifecycle/local-constraints-schema.md` — §1 目标 + §2 字段 + §3 模板新增「Butler 功能开关」+ §4 读写规则 + §5 流程联动。【AC1/AC2/AC3】
+- `Coder/00_System_Prompt/logic-protocol.md` — §1 增会话起始读取功能开关；§4 Dangerous 条目改写 + independent_review 落点。【AC4/AC5】
+- `Coder/65_Extension_Dangerous/dangerous-engine.md` — §3 改写跨会话语义。【AC6】
+- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — §4 local-constraints 生成含功能开关段 + 安全默认。【AC7】
+- `Coder/20_Workflow_Lifecycle/lifecycle.md` — §P1 里程碑段补 closed 不写入。【AC8】
+- `Coder/20_Workflow_Lifecycle/milestone-schema.md` — §7.2 推进补"自动归属无需逐次确认"、§7.4 收口补"closed 后新迭代独立不写入"。【AC8】
+- `templates/rule-card.md` — 补功能开关持久落点 + dangerous announce-on-read。【AC9】
+- `HUMAN_GUIDE.md` — 新增「项目级功能开关」子节 + dangerous 跨会话行为/风险 + 自动归属。【AC10】
+- `Coder/README.md` — local-constraints-schema 描述纳入功能开关。【AC11】
+- `.ai/`（dogfood）— ITER-0006 四件套 + 收口归档 + 台账 + `deliveries/ITER-0006-<slug>.md`。【AC13】
+- **零改动（守 AC12）**：`Coder/70_Extension_Preference/preference-probe-engine.md`、`templates/hooks/**`、`iteration-schema.md`。
 
 # External References
 - 无（`.ai/references/` 下无参考资料）。
 
 # Interface / Contract
-- **`origin/` 目录契约**：项目根、部署时创建的空目录；人类自管原始概念输入；AI 只读、不写不改不重塑不归档；非 §3 四层落盘成员。与 `.ai/references/`（外部第三方资料、AI 处理改名注入）角色互斥。
-- **Brief 契约**：`origin/` 下任意命名/数量的原始概念文件，或对话直接输入；可选、非权威、一次性；合成后 `.ai/MILESTONE.md` 为唯一真源。
-- **合成协议（brief → `.ai/MILESTONE.md`）**：① 收集输入（origin 文件 / 对话；多份未指明则汇总相关并回述确认）→ ② 解析落 §5 三段（范围评估 / 理解阐释 / 拆分路线图）→ ③ 信息缺口显式列"待澄清"，不臆造 → ④ soft 对齐（非硬门，演进按 §5.4/§7.3）。
-- **`/milestone` 命令**：无参或带意图文本 = 开启/录入，按 §6.1 信号判定 + §6.4 合成 + §7.1 开启；与语义触发**等价**（入口糖，不新增阶段、不阻塞流程）。
-- **`/milestone status` 命令**：只读看板，读 `.ai/MILESTONES.md` + `.ai/MILESTONE.md` 报当前里程碑标题/状态、范围摘要、路线图各项进度、含迭代、下一个 `planned` 项；无 active 里程碑时如实报"无"；不写文件、不改状态。
+- **功能开关配置契约**（`.ai/local-constraints.md` 新增段）：
+  - 段标题 `# Butler 功能开关`，字段 `dangerous: on|off`（默认 off）、`independent_review: on|off`（默认 off）。
+  - 读：AI 会话起始（已部署项目）读取并据此激活/抑制持久模式。
+  - 写：模式命令（`/dangerous on|off`、`/review` 项目级开关）NL 触发回写；用户可手改。
+  - dangerous 跨会话：读到 on → 当回合显式声明后**自动生效**（announce-on-read + auto-apply）。
+  - 排除：preference 不纳入（跨项目、状态在 `$BUTLER_PREF`）。
+  - legacy：旧文件无本段 → 全 off；独立 `Review Policy: independent_review` → independent_review 的 legacy 形式仍尊重。
+- **dangerous-engine §3 新语义**：开/关写 local-constraints `dangerous`；跨会话读到 on 声明后自动进入；显式 off / 手改 off 关闭；开关均对话层回声。
+- **Ask A 归属契约**：active 里程碑（台账 `current=MILE-NNNN`）期间开启的迭代一律自动归属（三处同步）；`current: none` 后开启的迭代独立、不写入已收口里程碑、不回挂（除非按 §6.3 显式回挂到另一 active 里程碑）。台账 `current` 仍是 active 唯一真源。
 
 # State / Boundary
-- 命令面**只覆盖** open / status 两个最高频动作；close / abandon / evolve 仍走 §7.3/§7.4/§7.5 语义，不命令化。
-- 里程碑层不冻结、不被 hook 拦：本次不加任何冻结门或 phase_gate 校验。
-- §5.3 不预先占号纪律不动：路线图给主题切片 + 预计 ITER 跨度，「实际 ITER」开启时绑。
-- 不在 butler 本仓库创建 `origin/`（butler 是规则仓库、非部署目标）。
+- local-constraints 仍是"配置/差异"非"规则复制器"：功能开关是配置项，不复制引擎逻辑。
+- 里程碑/迭代 active 指针**不进** local-constraints（台账唯一真源，零第二真源）。
+- preference 外置数据流、phase_gate、iteration 锁定纪律不在本次范围。
+- 危险模式跨会话自动生效是**有意降低** §3 安全冗余的取舍，必须 announce-on-read 兜底并如实标注风险。
 
 # Design Decisions
-- **新增小节用 §6.4/§6.5**（挂在"§6 启动信号与时机"下），不另起顶层节，避免 §7/§8/§9 整体重排号。
-- **录入合成集中写在 §6.4，§7.1 仅交叉引用**：避免开启动作与录入协议双写；§7.1 既有"产出 MILESTONE.md + soft 对齐"措辞保留，补一句指向 §6.4 录入通道。
-- **命令登记在里程碑段内、不进 HUMAN_GUIDE §5 扩展模式表**：里程碑是工作流层、非"扩展模式"，进扩展表会误分类（AC7 的"或"分支选此）。
-- **rule-card 增量克制**：里程碑段是 SSOT 浓缩，只加一句 brief+命令要点，控 token；模板经 `{{RULE_CARD_CONTENT}}` 自动继承，不手工改 `CLAUDE.md.template`。
-- **origin 与 references 显式对照**：在 mcv-deployment §2 与 HUMAN_GUIDE 各点一句区分，防止两者职责混淆（守 AC10）。
+- **整合而非并列**：`# Review Policy` 模板块并入统一 `# Butler 功能开关`，independent_review 作为其一项；旧独立字段保留 legacy 兼容，避免已部署项目断裂。
+- **读取接线写进 logic-protocol §1**（会话起始读取协议），而非只在 schema 自述——否则"写了没人读"=无效外化。
+- **dangerous 持久但每会话亮明**：以 announce-on-read 替代 §3 原"不续开"的安全角色——可见性换冗余，绝不静默进入无人值守。
+- **preference 排除**：跨项目语义，放项目级配置会制造"每项目一份偏好开关"的错觉，明确排除并注明其外置归宿。
+- **Ask A 仅澄清不改机制**：active 归属 / closed 不写入本就是现有行为（lifecycle L86 + §7.2 仅"若存在 active"），本轮只把 closed 边界写明，不引入新机制。
+- **rule-card 增量克制**：只加一句功能开关落点 + dangerous 亮明，控 token，模板占位符自动继承。
 
 # Execution Steps
-1. `mcv-deployment.md` §2：加 `origin/` 创建与职责、references 对照。【AC0】
-2. `milestone-schema.md`：插 §6.4（Brief 录入与合成协议）、§6.5（命令）；§7.1 补交叉引用句。【AC1–AC5】
-3. `templates/rule-card.md`：里程碑段补 brief + 命令要点。【AC6】
-4. `HUMAN_GUIDE.md`：§4 目录树加 `origin/`；§5 里程碑段更新 + 命令登记。【AC7】
-5. `Coder/README.md`：milestone / mcv-deployment 两条描述更新。【AC8】
-6. `lifecycle.md` §P1：补 `/milestone` 等价入口句。【AC9】
-7. 一致性自检（grep 交叉引用、SSOT 单写、§5.3/hook 零改动）。【AC10】
-8. P5：dogfood 收口 ITER-0005。【AC11】
+1. `local-constraints-schema.md`：§1/§2/§3/§4/§5 落功能开关段与读写口径。【AC1-3】
+2. `logic-protocol.md`：§1 读取接线 + §4 Dangerous/Review 条目。【AC4-5】
+3. `dangerous-engine.md §3`：改写跨会话语义 + 风险标注。【AC6】
+4. `mcv-deployment.md §4`：生成含功能开关段 + 安全默认。【AC7】
+5. `lifecycle.md` + `milestone-schema.md`：Ask A 显式化。【AC8】
+6. `rule-card.md` / `HUMAN_GUIDE.md` / `README.md`：传播。【AC9-11】
+7. 一致性自检（grep 交叉引用、SSOT 单写、AC12 零改动）。【AC12】
+8. P5：dogfood 收口 ITER-0006。【AC13】
 
 # Verification Plan
-- AC0：读 `mcv-deployment.md` §2 diff，确认 `origin/` 入部署创建清单 + references 对照句。
-- AC1/AC2/AC3：读 `milestone-schema.md` §6.4，确认两通道、brief 非权威定位、三段合成协议、§5.3 交叉引用与不矛盾。
-- AC4/AC5：读 §6.5，确认 `/milestone` 等价语义、`/milestone status` 只读看板字段、无 active 兜底。
-- AC6：对比 `rule-card.md` 里程碑段与 `CLAUDE.md.template`，确认 SSOT 单写、占位符未手工双写。
-- AC7/AC8/AC9：读 `HUMAN_GUIDE.md`/`README.md`/`lifecycle.md` diff，确认目录树、用法、命令登记、README 注册、P1 等价入口句到位。
-- AC10：`git diff --stat` 确认 `iteration-schema.md`、`templates/hooks/` 零改动；grep 确认无里程碑冻结/hook 文案、§5.3 原文在。
-- AC11：检查 `.ai/iterations/ITER-0005/` 快照、`deliveries/ITER-0005-*.md`、`ITERATIONS.md` 该行 `closed`、`current: none`。
+- AC1/2/3：读 `local-constraints-schema.md` diff——功能开关段字段/模板/读写四条/preference 排除/legacy 兼容。
+- AC4/5：读 `logic-protocol.md` diff——会话起始读取条目 + Dangerous 改写 + Review 落点。
+- AC6：读 `dangerous-engine.md §3` diff——"不续开"改写为"声明后自动生效" + 命令回写 + 风险标注。
+- AC7：读 `mcv-deployment.md §4` diff——功能开关段 + 安全默认。
+- AC8：读 `lifecycle.md`/`milestone-schema.md` diff——active 归属 / closed 不写入显式、与台账一致。
+- AC9：对比 `rule-card.md` 与 `CLAUDE.md.template`——SSOT 单写。
+- AC10/11：读 `HUMAN_GUIDE.md`/`README.md` diff。
+- AC12：`git diff --name-only` 确认 preference-probe-engine / hooks / iteration-schema 零改动；grep 台账 current 真源与 preference 外置表述未被矛盾。
+- AC13：检查 `.ai/iterations/ITER-0006/`、`deliveries/ITER-0006-*.md`、台账 `closed` + `current: none`。
 
 # Risks / Open Questions
-- 命令为语义约定（非真实 slash-command），长上下文下识别可能不稳——靠 rule-card 高注意力登记 + README 注册缓解，与现有 `/ideation` 同源同险，不新增机制。
-- 无其它未决项（Q1–Q3 已 ACK 定稿）。
+- 危险跨会话自动生效削弱 §3 安全冗余——announce-on-read 兜底 + 文档如实标注，用户知情拍板。
+- 功能开关靠规则纪律保证"会话起始必读"（无 hook 强制），与现有读取顺序同源同险。
+- 无其它未决项。

@@ -1,41 +1,40 @@
-> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约变更(里程碑产物链新增 Brief 录入载体) / 设计取舍(录入通道·命令面·迭代号预分配口径) | 2026-06-19
+> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约变更(新增功能开关配置契约 + 改 dangerous 跨会话语义) / 关键路径(危险模式无人值守自治) / 跨模块影响(local-constraints·logic-protocol·dangerous-engine·部署) / 设计取舍(配置归宿·危险跨会话·preference 取舍) | 2026-06-19
 
 # Goal
-- 优化里程碑模式的**人机录入交互**：让用户能在一处一次性把"想推进的某个大版本"说清楚，由模型据此生成里程碑概述（`.ai/MILESTONE.md`：范围评估 + 理解阐释 + 拆分路线图），并把大版本拆成有序的迭代承接规划，方便后续逐个迭代开发。录入支持两通道：① 对话直接输入；② 在一个 md 文件里一次性阐述。操作风格走**轻量命令 `/milestone` + 现有语义触发并存**。
+- 把 butler 的**持久运行模式状态**从"只活在对话里"外化为**项目级可读可写的持久配置**，落点统一在现有 `.ai/local-constraints.md`（新增"Butler 功能开关"段），让 AI 在会话起始读取并据此执行；同时把里程碑"active 自动归属 / closed 不再写入"的现有行为显式化（Ask A）。
 
 # Current Understanding
-- 现状：里程碑全靠 `milestone-schema.md §6.1` 四个启动信号语义触发 + AI 主动提议 + soft 对齐，开启/推进/收口全是散文驱动；**没有命令入口**（不像 `/ideation`、`/loop` 等扩展模式），也**没有一次性录入载体**——用户想表达大版本意图只能零散地在对话里说，模型再边问边拼。
-- 用户诉求拆成三步：① 一处说清（对话 or md 文件）；② 模型生成里程碑概述文件；③ 模型拆分路线图、规划迭代承接，方便后面开发。文件通道**不要**让用户手动在 `.ai/` 下建单个 brief 文件，而是 scaffolding 时就建好一个 `origin/` 收件箱，用户平时把原始概念文件丢进去，`/milestone` 从那儿读。`origin/` 是通用的"人类原始输入收件箱"，里程碑是它的首个消费者。
-- butler 的"命令"本质是规则里的**语义约定**（仓库无 `.claude/commands/` 文件），在引擎/schema 文件定义、在 `HUMAN_GUIDE.md` 与 `templates/rule-card.md` 成体登记。故 `/milestone` 同样是语义约定，不是真实 slash-command 文件。
-- 关键张力："拆分分配具体的迭代号" vs `milestone-schema.md §5.3` 的**不预先占号**纪律（迭代号单调递增、开启时才从台账绑定、路线图「实际 ITER」列留空）。预分配全局迭代号是脆的（中途插独立迭代 / 计划变更即失真）。倾向：路线图给主题切片 + 预计 ITER 跨度（方向性），真号开启时绑——既满足"拆好规划方便开发"，又不破坏单调计数纪律。
+- **病根**：`logic-protocol.md §4` 把 Dangerous / Preference 标为"持久 Mode"，但**无任何文件记录该持久状态**——新会话无从得知上次开着什么。与 ITER-0004 外化 ACK/分流同源（控制状态不外化，违背"不依赖对话记忆"立身原则）。
+- **用户诉求**：① 一个**统一**的地方对 butler 功能做项目级持久化配置（用户点名希望复用已有落点而非新造文件）；② AI 读取后遵循执行；③ 可对话 NL 触发改、也可手改。
+- **落点已定（用户拍板）**：扩展 `.ai/local-constraints.md`——它本就是"项目级持久化配置/与通用 SOP 的差异"，已含 `Review Policy: independent_review` 开关先例，部署时即建、在 `.ai/`，正好满足"统一 + 部署建好默认"。新建独立文件会与之并列成两个配置文件，反而背离"统一"。
+- **关键冲突（已向用户澄清并由其裁决）**：`dangerous-engine.md §3` **故意**规定危险模式"会话结束即回 Standard、不自动续开"，是防误触无人值守的安全闸。用户诉求反转它（跨会话持久 + 自动生效）。用户知情后选择：**跨会话读到 `dangerous: on` → 显式声明后直接自动生效**（以"读到即声明 + /dangerous off 显式关"作缓解），需相应改写 §3。
+- **preference 取舍**：偏好系统是**跨项目**的（外置 `$BUTLER_PREF` 存储、跨项目通识），其 on/off 不是项目级配置，**不纳入** local-constraints 功能开关；在 schema 注明其状态归外置存储。
 
 # Constraints
 - 显性约束：
-  - 不破坏三层分层（SOP Core / Domain / Business）与 P1→P5 产物链；新增规则/命令必须在 `Coder/README.md` 注册（CLAUDE.md 工程约束）。
-  - 模板 SSOT 是 `templates/rule-card.md`，经 `{{RULE_CARD_CONTENT}}` 占位符注入 `CLAUDE.md.template`，改强制约束只改 rule-card、不手工双写。
-  - 里程碑层**不冻结、不被 hook 拦截**（保持松耦合、方向性、可选）——本次优化不得给里程碑加冻结门或 hook 校验。
-  - `§5.3` 不预先占号纪律不得被推翻；`iteration-schema.md` 锁定纪律不受影响。
+  - 不破坏三层分层与 P1→P5 产物链；新增配置字段/语义须在 `Coder/README.md` 注册。
+  - 模板 SSOT 是 `templates/rule-card.md`，改强制约束经占位符传播、不手工双写。
+  - local-constraints 仍是"差异/配置"而非"规则复制器"；功能开关是配置项，不复制引擎规则。
+  - 向后兼容：已部署项目的旧 local-constraints（仅有 `Review Policy` 或无功能开关段）须按 legacy 兼容，不被误判；迁移走 `butler-upgrade`，本轮不强制回填。
 - 隐性约束：
-  - 文档有界：brief 载体不得跨里程碑纵向堆积（与 `§3` 文档有界原则一致）。
-  - 轻量命令不得喧宾夺主——`/milestone` 是入口糖，触发的仍是既有生命周期，不新增阶段、不阻塞流程。
-  - brief 是非权威输入，合成后 `.ai/MILESTONE.md` 仍是唯一真源，避免双真源。
+  - 危险模式跨会话自动生效是**降低安全冗余**的取舍，必须用 announce-on-read 硬性兜底（每会话起始显式声明、绝不静默），并在 §3 与人类文档如实标注风险。
+  - 功能开关读取必须真正接线进会话起始流程，否则"写了没人读"=无效外化。
+  - 里程碑/迭代的 active 真源仍是台账 `current`，**不进** local-constraints（避免第二真源）。
 
 # Impact Scope
 - 确定改：
-  - `Coder/20_Workflow_Lifecycle/milestone-schema.md`：新增"里程碑意图书(Brief)录入 + brief→MILESTONE.md 合成协议 + `/milestone` 命令"小节，并在 §6 启动/§7.1 开启处接入；文件通道源为 `origin/`。
-  - `Coder/20_Workflow_Lifecycle/mcv-deployment.md` §2 Scaffold：部署时新建 `origin/` 收件箱（定位为人类原始输入区，与 AI 处理的 `.ai/references/` 区分）。
-  - `templates/rule-card.md`：里程碑段补"一次性 brief 录入（对话 / `origin/` 文件）+ `/milestone` 命令"要点（SSOT，模板自动继承）。
-  - `HUMAN_GUIDE.md`：§4 目录结构补 `origin/`；§5 里程碑段更新使用方式；扩展模式表补 `/milestone` 行。
-  - `Coder/README.md`：milestone-schema 描述纳入 brief 录入与命令，登记 `/milestone`。
-  - `Coder/20_Workflow_Lifecycle/lifecycle.md` §P1 里程碑提议段：补一句命令等价路径（一句话级）。
-- 新增 input 载体：`origin/` 收件箱（scaffolding 时创建；存放用户原始概念文件；非权威、不属四层落盘、不归档、用户自管；AI 只读不重塑）。
-- 明确不影响：`iteration-schema.md` 锁定纪律、hook 体系（phase_gate 不变）、其它扩展模块（ideation/loop/review/dangerous/preference）、Composer/Learner 子系统。
+  - `Coder/20_Workflow_Lifecycle/local-constraints-schema.md`：新增"Butler 功能开关"段（`dangerous`、`independent_review` 整合）+ 字段语义 + 写入/读取/手改口径 + preference 排除说明 + legacy 兼容；更新目标段为"本地化适配 + 功能开关"。
+  - `Coder/00_System_Prompt/logic-protocol.md`：§1 增"已部署项目会话起始读取 local-constraints 功能开关并据此激活模式"；§4 更新 Dangerous（持久态落 local-constraints、跨会话 announce+auto-apply）、注明 independent_review 落点。
+  - `Coder/65_Extension_Dangerous/dangerous-engine.md` §3：改写"不跨会话续开"为"持久态外化到 local-constraints `dangerous`，跨会话读到 on → 显式声明后自动生效"，`/dangerous on|off` 回写开关。
+  - `Coder/20_Workflow_Lifecycle/mcv-deployment.md` §4：local-constraints 生成含功能开关段、安全默认（`dangerous: off`、`independent_review: off`）。
+  - `Coder/20_Workflow_Lifecycle/lifecycle.md` §P1 + `milestone-schema.md` §7.2/§7.4：显式化 Ask A——active 里程碑自动归属新迭代、closed（`current: none`）后新迭代独立不写入。
+  - `templates/rule-card.md`：补一句 local-constraints 持有项目级功能开关（dangerous/review）+ dangerous announce-on-read。
+  - `HUMAN_GUIDE.md`：文档统一配置用法（NL/手改）、dangerous 跨会话声明行为、自动归属。
+  - `Coder/README.md`：更新 local-constraints-schema 描述。
+- 明确不影响：preference 引擎数据流（外置存储不动）、phase_gate hook、iteration-schema 锁定纪律、台账 `current` 真源地位、其它扩展模块本体逻辑。
 
 # Project Type / Active Profiles
-- 项目类型：Markdown 规则仓库（butler 自身）。
-- 未命中任何 Domain / Stack Profile，仅按通用 SOP 推进。
+- 项目类型：Markdown 规则仓库（butler 自身）。未命中 Domain/Stack Profile，按通用 SOP。
 
 # Open Questions
-- Q1（origin 位置）：`origin/` 放项目根（与 `deliveries/` 平级，人类输入↔人类可读输出对称、不混入"AI 的 .ai/"）还是 `.ai/origin/`（与 `references/` 同居 .ai 下）？倾向**项目根 `origin/`**——它是人类自管的原始概念区、AI 只读不重塑，放根更贴近"你的空间"。需用户确认。
-- Q2（命令面范围）：核心是 `/milestone`（无参 = 开启/录入意图；可带意图文本或指向 brief 文件）。是否一并加只读看板 `/milestone status`（轻量、直接服务"方便后面开发"——看当前范围/路线图进度/含迭代/下一个 planned）？倾向：加，但保持最小。其余 close/abandon/evolve 仍走语义。
-- Q3（迭代号口径）：沿用 §5.3 不预先占号——路线图给主题切片 R1/R2… + 预计 ITER 跨度，「实际 ITER」开启时绑。即"拆分规划"而非"硬占全局号"。需用户确认是否接受（若坚持硬预分配，需另议且会动 §5.3）。
+- 均已 ACK 前置澄清并定稿：配置归宿=扩展 local-constraints；危险跨会话=声明后自动生效（改 §3）；preference 不纳入；落点 `.ai/`、部署建好默认。无遗留待决。

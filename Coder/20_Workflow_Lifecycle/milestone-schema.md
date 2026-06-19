@@ -202,7 +202,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 ### 7.2 推进 (Advance)
 
-- 期间每开一个承接迭代：① 在该迭代的 `.ai/ITERATIONS.md` 行「所属 milestone」列填 `current` 里程碑号；② 在 `.ai/MILESTONES.md`「含迭代」列追加其号；③ 把它绑定到 `.ai/MILESTONE.md` 拆分路线图对应路线项的「实际 ITER」列。
+- 里程碑处于 `active` 期间开启的每个迭代**一律自动归属**之（无需逐次征求确认）。每开一个承接迭代：① 在该迭代的 `.ai/ITERATIONS.md` 行「所属 milestone」列填 `current` 里程碑号；② 在 `.ai/MILESTONES.md`「含迭代」列追加其号；③ 把它绑定到 `.ai/MILESTONE.md` 拆分路线图对应路线项的「实际 ITER」列。归属判定只认台账 `current`：`current = 本里程碑号` 即归属。
 - 每个承接迭代各自走完整 `P1 -> P5` 并各自收口、各自交付（小版本交付落在 `deliveries/ITER-NNNN-<slug>.md`），迭代收口纪律以 `iteration-schema.md` §5 为准。
 
 ### 7.3 演进 (Evolve)
@@ -219,6 +219,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
   2. 生成版本级交付总结 `deliveries/milestones/MILE-NNNN-<slug>.md`，聚合其下各迭代交付，结构与触发参考 `delivery-summary.md`（聚合口径见其 §4.8）；**只链接各迭代交付路径与里程碑产物路径，不得全文嵌入**（见 `delivery-summary.md §4.7` 与本规范 §9）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`。
 - 版本级整体验收：收口前必须确认拆分路线图各路线项均 `closed`/`abandoned`、其下迭代验收闭环；存在 `planned`/`active` 路线项时不得收口（除非显式废弃该路线项）。
+- **收口后归属边界**：`current` 置 `none` 后，再开启的迭代**不再自动归属本（已收口）里程碑**、不回写其「含迭代」与路线图，按独立迭代处理；已收口里程碑不接收新迭代、不被回挂。若新迭代属于另一个大版本，按 §7.1 另开里程碑或 §6.3 回挂到另一个 `active` 里程碑。
 
 ### 7.5 废弃 (Abandon)
 

@@ -92,6 +92,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 - 生成 `.ai/local-constraints.md`，字段定义与最小模板参考 `local-constraints-schema.md`。
 - **逻辑：** 不要复制通用规则，而是通过”指针”引用。例如：”本项目遵循通用需求开发 SOP，并启用 TypeScript profile；针对 `/legacy` 目录下的旧代码，允许局部放宽类型检查。”
+- **必含「Butler 功能开关」段**：生成时即写入该段并以**安全默认全 off** 落地（`dangerous: off`、`independent_review: off`），作为项目级 butler 功能持久配置的统一入口。后续由命令回写或用户手改，AI 会话起始读取（见 `local-constraints-schema.md §4.1`）。
 
 ## 5. Hook 注入 (Hook Injection)
 

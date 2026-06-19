@@ -39,6 +39,10 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 3. 创建 `deliveries/` 目录（完整交付总结归档）
 4. 生成 `.ai/local-constraints.md`（本地化约束，引用而非复制通用规则）
 
+## 项目级功能开关（持久配置）
+
+butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功能开关」段（`dangerous` / `independent_review`，默认 off）。**会话起始必须读取本段并据此执行**；命令 NL 触发回写、也可手改。`dangerous: on` **跨会话生效**，AI 每会话起始读到即**显式声明后才进入**（announce-on-read，绝不静默进无人值守）。偏好系统不在此（跨项目、外置 `$BUTLER_PREF`）。
+
 ## 执行纪律
 
 - 不混入无关变更

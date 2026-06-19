@@ -1,37 +1,39 @@
 # Verification Summary
-- 覆盖范围：里程碑录入交互优化——`origin/` 收件箱（部署创建）、两通道 brief 录入、brief→`.ai/MILESTONE.md` 合成协议、`/milestone` 与 `/milestone status` 命令，及 SSOT/人类文档传播。
-- 总体结论：AC0–AC11 全部满足；逐文件落点 grep 自检全绿，AC10 零改动护栏经 `git diff` 双重确认；ITER-0005 闭合。
+- 覆盖范围：butler 持久运行模式外化为 `.ai/local-constraints.md`「Butler 功能开关」段、会话起始读取接线、dangerous 跨会话语义改写、里程碑 active 归属/closed 不写入显式化，及 SSOT/人类文档传播。
+- 总体结论：AC1–AC13 全部满足；逐 AC grep 落点 15/15 通过，AC12 零改动经 `git diff` 确认，dangerous-engine 旧"不续开"生效规则已被改写（仅保留解释性风险引用）。ITER-0006 闭合。
 
 # AC Status
-- [x] AC0: `origin/` 部署时创建（人类原始概念收件箱，与 references 区分）
-- [x] AC1: §6.4 Brief 录入小节（两通道 + 非权威定位）
-- [x] AC2: brief→MILESTONE.md 合成协议（三段 + 缺口待澄清 + soft 对齐）
-- [x] AC3: 路线图沿用 §5.3 不预先占号（交叉引用一致）
-- [x] AC4: `/milestone` 开启/录入命令（与语义触发等价）
-- [x] AC5: `/milestone status` 只读看板（字段 + 无 active 兜底）
-- [x] AC6: rule-card 里程碑段补 brief+命令，SSOT 单写（模板占位符自动继承）
-- [x] AC7: HUMAN_GUIDE §4 目录树 + §5 用法/命令登记
-- [x] AC8: README milestone-schema/mcv-deployment 两条描述更新 + 命令注册
-- [x] AC9: lifecycle §P1 补 `/milestone` 等价入口句
-- [x] AC10: 里程碑不冻结/不被 hook 拦保持；§5.3 原文在；iteration-schema/hooks/acceptance 零改动
-- [x] AC11: ITER-0005 四件套 + 收口归档 + 交付 + 台账（本报告产出即完成最后一环）
+- [x] AC1: local-constraints-schema 新增「Butler 功能开关」段 + 字段（dangerous / independent_review，默认 off）+ §1/§2 目标字段更新
+- [x] AC2: §4.1 读写口径四条（会话起始读 / 命令回写 / 手改 / dangerous announce-on-read 自动生效）
+- [x] AC3: preference 排除 + legacy 兼容（旧无段全 off、独立 Review Policy 作 legacy 仍尊重）
+- [x] AC4: logic-protocol §1.3 会话起始读取功能开关并激活
+- [x] AC5: logic-protocol §4 Dangerous 条目改写（外化 + 跨会话声明后自动进入）+ Review independent_review 落点
+- [x] AC6: dangerous-engine §3 改写跨会话语义（声明后自动生效）+ §3.1 + 安全取舍风险标注
+- [x] AC7: mcv-deployment §4 生成含功能开关段 + 安全默认全 off
+- [x] AC8: lifecycle §P1 + milestone-schema §7.2/§7.4 显式化 active 归属 / closed 不写入
+- [x] AC9: rule-card 补功能开关持久落点 + dangerous announce-on-read，SSOT 单写
+- [x] AC10: HUMAN_GUIDE 新增「项目级功能开关」子节 + dangerous 跨会话行为/风险 + 里程碑归属边界
+- [x] AC11: README local-constraints-schema 描述纳入"统一持久落点"
+- [x] AC12: preference-engine / hooks / iteration-schema 零改动；台账 current 真源、preference 外置表述未被矛盾
+- [x] AC13: ITER-0006 收口（本报告产出即完成最后一环）
 
 # Verification Results
-- AC0–AC9：逐 AC `grep` 关键句命中各目标文件（11/11 ✓，见执行日志的 per-AC landing 批次）。
-- AC3：grep 确认 `milestone-schema.md` 同时保留 §5.3 原文「开启时绑号 / 不得预先占号」(2 命中) 与 §6.4 新增「沿用 §5.3 不预先占号」交叉引用，二者不矛盾。
-- AC6：`grep RULE_CARD_CONTENT templates/CLAUDE.md.template` = 1 命中；`grep 里程碑|MILESTONE|/milestone templates/CLAUDE.md.template` = 0 命中 → 模板无手写里程碑内容，SSOT 单写成立。
-- AC10：`git diff --name-only | grep -E iteration-schema|templates/hooks|acceptance-schema` 空 → 三者零改动；`grep 不被 hook / 不进入 ACK 冻结门` 命中既有否定式表述（L24/L131/L231），确认未引入冻结或 hook 耦合。
-- AC11：见本报告下方收口三步执行记录。
+- AC1–AC11：逐 AC `grep` 关键句命中各目标文件（15/15 ✓，见 per-AC landing 批次）。
+- AC2/AC6：announce-on-read 在 local-constraints-schema §4.1、dangerous-engine §3.1、logic-protocol §1.3/§4、rule-card、HUMAN_GUIDE 五处一致表述；dangerous-engine 旧"会话结束即回 Standard、不自动续开"生效规则已替换为 §3.1 跨会话声明后自动进入，仅 §3.1 风险说明保留对旧设计的解释性引用（非生效规则）。
+- AC9 SSOT：`grep RULE_CARD_CONTENT templates/CLAUDE.md.template` = 1；`grep "Butler 功能开关|dangerous:" templates/CLAUDE.md.template` = 0 → 模板无手写功能开关内容，SSOT 单写成立。
+- AC12：`git diff --name-only | grep -E preference-probe-engine|templates/hooks|iteration-schema` 空 → 三者零改动。
+- AC8：lifecycle / milestone-schema 归属边界与台账 `current` 判定一致（`current=MILE` 归属、`current: none` 独立）。
 
 # Gate Coverage
-- 通用质量门禁：规则编辑遵守 CLAUDE.md 五条约束——未破坏三层分层（改动只落 20_Workflow_Lifecycle + 文档/模板）、未破坏产物链、新增命令/目录已在 README 注册、模板 SSOT 单一来源、各文件 frontmatter audience/scope 未动。
-- Active Profiles：未命中任何 Domain/Stack Profile（Markdown 规则仓库），N/A。
-- Tech Plan Alignment：TECH_PLAN 五项 Design Decisions 全兑现——§6.4/§6.5 不另起顶层节（§7/§8/§9 号未重排）、录入合成集中 §6.4 + §7.1 仅交叉引用、命令登记在里程碑段未进扩展表、rule-card 增量克制单写、origin↔references 对照各点一句。
-- References Compliance：本轮无 `.ai/references/` 参考资料，N/A。
+- 通用质量门禁：遵守 CLAUDE.md 五约束——未破坏三层分层（改动落 00/20/65 + 文档/模板）、未破坏产物链、新增功能开关配置已在 README 注册、模板 SSOT 单写、frontmatter 未动。
+- Active Profiles：未命中（Markdown 规则仓库），N/A。
+- Tech Plan Alignment：TECH_PLAN 六项 Design Decisions 全兑现——整合而非并列（Review Policy 并入功能开关 + legacy 保留）、读取接线写进 logic-protocol §1、dangerous 持久但每会话亮明、preference 排除、Ask A 仅澄清不改机制、rule-card 增量克制。
+- References Compliance：本轮无 `.ai/references/`，N/A。
 
 # Remaining Risks
-- 命令为语义约定（非真实 slash-command），长上下文下识别可能不稳——已靠 rule-card 高注意力登记 + README 注册缓解，与现有 `/ideation` 同源同险，未新增机制。可接受。
-- `origin/` 为部署时创建的空目录，git 不跟踪空目录——目标项目首次投放文件即出现，无碍；butler 本仓库非部署目标，未建 `origin/`（符合设计）。
+- 危险模式跨会话自动生效削弱 dangerous-engine §3 原"不续开"安全冗余——以 announce-on-read（每会话起始强制显式声明 + `/dangerous off` 即关）兜底，§3.1 与 HUMAN_GUIDE 如实标注"忘关则新会话声明后自动进入自治"风险，并建议仅在可隔离/可回滚环境保留 on。用户知情拍板。
+- 功能开关靠规则纪律保证"会话起始必读"（无 hook 强制），与现有读取顺序同源同险。
+- 已部署旧项目未自动迁移功能开关段——靠 legacy 全 off 兼容，正式迁移属 `butler-upgrade` 范围，本轮未做。
 
 # Handoff / Next Step
-- 任务闭合，无遗留。后续若要把 `origin/` 推广为其它录入流（如普通迭代 P1 概念）的通道，属新迭代范围，本轮不含。
+- 任务闭合，无遗留。后续可选项（非本轮）：把功能开关段纳入 `butler-upgrade.md` 迁移协议、或扩展更多项目级开关。
