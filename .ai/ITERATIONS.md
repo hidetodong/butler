@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0009 | preference 接入项目级配置：local-constraints 增 per-project 抑制开关（外置仍为跨项目真源） | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0009-preference-per-project-toggle.md |
 | ITER-0008 | 迭代状态枚举固化：封闭三态 + hook 机械门禁 ledger_status | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0008-iteration-status-enum-lockdown.md |
 | ITER-0007 | 引入硬版本概念：semver 基线 v1.0.0 + 部署版本戳 + 升级版本 gap | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0007-versioning-baseline-v1.0.0.md |
 | ITER-0006 | Butler 功能开关外化：local-constraints 统一持久配置（含 dangerous 跨会话）+ 里程碑自动归属显式化 | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0006-feature-toggles-and-milestone-auto-attach.md |

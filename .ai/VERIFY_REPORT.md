@@ -1,46 +1,45 @@
 # Verification Summary
-- 覆盖范围：迭代状态枚举固化为封闭三态（active/closed/abandoned）——`iteration-schema §4.2` 封闭声明 + `milestone-schema §5.3` 路线项消歧 + 新增 hook 规则 `ledger_status` 机械拦截台账状态列越界值（如 planned）+ 测试 + 传播。
-- 总体结论：AC1–AC16 全部满足；hook 全套 `pytest` 82 passed（含新增 13 例），逐 AC grep 落点通过，AC14 零改动经 `git status` 确认护栏文件未入改动名单。ITER-0008 闭合。
+- 覆盖范围：preference 接入 `.ai/local-constraints.md`「Butler 功能开关」作 per-project 抑制开关（默认 on）——schema 语义 SSOT（§4.1）+ 引擎 §2.5 优先级 + logic-protocol 接线 + 部署默认 + 四处排除措辞反转；外置 `$PREF` 仍为 consent/数据跨项目唯一真源。
+- 总体结论：AC1–AC16 全部满足；逐 AC grep 落点通过，AC12 旧排除句全仓 0 命中，AC14 零改动经 `git diff` 确认（engine 纯增量 +12/−0、仅 §2 区，算法/契约/底线/隔离段未动）。ITER-0009 闭合。
 
 # AC Status
-- [x] AC1: `iteration-schema §4.2` 改写为封闭枚举（仅 active/closed/abandoned，含 planned 在内的其他值对迭代行非法）
-- [x] AC2: §4.2 交叉引用消歧（planned 属 milestone §5.3 路线项）+ 声明由 hook ledger_status 机械校验
-- [x] AC3: `milestone-schema §5.3` 增消歧句（路线项状态 vs 迭代状态、planned 路线项不产生台账行、引 iteration-schema §4.2）
-- [x] AC4: 新增 `ledger_status.py`，RULE_ID 正确，仅 target==.ai/ITERATIONS.md 生效、其余 allow，零三方依赖
-- [x] AC5: 解析 Write/Edit/MultiEdit 入参，逐行识别 ITER-NNNN 行取第 3 列大小写不敏感比对，越界 deny（reason 含迭代号+原值+枚举，remediation 引 milestone-schema §5.3）
-- [x] AC6: 表头/分隔行/空状态/非 ITER 行均 allow（pytest 覆盖）
-- [x] AC7: `butler_gate.py` import + RULE_MODULES 接入 ledger_status，deny 后走 lib/bypass、退出码契约不变
-- [x] AC8: 新增 `test_ledger_status.py`，覆盖合法三态/planned deny/abandoned/非台账路径/Edit/MultiEdit/表头分隔/空状态/大小写/draft/非 ITER 行/空内容
-- [x] AC9: `cd templates/hooks && pytest tests/` = 82 passed（既有 + 新增）
-- [x] AC10: hook `README.md` 目录结构 + 运行机制执行顺序补 ledger_status
-- [x] AC11: `mcv-deployment §5` hook 拦截能力描述补迭代台账状态枚举越界拦截
-- [x] AC12: `Coder/README.md` hook bullet + `rule-card.md` 迭代机制各补封闭三态；`HUMAN_GUIDE.md` 无 hook 概述，按 AC12 不强加
-- [x] AC13: hook `VALID_STATES = ("active","closed","abandoned")` 与 §4.2 封闭三态字面一致（机械镜像，注释互指）
-- [x] AC14: 零改动护栏——phase_gate/protected_paths/artifact_chain、lib/io·lib/bypass、产物链四 schema、versioning-schema 均不在 `git status` 改动名单
-- [x] AC15: 未破坏 CLAUDE.md 五约束（分层未混、产物链未动、hook 规则随 rules/ 整目录分发且行为已在 README/部署/Coder README 登记、模板 SSOT 未手写重复、ledger_status frontmatter N/A 为代码文件、相关 schema frontmatter 未动）
-- [x] AC16: ITER-0008 归档 + delivery + 台账 closed（P5 收口环节执行）
+- [x] AC1: local-constraints-schema §3 模板新增 `preference: on` 行 + 注释（抑制开关/默认 on/on≠强制采集/外置真源）
+- [x] AC2: §2 必填字段描述更新为"dangerous/independent_review 默认 off、preference 默认 on"
+- [x] AC3: §4.1 "preference 不纳入"反转为 per-project 抑制开关口径（三态生效条件 + 只抑本项目 + 缺字段视 on + 外置唯一真源不双写），标为该语义 SSOT
+- [x] AC4: engine 新增 §2.5 项目级抑制开关 + 生效优先级（全局 off > consent > 项目开关）+ 引用 §4.1
+- [x] AC5: §2.1 默认常驻标注"受项目级抑制开关约束"，与 §2.5 一致
+- [x] AC6: logic-protocol §1.3 会话起始读取新增 `preference: off` 项（本项目抑制、缺省 on、无需 announce）
+- [x] AC7: logic-protocol §4 Preference Mode 补 per-project 抑制开关落 local-constraints + 外置仍为真源
+- [x] AC8: mcv-deployment §4 生成「Butler 功能开关」纳入 `preference: on` + on 安全说明
+- [x] AC9: rule-card 项目级功能开关节"偏好系统不在此"反转为"preference 作本项目抑制开关在此、外置仍为真源"
+- [x] AC10: HUMAN_GUIDE §5 开关表加 preference 行 + "关于 preference"注更新（本项目可抑制、外置跨项目）
+- [x] AC11: Coder/README local-constraints-schema 描述"偏好不纳入"反转为"per-project 抑制开关纳入、外置仍为真源"
+- [x] AC12: 四处旧排除句（preference 不纳入 / 偏好系统不在此 / 偏好探针不在这里 / 偏好系统因跨项目不纳入）全仓 grep 0 命中
+- [x] AC13: 真源归属全仓一致——consent/signals/profile 外置 $BUTLER_PREF 跨项目唯一真源、本开关不双写；无任一处写成项目级真源
+- [x] AC14: 零改动护栏——engine §3/§4/§5/§6/§7/§9 段、ledger_status hook、产物链四 schema、versioning-schema、iteration/milestone-schema 未改动
+- [x] AC15: 未破坏 CLAUDE.md 五约束（分层未混、产物链未动、无新增规则文件、模板 SSOT 经占位符继承未手写重复、frontmatter 未动）
+- [x] AC16: ITER-0009 归档 + delivery + 台账 closed（P5 收口环节执行）
 
 # Verification Results
-- AC1/AC2：`grep` iteration-schema §4.2 命中"封闭枚举/仅/其他值（含 planned）…非法/ledger_status 机械校验/镜像"。
-- AC3：`grep` milestone-schema §5.3 命中"与迭代状态消歧/不产生迭代台账行/ledger_status hook 机械拦截/引 iteration-schema §4.2"。
-- AC4-AC8：阅读 `ledger_status.py`（路径门 + _incoming_text 三工具分支 + 逐行 ITER_RE + 第 3 列 lower 比对 + deny 文案）与 `butler_gate.py`（import + RULE_MODULES = [protected_paths, phase_gate, ledger_status, artifact_chain]）；pytest 覆盖 allow/deny 全分支。
-- AC9：`pytest tests/ -q` → `82 passed`（两次运行一致）。
-- AC10/AC11/AC12：`grep` hook README（2 处）、mcv-deployment §5、Coder README、rule-card 命中各落点。
-- AC13：`grep` ledger_status.py `VALID_STATES = ("active", "closed", "abandoned")`，与 §4.2 三态逐字一致。
-- AC14：`git status --short` 改动名单 = .ai 四件套+台账、iteration-schema、mcv-deployment、milestone-schema、Coder README、hook README、butler_gate.py、rule-card（改）+ ledger_status.py、test_ledger_status.py（新增）；护栏文件全不在内。
+- AC1/AC3：grep local-constraints-schema 命中 `preference: on` 模板行（含 on≠强制采集/外置真源/不双写）与 §4.1 反转条（三态生效条件 + SSOT 声明）。
+- AC4/AC5：grep engine 命中 §2.5 标题、生效优先级、非双真源；§2.1 命中"受项目级抑制开关约束"。
+- AC6/AC7：grep logic-protocol §1.3 `preference: off` 项、§4 per-project 抑制开关补述。
+- AC8/AC9/AC10/AC11：grep mcv-deployment §4、rule-card、HUMAN_GUIDE（表行 + 注）、Coder/README 命中各落点。
+- AC12：`grep -rnE "preference 不纳入|偏好系统不在此|偏好探针不在这里|偏好系统因跨项目不纳入" Coder templates HUMAN_GUIDE.md` → rc=1（0 命中）。
+- AC13：schema/engine/rule-card/README/HUMAN_GUIDE 五处"外置 $BUTLER_PREF 跨项目唯一真源 + 本开关不双写"表述一致；无"项目级真源"矛盾。
+- AC14：`git status --short` 改动名单 = .ai 四件套+台账 + logic-protocol/local-constraints-schema/mcv-deployment/preference-probe-engine/Coder README/HUMAN_GUIDE/rule-card；护栏文件全不在内。`git diff --numstat` engine = `12 0`（纯增量），diff 仅触及 §2.1 段 + 新增 §2.5，§3-§9 未动。
 
 # Gate Coverage
-- 通用质量门禁：遵守 CLAUDE.md 五约束——分层未混（改动落 20_ schema + templates/hooks + 文档/模板）、产物链未动、新增 hook 规则随 rules/ 整目录分发（无独立注册项要求，行为已在 README §11/部署 §5/Coder README 登记）、模板 SSOT 未手写重复（rule-card 单写、CLAUDE.md.template 经占位符继承）、相关 schema frontmatter 未动。
-- Active Profiles：未命中（Markdown 规则仓库 + Python hook），N/A。
-- Tech Plan Alignment：TECH_PLAN 九处改动与五项 Design Decisions 全兑现——机制=hook/schema=契约、专打台账不走 is_gated、逐行+固定列序、复用 bypass、选项 A 不加第四态。
+- 通用质量门禁：遵守 CLAUDE.md 五约束——分层未混（改动落 00/20/70 + 模板/文档）、产物链未动、无新增规则文件（修改既有，无 README 新注册需求）、模板 SSOT（rule-card 单写、CLAUDE.md.template 经占位符继承）、frontmatter 未动。
+- Active Profiles：未命中（Markdown 规则仓库），N/A。
+- Tech Plan Alignment：TECH_PLAN 七文件改动与五项 Design Decisions 全兑现——抑制层非接管、默认 on 安全、外置真源不变、preference 无需 announce、四处排除句彻底反转。
 - References Compliance：本轮无 `.ai/references/`，N/A。
 
 # Remaining Risks
-- 列序假设：规则依赖 schema 固定列序（状态=第 3 列）。schema 是 hook 执行的契约，改列序须同步规则；pytest 覆盖固定列序。
-- 新增 deny 条件是 hook 拦截契约扩展：已部署旧项目升级后多一道拦截——附 BUTLER_BYPASS 兜底，且只拦真正越界值，不影响合法三态。
-- butler 仓自身不跑该 hook（hook 仅部署到目标项目）；butler 台账靠规则纪律——与现状一致。
-- 本轮未校验 `current:` 指针与里程碑台账状态——列为后续候选。
+- 项目开关靠规则纪律（会话起始读 + 遵循），无 hook 强制——与现有 dangerous/independent_review 同源同险。
+- "默认 on 但需全局同意"靠文案显式标注规避误读（schema/部署/rule-card/HUMAN_GUIDE 均写"on≠强制采集"）。
+- 存量旧项目无 `preference` 字段——按"缺字段=视为 on"兼容，行为同旧版（仅受全局同意约束），批量回填走 butler-upgrade。
+- 版本：本轮不发版；ITER-0009 累积到下次切版，预计 MINOR（新增项目级开关能力）。
 
 # Handoff / Next Step
-- 任务闭合。收口动作：归档四件套→`.ai/iterations/ITER-0008/`、写 `deliveries/ITER-0008-<slug>.md`、台账置 closed + `current: none`。
-- 版本：本轮不发版；ITER-0008 累积到下次切版，预计 MINOR（新增 hook 门禁能力）。临时 venv `/tmp/butler-venv` 仅用于本地跑测，非交付物。
+- 任务闭合。收口动作：归档四件套→`.ai/iterations/ITER-0009/`、写 `deliveries/ITER-0009-<slug>.md`、台账置 closed + `current: none`。

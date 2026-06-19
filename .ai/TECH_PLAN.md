@@ -1,58 +1,48 @@
 # Goal
-- 支撑 AC1–AC16：迭代状态枚举固化（封闭三态）+ hook 规则 ledger_status 机械门禁 + 测试 + 消歧/传播。下文给精确锚点与代码。
+- 支撑 AC1–AC16：preference 接入 local-constraints 作 per-project 抑制开关（默认 on），外置 $PREF 仍为跨项目真源，反转四处排除措辞。下文给精确锚点。
 
 # Files / Modules to Change
 
-## 新增
-### 1. `templates/hooks/rules/ledger_status.py` 【AC4/AC5/AC6/AC13】
-- `RULE_ID = "ledger_status"`；`LEDGER_REL = ".ai/ITERATIONS.md"`；`VALID_STATES = ("active", "closed", "abandoned")`（注释标"镜像 iteration-schema §4.2 封闭枚举"）；`_ITER_RE = re.compile(r"^ITER-\d{4}$")`。
-- `evaluate(ctx)`：`target != LEDGER_REL` → allow；取入参文本（`_incoming_text`）；逐行 `raw.strip()`，非 `|` 起头跳过；`cells = [c.strip() for c in line.strip("|").split("|")]`；`len(cells) < 3` 或 `cells[0]` 不匹配 `_ITER_RE` → 跳过；`status = cells[2].lower()`；`status and status not in VALID_STATES` → deny（reason 含 `cells[0]` 与原值 `cells[2]` + 合法枚举；remediation 指三态 + planned 属 milestone-schema §5.3 路线项）。
-- `_incoming_text(ctx)`：Write→`tool_input.get("content","")`、Edit→`get("new_string","")`、MultiEdit→`"\n".join(e.get("new_string","") for e in get("edits",[]))`、其他→`""`。
+### 1. `local-constraints-schema.md` 【AC1/AC2/AC3】
+- §2 line 19 必填字段：`Butler 功能开关`（部署时即以安全默认全 off 生成）→ 改为"（部署时生成：dangerous / independent_review 安全默认 off、preference 默认 on）"。
+- §3 模板「Butler 功能开关」段：在 `independent_review` 行后加 `- preference: on            # on|off，默认 on。本项目偏好探针采集抑制开关；on≠强制采集（实际采集仍需全局同意），off 即本项目不采集/蒸馏/反哺。consent/数据真源在外置 $BUTLER_PREF（跨项目），本开关不双写（见 70_Extension_Preference §2.5）`。
+- §4.1：把 line 65「**preference 不纳入**」整条反转为「**preference（per-project 抑制开关）**」——本项目是否运行探针 = 全局未 `/preference off` ∧ 外置 `$PREF` consent=granted ∧ 本项目 `preference ≠ off`，三者全真才采集/蒸馏/反哺；`preference: off` 只抑制本项目，不改全局 consent、不动 $PREF 数据、不影响他项目；缺字段=视为 on；外置 $PREF 仍是 consent/signals/profile 跨项目唯一真源，本开关不双写。此条为该语义 SSOT。
 
-### 2. `templates/hooks/tests/test_ledger_status.py` 【AC8】
-- `make_ctx(target, content, tool="Write")`：key = `content`（Write）/`new_string`（Edit）；MultiEdit 单独造 `edits`。
-- 用例：合法三态全 allow、`planned` 行 deny（断言 reason 含 `ITER-` 与 `planned`、remediation 含 `milestone-schema`）、`abandoned` allow、非台账路径（`.ai/CONCEPT.md` 含 planned 文本）allow、Edit `new_string` planned deny、MultiEdit planned deny、仅表头+分隔行 allow、空状态单元格 allow、大小写变体（`Active`）allow、`draft`（AC_LIST 态误入）deny。
+### 2. `preference-probe-engine.md` 【AC4/AC5】
+- §2.1 末尾加一句：默认常驻**受项目级抑制开关约束**——本项目 `.ai/local-constraints.md` `preference: off` 时不在本项目采集/蒸馏/反哺（见 §2.5）。
+- 新增 §2.5「项目级抑制开关（per-project）」：定义 local-constraints「Butler 功能开关」`preference: on|off`（默认 on）为本项目采集闸；**生效优先级**：全局 `/preference off`（§2.3 隐私总开关）> 外置 `$PREF` consent（§2.4）> 项目 `preference` 开关；三层全放行才在本项目运行。强调它与全局 consent 分管不同层面（全局=能不能、项目=要不要），故非双真源；真源归属与读写口径以 `local-constraints-schema §4.1` 为准。
 
-## 改
-### 3. `templates/hooks/butler_gate.py` 【AC7】
-- import：`from rules import artifact_chain, ledger_status, phase_gate, protected_paths`。
-- `RULE_MODULES = [protected_paths, phase_gate, ledger_status, artifact_chain]`（ledger_status 置于 phase_gate 后、artifact_chain 前；各规则命中条件互斥，first-deny-wins 不冲突）。
+### 3. `logic-protocol.md` 【AC6/AC7】
+- §1.3：在 `independent_review: on` 项后加 `preference: off` → 本项目抑制偏好探针（不采集/蒸馏/反哺）；默认/缺省视为 on；语义以 `local-constraints-schema §4.1` 为准。
+- §4 Preference Mode 条目（line 91）末尾补：per-project 抑制开关持久在 `.ai/local-constraints.md`「Butler 功能开关」`preference`（默认 on）；外置 `$BUTLER_PREF` 仍为 consent/数据跨项目真源。
 
-### 4. `Coder/20_Workflow_Lifecycle/iteration-schema.md` §4.2 【AC1/AC2】
-- 改写为封闭枚举声明：开头加一句"迭代行「状态」是**封闭枚举**，合法值**仅**以下三个，其他值（含 `planned`）对迭代行非法"；保留三态语义；末尾加交叉引用：`planned` 属 `milestone-schema §5.3` 路线图「路线项状态」、非迭代状态；部署项目由 hook `ledger_status` 机械校验本枚举（越界写 `.ai/ITERATIONS.md` 被拦截）。
+### 4. `mcv-deployment.md` §4 【AC8】
+- line 95「必含「Butler 功能开关」段」描述：原"安全默认全 off（dangerous: off、independent_review: off）"→ 改为"dangerous: off、independent_review: off、preference: on（preference 默认 on 安全：实际采集仍需全局同意，未同意时不采集）"。
 
-### 5. `Coder/20_Workflow_Lifecycle/milestone-schema.md` §5.3 【AC3】
-- 在「路线项状态取值」一段后加一句消歧：「路线项状态」是路线项自身命名空间，与迭代行状态（`iteration-schema §4.2` 封闭三态）**不是同一字段**；`planned` 路线项「实际 ITER」为 `—`、**不产生迭代台账行**，故 `planned` 不应出现在 `.ai/ITERATIONS.md`。
+### 5. `rule-card.md` 【AC9】
+- line 44 末「偏好系统不在此（跨项目、外置 `$BUTLER_PREF`）」→ 反转为「preference 作**本项目抑制开关**也在此段（默认 on；on≠强制采集，仍需全局同意）；consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写」。
 
-### 6. `templates/hooks/README.md` 【AC10】
-- 目录结构 rules/ 下加 `ledger_status.py     # 校验 .ai/ITERATIONS.md 状态列封闭枚举`。
-- 「运行机制」步骤 2 执行顺序更新为 `protected_paths → phase_gate → ledger_status → artifact_chain`。
+### 6. `HUMAN_GUIDE.md` 【AC10】
+- §5「项目级功能开关」表（line 142-145）加行：`| `preference: on\|off` | 本项目偏好探针采集开关（默认 on；off 即本项目不采集） |`。
+- line 149 注「（注：偏好探针不在这里——它是跨项目的……）」→ 更新为「偏好探针的总开关/数据是跨项目的（外置 `$BUTLER_PREF`），但**本项目可用 `preference: off` 单独抑制**；on≠强制采集，仍需全局同意」。
 
-### 7. `Coder/20_Workflow_Lifecycle/mcv-deployment.md` §5 【AC11】
-- §5 首段 hook 能力描述（"源码路径写操作在 P1/P2/P3 产物缺失时被拦截、AC_LIST 未冻结…被拦截、99_Business_Extension 写操作被拦截"）补一项："迭代台账 `.ai/ITERATIONS.md` 状态列出现封闭枚举（active/closed/abandoned）外的值被拦截"。
-
-### 8. `Coder/README.md` 【AC12】
-- 使用原则中 hook bullet（P1-P3 产物 + ACK 冻结机械拦截那条）补一句迭代台账状态枚举校验。
-
-### 9. `templates/rule-card.md` / `HUMAN_GUIDE.md` 【AC12】
-- 各自查是否含 hook 行为概述；含则补一句迭代台账状态校验，无则不强加（按 AC12 "无则不强加"）。
+### 7. `Coder/README.md` 【AC11】
+- line 130「偏好系统因跨项目不纳入」→ 反转为「preference 以 per-project 抑制开关纳入本段（默认 on），但 consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目）」。
 
 # Design Decisions
-1. **机制 = hook，schema = 契约**：§4.2 是枚举权威定义，hook 的 VALID_STATES 是机械镜像（AC13），注释互指防漂移。
-2. **专打台账路径、不走 is_gated**：`.ai/` 被源码写门豁免，新规则按 `target == .ai/ITERATIONS.md` 独立校验，与现有规则零冲突（设计决策 §2）。
-3. **逐行 + 固定列序**：依赖 schema 固定列序（状态=第 3 单元格），不依赖表头存在，故 Edit 片段亦可校验；空状态放行不误杀半写行。
-4. **复用 bypass**：deny 走 lib/bypass，可 BUTLER_BYPASS 显式绕过——与 butler"机械默认 + 显式绕过"哲学一致（AC7）。
-5. **选项 A，不加第四态**：planned 钉回路线项语义，保「不预先占号」。
+1. 抑制层而非接管：项目开关=本项目采集闸，与全局 consent 分管不同层面 → 非双真源（AC3/AC4/AC13）。
+2. 默认 on 安全：on≠强制采集，仍需全局同意（AC1/AC8 文案显式写明）。
+3. 真源不变：外置 $PREF 仍 SSOT，schema/engine 反复申明（AC13）。
+4. 不需 announce-on-read：preference 低风险，读到即遵循（区别于 dangerous）。
+5. 反转彻底：四处排除句全改写，grep 校验旧句消失（AC12）。
 
 # Test / Verify Strategy
-- AC9：`cd templates/hooks && python3 -m pytest tests/` 全绿（须含既有 + 新用例）。
-- AC1/AC2/AC3：grep iteration-schema §4.2 含"封闭枚举/仅/planned…非法/ledger_status"、milestone-schema §5.3 含消歧句。
-- AC4-AC7：阅读 ledger_status.py + butler_gate.py 确认路径门、入参提取、RULE_MODULES 接入；pytest 覆盖 deny/allow 分支。
-- AC10/AC11/AC12：grep README/mcv-deployment/Coder README 命中。
-- AC13：grep ledger_status.py 的 VALID_STATES = ("active","closed","abandoned") 与 §4.2 字面一致。
-- AC14：`git diff --name-only` 确认 phase_gate/protected_paths/artifact_chain/lib/* /四 schema/versioning-schema 不在改动名单（lib/* 不改、其他规则不改）。
+- AC1-AC11：逐 AC grep 各目标文件命中新句。
+- AC12：全仓 grep 旧排除句「preference 不纳入 / 偏好系统不在此 / 偏好探针不在这里 / 偏好系统因跨项目不纳入」应 0 命中。
+- AC13：grep "真源/外置 $BUTLER_PREF/不双写" 在 schema·engine·rule-card·README 表述一致；无"项目级真源"矛盾。
+- AC14：`git diff --name-only` 确认 engine §5/§6/§7（算法）、§4（存储契约）、§3、§9 段未被改动（仅 §2 区域变更）；ledger_status/四 schema/versioning-schema 不在改动名单。验证手段：diff 仅触及 §2.1/§2.5 区。
 - AC15：人工核对五约束。
 - AC16：归档/delivery/台账核对。
 
 # Rollback
-- 新增规则 + 文档改写，无运行态副作用（hook 仅在部署项目生效，且可 bypass）。回退 = `git revert` 本迭代提交。
+- 纯文档/模板改写，无运行态副作用。回退 = `git revert` 本迭代提交。

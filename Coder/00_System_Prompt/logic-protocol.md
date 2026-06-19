@@ -55,6 +55,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 - `dangerous: on` → 按 §4 Dangerous Mode 跨会话语义处理：**当回合显式声明后**自动进入危险模式（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
 - `independent_review: on` → 每次 P5 收口自动起独立复核。
+- `preference: off` → **本项目抑制偏好探针**（不采集/蒸馏/反哺）；默认/缺省视为 `on`（不抑制，仍受全局同意约束）。preference 低风险、无需 announce，读到即遵循。
 - 无该段或值为 off → 按 Standard Mode / 默认行为推进。
 - 字段语义、读写口径与 legacy 兼容以 `20_Workflow_Lifecycle/local-constraints-schema.md §4.1` 为准。
 
@@ -88,7 +89,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。P5 交付阶段默认触发**同上下文简要自评**（用户明确跳过时除外）。**独立复核（opt-in·真·独立·fresh-context 子 agent，单模型下靠上下文隔离而非更强模型）**有两条触发：手动 `/review`（一次性），或项目 `.ai/local-constraints.md`「Butler 功能开关」设 `independent_review: on`（旧 `Review Policy` 字段仍兼容）时每次 P5 收口自动跑。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启独立复核。
 - **Butler Upgrade (`/butler-upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler-upgrade` 时开启。非持久 Mode，执行一次后返回 Standard Mode。
 - **Dangerous Mode (`/dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以收敛闭环跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/dangerous` 时开启；`/dangerous off` 或"恢复确认"关闭。**持久状态外化**到 `.ai/local-constraints.md`「Butler 功能开关」`dangerous`：开/关回写该开关；**跨会话**读到 `dangerous: on` 时，AI 当回合**显式声明后自动进入**（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
-- **Preference Mode (`/preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/dangerous` 自治、只学真人选择（模型自决不采集）**。`/preference on`/`off` 隐私总开关、`/preference reback on`/`off` 开关反哺、`/preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。持久 Mode，跨迭代有效。
+- **Preference Mode (`/preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/dangerous` 自治、只学真人选择（模型自决不采集）**。`/preference on`/`off` 隐私总开关、`/preference reback on`/`off` 开关反哺、`/preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。持久 Mode，跨迭代有效。**per-project 抑制开关**持久在 `.ai/local-constraints.md`「Butler 功能开关」`preference`（默认 on；`off` 即本项目不采集），但 consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），详见 `70_Extension_Preference/preference-probe-engine.md §2.5`。
 
 若检测到任务复杂度极高（如核心算法、大规模重构），应主动询问："检测到逻辑复杂，是否需要开启收敛闭环模式进行高强度迭代验证？"
 

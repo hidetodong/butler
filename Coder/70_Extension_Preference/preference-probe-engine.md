@@ -25,6 +25,8 @@ scope: 偏好探针的采集/蒸馏/反哺三段回路——数据回路（采�
 
 经一次性同意(§2.4)后,在 **butler 托管项目**(含 `.ai/`)默认运行:采集你的高信号决策、在收口边界蒸馏成画像。全程**只读外置存储、从不写 `.ai/`、不被 hook 拦截**。蒸馏默认开,使 `profile.md` **一直保持温热**——这样一旦开启反哺,画像当场可用,不必再从零攒。
 
+默认运行**受项目级抑制开关约束**(§2.5):本项目 `.ai/local-constraints.md`「Butler 功能开关」`preference: off` 时,**不在本项目**采集/蒸馏/反哺(其他项目不受影响)。
+
 ### 2.2 影响回路（反哺）:opt-in
 
 **默认关**。`/preference reback on` 开启后,模型在**有监督**决策(P2/P3 提案、AskUserQuestion 选项排序)时把画像作为参考。**仅作用于有监督工作**,绝不参与 `/dangerous` 无人值守自治(见 §7、§3-3、§9)。
@@ -47,6 +49,16 @@ scope: 偏好探针的采集/蒸馏/反哺三段回路——数据回路（采�
 - **同意** → 写 `consent: granted, YYYY-MM-DD` 到 `config.md`,此后**全局常驻、不再询问**,并按 §4.1 惰性自举。
 - **拒绝** → 写 `consent: declined`,采集保持关、不再骚扰,直到用户主动 `/preference on`。
 - **同意前不写任何信号**,探针完全惰性——先问,后看。
+
+### 2.5 项目级抑制开关（per-project）
+
+全局 consent(§2.4)决定"**能不能**采集",项目级开关决定"**这个项目要不要**采集"。后者持久在本项目 `.ai/local-constraints.md`「Butler 功能开关」段的 `preference: on|off`(默认 `on`):
+
+- **生效优先级(三层全放行才在本项目运行)**:全局 `/preference off`(§2.3 隐私总开关)> 外置 `$PREF` `consent`(§2.4)> 项目 `preference` 开关。即:全局未 off **且** consent=granted **且** 本项目 `preference ≠ off`,三者全真,探针才在本项目采集/蒸馏/反哺。
+- `preference: off` **只抑制本项目**:不改全局 consent、不动 `$PREF` 数据、不影响其他项目;本项目 `signals/<project>.md` 不再新增条目。缺该字段 = 视为 `on`(不抑制)。
+- **非双真源**:项目开关与全局 consent 分管不同层面(全局=能不能、项目=要不要),故不构成第二真源。consent/signals/profile 的真源仍**唯一**在外置 `$PREF`(§4),项目开关**不双写**外置状态、不是其镜像。
+- **低风险、无需声明**:不同于 `/dangerous` 的 announce-on-read,preference 是只读观察者,会话起始读到 `preference` 值**直接遵循**即可,无需显式声明。
+- 字段语义、读写口径与 legacy 兼容以 `20_Workflow_Lifecycle/local-constraints-schema.md §4.1` 为准。
 
 ## 3. 安全底线（硬约束,不可省略）
 

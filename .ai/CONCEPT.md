@@ -1,42 +1,46 @@
-> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约级新增(hook 新增 deny 条件——拦截契约扩展) / 关键路径(hook 门禁) / 跨模块影响(iteration-schema·milestone-schema·hooks·部署·文档) / 涉及代码+测试 | 2026-06-19
+> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 反转既有规则(ITER-0006「preference 不纳入项目配置」) / 契约语义(三态生效条件 + 真源归属) / 跨模块影响(local-constraints-schema·preference-engine·logic-protocol·部署·rule-card·人类文档·Coder README) / 设计取舍(per-project 抑制 vs 跨项目真源 双源消歧) | 2026-06-19
 
 # Goal
-- 把**迭代状态枚举固化为封闭三态**（`active` / `closed` / `abandoned`），让 schema 从"列举三个值"升级为"显式封闭、其他非法"，并在规则上消除与里程碑路线图「路线项状态」（含 `planned`）的命名串台。
-- **不止于文档，要有机制**（用户明确要求）：新增一条 PreToolUse hook 规则 `ledger_status`，在写 `.ai/ITERATIONS.md` 时机械校验「状态」列，越界值（如 `planned`）即拦截——保证"枚举不会取错"，与现有 `phase_gate` / `protected_paths` 同源。
+- 把 preference（偏好探针）**接入项目级配置** `.ai/local-constraints.md`「Butler 功能开关」段，新增 `preference: on|off`（默认 on）作为**本项目抑制开关**——让它与 `dangerous`/`independent_review` 在同一处统一可见、可读、可控（用户要求）。
+- 同时**不破坏 preference 的跨项目本质**：consent / signals / profile 的真源仍在外置 `$PREF`，本开关只管"这个项目要不要采集"，不双写外置状态。
 
-# Background / 问题
-- 用户在一个已部署项目的 `.ai/ITERATIONS.md` 台账里发现了 `planned` 状态。经核对：`iteration-schema.md §4.2` 定义的迭代状态只有 `active`/`closed`/`abandoned`，**没有 `planned`**。
-- `planned` 真正的归属是 `milestone-schema.md §5.3` 的**拆分路线图「路线项状态」**（`planned`/`active`/`closed`/`abandoned`），语义是"已规划未开启、`实际 ITER` 列仍为 `—`"。两张表都有「状态」列、值域不同，于是路线项的 `planned` 被误写进迭代台账。
-- 根因有二：① 两个「状态」列语义串台；② 预先占号（违反 §5.3「不预先占号」，号应在开启时才绑定）。
-- 现行 schema 只是**列举**三态、未声明封闭性，且**无任何机制**阻止越界值落进台账——这正是用户要补的洞。
+# Background / 为什么做 + 冲突挑明
+- 用户问"preference 会自动开启吗"，确认其机制（一次同意后默认常驻、反哺 opt-in），随后要求"preference 也应写进配置里"。
+- **这反转了 ITER-0006 的一条特意决策**：当时把 dangerous/independent_review 写进 local-constraints 时，**特意排除了 preference**，理由是"preference 跨项目、外置存储，不是项目级配置"（写在 local-constraints-schema §4.1、rule-card、HUMAN_GUIDE、Coder/README 四处）。
+- 我已向用户挑明此冲突并给出三种语义（per-project 抑制 / 只读镜像 / 全量接管），**用户选定 A：per-project 抑制开关**。本轮据此反转排除条，但用"抑制层"而非"全量接管"来调和——保住跨项目真源不被破坏、不引入双真源。
+
+# 语义（已与用户锁定）
+- **本项目是否运行探针** = 全局未 `/preference off` **且** 外置 `$PREF` `consent: granted` **且** 本项目 `preference ≠ off`；三者全真才在本项目采集/蒸馏/反哺。
+- `preference: off`（项目级）**只抑制本项目**，不改全局 consent、不动 `$PREF` 数据、不影响其他项目。
+- 缺字段（legacy/旧部署）= 视为 `on`（不抑制），行为同旧版（仅受全局同意约束）。
+- 外置 `$PREF` 仍是 consent/signals/profile 的**跨项目唯一真源**；本开关不双写它（不是镜像、不是第二真源，而是"本项目采集闸"）。
 
 # Scope
 ## In
-1. **枚举固化（spec/SSOT）**：`iteration-schema.md §4.2` 改写为"封闭枚举，合法值仅 active/closed/abandoned，其他（含 planned）对迭代行非法"，并交叉引用里程碑路线项状态以消歧。
-2. **消歧（milestone 侧）**：`milestone-schema.md §5.3` 增一句明确——「路线项状态」是路线项自己的命名空间，`planned` 路线项的「实际 ITER」为 `—`、**不产生迭代台账行**；迭代行的状态以 `iteration-schema §4.2` 三态为准。
-3. **机制（hook）**：新增 `templates/hooks/rules/ledger_status.py`——仅针对 `.ai/ITERATIONS.md` 写操作，解析「状态」列，ITER-NNNN 行状态 ∉ 三态即 `deny`（给出违规值 + 合法枚举 + planned 归属提示）；接入 `butler_gate.py` 的 `RULE_MODULES`；配套单测 `tests/test_ledger_status.py`。
-4. **传播/注册**：hook `README.md`（新增规则说明 + 执行顺序）、`mcv-deployment.md §5`（hook 拦截能力描述补台账状态校验）、`Coder/README.md`（hook 门禁一句）、`rule-card.md`/`HUMAN_GUIDE.md`（如含 hook 行为概述则补一句）。
+1. **schema**：`local-constraints-schema.md` §2 必填字段 + §3 模板「Butler 功能开关」段增 `preference: on`；§4.1 把"preference 不纳入"反转为"per-project 抑制开关"口径（含三态生效条件与真源归属，作为该语义 SSOT）。
+2. **引擎**：`preference-probe-engine.md` 增项目级抑制开关（新 §2.5）+ 在 §2.1 默认常驻处标注"受项目级抑制"；明确生效优先级（全局 off > 全局 consent > 项目开关）。
+3. **接线**：`logic-protocol.md` §1.3 会话起始读取增 `preference` 项；§4 Preference Mode 补"per-project 抑制开关落 local-constraints"。
+4. **部署默认**：`mcv-deployment.md §4` 生成「Butler 功能开关」段时含 `preference: on`（默认 on，安全——实际采集仍需全局同意）。
+5. **传播**：`rule-card.md`（项目级功能开关节，反转排除句）、`HUMAN_GUIDE.md`（开关表加 preference 行 + 更新"偏好探针不在这里"注）、`Coder/README.md`（local-constraints-schema 描述反转"偏好不纳入"）。
 
 ## Out（非本轮）
-- 不给迭代加 `planned` 第四态（选项 B 已否决：与「不预先占号」核心纪律冲突）。
-- 不校验 `current:` 指针或里程碑台账状态（本轮聚焦迭代台账「状态」列；current/MILE 校验列为后续候选）。
-- 不切新版本（releases 按需聚合，本轮不发版；ITER-0008 累积到下次切版，预计 MINOR——新增 hook 门禁能力）。
-- 不改 hook 退出码契约 / bypass 机制 / 其他既有规则行为。
+- 不把 consent / reback / signals / profile 搬进 local-constraints（选项 C 已否决：破坏跨项目本质 + 双真源）。
+- 不为 preference 开关加 hook 校验（与 dangerous/independent_review 同等，靠规则纪律）。
+- 不改采集/蒸馏/反哺算法、外置存储契约、§3 安全底线、与 /dangerous 的完全隔离。
+- 不切新版本（按需聚合；ITER-0009 累积到下次切版，预计 MINOR——新增项目级开关能力）。
 
 # Key Design Decisions
-1. **机制 = hook，而非仅文档**：butler 的机制化手段就是 PreToolUse hook；新规则与 `phase_gate` 同构、复用 `lib/bypass`（可 `BUTLER_BYPASS` 显式绕过），落在已部署项目——正是 `planned` bug 出现的面。
-2. **专打台账、不走 is_gated**：`.ai/` 在 `GATED_BLACKLIST` 中被源码写门豁免；新规则按 `target == .ai/ITERATIONS.md` 精确命中、独立校验内容，与现有规则路径不冲突。
-3. **校验入参文本**：Write 取 `content`、Edit 取 `new_string`、MultiEdit 取各 `edits[].new_string`；逐行找 `^ITER-\d{4}$` 起头的表行，取第 3 单元格（schema 固定列序：迭代号|标题|状态|…）做大小写不敏感比对。空状态单元格放行（不误杀半写行）。
-4. **封闭枚举单一定义点**：迭代状态枚举的权威定义在 `iteration-schema §4.2`，hook 的 `VALID_STATES` 是其机械镜像；文档与代码两处一致，注释互指，避免漂移。
-5. **planned 保留正当出口**：固化不删 planned，只把它钉回里程碑路线项语义；"未来要做的迭代"仍由路线图 planned 路线项承载。
+1. **抑制层而非接管**：项目开关是"本项目采集闸"，与外置全局 consent 分管不同层面——故不构成双真源（governs 不同的东西）。
+2. **默认 on 是安全的**：`preference: on` 不等于"强制采集"——实际采集仍要全局 consent=granted；未同意时 on 也不会偷采。安全默认。
+3. **真源不变**：外置 `$PREF` 仍是 consent/data 跨项目真源；schema/engine 反复申明，避免被误读成"项目级真源"。
+4. **与 dangerous 区别对待**：preference 是只读观察者、低风险，**不需要 announce-on-read**（dangerous 才需要）；会话起始读到即遵循即可。
+5. **反转要彻底**：四处"排除"措辞全部改写，避免规则自相矛盾。
 
 # Risks / Open Questions
-- 列序假设：规则依赖 schema 固定列序（状态=第 3 列）。若未来改列序需同步规则——以 schema 为 hook 所执行的契约，可接受；测试覆盖固定列序。
-- Edit 片段可能不含完整表头：规则按"行内 ITER-NNNN + 第 3 单元格"判定，不依赖表头，故片段编辑也能校验。
-- 新增 deny 条件属 hook 拦截契约扩展：对已部署旧项目升级后会新增一道拦截——附 bypass 兜底，且只拦真正越界值，不影响合法三态写入。
-- butler 仓自身不跑该 hook（hook 只部署到目标项目）；butler 自己的台账靠规则纪律——与现状一致。
+- 反转既有决策需保证四处措辞一致改写，否则规则内部打架——以"逐处 grep 校验旧排除句消失"兜底。
+- "默认 on 但需全局同意"可能被误读为"装了就采集"——文案须显式写"on≠强制采集，仍需全局同意"。
+- 项目开关靠规则纪律（会话起始读 + 遵循），无 hook 强制——与现有 dangerous/independent_review 同源同险。
 
 # 影响文件（预估）
-- 新增：`templates/hooks/rules/ledger_status.py`、`templates/hooks/tests/test_ledger_status.py`。
-- 改：`templates/hooks/butler_gate.py`（接 RULE_MODULES）、`templates/hooks/README.md`、`Coder/20_Workflow_Lifecycle/iteration-schema.md`（§4.2）、`Coder/20_Workflow_Lifecycle/milestone-schema.md`（§5.3）、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`（§5）、`Coder/README.md`、`templates/rule-card.md` 与 `HUMAN_GUIDE.md`（如含 hook 概述）。
-- 零改动护栏：其他 hook 规则（phase_gate/protected_paths/artifact_chain）行为、lib/io·lib/bypass、产物链四 schema、versioning-schema、台账其它字段语义。
+- 改：`Coder/20_Workflow_Lifecycle/local-constraints-schema.md`、`Coder/70_Extension_Preference/preference-probe-engine.md`、`Coder/00_System_Prompt/logic-protocol.md`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`templates/rule-card.md`、`HUMAN_GUIDE.md`、`Coder/README.md`。
+- 零改动护栏：preference 采集/蒸馏/反哺算法（§5/§6/§7）、外置存储契约（§4）、§3 安全底线、与 /dangerous 隔离（§9）、ledger_status hook、产物链四 schema、versioning-schema。

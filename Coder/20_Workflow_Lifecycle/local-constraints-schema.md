@@ -16,7 +16,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 
 - 必须产出：`.ai/local-constraints.md`
 - 产出时机：基地车部署的 `mcv-deployment.md § 4 本地化适配` 步骤
-- 必填字段：`Project Type`、`Active Profiles`、`Butler 功能开关`（部署时即以安全默认全 off 生成）
+- 必填字段：`Project Type`、`Active Profiles`、`Butler 功能开关`（部署时生成：`dangerous` / `independent_review` 安全默认 off、`preference` 默认 on）
 - 可选字段：`Local Constraints`、`Scope Exceptions`、`External References`
 
 ## 3. 标准模板
@@ -46,6 +46,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 # 项目级 butler 持久模式开关。AI 会话起始读取本段并据此激活/抑制模式；命令 NL 触发会回写，也可手改。
 - dangerous: off            # on|off，默认 off。无人值守长程自治（见 65_Extension_Dangerous）。⚠️ on 时跨会话生效，AI 每会话起始须显式声明后才进入（announce-on-read），绝不静默
 - independent_review: off   # on|off，默认 off。on 时每次 P5 收口自动起独立复核（fresh-context 子 agent，见 60_Extension_CodeReview §6）；始终可手动 /review 单跑，与本开关无关
+- preference: on            # on|off，默认 on。本项目偏好探针采集抑制开关。on≠强制采集（实际采集仍需全局同意），off 即本项目不采集/蒸馏/反哺。consent/数据真源在外置 $BUTLER_PREF（跨项目），本开关不双写（见 70_Extension_Preference §2.5）
 ```
 
 ## 4. 编写规则
@@ -62,7 +63,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 - **两种改法**：① 对话 NL 触发——模式命令（`/dangerous on|off`、收回/让渡把关权语义、项目级 `/review` 常开/关）触发时，模型**回写**本段对应开关；② 用户**手改**——直接编辑本段，模型下次读取即遵循。两条路等价、同一真源。
 - **dangerous 安全（announce-on-read）**：`dangerous: on` **跨会话生效**，但 AI 每个会话起始读到 on 时**必须当回合显式声明**"危险模式当前 ON、本会话将按无人值守自治执行，要关说 `/dangerous off`"，声明后方自动进入，**绝不静默**。这是相对 `65_Extension_Dangerous/dangerous-engine.md §3` 原"会话结束不续开"的取舍：以可见性兜底替代不续开冗余，语义以该 §3 为准。
 - **independent_review 默认 off**：仅在"本项目值得长期严格复核"时设 `on`；只影响 P5 收口是否自动起独立复核，不改变 P5 默认简评，也不妨碍随时手动 `/review`。
-- **preference 不纳入**：偏好系统是**跨项目**的（状态与数据在外置 `$BUTLER_PREF`，见 `70_Extension_Preference/preference-probe-engine.md`），其 on/off 不是项目级配置，**不写入本段**。
+- **preference（per-project 抑制开关）**：`preference: on|off`（默认 on）是**本项目偏好探针采集闸**。本项目是否运行探针 = 全局未 `/preference off` **且** 外置 `$PREF` `consent: granted` **且** 本项目 `preference ≠ off`，三者全真才在本项目采集/蒸馏/反哺。`preference: off` **只抑制本项目**，不改全局 consent、不动 `$PREF` 数据、不影响其他项目；缺字段=视为 `on`（不抑制）。**真源归属**：consent/signals/profile 的真源始终在外置 `$BUTLER_PREF`（跨项目唯一真源，见 `70_Extension_Preference/preference-probe-engine.md`），本段 `preference` 仅本项目抑制闸、**不双写**外置状态、不是其镜像或第二真源。注意 `on` ≠ 强制采集：未取得全局同意时 on 也不会采集。本条为该语义 SSOT。
 - **legacy 兼容**：旧 `local-constraints.md` 无「Butler 功能开关」段时，所有开关按**默认 off** 处理；其中独立的 `Review Policy: independent_review` 字段是该开关的 legacy 形式，仍被尊重，不被误判。批量迁移走 `butler-upgrade.md`，不强制回填。
 
 ## 5. 与执行流程的关系
