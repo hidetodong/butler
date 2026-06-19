@@ -1,45 +1,42 @@
-> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 新增契约(版本号 SSOT + semver 口径 + 部署版本戳契约) / 跨模块影响(模板·部署·升级·README·人类文档) / 设计取舍(版本载体选型·版本与 ITER 台账分工·版本戳归宿·升级版本 gap 与内容差异的主从) / 反转既有规则(butler-upgrade §8「不引入版本戳」) | 2026-06-19
+> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约级新增(hook 新增 deny 条件——拦截契约扩展) / 关键路径(hook 门禁) / 跨模块影响(iteration-schema·milestone-schema·hooks·部署·文档) / 涉及代码+测试 | 2026-06-19
 
 # Goal
-- 给 butler 规则仓库引入**硬版本概念**并切出首个正式基线 **v1.0.0**，让"规则源现在是哪一版"成为机器可读、人类可读、可比较的事实，而非只活在 git 历史里。
-- 范围（用户拍板）= **基线 + 接入部署/升级**：不只在仓内立一个版本号，还要把版本**戳进部署产物**、并让 **butler-upgrade 变成版本感知**（读目标戳 vs 仓库 VERSION → 报 gap → 升级后重戳）。
+- 把**迭代状态枚举固化为封闭三态**（`active` / `closed` / `abandoned`），让 schema 从"列举三个值"升级为"显式封闭、其他非法"，并在规则上消除与里程碑路线图「路线项状态」（含 `planned`）的命名串台。
+- **不止于文档，要有机制**（用户明确要求）：新增一条 PreToolUse hook 规则 `ledger_status`，在写 `.ai/ITERATIONS.md` 时机械校验「状态」列，越界值（如 `planned`）即拦截——保证"枚举不会取错"，与现有 `phase_gate` / `protected_paths` 同源。
 
-# Background / 为什么现在做
-- butler 已连续收口 ITER-0001~0006，规则体系（三层 / 五阶段产物链 / 迭代·里程碑 / 控制状态外化 / 部署升级生命周期 / hook 门禁 / 扩展模块）已成形且自洽，具备"切基线"的条件——用户判断"已经可以有一个版本概念了"。
-- 现状的洞：`butler-upgrade.md §8` 明文写"butler 不引入版本戳；升级靠文件内容差异检测，不靠版本号比较"。这是一条**有意为之的旧设计**，本轮按用户决策**反转**它——但保留"内容差异为主、版本号为辅"的诚实底线（版本戳不能假装等于内容未漂移）。
-- 部署产物（目标项目 `CLAUDE.md`）目前只戳了 `{{RULE_CARD_CONTENT}}` 与 `{{BUTLER_PATH}}`，**无从得知自己是基于哪一版 butler 生成的**，升级时只能纯靠内容比对，缺一个粗粒度路标。
+# Background / 问题
+- 用户在一个已部署项目的 `.ai/ITERATIONS.md` 台账里发现了 `planned` 状态。经核对：`iteration-schema.md §4.2` 定义的迭代状态只有 `active`/`closed`/`abandoned`，**没有 `planned`**。
+- `planned` 真正的归属是 `milestone-schema.md §5.3` 的**拆分路线图「路线项状态」**（`planned`/`active`/`closed`/`abandoned`），语义是"已规划未开启、`实际 ITER` 列仍为 `—`"。两张表都有「状态」列、值域不同，于是路线项的 `planned` 被误写进迭代台账。
+- 根因有二：① 两个「状态」列语义串台；② 预先占号（违反 §5.3「不预先占号」，号应在开启时才绑定）。
+- 现行 schema 只是**列举**三态、未声明封闭性，且**无任何机制**阻止越界值落进台账——这正是用户要补的洞。
 
 # Scope
 ## In
-1. **版本载体三件**：仓库根 `VERSION`（机器 SSOT，纯文本 `MAJOR.MINOR.PATCH`）+ 根 `CHANGELOG.md`（人读发布史，按版本聚合 ITER、只引用不复述）+ git tag `v1.0.0`（发布锚点）。
-2. **版本治理规则**：新增 `Coder/20_Workflow_Lifecycle/versioning-schema.md`——定义 VERSION 的 SSOT 地位与格式、规则仓口径下的 semver 语义（MAJOR/MINOR/PATCH 各对应哪类规则变更）、CHANGELOG 格式与位置、**版本与 ITER 台账的分工**（ITER 台账=颗粒级开发真源；CHANGELOG=发布级聚合，一版聚合自上次 tag 以来的若干 ITER）、切版流程、部署戳与升级 gap 的口径、版本戳语义边界。
-3. **部署接入版本戳**：`templates/CLAUDE.md.template` 新增 `{{BUTLER_VERSION}}` 占位符（落在 butler 管理区，升级时可重戳）；`mcv-deployment.md §3` 增加"读 `$BUTLER/VERSION` → 替换 `{{BUTLER_VERSION}}`"的注入步。
-4. **升级版本感知**：`butler-upgrade.md` §3 侦察增"读目标戳 vs 仓库 VERSION → 报版本 gap"，§4/§5 升级时重戳到当前版本，§7 验证增版本戳项，§8 反转"不引入版本戳"为"版本号为辅、内容差异为主"。
-5. **注册与人类文档**：`Coder/README.md` 注册 versioning-schema.md（目录结构 + 说明）；`HUMAN_GUIDE.md` 增"版本"小节（VERSION/CHANGELOG/tag 在哪看、semver 含义、部署产物被戳版本、升级报 gap）；butler 自身 `CLAUDE.md`（项目说明）目录结构补 `VERSION` 与 `CHANGELOG.md` 两个根文件。
-6. **切 v1.0.0**：写 `VERSION=1.0.0`、`CHANGELOG.md` 写入 1.0.0 基线条目（聚合 ITER-0001~0007）、收口后打 git tag `v1.0.0`。
+1. **枚举固化（spec/SSOT）**：`iteration-schema.md §4.2` 改写为"封闭枚举，合法值仅 active/closed/abandoned，其他（含 planned）对迭代行非法"，并交叉引用里程碑路线项状态以消歧。
+2. **消歧（milestone 侧）**：`milestone-schema.md §5.3` 增一句明确——「路线项状态」是路线项自己的命名空间，`planned` 路线项的「实际 ITER」为 `—`、**不产生迭代台账行**；迭代行的状态以 `iteration-schema §4.2` 三态为准。
+3. **机制（hook）**：新增 `templates/hooks/rules/ledger_status.py`——仅针对 `.ai/ITERATIONS.md` 写操作，解析「状态」列，ITER-NNNN 行状态 ∉ 三态即 `deny`（给出违规值 + 合法枚举 + planned 归属提示）；接入 `butler_gate.py` 的 `RULE_MODULES`；配套单测 `tests/test_ledger_status.py`。
+4. **传播/注册**：hook `README.md`（新增规则说明 + 执行顺序）、`mcv-deployment.md §5`（hook 拦截能力描述补台账状态校验）、`Coder/README.md`（hook 门禁一句）、`rule-card.md`/`HUMAN_GUIDE.md`（如含 hook 行为概述则补一句）。
 
 ## Out（非本轮）
-- 不做自动化版本 bump 工具 / CI 校验（切版按规则人工触发）。
-- 不为已部署的存量旧项目批量回填版本戳（属 butler-upgrade 触发时按需补，legacy 无戳=视为前版本化）。
-- 不改 `templates/rule-card.md`（版本戳是部署替换值，与 {{BUTLER_PATH}} 同类，直接落模板，不进浓缩规则卡 SSOT）。
-- 不改 hook 体系、不改 preference 数据流、不改产物链阶段定义、不改迭代/里程碑台账字段。
-- 目标项目自身的业务版本与 butler 版本无关，本轮不涉及。
+- 不给迭代加 `planned` 第四态（选项 B 已否决：与「不预先占号」核心纪律冲突）。
+- 不校验 `current:` 指针或里程碑台账状态（本轮聚焦迭代台账「状态」列；current/MILE 校验列为后续候选）。
+- 不切新版本（releases 按需聚合，本轮不发版；ITER-0008 累积到下次切版，预计 MINOR——新增 hook 门禁能力）。
+- 不改 hook 退出码契约 / bypass 机制 / 其他既有规则行为。
 
-# Key Design Decisions（待 P3 细化，先定方向）
-1. **VERSION 是唯一机器真源**：版本号只写在根 `VERSION`，CHANGELOG/tag/部署戳都从它派生或与它对齐，不另立第二处版本数字。
-2. **版本与 ITER 台账双真源、互不复述**：ITER 台账记每个迭代（颗粒）、CHANGELOG 记每个发布（聚合区间），CHANGELOG 条目只引用 deliveries/台账链接。避免与"不破坏产物链 / 单一来源"约束冲突。
-3. **版本号为辅、内容差异为主**：升级判定仍以文件内容差异为准绳，版本 gap 只作辅助提示与"升级后重戳"的依据——反转 §8 但不神化版本号（内容可能已手工漂移）。
-4. **版本戳落 butler 管理区**：`{{BUTLER_VERSION}}` 戳在 CLAUDE.md 的 butler 区（非 `<!-- user-managed -->` 保护区），这样 butler-upgrade 常规升级能原地重戳而不碰用户内容。
-5. **基线即现状快照**：v1.0.0 = ITER-0007 收口时仓库的能力全集，不追溯重构历史；ITER-0001 的回溯补号性质沿用台账既有备注口径。
-6. **切版按需、非每迭代发版**：发布是对若干 ITER 的聚合动作，bump 级别由区间内最高变更级别决定（本轮初版直接定 1.0.0，用户指定）。
+# Key Design Decisions
+1. **机制 = hook，而非仅文档**：butler 的机制化手段就是 PreToolUse hook；新规则与 `phase_gate` 同构、复用 `lib/bypass`（可 `BUTLER_BYPASS` 显式绕过），落在已部署项目——正是 `planned` bug 出现的面。
+2. **专打台账、不走 is_gated**：`.ai/` 在 `GATED_BLACKLIST` 中被源码写门豁免；新规则按 `target == .ai/ITERATIONS.md` 精确命中、独立校验内容，与现有规则路径不冲突。
+3. **校验入参文本**：Write 取 `content`、Edit 取 `new_string`、MultiEdit 取各 `edits[].new_string`；逐行找 `^ITER-\d{4}$` 起头的表行，取第 3 单元格（schema 固定列序：迭代号|标题|状态|…）做大小写不敏感比对。空状态单元格放行（不误杀半写行）。
+4. **封闭枚举单一定义点**：迭代状态枚举的权威定义在 `iteration-schema §4.2`，hook 的 `VALID_STATES` 是其机械镜像；文档与代码两处一致，注释互指，避免漂移。
+5. **planned 保留正当出口**：固化不删 planned，只把它钉回里程碑路线项语义；"未来要做的迭代"仍由路线图 planned 路线项承载。
 
 # Risks / Open Questions
-- 版本戳靠规则纪律在部署/升级时维护（无 hook 强制），与现有"会话起始必读"同源同险——可接受，文档如实标注。
-- 反转 §8 削弱"纯内容差异"的旧简洁性，换来粗粒度路标；以"内容为主、版本为辅"的措辞兜底，不引入"仅凭版本号跳过升级"的危险捷径。
-- CHANGELOG 与 ITER 台账存在信息重叠风险——以"只引用不复述"纪律 + schema 明确分工规避。
+- 列序假设：规则依赖 schema 固定列序（状态=第 3 列）。若未来改列序需同步规则——以 schema 为 hook 所执行的契约，可接受；测试覆盖固定列序。
+- Edit 片段可能不含完整表头：规则按"行内 ITER-NNNN + 第 3 单元格"判定，不依赖表头，故片段编辑也能校验。
+- 新增 deny 条件属 hook 拦截契约扩展：对已部署旧项目升级后会新增一道拦截——附 bypass 兜底，且只拦真正越界值，不影响合法三态写入。
+- butler 仓自身不跑该 hook（hook 只部署到目标项目）；butler 自己的台账靠规则纪律——与现状一致。
 
 # 影响文件（预估）
-- 新增：根 `VERSION`、根 `CHANGELOG.md`、`Coder/20_Workflow_Lifecycle/versioning-schema.md`。
-- 改：`templates/CLAUDE.md.template`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`Coder/20_Workflow_Lifecycle/butler-upgrade.md`、`Coder/README.md`、`HUMAN_GUIDE.md`、butler 根 `CLAUDE.md`。
-- 收口动作：git tag `v1.0.0`。
-- 零改动护栏：`templates/rule-card.md`、`templates/hooks/`、`70_Extension_Preference/`、产物链四 schema（concept/acceptance/tech-plan/verify）、迭代/里程碑台账字段。
+- 新增：`templates/hooks/rules/ledger_status.py`、`templates/hooks/tests/test_ledger_status.py`。
+- 改：`templates/hooks/butler_gate.py`（接 RULE_MODULES）、`templates/hooks/README.md`、`Coder/20_Workflow_Lifecycle/iteration-schema.md`（§4.2）、`Coder/20_Workflow_Lifecycle/milestone-schema.md`（§5.3）、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`（§5）、`Coder/README.md`、`templates/rule-card.md` 与 `HUMAN_GUIDE.md`（如含 hook 概述）。
+- 零改动护栏：其他 hook 规则（phase_gate/protected_paths/artifact_chain）行为、lib/io·lib/bypass、产物链四 schema、versioning-schema、台账其它字段语义。

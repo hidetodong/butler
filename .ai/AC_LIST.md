@@ -4,38 +4,36 @@ ACK 日期: 2026-06-19
 ---
 
 # Goal
-- 给 butler 规则仓库引入硬版本概念并切出基线 v1.0.0；范围 = 基线 + 接入部署/升级（版本戳进部署产物 + butler-upgrade 版本感知）。
+- 把迭代状态枚举固化为封闭三态（active/closed/abandoned），并新增 hook 规则 ledger_status 机械保证台账状态列不取错（如 planned 被拦截）。
 
 # Acceptance Criteria
 
-## A. 版本载体（基线）
-- [ ] **AC1**：仓库根存在 `VERSION` 文件，内容为单行 `1.0.0`（纯文本，无 `v` 前缀、无多余空行），作为版本号机器 SSOT。
-- [ ] **AC2**：仓库根存在 `CHANGELOG.md`，含 `## [1.0.0] - 2026-06-19` 基线条目；条目聚合 ITER-0001~ITER-0007、**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`（不逐条复述迭代细节）；顶部说明版本号遵循 semver 并指向 versioning-schema。
-- [ ] **AC3**：ITER-0007 收口提交后打 git tag `v1.0.0`（指向发布提交），`git tag` 可见。
+## A. 枚举固化（spec/SSOT）
+- [ ] **AC1**：`iteration-schema.md §4.2` 改写为**封闭枚举**——明文声明迭代行「状态」合法值**仅** `active`/`closed`/`abandoned`，其他值（含 `planned`）对迭代行**非法**；保留三态各自语义说明。
+- [ ] **AC2**：§4.2 交叉引用消歧——指明 `planned` 是 `milestone-schema §5.3` 路线图「路线项状态」、非迭代状态；并说明该枚举由部署的 hook（ledger_status）机械校验。
 
-## B. 版本治理规则（versioning-schema）
-- [ ] **AC4**：新增 `Coder/20_Workflow_Lifecycle/versioning-schema.md`，含合规 frontmatter（audience / scope），定义：① 根 `VERSION` 为版本号 SSOT 及 `MAJOR.MINOR.PATCH` 格式；② 规则仓口径 semver 语义——MAJOR=破坏性（文件重命名/删除、schema 必填字段删改、产物链/hook 契约或命令语义不兼容变更）、MINOR=向后兼容能力新增（新 schema/命令/扩展/功能开关/可选字段）、PATCH=措辞澄清/错字/不改行为的修复。
-- [ ] **AC5**：versioning-schema 明确 **CHANGELOG 与 ITER 台账的分工**——ITER 台账=颗粒级开发真源，CHANGELOG=发布级聚合（一版聚合自上次 tag 以来的若干 ITER），CHANGELOG 只引用不复述；并定义 CHANGELOG 格式/位置与 git tag `vX.Y.Z` 约定。
-- [ ] **AC6**：versioning-schema 定义**切版流程**（定 bump 级别 → 改 VERSION → 加 CHANGELOG 条目 → 打 tag；按需发布、非每迭代发版）、**部署戳口径**（部署读 VERSION 戳 `{{BUTLER_VERSION}}`）与**升级 gap 口径**（升级读目标戳 vs 仓库 VERSION，版本号为辅、内容差异为主），并说明版本戳语义="规则源版本"而非目标项目业务版本。
+## B. 里程碑侧消歧
+- [ ] **AC3**：`milestone-schema.md §5.3` 增明确表述——「路线项状态」（planned/active/closed/abandoned）是路线项自身命名空间，`planned` 路线项「实际 ITER」为 `—`、**不产生迭代台账行**；迭代行状态以 `iteration-schema §4.2` 封闭三态为准（交叉引用）。
 
-## C. 部署接入版本戳
-- [ ] **AC7**：`templates/CLAUDE.md.template` 新增 `{{BUTLER_VERSION}}` 占位符，落在 butler 管理区（`<!-- user-managed -->` 保护区之外），并在模板顶部注释中补充该占位符的替换说明。
-- [ ] **AC8**：`mcv-deployment.md §3 规则注入` 新增一步——读 `$BUTLER/VERSION` 并替换 `{{BUTLER_VERSION}}`，步骤编号连续无断层。
+## C. 机制：hook 规则 ledger_status
+- [ ] **AC4**：新增 `templates/hooks/rules/ledger_status.py`，`RULE_ID = "ledger_status"`，仅当 `target == .ai/ITERATIONS.md` 时生效，其余路径直接 allow；零三方依赖、`from __future__ import annotations` 风格与现有规则一致。
+- [ ] **AC5**：规则解析入参文本（Write→`content`、Edit→`new_string`、MultiEdit→各 `edits[].new_string`），逐行识别 `^ITER-\d{4}$` 起头的表数据行，取「状态」单元格（第 3 列），大小写不敏感比对；越界非空值返回 `deny`，`reason` 含违规迭代号与该值、合法枚举，`remediation` 指明三态 + planned 属路线项（引 milestone-schema §5.3）。
+- [ ] **AC6**：表头行、分隔行（`|---|`）、空状态单元格、非 ITER 行均不误杀（allow）。
+- [ ] **AC7**：`butler_gate.py` 的 import 与 `RULE_MODULES` 接入 `ledger_status`；deny 后仍走 `lib/bypass`（`BUTLER_BYPASS=1` + 非空 `.ai/bypass-reason.md` 可绕过并记 RUN_LOG），退出码契约不变。
 
-## D. 升级版本感知
-- [ ] **AC9**：`butler-upgrade.md §3 侦察` 新增动作——读取目标 `CLAUDE.md` 的 butler 版本戳与仓库当前 `VERSION`、计算并汇报版本 gap（目标无戳=视为前版本化，按既有首次升级路径处理）。
-- [ ] **AC10**：`butler-upgrade.md` §4/§5 升级时把 `{{BUTLER_VERSION}}` 重戳到仓库当前版本，§5 升级清单含版本 gap 项；§7 验证项新增"CLAUDE.md 版本戳已更新到当前 butler 版本"。
-- [ ] **AC11**：`butler-upgrade.md §8` 原"版本戳引入：butler 不引入版本戳…"条目被反转——改写为"版本号为辅、内容差异为主"（升级仍以内容差异为准绳，版本 gap 仅作辅助提示与重戳依据，不单凭版本号判定是否升级），并把 §8 中 butler 自身升级的治理指向 versioning-schema 切版流程。
+## D. 测试
+- [ ] **AC8**：新增 `templates/hooks/tests/test_ledger_status.py`，覆盖：合法三态全 allow、`planned` 行 deny（reason/remediation 断言）、`abandoned` allow、非台账路径 allow、Edit/MultiEdit 入参 deny、表头/分隔/空状态 allow、大小写变体 allow。
+- [ ] **AC9**：`cd templates/hooks && python3 -m pytest tests/` 全绿（既有用例 + 新用例）。
 
-## E. 注册与人类文档
-- [ ] **AC12**：`Coder/README.md` 在 `20_Workflow_Lifecycle/` 目录结构清单与规则说明两处注册 `versioning-schema.md`。
-- [ ] **AC13**：`HUMAN_GUIDE.md` 新增"版本"小节——说明 VERSION/CHANGELOG/git tag 在哪看、semver 三级含义、部署产物会被戳上 butler 规则源版本、升级会报版本 gap。
-- [ ] **AC14**：butler 自身 `CLAUDE.md`（项目说明）的目录结构补充根 `VERSION` 与 `CHANGELOG.md` 两个文件及其职责。
+## E. 传播 / 注册
+- [ ] **AC10**：`templates/hooks/README.md` 目录结构与「运行机制」执行顺序补 `ledger_status` 及其职责。
+- [ ] **AC11**：`mcv-deployment.md §5` hook 拦截能力描述补"迭代台账状态枚举越界被拦截"。
+- [ ] **AC12**：`Coder/README.md` 使用原则/hook 说明补迭代台账状态校验一句；`rule-card.md` 与 `HUMAN_GUIDE.md` 若含 hook 行为概述则各补一句（无则不强加）。
 
 ## F. 一致性与零改动护栏
-- [ ] **AC15**：`{{BUTLER_VERSION}}` 在 `templates/CLAUDE.md.template`（占位符）、`mcv-deployment.md`（替换步）、`butler-upgrade.md`（重戳）三处口径一致；版本载体处处指向根 `VERSION` 单一真源，无第二处硬编码版本数字。
-- [ ] **AC16**：零改动护栏——`templates/rule-card.md`、`templates/hooks/`、`Coder/70_Extension_Preference/`、产物链四 schema（concept/acceptance/tech-plan/verify-schema）、迭代/里程碑台账字段定义未被改动（`git diff` 确认）。
-- [ ] **AC17**：未破坏 CLAUDE.md 五约束——分层未混（新增落 20_ + 根载体 + 文档）、产物链未动、新增 versioning-schema 已在 README 注册、模板 SSOT 未手写重复、各规则文件 frontmatter 合规。
+- [ ] **AC13**：hook `VALID_STATES` 与 `iteration-schema §4.2` 封闭三态字面一致（机械镜像，注释互指）。
+- [ ] **AC14**：零改动护栏——`phase_gate.py`/`protected_paths.py`/`artifact_chain.py` 行为、`lib/io.py`/`lib/bypass.py`、产物链四 schema、`versioning-schema.md` 未被改动（`git diff` 确认）。
+- [ ] **AC15**：未破坏 CLAUDE.md 五约束——分层未混、产物链未动、（无新增规则文件，hook 规则随 rules/ 整目录分发无需 README 单列文件，但行为已在相关文档登记）、模板 SSOT 未手写重复、frontmatter 合规。
 
 ## G. 收口
-- [ ] **AC18**：ITER-0007 四件套快照归档至 `.ai/iterations/ITER-0007/`，写 `deliveries/ITER-0007-<slug>.md`（引用路径、不嵌全文），台账行置 closed + 收口日期 + 交付链接，`current: none`。
+- [ ] **AC16**：ITER-0008 四件套快照归档 `.ai/iterations/ITER-0008/`，写 `deliveries/ITER-0008-<slug>.md`，台账置 closed + 收口日期 + 交付链接，`current: none`。
