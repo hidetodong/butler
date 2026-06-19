@@ -40,7 +40,9 @@ AI 必须依次完成以下动作并简要汇报：
    - `$BUTLER_PATH/templates/rule-card.md`
    - `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/` 下相关 schema
 
-4. 生成升级清单草稿，进入 § 4 或 § 5 呈报给用户。
+4. **计算版本 gap**：读取目标 `CLAUDE.md` 中的 `butler v…` 版本戳与 `$BUTLER_PATH/VERSION`，比较并汇报版本差（如 "v1.0.0 → v1.2.0"）。目标无版本戳=视为前版本化项目（早于版本概念引入），按 § 4 首次升级路径处理。版本 gap 仅作辅助提示，是否升级仍以文件内容差异为准绳（见 `versioning-schema.md §7`）。
+
+5. 生成升级清单草稿，进入 § 4 或 § 5 呈报给用户。
 
 ## 4. 首次升级（老项目，无保护区标记）
 
@@ -49,7 +51,7 @@ AI 必须依次完成以下动作并简要汇报：
 1. **备份旧文件**：
    - `cp CLAUDE.md CLAUDE.md.backup-YYYYMMDD`
    - 备份 `.ai/` 下将被重命名的文件到 `.ai/backup-YYYYMMDD/`
-2. **生成新版草稿**：按最新 `templates/CLAUDE.md.template` + `rule-card.md` 构造新 CLAUDE.md 骨架（含 `<!-- user-managed -->` 保护区），但不直接写入文件。
+2. **生成新版草稿**：按最新 `templates/CLAUDE.md.template` + `rule-card.md` 构造新 CLAUDE.md 骨架（含 `<!-- user-managed -->` 保护区），并把 `{{BUTLER_VERSION}}` 戳为 `$BUTLER_PATH/VERSION` 当前版本（老项目原无版本戳，此为首次戳入），但不直接写入文件。
 3. **对比差异**：将旧 CLAUDE.md 与新草稿逐段对比，分类：
    - 自动可迁移：旧文件中的 butler 区内容（会被新版替换，用户无需关心）。
    - 需 ACK 的段落：旧文件中 butler 不认识的内容，判定为用户加的。
@@ -64,9 +66,10 @@ AI 必须依次完成以下动作并简要汇报：
 项目 `CLAUDE.md` 含 `<!-- user-managed -->` 保护区标记的正常升级流程：
 
 1. **读取用户区**：提取 `<!-- user-managed -->` 到 `<!-- /user-managed -->` 之间的内容，暂存。
-2. **生成新框架**：按最新 `templates/CLAUDE.md.template` + `rule-card.md` 构造新 `CLAUDE.md` 骨架（保护区结构在新模板中保留）。
+2. **生成新框架**：按最新 `templates/CLAUDE.md.template` + `rule-card.md` 构造新 `CLAUDE.md` 骨架（保护区结构在新模板中保留），并把 `{{BUTLER_VERSION}}` 重戳为 `$BUTLER_PATH/VERSION` 当前版本。
 3. **填入用户区**：将暂存的用户区内容原样填入新骨架的保护区位置。
 4. **呈报升级清单给用户**：
+   - **版本 gap**：旧戳 → 新版本（如 "v1.0.0 → v1.2.0"）。
    - butler 区变化项逐条列出（如 "rule-card 新增了 X 条执行纪律"、"深度阅读指针路径数量变化"）。
    - 用户区：原样保留，无变化。
 5. **用户 ACK 后写入** `CLAUDE.md`。
@@ -106,6 +109,7 @@ AI 必须依次完成以下动作并简要汇报：
 升级完成后，AI 应回顾并向用户报告：
 
 - `CLAUDE.md` 含 `<!-- user-managed -->` / `<!-- /user-managed -->` 保护区标记完整；用户区内容逐字保留。
+- `CLAUDE.md` 版本戳已更新到当前 butler 版本（与 `$BUTLER_PATH/VERSION` 一致）。
 - `.ai/` 下无过时命名的文件。
 - `local-constraints.md` 必填字段齐全（按最新 schema）。
 
@@ -123,5 +127,5 @@ AI 必须依次完成以下动作并简要汇报：
 
 - **`deliveries/` 历史迁移**：人类可读交付总结归档，升级协议不改动。
 - **`CHANGELOG` / `BUG_LOG` 内容改写**：累积型维护文件内容属项目历史。
-- **butler 仓库自身的升级**：butler 仓（作为规则源）自身的演进由 audit 流程管理，不走 butler-upgrade（后者面向"目标项目"而非 butler 本身）。
-- **版本戳引入**：butler 不引入版本戳；升级靠文件内容差异检测，不靠版本号比较。
+- **butler 仓库自身的升级**：butler 仓（作为规则源）自身的版本与发布由 `versioning-schema.md` 的切版流程管理（VERSION / CHANGELOG / git tag），不走 butler-upgrade（后者面向"目标项目"而非 butler 本身）。
+- **版本号为辅、内容差异为主**：升级以文件内容差异为准绳；版本 gap（目标戳 vs 仓库 `VERSION`）仅作辅助提示与升级后重戳的依据，**不单凭版本号判定是否需要升级**——目标内容可能已手工漂移，版本号无法反映（见 `versioning-schema.md §7`）。

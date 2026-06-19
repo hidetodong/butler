@@ -11,6 +11,8 @@
 - `Composer/` — 杂项事务
 - `HUMAN_GUIDE.md` — 面向人类用户的操作手册
 - `templates/` — 目标项目使用的 CLAUDE.md 模板、浓缩规则卡与 hook 体系（`hooks/`、`settings.hooks-snippet.json`）
+- `VERSION` — 版本号机器 SSOT（单行 `MAJOR.MINOR.PATCH`）；语义与发布流程见 `Coder/20_Workflow_Lifecycle/versioning-schema.md`
+- `CHANGELOG.md` — 人读发布史，按版本聚合迭代（只引用 `deliveries/` 与 `.ai/ITERATIONS.md`，不复述）
 
 ## 编辑规则时的约束
 

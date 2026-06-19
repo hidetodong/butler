@@ -5,11 +5,14 @@
   正常流程下由 AI 在 mcv-deployment.md § 3 规则注入步骤中自动生成：
   - 用 templates/rule-card.md 中 ## 角色 起的章节内容替换下方的规则卡占位符
   - 用实际路径替换深度阅读指针中的 butler 路径占位符
+  - 用 butler 仓库根 VERSION 文件的内容替换规则源版本占位符（见 versioning-schema.md § 6）
   - 根据侦察结果填写「项目特定约束」章节
 
   人类通常不需要手动编辑此模板。修改强制约束规则只需更新 templates/rule-card.md。
   注：占位符字面（双花括号包裹）只出现在需要被替换的位置，本注释用文字描述指代，避免部署时被误替换。
 -->
+
+> 规则源：butler v{{BUTLER_VERSION}}　·　升级见 butler-upgrade
 
 {{RULE_CARD_CONTENT}}
 

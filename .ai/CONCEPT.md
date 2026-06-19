@@ -1,40 +1,45 @@
-> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 契约变更(新增功能开关配置契约 + 改 dangerous 跨会话语义) / 关键路径(危险模式无人值守自治) / 跨模块影响(local-constraints·logic-protocol·dangerous-engine·部署) / 设计取舍(配置归宿·危险跨会话·preference 取舍) | 2026-06-19
+> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 新增契约(版本号 SSOT + semver 口径 + 部署版本戳契约) / 跨模块影响(模板·部署·升级·README·人类文档) / 设计取舍(版本载体选型·版本与 ITER 台账分工·版本戳归宿·升级版本 gap 与内容差异的主从) / 反转既有规则(butler-upgrade §8「不引入版本戳」) | 2026-06-19
 
 # Goal
-- 把 butler 的**持久运行模式状态**从"只活在对话里"外化为**项目级可读可写的持久配置**，落点统一在现有 `.ai/local-constraints.md`（新增"Butler 功能开关"段），让 AI 在会话起始读取并据此执行；同时把里程碑"active 自动归属 / closed 不再写入"的现有行为显式化（Ask A）。
+- 给 butler 规则仓库引入**硬版本概念**并切出首个正式基线 **v1.0.0**，让"规则源现在是哪一版"成为机器可读、人类可读、可比较的事实，而非只活在 git 历史里。
+- 范围（用户拍板）= **基线 + 接入部署/升级**：不只在仓内立一个版本号，还要把版本**戳进部署产物**、并让 **butler-upgrade 变成版本感知**（读目标戳 vs 仓库 VERSION → 报 gap → 升级后重戳）。
 
-# Current Understanding
-- **病根**：`logic-protocol.md §4` 把 Dangerous / Preference 标为"持久 Mode"，但**无任何文件记录该持久状态**——新会话无从得知上次开着什么。与 ITER-0004 外化 ACK/分流同源（控制状态不外化，违背"不依赖对话记忆"立身原则）。
-- **用户诉求**：① 一个**统一**的地方对 butler 功能做项目级持久化配置（用户点名希望复用已有落点而非新造文件）；② AI 读取后遵循执行；③ 可对话 NL 触发改、也可手改。
-- **落点已定（用户拍板）**：扩展 `.ai/local-constraints.md`——它本就是"项目级持久化配置/与通用 SOP 的差异"，已含 `Review Policy: independent_review` 开关先例，部署时即建、在 `.ai/`，正好满足"统一 + 部署建好默认"。新建独立文件会与之并列成两个配置文件，反而背离"统一"。
-- **关键冲突（已向用户澄清并由其裁决）**：`dangerous-engine.md §3` **故意**规定危险模式"会话结束即回 Standard、不自动续开"，是防误触无人值守的安全闸。用户诉求反转它（跨会话持久 + 自动生效）。用户知情后选择：**跨会话读到 `dangerous: on` → 显式声明后直接自动生效**（以"读到即声明 + /dangerous off 显式关"作缓解），需相应改写 §3。
-- **preference 取舍**：偏好系统是**跨项目**的（外置 `$BUTLER_PREF` 存储、跨项目通识），其 on/off 不是项目级配置，**不纳入** local-constraints 功能开关；在 schema 注明其状态归外置存储。
+# Background / 为什么现在做
+- butler 已连续收口 ITER-0001~0006，规则体系（三层 / 五阶段产物链 / 迭代·里程碑 / 控制状态外化 / 部署升级生命周期 / hook 门禁 / 扩展模块）已成形且自洽，具备"切基线"的条件——用户判断"已经可以有一个版本概念了"。
+- 现状的洞：`butler-upgrade.md §8` 明文写"butler 不引入版本戳；升级靠文件内容差异检测，不靠版本号比较"。这是一条**有意为之的旧设计**，本轮按用户决策**反转**它——但保留"内容差异为主、版本号为辅"的诚实底线（版本戳不能假装等于内容未漂移）。
+- 部署产物（目标项目 `CLAUDE.md`）目前只戳了 `{{RULE_CARD_CONTENT}}` 与 `{{BUTLER_PATH}}`，**无从得知自己是基于哪一版 butler 生成的**，升级时只能纯靠内容比对，缺一个粗粒度路标。
 
-# Constraints
-- 显性约束：
-  - 不破坏三层分层与 P1→P5 产物链；新增配置字段/语义须在 `Coder/README.md` 注册。
-  - 模板 SSOT 是 `templates/rule-card.md`，改强制约束经占位符传播、不手工双写。
-  - local-constraints 仍是"差异/配置"而非"规则复制器"；功能开关是配置项，不复制引擎规则。
-  - 向后兼容：已部署项目的旧 local-constraints（仅有 `Review Policy` 或无功能开关段）须按 legacy 兼容，不被误判；迁移走 `butler-upgrade`，本轮不强制回填。
-- 隐性约束：
-  - 危险模式跨会话自动生效是**降低安全冗余**的取舍，必须用 announce-on-read 硬性兜底（每会话起始显式声明、绝不静默），并在 §3 与人类文档如实标注风险。
-  - 功能开关读取必须真正接线进会话起始流程，否则"写了没人读"=无效外化。
-  - 里程碑/迭代的 active 真源仍是台账 `current`，**不进** local-constraints（避免第二真源）。
+# Scope
+## In
+1. **版本载体三件**：仓库根 `VERSION`（机器 SSOT，纯文本 `MAJOR.MINOR.PATCH`）+ 根 `CHANGELOG.md`（人读发布史，按版本聚合 ITER、只引用不复述）+ git tag `v1.0.0`（发布锚点）。
+2. **版本治理规则**：新增 `Coder/20_Workflow_Lifecycle/versioning-schema.md`——定义 VERSION 的 SSOT 地位与格式、规则仓口径下的 semver 语义（MAJOR/MINOR/PATCH 各对应哪类规则变更）、CHANGELOG 格式与位置、**版本与 ITER 台账的分工**（ITER 台账=颗粒级开发真源；CHANGELOG=发布级聚合，一版聚合自上次 tag 以来的若干 ITER）、切版流程、部署戳与升级 gap 的口径、版本戳语义边界。
+3. **部署接入版本戳**：`templates/CLAUDE.md.template` 新增 `{{BUTLER_VERSION}}` 占位符（落在 butler 管理区，升级时可重戳）；`mcv-deployment.md §3` 增加"读 `$BUTLER/VERSION` → 替换 `{{BUTLER_VERSION}}`"的注入步。
+4. **升级版本感知**：`butler-upgrade.md` §3 侦察增"读目标戳 vs 仓库 VERSION → 报版本 gap"，§4/§5 升级时重戳到当前版本，§7 验证增版本戳项，§8 反转"不引入版本戳"为"版本号为辅、内容差异为主"。
+5. **注册与人类文档**：`Coder/README.md` 注册 versioning-schema.md（目录结构 + 说明）；`HUMAN_GUIDE.md` 增"版本"小节（VERSION/CHANGELOG/tag 在哪看、semver 含义、部署产物被戳版本、升级报 gap）；butler 自身 `CLAUDE.md`（项目说明）目录结构补 `VERSION` 与 `CHANGELOG.md` 两个根文件。
+6. **切 v1.0.0**：写 `VERSION=1.0.0`、`CHANGELOG.md` 写入 1.0.0 基线条目（聚合 ITER-0001~0007）、收口后打 git tag `v1.0.0`。
 
-# Impact Scope
-- 确定改：
-  - `Coder/20_Workflow_Lifecycle/local-constraints-schema.md`：新增"Butler 功能开关"段（`dangerous`、`independent_review` 整合）+ 字段语义 + 写入/读取/手改口径 + preference 排除说明 + legacy 兼容；更新目标段为"本地化适配 + 功能开关"。
-  - `Coder/00_System_Prompt/logic-protocol.md`：§1 增"已部署项目会话起始读取 local-constraints 功能开关并据此激活模式"；§4 更新 Dangerous（持久态落 local-constraints、跨会话 announce+auto-apply）、注明 independent_review 落点。
-  - `Coder/65_Extension_Dangerous/dangerous-engine.md` §3：改写"不跨会话续开"为"持久态外化到 local-constraints `dangerous`，跨会话读到 on → 显式声明后自动生效"，`/dangerous on|off` 回写开关。
-  - `Coder/20_Workflow_Lifecycle/mcv-deployment.md` §4：local-constraints 生成含功能开关段、安全默认（`dangerous: off`、`independent_review: off`）。
-  - `Coder/20_Workflow_Lifecycle/lifecycle.md` §P1 + `milestone-schema.md` §7.2/§7.4：显式化 Ask A——active 里程碑自动归属新迭代、closed（`current: none`）后新迭代独立不写入。
-  - `templates/rule-card.md`：补一句 local-constraints 持有项目级功能开关（dangerous/review）+ dangerous announce-on-read。
-  - `HUMAN_GUIDE.md`：文档统一配置用法（NL/手改）、dangerous 跨会话声明行为、自动归属。
-  - `Coder/README.md`：更新 local-constraints-schema 描述。
-- 明确不影响：preference 引擎数据流（外置存储不动）、phase_gate hook、iteration-schema 锁定纪律、台账 `current` 真源地位、其它扩展模块本体逻辑。
+## Out（非本轮）
+- 不做自动化版本 bump 工具 / CI 校验（切版按规则人工触发）。
+- 不为已部署的存量旧项目批量回填版本戳（属 butler-upgrade 触发时按需补，legacy 无戳=视为前版本化）。
+- 不改 `templates/rule-card.md`（版本戳是部署替换值，与 {{BUTLER_PATH}} 同类，直接落模板，不进浓缩规则卡 SSOT）。
+- 不改 hook 体系、不改 preference 数据流、不改产物链阶段定义、不改迭代/里程碑台账字段。
+- 目标项目自身的业务版本与 butler 版本无关，本轮不涉及。
 
-# Project Type / Active Profiles
-- 项目类型：Markdown 规则仓库（butler 自身）。未命中 Domain/Stack Profile，按通用 SOP。
+# Key Design Decisions（待 P3 细化，先定方向）
+1. **VERSION 是唯一机器真源**：版本号只写在根 `VERSION`，CHANGELOG/tag/部署戳都从它派生或与它对齐，不另立第二处版本数字。
+2. **版本与 ITER 台账双真源、互不复述**：ITER 台账记每个迭代（颗粒）、CHANGELOG 记每个发布（聚合区间），CHANGELOG 条目只引用 deliveries/台账链接。避免与"不破坏产物链 / 单一来源"约束冲突。
+3. **版本号为辅、内容差异为主**：升级判定仍以文件内容差异为准绳，版本 gap 只作辅助提示与"升级后重戳"的依据——反转 §8 但不神化版本号（内容可能已手工漂移）。
+4. **版本戳落 butler 管理区**：`{{BUTLER_VERSION}}` 戳在 CLAUDE.md 的 butler 区（非 `<!-- user-managed -->` 保护区），这样 butler-upgrade 常规升级能原地重戳而不碰用户内容。
+5. **基线即现状快照**：v1.0.0 = ITER-0007 收口时仓库的能力全集，不追溯重构历史；ITER-0001 的回溯补号性质沿用台账既有备注口径。
+6. **切版按需、非每迭代发版**：发布是对若干 ITER 的聚合动作，bump 级别由区间内最高变更级别决定（本轮初版直接定 1.0.0，用户指定）。
 
-# Open Questions
-- 均已 ACK 前置澄清并定稿：配置归宿=扩展 local-constraints；危险跨会话=声明后自动生效（改 §3）；preference 不纳入；落点 `.ai/`、部署建好默认。无遗留待决。
+# Risks / Open Questions
+- 版本戳靠规则纪律在部署/升级时维护（无 hook 强制），与现有"会话起始必读"同源同险——可接受，文档如实标注。
+- 反转 §8 削弱"纯内容差异"的旧简洁性，换来粗粒度路标；以"内容为主、版本为辅"的措辞兜底，不引入"仅凭版本号跳过升级"的危险捷径。
+- CHANGELOG 与 ITER 台账存在信息重叠风险——以"只引用不复述"纪律 + schema 明确分工规避。
+
+# 影响文件（预估）
+- 新增：根 `VERSION`、根 `CHANGELOG.md`、`Coder/20_Workflow_Lifecycle/versioning-schema.md`。
+- 改：`templates/CLAUDE.md.template`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`Coder/20_Workflow_Lifecycle/butler-upgrade.md`、`Coder/README.md`、`HUMAN_GUIDE.md`、butler 根 `CLAUDE.md`。
+- 收口动作：git tag `v1.0.0`。
+- 零改动护栏：`templates/rule-card.md`、`templates/hooks/`、`70_Extension_Preference/`、产物链四 schema（concept/acceptance/tech-plan/verify）、迭代/里程碑台账字段。

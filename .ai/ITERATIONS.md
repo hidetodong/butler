@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0007 | 引入硬版本概念：semver 基线 v1.0.0 + 部署版本戳 + 升级版本 gap | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0007-versioning-baseline-v1.0.0.md |
 | ITER-0006 | Butler 功能开关外化：local-constraints 统一持久配置（含 dangerous 跨会话）+ 里程碑自动归属显式化 | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0006-feature-toggles-and-milestone-auto-attach.md |
 | ITER-0005 | 里程碑录入交互优化：一次性 brief + /milestone 命令 | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0005-milestone-intake-origin-command.md |
 | ITER-0004 | 控制状态外化：ACK 冻结 + 入口分流可审计 | closed | 2026-06-15 | 2026-06-15 | — | deliveries/ITER-0004-ack-freeze-and-triage.md |
