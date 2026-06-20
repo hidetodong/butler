@@ -37,6 +37,7 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 - 迭代级（小版本）命名：`deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）。迭代交付**一律平铺在 `deliveries/` 根**，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条按号连续的时间线。
 - 里程碑级（大版本）命名：`deliveries/milestones/MILE-NNNN-<slug>.md`（里程碑收口时，里程碑号取自 `.ai/MILESTONES.md`）。版本级交付集中在 `deliveries/milestones/` 子目录，不污染迭代时间线。
 - 未开迭代号的简化路径任务，可沿用 `deliveries/YYYY-MM-DD-<task-slug>.md`
+- **固定格式 HTML 阅读视图（同名兄弟文件）**：每份迭代/里程碑交付总结，除 `.md` 外，收口时**必须并列产出一份同目录、同 slug、仅扩展名不同的 `.html`**——迭代级 `deliveries/ITER-NNNN-<slug>.html`、里程碑级 `deliveries/milestones/MILE-NNNN-<slug>.html`。`.md` 是引用真源，`.html` 是其固定格式的人类阅读投影；生成协议与硬约束见 §9。
 
 `deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份迭代级 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准；一份里程碑级 Delivery Summary 对应一次里程碑收口，里程碑号与版本级聚合机制以 `milestone-schema.md` 为准。
 
@@ -122,8 +123,8 @@ Delivery Summary 不负责以下内容：
 - Delivery Summary 不是新阶段，只是 P5 完整交付后的收尾产物
 - `VERIFY_REPORT.md` 继续作为验证真源
 - Delivery Summary 应基于已确认的 AC、方案与验证结论进行人类可读汇总
-- 生成 Delivery Summary 是迭代收口三步之一（快照归档 + 交付总结 + 更新台账），三步以 `iteration-schema.md` §5.5 为准；只交付总结而不归档、不更新台账，视为收口不完整
-- 里程碑级 Delivery Summary 是里程碑收口三步之一（快照归档 + 版本级交付总结 + 更新里程碑台账），三步以 `milestone-schema.md` §7.4 为准；它在所属迭代各自收口交付之后、大版本收口时生成，不替代迭代级交付
+- 生成 Delivery Summary 是迭代收口三步之一（快照归档 + 交付总结 + 更新台账），三步以 `iteration-schema.md` §5.5 为准；「交付总结」这一步产出 `.md`（引用真源）+ 同名 `.html`（固定格式阅读视图，见 §9），仍是三步、不新增第四步；只交付总结而不归档、不更新台账，视为收口不完整
+- 里程碑级 Delivery Summary 是里程碑收口三步之一（快照归档 + 版本级交付总结 + 更新里程碑台账），三步以 `milestone-schema.md` §7.4 为准；「版本级交付总结」同样并列产出 `.md` + 同名 `.html`；它在所属迭代各自收口交付之后、大版本收口时生成，不替代迭代级交付
 
 ## 8. 对话内人话摘要
 
@@ -156,6 +157,8 @@ Delivery Summary 不负责以下内容：
 
 路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `deliveries/YYYY-MM-DD-<slug>.md`。里程碑收口时，引用行指向版本级交付，格式为 `正式版：deliveries/milestones/MILE-NNNN-<slug>.md`。
 
+**引用行恒指 `.md`**：`.md` 是引用真源，本行格式不变；同名 `.html` 固定格式阅读视图（§9）是它的兄弟文件，不在本行重复列出（读者从同目录同名 `.html` 自取）。
+
 ### 8.5 与 §4 的关系
 
 - §4 定义 `deliveries/` 文件的书面结构（文件层）。
@@ -163,3 +166,31 @@ Delivery Summary 不负责以下内容：
 - 两者同源、同触发，但风格分层：文件正式、对话口语。
 - 不得用文件结构覆盖对话风格，也不得用对话口吻替代文件结构。
 - 结论真源以 `deliveries/` 文件为准，对话摘要只是其口语化投影。
+
+## 9. 固定格式 HTML 阅读视图
+
+### 9.1 目标与定位
+
+`.md` 交付总结在终端 / 编辑器里可读，但不便直接给人浏览。为此每份交付**额外并列一份固定格式的 HTML 阅读视图**，让读者双击即可在浏览器里读到统一排版的交付总结。
+
+- **`.md` 是引用真源，`.html` 是其固定格式的人类阅读投影**：二者同源（同一次收口的同一份内容）、内容一一对应；HTML 不引入第二真源、不改写结论。其分层关系与 §8 的「文件层（`.md`）/ 对话层（散文摘要）」一致——HTML 只是再加一层「阅读层」。
+- HTML 是收口标准产物，不是 opt-in：满足 §2 触发条件、生成 `.md` 时**必须**同时生成同名 `.html`（落点见 §3）。
+
+### 9.2 模板 SSOT 与填槽协议
+
+- **固定格式的唯一来源**是 butler 仓库的 `templates/delivery.html.template`（部署/升级语境即 `$BUTLER/templates/delivery.html.template`）。固定排版、内联样式与占位符清单都以该模板为准，**规则正文不重述其 HTML 结构**（模板单一来源纪律）。
+- **填槽时机**：收口 step ②，在写完同名 `.md` **之后**，读模板把每个 `{{占位符}}` 替换为对应 §4 章节的 HTML 渲染，写出 `.html`。占位符与 §4 的对应关系以模板顶部注释为准（`{{DELIVERY_TITLE/ID/LEVEL/DATE}}` 头部元信息 + `{{DELIVERY_GOAL}}`…`{{REFERENCES}}` 对应 §4.1–§4.7 + 里程碑专用 `{{ROADMAP}}` 对应 §4.8）。
+- **里程碑路线图段**：模板含 `<!-- ROADMAP:START/END -->` 注释界定的「拆分路线图回填」段——里程碑级填 `{{ROADMAP}}`；迭代级把该注释块（含其中 `section`）**整段删除**，不产生空段。
+- **模板不复制进目标项目**：以 butler 仓库内模板为唯一 SSOT，避免每个项目存一份会漂移的副本（同 rule-card 占位符继承纪律）。
+
+### 9.3 硬约束
+
+- **单文件自包含**：HTML 必须内联全部样式、**禁止**引入外部 CSS / JS / 字体 / 图片链接，保证双击可离线打开、可随 `deliveries/` 一起拷贝归档。
+- **只引用不嵌入、体量恒定**：`{{REFERENCES}}` 槽**只放路径指针**（`AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` 等的路径或链接），**不得把四件套全文嵌进 HTML**。HTML 与 `.md` 同守 §4.7 硬约束，体量随 §4 摘要恒定、不随迭代膨胀。
+- **内容对齐 `.md`**：HTML 各段内容必须与同名 `.md` 一致，不在 HTML 里新增或删改结论；`.md` 更新时 `.html` 同步重生成。
+
+### 9.4 边界
+
+- HTML 不替代 `.md`、不替代 §8 对话摘要、不替代 `VERIFY_REPORT.md`；它只是 `.md` 的固定格式呈现。
+- 不负责目录索引页、主题切换、历史回填——本规范只约束「每份交付的同名 HTML 视图」。
+- 存量（本规则生效前的历史交付）不强制回填 HTML；未升级到含本节版本的部署项目只产 `.md`，向后兼容、不报错。

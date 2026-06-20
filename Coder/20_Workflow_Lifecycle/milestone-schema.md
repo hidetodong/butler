@@ -217,7 +217,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 - 时机：版本范围达成、其下迭代均已 `closed`（或显式 `abandoned`）、确认大版本可交付时。
 - 动作（三步，缺一不可）：
   1. 把 `.ai/MILESTONE.md` 快照复制到 `.ai/milestones/MILE-NNNN/MILESTONE.md`。
-  2. 生成版本级交付总结 `deliveries/milestones/MILE-NNNN-<slug>.md`，聚合其下各迭代交付，结构与触发参考 `delivery-summary.md`（聚合口径见其 §4.8）；**只链接各迭代交付路径与里程碑产物路径，不得全文嵌入**（见 `delivery-summary.md §4.7` 与本规范 §9）。
+  2. 生成版本级交付总结 `deliveries/milestones/MILE-NNNN-<slug>.md`，聚合其下各迭代交付，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/milestones/MILE-NNNN-<slug>.html` 阅读视图（含里程碑专用「拆分路线图回填」段）；结构与触发参考 `delivery-summary.md`（聚合口径见其 §4.8）；`.md` 与 `.html` 均**只链接各迭代交付路径与里程碑产物路径，不得全文嵌入**（见 `delivery-summary.md §4.7` 与本规范 §9）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`。
 - 版本级整体验收：收口前必须确认拆分路线图各路线项均 `closed`/`abandoned`、其下迭代验收闭环；存在 `planned`/`active` 路线项时不得收口（除非显式废弃该路线项）。
 - **收口后归属边界**：`current` 置 `none` 后，再开启的迭代**不再自动归属本（已收口）里程碑**、不回写其「含迭代」与路线图，按独立迭代处理；已收口里程碑不接收新迭代、不被回挂。若新迭代属于另一个大版本，按 §7.1 另开里程碑或 §6.3 回挂到另一个 `active` 里程碑。
@@ -249,6 +249,7 @@ deliveries/
     MILE-0002-<slug>.md
 ```
 
+- 每份交付（迭代级与里程碑级）都另有一份**同目录、同 slug、仅扩展名为 `.html`** 的固定格式阅读视图（如 `ITER-0001-<slug>.html`、`milestones/MILE-0001-<slug>.html`）；`.md` 为引用真源，`.html` 生成协议见 `delivery-summary.md` §9。上图省略 `.html` 兄弟文件以保持时间线清晰。
 - 迭代交付平铺在 `deliveries/` 根，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条连续时间线。
 - 里程碑交付集中在 `deliveries/milestones/`，不污染迭代时间线。
 - 版本级交付的结构、聚合口径与对话层风格以 `delivery-summary.md` 为准。

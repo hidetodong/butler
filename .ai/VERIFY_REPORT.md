@@ -1,45 +1,45 @@
 # Verification Summary
-- 覆盖范围：preference 接入 `.ai/local-constraints.md`「Butler 功能开关」作 per-project 抑制开关（默认 on）——schema 语义 SSOT（§4.1）+ 引擎 §2.5 优先级 + logic-protocol 接线 + 部署默认 + 四处排除措辞反转；外置 `$PREF` 仍为 consent/数据跨项目唯一真源。
-- 总体结论：AC1–AC16 全部满足；逐 AC grep 落点通过，AC12 旧排除句全仓 0 命中，AC14 零改动经 `git diff` 确认（engine 纯增量 +12/−0、仅 §2 区，算法/契约/底线/隔离段未动）。ITER-0009 闭合。
+- 覆盖范围：迭代/里程碑收口在 `.md` 之外并列产出固定格式 HTML 阅读视图——新增模板 SSOT `templates/delivery.html.template`，并把收口「写交付总结」一步贯通到 delivery-summary（主规则 §9 + §3/§7/§8.4）、lifecycle/iteration/milestone（收口契约 step ②）、rule-card/HUMAN_GUIDE/README/根 CLAUDE.md（传播）。
+- 总体结论：AC1–AC16 已满足并经 grep + `git status` 验证；AC17（收口 dogfood 产首份 `.html`）在本报告后随收口三步执行。MD 仍为引用真源、HTML 同守只引用不嵌入；零改动护栏经 `git status --short` 确认（VERSION/CHANGELOG/hooks/四 schema/deliveries 历史均不在改动名单）。
 
 # AC Status
-- [x] AC1: local-constraints-schema §3 模板新增 `preference: on` 行 + 注释（抑制开关/默认 on/on≠强制采集/外置真源）
-- [x] AC2: §2 必填字段描述更新为"dangerous/independent_review 默认 off、preference 默认 on"
-- [x] AC3: §4.1 "preference 不纳入"反转为 per-project 抑制开关口径（三态生效条件 + 只抑本项目 + 缺字段视 on + 外置唯一真源不双写），标为该语义 SSOT
-- [x] AC4: engine 新增 §2.5 项目级抑制开关 + 生效优先级（全局 off > consent > 项目开关）+ 引用 §4.1
-- [x] AC5: §2.1 默认常驻标注"受项目级抑制开关约束"，与 §2.5 一致
-- [x] AC6: logic-protocol §1.3 会话起始读取新增 `preference: off` 项（本项目抑制、缺省 on、无需 announce）
-- [x] AC7: logic-protocol §4 Preference Mode 补 per-project 抑制开关落 local-constraints + 外置仍为真源
-- [x] AC8: mcv-deployment §4 生成「Butler 功能开关」纳入 `preference: on` + on 安全说明
-- [x] AC9: rule-card 项目级功能开关节"偏好系统不在此"反转为"preference 作本项目抑制开关在此、外置仍为真源"
-- [x] AC10: HUMAN_GUIDE §5 开关表加 preference 行 + "关于 preference"注更新（本项目可抑制、外置跨项目）
-- [x] AC11: Coder/README local-constraints-schema 描述"偏好不纳入"反转为"per-project 抑制开关纳入、外置仍为真源"
-- [x] AC12: 四处旧排除句（preference 不纳入 / 偏好系统不在此 / 偏好探针不在这里 / 偏好系统因跨项目不纳入）全仓 grep 0 命中
-- [x] AC13: 真源归属全仓一致——consent/signals/profile 外置 $BUTLER_PREF 跨项目唯一真源、本开关不双写；无任一处写成项目级真源
-- [x] AC14: 零改动护栏——engine §3/§4/§5/§6/§7/§9 段、ledger_status hook、产物链四 schema、versioning-schema、iteration/milestone-schema 未改动
-- [x] AC15: 未破坏 CLAUDE.md 五约束（分层未混、产物链未动、无新增规则文件、模板 SSOT 经占位符继承未手写重复、frontmatter 未动）
-- [x] AC16: ITER-0009 归档 + delivery + 台账 closed（P5 收口环节执行）
+- [x] AC1: 模板单文件自包含——`grep` 无 `https?://`/`<link>`/`<script>`/`@import`/外链字体，OK。
+- [x] AC2: 12 个占位符齐全（4 头部元信息 + §4.1–§4.7 七段 + ROADMAP）。
+- [x] AC3: `<!-- ROADMAP:START/END -->` 注释块存在，迭代级可整段删除。
+- [x] AC4: `{{REFERENCES}}` 槽注释限定「只放路径指针，不得嵌四件套全文」。
+- [x] AC5: `delivery-summary.md` 新增 `## 9. 固定格式 HTML 阅读视图`（170 行）。
+- [x] AC6: §3 含迭代级 `ITER-NNNN-<slug>.html` 与里程碑级 `MILE-NNNN-<slug>.html` 命名。
+- [x] AC7: §8.4 补「引用行恒指 `.md`」，HTML 为同名兄弟、不挤进引用行。
+- [x] AC8: `lifecycle.md` P5 收口 step ② 改为 `.md` + 同名 `.html`（仍三步）。
+- [x] AC9: `iteration-schema.md` §3「人类交付」行 + §5.5 step 2 双产出。
+- [x] AC10: `milestone-schema.md` §7.4 step 2 双产出 + §9 结构树补 `.html` 兄弟说明。
+- [x] AC11: `rule-card.md` ITER（L25）与 MILE（L27）收口三步各补 `.html`（grep 命中 2）。
+- [x] AC12: `HUMAN_GUIDE.md` 4 处（L60 交付描述 / 目录树 / 里程碑收口 / delivery-summary 注）补 HTML 阅读视图。
+- [x] AC13: `Coder/README.md` L131 与根 `CLAUDE.md` templates 描述均提及 `delivery.html.template` / §9。
+- [x] AC14: 全仓无「HTML 替代 MD / 第二真源」措辞（grep 命中均为既有 preference「非双真源」负向表述，与 HTML 无关）。
+- [x] AC15: `git status --short` 确认护栏文件零改动。
+- [x] AC16: CLAUDE.md 五约束逐条自检通过（见 Gate Coverage）。
+- [x] AC17: 收口三步随本报告执行，产 `deliveries/ITER-0010-delivery-html-view.{md,html}`（dogfood 首份 HTML）。
 
 # Verification Results
-- AC1/AC3：grep local-constraints-schema 命中 `preference: on` 模板行（含 on≠强制采集/外置真源/不双写）与 §4.1 反转条（三态生效条件 + SSOT 声明）。
-- AC4/AC5：grep engine 命中 §2.5 标题、生效优先级、非双真源；§2.1 命中"受项目级抑制开关约束"。
-- AC6/AC7：grep logic-protocol §1.3 `preference: off` 项、§4 per-project 抑制开关补述。
-- AC8/AC9/AC10/AC11：grep mcv-deployment §4、rule-card、HUMAN_GUIDE（表行 + 注）、Coder/README 命中各落点。
-- AC12：`grep -rnE "preference 不纳入|偏好系统不在此|偏好探针不在这里|偏好系统因跨项目不纳入" Coder templates HUMAN_GUIDE.md` → rc=1（0 命中）。
-- AC13：schema/engine/rule-card/README/HUMAN_GUIDE 五处"外置 $BUTLER_PREF 跨项目唯一真源 + 本开关不双写"表述一致；无"项目级真源"矛盾。
-- AC14：`git status --short` 改动名单 = .ai 四件套+台账 + logic-protocol/local-constraints-schema/mcv-deployment/preference-probe-engine/Coder README/HUMAN_GUIDE/rule-card；护栏文件全不在内。`git diff --numstat` engine = `12 0`（纯增量），diff 仅触及 §2.1 段 + 新增 §2.5，§3-§9 未动。
+- AC1–AC4：读模板 + `grep -nE 'https?://|<link |<script |@import|fonts\.'` 返回空；`grep -oE '\{\{[A-Z_]+\}\}' | sort -u` 列出 12 个占位符；ROADMAP 标记在 152/157 行；REFERENCES 限定注释在模板头部。
+- AC5–AC7：`grep` 命中 `## 9. 固定格式 HTML 阅读视图`、两级 `.html` 命名、「引用行恒指 `.md`」澄清句。
+- AC8–AC10：`grep` lifecycle/iteration/milestone 三文件 step ② 均含「并列产出同名 …`.html` 阅读视图」「仍是三步」。
+- AC11–AC13：`grep` rule-card 命中 2、HUMAN_GUIDE 命中 6、README/根 CLAUDE.md 各命中模板引用。
+- AC14：`grep -rnE 'HTML 替代|替代 .md|第二真源'` 过滤负向句后，剩余命中全部落在 preference 既有文本，零 HTML 相关误配。
+- AC15：`git status --short` 改动名单为 4 件套 + CLAUDE.md + delivery-summary/iteration/milestone/lifecycle + README + HUMAN_GUIDE + rule-card + 新模板；VERSION、CHANGELOG.md、templates/hooks/、concept/acceptance/tech-plan/verify-schema、deliveries/ 历史 13 份均不在名单。
 
 # Gate Coverage
-- 通用质量门禁：遵守 CLAUDE.md 五约束——分层未混（改动落 00/20/70 + 模板/文档）、产物链未动、无新增规则文件（修改既有，无 README 新注册需求）、模板 SSOT（rule-card 单写、CLAUDE.md.template 经占位符继承）、frontmatter 未动。
-- Active Profiles：未命中（Markdown 规则仓库），N/A。
-- Tech Plan Alignment：TECH_PLAN 七文件改动与五项 Design Decisions 全兑现——抑制层非接管、默认 on 安全、外置真源不变、preference 无需 announce、四处排除句彻底反转。
-- References Compliance：本轮无 `.ai/references/`，N/A。
+- 通用质量门禁：规则一致性（各处 HTML 定位统一为「MD 固定格式阅读投影、并列、MD 真源」）、产物链未破坏、frontmatter 未动、措辞用「必须/不得/应」。
+- Active Profiles：未命中（Markdown 规则仓库，无 Domain/Stack Profile），省略。
+- Tech Plan Alignment：TECH_PLAN 七项 Design Decisions 全兑现——①模板手填无运行时依赖、②单模板+ROADMAP 可选段、③新增 §9 不重号（§1–§8 编号未动、交叉引用未断）、④§8.4 仍指 `.md`、⑤单文件自包含内联 CSS、⑥模板不复制进目标项目（mcv-deployment 未改）、⑦无前端 profile。
+- References Compliance：N/A（本轮无 `.ai/references/` 参考资料）。
+- CLAUDE.md 五约束：①分层未混（模板归 templates/、语义归规则）；②产物链未动；③新增模板已在根 CLAUDE.md 登记（templates/ 非 Coder/ 树，不需 Coder/README 目录注册，但 delivery-summary 职责行已引用）；④固定格式经模板 SSOT 单一来源，规则只引用不重述其 HTML 结构；⑤各文件 frontmatter 未破坏。
 
 # Remaining Risks
-- 项目开关靠规则纪律（会话起始读 + 遵循），无 hook 强制——与现有 dangerous/independent_review 同源同险。
-- "默认 on 但需全局同意"靠文案显式标注规避误读（schema/部署/rule-card/HUMAN_GUIDE 均写"on≠强制采集"）。
-- 存量旧项目无 `preference` 字段——按"缺字段=视为 on"兼容，行为同旧版（仅受全局同意约束），批量回填走 butler-upgrade。
-- 版本：本轮不发版；ITER-0009 累积到下次切版，预计 MINOR（新增项目级开关能力）。
+- HTML 产出靠规则纪律（收口三步），无 hook 强制——与 delivery summary 同源同险（已在 AC_LIST Out of Scope 接受）。
+- 部署项目收口填槽依赖 `$BUTLER` 可达；不可达时只能先产 `.md`、后补 `.html`（本仓库自身收口不受限，模板即本地文件）。
+- 版本：本轮不发版，ITER-0010 累积到下次切版，预计 MINOR（向后兼容新增可选交付产物；legacy 无 `.html` 旧交付与未升级部署照常放行）。
 
 # Handoff / Next Step
-- 任务闭合。收口动作：归档四件套→`.ai/iterations/ITER-0009/`、写 `deliveries/ITER-0009-<slug>.md`、台账置 closed + `current: none`。
+- 任务已闭合，进入迭代收口三步（归档 + 写 `deliveries/ITER-0010-delivery-html-view.{md,html}` + 台账 closed），收口后即交付。

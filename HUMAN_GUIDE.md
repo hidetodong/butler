@@ -57,7 +57,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 每一轮 P1-P5 是一个**迭代**，有一个确定的迭代号 `ITER-NNNN`（单调递增，记在 `.ai/ITERATIONS.md` 台账里）。它的意义是把"这一轮固定了哪些需求、产出了哪套文档"钉死，方便回溯：
 
 - **固定需求**：你在 P2 ACK 验收清单后，这一迭代的范围就**冻结**了。之后小幅改动可以重新 ACK（记一条修订记录）；但影响面明显扩大时，AI 会开**下一个迭代号**承接，而不是把范围悄悄塞进当前迭代。
-- **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `deliveries/ITER-NNNN-<slug>.md` 交付总结。
+- **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `deliveries/ITER-NNNN-<slug>.md` 交付总结，外加一份同名 `.html` 固定格式阅读视图（双击即可在浏览器里读）。
 - **你的杠杆**：想开新一轮需求时，直接说"这算新迭代"；想确认当前进度时，让 AI 读 `.ai/ITERATIONS.md` 台账即可。
 
 ## 3. 安装（一次性）
@@ -115,9 +115,10 @@ AI 会自动走完整个链路：
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
 │   └── references/          # 外部参考资料（按需创建）
-├── deliveries/              # 交付总结归档
+├── deliveries/              # 交付总结归档（每份 .md 另有同名 .html 固定格式阅读视图）
 │   ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
-│   └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md
+│   ├── ITER-NNNN-<slug>.html #  └ 同名固定格式阅读视图，双击即可浏览器打开
+│   └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md(+.html)
 └── origin/                  # 人类原始概念输入收件箱（你自管，AI 只读不重塑）
 ```
 
@@ -162,7 +163,7 @@ butler 的持久模式开关，统一记在 `.ai/local-constraints.md` 的「**B
 
 ### 里程碑（大版本）
 
-迭代之上还可套一层**里程碑** `MILE-NNNN`，作为"大可交付版本"。当一批需求跨多个迭代、需要先整体圈定范围再拆分推进时，AI 会提议开里程碑：先写一份范围评估 + 理解阐释 + 拆分路线图（`.ai/MILESTONE.md`），与你 soft 对齐后，期间开启的迭代自动归属它；大版本收口时聚合各迭代产出一份版本级交付（`deliveries/milestones/MILE-NNNN-<slug>.md`）。里程碑是可选、松耦合的：不影响你按迭代推进的习惯，迭代历史在 `deliveries/` 根仍是一条连续时间线。
+迭代之上还可套一层**里程碑** `MILE-NNNN`，作为"大可交付版本"。当一批需求跨多个迭代、需要先整体圈定范围再拆分推进时，AI 会提议开里程碑：先写一份范围评估 + 理解阐释 + 拆分路线图（`.ai/MILESTONE.md`），与你 soft 对齐后，期间开启的迭代自动归属它；大版本收口时聚合各迭代产出一份版本级交付（`deliveries/milestones/MILE-NNNN-<slug>.md`，同样附一份同名 `.html` 固定格式阅读视图）。里程碑是可选、松耦合的：不影响你按迭代推进的习惯，迭代历史在 `deliveries/` 根仍是一条连续时间线。
 
 **自动归属的边界**：里程碑还**开着**的期间，你新提的迭代都**自动并进**这个里程碑、不用每次确认；一旦它**收口**，之后再开的迭代就是**独立**的，不会再塞进这个已关闭的里程碑（除非你显式开新里程碑或回挂到另一个进行中的里程碑）。
 
@@ -273,7 +274,7 @@ Coder/
 │   ├── iteration-schema.md    # 迭代号/台账/锁定纪律
 │   ├── milestone-schema.md    # 里程碑（大版本）号/台账/路线图/版本级交付
 │   ├── versioning-schema.md   # 版本治理：VERSION/CHANGELOG/tag/semver/部署戳
-│   ├── delivery-summary.md    # 交付总结规范
+│   ├── delivery-summary.md    # 交付总结规范（含固定格式 HTML 阅读视图 §9）
 │   ├── mcv-deployment.md      # 基地车部署协议
 │   ├── mcv-update.md          # 基地车升级协议
 │   ├── progressive-handoff.md # 渐进式交接

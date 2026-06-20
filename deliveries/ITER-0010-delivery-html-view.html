@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0010 交付总结 · 交付总结增加固定格式 HTML 阅读视图</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>交付总结增加固定格式 HTML 阅读视图</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0010</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>让 butler 的迭代 / 里程碑交付总结，在现有 Markdown 之外<strong>并列产出一份固定格式、单文件自包含的 HTML 阅读视图</strong>，方便人类直接双击打开阅读。固定格式有唯一 SSOT（模板文件），不在每次收口手搓飘移；不破坏「交付总结只引用产物路径、不嵌入全文、体量恒定」的硬约束。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新增固定 HTML 模板 SSOT</strong> <code>templates/delivery.html.template</code>：单文件自包含（内联 CSS、零外部依赖、双击可离线打开），12 个 <code>{{占位符}}</code> 槽位对应 <code>delivery-summary.md §4</code>（4 个头部元信息 + §4.1–§4.7 七段正文 + 里程碑专用 <code>{{ROADMAP}}</code>），含 <code>&lt;!-- ROADMAP:START/END --&gt;</code> 注释块供迭代级整段删除。</li>
+        <li><strong>主规则贯通</strong> <code>delivery-summary.md</code>：新增 §9「固定格式 HTML 阅读视图」；§3 命名补 <code>.html</code> 同名兄弟文件；§7 收口三步措辞改为 step ② 双产出；§8.4 澄清对话引用行恒指 <code>.md</code>。</li>
+        <li><strong>收口契约贯通</strong>：<code>lifecycle.md</code>、<code>iteration-schema.md</code>（§3 + §5.5）、<code>milestone-schema.md</code>（§7.4 + §9）三处把「写交付总结」从产 <code>.md</code> 扩为产 <code>.md</code> + 同名 <code>.html</code>，仍是三步、不新增第四步。</li>
+        <li><strong>传播一致</strong>：<code>templates/rule-card.md</code>、<code>HUMAN_GUIDE.md</code>、<code>Coder/README.md</code>、仓库根 <code>CLAUDE.md</code> 同步。</li>
+        <li><strong>dogfood</strong>：本份 ITER-0010 交付即用新模板产出首份 <code>.html</code>（即本文件），即时自校验排版与填槽协议。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>从 ITER-0010 起，每次收口都会在 <code>deliveries/</code> 多出一份<strong>同名 <code>.html</code></strong>：迭代级 <code>deliveries/ITER-NNNN-&lt;slug&gt;.html</code>、里程碑级 <code>deliveries/milestones/MILE-NNNN-&lt;slug&gt;.html</code>。</li>
+        <li><code>.html</code> 双击即可在浏览器读到统一排版；<code>.md</code> 仍是<strong>引用真源</strong>，<code>.html</code> 只是它的固定格式阅读投影。</li>
+        <li>收口节奏不变：仍是「快照归档 + 写交付总结 + 更新台账」三步，只是「写交付总结」那步变成双产出。</li>
+        <li>历史 13 份交付<strong>不回填</strong>；未升级到本版的部署项目只产 <code>.md</code>，向后兼容、不报错。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>templates/delivery.html.template</code>。</li>
+        <li>改（规则语义 + 传播）：<code>Coder/20_Workflow_Lifecycle/{delivery-summary,iteration-schema,milestone-schema,lifecycle}.md</code>、<code>templates/rule-card.md</code>、<code>HUMAN_GUIDE.md</code>、<code>Coder/README.md</code>、仓库根 <code>CLAUDE.md</code>。</li>
+        <li>零改动护栏：产物链四 schema、hook 体系（phase_gate/ledger_status）、<code>VERSION</code>/<code>CHANGELOG.md</code>、<code>mcv-deployment.md</code>、历史 13 份 <code>deliveries/</code>、各扩展模块。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>AC1–AC4（模板）：<code>grep</code> 确认零外链、12 占位符齐全、ROADMAP 注释块存在、REFERENCES 槽限定路径指针。</li>
+        <li>AC5–AC13（规则 + 传播）：逐文件 <code>grep</code> 命中 §9、两级 <code>.html</code> 命名、三处 step ② 双产出、rule-card 2 处 / HUMAN_GUIDE 4 处 / README / 根 CLAUDE.md。</li>
+        <li>AC14（一致性）：全仓无「HTML 替代 MD / 第二真源」措辞。</li>
+        <li>AC15（护栏）：<code>git status --short</code> 确认护栏文件零改动。</li>
+        <li>AC17（dogfood）：本份交付的 <code>.html</code> 用新模板填槽生成、浏览器可打开。</li>
+        <li>详见 <code>.ai/iterations/ITER-0010/VERIFY_REPORT.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>HTML 产出靠规则纪律（收口三步），无 hook 强制——与 delivery summary 同源同险。</li>
+        <li>部署项目收口填槽依赖 <code>$BUTLER</code> 可达；不可达时只能先产 <code>.md</code>、后补 <code>.html</code>（本仓库自身收口不受限）。</li>
+        <li>版本：本轮不发版，ITER-0010 累积到下次切版，预计 MINOR（向后兼容新增可选交付产物）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0010/CONCEPT.md</code></li>
+        <li><code>.ai/iterations/ITER-0010/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0010/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0010/VERIFY_REPORT.md</code></li>
+        <li><code>templates/delivery.html.template</code>（固定格式 SSOT）</li>
+        <li><code>Coder/20_Workflow_Lifecycle/delivery-summary.md</code> §9</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -35,7 +35,7 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 | 迭代台账 | `.ai/ITERATIONS.md` | 脊柱与索引。记录 `current` 指针与全部迭代的号/标题/状态/时间/交付链接，是"当前迭代号是几、有哪些历史迭代"的唯一真源 |
 | 当前迭代工作区 | `.ai/CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` | 固定路径的活产物，始终对应 `current` 指向的活跃迭代；hook 机械校验的就是这组路径 |
 | 迭代归档 | `.ai/iterations/ITER-NNNN/` | 迭代收口时四件套的冻结快照，只读，供复盘审计 |
-| 人类交付 | `deliveries/ITER-NNNN-<slug>.md` | 迭代收口后给人看的交付总结，结构与触发参考 `delivery-summary.md` |
+| 人类交付 | `deliveries/ITER-NNNN-<slug>.md` + 同名 `.html` | 迭代收口后给人看的交付总结：`.md` 为引用真源，同名 `.html` 为固定格式阅读视图（`delivery-summary.md` §9）；结构与触发参考 `delivery-summary.md` |
 
 约束：
 
@@ -119,7 +119,7 @@ current: ITER-0002
 - 时机：P5 达到可交付、可验收的闭环状态。
 - 动作（三步，缺一不可）：
   1. 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；若本迭代 `01_CHANGELOG.md` 有内容，其当前迭代切片一并归档为 `iterations/ITER-NNNN/CHANGELOG.md`。
-  2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，结构与触发参考 `delivery-summary.md`；交付只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
+  2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`；全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据（已归档切片不再留在全局文件）。
 - 收口后工作区四件套保留原位（作为最近一迭代的只读残影），直到下一迭代开启时被 §5.1 整体覆写；其权威副本以 `iterations/ITER-NNNN/` 为准。
 

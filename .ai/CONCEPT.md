@@ -1,46 +1,64 @@
-> 分流: 完整 | 命中升级信号: 多文件改动(≥3) / 反转既有规则(ITER-0006「preference 不纳入项目配置」) / 契约语义(三态生效条件 + 真源归属) / 跨模块影响(local-constraints-schema·preference-engine·logic-protocol·部署·rule-card·人类文档·Coder README) / 设计取舍(per-project 抑制 vs 跨项目真源 双源消歧) | 2026-06-19
+> 分流: 完整 | 命中升级信号: 契约变更（delivery-summary 收口产出契约扩展）、多文件改动（≥6 个规则/模板文件）、跨模块影响（delivery/iteration/milestone/lifecycle schema + templates + HUMAN_GUIDE）、设计取舍（HTML 生成方式：模板手填 vs 转换脚本，已由用户裁定为模板手填） | 2026-06-20
 
 # Goal
-- 把 preference（偏好探针）**接入项目级配置** `.ai/local-constraints.md`「Butler 功能开关」段，新增 `preference: on|off`（默认 on）作为**本项目抑制开关**——让它与 `dangerous`/`independent_review` 在同一处统一可见、可读、可控（用户要求）。
-- 同时**不破坏 preference 的跨项目本质**：consent / signals / profile 的真源仍在外置 `$PREF`，本开关只管"这个项目要不要采集"，不双写外置状态。
 
-# Background / 为什么做 + 冲突挑明
-- 用户问"preference 会自动开启吗"，确认其机制（一次同意后默认常驻、反哺 opt-in），随后要求"preference 也应写进配置里"。
-- **这反转了 ITER-0006 的一条特意决策**：当时把 dangerous/independent_review 写进 local-constraints 时，**特意排除了 preference**，理由是"preference 跨项目、外置存储，不是项目级配置"（写在 local-constraints-schema §4.1、rule-card、HUMAN_GUIDE、Coder/README 四处）。
-- 我已向用户挑明此冲突并给出三种语义（per-project 抑制 / 只读镜像 / 全量接管），**用户选定 A：per-project 抑制开关**。本轮据此反转排除条，但用"抑制层"而非"全量接管"来调和——保住跨项目真源不被破坏、不引入双真源。
+- 让 butler 的迭代 / 里程碑交付总结，除现有 Markdown 外，**额外产出一份固定格式的 HTML 阅读视图**，方便人类直接打开阅读。
+- HTML 必须是**固定格式**（统一布局与样式），保证每份交付看起来一致；格式有唯一 SSOT，不在每次收口手搓飘移。
+- 不破坏现有产物链与「交付总结只引用产物路径、不嵌入全文、体量恒定」的硬约束。
 
-# 语义（已与用户锁定）
-- **本项目是否运行探针** = 全局未 `/preference off` **且** 外置 `$PREF` `consent: granted` **且** 本项目 `preference ≠ off`；三者全真才在本项目采集/蒸馏/反哺。
-- `preference: off`（项目级）**只抑制本项目**，不改全局 consent、不动 `$PREF` 数据、不影响其他项目。
-- 缺字段（legacy/旧部署）= 视为 `on`（不抑制），行为同旧版（仅受全局同意约束）。
-- 外置 `$PREF` 仍是 consent/signals/profile 的**跨项目唯一真源**；本开关不双写它（不是镜像、不是第二真源，而是"本项目采集闸"）。
+# Current Understanding
 
-# Scope
-## In
-1. **schema**：`local-constraints-schema.md` §2 必填字段 + §3 模板「Butler 功能开关」段增 `preference: on`；§4.1 把"preference 不纳入"反转为"per-project 抑制开关"口径（含三态生效条件与真源归属，作为该语义 SSOT）。
-2. **引擎**：`preference-probe-engine.md` 增项目级抑制开关（新 §2.5）+ 在 §2.1 默认常驻处标注"受项目级抑制"；明确生效优先级（全局 off > 全局 consent > 项目开关）。
-3. **接线**：`logic-protocol.md` §1.3 会话起始读取增 `preference` 项；§4 Preference Mode 补"per-project 抑制开关落 local-constraints"。
-4. **部署默认**：`mcv-deployment.md §4` 生成「Butler 功能开关」段时含 `preference: on`（默认 on，安全——实际采集仍需全局同意）。
-5. **传播**：`rule-card.md`（项目级功能开关节，反转排除句）、`HUMAN_GUIDE.md`（开关表加 preference 行 + 更新"偏好探针不在这里"注）、`Coder/README.md`（local-constraints-schema 描述反转"偏好不纳入"）。
+- 现状：迭代收口三步之一是「生成 `deliveries/ITER-NNNN-<slug>.md`」；里程碑收口同理产 `deliveries/milestones/MILE-NNNN-<slug>.md`。两者都是 Markdown，结构由 `delivery-summary.md §4`（迭代级）与 §4.8（里程碑级聚合口径）定义。
+- 用户诉求：Markdown 在终端 / 编辑器里看尚可，但要给人「方便阅读」的呈现，需要一份固定排版的 HTML。
+- 已与用户裁定的四个设计分叉：
+  1. **生成方式 = 固定模板手填**：在 `templates/` 放一份固定 HTML 模板（`{{占位符}}` + 内联 CSS、单文件自包含），收口时 AI 按 §4 结构填槽生成。无运行时依赖（不引入 node/python/pandoc），纯 markdown 仓库友好，复用现有 `{{占位符}}` SSOT 范式（同 `CLAUDE.md.template` 的 `{{RULE_CARD_CONTENT}}`）。
+  2. **覆盖范围 = 迭代级 + 里程碑级**：ITER 与 MILE 两类交付都产 HTML，两层阅读体验一致。
+  3. **触发时机 = 每次收口强制产**：HTML 与 MD 并列，成为收口标准产物（收口三步中「写交付总结」那一步同时产 `.md` + 同名 `.html`），不是 opt-in。
+  4. **存量回填 = 不回填**：仅对 ITER-0010 起及之后的收口生效，历史 13 份交付保持原 `.md` 现状。
+- 预期产出：
+  - 新增固定 HTML 模板 SSOT 文件（`templates/` 下）。
+  - 规则侧把「收口产出契约」从「写一份 `.md`」扩展为「写一份 `.md`（引用真源）+ 同名 `.html`（固定格式阅读视图）」，并贯通到所有引用该契约的规则 / 模板 / 指南。
 
-## Out（非本轮）
-- 不把 consent / reback / signals / profile 搬进 local-constraints（选项 C 已否决：破坏跨项目本质 + 双真源）。
-- 不为 preference 开关加 hook 校验（与 dangerous/independent_review 同等，靠规则纪律）。
-- 不改采集/蒸馏/反哺算法、外置存储契约、§3 安全底线、与 /dangerous 的完全隔离。
-- 不切新版本（按需聚合；ITER-0009 累积到下次切版，预计 MINOR——新增项目级开关能力）。
+# Constraints
 
-# Key Design Decisions
-1. **抑制层而非接管**：项目开关是"本项目采集闸"，与外置全局 consent 分管不同层面——故不构成双真源（governs 不同的东西）。
-2. **默认 on 是安全的**：`preference: on` 不等于"强制采集"——实际采集仍要全局 consent=granted；未同意时 on 也不会偷采。安全默认。
-3. **真源不变**：外置 `$PREF` 仍是 consent/data 跨项目真源；schema/engine 反复申明，避免被误读成"项目级真源"。
-4. **与 dangerous 区别对待**：preference 是只读观察者、低风险，**不需要 announce-on-read**（dangerous 才需要）；会话起始读到即遵循即可。
-5. **反转要彻底**：四处"排除"措辞全部改写，避免规则自相矛盾。
+- **显性约束**：
+  - HTML 与 MD **并存**，MD 仍是**引用真源**（`AC_LIST/TECH_PLAN/VERIFY_REPORT` 等只能以路径指针引用，不嵌入全文）；HTML 是 MD 的渲染/阅读投影，不引入第二真源、不复制四件套全文。HTML 同样遵守 `delivery-summary.md §4.7` 的「只引用不嵌入、体量恒定」硬约束。
+  - 固定格式必须有**唯一 SSOT**（模板文件），收口时填槽，不在规则文件里散落多份 HTML 范式。
+  - HTML 必须**单文件自包含**（内联 CSS、零外部依赖），双击即可打开、可归档、可离线阅读。
+  - 收口仍是**三步**，不新增第四步——「写交付总结」那一步从单产出 `.md` 扩为双产出 `.md` + `.html`，三步框架不变。
+- **隐性约束**：
+  - 不破坏分层：模板归 `templates/`，规则语义归 `20_Workflow_Lifecycle/delivery-summary.md`，不把大段 HTML 塞进规则正文。
+  - 不破坏现有 hook 契约（phase_gate 只管迭代工作区四件套与 AC 冻结，HTML 在 P5 收口产出，AC 早已 ack-frozen，零 hook 改动）。
+  - 模板单一来源纪律（CLAUDE.md 编辑约束 #4）：HTML 固定格式以模板文件为 SSOT，规则只引用不重述其结构。
+  - 写作风格用「必须/不得/应」，措辞面向 AI 执行。
 
-# Risks / Open Questions
-- 反转既有决策需保证四处措辞一致改写，否则规则内部打架——以"逐处 grep 校验旧排除句消失"兜底。
-- "默认 on 但需全局同意"可能被误读为"装了就采集"——文案须显式写"on≠强制采集，仍需全局同意"。
-- 项目开关靠规则纪律（会话起始读 + 遵循），无 hook 强制——与现有 dangerous/independent_review 同源同险。
+# Impact Scope
 
-# 影响文件（预估）
-- 改：`Coder/20_Workflow_Lifecycle/local-constraints-schema.md`、`Coder/70_Extension_Preference/preference-probe-engine.md`、`Coder/00_System_Prompt/logic-protocol.md`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`templates/rule-card.md`、`HUMAN_GUIDE.md`、`Coder/README.md`。
-- 零改动护栏：preference 采集/蒸馏/反哺算法（§5/§6/§7）、外置存储契约（§4）、§3 安全底线、与 /dangerous 隔离（§9）、ledger_status hook、产物链四 schema、versioning-schema。
+- **会改**（规则语义 + 传播面）：
+  - 新增 `templates/delivery.html.template`（固定 HTML 模板 SSOT）。
+  - `Coder/20_Workflow_Lifecycle/delivery-summary.md`（主规则：新增 HTML 阅读视图小节 + §3 命名/存放补 `.html` 同名兄弟文件 + 收口产出契约 + §8 对话引用口径）。
+  - `Coder/20_Workflow_Lifecycle/iteration-schema.md`（§3 三层落盘「人类交付」行 + §5.5 收口三步 step 2 双产出）。
+  - `Coder/20_Workflow_Lifecycle/milestone-schema.md`（§7.4 收口三步 step 2 双产出 + §9 交付文档结构树补 `.html`）。
+  - `Coder/20_Workflow_Lifecycle/lifecycle.md`（P5 收口 step ② 措辞双产出）。
+  - `templates/rule-card.md`（浓缩规则卡 ITER / MILE 收口三步描述）。
+  - `HUMAN_GUIDE.md`（deliveries 结构说明 + 交付视图描述）。
+  - 可能微调：`Coder/README.md`（delivery-summary 职责一行）、仓库根 `CLAUDE.md`（templates/ 内容物描述补 delivery.html.template）。
+- **明确不影响**（零改动护栏）：
+  - 产物链四件套 schema（concept/acceptance/tech-plan/verify）字段语义。
+  - hook 体系（phase_gate / ledger_status）契约与脚本。
+  - 迭代 / 里程碑号分配、台账枚举、ACK 冻结纪律、overwrite-only。
+  - 历史 13 份 `deliveries/` 文件（不回填、不重命名）。
+  - `VERSION` / `CHANGELOG.md`：本轮不发版，累积到下次切版（预计 MINOR：向后兼容新增可选交付产物，legacy 无 `.html` 的旧交付照常放行）。
+  - 各扩展模块（ideation/loop/review/dangerous/preference）。
+
+# Project Type / Active Profiles
+
+- 项目形态：**Markdown 规则仓库**（butler 自身），编辑的是协作 SOP 规则本身，非用软件栈开发应用。
+- 命中的 Domain / Stack Profiles：**无**。`10_Domain_Stack_Profiles/` 下的 vue3 / typescript / build-tooling 均不适用，仅按通用 SOP + 本仓库 `CLAUDE.md` 编辑约束推进。
+- HTML 模板里的内联 CSS 是「固定排版资产」，不引入前端工程栈，不触发前端 profile。
+
+# Open Questions
+
+- 模板占位符的粒度与 MILE 特有的「拆分路线图回填」段如何在同一模板里安放（单模板 + 可选路线图段 vs ITER/MILE 两个薄变体）——倾向单模板 + 可选段，留待 P3 TECH_PLAN 定稿。
+- HTML 模板从何处读取以填槽：倾向「butler 仓库 `templates/delivery.html.template` 为 SSOT，收口时 AI 读取填槽」，与部署/升级读 `$BUTLER` 同源假设；是否需要在基地车部署时复制进目标项目（避免 $BUTLER 不可达），留待 P3 评估（默认：不复制，避免副本漂移）。
+- 以上均为方案层细节，不改变 Goal 与验收范围，进入 P2 不阻塞。
