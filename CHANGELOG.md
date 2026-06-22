@@ -4,6 +4,20 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.1.0] - 2026-06-22
+
+向后兼容能力新增版。聚合 ITER-0008 ~ ITER-0010——三个迭代均为向后兼容新增（无破坏性变更），按 semver 取区间最高级别为 MINOR。
+
+### 本版新增
+
+- **迭代状态封闭三态 + 机械门禁（ITER-0008）**：迭代台账状态固化为 `active` / `closed` / `abandoned` 封闭枚举，新增 `ledger_status` hook 拦截越界值（`planned` 等里程碑路线项不得写入迭代台账）。详见 `deliveries/ITER-0008-iteration-status-enum-lockdown.md`。
+- **preference 项目级抑制开关（ITER-0009）**：`.ai/local-constraints.md`「Butler 功能开关」新增 `preference: on|off`（默认 on）作 per-project 采集闸；consent / 数据真源仍外置 `$BUTLER_PREF`（跨项目唯一真源），本开关不双写。详见 `deliveries/ITER-0009-preference-per-project-toggle.md`。
+- **交付总结固定格式 HTML 阅读视图（ITER-0010）**：迭代 / 里程碑收口在 `.md` 之外并列产出同名 `.html`（固定格式模板 SSOT `templates/delivery.html.template`、单文件自包含、双击可离线打开）；`.md` 仍为引用真源，HTML 同守只引用不嵌入。详见 `deliveries/ITER-0010-delivery-html-view.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.1.0]: 自 v1.0.0 起聚合 ITER-0008 ~ ITER-0010
+
 ## [1.0.0] - 2026-06-19
 
 首个正式版本基线。聚合 ITER-0001 ~ ITER-0007，为 butler 规则仓库确立硬版本概念（VERSION / CHANGELOG / git tag），并把版本接入部署产物与升级协议。
