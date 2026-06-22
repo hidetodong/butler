@@ -1,45 +1,47 @@
 # Verification Summary
-- 覆盖范围：迭代/里程碑收口在 `.md` 之外并列产出固定格式 HTML 阅读视图——新增模板 SSOT `templates/delivery.html.template`，并把收口「写交付总结」一步贯通到 delivery-summary（主规则 §9 + §3/§7/§8.4）、lifecycle/iteration/milestone（收口契约 step ②）、rule-card/HUMAN_GUIDE/README/根 CLAUDE.md（传播）。
-- 总体结论：AC1–AC16 已满足并经 grep + `git status` 验证；AC17（收口 dogfood 产首份 `.html`）在本报告后随收口三步执行。MD 仍为引用真源、HTML 同守只引用不嵌入；零改动护栏经 `git status --short` 确认（VERSION/CHANGELOG/hooks/四 schema/deliveries 历史均不在改动名单）。
+- 覆盖范围：新增 `Coder/00_System_Prompt/presentation-protocol.md`（对话输出呈现协议，8 节）并接线到 identity / logic-protocol / Coder/README / rule-card / delivery-summary §8 / HUMAN_GUIDE；把 P1-P3 方案/分析/选项输出统一为「结论先行 + 统一标号 + 表格」，默认固定 + 弹性、仅管较长输出，与 §8 分场景共存。
+- 总体结论：AC1–AC18 已满足并经 grep 复核；AC19（收口含 ITER-0010 起的 `.html` 视图）随本报告后收口三步执行。零改动护栏经 `git status` + `git diff --stat` 确认。
 
 # AC Status
-- [x] AC1: 模板单文件自包含——`grep` 无 `https?://`/`<link>`/`<script>`/`@import`/外链字体，OK。
-- [x] AC2: 12 个占位符齐全（4 头部元信息 + §4.1–§4.7 七段 + ROADMAP）。
-- [x] AC3: `<!-- ROADMAP:START/END -->` 注释块存在，迭代级可整段删除。
-- [x] AC4: `{{REFERENCES}}` 槽注释限定「只放路径指针，不得嵌四件套全文」。
-- [x] AC5: `delivery-summary.md` 新增 `## 9. 固定格式 HTML 阅读视图`（170 行）。
-- [x] AC6: §3 含迭代级 `ITER-NNNN-<slug>.html` 与里程碑级 `MILE-NNNN-<slug>.html` 命名。
-- [x] AC7: §8.4 补「引用行恒指 `.md`」，HTML 为同名兄弟、不挤进引用行。
-- [x] AC8: `lifecycle.md` P5 收口 step ② 改为 `.md` + 同名 `.html`（仍三步）。
-- [x] AC9: `iteration-schema.md` §3「人类交付」行 + §5.5 step 2 双产出。
-- [x] AC10: `milestone-schema.md` §7.4 step 2 双产出 + §9 结构树补 `.html` 兄弟说明。
-- [x] AC11: `rule-card.md` ITER（L25）与 MILE（L27）收口三步各补 `.html`（grep 命中 2）。
-- [x] AC12: `HUMAN_GUIDE.md` 4 处（L60 交付描述 / 目录树 / 里程碑收口 / delivery-summary 注）补 HTML 阅读视图。
-- [x] AC13: `Coder/README.md` L131 与根 `CLAUDE.md` templates 描述均提及 `delivery.html.template` / §9。
-- [x] AC14: 全仓无「HTML 替代 MD / 第二真源」措辞（grep 命中均为既有 preference「非双真源」负向表述，与 HTML 无关）。
-- [x] AC15: `git status --short` 确认护栏文件零改动。
-- [x] AC16: CLAUDE.md 五约束逐条自检通过（见 Gate Coverage）。
-- [x] AC17: 收口三步随本报告执行，产 `deliveries/ITER-0010-delivery-html-view.{md,html}`（dogfood 首份 HTML）。
+- [x] AC1: 协议文件已建，frontmatter 含 audience（AI / 开发者）+ scope（对话层方案/分析/选项呈现，非产物文件、非简短问答）。
+- [x] AC2: §2 适用范围明确「适用 P1-P3 较长输出 / 不适用简短问答·澄清·确认·进度·P5 摘要」（grep 命中 5）。
+- [x] AC3: §3 BLUF——开头一句话结论、不得大段概念开场。
+- [x] AC4: §4 标号可执行口径——无序 `-`、有序 `1.`、不得字母标号作层级、嵌套缩进 `-`（grep 命中）。
+- [x] AC5: §5 选项表格化——≥2 方案用表格、固定列。
+- [x] AC6: §6 概念后置 + 结尾给「建议/下一步」。
+- [x] AC7: §7 弹性条款——默认固定 + 弹性、豁免不强行套、不注水。
+- [x] AC8: §8 与 §8 边界——「过程结构化、交付散文化」分场景声明。
+- [x] AC9: §8 附标准骨架样例（结论 → 关键点 → 选项表 → 建议/下一步），样例自身遵守协议。
+- [x] AC10: `identity.md §2` 增指针引用协议。
+- [x] AC11: `logic-protocol.md §1.1` 读取顺序纳入 presentation-protocol（第 3 项，原序顺延）。
+- [x] AC12: `Coder/README.md` 三处登记——目录结构、读取顺序（1-8 重编号无重号）、规则目录说明。
+- [x] AC13: `rule-card.md` 新增「## 输出呈现」精简节（grep 命中），口径与正文一致。
+- [x] AC14: `delivery-summary.md §8.5` 加边界互指句。
+- [x] AC15: `HUMAN_GUIDE.md §1` 加统一呈现格式说明。
+- [x] AC16: 分工句在 protocol / delivery-summary / rule-card 三处一致（grep 三文件均命中），无矛盾。
+- [x] AC17: 零改动护栏——`git status` 改动名单不含 VERSION/CHANGELOG/四 schema/hooks/iteration·milestone·versioning-schema/扩展模块/deliveries 历史；上述文件 `git diff --stat` 零行变更。
+- [x] AC18: CLAUDE.md 五约束自检通过（见 Gate Coverage）。
+- [x] AC19: 收口三步随本报告执行（归档 + `deliveries/ITER-0011-presentation-protocol.{md,html}` + 台账 closed）。
 
 # Verification Results
-- AC1–AC4：读模板 + `grep -nE 'https?://|<link |<script |@import|fonts\.'` 返回空；`grep -oE '\{\{[A-Z_]+\}\}' | sort -u` 列出 12 个占位符；ROADMAP 标记在 152/157 行；REFERENCES 限定注释在模板头部。
-- AC5–AC7：`grep` 命中 `## 9. 固定格式 HTML 阅读视图`、两级 `.html` 命名、「引用行恒指 `.md`」澄清句。
-- AC8–AC10：`grep` lifecycle/iteration/milestone 三文件 step ② 均含「并列产出同名 …`.html` 阅读视图」「仍是三步」。
-- AC11–AC13：`grep` rule-card 命中 2、HUMAN_GUIDE 命中 6、README/根 CLAUDE.md 各命中模板引用。
-- AC14：`grep -rnE 'HTML 替代|替代 .md|第二真源'` 过滤负向句后，剩余命中全部落在 preference 既有文本，零 HTML 相关误配。
-- AC15：`git status --short` 改动名单为 4 件套 + CLAUDE.md + delivery-summary/iteration/milestone/lifecycle + README + HUMAN_GUIDE + rule-card + 新模板；VERSION、CHANGELOG.md、templates/hooks/、concept/acceptance/tech-plan/verify-schema、deliveries/ 历史 13 份均不在名单。
+- AC1–9：`grep -nE '^## [1-8]\.'` 列出 8 节齐全；分项 grep 命中适用/豁免、字母标号口径、骨架样例。读协议确认样例遵守 §3-§6（结论先行、`-` 标号、表格、收尾下一步），自洽。
+- AC10–13：`grep -l 'presentation-protocol'` 命中 identity/logic-protocol/README/rule-card 四文件；rule-card「## 输出呈现」节存在且含「禁 A)/a)」「多方案用表格」。
+- AC12 重号检查：README 读取顺序重读为 1-8 连续无重号（presentation 为 3，business=7、domain=8）。
+- AC14–15：grep delivery-summary §8.5 与 HUMAN_GUIDE §1 均命中边界互指 / 呈现说明。
+- AC16：`grep -rl '过程结构化|交付散文化|P5 交付摘要'` 命中 protocol + delivery-summary + rule-card。
+- AC17：`git status --short` 改动 = 4 件套 + identity/logic-protocol/delivery-summary/README/HUMAN_GUIDE/rule-card + 新协议文件；护栏文件 `git diff --stat` 空。
 
 # Gate Coverage
-- 通用质量门禁：规则一致性（各处 HTML 定位统一为「MD 固定格式阅读投影、并列、MD 真源」）、产物链未破坏、frontmatter 未动、措辞用「必须/不得/应」。
-- Active Profiles：未命中（Markdown 规则仓库，无 Domain/Stack Profile），省略。
-- Tech Plan Alignment：TECH_PLAN 七项 Design Decisions 全兑现——①模板手填无运行时依赖、②单模板+ROADMAP 可选段、③新增 §9 不重号（§1–§8 编号未动、交叉引用未断）、④§8.4 仍指 `.md`、⑤单文件自包含内联 CSS、⑥模板不复制进目标项目（mcv-deployment 未改）、⑦无前端 profile。
-- References Compliance：N/A（本轮无 `.ai/references/` 参考资料）。
-- CLAUDE.md 五约束：①分层未混（模板归 templates/、语义归规则）；②产物链未动；③新增模板已在根 CLAUDE.md 登记（templates/ 非 Coder/ 树，不需 Coder/README 目录注册，但 delivery-summary 职责行已引用）；④固定格式经模板 SSOT 单一来源，规则只引用不重述其 HTML 结构；⑤各文件 frontmatter 未破坏。
+- 通用质量门禁：规则一致性（三处分工句一致）、协议自洽（正文与样例自身遵守协议）、措辞用「必须/不得/应」、frontmatter 标 audience/scope。
+- Active Profiles：未命中（Markdown 规则仓库），省略。
+- Tech Plan Alignment：六项 Design Decisions 全兑现——①独立文件放 00_System_Prompt、②进 rule-card 高注意力区、③可执行标号口径非模糊、④附标准骨架样例、⑤协议自洽、⑥无前端 profile。
+- References Compliance：N/A（本轮无 `.ai/references/`）。
+- CLAUDE.md 五约束：①分层未混（协议归 00 SOP Core）；②产物链未动；③新文件已在 Coder/README 目录结构 + 读取顺序双注册；④rule-card 节与协议正文口径一致（单一来源，未矛盾双写）；⑤各文件 frontmatter 未破坏。
 
 # Remaining Risks
-- HTML 产出靠规则纪律（收口三步），无 hook 强制——与 delivery summary 同源同险（已在 AC_LIST Out of Scope 接受）。
-- 部署项目收口填槽依赖 `$BUTLER` 可达；不可达时只能先产 `.md`、后补 `.html`（本仓库自身收口不受限，模板即本地文件）。
-- 版本：本轮不发版，ITER-0010 累积到下次切版，预计 MINOR（向后兼容新增可选交付产物；legacy 无 `.html` 旧交付与未升级部署照常放行）。
+- 协议靠会话起始读取 + 遵守，无 hook 强制——与 identity/logic-protocol 同源同险。
+- 「较长输出 vs 豁免」边界靠语义判断，有模型自由度——用「默认套 + 豁免清单」兜底，可接受。
+- 版本：本轮不发版，ITER-0011 累积到下次切版，预计 MINOR（新增可选输出协议、向后兼容）。
 
 # Handoff / Next Step
-- 任务已闭合，进入迭代收口三步（归档 + 写 `deliveries/ITER-0010-delivery-html-view.{md,html}` + 台账 closed），收口后即交付。
+- 任务已闭合，进入收口三步（归档 + 写 `deliveries/ITER-0011-presentation-protocol.{md,html}` + 台账 closed）。

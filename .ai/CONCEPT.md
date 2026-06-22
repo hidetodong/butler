@@ -1,64 +1,58 @@
-> 分流: 完整 | 命中升级信号: 契约变更（delivery-summary 收口产出契约扩展）、多文件改动（≥6 个规则/模板文件）、跨模块影响（delivery/iteration/milestone/lifecycle schema + templates + HUMAN_GUIDE）、设计取舍（HTML 生成方式：模板手填 vs 转换脚本，已由用户裁定为模板手填） | 2026-06-20
+> 分流: 完整 | 命中升级信号: 契约变更（新增对话层呈现行为契约，贯穿各阶段输出）、跨模块影响（影响 P1-P3 所有方案/分析对话输出 + 须与 delivery-summary §8 划清边界）、多文件改动（新增规范文件 + identity/logic-protocol/rule-card/README/HUMAN_GUIDE 接线 ≥5）、设计取舍（落点：新建 00 层文件 vs 扩 identity §2；与 §8 边界） | 2026-06-22
 
 # Goal
 
-- 让 butler 的迭代 / 里程碑交付总结，除现有 Markdown 外，**额外产出一份固定格式的 HTML 阅读视图**，方便人类直接打开阅读。
-- HTML 必须是**固定格式**（统一布局与样式），保证每份交付看起来一致；格式有唯一 SSOT，不在每次收口手搓飘移。
-- 不破坏现有产物链与「交付总结只引用产物路径、不嵌入全文、体量恒定」的硬约束。
+- 解决「每次输出方案时格式不固定、不易读」的体验问题：标号忽 ABC 忽 123 忽 a)、开场堆大段概念。
+- 补一条**常驻的「对话输出呈现协议」**，把 P1-P3 的方案/分析/选项类对话输出统一为：**结论先行 + 统一标号 + 选项表格化**；默认固定、按内容弹性、仅管较长输出。
+- 与现有 `delivery-summary.md §8`（P5 交付摘要散文化）**分场景共存、不打架**。
 
 # Current Understanding
 
-- 现状：迭代收口三步之一是「生成 `deliveries/ITER-NNNN-<slug>.md`」；里程碑收口同理产 `deliveries/milestones/MILE-NNNN-<slug>.md`。两者都是 Markdown，结构由 `delivery-summary.md §4`（迭代级）与 §4.8（里程碑级聚合口径）定义。
-- 用户诉求：Markdown 在终端 / 编辑器里看尚可，但要给人「方便阅读」的呈现，需要一份固定排版的 HTML。
-- 已与用户裁定的四个设计分叉：
-  1. **生成方式 = 固定模板手填**：在 `templates/` 放一份固定 HTML 模板（`{{占位符}}` + 内联 CSS、单文件自包含），收口时 AI 按 §4 结构填槽生成。无运行时依赖（不引入 node/python/pandoc），纯 markdown 仓库友好，复用现有 `{{占位符}}` SSOT 范式（同 `CLAUDE.md.template` 的 `{{RULE_CARD_CONTENT}}`）。
-  2. **覆盖范围 = 迭代级 + 里程碑级**：ITER 与 MILE 两类交付都产 HTML，两层阅读体验一致。
-  3. **触发时机 = 每次收口强制产**：HTML 与 MD 并列，成为收口标准产物（收口三步中「写交付总结」那一步同时产 `.md` + 同名 `.html`），不是 opt-in。
-  4. **存量回填 = 不回填**：仅对 ITER-0010 起及之后的收口生效，历史 13 份交付保持原 `.md` 现状。
-- 预期产出：
-  - 新增固定 HTML 模板 SSOT 文件（`templates/` 下）。
-  - 规则侧把「收口产出契约」从「写一份 `.md`」扩展为「写一份 `.md`（引用真源）+ 同名 `.html`（固定格式阅读视图）」，并贯通到所有引用该契约的规则 / 模板 / 指南。
+- **根因**：butler 现有所有 schema 只约束**产物文件**字段（CONCEPT/AC_LIST/TECH_PLAN 写什么），从未约束**对话框里怎么把方案呈现给人看**。唯一的对话层规则是 `delivery-summary §8`，且只管 P5 交付摘要那一刻。其余阶段（P1 分析、P2 AC 呈现、P3 方案、选项对比）的对话输出全靠模型即兴 → 标号随机、概念堆叠、不易读。
+- **已与用户锁定的三个设计参数**（本轮 AskUserQuestion 裁定）：
+  1. **呈现骨架 = 结论先行 + 选项表格（BLUF）**：开头一句话结论/建议，再用统一标号要点展开，多方案对比一律用表格。
+  2. **约束强度 = 默认固定 + 弹性**：定一套默认骨架，但允许按内容繁简调整——短回答/纯澄清/单点确认不强行套骨架，避免僵硬。
+  3. **作用范围 = 仅方案/分析/选项**：只约束 P1-P3 方案提案、选项对比、分析说明这类较长输出；简短问答与进度汇报不受约束。
+- **预期产出**：一条新规则文件（对话输出呈现协议）定义骨架/标号/表格/弹性条款与 §8 边界，并接线到入口规则（identity / logic-protocol）、浓缩规则卡（rule-card，高注意力区，影响实际遵守）、人类指南与 Coder/README 注册。
 
 # Constraints
 
 - **显性约束**：
-  - HTML 与 MD **并存**，MD 仍是**引用真源**（`AC_LIST/TECH_PLAN/VERIFY_REPORT` 等只能以路径指针引用，不嵌入全文）；HTML 是 MD 的渲染/阅读投影，不引入第二真源、不复制四件套全文。HTML 同样遵守 `delivery-summary.md §4.7` 的「只引用不嵌入、体量恒定」硬约束。
-  - 固定格式必须有**唯一 SSOT**（模板文件），收口时填槽，不在规则文件里散落多份 HTML 范式。
-  - HTML 必须**单文件自包含**（内联 CSS、零外部依赖），双击即可打开、可归档、可离线阅读。
-  - 收口仍是**三步**，不新增第四步——「写交付总结」那一步从单产出 `.md` 扩为双产出 `.md` + `.html`，三步框架不变。
+  - 协议只管**对话层呈现**，**不改产物文件 schema**（CONCEPT/AC_LIST/TECH_PLAN/VERIFY 字段一字不动）——呈现层与产物层正交。
+  - 与 `delivery-summary §8` **边界清晰**：§8 管 P5 最终交付摘要（散文、禁编号、3-6 句）；本协议管**过程中**的方案/选项呈现（结构化、统一标号、表格）。两者按场景分工，互不覆盖、互不矛盾。
+  - **弹性内建**：默认骨架 + 显式「不套骨架」豁免清单（短问答/澄清/进度汇报），防止把轻量交流变重、防僵硬。
+  - 统一标号必须给**可执行的具体规则**（如：无序用 `-`、有序用 `1.`、禁字母标号做层级），不能只说「请统一」这种模糊话。
 - **隐性约束**：
-  - 不破坏分层：模板归 `templates/`，规则语义归 `20_Workflow_Lifecycle/delivery-summary.md`，不把大段 HTML 塞进规则正文。
-  - 不破坏现有 hook 契约（phase_gate 只管迭代工作区四件套与 AC 冻结，HTML 在 P5 收口产出，AC 早已 ack-frozen，零 hook 改动）。
-  - 模板单一来源纪律（CLAUDE.md 编辑约束 #4）：HTML 固定格式以模板文件为 SSOT，规则只引用不重述其结构。
-  - 写作风格用「必须/不得/应」，措辞面向 AI 执行。
+  - 不破坏分层：这是 SOP Core 通用输出治理，归 `00_System_Prompt/`（系统级输出协议层），不混进 Domain Profile 或 Business Extension。
+  - 高注意力区落地：必须进 `rule-card.md`（会内联到目标项目 CLAUDE.md），否则规则写了但 AI 实际读不到、不遵守。
+  - CLAUDE.md 编辑五约束：新增规则文件须在 `Coder/README.md` 目录结构 + 读取顺序注册；措辞用「必须/不得/应」；frontmatter 标 audience/scope。
+  - 协议本身要简洁、可执行，且**自洽**（一份规范「如何呈现」的规则，自己也要做到良好呈现）。
 
 # Impact Scope
 
-- **会改**（规则语义 + 传播面）：
-  - 新增 `templates/delivery.html.template`（固定 HTML 模板 SSOT）。
-  - `Coder/20_Workflow_Lifecycle/delivery-summary.md`（主规则：新增 HTML 阅读视图小节 + §3 命名/存放补 `.html` 同名兄弟文件 + 收口产出契约 + §8 对话引用口径）。
-  - `Coder/20_Workflow_Lifecycle/iteration-schema.md`（§3 三层落盘「人类交付」行 + §5.5 收口三步 step 2 双产出）。
-  - `Coder/20_Workflow_Lifecycle/milestone-schema.md`（§7.4 收口三步 step 2 双产出 + §9 交付文档结构树补 `.html`）。
-  - `Coder/20_Workflow_Lifecycle/lifecycle.md`（P5 收口 step ② 措辞双产出）。
-  - `templates/rule-card.md`（浓缩规则卡 ITER / MILE 收口三步描述）。
-  - `HUMAN_GUIDE.md`（deliveries 结构说明 + 交付视图描述）。
-  - 可能微调：`Coder/README.md`（delivery-summary 职责一行）、仓库根 `CLAUDE.md`（templates/ 内容物描述补 delivery.html.template）。
+- **会改/新增**：
+  - **新增** `Coder/00_System_Prompt/presentation-protocol.md`（对话输出呈现协议，本迭代核心产物）。
+  - `Coder/00_System_Prompt/identity.md`（§2 输出风格加指针引用新协议）。
+  - `Coder/00_System_Prompt/logic-protocol.md`（§1.1 基础读取顺序纳入新协议）。
+  - `Coder/README.md`（目录结构 00_System_Prompt 下登记 + 读取顺序登记 + 规则分工一行）。
+  - `templates/rule-card.md`（新增精简「输出呈现」节，高注意力区）。
+  - `HUMAN_GUIDE.md`（提一句：方案输出有统一呈现格式）。
+  - 可能微调：`delivery-summary.md §8`（加一句与本协议的边界互指，确保两侧都声明分工）。
 - **明确不影响**（零改动护栏）：
   - 产物链四件套 schema（concept/acceptance/tech-plan/verify）字段语义。
-  - hook 体系（phase_gate / ledger_status）契约与脚本。
-  - 迭代 / 里程碑号分配、台账枚举、ACK 冻结纪律、overwrite-only。
-  - 历史 13 份 `deliveries/` 文件（不回填、不重命名）。
-  - `VERSION` / `CHANGELOG.md`：本轮不发版，累积到下次切版（预计 MINOR：向后兼容新增可选交付产物，legacy 无 `.html` 的旧交付照常放行）。
-  - 各扩展模块（ideation/loop/review/dangerous/preference）。
+  - hook 体系（phase_gate/ledger_status）、迭代/里程碑/版本治理机制。
+  - `VERSION`/`CHANGELOG.md`（本轮不发版，累积到下次切版，预计 MINOR：新增可选输出协议、向后兼容）。
+  - 各扩展模块（ideation/loop/review/dangerous/preference）与 ITER-0010 的 HTML 视图。
+  - `deliveries/` 历史交付。
 
 # Project Type / Active Profiles
 
-- 项目形态：**Markdown 规则仓库**（butler 自身），编辑的是协作 SOP 规则本身，非用软件栈开发应用。
-- 命中的 Domain / Stack Profiles：**无**。`10_Domain_Stack_Profiles/` 下的 vue3 / typescript / build-tooling 均不适用，仅按通用 SOP + 本仓库 `CLAUDE.md` 编辑约束推进。
-- HTML 模板里的内联 CSS 是「固定排版资产」，不引入前端工程栈，不触发前端 profile。
+- 项目形态：**Markdown 规则仓库**（butler 自身），编辑协作 SOP 规则本身。
+- 命中 Domain / Stack Profiles：**无**，仅按通用 SOP + 本仓库 CLAUDE.md 编辑约束推进。
 
 # Open Questions
 
-- 模板占位符的粒度与 MILE 特有的「拆分路线图回填」段如何在同一模板里安放（单模板 + 可选路线图段 vs ITER/MILE 两个薄变体）——倾向单模板 + 可选段，留待 P3 TECH_PLAN 定稿。
-- HTML 模板从何处读取以填槽：倾向「butler 仓库 `templates/delivery.html.template` 为 SSOT，收口时 AI 读取填槽」，与部署/升级读 `$BUTLER` 同源假设；是否需要在基地车部署时复制进目标项目（避免 $BUTLER 不可达），留待 P3 评估（默认：不复制，避免副本漂移）。
-- 以上均为方案层细节，不改变 Goal 与验收范围，进入 P2 不阻塞。
+- 落点最终定在 `00_System_Prompt/` 独立文件（倾向）还是扩 `identity.md §2`——倾向独立文件（可被 rule-card 引用、可单独演进、放高注意力区），P3 定稿。
+- 标号统一的精确口径（无序 `-` / 有序 `1.` / 禁字母层级 / 嵌套缩进）在 P2 AC 与 P3 规范正文定稿。
+- 是否需要在协议里给一个「标准骨架样例」（结论 → 关键点 → 选项表 → 建议/下一步）作为可套用模板——倾向给，P3 定。
+- 以上均为方案层细节，不改 Goal 与已锁定的三参数，进入 P2 不阻塞。

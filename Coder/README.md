@@ -35,6 +35,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /00_System_Prompt
     identity.md
     logic-protocol.md
+    presentation-protocol.md
 
   /10_Domain_Stack_Profiles
     vue3-standard.md
@@ -89,7 +90,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 规则目录说明：
 
-- `00_System_Prompt/`：协作身份与总调度协议。
+- `00_System_Prompt/`：协作身份、总调度协议与对话输出呈现协议（`presentation-protocol.md`：方案 / 分析 / 选项类输出结论先行 + 统一标号 + 表格化）。
 - `20_Workflow_Lifecycle/`：通用需求开发 SOP 的阶段状态机、阶段交付约束与人类可读交付总结规范。
 - `30_Quality_Gate/`：通用质量门禁与验证策略。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
@@ -105,11 +106,12 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 1. `00_System_Prompt/identity.md`
 2. `00_System_Prompt/logic-protocol.md`
-3. `20_Workflow_Lifecycle/`
-4. `30_Quality_Gate/`
-5. `40_Context_Management/`（长任务、多阶段任务、上下文压缩前重点读取）
-6. `99_Business_Extension/*.md`（如存在，视为最高优先级业务约束）
-7. `10_Domain_Stack_Profiles/` 中与当前项目类型匹配的规则文档，需先在 P1 Analysis 识别项目类型与技术栈后启用
+3. `00_System_Prompt/presentation-protocol.md`
+4. `20_Workflow_Lifecycle/`
+5. `30_Quality_Gate/`
+6. `40_Context_Management/`（长任务、多阶段任务、上下文压缩前重点读取）
+7. `99_Business_Extension/*.md`（如存在，视为最高优先级业务约束）
+8. `10_Domain_Stack_Profiles/` 中与当前项目类型匹配的规则文档，需先在 P1 Analysis 识别项目类型与技术栈后启用
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 

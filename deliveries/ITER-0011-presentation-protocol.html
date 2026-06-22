@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0011 交付总结 · 对话输出呈现协议</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>对话输出呈现协议</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0011</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-22</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>解决一个使用体验问题：butler 每次输出方案时格式不固定——标号忽 <code>ABC</code> 忽 <code>123</code> 忽 <code>a)</code>，且开场堆大段概念、不易读。补一条常驻的「对话输出呈现协议」，把 P1-P3 的方案 / 分析 / 选项类对话输出统一为「结论先行 + 统一标号 + 选项表格」，默认固定 + 弹性、仅管较长输出，与现有 <code>delivery-summary §8</code>（P5 交付摘要散文化）分场景共存。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新增协议 SSOT</strong> <code>Coder/00_System_Prompt/presentation-protocol.md</code>（8 节）：目标、适用范围（适用 P1-P3 较长输出 / 豁免简短问答·澄清·进度·P5 摘要）、结论先行（BLUF）、统一标号（可执行口径：无序 <code>-</code>、有序 <code>1.</code>、禁字母标号作层级）、选项表格化、概念后置 + 收尾下一步、弹性条款、与 §8 边界 + 标准骨架样例。</li>
+        <li><strong>入口接线</strong>：<code>identity.md §2</code> 加指针；<code>logic-protocol.md §1.1</code> 读取顺序纳入协议（第 3 项）；<code>Coder/README.md</code> 目录结构 + 读取顺序（重编号 1-8）+ 规则说明三处登记。</li>
+        <li><strong>高注意力区落地</strong>：<code>templates/rule-card.md</code> 新增精简「输出呈现」节——规则卡会内联到目标项目 CLAUDE.md，确保协议被实际读到、不是「写了但不遵守」。</li>
+        <li><strong>边界互指 + 指南</strong>：<code>delivery-summary.md §8.5</code> 加分工句（过程结构化、交付散文化）；<code>HUMAN_GUIDE.md §1</code> 加统一呈现格式说明。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>从现在起，AI 呈现方案 / 选项 / 分析时会<strong>结论先行</strong>、<strong>标号统一</strong>（不再 <code>ABC</code>/<code>123</code>/<code>a)</code> 混用）、<strong>多方案用表格</strong>、<strong>结尾给下一步</strong>。</li>
+        <li>这套格式是<strong>默认固定 + 弹性</strong>：简短问答、纯澄清、进度汇报不强行套骨架，避免轻量交流变重。</li>
+        <li>与 P5 交付摘要<strong>分工</strong>：交付摘要继续走 §8 散文口径，本协议只管过程中的方案呈现，两者不打架。</li>
+        <li>协议放在最高注意力区（<code>00_System_Prompt/</code> + rule-card），更可能被实际遵守。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>Coder/00_System_Prompt/presentation-protocol.md</code>。</li>
+        <li>改：<code>Coder/00_System_Prompt/{identity,logic-protocol}.md</code>、<code>Coder/README.md</code>、<code>templates/rule-card.md</code>、<code>Coder/20_Workflow_Lifecycle/delivery-summary.md</code>（§8.5 边界句）、<code>HUMAN_GUIDE.md</code>。</li>
+        <li>零改动护栏：产物链四件套 schema、hook 体系（phase_gate/ledger_status）、<code>VERSION</code>/<code>CHANGELOG.md</code>、iteration/milestone/versioning-schema、各扩展模块、<code>deliveries/</code> 历史与 ITER-0010 的 HTML 模板。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>AC1–AC9（协议）：<code>grep</code> 确认 8 节齐全、适用/豁免清单、标号可执行口径、骨架样例，且样例自身遵守协议（自洽）。</li>
+        <li>AC10–AC13（接线 + 高注意力区）：<code>grep -l</code> 命中 identity/logic-protocol/README/rule-card；README 读取顺序重编号 1-8 无重号。</li>
+        <li>AC14–AC16（边界 + 一致性）：分工句在 protocol / delivery-summary / rule-card 三处一致、无矛盾。</li>
+        <li>AC17（护栏）：<code>git status</code> + <code>git diff --stat</code> 确认护栏文件零改动。</li>
+        <li>详见 <code>.ai/iterations/ITER-0011/VERIFY_REPORT.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>协议靠会话起始读取 + 遵守，无 hook 强制——与 identity/logic-protocol 同源同险。</li>
+        <li>「较长输出 vs 豁免」边界靠语义判断，有模型自由度——用「默认套 + 豁免清单」兜底。</li>
+        <li>版本：本轮不发版，ITER-0011 累积到下次切版，预计 MINOR。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0011/CONCEPT.md</code></li>
+        <li><code>.ai/iterations/ITER-0011/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0011/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0011/VERIFY_REPORT.md</code></li>
+        <li><code>Coder/00_System_Prompt/presentation-protocol.md</code>（协议 SSOT）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

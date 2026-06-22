@@ -14,8 +14,9 @@ scope: 规则读取顺序、实施协议、AI 协作约束、模块激活触发�
 
 1. `00_System_Prompt/identity.md`
 2. `00_System_Prompt/logic-protocol.md`
-3. `20_Workflow_Lifecycle/`
-4. `30_Quality_Gate/`
+3. `00_System_Prompt/presentation-protocol.md`（对话层方案 / 分析 / 选项输出的呈现协议）
+4. `20_Workflow_Lifecycle/`
+5. `30_Quality_Gate/`
 
 当任务进入长链路、多阶段推进、角色切换或上下文压缩前，应补充读取 `40_Context_Management/`。
 
