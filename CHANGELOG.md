@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.2.0] - 2026-06-22
+
+向后兼容能力新增版。聚合 ITER-0011（自 v1.1.0 起新收口），按 semver 为 MINOR。
+
+### 本版新增
+
+- **对话输出呈现协议（ITER-0011）**：新增 `Coder/00_System_Prompt/presentation-protocol.md`，把 P1-P3 方案 / 分析 / 选项类对话输出统一为「结论先行 + 统一标号 + 选项表格 + 结尾下一步」，默认固定 + 弹性、仅管较长输出；接线至 `identity` / `logic-protocol` / `rule-card`（高注意力区）/ `Coder/README`，与 `delivery-summary §8`（P5 交付摘要散文化）分场景共存。详见 `deliveries/ITER-0011-presentation-protocol.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.2.0]: 自 v1.1.0 起聚合 ITER-0011
+
 ## [1.1.0] - 2026-06-22
 
 向后兼容能力新增版。聚合 ITER-0008 ~ ITER-0010——三个迭代均为向后兼容新增（无破坏性变更），按 semver 取区间最高级别为 MINOR。
