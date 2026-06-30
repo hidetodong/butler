@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0014 交付总结 · 版本升级 SOP 化：迁移配方台账 + butler-upgrade 改执行器</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.danger { background: var(--warn-soft); color: var(--warn); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>版本升级 SOP 化：迁移配方台账 + butler-upgrade 改执行器</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0014</span>
+        <span class="chip level">迭代交付（小版本累积）</span>
+        <span class="chip date">收口 2026-06-30</span>
+        <span class="chip danger">⚠️ 危险模式自治</span>
+      </div>
+    </header>
+
+    <section class="block risks">
+      <h2>危险模式自治披露</h2>
+      <ul>
+        <li>本迭代在 <code>/dangerous</code> 无人值守自治下完成：P2/P3 的 ACK 由模型自审门替代（未经用户逐阶段确认）。</li>
+        <li>P5 经强制完整审查 + 独立复核（另起一个不带本会话上下文的子 agent 逐 AC 裁决）；查出的实质 bug 已修复，详见下方验证摘要。</li>
+        <li>完整自治决策轨迹见 <code>.ai/RUN_LOG.md</code>；回滚锚点为 git（改动均未提交、新增文件未跟踪）。</li>
+      </ul>
+    </section>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>你反馈：每次在不同项目跑 <code>butler-upgrade</code>，模型都得现场比对"目标项目 vs butler 最新仓"、自己拼升级流程——同样的活每次重做、还因人而异。</li>
+        <li>这次把版本升级 SOP 化：每次切版顺手记一份"这一版升级要做哪几步"的<strong>迁移配方</strong>，升级时不再现推、直接照配方按序执行。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新增迁移配方规范</strong> <code>migration-schema.md</code>：定义配方放哪（仓库根 <code>migrations/vX.Y.Z.md</code>）、每份必含什么、六个 typed 操作标签（<code>[rename]</code> / <code>[add-field]</code> / <code>[regen-claude]</code> / <code>[sync-hooks]</code> / <code>[restamp]</code> / <code>[no-op]</code>），以及"幂等 + 先校验起始态 + 漂移就停下问人"的契约。</li>
+        <li><strong>回填三份配方</strong> <code>migrations/v1.1.0.md</code> / <code>v1.2.0.md</code> / <code>v1.3.0.md</code>：如实列出每个历史版本对已部署项目要做的步骤，台账不再是空的。</li>
+        <li><strong><code>butler-upgrade.md</code> 改成执行器</strong>：按目标版本戳收集区间配方排队、按序幂等应用；内容 diff 从"主驱动"降为"每步起始态校验 + 冲突兜底"；顺带补上一直缺的 <code>.claude/hooks/</code> 副本同步（覆盖 <code>mcv-deployment §5.4</code> 缺口）。无版本戳老项目仍走全量首次升级兜底。</li>
+        <li><strong><code>versioning-schema.md §5</code></strong> 切版流程加一步"写迁移配方"（无影响也要写 <code>[no-op]</code>），让配方不漏记。</li>
+        <li><code>Coder/README.md</code> 三处注册新规范。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>以后升级：模型从"现场想流程"变成"照配方执行"，跨项目、跨模型结果一致、可审计。</li>
+        <li>升级现在会一并把目标项目的 hook 副本同步到最新（以前不会，副本会悄悄漂）。</li>
+        <li>对已手工改过的项目仍安全：每步先校验起始态，对不上就停下报告、等你决定，不盲目按版本号套。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>migration-schema.md</code>、<code>migrations/</code> 目录 + 三份配方。</li>
+        <li>改：<code>butler-upgrade.md</code>、<code>versioning-schema.md</code>、<code>Coder/README.md</code>。</li>
+        <li>没碰：hook 代码、四件套字段结构、lifecycle 分流、对话层规则、历史 <code>deliveries/</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>AC1–AC11 全部满足。<strong>独立复核查出一个实质 bug</strong>：<code>v1.1.0</code> 配方漏了 <code>[regen-claude]</code>——经 <code>git log -- templates/rule-card.md</code> 证实 ITER-0008/0009/0010 都改过 rule-card，配方必须重生成目标 CLAUDE.md 内联规则卡。已补步修复，并在 <code>migration-schema.md</code> 加"漏判防线"判据防复发。</li>
+        <li>本仓 CLAUDE.md 五约束自检通过；新文件已注册、模板单一来源未破。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>配方靠"切版时记录"规则纪律 + 漏判防线维持，无 hook 机械强制——降低漏记概率但不根除（与版本治理本身"无 hook 强制"同源）。</li>
+        <li>本迭代<strong>未切版</strong>（切版属用户门控动作）。建议发为 v1.4.0 并按新规则写 <code>migrations/v1.4.0.md</code> 做 dogfood：本迭代未动 rule-card，该配方应为 <code>[no-op]</code> + <code>[restamp]</code>，正好演示 <code>[no-op]</code> 场景。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0014/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code></li>
+        <li><code>.ai/RUN_LOG.md</code>（危险模式自治审计轨迹）</li>
+        <li>新增规则：<code>Coder/20_Workflow_Lifecycle/migration-schema.md</code></li>
+        <li>配方台账：<code>migrations/v1.1.0.md</code> / <code>v1.2.0.md</code> / <code>v1.3.0.md</code></li>
+        <li>改动规则：<code>Coder/20_Workflow_Lifecycle/butler-upgrade.md</code>、<code>versioning-schema.md</code>、<code>Coder/README.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

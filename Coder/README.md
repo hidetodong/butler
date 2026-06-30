@@ -52,6 +52,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     iteration-schema.md
     milestone-schema.md
     versioning-schema.md
+    migration-schema.md
     local-constraints-schema.md
     delivery-summary.md
     progressive-handoff.md
@@ -120,7 +121,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；部署时在项目根创建 `.ai/`、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
-- `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）。
+- `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）；版本感知，以 `migrations/` 下的迁移配方为主干、按版本区间收集后按序幂等执行（不再现场推导差异），并随升级同步 `.claude/hooks/` 副本。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `30_Quality_Gate/correction-contract.md`（纠错收口契约）是 P4 默认常驻的底线纪律——修到真过、探测绑 AC、禁止降级修复、诚实停，无需触发、每次迭代生效。
 - `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 只在显式 `/loop` 指令或语义触发下启用，是 P4 纠错的高强度升档（叠在常驻纠错收口契约之上），负责死磕式闭环与定量熔断规则。
@@ -131,6 +132,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
 - `20_Workflow_Lifecycle/milestone-schema.md` 定义里程碑号分配、`.ai/MILESTONES.md` 台账字段、`.ai/MILESTONE.md` 范围评估/理解阐释/拆分路线图产物、启动信号与版本级交付纪律；里程碑是套在迭代之上、松耦合可选、方向性不冻结的大版本范围单元。录入支持两通道（对话 / 项目根 `origin/` 收件箱的原始概念文件），由模型据 brief 合成概述与路线图（§6.4）；显式命令 `/milestone`（开启录入）与 `/milestone status`（只读看板）与语义触发等价（§6.5）。
 - `20_Workflow_Lifecycle/versioning-schema.md` 定义 butler 规则仓库的硬版本概念：仓库根 `VERSION` 为版本号机器 SSOT（`MAJOR.MINOR.PATCH`）、规则仓口径的 semver 语义（MAJOR 破坏性 / MINOR 兼容新增 / PATCH 澄清修订）、`CHANGELOG.md` 发布史与 ITER 台账的分工（发布聚合迭代、只引用不复述）、切版流程与 git tag `vX.Y.Z` 约定、部署版本戳（`{{BUTLER_VERSION}}`）与升级版本 gap（版本号为辅、内容差异为主）。
+- `20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式：每个发布版一份 `migrations/vX.Y.Z.md`，用 typed 步骤（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版要做的幂等动作；切版时产出（`versioning-schema.md §5` 必做步），升级时由 `butler-upgrade.md` 按版本区间收集执行。配方落仓库根 `migrations/`（与 `deliveries/`、`CHANGELOG.md` 同级的发布元数据）。
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的字段与最小模板，在基地车部署的本地化适配步骤产出；它也是**项目级 butler 功能开关的统一持久落点**——「Butler 功能开关」段（`dangerous` / `independent_review` 默认 off、`preference` 默认 on）承载持久模式状态，AI 会话起始读取并据此执行、命令回写或用户手改（§4.1）；其中 `preference` 是 **per-project 抑制开关**（本项目采集闸），consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
