@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.4.0] - 2026-06-30
+
+向后兼容能力新增版。聚合 ITER-0014（自 v1.3.0 起新收口），向后兼容新增，按 semver 为 MINOR。
+
+### 本版新增
+
+- **版本升级 SOP 化（ITER-0014）**：新增 `Coder/20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式——配方落仓库根 `migrations/vX.Y.Z.md`、用 typed 标签（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版的幂等步骤，附"先校验起始态、漂移退回 ACK"契约，并回填 `migrations/v1.1.0 ~ v1.3.0`；`butler-upgrade.md` 由"现场推导差异"改为"按版本区间收集配方、按序幂等执行"（含 `.claude/hooks/` 副本同步，补 `mcv-deployment.md §5.4` 缺口），无版本戳老项目保留全量首次升级兜底；`versioning-schema.md §5` 切版流程新增"写迁移配方"必做步（无影响也写 `[no-op]`）。本迭代在 `/dangerous` 危险模式下自治完成，P5 独立复核查出并修复 v1.1.0 漏 `[regen-claude]`。详见 `deliveries/ITER-0014-migration-ledger.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.4.0]: 自 v1.3.0 起聚合 ITER-0014
+
 ## [1.3.0] - 2026-06-30
 
 向后兼容能力新增版。聚合 ITER-0012 ~ ITER-0013（自 v1.2.0 起新收口），两个迭代均为向后兼容新增，按 semver 为 MINOR。
