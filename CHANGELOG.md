@@ -4,6 +4,19 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.3.0] - 2026-06-30
+
+向后兼容能力新增版。聚合 ITER-0012 ~ ITER-0013（自 v1.2.0 起新收口），两个迭代均为向后兼容新增，按 semver 为 MINOR。
+
+### 本版新增
+
+- **四件套讲人话 + 反啰嗦（ITER-0012）**：新增 `Coder/20_Workflow_Lifecycle/artifact-style.md` 作为四件套字段正文书写口径单一来源——正文须让不懂内部机制者也读得懂（反黑话）、一律 bullet / 嵌套 ≤2 / 不复述 / 宁缺毋滥（反注水），VERIFY 用 `[x] ACn ✓ 一句话证据` 紧凑式；接线四 schema 编写规则 + `rule-card` + `Coder/README`。字段结构未动。详见 `deliveries/ITER-0012-artifact-plain-language.md`。
+- **CONCEPT 分层 / 渐进展开（ITER-0013）**：`artifact-style.md` 增「渐进展开与分层」节（顶部一句话意图 + 一行一意 / 拆箭头链 + 承重引用首次解释 + 散文层与精度层不串味 + 不啰嗦 ≠ 极限压缩）；`concept-schema` 模板顶部增「一句话」块（散文意图速览，与 `Goal` 分工、向后兼容 legacy）。把「对人友好 / 对 AI 友好」统一为同一目标，唯一偏差用分层吸收。详见 `deliveries/ITER-0013-concept-layering.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.3.0]: 自 v1.2.0 起聚合 ITER-0012 ~ ITER-0013
+
 ## [1.2.0] - 2026-06-22
 
 向后兼容能力新增版。聚合 ITER-0011（自 v1.1.0 起新收口），按 semver 为 MINOR。
