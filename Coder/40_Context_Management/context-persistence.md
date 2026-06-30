@@ -100,7 +100,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 蒸馏规则：
 
-- `02_SESSION_HANDOFF.md` 的格式与字段约束以 `handoff-spec.md` 为准
+- `02_SESSION_HANDOFF.md` 的格式与字段约束以 `handoff-spec.md` 为准，模板骨架见 `handoff-spec.md` §4，具体生成步骤见 `handoff-spec.md` §5
 - handoff 是**入口**而非自足包——通过状态指针引用完整 context
 - 简单任务中 handoff 可自足，无需跟指针
 - 复杂任务中 handoff 给方向，状态文件给细节
