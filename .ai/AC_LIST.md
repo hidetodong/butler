@@ -3,28 +3,31 @@
 ACK 日期: 2026-06-30
 ---
 
-> 补领入账：本迭代内容已先行实现于工作树，受用户监督决定正式归档为 ITER-0015；ACK 由用户「补领正式入账」指令授予，非危险模式自审。
+> P2 由用户显式 ACK（真实确认，非危险模式自审）；本迭代自 P3 起在 `/dangerous` 危险模式下自治推进，P3/P5 产物留危险横幅与 `RUN_LOG.md` 审计。
 
 # Goal
 
-- 把 handoff 格式契约从「只有字段」补全到「字段 + 骨架 + 生成流程」，让 `02_SESSION_HANDOFF.md` 结构可复现、蒸馏可照做。
+- 轻量引入 tasks 能力（方案 A）：强化 TECH_PLAN.Execution Steps 为"可勾选 / 绑 AC / 可标依赖并行"的任务清单 + task-state 镜像活进度，不破坏四件套与 AC 脊柱。
 
 # Constraints
 
-- 不改 §3 必填字段表语义、不改四件套字段、不碰 hook、frontmatter scope 不变。
-- 不与 context-persistence 的「何时写 / 写什么 / 写到哪」职责重叠。
+- 零新增产物、零 hook 改动、零四件套字段结构变更。
+- AC 仍是验收 / 回填脊柱；tasks 仅执行辅助。
+- 单一存放：任务清单只在 Execution Steps，活态只在 task-state，不开第三处（不双重记账）。
 
 # Acceptance Checklist
 
-- [x] AC1: handoff-spec 新增 §4 模板骨架——H1 固定 `# Session Handoff` + 6 个 H2（任务断点 / 关键决策摘要 / 环境脏点 / 已知风险 / 唤醒指令 / 状态指针），顺序与 §3 字段表一致，含占位注释与「H1 不得改写 / H2 顺序固定 / 占位注释落盘须替换」三条模板规则。
-- [x] AC2: handoff-spec 新增 §5 生成流程——5 个不得跳步的步骤（来源确认 / 字段映射 / 长度自检 / 完整性自检 / 落盘）+ 反模式清单（禁写思考过程、禁复制大段日志、禁罗列已完成清单、禁写成对人交付总结）。
-- [x] AC3: §4/§5 与既有约束自洽——H2 顺序对齐 §3；§5 长度自检 ≤500 tokens 对齐 §2；「状态指针」简单任务可省对齐 context-persistence §6。
-- [x] AC4: context-persistence §6 蒸馏规则指向新增段——明确「模板骨架见 handoff-spec §4、生成步骤见 §5」。
-- [x] AC5: 不越界——未改 §3 字段表语义、未改四件套字段、未碰 hook、handoff-spec frontmatter scope 不变。
+- [ ] AC1: tech-plan-schema `Execution Steps` 字段口径强化——模板与编写规则明确：① 列为可勾选任务项 ② 每项标注所服务的 AC ③ 可选标注依赖顺序与可并行项（`[P]`）。
+- [ ] AC2: tech-plan-schema 明确"展开粒度随迭代大小"——大迭代（多文件 / 可并行 / TDD）展开到任务级；小 / 简化迭代保持粗粒度实现顺序即可，不强制细拆（proportionate，避免过度工程）。
+- [ ] AC3: context-persistence 运行时增量补一条——当 TECH_PLAN 含任务清单时，P4 须在 task-state.md 镜像任务完成态（已完成 / 进行中 / 下一条）作为活进度板；并显式声明 AC 仍是验收脊柱、task-state 不取代 AC 回填。
+- [ ] AC4: artifact-style 增补任务清单书写口径——一行一任务、动词开头可执行、绑 AC、标记克制；明确"不过度拆分小迭代"。
+- [ ] AC5: 不双重记账自证——三处文档明确职责切分：Execution Steps = 计划态任务清单（P3 写），task-state = 运行态镜像（P4 更），AC = 验收脊柱（P2 定 / P5 回填）；无新增产物、无新增 hook 门禁。
+- [ ] AC6: 不破坏不变量——四件套字段结构未改、hook 未碰、lifecycle 分流未动、rule-card 强制约束集未扩（若无新增硬约束则 rule-card 不动）；本仓 CLAUDE.md 五约束自检通过。
 
 # Verification Method
 
-- AC1/AC2: 读 handoff-spec §4/§5，核对骨架字段齐全、H2 顺序、模板规则、5 步序列与反模式。
-- AC3: 交叉比对 §4 H2 顺序 vs §3 字段表、§5 长度上限 vs §2、状态指针可省 vs context-persistence §6。
-- AC4: 读 context-persistence §6，确认指针句存在。
-- AC5: git diff 确认仅 §4/§5 新增 + §6 一行；grep 确认 §3 字段表与 frontmatter 未变。
+- AC1 / AC2: 读 tech-plan-schema，核对 Execution Steps 模板含勾选 / 绑 AC / 依赖并行标注 + 粒度随迭代大小的说明。
+- AC3: 读 context-persistence 运行时增量，确认任务镜像条目 + "AC 仍是脊柱"声明。
+- AC4: 读 artifact-style，确认任务清单书写口径段。
+- AC5: 通读三处，确认职责切分表述无歧义、无第三处记账。
+- AC6: git diff 确认未碰四件套字段 / hook / lifecycle；grep rule-card 确认强制约束集未扩；本仓五约束自检。

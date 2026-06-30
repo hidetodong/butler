@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0016 交付总结 · tasks 步骤轻量引入（方案 A）：强化 Execution Steps 为可勾选任务清单</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>tasks 步骤轻量引入（方案 A）：强化 Execution Steps 为可勾选任务清单</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0016</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-30</span>
+      </div>
+    </header>
+
+    <section class="block risks">
+      <h2>危险模式自治披露</h2>
+      <ul>
+        <li>P2 由用户<strong>显式 ACK</strong>（真实确认 6 条 AC + 改动预览），非危险模式自审。</li>
+        <li>自 P3 起在 <code>/dangerous</code> 自治下推进：P3 的 ACK 由模型自审门替代（未经用户逐阶段确认）。</li>
+        <li>P5 经强制完整审查 + 独立复核（另起一个不带本会话上下文的子 agent 逐 AC 裁决）：6/6 confirm、无 Must Fix。</li>
+        <li>完整自治决策轨迹见 <code>.ai/RUN_LOG.md</code>（ITER-0016 段）；回滚锚点为 git <code>2e7c9ec</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>参照 SDD（规范驱动开发）Specify → Plan → <strong>Tasks</strong> → Implement 四步评估：butler 缺一个独立的 Tasks（任务分解）步。评估结论是 butler 本就是<strong>验收导向</strong>（AC 贯穿 P2→P4→P5），不需要 SDD 那种强制的第五件套。</li>
+        <li>唯一真实缺口：完整路径的大迭代缺一份"细粒度、有序、可勾选、活的"执行清单。本迭代用方案 A 轻量补上——只强化 TECH_PLAN 既有的 <code>Execution Steps</code> 字段，不新增产物、不动 hook、不破坏四件套。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>tech-plan-schema.md</code>：§3 模板的 <code>Execution Steps</code> 块从"实现顺序 / 子任务拆分"升级为可勾选任务清单样例（<code>[ ] T&lt;n&gt; 动作 → ACn</code>，可标"依赖 T&lt;m&gt;"与可并行 <code>[P]</code>，编号可选）；§4 补 4 条编写规则（绑 AC / 粒度随迭代大小 / 计划态单一存放 + task-state 镜像 / 书写口径指针引用 artifact-style）。</li>
+        <li><code>context-persistence.md</code>：§4 运行时增量最小记录集合补一条——TECH_PLAN 含任务清单时，按任务粒度镜像完成态（已完成 / 进行中 / 下一条）作 P4 活进度板；记录原则补一条——任务镜像不取代验收脊柱，AC 仍以 AC 为单位。</li>
+        <li><code>artifact-style.md</code>：新增 §5「Execution Steps 任务清单书写」6 条口径（一行一任务 / 绑 AC / 标记克制 / 编号可选 / 不过度拆分 / 计划态不反复改勾），原 §5–§7 顺延为 §6–§8。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>以后完整路径的大迭代，TECH_PLAN 的 <code>Execution Steps</code> 写成可勾选、绑 AC、可标依赖 / 并行的任务清单；P4 执行进度镜像到 <code>task-state.md</code>，断点续接看得见"做到哪条任务"。</li>
+        <li>小 / 简化迭代不受影响：粒度随迭代大小，保持粗粒度实现顺序即可，不强制细拆。</li>
+        <li>验收脊柱不变：AC 仍是 P2→P4→P5 的验收单位，tasks 只是执行侧投影；不引入双重记账——计划态在 TECH_PLAN、运行态在 task-state、验收在 AC，三处职责切分。</li>
+        <li>向后兼容：纯字段口径强化，没动四件套字段结构、没碰 hook，老迭代不受影响。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则层：改 <code>Coder/20_Workflow_Lifecycle/tech-plan-schema.md</code>、<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>、<code>Coder/40_Context_Management/context-persistence.md</code>，共 3 文件。</li>
+        <li>没碰：四件套字段结构、hook、lifecycle 分流、AC / 验收脊柱、rule-card、README、迭代 / 里程碑 / 版本机制。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>6 条验收项全部满足（逐项见 VERIFY_REPORT）：Execution Steps 口径强化（可勾选 + 绑 AC + 可标依赖并行）、粒度随迭代大小、task-state 镜像 + AC 脊柱声明、artifact-style 书写口径、三处职责切分不双重记账、不破坏不变量 + 五约束。</li>
+        <li>独立复核（dangerous §7.3）：fresh-context 子 agent spec-only 逐 AC + 多维审查，6/6 confirm、零 refute、无 Must Fix、无 Should Fix，结论可收口；2 条 Nit（模板编号示例、VERIFY 当时占位）已就地消解 / 补齐。</li>
+        <li>git diff 确认改动集中 3 文件；四件套字段 / hook / lifecycle / rule-card / README 零改动；本仓五约束自检通过。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>任务清单与 task-state 镜像靠 AI 读取遵守、无 hook 机械强制（同 artifact-style / 分层既有取舍，可接受）。</li>
+        <li>本轮<strong>未切版</strong>；ITER-0015 + ITER-0016 累积，可在用户门控下发为 v1.5.0（MINOR）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0016/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code></li>
+        <li><code>.ai/RUN_LOG.md</code>（危险模式自治审计轨迹，ITER-0016 段）</li>
+        <li>改动规则：<code>Coder/20_Workflow_Lifecycle/tech-plan-schema.md</code>、<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>、<code>Coder/40_Context_Management/context-persistence.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
