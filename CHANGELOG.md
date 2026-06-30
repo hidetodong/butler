@@ -4,6 +4,19 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.5.0] - 2026-06-30
+
+向后兼容能力新增版。聚合 ITER-0015 ~ ITER-0016（自 v1.4.0 起新收口），两个迭代均为向后兼容的规则正文新增 / 既有字段口径强化，无破坏性变更，按 semver 取区间最高级别为 MINOR。
+
+### 本版新增
+
+- **handoff 格式契约补全（ITER-0015）**：`Coder/40_Context_Management/handoff-spec.md` 新增 §4 模板骨架（H1 锁死 `# Session Handoff` + 6 个固定顺序 H2 + 模板规则）与 §5 蒸馏生成流程（5 步不得跳步 + 4 条反模式）；`context-persistence.md §6` 补一行指针指向骨架与流程。补全此前"有字段、无骨架、无步骤"的半截契约，字段语义与 hook 未动。详见 `deliveries/ITER-0015-handoff-template-and-flow.md`。
+- **tasks 步骤轻量引入 · 方案 A（ITER-0016）**：参照 SDD（Specify → Plan → Tasks → Implement）评估后不引入强制第五件套，而是强化 `tech-plan-schema.md` 既有 `Execution Steps` 字段——升级为可勾选 / 绑 AC / 可标依赖与并行（`[P]`）的任务清单，粒度随迭代大小；`context-persistence.md §4` 补 `task-state.md` 任务镜像作 P4 活进度板并声明 AC 仍是验收脊柱；`artifact-style.md` 新增 §5 任务清单书写口径。四件套字段结构 / hook / rule-card / README 零改动。本迭代 P2 用户 ACK、自 P3 起 `/dangerous` 自治，P5 独立复核 6/6 confirm。详见 `deliveries/ITER-0016-tasks-step-lite.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.5.0]: 自 v1.4.0 起聚合 ITER-0015 ~ ITER-0016
+
 ## [1.4.0] - 2026-06-30
 
 向后兼容能力新增版。聚合 ITER-0014（自 v1.3.0 起新收口），向后兼容新增，按 semver 为 MINOR。
