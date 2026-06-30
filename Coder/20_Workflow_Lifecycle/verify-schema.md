@@ -57,6 +57,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - 验证方式应尽量具体到命令、检查动作或人工确认口径。
 - `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
+- 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）；AC 回填用紧凑式 `[x] ACn ✓ 一句话证据`，不重抄 AC 原文。
 - `Independent Review` 为可选字段：仅当本迭代跑过独立复核（手动 `/review` 或项目 `Review Policy: independent_review: on`）时回填；未跑则可整段省略。环境不支持 fresh-context 子 agent 而未能独立复核时，须按 `60_Extension_CodeReview/review-engine.md` §6.4 如实标注"未执行"并落到 `Remaining Risks`，不得冒称已独立复核。
 
 ## 5. 与执行流程的关系

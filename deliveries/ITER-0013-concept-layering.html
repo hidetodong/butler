@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0013 交付总结 · CONCEPT 分层 / 渐进展开：同时对人和 AI 友好</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>CONCEPT 分层 / 渐进展开：同时对人和 AI 友好</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0013</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-30</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>上一轮（ITER-0012）治好了"臃肿 + 黑话填充"，但还有反过来一种病没治：产物（尤其 CONCEPT）"太挤 + 太省 + 没铺台阶"——信息很精确却糊成一团，人读着累、AI 也得现拆关系才能动手。</li>
+        <li>这次补一条"分层 / 渐进展开"的写法，让同一份文档<strong>既能让人 15 秒看懂要干嘛、又能让 AI 稳定照着干</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>artifact-style.md</code> 新增一节「渐进展开与分层」，五条原则：
+          <ul>
+            <li>顶部先放一句话意图（让冷读者先抓意图再看细节）。</li>
+            <li>一行一个意思，多步列成步骤、别用箭头链。</li>
+            <li>承重引用第一次出现给一句话解释——不止 butler 黑话，也含项目里的关键符号 / 文件 / 表。</li>
+            <li>不串层：散文层不夹密集符号、精确引用单独成一层。</li>
+            <li>明确"不啰嗦 ≠ 极限压缩"，防止上一轮的反啰嗦被误读成"再压一点"。</li>
+            <li>附了一个分层 CONCEPT 骨架样例 + 一个箭头链反例，可照抄。</li>
+          </ul>
+        </li>
+        <li><code>concept-schema.md</code> 模板顶部加了「一句话」块，列入必填字段，并写清它和 <code>Goal</code> 的分工（一句话是散文意图速览，Goal 是结构化目标项）。</li>
+        <li>rule-card 和 README 同步收录这条口径。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>以后新写的 CONCEPT 顶部会有一句话意图，先讲清"干嘛 + 为什么"，不用从一堆目标里自己拼。</li>
+        <li>"对人友好"和"对 AI 友好"被明确成同一件事：唯一偏差（AI 更需要精确引用）用"分层"吸收——精度单独成层，人不看也懂意图、AI 要用直接拿。</li>
+        <li>向后兼容：老 CONCEPT 没有"一句话"块按 legacy 放行；hook 不看文档内部结构，不受影响。</li>
+        <li>本迭代自己的 CONCEPT 就是按新结构写的，可当样板。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则层：改 <code>artifact-style.md</code>、<code>concept-schema.md</code>、rule-card、README。</li>
+        <li>没碰：其它三件套字段结构、lifecycle 分流格式、对话层规则、hook、迭代 / 里程碑 / 版本机制、历史产物。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>9 条验收项全部满足：新节五要点 + 骨架样例齐全、concept-schema 加块 + 必填 + legacy、rule-card / README 同步，grep 全中。</li>
+        <li>不冲突核对：ITER-0012 的 §2 / §3 原样保留，"不啰嗦 ≠ 极限压缩"已显式化解误读。</li>
+        <li>本迭代 CONCEPT 自身顶部带"一句话"层（dogfood）。本仓 CLAUDE.md 五约束自检通过。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>分层 / gist 靠 AI 读取并遵守，没有 hook 机械强制——同 ITER-0012，可接受。</li>
+        <li>"一句话"和 Goal 有写重的风险，用分工说明 + 样例兜底。</li>
+        <li>TECH_PLAN 是否也加一句话 gist：本轮没做，留将来。</li>
+        <li>本轮不切版，ITER-0012 + ITER-0013 一起累积到下次发布，预计 MINOR。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0013/CONCEPT.md</code></li>
+        <li><code>.ai/iterations/ITER-0013/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0013/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0013/VERIFY_REPORT.md</code></li>
+        <li>改动规则：<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>（§4 新增）、<code>Coder/20_Workflow_Lifecycle/concept-schema.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

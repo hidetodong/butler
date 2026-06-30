@@ -4,6 +4,8 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0013 | CONCEPT 分层 / 渐进展开：顶部一句话 + 一行一意 + 精度单独成层，同时对人和 AI 友好 | closed | 2026-06-30 | 2026-06-30 | — | deliveries/ITER-0013-concept-layering.md |
+| ITER-0012 | 四件套讲人话 + 反啰嗦：新增产物书写口径并接线四 schema / rule-card / README | closed | 2026-06-30 | 2026-06-30 | — | deliveries/ITER-0012-artifact-plain-language.md |
 | ITER-0011 | 对话输出呈现协议：方案/分析/选项统一为结论先行 + 标号统一 + 表格化（过程层，与 §8 交付摘要分工） | closed | 2026-06-22 | 2026-06-22 | — | deliveries/ITER-0011-presentation-protocol.md |
 | ITER-0010 | 交付总结增加固定格式 HTML 阅读视图：收口与 MD 并列产出、MD 仍为引用真源 | closed | 2026-06-20 | 2026-06-20 | — | deliveries/ITER-0010-delivery-html-view.md |
 | ITER-0009 | preference 接入项目级配置：local-constraints 增 per-project 抑制开关（外置仍为跨项目真源） | closed | 2026-06-19 | 2026-06-19 | — | deliveries/ITER-0009-preference-per-project-toggle.md |

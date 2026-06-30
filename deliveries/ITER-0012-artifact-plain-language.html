@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0012 交付总结 · 四件套讲人话 + 反啰嗦：新增产物书写口径</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>四件套讲人话 + 反啰嗦：新增产物书写口径</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0012</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-30</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）写出来的内容太像内部机器日志：堆满只有 butler 自己懂的黑话，还经常把一件事重述好几遍。</li>
+        <li>这次给它们补一条"内容怎么写"的纪律——讲人话、不啰嗦——但<strong>字段结构一字不动</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增一份书写口径 <code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>，定两条原则：
+          <ul>
+            <li><strong>讲人话</strong>：字段正文要让不懂 butler 内部机制的人也读得懂；能用大白话就别用黑话；真要指某个机制（如 schema、ack-frozen）就点名再加一句解释，不让读者自己猜。</li>
+            <li><strong>不啰嗦</strong>：一律 bullet、嵌套不超 2 层、不复述模板提示语和上一阶段已写过的内容、没有的字段就写"无"；升级信号只列名不加括号小作文；验证报告用 <code>[x] ACn ✓ 一句话证据</code> 不重抄原文。</li>
+            <li>附了两组取自真实历史产物的 before / after 对照，可直接照抄。</li>
+          </ul>
+        </li>
+        <li>把这条口径接到了四个 schema（各加一行指针引用，单一来源不重复）、浓缩规则卡 <code>rule-card.md</code>（AI 最先读到的地方）、以及 <code>Coder/README.md</code>（注册新文件）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>从此以后新产出的四件套会明显更像人话、更短，读起来不再像内部日志。</li>
+        <li>字段名、AC 编号、文件路径等结构锚点保持不变，产物链逐阶段读取不受影响；老项目不升级也能照常用（向后兼容）。</li>
+        <li>本迭代自己的四件套就是按新口径写的，可直接当样板对照。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则层：新增 1 个文件，改动四个 schema 的"编写规则"段、rule-card、README。</li>
+        <li>没碰：四件套字段结构、lifecycle 的分流行格式、对话层规则（presentation-protocol、delivery-summary §8）、hook 体系、迭代 / 里程碑 / 版本机制、历史已归档产物。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>10 条验收项全部满足：新文件六节齐全、四个 schema 与 rule-card、README 接线点 grep 全中。</li>
+        <li>dogfood 核对：本迭代四件套已无黑话 filler、无整段重述（反面词只出现在"举例说明它们"的地方）。</li>
+        <li>本仓 CLAUDE.md 五条编辑约束逐项自检通过。</li>
+        <li>详见验证报告与四件套（见下方引用）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>这条口径靠 AI 会话起始读取并遵守，没有 hook 机械强制——和 identity、presentation-protocol 一样，可接受。</li>
+        <li>"讲人话"和"必要的机制名"之间的边界靠语义判断，有一定模型自由度，用 before / after 例子兜底。</li>
+        <li>本轮不切版，ITER-0012 累积到下次发布，预计是 MINOR（新增可选规则、向后兼容）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0012/CONCEPT.md</code></li>
+        <li><code>.ai/iterations/ITER-0012/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0012/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0012/VERIFY_REPORT.md</code></li>
+        <li>新增规则：<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

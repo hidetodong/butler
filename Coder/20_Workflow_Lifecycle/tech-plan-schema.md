@@ -64,6 +64,7 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 - 若存在 active profiles，应写明其约束点；未命中时只按通用 SOP 与质量门禁设计。
 - 若 `.ai/references/` 下存在已处理的外部参考资料，必须在 `External References` 中列出，并在 `Interface / Contract` 和 `Design Decisions` 中标注哪些决策来源于参考资料。
 - 不把执行细节写成流水账，重点保留关键设计与实现边界。
+- 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）。
 
 ## 5. 与执行流程的关系
 

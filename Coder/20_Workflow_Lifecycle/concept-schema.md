@@ -13,12 +13,15 @@ scope: P1 Analysis 阶段的问题理解说明模板、字段约束与编写口�
 ## 2. 交付约定
 
 - 必须产出：`.ai/CONCEPT.md`
-- 必填字段：`Goal`、`Current Understanding`、`Constraints`、`Impact Scope`、`Project Type / Active Profiles`、`Open Questions`
+- 必填字段：`一句话`、`Goal`、`Current Understanding`、`Constraints`、`Impact Scope`、`Project Type / Active Profiles`、`Open Questions`（完整路径必填；`一句话` 在简化路径可选，老 CONCEPT 无此块按 legacy 放行）
 
 ## 3. 标准模板
 
 ```md
 > 分流: 完整 | 命中升级信号: <列出命中项> | YYYY-MM-DD
+
+# 一句话
+- 2-3 句白话说清这个迭代要干嘛、为什么；让冷读者先抓住意图再看下面的细节
 
 # Goal
 - 本次任务要解决什么问题
@@ -51,6 +54,8 @@ scope: P1 Analysis 阶段的问题理解说明模板、字段约束与编写口�
 - 约束、影响范围与待确认问题必须显式写出。
 - 若已识别到 profile，应在此处记录；若未识别到，不得强行套用领域规则。
 - 不记录失败尝试与冗长调查日志，只保留当前有效理解。
+- 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）；其中分流行的升级信号只列名、不加括号小作文。
+- 顶部 `一句话` 是散文意图速览（干嘛 + 为什么），与 `Goal`（结构化目标项）分工、不写重；分层 / 渐进展开口径见 `artifact-style.md` §4。
 
 ## 5. 与执行流程的关系
 

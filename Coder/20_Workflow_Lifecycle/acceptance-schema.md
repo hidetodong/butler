@@ -71,6 +71,7 @@ ACK 日期: —        # 置 ack-frozen 时填写
 - AC 不得混入未来愿景、长期规划或下一阶段任务。
 - 超出范围但相关的事项，应放进 `Out of Scope` 或 `Open Questions / Risks`。
 - 若存在已处理的外部参考资料（`.ai/references/`），必须在 `External References` 中列出，并标注哪些 AC 项源自该参考资料。
+- 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）。
 
 ## 6. 判定口径
 
