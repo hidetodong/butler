@@ -12,6 +12,8 @@ scope: 02_SESSION_HANDOFF.md 的唯一结构定义与字段约束
 
 `02_SESSION_HANDOFF.md` 是冷启动**入口**，不是自足包。它的目标是让新会话能**定向、开工、不踩雷**。完整 context 由状态文件承载，handoff 通过指针引用。
 
+其中项目的**状态全貌**由 `.ai/PROJECT.md` 承载（格式见 `project-digest-schema.md`）：handoff 给"此刻断点"、PROJECT.md 给"系统整体是什么"，二者互补不重叠，handoff 的状态指针可引用它。冷启动完整读序见 `context-persistence.md §6`。
+
 ## 2. 约束
 
 - 总长度 ≤ 500 Tokens

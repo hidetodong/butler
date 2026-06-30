@@ -100,7 +100,7 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 
 ### 5.1 CHANGELOG
 
-`CHANGELOG` 的主分片路径已**随迭代收口自动发生**：`01_CHANGELOG.md` 只承载当前活跃迭代的热数据，收口时其切片归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛（见 `iteration-schema.md` §5.5）。因此正常迭代化项目中，`CHANGELOG` 不会跨迭代无界累积，无需在本协议里再做体积分片。
+`CHANGELOG` 的主分片路径已**随迭代收口自动发生**：`01_CHANGELOG.md` 只承载当前活跃迭代的热数据，收口时其切片归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛（见 `iteration-schema.md` §5.5）。迭代化项目的 changelog 格式与语义以 `changelog-schema.md` 为准（严格 ADD/EDIT/DELETE 对象级变更流，非旧的"决策快照"）。因此正常迭代化项目中，`CHANGELOG` 不会跨迭代无界累积，无需在本协议里再做体积分片。
 
 体积分片在此**退化为兜底**，仅用于以下例外：
 

@@ -118,7 +118,7 @@ P4 执行阶段**直接复用 `55_Extension_ConvergenceLoop/convergence-loop-eng
 
 - 强制激活 `60_Extension_CodeReview/review-engine.md` 的**完整多维评审**（逻辑健壮性 / 可读性命名 / 性能 / 安全 / 已激活 profile 专项），而非精简自评；危险模式下**不允许**"跳过审查"。因全程无人把关，**建议**进一步升格为 §6 **独立复核**（fresh-context 子 agent，验证者≠模型自身）；环境不支持子 agent 时按其 §6.4 如实标注、不得冒称已独立。
 - **Must Fix 阻断收口**：存在 Must Fix 即不得收口、不得交付，必须先修复并对 Must Fix 定点复查通过；修复直接走 §6 的收敛闭环。
-- **Should Fix 必须留痕**：写入 `.ai/01_CHANGELOG.md` 或交付披露，不得静默丢弃。
+- **Should Fix 必须留痕**：记入 `.ai/VERIFY_REPORT.md` 的 `Remaining Risks` 并在交付披露，不得静默丢弃；不写入 `01_CHANGELOG.md`（对象级变更流，见 `20_Workflow_Lifecycle/changelog-schema.md`）。
 - 审查结论按 §7.1 记入审计轨迹并在交付总结披露。
 
 ## 8. 终止与交还

@@ -50,6 +50,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     verify-schema.md
     artifact-style.md
     iteration-schema.md
+    changelog-schema.md
     milestone-schema.md
     versioning-schema.md
     migration-schema.md
@@ -70,6 +71,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     context-persistence.md
     role-switch.md
     handoff-spec.md
+    project-digest-schema.md
 
   /50_Extension_Ideation
     ideation-engine.md
@@ -117,6 +119,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 
+冷启动 / clean-slate 重启时，先读项目 `.ai/PROJECT.md`（状态全貌、系统现在整体是什么）建立认知，再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节见 `40_Context_Management/context-persistence.md §6`。
+
 其中：
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；部署时在项目根创建 `.ai/`、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。
@@ -130,12 +134,14 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板。
 - `20_Workflow_Lifecycle/artifact-style.md` 定义四件套字段正文的通用书写口径（讲人话、反啰嗦、分层渐进展开——顶部一句话意图、一行一意、精度单独成层，同时对人和 AI 友好），与四个 schema 分工：schema 管填哪些字段、本文件管字段里的话怎么写；四个 schema 的编写规则均指针引用它（单一来源），rule-card 同步收录紧凑口径。
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
+- `20_Workflow_Lifecycle/changelog-schema.md` 定义 `.ai/01_CHANGELOG.md` 的格式契约：每迭代严格 ADD/EDIT/DELETE 对象级变更流（绑 AC、文件+章节级粒度、完整路径收口必产并归档），并厘清与 delivery / ITERATIONS / PROJECT 四产物分工。
 - `20_Workflow_Lifecycle/milestone-schema.md` 定义里程碑号分配、`.ai/MILESTONES.md` 台账字段、`.ai/MILESTONE.md` 范围评估/理解阐释/拆分路线图产物、启动信号与版本级交付纪律；里程碑是套在迭代之上、松耦合可选、方向性不冻结的大版本范围单元。录入支持两通道（对话 / 项目根 `origin/` 收件箱的原始概念文件），由模型据 brief 合成概述与路线图（§6.4）；显式命令 `/milestone`（开启录入）与 `/milestone status`（只读看板）与语义触发等价（§6.5）。
 - `20_Workflow_Lifecycle/versioning-schema.md` 定义 butler 规则仓库的硬版本概念：仓库根 `VERSION` 为版本号机器 SSOT（`MAJOR.MINOR.PATCH`）、规则仓口径的 semver 语义（MAJOR 破坏性 / MINOR 兼容新增 / PATCH 澄清修订）、`CHANGELOG.md` 发布史与 ITER 台账的分工（发布聚合迭代、只引用不复述）、切版流程与 git tag `vX.Y.Z` 约定、部署版本戳（`{{BUTLER_VERSION}}`）与升级版本 gap（版本号为辅、内容差异为主）。
 - `20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式：每个发布版一份 `migrations/vX.Y.Z.md`，用 typed 步骤（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版要做的幂等动作；切版时产出（`versioning-schema.md §5` 必做步），升级时由 `butler-upgrade.md` 按版本区间收集执行。配方落仓库根 `migrations/`（与 `deliveries/`、`CHANGELOG.md` 同级的发布元数据）。
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的字段与最小模板，在基地车部署的本地化适配步骤产出；它也是**项目级 butler 功能开关的统一持久落点**——「Butler 功能开关」段（`dangerous` / `independent_review` 默认 off、`preference` 默认 on）承载持久模式状态，AI 会话起始读取并据此执行、命令回写或用户手改（§4.1）；其中 `preference` 是 **per-project 抑制开关**（本项目采集闸），consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
+- `40_Context_Management/project-digest-schema.md` 定义 `.ai/PROJECT.md`（项目常驻全貌摘要、状态取向）的格式契约——字段、有界、指针化、收口前滚维护与四产物边界；它是冷启动第一读。
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认触发同上下文简要自评；**独立复核（opt-in·fresh-context 子 agent·验证者≠实现者）**由手动 `/review` 或项目 `.ai/local-constraints.md` 的 `Review Policy: independent_review: on` 触发，spec-only 输入逐 AC 独立核对作者断言（refute 即阻断收口）。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。

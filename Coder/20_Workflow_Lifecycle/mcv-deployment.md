@@ -40,8 +40,9 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 **运行态文件**（按需产生，随会话更新）：
 
 - `00_IDEATION.md`：`/ideation` 模式下的脑暴过程与中间结论；收敛后由 `CONCEPT.md` 承载进入 P2 的已确认结论。
-- `01_CHANGELOG.md`：记录经过确认的技术决策与需求增量，**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
+- `01_CHANGELOG.md`：记录本迭代的**对象级变更流**（严格 ADD/EDIT/DELETE、绑 AC，格式见 `changelog-schema.md`），**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
+- `PROJECT.md`：项目常驻全貌摘要（状态取向），冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`。**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。已部署的老项目由升级补建：新建 `.ai/PROJECT.md` 并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次（实际配方在 butler 切版时按 `versioning-schema §5` 写）。
 - `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。

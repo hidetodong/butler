@@ -101,7 +101,7 @@ Delivery Summary 不负责以下内容：
 - 不复制大段终端日志
 - 不替代 checkpoint
 - 不替代 `02_SESSION_HANDOFF.md`
-- 不替代 `.ai/CHANGELOG.md`、`BUG_LOG.md` 等运行态维护文件
+- 不替代 `.ai/01_CHANGELOG.md`（每迭代对象级 ADD/EDIT/DELETE 变更流，见 `changelog-schema.md`）、`BUG_LOG.md` 等运行态维护文件——交付总结写高层人话，细粒度变更让位 changelog，可引用不复述
 
 边界原则：
 

@@ -81,7 +81,7 @@ current: ITER-0002
 
 ### 4.4 编写规则
 
-- 台账只记结论性索引信息，不写迭代内的过程细节（过程细节归 `01_CHANGELOG.md` 与各迭代工作区）。
+- 台账只记结论性索引信息，不写迭代内的过程细节（迭代内的对象级变更记录归 `01_CHANGELOG.md`，格式见 `changelog-schema.md`；活产物在各迭代工作区）。
 - 每次开启 / 收口 / 废弃迭代，必须同步更新本表与 `current` 指针，二者不得不一致。
 - 台账长期增长后，可参考 `mcv-update.md` 把很早的已收口行做语义快照归档，但 `current` 与近期迭代必须留在热数据区。
 
@@ -117,10 +117,11 @@ current: ITER-0002
 ### 5.5 收口 (Close)
 
 - 时机：P5 达到可交付、可验收的闭环状态。
-- 动作（三步，缺一不可）：
-  1. 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；若本迭代 `01_CHANGELOG.md` 有内容，其当前迭代切片一并归档为 `iterations/ITER-NNNN/CHANGELOG.md`。
+- 动作（前三步必做、缺一不可；第四步按需）：
+  1. 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；完整路径迭代**必产** `01_CHANGELOG.md`（严格 ADD/EDIT/DELETE，格式见 `changelog-schema.md`），其当前迭代切片一并归档为 `iterations/ITER-NNNN/CHANGELOG.md`（简化路径可省）。
   2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`；全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据（已归档切片不再留在全局文件）。
+  4. **按需前滚 `.ai/PROJECT.md`**（条件步）：本迭代若改变了某条长期事实（架构 / 不变量 / 现行约束 / 长期欠债），更新对应字段；否则不动。多数迭代只动 0-2 行或不动；判据与格式见 `40_Context_Management/project-digest-schema.md §5`。
 - 收口后工作区四件套保留原位（作为最近一迭代的只读残影），直到下一迭代开启时被 §5.1 整体覆写；其权威副本以 `iterations/ITER-NNNN/` 为准。
 
 ### 5.6 废弃 (Abandon)

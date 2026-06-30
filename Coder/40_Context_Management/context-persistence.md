@@ -116,9 +116,21 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 3. 以 `02_SESSION_HANDOFF.md` 为入口重新开始
 4. 新入口优先读取最终结论，而不是旧日志
 
+### 冷启动读序
+
+冷启动 / clean-slate 重启时，按 状态 → 时间线 → 断点 → 代码 的顺序建立上下文：
+
+1. `.ai/PROJECT.md` —— 项目状态全貌（系统现在整体是什么、为何如此、长期约束与欠债），冷启动**第一读**；格式见 `project-digest-schema.md`。
+2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 变更流时间线，怎么一步步走到今天。
+3. `.ai/02_SESSION_HANDOFF.md` —— 当前任务断点（在做什么、卡在哪）。
+4. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
+
+PROJECT.md 与 handoff 互补：前者给"系统整体状态"、后者给"此刻断点"；缺 PROJECT.md 时新会话只能从一堆迭代 delta 倒推全貌（管中窥豹）。
+
 ## 7. 与其他规则的关系
 
 - 本规则负责"何时写、写什么、写到哪"。
 - `handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的格式契约。
+- `project-digest-schema.md` 负责 `.ai/PROJECT.md`（项目状态全貌、冷启动第一读）的格式契约；其前滚维护在收口步触发（`20_Workflow_Lifecycle/iteration-schema.md §5.5`）。
 - `20_Workflow_Lifecycle/progressive-handoff.md` 负责"长链路任务何时拆分与接力"。
 - `role-switch.md` 负责角色切换时的职责边界。

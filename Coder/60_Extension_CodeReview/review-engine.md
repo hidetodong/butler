@@ -68,7 +68,7 @@ review-engine 在以下情形激活：
 
 - 若存在 **Must Fix** 条目（含独立复核 refute 的 AC），AI 必须建议启动修复。若当前处于收敛闭环模式，直接进入下一轮迭代修复；否则询问用户是否激活 `/loop`。修复退回 P4，受 `30_Quality_Gate/correction-contract.md` 约束（修到真过、禁止降级修复）。
 - 修复完成后，应对 Must Fix 条目进行定点复查，不需要重跑全量审查。
-- 所有 Should Fix 条目应记录到 `.ai/01_CHANGELOG.md` 或反馈给用户，不得静默丢弃。
+- 所有 Should Fix 条目应记入 `.ai/VERIFY_REPORT.md` 的 `Remaining Risks`（并按需反馈用户），不得静默丢弃；不写入 `01_CHANGELOG.md`（那是对象级变更流，见 `20_Workflow_Lifecycle/changelog-schema.md`）。
 
 ## 5. P5 简要自评模式
 

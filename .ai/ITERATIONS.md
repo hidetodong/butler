@@ -1,9 +1,12 @@
 # 迭代台账
 
-current: none
+current: ITER-0019
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0019 | 收口门槛：执行门禁 hook（单 active 迭代不变量）+ 冷启动一致性自检探针 + 原子收口仪式 | active | 2026-06-30 | — | MILE-0001 | — |
+| ITER-0018 | 每迭代 changelog 正式化：01_CHANGELOG 重定义为严格 ADD/EDIT/DELETE 变更流 + 新 schema + 收编半成品 + Should-Fix 迁新家 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0018-changelog-formalization.md |
+| ITER-0017 | 新增 .ai/PROJECT.md 常驻项目摘要：冷启动全貌产物（状态取向）+ schema + 读序接线 + 收口前滚 + 部署种子 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0017-project-digest.md |
 | ITER-0016 | tasks 步骤轻量引入（方案 A）：强化 TECH_PLAN.Execution Steps 为可勾选任务清单 + task-state 镜像活进度 | closed | 2026-06-30 | 2026-06-30 | — | deliveries/ITER-0016-tasks-step-lite.md |
 | ITER-0015 | handoff 格式契约补全：固化 02_SESSION_HANDOFF 模板骨架 + 蒸馏生成流程（补领入账） | closed | 2026-06-30 | 2026-06-30 | — | deliveries/ITER-0015-handoff-template-and-flow.md |
 | ITER-0014 | 版本升级 SOP 化：新增结构化迁移配方台账 + butler-upgrade 改执行器（危险模式自治） | closed | 2026-06-30 | 2026-06-30 | — | deliveries/ITER-0014-migration-ledger.md |
