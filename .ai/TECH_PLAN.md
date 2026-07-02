@@ -1,41 +1,66 @@
-# TECH_PLAN — ITER-0024
+# TECH_PLAN — ITER-0025
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 §5.2 P3 设计自审门），未经用户确认（ITER-0024，2026-07-02）。
+> P3 经**用户显式 ACK**（2026-07-02）。ACK 后用户开启 **/dangerous 危险模式**，P4→P5→收口由模型无人值守自治推进（§7.2 回滚锚点 + §7.3 P5 升格完整审查 + §7.1 审计披露）。R5 = MILE-0002 收尾：部署侧调用文档 + 人类侧使用说明 + 真样例 dogfood。
 
 # Goal
 
-把 R3 交付自测桥接进 butler SOP：新增等待-回收-续跑闭环协议 `human-test-bridge.md`，定四态路由，接线 P5 / 纠错 / 无人降级，注册前滚，并机械跑通一遍证明协议可执行。
+- 支撑 AC1-AC9：给交付自测桥补"外面怎么用"——`mcv-deployment.md` 新增 butler 驻留工具调用节（AC1/AC2）、`HUMAN_GUIDE.md` 新增人测桥使用说明（AC3/AC4）、按外部调用形态真 dogfood 四态齐全回路（AC5/AC6）、样例固化为工具 fixture + README 指引（AC7）、注册确认（AC8）、收口前滚 + 里程碑收尾（AC9）。
+
+# Files / Modules to Change
+
+- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — 新增 §6「butler 驻留工具调用」（部署项目如何定位 + 调用桥），承接 §0 路径发现。
+- `HUMAN_GUIDE.md` — §5 扩展模式区新增「人测回环（交付自测桥）」小节，人类用户视角。
+- `tools/delivery-selftest/sample/manifest.sample.json` — 新增 dogfood 样例 fixture（四态齐全示例）。
+- `tools/delivery-selftest/README.md` — 「用法」后补一句"外部项目调用样例"指引，指向 sample。
+- `Coder/README.md` — 确认 mcv-deployment 描述仍准（§6 内嵌，无新文件依赖，按需微调描述）。
+- `.ai/PROJECT.md` — 收口前滚（tools 条 + 现行约束反映"桥可用且调用方式已文档化"）。
+- `.ai/MILESTONE.md` / `.ai/ITERATIONS.md` — 收口时台账翻转（原子仪式步③）。
+
+# Interface / Contract
+
+- **桥调用形态（对外契约，文档化不新造）**：`node $BUTLER/tools/delivery-selftest/bridge.js <manifest> [--out <results>] [--port N] [--no-open]`；输入/输出 JSON schema 与四态机器码以 `tools/delivery-selftest/README.md` 为真源，本迭代文档只引用。
+- **路径解析**：复用 `mcv-deployment §0` 的 `$BUTLER` 发现结果（`$BUTLER_PATH` → 全局 CLAUDE.md → 询问），不另造。
+- **落点约定**：目标项目 manifest/results 落本项目 `.ai/human-test/`（建议 gitignore），与四件套隔离——与 `human-test-bridge.md §3` 一致。
+
+# State / Boundary
+
+- 只加文档 + 样例 fixture + 一次 dogfood；**不改** `bridge.js`/`render.js` 代码、四态机器码、`human-test-bridge.md` SOP 语义、`dangerous-engine §7.4` 判据、四件套 schema、hook、P1-P5 状态机、根 CHANGELOG/VERSION。
+- §7.4（无人异步入账 + 准入闸）R2 已交付——本迭代只**交叉引用**，不在 mcv-deployment/HUMAN_GUIDE 里重定义无人语义。
+- dogfood 运行产物走临时路径（`/tmp` 或工作树临时目录），不入库；固化的 sample manifest 入库、results 不入库。
 
 # Design Decisions
 
-- **DD1 新协议落 `20_Workflow_Lifecycle/human-test-bridge.md`（AC1）**：它是 P5 的生命周期子流程（等待-回收-续跑），非质量门禁判据，故归 20_ 而非 30_。文件名与工具"交付自测桥"呼应。结构：§1 定位 / §2 触发条件 / §3 等待-回收-续跑闭环（五步）/ §4 四态路由 / §5 无人场次降级 / §6 调用形态 / §7 与其他规则关系。
-- **DD2 契约单一来源（AC2）**：manifest / results 字段 schema 只在 `tools/delivery-selftest/README.md`，协议引用不重抄；协议管"何时起、怎么等、怎么路由"，工具 README 管"传什么、回什么"。
-- **DD3 四态路由表 = 工具 README 镜像（AC3/AC4）**：协议 §4 路由表与工具 README 同机器码同动作（pass=收口 / fail=纠错 / defer=入账不阻塞 / skip=N/A），并补 SOP 侧动作（回填 VERIFY_REPORT / 进 correction-contract / 记 Remaining Risks+handoff）。两表并置比对确保不分叉。
-- **DD4 接线用文件名互引、增量追加（AC5/AC6/AC7）**：
-  - `verify-schema.md`：§4 编写规则加一条 bullet——人测道残余的回传闭环见 `human-test-bridge.md`（有人场次经桥四态回填；无人走 dangerous §7.4）。§4 不移位（护 changelog-schema 引用）。
-  - `testing-strategy.md §3`：人测道判定纪律末尾加一句——落人测道的残余，其回传闭环走 `human-test-bridge.md`。
-  - `correction-contract.md §3`：加一条关系 bullet——人测 `fail`（经桥回传）进本契约纠错闭环、备注当线索。
-  - `dangerous-engine.md §7.4`：加一句——交付自测桥属有人场次工具，无人值守下不起桥（否则永久阻塞），无人残余按本节准入闸处置；§8 注已有"待人不构成停止条件"，补指有人分支走 `human-test-bridge.md`。
-  - 均为增量，不 renumber、不移动既有小节。
-- **DD5 无人岔口双向锁死（AC7）**：桥协议 §5 明写"无人场次不起桥 → 走 dangerous §7.4"；dangerous §7.4 明写"桥属有人场次 → 无人不起桥"。两处互指，语义一致（有人=弹页面等人；无人=异步入账/准入闸）。
-- **DD6 调用形态只定协议、不做部署登记（AC1/Out）**：协议 §6 描述外部项目调用形态（butler 传 manifest 路径调 butler 驻留 `bridge.js`、不拷副本、`--out` 收 results），并标注"具体路径解析 / 部署注册 / HUMAN_GUIDE 登记留 R5"。避免与 R5 抢范围。
-- **DD7 落点隔离（AC9/风险 R3）**：约定运行期 manifest/results 落 `.ai/human-test/`（与四件套隔离、建议 gitignore）；机械验证用临时目录（`/tmp` 或工作树临时路径），产物不入库。
-- **DD8 机械验证复用桥、不新增工具代码（AC9/Constraints）**：写一次性样例 manifest，`run_in_background` 起 `bridge.js --no-open`，node/`curl` 程序化 POST 四态，断言 exit 0 + results.json 四态 + 路由分派。桥体代码不动；若暴露缺陷另记欠债。
+- **DD1 mcv-deployment 新增 §6 而非塞进 §5 Hook（AC1）**：驻留工具调用与 hook 注入是两件事（hook 拷进目标项目、驻留工具反之不拷）。独立成 §6「butler 驻留工具调用」更清晰，且为将来其他驻留工具留位。
+- **DD2 `tools/` 抽象为通用"butler 驻留工具"类别（Q2 定：采纳）**：§6 开头一句话定义类别（存 butler 仓、不拷进目标项目、目标项目传参调用、与 hook 副本相反），再具体举 delivery-selftest 桥的调用形态。轻量抽象，不过度工程。
+- **DD3 单一来源纪律（AC2）**：§6 不重抄 manifest/results 字段与四态码，只引用 `tools/delivery-selftest/README.md`（契约）+ `human-test-bridge.md`（下游语义）+ `dangerous-engine §7.4`（无人岔口）。三处文件名互引。
+- **DD4 HUMAN_GUIDE 落 §5 扩展区（AC3/AC4）**：人测桥是 P5 收口时按需触发的能力，与扩展模式（review/dangerous 等可选能力）同类，放 §5 末尾新小节；不动 §2 核心工作流表、不移既有节。措辞用"你会看到一个浏览器页面…点四态…提交后 AI 继续"，人类视角、非指令腔。
+- **DD5 样例 fixture 落 `tools/delivery-selftest/sample/`（Q1 定：采纳）**：跟工具走，README 与使用文档可直接引为示例，dogfood 与"使用样例"复用同一份。fixture 覆盖四态齐全（4 项，各一态）以同时满足 AC6。
+- **DD6 dogfood = 外部调用形态的机械闭环（AC5/AC6）**：模拟部署项目调用——起 `bridge.js sample/manifest.sample.json --no-open --port 0 --out <tmp>/results.json`（`run_in_background`）→ 解析监听端口 → 程序化 POST `/submit` 四态 payload → 断言桥 exit 0 自退 → 读 results.json 断言 summary 四态各≥1 → 按路由表打印 pass/fail/defer/skip 分派。真人点选层 R3 Playwright 已弱档覆盖，不重造；差异记 Remaining Risks。
+- **DD7 Coder/README 按需微调（AC8）**：mcv-deployment 已注册，本迭代只在其内部加 §6，不新增文件、不改读序 → 确认描述仍准即可，若 README 有"驻留工具"可提及处顺手补一句，避免隐式依赖。
+- **DD8 发布节奏延后（Q3 定）**：R5 收口只做原子仪式 + 提交，**不聚合切版**；MILE-0002 三路线项全 closed 后由用户拍板 v1.7.0 发布节奏（承 R4 口径）。
 
 # Execution Steps
 
-- [x] T1（AC1/AC2/AC3/AC4）：新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`（§1-§7，含四态路由表镜像工具 README、引用契约真源）。
-- [x] T2（AC5）：接线 `verify-schema.md` §4 + `testing-strategy.md §3`（增量追加、文件名互引、§4 不移位）。
-- [x] T3（AC6）：接线 `correction-contract.md §3`（人测 fail 进纠错闭环）。
-- [x] T4（AC7）：接线 `dangerous-engine.md §7.4/§8`（有人起桥 / 无人走准入闸，与桥协议双向一致）。
-- [x] T5（AC8）：注册 `Coder/README.md`（目录 + 文件说明）；改工具 `README.md`（R4 已完成 + 指向协议）；收录 `rule-card.md` 一句。
-- [x] T6（AC9）：机械跑通闭环——样例 manifest → 起桥（&/run_in_background）→ POST 四态 → 断言 exit 0（自退）+ results.json summary{pass:1,fail:1,defer:1,skip:1} + 路由分派 ASSERT PASS。
-- [x] T7：一致性对账——7 处新引用可解析、四态两表逐条一致、verify §4 未移位（changelog-schema §4 引用不破）、dangerous §7.4↔协议 §5 双向指向。
-- [ ] T8：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC + 一致性 + dogfood 可读性）+ 原子收口五步（含 PROJECT 前滚）。
+- [ ] T1（AC5/AC6/AC7）：写 `tools/delivery-selftest/sample/manifest.sample.json`（四态齐全 4 项，贴近真实 P5 残余）→ 先落样例，dogfood 与文档共用。
+- [ ] T2（AC5/AC6）：真 dogfood——`run_in_background` 起 `bridge.js sample --no-open --port 0 --out /tmp/...results.json` → 程序化 POST 四态 → 断言 exit 0 + results summary 四态各≥1 + 路由分派一致；证据留待回填 VERIFY。
+- [ ] T3（AC1/AC2）：`mcv-deployment.md` 新增 §6「butler 驻留工具调用」（类别定义 + 桥调用形态 + `.ai/human-test/` 落点 + 引用三处真源 + 无人岔口指 §7.4）。
+- [ ] T4（AC3/AC4）：`HUMAN_GUIDE.md` §5 新增「人测回环（交付自测桥）」小节（何时弹页面 / 点四态+备注 / 提交即续跑 / 四态含义），位置自洽不移既有节。
+- [ ] T5（AC7）：`tools/delivery-selftest/README.md` 补"外部项目调用样例"指引指向 sample。
+- [ ] T6（AC8）：读 `Coder/README.md` 确认 mcv-deployment 描述仍准、无遗漏依赖（按需补"驻留工具"一句）。
+- [ ] T7（AC9）：原子收口五步——归档四件套+changelog切片 / 交付 md+html / 台账翻转+收编 01_CHANGELOG / PROJECT 前滚 / 收口自检 5 不变量；MILESTONE R5→closed + 范围演进。
 
-# Impact / Boundary
+# Verification Plan
 
-- 新增：`Coder/20_Workflow_Lifecycle/human-test-bridge.md`。
-- 改（接线）：`verify-schema.md` / `testing-strategy.md` / `correction-contract.md` / `dangerous-engine.md` / `Coder/README.md` / `templates/rule-card.md` / `tools/delivery-selftest/README.md` / `.ai/PROJECT.md`。
-- 不碰：桥工具代码、hook、四件套 schema、状态机、四态机器码、R5 部署 / dogfood。
-- 回滚：本轮 iteration-open 提交为锚点，P4 接线叠其上，`git reset` + 清未跟踪即回退。
+- AC1/AC2：读 mcv-deployment §6 确认三点齐全、不拷副本口径、引用真源无重抄、含无人岔口。
+- AC3/AC4：读 HUMAN_GUIDE 新小节确认覆盖四要点、人类视角、既有节未移位。
+- AC5/AC6：实跑 dogfood，断言退出码 0、results.json 四态齐全可解析、路由分派与协议表一致；证据（命令 + 输出摘要）入 VERIFY_REPORT。
+- AC7：确认 sample manifest 存在、为合法 manifest（dogfood 已解析过）、README 有指引。
+- AC8：读 Coder/README 确认描述准确。
+- AC9：读 PROJECT/MILESTONE 确认前滚 + 路线项状态；收口自检 5 不变量全绿。
+
+# Risks / Open Questions
+
+- R1（环境）：本环境无真人浏览器点选 → dogfood 以 headless 程序化提交证机械闭环；真人层 R3 Playwright 弱档覆盖。差异记 VERIFY Remaining Risks。
+- R2（一致性）：§6 路径发现须引用 §0 不分叉——T3 强制引用兜底。
+- R3（措辞）：HUMAN_GUIDE 易滑成指令腔 → T4 显式人类视角复核。
+- 回滚锚点：本轮 iteration-open（已落台账/四件套 draft）为基线；P4 文档+dogfood 叠其上，`git reset` + 清未跟踪即回退。标准模式无危险模式回滚锚点提交要求。
