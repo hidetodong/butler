@@ -1,37 +1,41 @@
-# TECH_PLAN — ITER-0023
+# TECH_PLAN — ITER-0024
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 §5.2 P3 设计自审门），未经用户确认（ITER-0023，2026-07-02）。
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过 §5.2 P3 设计自审门），未经用户确认（ITER-0024，2026-07-02）。
 
 # Goal
 
-造 MILE-0002 R3「交付自测」桥：Node 零依赖工具，manifest JSON → 渲染 GitHub 风格分步流程页 + 本地服务 + 开浏览器 → 四态 + 备注回传 → 写 `results.json` + 进程自退。定契约、真测（node + Playwright）、注册 `tools/`。
+把 R3 交付自测桥接进 butler SOP：新增等待-回收-续跑闭环协议 `human-test-bridge.md`，定四态路由，接线 P5 / 纠错 / 无人降级，注册前滚，并机械跑通一遍证明协议可执行。
 
 # Design Decisions
 
-- **DD1 落点 `tools/delivery-selftest/`（AC9）**：新增顶层 `tools/`——butler 驻留可执行工具的家，区别于 `templates/`（拷给项目的模板）。桥不拷进目标项目，目标项目传 manifest 路径调用。
-- **DD2 模块拆分（AC1/AC2）**：`render.js`（纯函数 `render(manifest)→HTML`，可单测、无 IO）+ `bridge.js`（CLI + HTTP 服务 + 开浏览器 + 写文件 + 自退）。渲染与 IO 解耦。
-- **DD3 四态 ASCII 码 + 中文展示（AC3）**：机器码 `pass / fail / skip / defer`（利于 R4 稳健路由），页面展示中文「通过 / 未通过 / 跳过 / 延后处理」。`results.json` 存 ASCII state。
-- **DD4 服务与自退（AC1/AC4）**：`http` 内建。路由 `GET /`（HTML）/ `GET /health`（就绪探针，供测试）/ `POST /submit`（收结果）。`/submit`：读 body → 校验 → 写 `results.json` → 响应 200 → 延迟 100ms `server.close(()=>process.exit(0))`（避免响应未刷完即退的竞态）。默认 `--port 0`（临时端口）、`--no-open`（测试用）、`--out`（覆写结果路径，默认 manifest 同目录 `results.json`）。
-- **DD5 可测性（AC7/AC8）**：`bridge.js` 导出 `createBridge(manifest, {out, exitOnSubmit, onSubmitted})`——`exitOnSubmit:false` 供测试在进程内起服务、驱动、断言而不自杀进程；CLI `main()` 用 `exitOnSubmit:true`。`render.js` 纯函数直接单测。
-- **DD6 安全渲染（AC1/AC2）**：客户端脚本用 DOM API + `textContent` 注入 item 文本（不用 innerHTML 拼用户串），避免注入；manifest 数据用 `JSON.stringify(...).replace(/</g,'\\u003c')` 安全内联进 `<script>`。
-- **DD7 零依赖（AC6）**：仅 `require` 内建（`http`/`fs`/`path`/`child_process`/`url`）；无 `package.json` dependencies（如需 `package.json` 仅置 `type`/scripts、依赖为空）。
-- **DD8 契约 + 路由语义（AC5）**：README 定 manifest / results 两 schema + 四态路由表（通过=收口 / 未通过=纠错 / 跳过=N/A / 延后=入账不阻塞）。桥本迭代只**产出** results 与自退；**消费**（路由 + 续跑）留 R4。
+- **DD1 新协议落 `20_Workflow_Lifecycle/human-test-bridge.md`（AC1）**：它是 P5 的生命周期子流程（等待-回收-续跑），非质量门禁判据，故归 20_ 而非 30_。文件名与工具"交付自测桥"呼应。结构：§1 定位 / §2 触发条件 / §3 等待-回收-续跑闭环（五步）/ §4 四态路由 / §5 无人场次降级 / §6 调用形态 / §7 与其他规则关系。
+- **DD2 契约单一来源（AC2）**：manifest / results 字段 schema 只在 `tools/delivery-selftest/README.md`，协议引用不重抄；协议管"何时起、怎么等、怎么路由"，工具 README 管"传什么、回什么"。
+- **DD3 四态路由表 = 工具 README 镜像（AC3/AC4）**：协议 §4 路由表与工具 README 同机器码同动作（pass=收口 / fail=纠错 / defer=入账不阻塞 / skip=N/A），并补 SOP 侧动作（回填 VERIFY_REPORT / 进 correction-contract / 记 Remaining Risks+handoff）。两表并置比对确保不分叉。
+- **DD4 接线用文件名互引、增量追加（AC5/AC6/AC7）**：
+  - `verify-schema.md`：§4 编写规则加一条 bullet——人测道残余的回传闭环见 `human-test-bridge.md`（有人场次经桥四态回填；无人走 dangerous §7.4）。§4 不移位（护 changelog-schema 引用）。
+  - `testing-strategy.md §3`：人测道判定纪律末尾加一句——落人测道的残余，其回传闭环走 `human-test-bridge.md`。
+  - `correction-contract.md §3`：加一条关系 bullet——人测 `fail`（经桥回传）进本契约纠错闭环、备注当线索。
+  - `dangerous-engine.md §7.4`：加一句——交付自测桥属有人场次工具，无人值守下不起桥（否则永久阻塞），无人残余按本节准入闸处置；§8 注已有"待人不构成停止条件"，补指有人分支走 `human-test-bridge.md`。
+  - 均为增量，不 renumber、不移动既有小节。
+- **DD5 无人岔口双向锁死（AC7）**：桥协议 §5 明写"无人场次不起桥 → 走 dangerous §7.4"；dangerous §7.4 明写"桥属有人场次 → 无人不起桥"。两处互指，语义一致（有人=弹页面等人；无人=异步入账/准入闸）。
+- **DD6 调用形态只定协议、不做部署登记（AC1/Out）**：协议 §6 描述外部项目调用形态（butler 传 manifest 路径调 butler 驻留 `bridge.js`、不拷副本、`--out` 收 results），并标注"具体路径解析 / 部署注册 / HUMAN_GUIDE 登记留 R5"。避免与 R5 抢范围。
+- **DD7 落点隔离（AC9/风险 R3）**：约定运行期 manifest/results 落 `.ai/human-test/`（与四件套隔离、建议 gitignore）；机械验证用临时目录（`/tmp` 或工作树临时路径），产物不入库。
+- **DD8 机械验证复用桥、不新增工具代码（AC9/Constraints）**：写一次性样例 manifest，`run_in_background` 起 `bridge.js --no-open`，node/`curl` 程序化 POST 四态，断言 exit 0 + results.json 四态 + 路由分派。桥体代码不动；若暴露缺陷另记欠债。
 
 # Execution Steps
 
-- [x] T1（AC6/AC1/AC2）：`render.js`——`render` / `VERDICTS` / `escapeHtml` / `safeJson`；GitHub 风格模板 + 客户端 DOM/textContent 构建（安全渲染）。
-- [x] T2（AC1/AC3/AC4）：`bridge.js`——`parseArgs` / `createBridge` / `openBrowser` / `summarize` / `main`；路由 GET·health·favicon·submit、写 results、自退。
-- [x] T3（AC5）：`README.md`——用法 + manifest / results 两 schema + 四态路由表 + R4/R5 边界。
-- [x] T4（AC5）：`example/manifest.json`——3 项示例（真机 / 主观动效 / 外部短信通道）。
-- [x] T5（AC7）：`test/bridge.test.js`——node 内建端到端 + render 单测 + 真进程自退。
-- [x] T6（AC7）：`node test/bridge.test.js` 全过（8 checks，exit 0）。
-- [x] T7（AC8）：Playwright 真浏览器打开桥页 → 点四态（通过/延后/跳过）→ 提交 → done 面板出现 + results.json 落盘 + **后台服务进程 exit 0 自退**（代理验证·弱档，真端到端）。
-- [x] T8（AC9）：仓库根 `CLAUDE.md` 目录职责加 `tools/`（含 delivery-selftest 说明）。
-- [ ] T9：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC）+ 原子收口五步（含 PROJECT 前滚 tools/ + 桥）。
+- [ ] T1（AC1/AC2/AC3/AC4）：新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`（§1-§7，含四态路由表镜像工具 README、引用契约真源）。
+- [ ] T2（AC5）：接线 `verify-schema.md` §4 + `testing-strategy.md §3`（增量追加、文件名互引、§4 不移位）。
+- [ ] T3（AC6）：接线 `correction-contract.md §3`（人测 fail 进纠错闭环）。
+- [ ] T4（AC7）：接线 `dangerous-engine.md §7.4/§8`（有人起桥 / 无人走准入闸，与桥协议双向一致）。
+- [ ] T5（AC8）：注册 `Coder/README.md`（目录 + 文件说明）；改工具 `README.md`（R4 已完成 + 指向协议）；收录 `rule-card.md` 一句。
+- [ ] T6（AC9）：机械跑通闭环——样例 manifest → run_in_background 起桥 → POST 四态 → 断言 exit 0 + results.json + 路由分派。
+- [ ] T7：一致性对账——grep 所有新引用可解析、四态两表逐条一致、verify §4 未移位、dangerous §7.4↔协议双向指向。
+- [ ] T8：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC + 一致性 + dogfood 可读性）+ 原子收口五步（含 PROJECT 前滚）。
 
 # Impact / Boundary
 
-- 新增：`tools/delivery-selftest/`（render.js / bridge.js / README.md / example/manifest.json / test/bridge.test.js，可选 package.json 零依赖）。
-- 改（接线）：仓库根 `CLAUDE.md`、`.ai/PROJECT.md`（收口前滚）。
-- 不碰：Coder 规则正文、hook、四件套 schema、桥下游接线（R4）、部署（R5）。
-- 回滚：本轮 iteration-open 提交为锚点，P4 新增 tools/ 叠其上，`git reset` + 清未跟踪即回退。
+- 新增：`Coder/20_Workflow_Lifecycle/human-test-bridge.md`。
+- 改（接线）：`verify-schema.md` / `testing-strategy.md` / `correction-contract.md` / `dangerous-engine.md` / `Coder/README.md` / `templates/rule-card.md` / `tools/delivery-selftest/README.md` / `.ai/PROJECT.md`。
+- 不碰：桥工具代码、hook、四件套 schema、状态机、四态机器码、R5 部署 / dogfood。
+- 回滚：本轮 iteration-open 提交为锚点，P4 接线叠其上，`git reset` + 清未跟踪即回退。

@@ -1,47 +1,49 @@
-# CONCEPT — ITER-0023
+# CONCEPT — ITER-0024
 
-> 分流：完整路径 | 命中升级信号：新增可执行工具（真代码）、跨模块契约（输入 / 输出 JSON）、多文件、关键路径（R4/R5 依赖其契约） | 2026-07-02 | MILE-0002 R3 | ⚠️ 危险模式（P4 起自治；P2/P3 自审门自 ACK）
+> 分流：完整路径 | 命中升级信号：新增规则文件（P5 子协议）、跨文件接线（verify / testing / correction / dangerous）、关键路径（人测闭环收口判定）| 2026-07-02 | MILE-0002 R4 | ⚠️ 危险模式（P2 起自审门自 ACK；P4 自治）
 
 ## 一句话
 
-R1/R2 把"人测残余"结构化并定了置信档，但残余的**回传通道**仍缺——人测完，结论断在人这侧、butler 收不回。R3 造「交付自测」桥：一个**只驻留 butler 仓**的 Node 零依赖工具，外部项目**传一份 JSON 清单** → 桥渲染 GitHub 风格分步流程页、本地起服务、开浏览器 → 人对每项选**四态**（通过 / 未通过 / 跳过 / 延后处理）+ 备注 → 提交后写 `results.json`、**进程自退** → 为 R4 的"等待-回收-续跑"接线铺好契约与产物。
+R3 造好了桥（能起、能测、能回传、能自退），但桥的**下游还没接**——butler 不知道何时起桥、起完怎么等、结果回来怎么按四态续跑。R4 把桥接进 SOP：新增一份**等待-回收-续跑闭环协议**（`human-test-bridge.md`），定清"P5 存在人测残余 + 有人在场 → 生成 manifest → `run_in_background` 起桥 → 阻塞等进程退出 → 读 `results.json` → 四态路由（通过=收口 / 未通过=纠错 / 跳过=N/A / 延后=入账不阻塞）"，并把它接进 P5（verify-schema / testing-strategy）、纠错（correction-contract）、无人降级（dangerous §7.4），补上 R1/R2/R3 一直缺的最后一环：**结论真正流回 butler、闭环真正合上**。
 
 ## 背景与判断
 
-- 里程碑归属：MILE-0002 路线项 **R3**。承 R1（分道）R2（置信）——它们定"哪些要人测、多大把握"，R3 造"人测完怎么把结论传回"的物理通道。
-- 关键设计（用户已定，见 `MILESTONE.md` 关键设计 + 样例 `docs/research/MILE-0002-R2-manual-test-bridge-sample.html`）：butler 驻留（不拷进目标项目，外部传 JSON 调用）、Node 零三方依赖、GitHub 风格、分步流程页、每项四态 + 备注、提交自退。
-- 本迭代**只造桥 + 定契约**；把桥接进 P5 / correction-contract / 外部调用方式 = R4；部署文档 + dogfood = R5。
-- 与 R2 无人残余处置互补：R2 是 `/dangerous` **无人**场景（异步入账）；R3 是**有人**场景（弹页面回传）。四态里「延后处理」正是"记账不阻塞"的人工版。
+- 里程碑归属：MILE-0002 路线项 **R4**（扁平原子）。承 R1（分道）R2（置信）R3（桥体）——前三项把"哪些要人测 / 多大把握 / 人测完怎么回传"都备齐了，唯独**回传后 butler 怎么接**还悬空。
+- 缺口：R3 交付时明说"把桥接进 P5 / 纠错闭环、后台等待续跑是 R4"（见 `tools/delivery-selftest/README.md` 及其交付）。桥能自退、能写 `results.json`，但没有规则告诉 butler 何时起、怎么等、四态怎么分派。
+- 本迭代**只接线 + 定协议 + 机械跑通闭环**；部署 / 使用文档注册（mcv-deployment / HUMAN_GUIDE）+ 真实项目 dogfood = R5。
+- 与 R2 无人处置的分工要厘清：桥是**有人场次**工具（弹页面等人勾）；`/dangerous` **无人**场次桥会永久阻塞，故无人场次**不起桥**、走 `dangerous-engine §7.4` 依赖感知准入。R4 要把这条"有人起桥 / 无人走准入闸"的岔口写死，两边一致、不矛盾。
 
 ## 目标（Goal）
 
-- G1：**桥本体**——Node 零依赖工具，读 manifest JSON → 起本地 HTTP 服务 → 渲染分步流程页（GitHub 风格，保真样例）→ 开浏览器。
-- G2：**四态回传 + 自退**——每项四态（pass / fail / skip / defer）+ 备注；提交 POST → 写 `results.json`（含 summary）→ 响应后 `process.exit(0)`（后台进程退出即触发 R4 续跑）。
-- G3：**输入 / 输出契约**——manifest 输入 schema（`{title, project, iteration, items:[{id,title,steps[],expected}]}`）与 results 输出 schema（`{iteration, results:[{id,state,note}], summary}`）成文，四态→路由语义（通过=收口 / 未通过=纠错 / 跳过=N/A / 延后=入账不阻塞）写清。
-- G4：**真测**——node 内建断言测服务与契约（可靠档）+ Playwright 浏览器交互测真 UI（代理验证·弱档），dogfood R2 分级置信。
-- G5：**接线注册**——新增 `tools/` 顶层目录，注册进仓库 `CLAUDE.md` 目录职责 + 工具自带 README；PROJECT 收口前滚。
+- G1：**闭环协议成文**——新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`，定义触发条件（P5 存在 `human·待人` 残余 + 有人在场）、等待-回收-续跑五步（生成 manifest → `run_in_background` 起桥 → 阻塞等进程退出 → 读 `results.json` → 四态路由回填）、调用形态（butler 传 manifest 路径调 butler 驻留工具、不拷副本）。
+- G2：**四态路由口径**——`pass`=计入收口 / `fail`=进 `correction-contract` 纠错（备注当线索）/ `defer`=入欠债账不阻塞收口 / `skip`=记 N/A；结论回填 `VERIFY_REPORT.md`。与工具 README 路由表逐条一致。
+- G3：**P5 接线**——`verify-schema.md`（人测道回填）+ `testing-strategy.md §3`（人测道界定）指向桥协议为回传通道。
+- G4：**纠错接线**——`correction-contract.md` 明确人测 `fail`（经桥回传）进本契约纠错闭环。
+- G5：**无人降级接线**——`dangerous-engine.md §7.4/§8` 厘清"桥属有人场次、无人不起桥走准入闸"，与桥协议双向一致。
+- G6：**注册 + 前滚**——`Coder/README.md` 目录 + 读序注册新文件；工具 `README.md` 把"接线=R4"改为已完成并指向协议；`rule-card.md` 收录一句；`.ai/PROJECT.md` 前滚。
+- G7：**机械跑通闭环**——真跑一遍 butler 侧回路：样例 manifest → `run_in_background` 起 `bridge.js`（`--no-open`）→ 程序化 POST 四态 → 后台进程 exit 0 → 读 `results.json` 解析 → 演示四态路由分派，证明协议可执行（非仅规则正文）。
 
 ## 约束（Constraints）
 
-- **零三方依赖**：只用 Node 内建（`http` / `fs` / `path` / `child_process`）；不引 express / 测试框架。
-- **butler 驻留**：工具存 butler 仓、不拷进目标项目；目标项目通过传 manifest JSON 路径调用。
-- **单机单次握手**：不做多人 / 远程 / 持久看板。
-- 只造桥、定契约、自测；**不接** P5 / correction-contract / 续跑（R4）、**不写**部署文档 / dogfood（R5）。
-- 不改 P1-P5 状态机、四件套脊柱、hook。
+- **接线不造新工具**：桥体 R3 已成，R4 只写规则协议 + 复用现有 `bridge.js`，不改工具代码（若机械验证暴露桥体缺陷，另记欠债 / 视严重度决定，不在本迭代顺手改契约）。
+- **有人 / 无人岔口清晰**：桥只在有人场次跑；无人场次（`/dangerous`）不起桥，走 §7.4。协议与 dangerous-engine 不得互相矛盾。
+- **文件名互引**：接线一律用文件名引用（不写脆弱的 §行号），符合本仓写作约定。
+- 只接线、定协议、机械验证；**不写**部署注册文档（mcv-deployment / HUMAN_GUIDE）、**不做**真实项目 dogfood（R5）。
+- 不改 P1-P5 状态机、四件套脊柱、hook、四态机器码。
 
 ## 影响范围（Impact Scope）
 
-- 新增：`tools/delivery-selftest/`（`bridge.js` 服务 + 自退、`render.js` 渲染、`README.md` 契约、`example/manifest.json`、`test/bridge.test.js`）。
-- 改（接线）：仓库根 `CLAUDE.md`（目录职责加 `tools/`）、`.ai/PROJECT.md`（前滚）。
-- 不影响：Coder 规则正文（R3 是工具不是规则）、hook、四件套 schema、桥的下游接线（R4）。
+- 新增：`Coder/20_Workflow_Lifecycle/human-test-bridge.md`（等待-回收-续跑闭环协议 SSOT）。
+- 改（接线）：`verify-schema.md`、`testing-strategy.md`、`correction-contract.md`、`dangerous-engine.md`、`Coder/README.md`、`templates/rule-card.md`、`tools/delivery-selftest/README.md`、`.ai/PROJECT.md`。
+- 不影响：桥工具代码（`bridge.js` / `render.js`）、hook、四件套 schema、状态机、R5 部署 / dogfood。
 
 ## 项目类型与 Profiles
 
-butler 仓内首次引入**可执行 Node 工具**（非规则正文）。无既有 JS profile 落盘，按通用 SOP + Node 零依赖约束推进；测试遵循 R1 自动化优先（能自动必自动，UI 用浏览器自动化）。
+butler 规则仓（编辑规则本身）。R4 主体是规则协议（新增一份 20_ 层子协议 + 多处接线），叠一次机械验证（真跑桥回路）。无 active profile；验证遵循 R1 自动化优先——闭环用真跑证明（`auto·可靠`），不停在"读规则存在"。
 
 ## 待澄清（Open Questions）
 
-- Q1：工具落点 `tools/delivery-selftest/` vs `templates/`？倾向 `tools/`——它是 butler 驻留可执行工具、非部署模板（`templates/` 是拷给项目的）。（P3 定）
-- Q2：四态机器码用 ASCII（pass/fail/skip/defer）还是中文（样例里的中文）？倾向 ASCII 码 + 中文展示——利于 R4 机器路由稳健。（P3 定）
-- Q3：渲染单文件内联 vs 拆 render.js？倾向拆 `render.js`（纯函数、可单测），`bridge.js` 管服务 / IO。（P3 定）
-- Q4：results.json 落点默认 = manifest 同目录 `results.json`，可 `--out` 覆写。（P3 定）
+- Q1：新协议落 `20_Workflow_Lifecycle/` 还是 `30_Quality_Gate/`？倾向 20_——它是 P5 生命周期子流程（等待-回收-续跑），非质量门禁判据。（P3 定）
+- Q2：文件名 `human-test-bridge.md` vs `human-test-loop.md`？倾向 `human-test-bridge.md`——与工具"交付自测桥"呼应、涵盖回环。（P3 定）
+- Q3：manifest / results 落点？倾向 `.ai/human-test/`（manifest.json + results.json），与四件套隔离、可 gitignore。（P3 定）
+- Q4：机械验证用 `curl` 还是 node `http` 客户端 POST？倾向复用桥自带 `test/` 思路或 `curl`，只为证明 run_in_background→exit→read 回路，不新增测试文件。（P3 定）

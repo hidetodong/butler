@@ -2,55 +2,55 @@
 状态: ack-frozen
 ACK 日期: 2026-07-02
 ACK 方式: 危险模式 P2 自审门 self-ACK（非用户显式 ACK）
-迭代: ITER-0023
-里程碑: MILE-0002 R3
+迭代: ITER-0024
+里程碑: MILE-0002 R4
 ---
 
-# AC_LIST — ITER-0023
+# AC_LIST — ITER-0024
 
-> ⚠️ 危险模式：本 AC 清单未经用户显式 ACK，由 P2 自审门（对照 `acceptance-schema.md`）自主冻结；自审结论见 `RUN_LOG.md` ITER-0023 · P2-self-ack。
-> 说明：本迭代是真代码，验证多为**真跑**（node 断言 / 子进程 / Playwright），故置信档不再全 `可靠`——AC8 为 `auto·弱`（浏览器代理验证），正好 dogfood R2 分级置信。
+> ⚠️ 危险模式：本 AC 清单未经用户显式 ACK，由 P2 自审门（对照 `acceptance-schema.md`）自主冻结；自审结论见 `RUN_LOG.md` ITER-0024 · P2-self-ack。
+> 说明：R4 主体是规则协议接线（`auto·可靠`=读规则确认存在且自洽），另叠一条 `auto·可靠` 机械验证（真跑桥回路证明协议可执行）。
 
-## 桥本体（G1）
+## 闭环协议成文（G1）
 
-- **AC1**：`bridge.js` 读 manifest JSON、在 `127.0.0.1` 起 HTTP 服务，`GET /` 返回 200 + 渲染 HTML；HTML 含 manifest 每个 item 的 id / 标题 / 每条分步步骤 / 预期结果。
-  - 验证（auto·可靠）：起服务（`--no-open --port 0`）+ `http` 客户端 GET，断言状态码 200 且 body 含各 item 文本。
-- **AC2**：渲染为 **GitHub 风格分步流程页**——含 sticky 进度条、分步流程卡（编号步骤）、四态按钮、备注框、提交栏（结构保真 `docs/research/MILE-0002-R2-manual-test-bridge-sample.html`）。
-  - 验证（auto·可靠）：断言渲染 HTML 含 `statusbar` / `steps` / `verdicts` / `note` / `submitBtn` 等结构标记。
+- **AC1**：新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`，frontmatter 含 audience + scope；正文定义 ①触发条件（P5 存在 `human·待人` 残余 **且** 有人在场）②等待-回收-续跑闭环步骤（生成 manifest → `run_in_background` 起桥 → 阻塞等桥进程退出 → 读 `results.json` → 四态路由回填 `VERIFY_REPORT`）③调用形态（butler 传 manifest 路径调用 butler 驻留工具、不拷副本）。
+  - 验证（auto·可靠）：读该文件确认三部分齐全、frontmatter 合规。
+- **AC2**：协议**不复述**工具 schema——manifest / results 字段以 `tools/delivery-selftest/README.md` 为契约真源，桥协议只引用不重抄（单一来源纪律）。
+  - 验证（auto·可靠）：读协议确认引用工具 README 为契约真源、无字段级重抄。
 
-## 四态回传 + 自退（G2）
+## 四态路由口径（G2）
 
-- **AC3**：每项四态 `pass / fail / skip / defer`（通过 / 未通过 / 跳过 / 延后处理）+ 备注；全判定后可提交，`POST /submit` 写 `results.json`，内容含 `results[]`（每项 id / state / note）+ `summary`（四态计数）。
-  - 验证（auto·可靠）：POST 模拟四态 payload，断言 `results.json` 落盘且 results / summary 正确。
-- **AC4**：提交后**进程自退**——写完 results、响应 200 后 `process.exit(0)`，服务关闭、端口释放。
-  - 验证（auto·可靠）：`spawn` 子进程，POST 后断言子进程 exit code 0。
+- **AC3**：四态路由语义成文：`pass`=计入收口 / `fail`=进 `correction-contract` 纠错（备注当线索）/ `defer`=入欠债账（Remaining Risks + handoff）不阻塞收口 / `skip`=记 N/A（非欠债）；四态结论回填 `VERIFY_REPORT.md`。
+  - 验证（auto·可靠）：读协议路由表确认四态齐全、动作明确、含回填要求。
+- **AC4**：路由表与工具 `README.md`「四态 → 路由语义」表**逐条一致**（同机器码、同下游动作），不出现口径分叉。
+  - 验证（auto·可靠）：并置两表逐行比对一致。
 
-## 输入 / 输出契约（G3）
+## P5 / 纠错 / 无人 接线（G3/G4/G5）
 
-- **AC5**：契约成文——工具 `README.md` 定义 manifest 输入 schema（`title / project / iteration / items:[{id,title,steps[],expected}]`）+ results 输出 schema（`iteration / results:[{id,state,note}] / summary`）+ **四态→路由语义**（通过=计入收口 / 未通过=进纠错 / 跳过=N/A / 延后处理=入账不阻塞）。`example/manifest.json` 符合 schema 且能被桥成功渲染。
-  - 验证（auto·可靠）：读 README 确认两 schema + 路由表；对 `example/manifest.json` 跑渲染无异常。
+- **AC5**：`verify-schema.md`（人测道回填处）与 `testing-strategy.md §3`（人测道界定处）均以文件名指向 `human-test-bridge.md` 作为人测残余的回传通道；接线为**增量追加**、不移动既有小节、不破坏 `changelog-schema` 对 verify-schema §4 的引用。
+  - 验证（auto·可靠）：grep 两文件含 `human-test-bridge` 引用；确认 verify-schema §4 未移位。
+- **AC6**：`correction-contract.md` 明确"人测 `fail`（经桥回传）进本契约纠错闭环、备注当线索"，且落在既有章节的增量追加、不破坏其常驻底线定位。
+  - 验证（auto·可靠）：读 correction-contract 确认新增该口径。
+- **AC7**：`dangerous-engine.md §7.4/§8` 与 `human-test-bridge.md` **双向一致**厘清岔口——桥属**有人场次**工具；`/dangerous` 无人场次**不起桥**（否则永久阻塞），走 §7.4 依赖感知准入闸；桥协议反向指向 §7.4 为无人分支。
+  - 验证（auto·可靠）：读两文件确认双向指向且语义不矛盾（有人起桥 / 无人走准入闸）。
 
-## 零依赖 + 自测（G4）
+## 注册 + 前滚（G6）
 
-- **AC6**：**零三方依赖**——源码仅 `require` Node 内建（`http` / `fs` / `path` / `child_process` / `url` 等）；无第三方 import、无 `node_modules` 依赖。
-  - 验证（auto·可靠）：grep 全部 `require(...)` 确认仅内建；无 `package.json` dependencies 或为空。
-- **AC7**：**自测套件**——`test/bridge.test.js` 用 Node 内建跑端到端（起服务 → GET → POST → 断言 results.json → 断言自退），`node test/bridge.test.js` 退出码 0。
-  - 验证（auto·可靠）：实际运行测试，断言 exit 0 + 打印全过。
-- **AC8**：**浏览器交互实测（代理验证）**——真浏览器打开桥页、逐项点四态、填一条备注、点提交，页面出现"已提交"面板且 `results.json` 落盘。
-  - 验证（auto·弱）：Playwright 驱动真浏览器交互 + 截图（代理验证，见 `testing-strategy §3.1`；置信弱于确定性断言、不冒充可靠）。
+- **AC8**：`Coder/README.md` 目录结构 + 读序/文件说明注册 `human-test-bridge.md`；工具 `README.md` 把"接进 P5 / 纠错闭环、后台等待续跑是 R4"改为**已完成**并指向协议；`templates/rule-card.md` 收录一句人测回传闭环口径；`.ai/PROJECT.md` 收口前滚（现行约束 + 架构图按需）。
+  - 验证（auto·可靠）：读四处确认注册 / 改写 / 收录 / 前滚到位。
 
-## 接线注册（G5）
+## 机械跑通闭环（G7）
 
-- **AC9**：`tools/` 顶层目录注册进仓库根 `CLAUDE.md` 目录职责；工具自带 `README.md`；`.ai/PROJECT.md` 收口前滚（新增 tools/ 与桥工具入架构图 / 现行约束）。
-  - 验证（auto·可靠）：读 `CLAUDE.md` / 工具 README / PROJECT 确认注册与前滚。
+- **AC9**：真跑一遍 butler 侧回路证明协议可执行——写样例 manifest → 用 `run_in_background` 起 `bridge.js`（`--no-open --port <p> --out <results>`）→ 程序化 POST `/submit` 四态 payload → 后台桥进程 **exit 0** 自退 → 读 `results.json` 解析出四态 → 按路由表演示 `pass/fail/defer/skip` 各自分派动作。
+  - 验证（auto·可靠）：实际执行上述回路，断言进程退出码 0、`results.json` 落盘且四态可解析、路由分派与协议表一致。
 
 ## In / Out Scope
 
-- **In**：桥本体（服务 + 渲染 + 四态 + 自退）+ 输入 / 输出契约 + 零依赖 + 自测（node + Playwright）+ tools/ 注册。
-- **Out**：**不接** P5 / correction-contract / 等待-回收-续跑（R4）；**不写**部署文档 / 真实 dogfood 跑通（R5）；不做多人 / 远程 / 持久看板；不改 Coder 规则正文 / 状态机 / 四件套脊柱 / hook。
+- **In**：闭环协议成文（触发 + 五步 + 调用形态）+ 四态路由口径 + P5/纠错/无人三处接线 + 注册前滚 + 机械跑通验证。
+- **Out**：**不写**部署注册文档（mcv-deployment / HUMAN_GUIDE 调用方式登记）、**不做**真实项目端到端 dogfood（R5）；不改桥工具代码 / 四态机器码 / hook / 状态机 / 四件套脊柱；不做多人 / 远程 / 持久看板。
 
 ## 风险
 
-- R1：浏览器自动化环境（Playwright）不可用 → AC8 弱档验证降级：如实标注"未执行"落 Remaining Risks，不冒称已测（承 R2 红线）；AC1-AC7 可靠档不受影响仍覆盖核心。
-- R2：`process.exit` 自退时机与响应刷新竞态 → 响应 end 后延迟再 exit，测试断言 exit code 兜底。
-- R3：跨平台开浏览器（open / xdg-open / start）差异 → best-effort 且 `--no-open` 可关，不阻塞核心逻辑与测试。
+- R1：run_in_background 的"进程退出即续跑"依赖 harness 后台能力，不同 harness 行为可能差异 → 协议描述机制与依赖，机械验证在本 harness 证明可行；跨 harness 差异记 Remaining Risks。
+- R2：有人 / 无人岔口写不清会与 dangerous §7.4 冲突（无人下误起桥→永久阻塞）→ AC7 强制双向一致对账兜底。
+- R3：manifest / results 落点若与四件套混放会污染工作区 → 约定落 `.ai/human-test/`、隔离，机械验证用临时路径不入库。
