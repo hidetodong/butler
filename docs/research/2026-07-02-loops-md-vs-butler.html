@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LOOPS.md（Karpathy） × butler · 理念对比</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --danger: #cf222e;
+      --danger-soft: #ffebe9;
+      --ok: #1a7f37;
+      --ok-soft: #dafbe1;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 880px; margin: 0 auto; }
+    header.head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.head h1 { margin: 0 0 0.6rem; font-size: 1.5rem; line-height: 1.35; }
+    header.head p.sub { margin: 0.4rem 0 0.9rem; color: var(--fg-muted); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem; border-radius: 999px;
+      font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.gray { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.7rem; font-size: 1.1rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    section.block > h2 .n {
+      display: inline-block; width: 1.6rem; color: var(--accent);
+      font-family: var(--mono); font-weight: 700;
+    }
+    section.block :is(p, ul, ol) { margin: 0.55rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.3rem 0; }
+    code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    strong { font-weight: 650; }
+    em.q { color: var(--fg-muted); font-style: italic; }
+
+    blockquote.thesis {
+      margin: 0.7rem 0; padding: 0.7rem 1.1rem;
+      border-left: 4px solid var(--accent); background: var(--bg);
+      border-radius: 0 10px 10px 0; color: var(--fg);
+    }
+
+    table { border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.9rem; }
+    th, td { border: 1px solid var(--border); padding: 0.45rem 0.65rem; text-align: left; vertical-align: top; }
+    th { background: #eef1f5; }
+    td.c { text-align: center; white-space: nowrap; }
+    .rn { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+
+    .al { font-weight: 650; font-size: 0.85rem; white-space: nowrap; }
+    .al-strong { color: var(--ok); }
+    .al-part   { color: var(--warn); }
+    .al-gap    { color: var(--danger); }
+    .dot { display:inline-block; width:0.6rem; height:0.6rem; border-radius:50%; margin-right:0.3rem; vertical-align: middle;}
+    .dot.g{background:var(--ok);} .dot.y{background:var(--warn);} .dot.r{background:var(--danger);}
+
+    .pillar {
+      border-left: 4px solid var(--accent);
+      background: var(--bg);
+      border-radius: 0 10px 10px 0;
+      padding: 0.85rem 1.1rem;
+      margin: 0.85rem 0;
+    }
+    .pillar h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .pillar h3 .idx {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 0.5rem; height: 1.5rem; border-radius: 999px;
+      background: var(--accent); color: #fff; font-family: var(--mono);
+      font-size: 0.8rem; margin-right: 0.5rem; vertical-align: middle;
+    }
+    .pillar.crit { border-left-color: var(--danger); }
+    .pillar.crit h3 .idx { background: var(--danger); }
+    .pillar.gap { border-left-color: var(--warn); }
+    .pillar.gap h3 .idx { background: var(--warn); }
+
+    .contradiction {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.75rem;
+      align-items: stretch; margin: 0.9rem 0 0.4rem;
+    }
+    .contradiction .side {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.8rem 1rem; background: var(--card);
+    }
+    .contradiction .side h4 { margin: 0 0 0.35rem; font-size: 0.9rem; }
+    .contradiction .side p { margin: 0; font-size: 0.88rem; color: var(--fg-muted); }
+    .contradiction .vs {
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-weight: 700; color: var(--danger); font-size: 1.1rem;
+    }
+    @media (max-width: 620px) {
+      .contradiction { grid-template-columns: 1fr; }
+      .contradiction .vs { padding: 0.2rem; }
+    }
+
+    .redline {
+      background: var(--danger-soft); border: 1px solid #ffc1bd;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.6rem 0;
+    }
+    .redline h3 { margin: 0 0 0.3rem; color: var(--danger); font-size: 1rem; }
+
+    .prio { font-family: var(--mono); color: var(--warn); font-weight: 700; letter-spacing: -1px; }
+
+    details.src { margin-top: 0.4rem; }
+    details.src summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+    details.src .art h4 { margin: 0.9rem 0 0.2rem; font-size: 0.95rem; }
+    details.src .art p { margin: 0.25rem 0; font-size: 0.88rem; color: var(--fg-muted); }
+
+    footer.foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.head { border-color: #ccc; break-inside: avoid; }
+      details.src { display: block; }
+      details.src[open] > summary { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>《LOOPS.md》（Karpathy）× butler —— 理念异同与可借鉴点</h1>
+      <p class="sub">对 Andrej Karpathy《Field Notes on Agents That Run for Days》9 条原则的通读，与 butler 现行体系逐条对照。</p>
+      <div class="meta">
+        <span class="chip">对比研究</span>
+        <span class="chip gray">未进体系</span>
+        <span class="chip gray">2026-07-02</span>
+        <span class="chip gray">docs/research/</span>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <section class="block">
+      <h2><span class="n">1</span>这篇文章是什么</h2>
+      <p><strong>《LOOPS.md: Field Notes on Agents That Run for Days》</strong>，署名 Andrej Karpathy，一份"长程 agent loop 工作笔记"，重排成会议论文体，共 <strong>9 条原则</strong>。核心论点一句话：</p>
+      <blockquote class="thesis">
+        大多数 agent 系统死掉，<strong>不是因为模型弱，而是因为 harness（外壳）弱</strong>。模型能写码、能评码、能对着十分钟前自己认同的 rubric 验收自己。它唯一做不到的，是<strong>决定何时停、何时重启、结果写到哪</strong>——那才是 loop 的工作。
+      </blockquote>
+      <p>一句话结论：<strong>前四条 butler 做得比他更严；后四条正好戳中 butler 的盲区。</strong></p>
+    </section>
+
+    <!-- 2 -->
+    <section class="block">
+      <h2><span class="n">2</span>结论先行 · 9 条 × butler 对照</h2>
+      <table>
+        <thead>
+          <tr><th class="c">#</th><th>原则</th><th>butler 对应</th><th class="c">判定</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="c rn">I</td><td>Write the loop, not the prompt</td><td>整个 butler 就是把 loop 写死成 Markdown；P1–P5 = gather/reason/act/verify</td><td class="c"><span class="al al-strong"><span class="dot g"></span>强同频</span></td></tr>
+          <tr><td class="c rn">II</td><td>Separate the roles</td><td>role-switch + 独立复核（验证者≠实现者·fresh-context·default-refute）</td><td class="c"><span class="al al-part"><span class="dot y"></span>同向·非默认</span></td></tr>
+          <tr><td class="c rn">III</td><td>Negotiate the contract first</td><td>AC_LIST + ack-frozen + 可测断言；CONCEPT(边界)/AC(被打分) 双层</td><td class="c"><span class="al al-strong"><span class="dot g"></span>强同频</span></td></tr>
+          <tr><td class="c rn">IV</td><td>Write to disk, not to context</td><td>"状态只存对话里"列为劣化根因；六件套 + 冷启动读序 + clean-slate</td><td class="c"><span class="al al-strong"><span class="dot g"></span>强同频</span></td></tr>
+          <tr><td class="c rn">V</td><td>Let the loop restart</td><td>patch-forward + 熔断交还人类；<strong>无"推倒重来"档</strong></td><td class="c"><span class="al al-gap"><span class="dot r"></span>显著分歧</span></td></tr>
+          <tr><td class="c rn">VI</td><td>Score the subjective</td><td>验收二元 pass/fail；<strong>无定性打分模型</strong></td><td class="c"><span class="al al-gap"><span class="dot r"></span>明确缺口</span></td></tr>
+          <tr><td class="c rn">VII</td><td>Read the traces</td><td>RUN_LOG/BUG_LOG 用于审计/RCA；<strong>无"读轨迹→改规则"元回路</strong></td><td class="c"><span class="al al-part"><span class="dot y"></span>有料·无回路</span></td></tr>
+          <tr><td class="c rn">VIII</td><td>Delete the harness</td><td>目录单调增长（00→99 越加越多）；<strong>无裁剪纪律</strong></td><td class="c"><span class="al al-gap"><span class="dot r"></span>最大张力</span></td></tr>
+          <tr><td class="c rn">IX</td><td>The bottleneck always moves</td><td>演进轨迹恰好走了这阶梯，但每次 ship <strong>更大</strong>的 harness</td><td class="c"><span class="al al-part"><span class="dot y"></span>走对·违反收缩</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 3 -->
+    <section class="block">
+      <h2><span class="n">3</span>同频处（butler 甚至更强）</h2>
+      <p>I / III / IV 三条，butler 是这份手记的<strong>严肃工程化版本</strong>：</p>
+      <ul>
+        <li><strong>契约先行（III）</strong>：他说"原始 spec 是边界，被打分的是契约"——正是 butler 的 <code>CONCEPT.md</code>(边界)→<code>AC_LIST.md</code>(被验收)双层。缺一条他的警戒：<em class="q">"27 条对小 app 合理，10 条太少、评估者会盖橡皮章。"</em></li>
+        <li><strong>写盘不写上下文（IV）</strong>：他说 context "会撒谎、会压缩、会 rot"；你们原话"关键状态只存在于对话上下文里"是长任务劣化根因。判据几乎逐字一致，且 butler 走得更远（读序 / 5 条一致性自检 / clean-slate / hook 机械拦截）。</li>
+        <li><strong>反自欺护栏</strong>：butler 的"禁止降级修复"、独立复核"环境不支持就如实标注、不得冒称已独立复核"——<strong>这类护栏文章里没有</strong>，是 butler 领先的地方。</li>
+      </ul>
+      <p>一个诚实的差异：他主张 <strong>3 个文件</strong>能描述完的状态才不算太复杂；butler 是 <strong>6+ 件套</strong>。按他的尺子，butler 状态 schema 偏重——这条直接接到第八条。</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="block">
+      <h2><span class="n">4</span>分歧与缺口（真正值得想的部分）</h2>
+
+      <div class="pillar crit">
+        <h3><span class="idx">V</span>让 loop 重启 —— 最锋利的分歧</h3>
+        <p>Karpathy 原话很激进：<em class="q">"前沿模型最好的行为是愿意把一切推倒重来……第 9 轮删掉整个项目、第 11 轮交出能跑的版本。别打断它。重启就是 loop 在正确工作。只有契约本身错了才插入人类，而不是 build 错了的时候。"</em></p>
+        <div class="contradiction">
+          <div class="side"><h4>Karpathy</h4><p>给它干净评估者 + 落盘契约 → 删了重生成。restart 是特性，别打断。</p></div>
+          <div class="vs">⚔</div>
+          <div class="side"><h4>butler</h4><p>熔断（5 轮/3 同错/环境阻塞）→ 写 RCA、交还人类。patch-forward，无"弃码重生成"档。</p></div>
+        </div>
+        <p><strong>诊断一致（打补丁攒出考古现场），药方相反。</strong>关键：他重启的两个前提——<strong>干净评估者 + 契约落盘——butler 全都有</strong>（AC_LIST 在盘上、独立复核就是干净评估者）。即 butler 技术上完全具备安全重启的条件，只是<strong>刻意没扣扳机</strong>（与"并行迭代/半自治先按住"的保守取向一致），值得重新过一遍。</p>
+      </div>
+
+      <div class="pillar gap">
+        <h3><span class="idx">VI</span>给主观打分 —— 干净的缺口</h3>
+        <p><em class="q">"品味是可打分的，只要写下来。四加权轴：design / originality / craft / functionality。用 3 好 + 3 垃圾样例校准。输出 0–1 分 + 一段解释差距的话。模型不发明品味，只朝你描述的品味收敛。"</em></p>
+        <p>butler 验收是<strong>结构性二元的</strong>（pass/fail 绑可测 AC），review-standard 全是客观项。<strong>"设计好不好看、文案顺不顺、交互优不优雅"这类无法二元判定的东西，butler 只能推给人在 AC 冻结时拍板，验收阶段无法自动评。</strong>你们有 Vue3/前端 profile，这个缺口是实打实的。</p>
+      </div>
+
+      <div class="pillar crit">
+        <h3><span class="idx">VIII</span>删掉 harness —— 直接照进 butler 的镜子</h3>
+        <p><em class="q">"harness 存在是为了补偿模型。模型一变强，你上季度写的一半变成负重……单调增长的 harness，是一个你已经停止阅读的 harness。拿每个新模型版本重读它，把模型现在能免费做到的都删掉。"</em></p>
+        <p>butler 目录就是单调增长的活证据：<code>00→10→20→30→40→50→55→60→65→70→99</code>，每次迭代都在<strong>加</strong>模块/schema/hook。有 <code>butler-upgrade</code>、<code>migration</code>、版本流——<strong>全是"加"和"迁移"，没有一条是"随模型变强而裁剪/收缩"</strong>。记忆里那个"待优化清单"也是往里加。</p>
+        <p><strong>必要的反驳：</strong>butler 的 harness 不全是补模型弱——很大一块服务<strong>人的治理</strong>（审计 / 交付总结 / 跨会话交接 / 门禁）。他的语境是单人放手让一个模型跑几天；你们是团队 / 可复用 / 可审计。所以"删"不能无脑套。<strong>但"每逢前沿模型迭代就重读一遍问‘这条现在模型免费做得到吗’"这个纪律动作，butler 完全没有——这才是最该抄的。</strong></p>
+      </div>
+
+      <div class="pillar gap">
+        <h3><span class="idx">VII·IX</span>半对的两条</h3>
+        <p><strong>读轨迹（VII）</strong>：他把 debug 洞见全归功于"读原始 transcript、grep 到判断跑偏那一刻、只改那一处、再跑"。butler 有 RUN_LOG/BUG_LOG，但那是<strong>产品审计</strong>用，不是<strong>给 butler 规则自身做元改进</strong>用。缺一条"读真实轨迹→定位规则跑偏点→改那一条规则"的成文实践。</p>
+        <p><strong>瓶颈会移动（IX）</strong>：butler 演进史恰好走了他的阶梯（编码→规划→验证→品味），preference-probe 已摸到"品味"层。但他强调"ship 一个<strong>更小</strong>的 harness"——butler 每次 ship 更大的。按阶梯，butler 现在的前沿瓶颈就是<strong>品味</strong>，而 butler 有 preference-probe（学人的选择）却没有 taste-scoring（给主观质量打分，即第 VI 条）——两件事在这里交汇。</p>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="block">
+      <h2><span class="n">5</span>可借鉴清单（按价值排序）</h2>
+      <table>
+        <thead>
+          <tr><th class="c">优先级</th><th>借鉴点</th><th>具体做法</th><th>butler 落点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="c prio">★★★</td>
+            <td><strong>删壳纪律</strong>（VIII）</td>
+            <td>新增"模型版本重读仪式"：每逢前沿大版本，逐条问"补模型弱 vs 服务人治理？若前者且模型已能免费做到→删/降级"。把"净收缩"设为合法版本动作。</td>
+            <td><code>versioning-schema.md</code> 增"删减/收缩"语义 + harness 审阅 checklist</td>
+          </tr>
+          <tr>
+            <td class="c prio">★★★</td>
+            <td><strong>给主观打分</strong>（VI）</td>
+            <td>引入"定性验收 / graded AC"：加权轴 + 校准样例(好/坏各 N) + 0–1 分 + 差距说明，设阈值。与二元 AC 并列。</td>
+            <td><code>acceptance-schema.md</code> 增 AC 类型；前端 profile 引用</td>
+          </tr>
+          <tr>
+            <td class="c prio">★★</td>
+            <td><strong>重启作合法收敛路径</strong>（V）</td>
+            <td>在 <code>/loop</code>·<code>/dangerous</code>（契约已落盘）下，熔断时除"交还人类"外增"弃码保契约、从 AC/TECH_PLAN 重新生成"选项。把 restart 从"失败"重构为"正常收敛"。</td>
+            <td><code>convergence-loop-engine.md</code> §熔断分支 + <code>dangerous-engine</code></td>
+          </tr>
+          <tr>
+            <td class="c prio">★★</td>
+            <td><strong>契约 agent-vs-agent 硬化</strong>（III）</td>
+            <td>人 ACK 前，加一个 evaluator agent 对 draft AC_LIST 挑刺/推回（专抓"太少条会橡皮章""不可测"），再交人冻结。</td>
+            <td><code>acceptance-schema.md</code> + 复用 review 引擎</td>
+          </tr>
+          <tr>
+            <td class="c prio">★★</td>
+            <td><strong>读轨迹改规则</strong>（VII）</td>
+            <td>为 butler 仓自身立实践：坏结果发生时读真实 transcript/RUN_LOG，grep 判断跑偏点，只改那一条规则——而非凭感觉重写。</td>
+            <td>新增 meta 开发实践文档（butler 仓自用）</td>
+          </tr>
+          <tr>
+            <td class="c prio">★</td>
+            <td><strong>独立复核更强 + "玩一遍 app"</strong>（II）</td>
+            <td>高风险改动让独立复核更接近默认；评估维度补<strong>动态/行为验证</strong>（playwright 玩一遍），不止 spec 静态核对。</td>
+            <td><code>review-engine.md §6</code> + testing-strategy</td>
+          </tr>
+          <tr>
+            <td class="c prio">★</td>
+            <td><strong>"ship 更小的壳"作版本价值观</strong>（IX）</td>
+            <td>milestone/versioning 里显式记"当前瓶颈在哪"，允许"这一版目标是让 harness 更小"。</td>
+            <td><code>milestone-schema.md</code> / <code>versioning-schema.md</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6 -->
+    <section class="block">
+      <h2><span class="n">6</span>一句话的元判断</h2>
+      <p><strong>butler 与 LOOPS.md 在"地基"上高度同频</strong>——loop 不是 prompt、状态写盘、契约先行、角色分离，这四条 butler 做得更严、更工业化、更可治理。<strong>分歧全在"前沿姿态"上</strong>：Karpathy 更激进、极简、信任模型（推倒重来 / 删壳 / 给品味打分）；butler 更保守、全面、以人治理为中心。</p>
+      <p>这不是"谁对"，<strong>是两个不同的设计中心</strong>：他优化"单个专家从一个前沿模型榨出最大杠杆，仪式越少越好"；你们优化"跨项目、可审计、可复用、可交接的可靠交付"。借鉴要带判断，别 cargo-cult。</p>
+      <div class="redline">
+        <h3>但有一条建议认真当回事</h3>
+        <p><em class="q">"单调增长的 harness，是一个你已经停止阅读的 harness。"</em> butler 目前只有"加"和"迁移"机制，没有"随模型变强而删"的机制——这恰恰是文章诊断的、也是"待优化清单"越堆越高的病根。<strong>第八条比第五、第六条更根本。</strong></p>
+      </div>
+    </section>
+
+    <!-- Appendix -->
+    <section class="block">
+      <h2><span class="n">A</span>附录 · 原文全文转录</h2>
+      <details class="src">
+        <summary>展开 / 收起 —— LOOPS.md 九条原则（英文原文要点转录）</summary>
+        <div class="art">
+          <p><strong>LOOPS.md: Field Notes on Agents That Run for Days</strong> · <em>A Short List of Rules for Letting the Model Drive</em> · Andrej Karpathy, Independent Researcher · © 2026（reformatting of loops.md, r060726）</p>
+
+          <p><strong>Abstract.</strong> This file exists because most agent systems die not from a weak model but from a weak harness: the model can write code; the model can review code; the model can verify its own output against a rubric it agreed to ten minutes ago. What it cannot do, on its own, is decide when to stop, when to restart, and where to write the result. That is the work of the loop. The pattern treats the loop as a first-class object: roles are separated, state lives on disk, contracts are negotiated between agents before the first line of code is written, and the harness is read like a stack trace whenever something goes wrong. Short loops, simple state, clean contracts. Everything else is decoration.</p>
+
+          <h4>I. Write the loop, not the prompt</h4>
+          <p>A prompt is typed once and forgotten; a loop runs while you sleep. The unit of leverage stopped being the prompt the moment models could follow a procedure without supervision. If you iterate on a single message at 3am, you are still in the prompting era. The loop is short: gather, reason, act, verify, repeat — everything else is a footnote to those five verbs.</p>
+
+          <h4>II. Separate the roles</h4>
+          <p>Three roles, three context windows, three system prompts. A planner that turns a vague sentence into a sprint spec and never touches code. A generator that writes everything and is forbidden from grading its own work. An evaluator that reads diffs, launches playwright, plays the app, and is told from the first message that the code is broken and its job is to prove it. Mixing roles is the most common failure: the model becomes sycophantic the moment it grades itself, and the loop converges on slop.</p>
+
+          <h4>III. Negotiate the contract first</h4>
+          <p>Before the generator writes a line, it proposes what "done" looks like and the evaluator pushes back. They argue via markdown files until they agree on a checklist of testable assertions. Twenty-seven criteria is reasonable for a small app; ten is too few and the evaluator rubber-stamps. The original spec is the boundary; the contract is what gets graded. This single change moved runs from broken-bones to working products.</p>
+
+          <h4>IV. Write to disk, not to context</h4>
+          <p>Context windows lie: they compact, rot, and hide what you said an hour ago. A file on disk does not. Keep <code>feature_list.json</code>, <code>progress.md</code>, <code>contract.md</code>, and an append-only <code>log.md</code> with <code>## [YYYY-MM-DD] | title</code> entries. The model should be able to crash, lose its session, and pick up by reading three files. If you cannot describe your state in three files, your state is too complicated.</p>
+
+          <h4>V. Let the loop restart</h4>
+          <p>Counter-intuitively, the best behavior of current frontier models is the willingness to throw everything away and start over when a run goes sideways. Older models patched until the codebase resembled archaeology; newer ones, given a clean evaluator and a contract on disk, will delete the project at iteration nine and ship a working version at iteration eleven. Do not interrupt this. The restart is the loop working correctly. Insert a human only when the contract itself is wrong, not when the build is.</p>
+
+          <h4>VI. Score the subjective</h4>
+          <p>Taste is gradable if you write it down. Four axes, weighted: design, originality, craft, functionality. Calibrate on three reference sites told to be good and three told to be slop. Output is a number between zero and one plus a paragraph explaining the gap. The model will not invent taste; it converges toward the taste you described. The whole game is writing the rubric carefully enough that converging toward it is what you actually wanted.</p>
+
+          <h4>VII. Read the traces</h4>
+          <p>Every debugging insight about agent loops came from reading the raw transcript, not running another experiment. Pipe the agent's output to a file, grep for the moment its judgment diverged from yours, edit the prompt for that exact moment, run again. Same muscle as reading a stack trace — except the trace is in English and most of it is the model talking to itself. Skip this and you are tuning by vibe.</p>
+
+          <h4>VIII. Delete the harness</h4>
+          <p>The harness exists to compensate for the model. As the model improves, half of what you wrote last quarter becomes overhead. Context-restarting between sessions was load-bearing for one generation and dead weight for the next; sprint decomposition was the only thing keeping a four-hour build coherent and is now a constraint on a model that holds two hours in its head. Re-read your harness against each new release and delete anything the model now does for free. The harness that grows monotonically is a harness you have stopped reading.</p>
+
+          <h4>IX. The bottleneck always moves</h4>
+          <p>When coding stops being the bottleneck, planning becomes the bottleneck. When planning is solved, verification becomes the bottleneck. When verification is automated, taste becomes the bottleneck. You do not finish; you find the next thing to fix. The whole point of the loop is to make the next bottleneck visible. Find the new bottleneck, fix it, ship a smaller harness, repeat.</p>
+        </div>
+      </details>
+    </section>
+
+    <footer class="foot">
+      对比研究 · 结论未冻结，可随讨论演进 · 未进 butler 体系 · docs/research/
+    </footer>
+  </main>
+</body>
+</html>
