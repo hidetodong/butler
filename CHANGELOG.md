@@ -4,6 +4,21 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.6.0] - 2026-07-02
+
+向后兼容能力新增版。聚合 ITER-0017 ~ ITER-0020（自 v1.5.0 起新收口），并**收口里程碑 MILE-0001「冷启动可恢复性与收口知识固结」**（其下 R1/R2/R3 = ITER-0017/0018/0019）+ 独立迭代 ITER-0020。四个迭代均为向后兼容的规则正文新增 / 新增 hook 规则 / 新增产物，无破坏性变更，按 semver 取区间最高级别为 MINOR。
+
+### 本版新增
+
+- **`.ai/PROJECT.md` 冷启动全貌产物（ITER-0017 · MILE-0001 R1）**：新增状态取向的项目常驻摘要 + `40_Context_Management/project-digest-schema.md` + 冷启动读序接线 + 收口前滚维护 + 部署种子，补长寿项目冷启动"全貌"缺口。详见 `deliveries/ITER-0017-project-digest.md`。
+- **每迭代 changelog 正式化（ITER-0018 · MILE-0001 R3）**：`.ai/01_CHANGELOG.md` 重定义为严格 ADD/EDIT/DELETE 对象级变更流 + `changelog-schema.md` + Should-Fix 迁 `VERIFY_REPORT.Remaining Risks`。详见 `deliveries/ITER-0018-changelog-formalization.md`。
+- **收口门槛（ITER-0019 · MILE-0001 R2）**：新增 hook 规则 `single_active_iteration`（写 ITERATIONS 后 active 行 >1 即 deny）+ 冷启动一致性自检 5 不变量 + 原子收口仪式（`iteration-schema §5.5` 五步）。详见 `deliveries/ITER-0019-close-gate.md`。
+- **提交与切版 SOP（ITER-0020 · 独立迭代）**：`versioning-schema.md`（更名「提交与版本治理协议」）新增 §5 提交规约（`type(scope): 中文描述 (ITER-NNNN)` / `chore(release)` / 非 hook 门禁 / `Co-Authored-By` 署名）+ §6 切版流程扩到 git 操作层（切版前预检复用一致性自检 → add/commit/tag/push 序列 → 切版后自检 / 提交≠切版两路径）。详见 `deliveries/ITER-0020-commit-release-sop.md`。
+
+里程碑级聚合交付见 `deliveries/milestones/MILE-0001-coldstart-recoverability.md`；聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.6.0]: 自 v1.5.0 起聚合 ITER-0017 ~ ITER-0020（含 MILE-0001 收口）
+
 ## [1.5.0] - 2026-06-30
 
 向后兼容能力新增版。聚合 ITER-0015 ~ ITER-0016（自 v1.4.0 起新收口），两个迭代均为向后兼容的规则正文新增 / 既有字段口径强化，无破坏性变更，按 semver 取区间最高级别为 MINOR。
