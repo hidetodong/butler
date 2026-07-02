@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0003 预研 · 项目知识文件夹（PROJECT.md → .ai/project/）</title>
+  <style>
+    :root {
+      --fg: #1f2328; --fg-muted: #59636e; --bg: #f6f8fa; --card: #ffffff;
+      --border: #d1d9e0; --accent: #0969da; --accent-soft: #ddf4ff;
+      --warn: #9a6700; --warn-soft: #fff8c5; --danger: #cf222e; --danger-soft: #ffebe9;
+      --ok: #1a7f37; --ok-soft: #dafbe1;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1rem 4rem; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7; font-size: 15px;
+    }
+    .sheet { max-width: 880px; margin: 0 auto; }
+    header.head {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem 1.75rem; margin-bottom: 1.25rem;
+    }
+    header.head h1 { margin: 0 0 0.6rem; font-size: 1.5rem; line-height: 1.35; }
+    header.head p.sub { margin: 0.4rem 0 0.9rem; color: var(--fg-muted); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center; padding: 0.15rem 0.6rem;
+      border-radius: 999px; font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
+    }
+    .chip.gray { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.35rem; margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.7rem; font-size: 1.1rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    section.block > h2 .n {
+      display: inline-block; width: 1.6rem; color: var(--accent);
+      font-family: var(--mono); font-weight: 700;
+    }
+    section.block :is(p, ul, ol) { margin: 0.55rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.3rem 0; }
+    code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    pre { background: #f0f3f6; border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.9rem 1.1rem; overflow-x: auto; font-family: var(--mono);
+      font-size: 0.82rem; line-height: 1.55; margin: 0.6rem 0; }
+    pre code { background: none; padding: 0; font-size: inherit; }
+    strong { font-weight: 650; }
+    em.q { color: var(--fg-muted); font-style: italic; }
+    blockquote.thesis {
+      margin: 0.7rem 0; padding: 0.7rem 1.1rem; border-left: 4px solid var(--accent);
+      background: var(--bg); border-radius: 0 10px 10px 0; color: var(--fg);
+    }
+
+    table { border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.9rem; }
+    th, td { border: 1px solid var(--border); padding: 0.45rem 0.65rem; text-align: left; vertical-align: top; }
+    th { background: #eef1f5; }
+    td.c { text-align: center; white-space: nowrap; }
+
+    .pillar {
+      border-left: 4px solid var(--accent); background: var(--bg);
+      border-radius: 0 10px 10px 0; padding: 0.85rem 1.1rem; margin: 0.85rem 0;
+    }
+    .pillar h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .pillar h3 .idx {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent);
+      color: #fff; font-family: var(--mono); font-size: 0.85rem; margin-right: 0.5rem; vertical-align: middle;
+    }
+    .pillar.crit { border-left-color: var(--danger); }
+    .pillar.crit h3 .idx { background: var(--danger); }
+    .pillar .tag { font-family: var(--mono); font-size: 0.72rem; padding: 0.05rem 0.4rem;
+      border-radius: 5px; background: var(--danger-soft); color: var(--danger); margin-left: 0.4rem; vertical-align: middle; }
+
+    .redline { background: var(--danger-soft); border: 1px solid #ffc1bd;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.6rem 0; }
+    .redline h3 { margin: 0 0 0.3rem; color: var(--danger); font-size: 1rem; }
+
+    .badge { font-family: var(--mono); font-size: 0.78rem; padding: 0.05rem 0.4rem;
+      border-radius: 5px; background: var(--accent-soft); color: var(--accent); }
+    .verdict { background: var(--ok-soft); border-color: #a7e3b8; }
+    .verdict > h2 { border-bottom-color: #a7e3b8; }
+    .scope-in { color: var(--ok); font-weight: 650; }
+    .scope-out { color: var(--danger); font-weight: 650; }
+
+    footer.foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print { body { background: #fff; padding: 0; }
+      section.block, header.head { border-color: #ccc; break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>项目知识文件夹 —— <code>PROJECT.md</code> → <code>.ai/project/</code></h1>
+      <p class="sub">MILE-0003 方向性预研 · 把冷启动"整体"产物从<strong>薄索引</strong>升级为随迭代<strong>越来越完整</strong>的实体知识库。方向经对话澄清，结论未冻结。</p>
+      <div class="meta">
+        <span class="chip">MILE-0003</span>
+        <span class="chip gray">预研 · 未进体系</span>
+        <span class="chip gray">2026-07-02</span>
+        <span class="chip gray">gated: MILE-0002 收口后开</span>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <section class="block">
+      <h2><span class="n">1</span>目标与缘起</h2>
+      <p>冷启动的"整体"产物今天是单文件 <code>.ai/PROJECT.md</code>——一份 <code>≤1500 tokens</code> 的<strong>薄索引</strong>：几行关键词 + 指针"细节去读代码"。实操里它容易沦为<em class="q">"说几个关键词然后假装这套体系很有用"</em>，AI 读完并不真正知道"项目里有什么"。</p>
+      <p><strong>目标</strong>：要一份 AI 读完就<strong>真懂</strong>项目内容、且<strong>随迭代越来越完整</strong>的知识层，真正能用起来——而不是骨架。它与迭代日志是两个东西：</p>
+      <table>
+        <thead><tr><th>产物</th><th>取向</th><th>答什么</th></tr></thead>
+        <tbody>
+          <tr><td><code>.ai/project/</code>（新）</td><td><strong>整体 / 积分</strong></td><td>系统现在整体是什么、有什么、处于什么状态</td></tr>
+          <tr><td><code>ITERATIONS.md</code> / <code>CHANGELOG</code></td><td>部分 / 增量</td><td>一步步怎么走到今天（delta 流）</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 2 -->
+    <section class="block">
+      <h2><span class="n">2</span>愿景（用户定）</h2>
+      <ul>
+        <li><strong>解构成文件夹</strong>：单文件 <code>PROJECT.md</code> → <code>.ai/project/</code> 知识文件夹，<strong>按主题</strong>拆分。</li>
+        <li><strong>有入口</strong>：文件夹含一个 <code>00_INDEX.md</code>，冷启动第一读、指向其余。</li>
+        <li><strong>越来越完整</strong>：内容随迭代持续补全，AI 越来越方便地知道"项目里有什么东西"。</li>
+        <li><strong>真能用</strong>：装消化过的真内容，不是关键词占位、也不是纯指针。</li>
+        <li><strong>通用 + dogfood</strong>：做成任何部署项目都能用的 SOP schema，butler 仓自身先吃自己的狗粮。</li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section class="block verdict">
+      <h2><span class="n">3</span>结论：能，但这是一次哲学切换</h2>
+      <p><strong>能完成目标——但不是"把 PROJECT.md 切成几块"那么轻。它是从「薄索引」到「实体知识库」的<u>有意识哲学切换</u></strong>，成立有 4 个硬前提（§5）。缺了，产出的会比现在<strong>更危险</strong>：看着完整、其实滞后，让 AI 自信地错。</p>
+      <p>要先认清在推翻现 <code>project-digest-schema</code> 的哪些明文价值：</p>
+      <table>
+        <thead><tr><th>现 schema（明文）</th><th>本愿景（反转）</th></tr></thead>
+        <tbody>
+          <tr><td><code>≤1500 tokens</code>、"<strong>摘要不是百科</strong>"</td><td>越来越完整、概括项目内容</td></tr>
+          <tr><td><strong>指针化</strong>：深内容指向真源、不内嵌</td><td>装真内容、读完就懂"有什么"</td></tr>
+          <tr><td>§5"多数迭代只动 0-2 行甚至不动，<strong>避免维护膨胀</strong>"</td><td>随每次迭代折叠更新、持续补全</td></tr>
+        </tbody>
+      </table>
+      <p>即 MILE-0003 本质是<strong>反转 §5 的维护哲学</strong>（从"按需微调"→"每次收口必折叠"）。换来"真能用"，代价是<strong>更高的维护纪律</strong>——这笔账要认下来。</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="block">
+      <h2><span class="n">4</span>矛盾怎么消解（成立的关键）</h2>
+      <p>"完整"与"不膨胀 / 不腐"能共存，靠三条重定义：</p>
+      <table>
+        <thead><tr><th>张力</th><th>消解</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>完整 vs 有界</td>
+            <td><strong>完整 = 覆盖广度，不是细节深度</strong>（地图 ≠ 疆域）。体积 ∝ 项目复杂度、<strong>不 ∝ 迭代数</strong>；每项到深处仍指针回代码 / 规则。</td>
+          </tr>
+          <tr>
+            <td>越来越完整 vs 禁纵向堆积</td>
+            <td><strong>"完整" ≠ "变长"</strong>：完整靠覆盖 + 折叠折新，当前真相 overwrite，<strong>禁历史层</strong>；被取代的内容删除、不叠。</td>
+          </tr>
+          <tr>
+            <td>越来越完整 vs 反 harness 膨胀（LOOPS §VIII）</td>
+            <td><strong>知识地图（要完整）≠ harness 机器（要精简）</strong>，二者正交。好地图反而帮你看清哪些壳能删——不违反"删壳"。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 5 -->
+    <section class="block">
+      <h2><span class="n">5</span>四个成立前提（成败在此）</h2>
+
+      <div class="pillar">
+        <h3><span class="idx">1</span>地图非百科</h3>
+        <p>完整 = <strong>广度覆盖</strong>；每份文件<strong>有界、可整篇读完</strong>，满则拆新文件；密度到"每项 + 它到底干什么 + 真源"（见 §7 样例），不是关键词、也不是复制代码。</p>
+      </div>
+
+      <div class="pillar crit">
+        <h3><span class="idx">2</span>强制 + 可验证的收口折叠<span class="tag">make-or-break</span></h3>
+        <p>本迭代 delta → <strong>按主题路由</strong>进对应文件，<strong>必做</strong>（非"按需"）；再加一条<strong>漂移自检不变量</strong>（文件夹 vs 现实是否脱节，脱节先暴露）。有现成先例可复用：MILE-0001 的冷启动 5 不变量 + 原子收口仪式。</p>
+        <p><strong>成本可控</strong>：delta 已在 <code>CHANGELOG</code> 记好、绑 AC，收口是<strong>路由</strong>不是重推导——成本 ∝ 本迭代改动量、<strong>不 ∝ 文件夹大小</strong>。</p>
+      </div>
+
+      <div class="pillar">
+        <h3><span class="idx">3</span>digest-and-point，已有真源不复制</h3>
+        <p>butler 仓自己是<strong>最难的 dogfood</strong>（<code>Coder/README.md</code> / <code>architecture-overview</code> 已在）：架构类文件必须"摘当前全貌 + 补 README 没有的现状 / 成熟度层 + 指针"，<strong>不逐字抄</strong>。跑通 butler，就对任何项目通用。绿地项目则以知识文件夹为主场。</p>
+      </div>
+
+      <div class="pillar">
+        <h3><span class="idx">4</span>推荐核心 topic 集 + 受控扩展</h3>
+        <p>新内容 → 新 topic 文件，<strong>登记进 <code>00_INDEX.md</code></strong>（沿用"注册进 README / 无隐式依赖"的老不变量）。这个受控扩展本身就是<strong>"越来越完整"的引擎</strong>。</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="block">
+      <h2><span class="n">6</span>维护回路（整体靠部分喂养）</h2>
+      <blockquote class="thesis">
+        整体 = <code>.ai/project/</code>（积分，当前真相全貌）；部分 = 迭代 <code>CHANGELOG</code>（ADD/EDIT/DELETE 增量）。<strong>收口时把本迭代 delta 按主题折进对应文件</strong>——不是重写全份，是定向路由。写代码 = "改了什么"，收口 = 把"改了什么"折进"现在是什么"。这样它随迭代长、且不腐。
+      </blockquote>
+      <p>落点：把现有 <code>iteration-schema §5.5 step④</code>"按需前滚 PROJECT.md"从单文件 · 按需，泛化成<strong>文件夹 · 按主题 · 必做</strong>；里程碑收口同理（<code>milestone-schema §7.4</code>）。</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="block">
+      <h2><span class="n">7</span>拟定结构 + 密度样例</h2>
+      <p>按主题细拆（推荐核心集，可扩展）：</p>
+      <pre><code>.ai/project/
+  00_INDEX.md      # 入口：一段话讲清项目是什么 + 本文件夹读序/地图
+  identity.md      # 定位/目的/使用者/边界
+  architecture.md  # 模块地图：每个模块 + 它到底管什么 + 关键文件
+  capabilities.md  # 当前能做什么：命令/引擎/触发/产物（真清单）
+  invariants.md    # 关键长期决策与不变量
+  constraints.md   # 现行约束
+  debt.md          # 已知长期欠债
+  frontier.md      # 当前形态/活跃战线/下一个瓶颈（最快变）</code></pre>
+      <p>密度校准——<code>architecture.md</code> 该长这样（digest 级、真信息，非关键词）：</p>
+      <pre><code>## SOP Core（00/20/30/40 · 通用主干，所有任务默认走）
+- 00 System_Prompt — 协作身份 + 总调度逻辑 + 输出呈现协议（结论先行/统一标号/表格化）。
+- 20 Workflow_Lifecycle — P1→P5 状态机 + 四件套 schema + 迭代/里程碑/版本/迁移/交付规则。骨架，最大一层。
+- 30 Quality_Gate — linting、测试策略、复核标准、纠错收口契约（修到真过/禁降级修复/诚实停，P4 常驻）。
+- 40 Context_Management — 状态外化、冷启动读序、handoff、角色切换。
+
+## 扩展模块（opt-in 壳，不进默认主线）
+- 55 /loop — 收敛闭环：P4 纠错升档，死磕到 AC 通过，5 轮熔断。
+- 60 /review — 复核：验证者≠实现者，fresh-context 子 agent、spec-only、refute 即阻断收口。
+- 65 /dangerous — 无人值守长程自治：自审门替代人 ACK，审计+回滚+P5 强制复核。
+- 70 /preference — 偏好探针：只学真人选择、外置存储、反哺 opt-in。
+
+## 关键真源
+- 目录+读序 Coder/README.md ｜分层 architecture-overview ｜版本 VERSION ｜约束 SSOT templates/rule-card.md</code></pre>
+    </section>
+
+    <!-- 8 -->
+    <section class="block">
+      <h2><span class="n">8</span>最大风险</h2>
+      <div class="redline">
+        <h3>陈旧的完整，比诚实的薄更毒</h3>
+        <p>现在的薄索引至少不骗人（"细节去读代码"）；一个立志完整却没被严格维护的知识库，会变成一份<strong>自信的谎</strong>——AI 信了滞后内容、做出错判。整套设计<strong>生死系于前提 2</strong>（强制 + 可验证的收口折叠）。它若不硬，MILE-0003 会精确地产出用户最讨厌的"假装有用"，只是更大份。</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="block">
+      <h2><span class="n">9</span>范围骨架 + 路线图草案</h2>
+      <p><span class="scope-in">In Scope</span></p>
+      <ul>
+        <li><code>.ai/PROJECT.md</code> 解构为 <code>.ai/project/</code> 主题知识文件夹（含 <code>00_INDEX</code> 入口）。</li>
+        <li>改写 <code>project-digest-schema</code> → 文件夹 schema：主题集、每份边界、INDEX 契约、写作密度口径。</li>
+        <li>反转维护哲学：收口<strong>强制</strong>按主题折叠 delta（泛化 <code>iteration-schema §5.5</code> / <code>milestone §7.4</code>）。</li>
+        <li>新增"知识文件夹漂移自检"不变量（复用 / 扩展冷启动一致性自检）。</li>
+        <li>冷启动读序更新（<code>context-persistence §6</code>：第一读 <code>PROJECT.md</code> → <code>project/00_INDEX.md</code> + 主题）。</li>
+        <li>部署种子（<code>mcv-deployment</code>）+ 迁移配方（<code>PROJECT.md → project/</code> 的 rename+split+restamp）。</li>
+        <li>butler 仓自身 dogfood：用新结构重述 butler 现状并对齐现实。</li>
+      </ul>
+      <p><span class="scope-out">Out of Scope</span></p>
+      <ul>
+        <li>不改 P1–P5 状态机、四件套、AC 脊柱、迭代 / 里程碑双层。</li>
+        <li>不把知识文件夹变成变更流（那是 <code>ITERATIONS</code> / <code>CHANGELOG</code> 的活）。</li>
+        <li>不追求细节完整——是广度地图、非疆域百科。</li>
+        <li>不做自动生成（本 milestone 只定 schema + 手工折叠回路；自动化留后续）。</li>
+      </ul>
+      <p>路线图草案（扁平 · 原子 · 一项 ≈ 一迭代，实际 ITER 开启时才绑号）：</p>
+      <table>
+        <thead><tr><th class="c">路线项</th><th>范围切片</th></tr></thead>
+        <tbody>
+          <tr><td class="c"><span class="badge">R1</span></td><td>文件夹 schema + 主题集 + INDEX 契约 + 每份边界（改写 project-digest-schema）</td></tr>
+          <tr><td class="c"><span class="badge">R2</span></td><td>维护回路：收口强制主题折叠 + 漂移自检不变量（改 iteration-schema §5.5 / milestone §7.4 / 一致性自检）</td></tr>
+          <tr><td class="c"><span class="badge">R3</span></td><td>冷启动读序切换 + digest-and-point 纪律（context-persistence §6 + schema 口径）</td></tr>
+          <tr><td class="c"><span class="badge">R4</span></td><td>部署种子 + 迁移配方（mcv-deployment + migrations/vX.Y.Z）</td></tr>
+          <tr><td class="c"><span class="badge">R5</span></td><td>butler 仓 dogfood：用新结构重写自身 <code>.ai/project/</code> 并对齐现实 + 文档注册（HUMAN_GUIDE / README）</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10 -->
+    <section class="block">
+      <h2><span class="n">10</span>版本 / 迁移影响</h2>
+      <ul>
+        <li>重构冷启动<strong>核心产物契约 + 读序 + 迁移</strong>——按 semver 属 <strong>MAJOR（破坏性）</strong>，切版必写迁移配方 + 打 tag。</li>
+        <li>利好：<code>PROJECT.md</code> <strong>不受 hook 门禁</strong>（hook 只拦 CONCEPT/AC/TECH_PLAN + 台账），故本次<strong>无需改 hook</strong>，耦合面小于看起来。</li>
+        <li>迁移 typed 步骤预期：<code>[rename]</code>（PROJECT.md → project/）+ <code>[split]</code>（按主题切）+ <code>[restamp]</code>（版本戳）。</li>
+      </ul>
+    </section>
+
+    <!-- 11 -->
+    <section class="block">
+      <h2><span class="n">11</span>状态与落点</h2>
+      <ul>
+        <li><strong>预研 · 未进体系</strong>：不进 <code>Coder/</code> 规则链、不在 README 读序注册、不排 plan。</li>
+        <li><strong>gated</strong>：MILE-0002 仍 active（R2/ITER-0022 在飞）；<strong>不动 <code>MILESTONES.md</code></strong>，待 MILE-0002 收口后正式 <code>/milestone</code> 开题。</li>
+        <li>转正路径：届时另起 <code>docs/superpowers/specs/</code> 设计取舍 + <code>plans/</code> 计划，从本预研迁出。</li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      MILE-0003 方向性预研 · 结论未冻结，可随讨论演进 · 未进 butler 体系 · docs/research/
+    </footer>
+  </main>
+</body>
+</html>
