@@ -25,3 +25,10 @@
 - 2026-07-02 · rollback-anchor · ITER-0021 · 回滚锚点=本轮 iteration-open 提交 `d351075`（P1-P3 产物 + 台账）；P4 自治改动叠其上，`git reset` 到锚点即回退全部自治改动、保留已 ACK 的计划。待改 6 文件（testing-strategy / verify-schema / rule-card / README / HUMAN_GUIDE / PROJECT）在锚点均已提交干净。
 - 2026-07-02 · P5-review · ITER-0021 · dangerous-ack · 强制完整审查（§7.3）升格独立复核：起 fresh-context general-purpose 子 agent，spec-only 逐 AC + 多维（一致性 / 可读性 / 边界 / dogfood），验证者≠实现者。结论：**8/8 AC confirm，0 Must Fix，0 Should Fix**，2 Nit（PROJECT 前滚=收口债已办；verify 模板自洽=确认）。可收口。
 - 2026-07-02 · close · ITER-0021 · 原子收口五步完成：归档四件套 + 切片 → 交付 md/html → 台账 closed + current=none + 收敛 01_CHANGELOG → PROJECT 前滚（自动化优先纪律）→ 收口自检 5 不变量全绿。北极星（R1 单迭代）达成，危险模式本次自治终止、交还用户；R2-R5 待指令。危险模式开关无持久落点（本仓非部署项目），退出即回标准模式。
+
+## ITER-0022 — R2 分级置信 + 代理验证 + 依赖感知准入（MILE-0002）
+
+- 2026-07-02 · dangerous-on · ITER-0022 · 用户"继续危险模式做 R2"。承 ITER-0021 precedent 本会话实质执行：自治 + 本账本审计 + P5 强审 + 回滚锚点 + 交付披露。北极星=**ITER-0022 R2（单迭代）**；R3-R5 收口后交还。**本迭代 P2/P3 均由自审门替代 ACK**（危险模式自 P2 起全程接管）。
+- 2026-07-02 · iter-open · ITER-0022 · 领号 ITER-0022、置 active、`current` 指向它、归属 MILE-0002 R2；四件套 overwrite-only 覆写。
+- 2026-07-02 · P2-self-ack · ITER-0022 · dangerous-ack · 自审门（对照 `acceptance-schema.md`）：8 条 AC 均可验证且绑定验证动作（本仓验证=读规则正文确认存在且自洽，确定性可复现）；覆盖功能（G1 置信档 / G2 代理验证 / G3 准入 + 无人残余）、结构（G4 接线一致性 + §号对账）、质量（AC4 诚实边界 / AC7 红线）三类；In/Out Scope 清晰（不实现桥 R3 / 不接续跑 R4 / 不重构 R1 分道字段划 Out）；风险如实暴露（记法过密、与 §8 熔断语义重叠、代理验证被误读）。无"不可验证 / 范围膨胀 / 隐藏未决项"，Open Questions Q1-Q4 转入 P3 定夺 → 通过，自主 ACK，`AC_LIST.md` 置 `ack-frozen`（ACK 方式=自审门）。
+- 2026-07-02 · P3-self-ack · ITER-0022 · dangerous-ack · 自审门（对照 `tech-plan-schema.md` + `AC_LIST.md`）：TECH_PLAN 6 项 DD 逐项映射 AC1-8（DD1→AC1/2、DD2→AC3/4、DD3→AC5/6/7、DD4 化解 §8 语义重叠风险、DD5→AC8、DD6 边界守恒）；契约边界清晰（置信档合并进 R1 lane 不新增字段；代理验证 earned 弱不假绿；准入闸区分叶子/卡下游）；**未命中 `lifecycle §5` 影响面失控信号**——改动虽跨 3 文件 2 层（20/30/65），但三件事同属"置信 + 无人处置"一主题、增量式追加（新 §3.1 / §7.4 + 既有节追 bullet）、不 renumber、不碰状态机/脊柱/hook，属主题内聚而非跨模块扩张；无 active profile 可违背；已比对更小方案（另立置信字段 vs 合并 lane）取后者。Open Questions Q1-Q4 已定（合并记法 / §3.1 子节 / §7.4+§8 呼应 / rule-card 半句）。通过，自主 ACK。

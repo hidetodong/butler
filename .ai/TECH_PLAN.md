@@ -1,60 +1,35 @@
-# TECH_PLAN — ITER-0021
+# TECH_PLAN — ITER-0022
+
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过 §5.2 P3 设计自审门），未经用户确认（ITER-0022，2026-07-02）。
 
 # Goal
 
-- 支撑 AC1-AC8：`testing-strategy.md` 升级为自动化优先 + 分道口径；`verify-schema.md` 增双道回填；同步 README / rule-card / PROJECT。
-
-# Files / Modules to Change
-
-- `Coder/30_Quality_Gate/testing-strategy.md`（核心）：§2 建议→纪律；新增「分道口径」节（作新 §3，原 §3-6 顺移 §4-7）；frontmatter scope 补分道。
-- `Coder/20_Workflow_Lifecycle/verify-schema.md`（核心）：§3 模板 `AC Status` 加 lane 标记 + 新增「人测道小结」字段；§4 编写规则补分道回填要求。**只在 §3/§4 内追加、不 renumber**（护 `changelog-schema.md §4` 引用不断）。
-- `templates/rule-card.md`：「执行纪律」段加一句"能自动化的验证必须自动化，人测只留机器不可测残余"。
-- `Coder/README.md`：§99 群组描述补自动化优先；§134 verify 描述补分道回填。
-- `HUMAN_GUIDE.md`：testing-strategy / verify-schema 两处注释同步（指针一致，AC6 spirit）。
-- `.ai/PROJECT.md`：收口前滚，现行纪律补自动化优先一句。
-
-# Interface / Contract
-
-- 分道口径契约（新增）：每条 AC ∈ {auto 道, human 道}；human 道 = 机器不可测残余；判定**默认归 auto 道**，仅确证不可测才 human；human 道类目锚点 = {主观审美, 物理设备, 真人感知, 外部人工闸}。
-- VERIFY_REPORT 回填契约（扩写）：`AC Status` 行内标 `(auto)` / `(human)`；新增「人测道小结」段列 human 项 + 待测 / 结论。既有 6 必填字段结构不变。
-
-# State / Boundary
-
-- 只动规则正文 + 指针；不动 hook 代码、四件套字段脊柱、P1-P5 状态机、correction-contract。
-- verify-schema 不 renumber（护 §4 引用）；testing-strategy 顺移安全（无 §N 外部引用，已 grep 验证）。
-- 弱视觉 / 代理验证 / 分级置信 / 依赖感知准入 = R2，不写入；「交付自测」桥 = R3，不实现。
+落地 MILE-0002 R2：在 R1 分道二分之上叠**分级置信**（可靠 / 弱 / 待人），补**代理验证**把弱可测项拉回自动道，补**无人残余处置 + 依赖感知准入**让 `/dangerous` 长程自治遇人测残余不僵死、不假绿。全部为规则正文增量，不动状态机 / 字段脊柱 / hook。
 
 # Design Decisions
 
-- DD1（Q1）：分道口径作 testing-strategy **新 §3**（§2 立纪律 → §3 给判定，动线顺），原 §3-6 顺移 §4-7。testing-strategy 无 §N 外部引用（grep 确认），顺移安全。
-- DD2（Q2）：verify 分道回填 = 行内 lane 标记 `[x] AC1 (auto) ✓` + 独立「人测道小结」段。理由：行内最省、合现有紧凑式；小结段集中列残余，给 R3 桥 JSON 输入预留结构锚点。
-- DD3（Q3）：rule-card 收录一句到「执行纪律」段（非新卡、非机械门）。与 ITER-0020 提交规约不入 rule-card 不冲突——那是格式约定，这是执行纪律，执行纪律段正是其家。
-- DD4（Q4）：给 human 道**类目锚点清单**（主观审美 / 物理设备 / 真人感知 / 外部人工闸），作"允许落人测"的封闭性锚，防随手推人。
-- DD5：verify-schema 只在 §3/§4 内追加、不 renumber，保护 `changelog-schema.md §4` 引用。
-- DD6：README 更新落 §99（quality gate 自动化优先）+ §134（verify 分道）；HUMAN_GUIDE 两注释同步（指针一致）。
+- **DD1 置信档记法（AC1/AC2）**：置信档**合并进 R1 的 lane 标记**，不另立字段——`(auto·可靠)` / `(auto·弱)` / `(human·待人)`。三档判据写入 `verify-schema.md §4`（承既有「分道回填」bullet 追加「分级置信」bullet）；`§3` 模板 AC Status 示例与「人测道小结」块更新为带档形式。理由：承 R1 行内式最省、可读；`待人` 天然等价于 human 道残余，不产生新概念。
+- **DD2 代理验证落点（AC3/AC4）**：`testing-strategy.md §3`（分道口径）下新增 **§3.1「代理验证」**——手段清单（截图对基线 diff / VLM 判读截图 / 启发式断言）+ earned `弱` 档 + 诚实边界（不冒充可靠绿）+ 置信三档统一口径；`§3` 判定纪律补一句"归人测道前先问能否造弱检查，能造=自动道弱档、不算残余"。新增子节不改 §3 编号，§4/§5 对 §3 的引用不受影响。
+- **DD3 无人残余处置落点（AC5/AC6/AC7）**：`dangerous-engine.md §7`（安全护栏）下新增 **§7.4「无人残余处置与依赖感知准入」**——① 不阻塞、异步入账 ② 先尽量弱验证顶 ③ 依赖感知准入闸（叶子残余续跑 / 卡下游三处置：弱验证顶·砍分支·不具准入资格交还）④ 红线绝不假绿。additive，不 renumber。
+- **DD4 与 §8 熔断的语义边界（风险 R2）**：§7.4 引语明确两条不同路径——**熔断**=能力 / 安全触顶、写 RCA 交还（既有 §8）；**残余入账**=不阻塞、续跑（新 §7.4）；仅当残余**卡死下游关键路径且连弱验证都造不出**时，才走准入闸交还。§8 补一句"待人残余异步入账、不阻塞自治继续"与 §7.4 呼应闭环。
+- **DD5 接线（AC8）**：`rule-card.md` 自动化优先行补半句（能造弱检查就造 / 标弱不假绿）；`README.md` §99 group desc + §132 dangerous desc + §134 verify desc 补置信档 / 无人残余处置；`HUMAN_GUIDE.md` 275 / 286 注释补置信档 / 代理验证；`PROJECT.md` 现行约束前滚（收口步，属收口债）。
+- **DD6 边界守恒**：不改 P1-P5 状态机、四件套脊柱、AC 验收脊柱、hook、correction-contract；不重构 R1 分道二分字段；不 renumber 既有 §（testing-strategy 新增 §3.1 子节、dangerous 新增 §7.4，均为末位追加）。`changelog-schema §4` 依赖的 verify-schema §4 只**追加 bullet**、不移动。
 
 # Execution Steps
 
-- [ ] T1 testing-strategy §2：建议措辞 → 自动化优先硬纪律（能自动必自动 + UI/交互纳入自动道：浏览器自动化 / headless / 可编程视觉断言）→ AC1
-- [ ] T2 testing-strategy §3"关键路径手动验证" → "默认自动、人测例外残余"→ AC1
-- [ ] T3 testing-strategy 新增「分道口径」节（新 §3）：auto/human 判定 + 默认归 auto + human 类目锚点清单；原 §3-6 顺移 §4-7；frontmatter scope 补分道 → AC2
-- [ ] T4 verify-schema §3 模板 `AC Status` 加 `(auto)`/`(human)` 标记 + 新增「人测道小结」字段 → AC3
-- [ ] T5 verify-schema §4 编写规则补分道回填要求（auto 给可复现证据 / human 说明为何不可测）；确认 6 必填字段不增删 → AC4, AC5
-- [ ] T6 rule-card 执行纪律段加自动化优先一句 → AC7
-- [ ] T7 README §99 + §134 描述同步 + HUMAN_GUIDE 两注释同步 → AC6
-- [ ] T8 PROJECT.md 收口前滚补自动化优先纪律一句 → AC7
-- [ ] T9 P5：git diff 核对不变量未动 + 无 R2/R3 混入 + 逐 AC 回填 VERIFY（首次带分道）→ AC8
+- [ ] T1（AC1/AC2）：`verify-schema.md` §4 加「分级置信」bullet（三档判据 + 记法）；§2 条件字段说明 + §3 模板 AC Status 示例 + 人测道小结块更新为带置信档形式。
+- [ ] T2（AC3/AC4）：`testing-strategy.md` §3 新增 §3.1「代理验证」（手段清单 + earned 弱 + 诚实边界 + 三档口径）；§3 判定纪律补"先问能否造弱检查"一句。
+- [ ] T3（AC5/AC6/AC7）：`dangerous-engine.md` §7 新增 §7.4「无人残余处置与依赖感知准入」（四要点 + 叶子/卡下游区分 + 红线 + 与 §8 边界引语）。
+- [ ] T4（AC7）：`dangerous-engine.md` §8 补"待人残余异步入账、不阻塞自治继续"呼应句。
+- [ ] T5（AC8）：`rule-card.md` 执行纪律「自动化优先」行补半句。
+- [ ] T6（AC8）：`Coder/README.md` §99 group desc + §132 dangerous desc + §134 verify desc 更新。
+- [ ] T7（AC8）：`HUMAN_GUIDE.md` 275 / 286 注释更新。
+- [ ] T8（AC8）：全仓 §号 + 引用对账（testing §3 引用仍有效、verify §4 未移位、新 §号无悬挂）。
+- [ ] T9：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC）+ 原子收口五步（含 PROJECT 前滚）。
 
-# Verification Plan
+# Impact / Boundary
 
-- AC1/2：读改后 testing-strategy §2/§3。
-- AC3/4/5：读改后 verify-schema §3/§4；比对 6 必填字段未增删。
-- AC6：grep README / HUMAN_GUIDE。
-- AC7：rule-card diff + PROJECT diff。
-- AC8：`git diff --stat` + 通读无 R2/R3 混入。
-
-# Risks / Open Questions
-
-- 顺移断引用风险 → 缓解：T3 后 grep `testing-strategy.md §`（已知外部无 §引用）+ 文件内 grep `§`。
-- R1/R2 边界混淆 → 缓解：DD 只写确定性自动化，弱信号显式留 R2（AC_LIST 风险项已记）。
-- Q1-Q4 已在 DD1-DD4 定案，无遗留。
+- 改（核心 3）：`verify-schema.md`、`testing-strategy.md`、`dangerous-engine.md`。
+- 改（接线 4）：`rule-card.md`、`Coder/README.md`、`HUMAN_GUIDE.md`、`.ai/PROJECT.md`（收口前滚）。
+- 不碰：状态机 / 四件套脊柱 / AC 脊柱 / hook / correction-contract / 桥（R3）/ 续跑（R4）。
+- 回滚：本轮 iteration-open 提交为锚点，P4 改动叠其上，`git reset` 到锚点即回退全部自治改动、保留已自审 ACK 的计划。
