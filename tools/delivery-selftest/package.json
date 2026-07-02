@@ -1,0 +1,15 @@
+{
+  "name": "delivery-selftest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "butler 驻留人测回传桥：JSON 清单 → GitHub 风格分步流程页 → 四态回传 + 自退（Node 零三方依赖）",
+  "main": "bridge.js",
+  "bin": { "delivery-selftest": "bridge.js" },
+  "scripts": {
+    "start": "node bridge.js",
+    "test": "node test/bridge.test.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT"
+}

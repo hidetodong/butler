@@ -11,6 +11,7 @@
 - `Composer/` — 杂项事务
 - `HUMAN_GUIDE.md` — 面向人类用户的操作手册
 - `templates/` — 目标项目使用的 CLAUDE.md 模板、浓缩规则卡、交付总结固定格式 HTML 模板（`delivery.html.template`，SSOT，见 `Coder/20_Workflow_Lifecycle/delivery-summary.md` §9）与 hook 体系（`hooks/`、`settings.hooks-snippet.json`）
+- `tools/` — butler 驻留可执行工具（非规则、非部署模板；目标项目通过传参调用，不拷副本）。当前含 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖：JSON 清单 → GitHub 风格分步流程页 → 四态回传 → 写 results.json + 自退；MILE-0002 R3）
 - `VERSION` — 版本号机器 SSOT（单行 `MAJOR.MINOR.PATCH`）；提交规约、semver 语义与切版流程见 `Coder/20_Workflow_Lifecycle/versioning-schema.md`
 - `CHANGELOG.md` — 人读发布史，按版本聚合迭代（只引用 `deliveries/` 与 `.ai/ITERATIONS.md`，不复述）
 

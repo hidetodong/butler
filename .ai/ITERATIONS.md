@@ -1,10 +1,10 @@
 # 迭代台账
 
-current: ITER-0023
+current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
-| ITER-0023 | R3「交付自测」桥工具：Node 零依赖、GitHub 风格——manifest JSON → 渲染分步流程页 + 本地服务 + 开浏览器 → 每项四态（通过/未通过/跳过/延后处理）+ 备注 → 写 results.json + 进程自退；定义输入/输出契约 + 真测（node 断言 + Playwright） | active | 2026-07-02 | — | MILE-0002 | — |
+| ITER-0023 | R3「交付自测」桥工具：Node 零依赖、GitHub 风格——manifest JSON → 渲染分步流程页 + 本地服务 + 开浏览器 → 每项四态（通过/未通过/跳过/延后处理）+ 备注 → 写 results.json + 进程自退；定义输入/输出契约 + 真测（node 断言 + Playwright） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0023-delivery-selftest-bridge.md |
 | ITER-0022 | R2 分级置信 + 代理验证 + 依赖感知准入：verify-schema 加「可靠 / 弱 / 待人」置信档 + testing-strategy 代理验证（截图 diff / VLM 判图）earned 弱档 + dangerous-engine 无人残余处置（不阻塞入账 / 卡下游不硬闯 / 绝不假绿） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0022-graded-confidence-proxy-and-admission.md |
 | ITER-0021 | R1 自动化优先纪律 + 分道口径：testing-strategy 升级为竭尽自动化（含浏览器自动化覆盖 UI / 交互）+ verify-schema 双道回填；人测道界定为机器不可测残余 | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0021-automation-first-testing-lanes.md |
 | ITER-0020 | 提交与切版 SOP：提交规约成文（`type(scope): 描述 (ITER-NNNN)` + `chore(release)`）+ versioning-schema §5 切版 git 仪式补全 | closed | 2026-07-02 | 2026-07-02 | — | deliveries/ITER-0020-commit-release-sop.md |

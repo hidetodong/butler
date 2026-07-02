@@ -9,6 +9,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - `Coder/`：核心 SOP 体系，三层分明——SOP Core（`00` 身份/逻辑/呈现、`20` 生命周期、`30` 质量门禁、`40` 上下文）、Domain Profiles（`10` 按栈启用）、Business Extension（`99` 最高优先级业务约束）。入口 `Coder/README.md`（目录 + 读取顺序真源）。
 - 扩展模块（按需触发）：`50` 脑暴 `/ideation`、`55` 收敛闭环 `/loop`、`60` 代码复核 `/review`、`65` 危险模式 `/dangerous`、`70` 偏好探针 `/preference`。
 - `templates/`：目标项目的 CLAUDE.md 模板、浓缩规则卡（`rule-card.md` SSOT）、交付 HTML 模板、hook 体系（PreToolUse 机械门禁）。
+- `tools/`：butler 驻留可执行工具（非规则、非部署模板；目标项目传参调用、不拷副本）。当前含 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖：manifest JSON → GitHub 风格分步流程页 → 四态回传 → 写 results.json + 自退；MILE-0002 R3，契约见其 README）。
 - `Learner/` / `Composer/`：学习事务 / 杂项事务子系统。
 - 发布元数据：`VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（发布史）、`migrations/`（迁移配方）、`deliveries/`（交付总结）。
 

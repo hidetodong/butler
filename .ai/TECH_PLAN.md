@@ -19,14 +19,14 @@
 
 # Execution Steps
 
-- [ ] T1（AC6/AC1/AC2）：`tools/delivery-selftest/render.js`——`render(manifest)`、`VERDICTS`、`escapeHtml`；GitHub 风格模板（保真样例结构）+ 客户端脚本（DOM/textContent 构建、四态、进度、POST /submit）。
-- [ ] T2（AC1/AC3/AC4）：`tools/delivery-selftest/bridge.js`——`parseArgs` / `createBridge` / `openBrowser` / `summarize` / `main`；路由 GET·health·submit、写 results、自退。
-- [ ] T3（AC5）：`tools/delivery-selftest/README.md`——用法 + manifest schema + results schema + 四态路由表 + 与 R4/R5 边界。
-- [ ] T4（AC5）：`tools/delivery-selftest/example/manifest.json`——示例清单（3 项，覆盖典型人测类目）。
-- [ ] T5（AC7）：`tools/delivery-selftest/test/bridge.test.js`——node 内建端到端：createBridge(exitOnSubmit:false) → GET 断言 → POST 断言 results.json/summary → 另 spawn 真进程测 exit 0；render 纯函数断言。
-- [ ] T6（AC7）：实际运行 `node test/bridge.test.js`，全过（exit 0）。
-- [ ] T7（AC8）：Playwright 起真浏览器打开桥页 → 点四态 + 填备注 + 提交 → 断言 done 面板 + results.json；截图留证（代理验证·弱档）。若环境不可用则如实标未执行、落 Remaining Risks。
-- [ ] T8（AC9）：仓库根 `CLAUDE.md` 目录职责加 `tools/`；工具 README 已在 T3。
+- [x] T1（AC6/AC1/AC2）：`render.js`——`render` / `VERDICTS` / `escapeHtml` / `safeJson`；GitHub 风格模板 + 客户端 DOM/textContent 构建（安全渲染）。
+- [x] T2（AC1/AC3/AC4）：`bridge.js`——`parseArgs` / `createBridge` / `openBrowser` / `summarize` / `main`；路由 GET·health·favicon·submit、写 results、自退。
+- [x] T3（AC5）：`README.md`——用法 + manifest / results 两 schema + 四态路由表 + R4/R5 边界。
+- [x] T4（AC5）：`example/manifest.json`——3 项示例（真机 / 主观动效 / 外部短信通道）。
+- [x] T5（AC7）：`test/bridge.test.js`——node 内建端到端 + render 单测 + 真进程自退。
+- [x] T6（AC7）：`node test/bridge.test.js` 全过（8 checks，exit 0）。
+- [x] T7（AC8）：Playwright 真浏览器打开桥页 → 点四态（通过/延后/跳过）→ 提交 → done 面板出现 + results.json 落盘 + **后台服务进程 exit 0 自退**（代理验证·弱档，真端到端）。
+- [x] T8（AC9）：仓库根 `CLAUDE.md` 目录职责加 `tools/`（含 delivery-selftest 说明）。
 - [ ] T9：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC）+ 原子收口五步（含 PROJECT 前滚 tools/ + 桥）。
 
 # Impact / Boundary

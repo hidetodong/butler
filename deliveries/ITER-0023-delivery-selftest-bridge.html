@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图（填自 templates/delivery.html.template）
+  引用真源以同名 .md 为准 · 迭代级已删除 ROADMAP 块 · 语义见 delivery-summary.md §9
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0023 交付总结 · 交付自测桥工具</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.danger { background: var(--warn-soft); color: var(--warn); border-color: #eed888; }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>「交付自测」桥工具：Node 零依赖人测回传桥（JSON → 分步流程页 → 四态回传 → 自退）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0023</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-02</span>
+        <span class="chip danger">⚠️ 危险模式 · P2/P3 自审门 · P5 独立复核</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>MILE-0002 第三个路线项 R3（扁平原子）。承 R1（分道）R2（置信）——R3 造"人测完怎么把结论传回"的物理通道。</li>
+        <li>缺口：R1/R2 把人测残余结构化了，但<strong>结论断在人这侧、butler 收不回</strong>。</li>
+        <li>目标：造只驻留 butler 仓的 Node 零依赖桥——外部项目传 manifest JSON → 渲染 GitHub 风格分步流程页 + 起本地服务 + 开浏览器 → 四态（通过/未通过/跳过/延后处理）+ 备注 → 写 <code>results.json</code> + 进程自退；定输入/输出契约。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增 <code>tools/</code>（butler 驻留可执行工具的家）+ <code>tools/delivery-selftest/</code>：</li>
+        <li><code>render.js</code>：<code>render(manifest)→HTML</code> 纯函数（GitHub 风格：sticky 进度条 / 编号分步卡 / 四态按钮 / 备注框 / 提交栏）；客户端 DOM + <code>textContent</code> 构建（防注入）、<code>safeJson</code> 内联数据（转义 <code>&lt;</code>、U+2028/2029）。</li>
+        <li><code>bridge.js</code>：CLI + <code>http</code> 服务（<code>GET /</code>·<code>/health</code>·<code>/favicon.ico</code>·<code>POST /submit</code>）+ 开浏览器（跨平台 best-effort）+ 写 <code>results.json</code> + <code>process.exit(0)</code> 自退；导出 <code>createBridge</code>（<code>exitOnSubmit</code> 可关，供测试）。</li>
+        <li><code>README.md</code>（manifest / results 两 schema + 四态路由表 + R4/R5 边界）、<code>example/manifest.json</code>、<code>test/bridge.test.js</code>、<code>package.json</code>（零依赖）。</li>
+        <li>四态机器码 ASCII（pass/fail/skip/defer）+ 中文展示；接线：仓库根 <code>CLAUDE.md</code> 注册 <code>tools/</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>人测有了<strong>回传通道</strong>：AI 把残余写成 manifest JSON → 桥弹 GitHub 风格页勾四态 → 结论落 <code>results.json</code>、进程自退（后台进程退出即触发 R4 续跑）。</li>
+        <li>四态齐全，人无论选哪个 butler 都能续跑；「延后处理」= "记账不阻塞"的人工版（对应 R2 dangerous §7.4 无人版）。</li>
+        <li><strong>零三方依赖</strong>：只用 Node 内建、双击即用、无需 <code>npm install</code>；butler 驻留、不拷进目标项目。</li>
+        <li>真代码真验证：node 自测 8/8 + Playwright 真浏览器端到端 + 进程 exit 0——比规则正文验证更硬。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>tools/delivery-selftest/</code>（render.js / bridge.js / README.md / package.json / example / test）。</li>
+        <li>改（接线）：仓库根 <code>CLAUDE.md</code>、<code>.ai/PROJECT.md</code>（收口前滚）。</li>
+        <li>没碰：Coder 规则正文、hook、四件套 schema、桥下游接线（R4）、部署 / dogfood（R5）。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>9 条 AC 全满足。置信分布 <strong>8 <code>auto·可靠</code> + 1 <code>auto·弱</code></strong>（AC8 浏览器代理验证）——首次真 <code>弱</code> 档，dogfood R2 分级置信。</li>
+        <li><code>node test/bridge.test.js</code>：<strong>8 checks ALL PASS、exit 0</strong>（render 单测 / GET / health / 404 / POST 写 results / summary / 非法 state→null / 真进程自退 / example 渲染）。</li>
+        <li><strong>Playwright 真浏览器端到端</strong>：打开桥页 → 点四态 → 提交 → done 面板 + <code>results.json</code> 落盘 + 后台服务进程 <strong>exit 0</strong> 自退（回环打通）。</li>
+        <li><strong>危险模式 P5 §7.3 独立复核</strong>：fresh-context 子 agent 实读代码 + 实跑测试 + 对抗探测（XSS / 畸形 payload / 超大 body / 写失败 / 自退竞态）。结论：<strong>9/9 confirm、0 Must Fix、0 Should Fix、3 Nit</strong>（缺 id 脏结果 + README 四态顺序已就地修）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>AC8 弱档：浏览器代理验证强于静态断言、弱于确定性单测；已如实标弱、不冒充可靠；截图会话内、未入库。</li>
+        <li>跨平台开浏览器 best-effort，仅 macOS 实测；失败不影响服务与 <code>--no-open</code> 路径。</li>
+        <li>下游消费（四态路由 + 后台等待续跑）留 R4；部署 / 真实 dogfood 留 R5。本迭代只到"能起、能测、能回传、能自退"。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0023/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>工具：<code>tools/delivery-selftest/</code>（bridge.js / render.js / README.md 契约 / example/manifest.json / test/bridge.test.js）</li>
+        <li>渲染保真参照：<code>docs/research/MILE-0002-R2-manual-test-bridge-sample.html</code></li>
+        <li>接线：仓库根 <code>CLAUDE.md</code>；前滚：<code>.ai/PROJECT.md</code></li>
+        <li>危险模式审计：<code>.ai/RUN_LOG.md</code>（ITER-0023 段）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
