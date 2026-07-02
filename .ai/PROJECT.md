@@ -32,7 +32,8 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - 每个规则文件 frontmatter 必须标 audience + scope。
 - 版本 semver：MAJOR 破坏 / MINOR 兼容新增 / PATCH 澄清；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检（见 `versioning-schema.md §6`）。
 - 提交规约：commit message 用 `type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release): vX.Y.Z — 聚合 …`、末行 `Co-Authored-By` 署名；提交单元=迭代收口，"提交 ≠ 切版"；非 hook 门禁，靠纪律兜底（见 `versioning-schema.md §5`）。
-- 测试自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测残余；P5 验证按自动道 / 人测道分道回填（见 `testing-strategy.md §3` / `verify-schema.md`）。非 hook 门禁，靠纪律 + 收口自检兜底。
+- 测试自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测残余；P5 验证按自动道 / 人测道分道回填、叠**分级置信**「可靠 / 弱 / 待人」（见 `testing-strategy.md §3` / `verify-schema.md`）。感知项先造**代理验证**（截图 diff / VLM 判图，`testing-strategy §3.1`）earned 弱档、不冒充可靠绿。非 hook 门禁，靠纪律 + 收口自检兜底。
+- 无人残余处置（`/dangerous`）：无人值守下人测残余按 `dangerous-engine §7.4` 依赖感知准入闸处置——不阻塞异步入账、卡下游不硬闯（弱验证顶 / 砍分支 / 不具准入资格交还）、**红线绝不假绿**。
 
 ## 已知长期欠债
 

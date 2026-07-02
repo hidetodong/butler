@@ -272,7 +272,7 @@ Coder/
 │   ├── concept-schema.md      # P1 产物模板
 │   ├── acceptance-schema.md   # P2 产物模板
 │   ├── tech-plan-schema.md    # P3 产物模板
-│   ├── verify-schema.md       # P5 产物模板（含自动道/人测道分道回填）
+│   ├── verify-schema.md       # P5 产物模板（分道回填 + 分级置信 可靠/弱/待人）
 │   ├── iteration-schema.md    # 迭代号/台账/锁定纪律
 │   ├── milestone-schema.md    # 里程碑（大版本）号/台账/路线图/版本级交付
 │   ├── versioning-schema.md   # 提交规约 + 版本治理：commit 格式/VERSION/CHANGELOG/tag/semver/切版仪式/部署戳
@@ -283,7 +283,7 @@ Coder/
 │   └── maintenance-boundaries.md # 维护边界
 ├── 30_Quality_Gate/           # 质量门禁
 │   ├── linting.md             # 提交前自检清单
-│   ├── testing-strategy.md    # 自动化优先 + 分道口径 + 验收映射
+│   ├── testing-strategy.md    # 自动化优先 + 分道口径 + 代理验证 + 验收映射
 │   ├── review-standard.md     # 通用审计准则
 │   └── correction-contract.md # 纠错收口契约（P4 常驻底线）
 ├── 40_Context_Management/     # 上下文治理（长任务必读）

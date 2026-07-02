@@ -51,7 +51,7 @@
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
 | R1 | 自动化优先纪律 + 分道口径：testing-strategy 升级为"竭尽自动化"（含浏览器自动化覆盖 UI / 交互）+ verify-schema 分道回填；人测道界定为机器不可测残余 | ITER-0021 | closed |
-| R2 | 分级置信 + 代理验证 + 依赖感知准入：VERIFY_REPORT 记「可靠 / 弱 / 待人」置信档；对感知类造弱自动检查（截图 diff / VLM 判图）；卡下游的未验项不许无人跑 | ITER-0022 | active |
+| R2 | 分级置信 + 代理验证 + 依赖感知准入：VERIFY_REPORT 记「可靠 / 弱 / 待人」置信档；对感知类造弱自动检查（截图 diff / VLM 判图）；卡下游的未验项不许无人跑 | ITER-0022 | closed |
 | R3 | 「交付自测」桥工具（butler 驻留、Node 零依赖、GitHub 风格）：JSON 清单输入 → 渲染分步流程页 → 本地服务 + 开浏览器 → 每项四态（通过 / 未通过 / 跳过 / 延后处理）+ 备注 → 收结果写 results JSON → 自退；定义输入 / 输出契约 | — | planned |
 | R4 | 等待-回收-续跑接线：run_in_background 起桥 + 阻塞等待 + 读结果 + 四态路由（通过→收口 / 未通过→纠错 / 跳过→N/A / 延后→入账不阻塞）；接线 P5 + correction-contract + 外部项目调用方式 | — | planned |
 | R5 | 部署 / 使用文档 + dogfood：mcv-deployment / HUMAN_GUIDE / README 注册调用方式；样例跑通一遍；长程 / 无人的残余异步入账 + 准入闸落地 | — | planned |
