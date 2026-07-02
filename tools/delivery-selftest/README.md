@@ -21,6 +21,16 @@ node bridge.js <manifest.json> [--out results.json] [--port N] [--no-open]
 
 提交后工具向 `--out` 写结果、响应浏览器、然后 `process.exit(0)`。调用方（R4）用后台方式起桥并阻塞等待，**进程退出即续跑**。
 
+**外部项目调用样例**：目标项目不拷本工具、按路径调 butler 仓这一份——
+
+```bash
+node $BUTLER/tools/delivery-selftest/bridge.js \
+  <你的项目>/.ai/human-test/manifest.json \
+  --out <你的项目>/.ai/human-test/results.json
+```
+
+`example/manifest.json` 是一份可直接跑的四态齐全样例清单（4 项人测残余）；部署 / 使用说明与路径解析见 `Coder/20_Workflow_Lifecycle/mcv-deployment.md §6`，何时起桥 / 怎么等 / 四态怎么续跑见 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`。
+
 ## 输入契约（manifest JSON）
 
 ```jsonc

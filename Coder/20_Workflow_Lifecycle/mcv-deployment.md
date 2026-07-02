@@ -137,3 +137,23 @@ echo "exit=$?"
 ### 5.4 与 butler-upgrade 的联动（Follow-up）
 
 Hook 副本与 butler 仓库版本可能漂移。`butler-upgrade.md` 协议需要扩展以检测并同步 hook 副本；本协议本身只负责**首次部署路径**，不处理升级。
+
+## 6. Butler 驻留工具调用（Resident Tools）
+
+除 hook（拷进目标项目的副本）外，butler 还提供另一类能力——**驻留工具**：可执行工具存放在 butler 仓 `tools/` 下，**不拷进目标项目**，目标项目在需要时**传参调用** butler 仓里的那一份。与 hook 的部署方向正好相反——hook 是"拷副本进项目"，驻留工具是"项目按路径调 butler"，从而单一来源、不在每个项目留副本、免维护漂移。
+
+### 6.1 路径解析
+
+驻留工具的定位**复用 §0 的 butler 路径发现**结果 `$BUTLER`（`$BUTLER_PATH` → 全局 `CLAUDE.md` → 询问），不另造发现逻辑。工具位于 `$BUTLER/tools/<tool-name>/`。
+
+### 6.2 交付自测桥（delivery-selftest）
+
+当前唯一驻留工具是 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）——把"机器测不了、需人判定的残余项"渲染成分步流程页给人勾四态、回传结果。目标项目在 P5 触发人测残余时按下述形态调用：
+
+- **写 manifest**：把本项目的人测残余（`human·待人` 档 AC）整理成 manifest JSON，落**本项目** `.ai/human-test/manifest.json`（与四件套隔离，建议加入 `.gitignore`）。
+- **传路径调桥**：`node $BUTLER/tools/delivery-selftest/bridge.js <本项目>/.ai/human-test/manifest.json --out <本项目>/.ai/human-test/results.json`（不在本项目存桥副本）。
+- **后台起桥 + 阻塞等待 + 读回 + 四态路由**：SOP 语义（何时起、怎么等、四态怎么续跑）以 `human-test-bridge.md` 为准；manifest / results 字段与四态机器码以 `tools/delivery-selftest/README.md`（契约真源）为准——本节只定"怎么定位、怎么调"，不重抄字段、不重定义语义。
+
+### 6.3 无人值守岔口
+
+交付自测桥是**有人场次**工具（弹页面等人勾选）。`/dangerous` 无人值守场次**不起桥**（否则页面无人提交、进程永久阻塞），人测残余改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 依赖感知准入闸（异步入账 / 卡下游不硬闯 / 绝不假绿）。一句话岔口：**有人 → 起桥；无人 → 走 §7.4**。

@@ -1,10 +1,10 @@
 # 迭代台账
 
-current: ITER-0025
+current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
-| ITER-0025 | R5 部署 / 使用文档 + dogfood：mcv-deployment 新增 butler 驻留工具调用节 + HUMAN_GUIDE 人测桥使用说明 + 真样例端到端跑通四态回路（收尾 MILE-0002） | active | 2026-07-02 | — | MILE-0002 | — |
+| ITER-0025 | R5 部署 / 使用文档 + dogfood：mcv-deployment 新增 butler 驻留工具调用节 + HUMAN_GUIDE 人测桥使用说明 + 真样例端到端跑通四态回路（收尾 MILE-0002） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0025-bridge-usage-docs.md |
 | ITER-0024 | R4 等待-回收-续跑接线：新增 human-test-bridge 闭环协议（触发 + run_in_background 起桥 + 阻塞等待 + 读 results.json + 四态路由）+ 接线 P5（verify-schema/testing-strategy）/ 纠错（correction-contract）/ 无人降级（dangerous §7.4）+ 机械跑通验证 | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0024-human-test-bridge-wiring.md |
 | ITER-0023 | R3「交付自测」桥工具：Node 零依赖、GitHub 风格——manifest JSON → 渲染分步流程页 + 本地服务 + 开浏览器 → 每项四态（通过/未通过/跳过/延后处理）+ 备注 → 写 results.json + 进程自退；定义输入/输出契约 + 真测（node 断言 + Playwright） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0023-delivery-selftest-bridge.md |
 | ITER-0022 | R2 分级置信 + 代理验证 + 依赖感知准入：verify-schema 加「可靠 / 弱 / 待人」置信档 + testing-strategy 代理验证（截图 diff / VLM 判图）earned 弱档 + dangerous-engine 无人残余处置（不阻塞入账 / 卡下游不硬闯 / 绝不假绿） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0022-graded-confidence-proxy-and-admission.md |

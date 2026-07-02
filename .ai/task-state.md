@@ -1,23 +1,15 @@
 # Task State
 
-> ITER-0025（MILE-0002 R5）· 阶段 P3（TECH_PLAN 待用户 ACK）。任务清单镜像自 TECH_PLAN Execution Steps。
+> 无活跃迭代 · MILE-0002 五路线项 R1~R5 全 closed · 上一收口 ITER-0025（2026-07-02）。
 
 ## 当前状态
 
-- ITER-0025，P2 已 ACK 冻结（2026-07-02），P3 TECH_PLAN 完成、待用户 ACK 进 P4。
-- 主题：MILE-0002 收尾 R5——部署侧调用文档 + 人类侧使用说明 + 真样例 dogfood。
-- Q1/Q2/Q3 已在 P3 落定：样例落 `tools/delivery-selftest/sample/`；`tools/` 抽象为通用驻留工具类别；收口不切版、发布节奏用户拍板。
-
-## 任务清单（镜像 TECH_PLAN，P4 执行时更新活进度）
-
-- [ ] T1（AC5/6/7）：写 sample manifest（四态齐全 fixture）
-- [ ] T2（AC5/6）：真 dogfood 跑通外部调用回路 + 留证据
-- [ ] T3（AC1/2）：mcv-deployment 新增 §6 驻留工具调用节
-- [ ] T4（AC3/4）：HUMAN_GUIDE §5 新增人测桥使用说明
-- [ ] T5（AC7）：README 补外部调用样例指引
-- [ ] T6（AC8）：Coder/README 描述确认
-- [ ] T7（AC9）：原子收口五步 + MILESTONE 收尾
+- 无活跃迭代（current=none）。上一收口 **ITER-0025**（MILE-0002 R5，2026-07-02）。
+- 活跃里程碑 **MILE-0002**：R1/R2/R3/R4/R5 全 closed，方向（自动化测试最大化 + 人测 web 回环）达成；里程碑本身尚未聚合切版（仍 active，待发布）。
+- 危险模式：本次自治（ITER-0025 P4→P5→收口）已终止交还；butler 仓无 `.ai/local-constraints.md` 落点，退出即回标准模式。
 
 ## 下一步入口
 
-- 等用户 ACK P3 → 进 P4 按 T1→T7 执行（dogfood 先行，文档随后）。
+- **发布 MILE-0002**（待用户拍板）：聚合切版 MINOR v1.7.0——更新 `VERSION`、根 `CHANGELOG.md`（聚合 ITER-0021~0025）、里程碑级交付 `deliveries/milestones/MILE-0002-*.md(+html)`、按需 `migrations/`、打 tag、MILESTONES/MILESTONE 收口置 closed。
+- 或开新方向（MILE-0003 已有预研 `docs/research/`，未开题）。
+- 本轮改动**未提交推送**（除 §7.2 回滚锚点 `d82f736`），待用户指令。
