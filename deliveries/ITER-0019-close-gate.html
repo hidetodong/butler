@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0019 交付总结 · 给收口加门槛</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>给收口加门槛：执行门禁 hook + 冷启动一致性自检 + 原子收口仪式</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0019</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-06-30</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>补用户最初提的"事项 2"：迭代做完后没有硬门槛更新台账 / 产物，收口纪律"有规则、无门槛"，台账↔产物↔交付漂移已实际发生。</li>
+        <li>R1（PROJECT.md）、R3（changelog）补了"收口该产出什么"，本轮 R2 补"怎么保证收口真发生、且不漂移"——两条腿：机械门禁（部署项目）+ 一致性自检（人人可跑，含 butler 自身）。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增 hook 规则 <code>templates/hooks/rules/single_active_iteration.py</code>：写 <code>.ai/ITERATIONS.md</code> 后 active 迭代行 >1 即 deny（=上一迭代未收口就开新）；用 effective-text 还原 Write/Edit/MultiEdit 写入后全表，无法可靠还原时 allow-on-uncertainty 不误杀。</li>
+        <li>新增 <code>tests/test_single_active_iteration.py</code>（15 例），注册进 <code>butler_gate.py</code>；<code>pytest tests/</code> = 97 passed（原套件无回归）。</li>
+        <li>定义冷启动一致性自检 5 不变量（<code>context-persistence.md</code>）：current↔状态 / 至多一个 active / closed 有交付且文件存在 / closed 有归档 / 里程碑路线项对账；落进冷启动读序，漂移先暴露。</li>
+        <li>收口强化为原子仪式：<code>iteration-schema §5.5</code> 五步（前三必做 + 第四按需前滚 PROJECT + 第五收口自检），<code>lifecycle §165</code> 同步。</li>
+        <li>接线：<code>iteration-schema §5.1</code> 交叉引用门禁 + hook README / <code>mcv-deployment §5</code> / <code>Coder/README</code> 注册描述。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>部署项目里"上一迭代没收口就开新迭代"会被 hook 当场拦下（写台账时机械兜底），不再靠自觉。</li>
+        <li>所有项目（含不跑自身 hook 的 butler）冷启动 + 收口时都跑一遍一致性自检，台账 / 产物 / 交付漂移主动暴露而非事后踩坑。</li>
+        <li>收口从"三步/四步"升级为"五步原子仪式"，最后一步强制自检——收口不再容易半途而废。</li>
+        <li>向后兼容：新增规则 + 文档接线，未动 phase_gate/ledger_status 判据、四件套字段、状态机、根 CHANGELOG。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>templates/hooks/rules/single_active_iteration.py</code>、<code>templates/hooks/tests/test_single_active_iteration.py</code>。</li>
+        <li>改（hook）：<code>butler_gate.py</code>、<code>templates/hooks/README.md</code>；（20/40 层）：iteration-schema、lifecycle、mcv-deployment、context-persistence、Coder/README。</li>
+        <li>没碰：phase_gate/ledger_status 判据、四件套字段 schema、rule-card、P1-P5 状态机、版本机制、根 CHANGELOG。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>10 条 AC 全部满足（逐项见 VERIFY_REPORT）；危险模式 §7.3 P5 升格完整多维审查（非简评）：逻辑 / 健壮性 / 安全 / 一致性四维，无 Must Fix。</li>
+        <li><code>pytest tests/</code> = 97 passed（新增 15 例 + 原套件零回归）。</li>
+        <li>dogfood：对 butler 自身 <code>.ai/</code> 跑 5 不变量全绿（唯一 active、18 closed 全有归档 + 交付文件全存在、路线项对账一致）。</li>
+        <li>git diff 核对：concept/acceptance/tech-plan/verify schema、根 CHANGELOG、VERSION、rule-card、phase_gate、ledger_status 均未改。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>Should Fix（不阻断）：Edit/MultiEdit 在 old_string 未命中现文件时退化为片段计数，可能漏判隐蔽双 active——有意的 allow-on-uncertainty（避免误杀），由 Write 全覆写 + 冷启动自检兜底。</li>
+        <li>butler 仓自身不跑 hook → 门禁靠 pytest 验证 + prompt 级自检覆盖 butler 侧（已知设计约束）。</li>
+        <li><code>/close</code> 原子收口命令未做（Q4 延后）；收口仪式已清单化 + 自检，命令化留后续 polish。</li>
+        <li>本轮按用户指令只提交推送、不切版；MILE-0001 三路线项已全 closed，聚合发布留作后续。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0019/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>新增代码：<code>templates/hooks/rules/single_active_iteration.py</code>、<code>templates/hooks/tests/test_single_active_iteration.py</code></li>
+        <li>改动：<code>templates/hooks/butler_gate.py</code>、<code>templates/hooks/README.md</code>、<code>Coder/20_Workflow_Lifecycle/iteration-schema.md</code>、<code>lifecycle.md</code>、<code>mcv-deployment.md</code>、<code>Coder/40_Context_Management/context-persistence.md</code>、<code>Coder/README.md</code></li>
+        <li>里程碑：<code>.ai/MILESTONE.md</code>（MILE-0001 R2，收尾路线项）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

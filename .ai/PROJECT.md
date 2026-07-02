@@ -20,8 +20,9 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - **AC 是验收脊柱**：贯穿 P2→P4→P5；tasks（Execution Steps + task-state）只是执行侧投影，不取代 AC。
 - **模板单一来源**：强制约束改 `rule-card.md` 一处，`CLAUDE.md.template` 占位符引用。
 - **文档有界、历史横向归档**：单份产物只承载当前迭代，历史靠 `iterations/ITER-NNNN/` 横向铺开，禁纵向堆积。
-- **hook 机械门禁**：部署项目由 PreToolUse hook 拦截跳阶段 / 未冻结 AC / 越界写；butler 仓自身不跑自己的 hook（规则仓非部署项目）。
-- **冷启动读序固定**：`PROJECT.md`（状态全貌）→ `ITERATIONS.md`（变更流）→ `02_SESSION_HANDOFF.md`（断点）→ 代码；收口时按需前滚 PROJECT.md（见 `project-digest-schema.md`）。
+- **hook 机械门禁**：部署项目由 PreToolUse hook 拦截跳阶段 / 未冻结 AC / 越界写 / 双 active 迭代（`single_active_iteration`：写 ITERATIONS 后 active 行 >1 即 deny）；butler 仓自身不跑自己的 hook（规则仓非部署项目），改由 prompt 级一致性自检兜底。
+- **冷启动读序固定**：`PROJECT.md`（状态全貌）→ `ITERATIONS.md`（变更流）→ `02_SESSION_HANDOFF.md`（断点）→ 代码；读序末尾 + 收口末步各跑一遍一致性自检 5 不变量（current↔状态 / 至多一 active / closed 有交付且文件在 / closed 有归档 / 里程碑路线项对账），漂移先暴露；收口时按需前滚 PROJECT.md（见 `project-digest-schema.md` / `context-persistence.md`）。
+- **收口是原子仪式**：`iteration-schema §5.5` 五步——①归档四件套+changelog切片 ②交付 md+html ③翻台账+收编 01_CHANGELOG ④按需前滚 PROJECT ⑤收口自检；前三必做、缺一不可，末步强制自检。
 - **每迭代对象级变更流**：`01_CHANGELOG.md` 记本迭代 ADD/EDIT/DELETE（绑 AC、文件+章节级），收口归档 `iterations/ITER-NNNN/CHANGELOG.md`（见 `changelog-schema.md`）；Review/自评的 Should Fix 归 `VERIFY_REPORT.md` 的 Remaining Risks，不入 changelog。
 
 ## 现行约束
@@ -33,7 +34,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 
 ## 已知长期欠债
 
-- butler 仓自身不 dogfood 运行自己的 hook → 收口 / 台账更新缺机械门槛，靠纪律（MILE-0001 R2 拟补一致性探针 + 执行门禁）。
+- butler 仓自身不 dogfood 运行自己的 hook → live 机械门槛（含 `single_active_iteration`）在 butler 内不触发，靠 pytest 验证 + prompt 级一致性自检覆盖 butler 侧（MILE-0001 R2 已补执行门禁 hook + 自检探针；butler 侧不 live 化仍是已知设计约束）。
 - `/butler-upgrade` 协议从未在真实老项目实跑过（历史 dogfood 债）。
 
 ## 指针

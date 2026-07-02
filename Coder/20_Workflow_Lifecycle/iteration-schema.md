@@ -94,7 +94,7 @@ current: ITER-0002
 - 时机：进入 P1 或 P2、准备固定一轮需求时。
 - 动作：从台账领下一个 `ITER-NNNN`，写入台账并置 `active`、`current` 指向它；本迭代的 `CONCEPT.md` / `AC_LIST.md` 即产在工作区四件套中。
 - **overwrite-only（硬约束）**：开启新迭代时，工作区四件套必须以本迭代内容**整体覆写**。**严禁**保留、续写或在上一迭代内容下追加；上一迭代的产物只在收口时归档的 `iterations/ITER-NNNN/` 中存续，不得在工作区残留。`01_CHANGELOG.md` 同步重置为本迭代热数据（见 §5.5）。
-- 上一迭代若已收口，`current` 应为 `none`；开启即把 `current` 指向新号。若上一迭代未收口就要开新迭代，先按 §5.4 / §5.6 处理旧迭代，不得跳过。
+- 上一迭代若已收口，`current` 应为 `none`；开启即把 `current` 指向新号。若上一迭代未收口就要开新迭代，先按 §5.4 / §5.6 处理旧迭代，不得跳过。部署项目由 hook `single_active_iteration` 机械兜底：写入台账后若出现 ≥2 个 `active` 行即 `deny`（见 `templates/hooks/README.md`）；butler 仓自身不跑 hook，靠 §5.5 收口自检 + 冷启动一致性自检把关。
 
 ### 5.2 冻结 (Freeze)
 
@@ -117,11 +117,12 @@ current: ITER-0002
 ### 5.5 收口 (Close)
 
 - 时机：P5 达到可交付、可验收的闭环状态。
-- 动作（前三步必做、缺一不可；第四步按需）：
+- 动作（收口原子仪式，按序执行；前三步必做、缺一不可，第四步按需，第五步自检）：
   1. 把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`；完整路径迭代**必产** `01_CHANGELOG.md`（严格 ADD/EDIT/DELETE，格式见 `changelog-schema.md`），其当前迭代切片一并归档为 `iterations/ITER-NNNN/CHANGELOG.md`（简化路径可省）。
   2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`；全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据（已归档切片不再留在全局文件）。
   4. **按需前滚 `.ai/PROJECT.md`**（条件步）：本迭代若改变了某条长期事实（架构 / 不变量 / 现行约束 / 长期欠债），更新对应字段；否则不动。多数迭代只动 0-2 行或不动；判据与格式见 `40_Context_Management/project-digest-schema.md §5`。
+  5. **收口自检**（原子仪式最后一步）：跑 `40_Context_Management/context-persistence.md` §冷启动一致性自检的 5 条不变量（current↔状态 / 至多一个 active / closed 有交付 / closed 有归档 / 路线项对账），确认台账↔产物↔交付无漂移；有漂移当场修正，不留待冷启动才发现。
 - 收口后工作区四件套保留原位（作为最近一迭代的只读残影），直到下一迭代开启时被 §5.1 整体覆写；其权威副本以 `iterations/ITER-NNNN/` 为准。
 
 ### 5.6 废弃 (Abandon)

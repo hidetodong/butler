@@ -21,12 +21,25 @@ if str(HERE) not in sys.path:
 
 from lib.bypass import evaluate_bypass
 from lib.io import Context, Decision, parse_stdin, resolve_target
-from rules import artifact_chain, ledger_status, phase_gate, protected_paths
+from rules import (
+    artifact_chain,
+    ledger_status,
+    phase_gate,
+    protected_paths,
+    single_active_iteration,
+)
 
 GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit"})
 
 # Registered in evaluation order. First deny wins; more specific rules first.
-RULE_MODULES = [protected_paths, phase_gate, ledger_status, artifact_chain]
+# single_active_iteration 紧随 ledger_status（同为 .ai/ITERATIONS.md 台账规则）。
+RULE_MODULES = [
+    protected_paths,
+    phase_gate,
+    ledger_status,
+    single_active_iteration,
+    artifact_chain,
+]
 
 
 def main() -> int:

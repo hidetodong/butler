@@ -127,6 +127,18 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 PROJECT.md 与 handoff 互补：前者给"系统整体状态"、后者给"此刻断点"；缺 PROJECT.md 时新会话只能从一堆迭代 delta 倒推全貌（管中窥豹）。
 
+### 冷启动一致性自检
+
+读完台账后、动手前，核对台账↔产物↔交付无漂移。部署项目的 hook 只在**写台账时**机械兜底（`single_active_iteration` 等），此自检覆盖全部漂移面、对所有项目（含不跑自身 hook 的 butler 仓）生效。发现漂移先暴露、不静默继续：
+
+1. **current ↔ 状态**：`current` 指向的迭代号，其台账行须为 `active`；`current: none` 时台账无 `active` 行。
+2. **至多一个 active**：`ITERATIONS.md` 至多一行 `active`（多于一行 = 上一迭代未收口就开新）。
+3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且 `deliveries/<链接>` 文件存在。
+4. **closed 有归档**：每个 `closed` 行须有 `iterations/ITER-NNNN/` 归档快照。
+5. **路线项对账**：`MILESTONE.md` 拆分路线图各路线项状态与其绑定迭代的实际台账状态一致（见 `20_Workflow_Lifecycle/milestone-schema.md §5.3`）。
+
+这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）：收口后立即自检，确保本轮没把台账 / 产物 / 交付改漂。
+
 ## 7. 与其他规则的关系
 
 - 本规则负责"何时写、写什么、写到哪"。

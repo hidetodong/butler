@@ -16,6 +16,7 @@ rules/
   protected_paths.py     # 拦 99_Business_Extension/
   phase_gate.py          # 拦源码路径在 P1/P2/P3 产物缺失 / AC_LIST 未冻结时
   ledger_status.py       # 拦 .ai/ITERATIONS.md 状态列越界（封闭枚举 active/closed/abandoned）
+  single_active_iteration.py  # 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
   artifact_chain.py      # 占位，未来承载 AC-ID linkage 等规则
 lib/
   io.py                  # Context, Decision, parse_stdin, resolve_target, is_gated, GATED_BLACKLIST
@@ -26,7 +27,7 @@ tests/                   # 本目录的测试（不分发到目标项目）
 ## 运行机制
 
 1. Claude Code 在 `Edit` / `Write` / `MultiEdit` 前通过 PreToolUse 调用 `python3 .claude/hooks/butler_gate.py`，stdin 传入 JSON。
-2. Dispatcher 顺序执行 `RULE_MODULES`（`protected_paths → phase_gate → ledger_status → artifact_chain`），任一 `deny` 即终止。`ledger_status` 仅在目标为 `.ai/ITERATIONS.md` 时生效，校验「状态」列只取封闭枚举 active/closed/abandoned（见 `iteration-schema.md §4.2`）。
+2. Dispatcher 顺序执行 `RULE_MODULES`（`protected_paths → phase_gate → ledger_status → single_active_iteration → artifact_chain`），任一 `deny` 即终止。`ledger_status` 与 `single_active_iteration` 仅在目标为 `.ai/ITERATIONS.md` 时生效：前者校验「状态」列只取封闭枚举 active/closed/abandoned（见 `iteration-schema.md §4.2`）；后者还原写入后全表，拦截 ≥2 个 active 行（等价于 iteration-schema §5.1「上一迭代未收口不得开新」，Edit/MultiEdit 无法可靠还原时按 allow-on-uncertainty 放行）。
 3. `deny` 后走 `lib/bypass.py`：若 `BUTLER_BYPASS=1` 且 `.ai/bypass-reason.md` 非空，追加 `.ai/RUN_LOG.md` 后放行；否则 `exit 2` + stderr 给 AI 可读的违规摘要。
 4. 任何未捕获异常由 dispatcher 顶层 catch，`exit 2`（**fail-closed**）。
 
