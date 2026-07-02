@@ -14,6 +14,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 - 必须产出：`.ai/VERIFY_REPORT.md`
 - 必填字段：`Verification Summary`、`AC Status`、`Verification Results`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
+- 条件字段：`人测道小结`（仅当存在人测道 AC 时必填，见 §3 模板与 §4 分道回填要求）
 
 ## 3. 标准模板
 
@@ -23,9 +24,12 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - 总体验收结论
 
 # AC Status
-- [x] AC1: 已满足 / 未满足
-- [x] AC2: 已满足 / 未满足
-- [ ] AC3: 未满足原因
+- [x] AC1 (auto): 已满足 / 未满足
+- [x] AC2 (human): 已满足 / 未满足
+- [ ] AC3 (auto): 未满足原因
+
+# 人测道小结（仅当存在人测道 AC 时；无则整段省略）
+- AC2：<归入类目：主观审美 / 物理设备 / 真人感知 / 外部人工闸> — 状态：待人测 / 结论摘要
 
 # Verification Results
 - AC1: 使用了什么验证方式，结果如何
@@ -54,6 +58,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 4. 编写规则
 
 - 必须按 AC 回填，不得只给笼统结论。
+- **分道回填**：每条 AC 必须标所属道 `(auto)` / `(human)`（口径见 `30_Quality_Gate/testing-strategy.md §3`）。自动道 AC 须给可复现的自动验证证据（命令 / 断言 / 脚本）；人测道 AC 须在「人测道小结」说明归入哪个类目、为何机器不可测，并记其待测 / 结论状态。默认归自动道，说不出人测类目即应回自动道。
 - 验证方式应尽量具体到命令、检查动作或人工确认口径。
 - `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。

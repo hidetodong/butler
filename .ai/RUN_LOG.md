@@ -22,4 +22,6 @@
 
 - 2026-07-02 · dangerous-on · ITER-0021 · 用户本回合"开启危险模式，ACK"。butler 仓无 `.ai/local-constraints.md`（规则仓非部署项目，不受自己 hook 管），开关无持久落点；按 ITER-0014/0016 precedent 本会话实质执行：自治 + 本账本审计 + P5 强审 + 回滚锚点 + 交付披露。北极星=**ITER-0021 R1（单迭代）**；R2-R5 设计未锁，不在本次自治范围，收口后交还。
 - 2026-07-02 · iter-context · ITER-0021 · 迭代已于本会话标准模式开 active、`current` 指向它、归属 MILE-0002 R1。**P2 与 P3 均为用户显式 ACK**（AC_LIST 8 条 AC + TECH_PLAN 方案），非自审门；危险模式自 **P4** 起接管把关（P5 强制完整审查）。故 AC_LIST/TECH_PLAN 不加自主 ACK 横幅。
-- 2026-07-02 · rollback-anchor · ITER-0021 · 回滚锚点=本轮 iteration-open 提交（P1-P3 产物 + 台账）；P4 自治改动叠其上，`git reset` 到锚点即回退全部自治改动、保留已 ACK 的计划。待改 6 文件（testing-strategy / verify-schema / rule-card / README / HUMAN_GUIDE / PROJECT）在锚点均已提交干净。
+- 2026-07-02 · rollback-anchor · ITER-0021 · 回滚锚点=本轮 iteration-open 提交 `d351075`（P1-P3 产物 + 台账）；P4 自治改动叠其上，`git reset` 到锚点即回退全部自治改动、保留已 ACK 的计划。待改 6 文件（testing-strategy / verify-schema / rule-card / README / HUMAN_GUIDE / PROJECT）在锚点均已提交干净。
+- 2026-07-02 · P5-review · ITER-0021 · dangerous-ack · 强制完整审查（§7.3）升格独立复核：起 fresh-context general-purpose 子 agent，spec-only 逐 AC + 多维（一致性 / 可读性 / 边界 / dogfood），验证者≠实现者。结论：**8/8 AC confirm，0 Must Fix，0 Should Fix**，2 Nit（PROJECT 前滚=收口债已办；verify 模板自洽=确认）。可收口。
+- 2026-07-02 · close · ITER-0021 · 原子收口五步完成：归档四件套 + 切片 → 交付 md/html → 台账 closed + current=none + 收敛 01_CHANGELOG → PROJECT 前滚（自动化优先纪律）→ 收口自检 5 不变量全绿。北极星（R1 单迭代）达成，危险模式本次自治终止、交还用户；R2-R5 待指令。危险模式开关无持久落点（本仓非部署项目），退出即回标准模式。

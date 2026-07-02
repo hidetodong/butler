@@ -1,10 +1,10 @@
 # 迭代台账
 
-current: ITER-0021
+current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
-| ITER-0021 | R1 自动化优先纪律 + 分道口径：testing-strategy 升级为竭尽自动化（含浏览器自动化覆盖 UI / 交互）+ verify-schema 双道回填；人测道界定为机器不可测残余 | active | 2026-07-02 | — | MILE-0002 | — |
+| ITER-0021 | R1 自动化优先纪律 + 分道口径：testing-strategy 升级为竭尽自动化（含浏览器自动化覆盖 UI / 交互）+ verify-schema 双道回填；人测道界定为机器不可测残余 | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0021-automation-first-testing-lanes.md |
 | ITER-0020 | 提交与切版 SOP：提交规约成文（`type(scope): 描述 (ITER-NNNN)` + `chore(release)`）+ versioning-schema §5 切版 git 仪式补全 | closed | 2026-07-02 | 2026-07-02 | — | deliveries/ITER-0020-commit-release-sop.md |
 | ITER-0019 | 收口门槛：执行门禁 hook（单 active 迭代不变量）+ 冷启动一致性自检探针 + 原子收口仪式 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0019-close-gate.md |
 | ITER-0018 | 每迭代 changelog 正式化：01_CHANGELOG 重定义为严格 ADD/EDIT/DELETE 变更流 + 新 schema + 收编半成品 + Should-Fix 迁新家 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0018-changelog-formalization.md |

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0021 交付总结 · 自动化优先纪律 + 分道口径</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.danger { background: #ffebe9; color: #cf222e; }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>自动化优先纪律 + 分道口径：testing-strategy 升级 + verify-schema 双道回填</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0021</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0002 R1</span>
+        <span class="chip date">收口 2026-07-02</span>
+        <span class="chip danger">⚠️ 危险模式（P4 自治 + P5 独立复核）</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>MILE-0002 首个路线项 R1（扁平原子）。</li>
+        <li>现状两处缺口：① <code>testing-strategy.md</code> 是"分层<strong>建议</strong>"（§3 写"关键路径<strong>手动</strong>验证完成"），没有"能自动就必须自动"的硬纪律，UI/交互容易随手推给人；② <code>verify-schema.md</code> 的 <code>AC Status</code> 只记通过/未通过、<strong>不分道</strong>，人测残余无结构化落点。</li>
+        <li>目标：测试纪律升级为<strong>自动化优先</strong>（竭尽自动化，含浏览器自动化覆盖 UI/交互）+ 验证报告引入<strong>自动道/人测道双道回填</strong>，人测道界定为机器不可测残余。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>testing-strategy.md</code> §2「测试分层建议」→「自动化优先（硬纪律）」：措辞由建议升级为"凡机器能测的必须自动化"，UI/交互显式纳入自动道（浏览器自动化/headless/可编程视觉断言）；§4（原§3）"关键路径手动验证"→"默认自动验证、人测例外残余"。</li>
+        <li><code>testing-strategy.md</code> 新增 §3「分道口径」：自动道/人测道判定 + <strong>默认归自动道</strong>纪律（说不出人测类目即回自动道、"暂时没写自动化"是自动道欠债不是人测残余）+ 人测道<strong>类目锚点清单</strong>（主观审美/物理设备/真人感知·决策/外部人工闸）；原 §3-6 顺移 §4-7。</li>
+        <li><code>verify-schema.md</code>：§3 模板 <code>AC Status</code> 每条 AC 加 <code>(auto)</code>/<code>(human)</code> 标记 + 新增「人测道小结」条件字段；§4 编写规则补分道回填要求；既有 6 必填字段不变（只加不改）。</li>
+        <li>接线：<code>rule-card.md</code> 执行纪律段加"自动化优先"一句；<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code> 同步；<code>.ai/PROJECT.md</code> 现行约束前滚。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>测试从"可以手动验"变成"<strong>能自动必自动</strong>"的硬纪律；UI/交互默认走浏览器自动化，不再随手推人。</li>
+        <li>验证报告首次带<strong>分道</strong>：每条 AC 标 <code>(auto)</code>/<code>(human)</code>，人测残余集中进「人测道小结」——为 R2（分级置信/代理验证）与 R3（交付自测桥）预留结构锚点。</li>
+        <li>人测道有了<strong>封闭类目</strong> + 默认归自动道纪律，防止"能自动却推人"。</li>
+        <li>向后兼容：纯规则正文 + 指针同步，未动状态机/四件套字段脊柱/hook 代码/correction-contract。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（核心）：<code>Coder/30_Quality_Gate/testing-strategy.md</code>、<code>Coder/20_Workflow_Lifecycle/verify-schema.md</code>。</li>
+        <li>改（接线）：<code>templates/rule-card.md</code>、<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code>。</li>
+        <li>前滚：<code>.ai/PROJECT.md</code> 现行约束。</li>
+        <li>没碰：P1-P5 状态机、四件套字段脊柱、hook 体系、correction-contract；R2/R3 内容未提前塞入。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>8 条 AC 全部满足，<strong>全属自动道</strong>（读文件/grep 可复现），无人测道残余 →「人测道小结」按规则省略（dogfood 新条件字段路径）。</li>
+        <li><strong>危险模式 P5 §7.3 独立复核</strong>：fresh-context 子 agent、spec-only 逐 AC + 多维审查、验证者≠实现者。结论：8/8 confirm、0 Must Fix、0 Should Fix、2 Nit（PROJECT 前滚本次已办；verify 模板自洽=确认）。</li>
+        <li>顺移安全：testing-strategy §1-§7 连续；外部 §引用 2 处 + 内部 3 处均指新 §3；verify-schema 未 renumber（§4 完好，护 <code>changelog-schema §4</code> 引用）。</li>
+        <li>不变量：<code>git diff --name-only</code> 确认 hook/correction-contract/lifecycle/schema 未在变更内；R2/R3 关键词全仓 grep 零命中。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>R1/R2 边界：本迭代只写"确定性自动化必自动"，弱视觉/代理验证/分级置信显式留 R2；"弱信号项归哪道"待 R2 落地才完全清晰。</li>
+        <li>分道口径非 hook 机械门，靠纪律 + 收口自检兜底（与既有"提交规约/自动化优先均非机械门禁"同源，非新增风险）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0021/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>核心改动：<code>Coder/30_Quality_Gate/testing-strategy.md</code>（§2 自动化优先 / §3 分道口径）、<code>Coder/20_Workflow_Lifecycle/verify-schema.md</code>（§3 lane + 人测道小结 / §4 分道回填）</li>
+        <li>接线改动：<code>templates/rule-card.md</code>、<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code></li>
+        <li>前滚：<code>.ai/PROJECT.md</code>；危险模式审计：<code>.ai/RUN_LOG.md</code>（ITER-0021 段）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
