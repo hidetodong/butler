@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0020 交付总结 · 提交与切版 SOP：提交规约成文 + 切版 git 仪式补全</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>提交与切版 SOP：提交规约成文 + 切版 git 仪式补全</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0020</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-02</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>用户诉求：在仓库内做一份"提交切版"的 SOP。</li>
+        <li>现状两处缺口：① 提交约定<strong>有实践、无规则</strong>——全仓零成文，但 git 历史高度一致（<code>type(scope): 描述 (ITER-NNNN)</code> + <code>chore(release)</code> + <code>Co-Authored-By</code>）；② 切版流程 <code>versioning-schema §5</code> 只到语义层，<strong>没落到 git 操作层</strong>。</li>
+        <li>目标：把"日常提交规约 + 切版 git 仪式"补成可照做的 SOP，就地扩写进 <code>versioning-schema.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>versioning-schema.md</code> 新增 §5「提交规约」：commit message 格式 <code>type(scope): 中文描述 (ITER-NNNN)</code>（7 类 type + scope 口径 + 中文描述 + 迭代号尾注）、发布专用 <code>chore(release): vX.Y.Z — 聚合 ITER-A~B (级别)</code>、何时提交 / 一次装什么、<code>Co-Authored-By</code> 署名 trailer，并显式声明<strong>非 hook 机械门禁</strong>。</li>
+        <li>原 §5 切版流程顺移 §6 并扩到 git 操作层：§6.1「提交 ≠ 切版」两路径、§6.2 切版前预检（复用冷启动一致性自检 5 不变量）、§6.3 语义 5 步 + git 精确序列（add→commit→tag→push）、§6.4 切版后自检（VERSION==tag==CHANGELOG 顶条）；里程碑发布引用 <code>milestone-schema</code>。</li>
+        <li>原 §6-8（部署戳 / 升级 gap / 边界）顺移 §7-9，内部 §引用同步修正。</li>
+        <li>frontmatter title 改「提交与版本治理协议」、scope 扩含提交规约 + 切版仪式。</li>
+        <li>指针同步：<code>Coder/README §139</code> / <code>CLAUDE.md</code> VERSION 行 / <code>HUMAN_GUIDE</code>；外部 §引用顺移修正 <code>migration-schema</code> / <code>butler-upgrade</code> / <code>mcv-deployment</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>现在有一份可照做的提交规约：每次 commit 该写什么格式、release 该用什么形态，从"看历史模仿"变成"照规则写"。</li>
+        <li>切版从"知道要改哪些文件"升级为"知道每一步敲什么 git 命令 + 切版前后各自检一遍"，降低发版漂移。</li>
+        <li>明确"提交 ≠ 切版"——日常迭代收口只 commit+push（不切 tag），发版是按需聚合动作。</li>
+        <li>向后兼容：纯规则正文扩写 + 指针同步，未动 hook 代码 / 四件套字段 / 状态机 / VERSION 数值 / 根 CHANGELOG 已有条目。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（核心）：<code>Coder/20_Workflow_Lifecycle/versioning-schema.md</code>（新增 §5 + 扩写 §6 + 顺移 §7-9 + frontmatter）。</li>
+        <li>改（顺移引用）：<code>migration-schema.md</code>、<code>butler-upgrade.md</code>、<code>mcv-deployment.md</code>。</li>
+        <li>改（指针）：<code>Coder/README.md</code>、<code>CLAUDE.md</code>、<code>HUMAN_GUIDE.md</code>。</li>
+        <li>前滚：<code>.ai/PROJECT.md</code> 现行约束。</li>
+        <li>没碰：<code>templates/rule-card.md</code>、<code>CLAUDE.md.template</code>、四件套 schema、hook 体系、<code>VERSION</code>、根 <code>CHANGELOG.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>11 条 AC 全部满足（逐项见 VERIFY_REPORT）。</li>
+        <li>AC4 抽 6 条历史提交逐条套规约，全含 <code>Co-Authored-By</code> trailer、零冲突。</li>
+        <li><code>git diff --name-only</code> 核对不变量：VERSION / 根 CHANGELOG / rule-card / CLAUDE.md.template / 四件套 schema / hook 全部未碰。</li>
+        <li>全仓 <code>versioning-schema.md §N</code> 引用复查：外部 6 处已正确指向 §6/§7/§8，无旧指向残留；§1-9 编号连续。</li>
+        <li>rule-card 裁决=不改（提交规约属纪律类，非产物链硬门 / 非封闭枚举）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>Should Fix（不阻断）：提交规约作用域限 butler 仓自身，目标项目提交规约推广未做（已在 §9 边界声明，留后续按需）。</li>
+        <li>提交规约非机械门禁，靠纪律 + 收口自检兜底（与"会话起始必读""切版靠纪律"同源同险，非新增风险）。</li>
+        <li>本迭代只写 SOP，未实际切版；MILE-0001 聚合发布仍待定，与本迭代解耦。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0020/</code>（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT / CHANGELOG）</li>
+        <li>核心改动：<code>Coder/20_Workflow_Lifecycle/versioning-schema.md</code>（§5 提交规约 / §6 切版流程）</li>
+        <li>联动改动：<code>migration-schema.md</code>、<code>butler-upgrade.md</code>、<code>mcv-deployment.md</code>、<code>Coder/README.md</code>、<code>CLAUDE.md</code>、<code>HUMAN_GUIDE.md</code></li>
+        <li>前滚：<code>.ai/PROJECT.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

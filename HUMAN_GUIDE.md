@@ -275,7 +275,7 @@ Coder/
 │   ├── verify-schema.md       # P5 产物模板
 │   ├── iteration-schema.md    # 迭代号/台账/锁定纪律
 │   ├── milestone-schema.md    # 里程碑（大版本）号/台账/路线图/版本级交付
-│   ├── versioning-schema.md   # 版本治理：VERSION/CHANGELOG/tag/semver/部署戳
+│   ├── versioning-schema.md   # 提交规约 + 版本治理：commit 格式/VERSION/CHANGELOG/tag/semver/切版仪式/部署戳
 │   ├── delivery-summary.md    # 交付总结规范（含固定格式 HTML 阅读视图 §9）
 │   ├── mcv-deployment.md      # 基地车部署协议
 │   ├── mcv-update.md          # 基地车升级协议

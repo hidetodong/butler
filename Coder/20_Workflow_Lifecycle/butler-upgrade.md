@@ -42,7 +42,7 @@ AI 必须依次完成以下动作并简要汇报：
    - `$BUTLER_PATH/templates/rule-card.md`
    - `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/` 下相关 schema
 
-4. **计算版本 gap**：读取目标 `CLAUDE.md` 中的 `butler v…` 版本戳与 `$BUTLER_PATH/VERSION`，比较并汇报版本差（如 "v1.0.0 → v1.2.0"）。目标无版本戳=视为前版本化项目（早于版本概念引入），按 § 4 首次升级路径处理。版本 gap 仅作辅助提示，是否升级仍以文件内容差异为准绳（见 `versioning-schema.md §7`）。
+4. **计算版本 gap**：读取目标 `CLAUDE.md` 中的 `butler v…` 版本戳与 `$BUTLER_PATH/VERSION`，比较并汇报版本差（如 "v1.0.0 → v1.2.0"）。目标无版本戳=视为前版本化项目（早于版本概念引入），按 § 4 首次升级路径处理。版本 gap 仅作辅助提示，是否升级仍以文件内容差异为准绳（见 `versioning-schema.md §8`）。
 
 5. **收集迁移配方**：取 `$BUTLER_PATH/migrations/` 下所有满足"目标戳 < vV ≤ 仓库 `VERSION`"的 `vV.md`，按版本号升序排成执行队列（格式见 `migration-schema.md`）。目标无版本戳=无配方链起点，转 §4 全量首次升级。
 
@@ -74,7 +74,7 @@ AI 必须依次完成以下动作并简要汇报：
    - `[rename]`：见 §6.1。`[add-field]`：见 §6.2。`[sync-hooks]`：见 §6.4。
    - `[restamp]`：把 `{{BUTLER_VERSION}}` 戳重戳为该步目标版本。
    - `[no-op]`：本版无结构影响，跳到 restamp。
-2. **起始态校验与冲突**：每步执行前校验起始态是否符合配方预期。**符合**才动；**不符合**（目标已手工漂移）则停下、报告差异、退回用户 ACK，**不**强行套用（守 `versioning-schema.md §7`"内容差异为主"）。
+2. **起始态校验与冲突**：每步执行前校验起始态是否符合配方预期。**符合**才动；**不符合**（目标已手工漂移）则停下、报告差异、退回用户 ACK，**不**强行套用（守 `versioning-schema.md §8`"内容差异为主"）。
 3. **呈报升级清单给用户**：版本 gap（旧戳 → 仓库当前版本）、队列覆盖的配方版本、每版关键步骤；user-managed 区原样保留、无变化。
 4. **用户 ACK 后写入**：写 `CLAUDE.md` 及改动的 `.ai/` / `.claude/hooks/`；末尾 `[restamp]` 到仓库当前 `VERSION`。
 
@@ -142,4 +142,4 @@ AI 必须依次完成以下动作并简要汇报：
 - **`deliveries/` 历史迁移**：人类可读交付总结归档，升级协议不改动。
 - **`CHANGELOG` / `BUG_LOG` 内容改写**：累积型维护文件内容属项目历史。
 - **butler 仓库自身的升级**：butler 仓（作为规则源）自身的版本与发布由 `versioning-schema.md` 的切版流程管理（VERSION / CHANGELOG / git tag），不走 butler-upgrade（后者面向"目标项目"而非 butler 本身）。
-- **版本号为辅、内容差异为主**：升级以文件内容差异为准绳；版本 gap（目标戳 vs 仓库 `VERSION`）仅作辅助提示与升级后重戳的依据，**不单凭版本号判定是否需要升级**——目标内容可能已手工漂移，版本号无法反映（见 `versioning-schema.md §7`）。
+- **版本号为辅、内容差异为主**：升级以文件内容差异为准绳；版本 gap（目标戳 vs 仓库 `VERSION`）仅作辅助提示与升级后重戳的依据，**不单凭版本号判定是否需要升级**——目标内容可能已手工漂移，版本号无法反映（见 `versioning-schema.md §8`）。

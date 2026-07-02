@@ -1,52 +1,54 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-06-30
+ACK 日期: 2026-07-02
 ---
 
-> ITER-0019（MILE-0001 R2）。P2 经用户显式 ACK 冻结（2026-06-30），并授权 `/dangerous` 危险模式自治执行至收口；验收范围锁定，进入 P3。背景见 CONCEPT，不重述。
+> ITER-0020（独立迭代，所属 milestone `—`；MILE-0001 虽仍 active，但本 SOP 不在其范围，故不吸附）。分流与背景见 CONCEPT，不重述。
 
 # Goal
 
-- 给收口加门槛：hook 机械拦截"未收口先开新迭代"+ 冷启动一致性自检探针（butler 自身可跑）+ 原子收口仪式清单。MILE-0001 收尾路线项。
+- 把 butler 的"日常提交规约 + 切版 git 仪式"补成一份可照做的 SOP，就地扩写进 `versioning-schema.md`：提交约定从隐性实践固结成文，切版从语义 5 步落到 git 操作层。
 
 # In Scope
 
-- 新增 hook 规则（单 active 迭代不变量）+ pytest + 派发器注册。
-- 冷启动一致性自检不变量清单 + 落进读序。
-- §5.5 收口原子清单 + 末尾自检步。
-- hook/规则接线 + dogfood 自检。
+- `versioning-schema.md` 新增「提交规约」节。
+- `versioning-schema.md §5` 扩写为含 git 操作层 + 切版前后自检的仪式。
+- versioning-schema title/scope 更新 + README / CLAUDE / HUMAN_GUIDE 指针同步。
+- rule-card / PROJECT.md 裁决与按需前滚。
 
 # Out of Scope
 
-- 不改 phase_gate / ledger_status 既有判据。
-- 不改四件套字段结构、AC 脊柱、P1-P5 状态机、版本机制、根 CHANGELOG。
-- `/close` 命令实现（如 P3 判定做则纳入，否则延后）。
+- 不新建规则文件。
+- 不改 semver 语义 / SSOT / 迁移配方格式 / 里程碑收口机制（均引用既有单一来源）。
+- 不做 git commit 的 hook 机械门禁。
+- 不实际发布 MILE-0001 或切任何版本（本迭代只写 SOP）。
+- 不动 hook Python 代码、四件套字段、P1-P5 状态机。
 
 # Acceptance Checklist
 
-- [ ] AC1: 新增 hook 规则，对 `.ai/ITERATIONS.md` 写入做机械门禁——写入后 active 迭代行 > 1 即 `deny`（语义=未收口/废弃旧迭代就开新）；deny 文案含命中行号与 remediation（先按 §5.4/§5.6 收口或废弃）。
-- [ ] AC2: 规则正确处理 Write / Edit / MultiEdit——用 effective-text（Write 取 content；Edit/MultiEdit 读现文件套用替换后）还原写入后全表再计数，避免 Edit 片段只见新行漏看旧 active；非 ITERATIONS 路径与半写/空表不误杀。
-- [ ] AC3: 规则注册进 `butler_gate.py` 的 `RULE_MODULES`（合理顺序）；保持 first-deny-wins / fail-closed / bypass 契约不变。
-- [ ] AC4: 新增 `templates/hooks/tests/test_<规则>.py`，覆盖：单 active 放行 / 双 active 拒绝 / 全 closed 放行 / 收口同写（旧 closed+新 active）放行 / Edit 新增 active 触发 / 非台账路径放行 / 空表放行；`cd templates/hooks && python3 -m pytest tests/` 全绿。
-- [ ] AC5: 定义冷启动一致性自检不变量清单：① current↔状态（current=ITER-N 则该行 active；current=none 则无 active）② 至多一个 active ③ closed 行须有收口日期+交付链接，且 `deliveries/<链接>` 存在 ④ closed 行须有 `iterations/ITER-N/` 归档 ⑤ 里程碑路线项状态与迭代实际状态对账。
-- [ ] AC6: 一致性自检落进 `context-persistence.md` 冷启动读序——冷启动读完台账后跑自检，发现漂移先暴露、不静默继续。
-- [ ] AC7: `iteration-schema.md §5.5` 收口强化为原子有序清单（含 R1 前滚 PROJECT + R3 必产 changelog），末尾加"收口自检"步（跑 AC5 探针）；`lifecycle.md §165` 同步。
-- [ ] AC8: `iteration-schema.md §5.1` 交叉引用新 hook 门禁（如 ledger_status 的交叉引用写法）；hook `README.md` + `mcv-deployment.md §5` + `Coder/README.md` 注册/描述新规则。
-- [ ] AC9: dogfood——对 butler 自身 `.ai/` 跑一遍 AC5 一致性自检并记录结果（现状预期全绿）；rule-card 裁决（门禁不进强制产物集，记理由）。
-- [ ] AC10: 不破坏不变量——四件套字段 schema / phase_gate / ledger_status 判据 / P1-P5 状态机 / 根 CHANGELOG / VERSION 未动；本仓五约束自检；hook 零三方依赖、fail-closed 保持。
+- [ ] AC1: `versioning-schema.md` 新增「提交规约」节，明确 commit message 格式 `type(scope): 中文描述 (ITER-NNNN)`——列出允许的 type 集、scope 取值口径（规则模块名）、描述语言（中文）、迭代号尾注规则（可引用多个 ITER）。
+- [ ] AC2: 提交规约节写明发布专用提交形态 `chore(release): vX.Y.Z — 聚合 ITER-NNNN~NNNN (级别)`，并与日常迭代提交区分。
+- [ ] AC3: 提交规约节写明"何时提交 / 一次提交装什么 / commit body 引用 `deliveries/` 与 `ITERATIONS.md` 而不复述"，并显式声明 commit message 非 hook 机械门禁、靠纪律 + 收口自检兜底。
+- [ ] AC4: 提交规约与本仓真实 git 历史自洽——抽查近若干条历史提交（`chore(release): v1.5.0 …`、`feat(hook): … (ITER-0019)` 等）均能被规约覆盖，无冲突。
+- [ ] AC5: `versioning-schema §5` 扩写为含 git 操作层的完整切版仪式，在保留原语义 5 步（定 bump / 改 VERSION / 加 CHANGELOG / 写 migration / 打 tag）基础上补：①切版前预检（复用 `context-persistence.md` 一致性自检 5 不变量 + 待聚合迭代均 `closed`、无悬挂 active）②git 精确序列（add 哪些 → `chore(release)` commit → `git tag vX.Y.Z` → push + push tag）③切版后自检（VERSION 数值 == tag 数字 == CHANGELOG 顶条版本，三者对齐）。
+- [ ] AC6: §5 明确"提交 ≠ 切版"两条路径——日常迭代收口的 commit+push（不切 tag）与聚合发布的切版仪式分开；切版是按需聚合动作、非每迭代触发。
+- [ ] AC7: §5 切版仪式中若本次发布的是一个里程碑，引用 `milestone-schema.md` 的里程碑收口机制处理里程碑台账 / 归档 / 版本级交付，不在 versioning-schema 内重写该机制。
+- [ ] AC8: versioning-schema.md frontmatter `title` 与 `scope` 更新，反映其现在也承载提交规约与切版仪式（不止版本治理）。
+- [ ] AC9: 指针同步——`Coder/README.md §139` versioning-schema 一句话描述、`CLAUDE.md` VERSION 行引用、`HUMAN_GUIDE.md` versioning-schema 注释均更新，与新范围一致；守"无隐式依赖"。
+- [ ] AC10: rule-card 裁决（提交规约是否进强制卡）并记理由；`.ai/PROJECT.md` 现行约束段按需补"提交规约"一句（收口前滚）。
+- [ ] AC11: 不破坏不变量——semver 语义 §2 / SSOT §1 / 迁移配方格式 / 四件套字段 schema / hook 代码 / P1-P5 状态机 / VERSION 数值 / 根 CHANGELOG 已有条目 均未改；本仓五约束自检。
 
 # Verification Method
 
-- AC1/AC2/AC3: 读新规则 + butler_gate diff，核对判据 / effective-text / 注册 / 契约。
-- AC4: 实跑 `python3 -m pytest tests/`，贴通过数。
-- AC5/AC6: 读 context-persistence 冷启动段，核对不变量清单 + 触发点。
-- AC7: 读 iteration-schema §5.5 + lifecycle §165，核对原子清单 + 自检步。
-- AC8: grep 新规则名在 hook README / mcv-deployment / Coder README / iteration-schema 的注册与交叉引用。
-- AC9: 跑自检记录 + grep rule-card。
-- AC10: git diff 确认未碰不变量文件；pytest 全绿即 fail-closed/零依赖未破。
+- AC1/2/3: 读改后 versioning-schema 提交规约节，核对格式 / type 集 / scope / release 形态 / 何时提交 / 非门禁声明。
+- AC4: 抽 5-8 条 `git log` 历史提交逐条对照规约，确认无冲突。
+- AC5/6/7: 读改后 §5，核对预检 / git 序列 / 切版后自检三段齐备、两路径分开、里程碑走引用。
+- AC8/9: 读 frontmatter + grep versioning-schema 在 README / CLAUDE / HUMAN_GUIDE 的描述，确认同步。
+- AC10: 看 rule-card 裁决记录 + PROJECT.md diff。
+- AC11: git diff 确认未碰不变量文件 / 段落。
 
 # Open Questions / Risks
 
-- 见 CONCEPT Open Questions（规则命名 / effective-text 口径 / 自检落点 / 是否做 /close），P3 定。
-- 风险：butler 自身不跑 hook → 门禁无法在 butler 内 live 验证，靠 pytest 充当验证（与现有规则同策略）。
-- 风险：effective-text 读现文件失败（IO 异常）→ 按 fail-closed 与现有规则一致处理，不放过也不误杀（P3 定边界）。
+- 见 CONCEPT Open Questions（提交规约成节位置 / type 允许集 / rule-card 裁决 / 是否补"仅提交"路径），P3 定。
+- 风险：与 conventional commits 的关系——采用其格式但用中文描述，须在 SOP 内说明"借鉴其格式、非严格全套遵循"，避免读者误按英文 conventional 全规范执行。
+- 风险：规约作用域——写在 versioning-schema（scope=butler 仓自身版本治理），默认只约束 butler 仓提交；是否推广到目标项目留 Out of Scope / 后续。

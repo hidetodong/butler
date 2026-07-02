@@ -30,7 +30,8 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - 写作面向 AI 执行：用"必须 / 不得 / 应"，中文说明、标识符与文件名用英文。
 - 新增规则文件必须在 `Coder/README.md` 目录结构 + 读取顺序注册（无隐式依赖）。
 - 每个规则文件 frontmatter 必须标 audience + scope。
-- 版本 semver：MAJOR 破坏 / MINOR 兼容新增 / PATCH 澄清；切版必写迁移配方 + 打 tag `vX.Y.Z`。
+- 版本 semver：MAJOR 破坏 / MINOR 兼容新增 / PATCH 澄清；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检（见 `versioning-schema.md §6`）。
+- 提交规约：commit message 用 `type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release): vX.Y.Z — 聚合 …`、末行 `Co-Authored-By` 署名；提交单元=迭代收口，"提交 ≠ 切版"；非 hook 门禁，靠纪律兜底（见 `versioning-schema.md §5`）。
 
 ## 已知长期欠债
 

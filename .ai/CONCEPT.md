@@ -1,47 +1,49 @@
-# CONCEPT — ITER-0019
+# CONCEPT — ITER-0020
 
-> 分流：完整路径 | 命中升级信号：跨模块改动（hook 代码 + 多处规则）、新增 hook 规则契约、含可执行代码与测试 | 2026-06-30
+> 分流：完整路径 | 命中升级信号：新增契约（提交/切版规约）、多文件接线、跨阶段影响（收口↔发布） | 2026-07-02
 
 ## 一句话
 
-收口纪律目前"有规则、无门槛"——`iteration-schema §5.5` 写了收口四步、`§5.1` 写了"上一迭代未收口不得开新"，但全靠 AI 自觉；台账 / 产物 / 交付三者漂移已实际发生过（本会话开局就撞见 v0.2.0 时代的陈旧 handoff）。本迭代给收口加门槛：① 部署项目用 **hook 机械拦截**"上一迭代没收口就开新迭代"；② 给所有项目（含 butler 自身）一个 **冷启动一致性自检探针**，把台账↔产物↔交付的漂移在冷启动 / 收口时主动揪出；③ 把收口固化成 **原子仪式清单**，末尾跑一遍自检，杜绝半途而废。这是 MILE-0001 的收尾路线项 R2。
+butler 每次提交都在遵循一套约定（`type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release)`），但这套约定**全靠隐性模仿、零成文**；而切版流程 `versioning-schema §5` 只写到"改 VERSION / 加 CHANGELOG / 写迁移 / 打 tag"的语义层，**没落到 git 操作层**（stage 什么、commit message 长什么样、push 与 tag 的先后、切版前后怎么自检）。本迭代把"日常提交规约 + 切版 git 仪式"补成一份可照做的 SOP，就地扩写进 `versioning-schema.md`。
 
 ## 背景与判断
 
-- 这是用户最初提的"事项 2"：迭代做完后没有硬门槛去更新台账 / 产物，更新不及时。R1（PROJECT.md）、R3（changelog）补了"收口该产出什么"，R2 补"怎么保证收口真发生、且一致"。
-- butler 仓自身不跑自己的 hook（规则仓非部署项目，长期欠债），所以纯 hook 方案救不了 butler 自己——必须同时有一个 **prompt 级探针**，对 butler 与部署项目都生效。两条腿走路：机械门禁（部署项目）+ 自检探针（人人可跑）。
-- hook 体系已成熟（`butler_gate.py` 派发 + `phase_gate` / `ledger_status` 等规则 + pytest 套件 + bypass）。新增"开新迭代门禁"是顺势加一条规则，风险可控、可测。
-- 执行门禁的机械判据选**"ITERATIONS 写入后 active 行 ≤ 1"**：开新迭代=新增 active 行，若旧迭代没先收口/废弃，台账就会出现 ≥2 个 active 行——这个不变量确定、可解析、与 §5.1 语义等价。
+- 用户诉求：在仓库内做一份"提交切版"的 SOP。
+- 现状扫描：全仓 grep `commit message / 提交规约 / conventional` 零命中——提交约定有实践、无规则；但 git 历史近 40 条前缀分布高度一致（`feat(scope)` / `docs` / `chore(release)` + 尾部 `(ITER-NNNN)`），是稳定的隐性契约，值得固结成文。
+- 切版侧 `versioning-schema §5` 已有 5 步语义骨架，缺的是 git 操作层与切版前后自检——不是从零造，是补齐"最后一公里"。
+- 落点已定（用户三选）：就地扩写 `versioning-schema.md`（不新建文件）、提交规约 + 切版仪式都做、按 ITER-0020 正式迭代走。
+- 复用而非另造：切版前/后的一致性核对**复用** ITER-0019 已定义的冷启动一致性自检 5 不变量（`context-persistence.md`），不新造一套校验。
+- 归属：本 SOP 不在 MILE-0001（冷启动全貌 + 收口门槛，R1/R2/R3 已封口）范围内，故 ITER-0020 作**独立迭代**（所属 milestone `—`），不吸附进仍 active 但已达成的 MILE-0001。
 
 ## 目标（Goal）
 
-- G1：新增 hook 规则拦截"未收口先开新迭代"——`.ai/ITERATIONS.md` 写入后 active 迭代行 > 1 即 deny；注册进派发器、配 pytest（含 Write / Edit / MultiEdit 与 effective-text 还原）。
-- G2：定义 **冷启动一致性自检**：台账↔产物↔交付的不变量清单（current↔状态、closed 行须有收口日期+交付链接+归档目录、单 active、里程碑路线项状态对账），落进冷启动读序，漂移则先暴露。
-- G3：把收口固化成 **原子仪式**：`§5.5` 强化为有序清单（含 R1 前滚 + R3 changelog），末尾加"收口自检"步跑 G2 探针；评估是否给 `/close` 语义命令。
-- G4：接线——hook README / `mcv-deployment §5` / `Coder/README` hook 描述 / `iteration-schema §5.1` 交叉引用新门禁；dogfood：butler 自身跑一遍一致性自检（现状应全绿）。
+- G1：在 `versioning-schema.md` 新增「提交规约」——固化 commit message 格式（type/scope/中文描述 + `(ITER-NNNN)` 尾注）、发布专用 `chore(release): vX.Y.Z — 聚合 …` 形态、何时提交、一次提交装什么、body 引用而不复述。
+- G2：把 `versioning-schema §5` 切版流程从语义 5 步扩成含 git 操作层的可照做仪式：切版前预检（复用一致性自检）→ 版本级改动（VERSION / CHANGELOG / migration）→ git add/commit/tag/push 精确序列 → 切版后自检（VERSION 数值 == tag == CHANGELOG 顶条版本）。
+- G3：接线与指针同步——更新 versioning-schema 的 title/scope、`Coder/README §139` 一句话描述、`CLAUDE.md` 与 `HUMAN_GUIDE.md` 对 versioning-schema 的引用；按需前滚 `PROJECT.md` 现行约束。
+- G4：dogfood 自洽——SOP 里的切版仪式与本仓真实 git 历史（`chore(release)` 形态、tag `vX.Y.Z`）对得上；rule-card 裁决（提交规约是否进强制卡，倾向不进）。
 
 ## 约束（Constraints）
 
-- hook 守现有契约：零三方依赖、fail-closed、first-deny-wins、bypass 机制不变；改 hook 必跑 `pytest tests/`。
-- 探针对 butler 自身可跑（不依赖 hook 运行），这是设计硬要求。
-- 不改四件套字段结构、AC 脊柱、P1-P5 状态机；不改既有规则（phase_gate / ledger_status）的判据，只新增。
+- 就地扩写，不新建规则文件（用户选定）。
+- 不改 semver 语义（§2）、SSOT（§1）、迁移配方格式（`migration-schema.md` 主管，只引用）。
+- git commit message 不做 hook 机械门禁——PreToolUse hook 管不到 git commit，且 butler 自身不跑 hook；提交规约靠纪律 + 收口自检兜底，须在 SOP 内写明"非机械门禁"。
+- 切版仪式里"里程碑收口"部分只引用 `milestone-schema §里程碑收口`，不重写里程碑收口机制（单一来源）。
 - 守本仓五约束（分层 / 产物链 / 无隐式依赖 / 模板单一来源 / audience 标注）。
 
 ## 影响范围（Impact Scope）
 
-- 新增：`templates/hooks/rules/<新规则>.py` + `templates/hooks/tests/test_<新规则>.py`。
-- 改（hook）：`butler_gate.py`（注册规则）、`templates/hooks/README.md`（规则清单/运行机制）。
-- 改（规则）：`iteration-schema.md`（§5.1 交叉引用门禁、§5.5 原子清单+自检）、`lifecycle.md §165`（收口步同步）、`40_Context_Management/context-persistence.md`（冷启动一致性自检）、`mcv-deployment.md §5`（hook 注入清单）、`Coder/README.md`（hook 描述 + 注册）。
-- 评估：是否新增 `/close` 命令（P3 定）；`rule-card`（是否提门禁，倾向不改）。
-- 不影响：四件套字段 schema、phase_gate/ledger_status 判据、P1-P5 状态机、版本机制、根 CHANGELOG。
+- 改（核心）：`Coder/20_Workflow_Lifecycle/versioning-schema.md`——frontmatter scope + 新增提交规约节 + 扩写 §5。
+- 改（接线）：`Coder/README.md §139`（versioning-schema 一句话描述）、`CLAUDE.md`（VERSION 行引用描述）、`HUMAN_GUIDE.md`（versioning-schema 注释）。
+- 按需：`.ai/PROJECT.md`（现行约束段补"提交规约"一句，收口时前滚）；`templates/rule-card.md`（裁决，倾向不改）。
+- 不影响：四件套字段 schema、P1-P5 状态机、hook 体系代码、迁移配方格式、根 CHANGELOG 已有条目、VERSION 数值、里程碑收口机制。
 
 ## 项目类型与 Profiles
 
-Markdown 规则仓 + Python hook（零三方依赖、pytest）。Profile：Python（hook 子树）。
+Markdown 规则仓。本迭代纯规则正文，不动 hook Python，无代码 profile 命中；按通用 SOP 推进。
 
 ## 待澄清（Open Questions）
 
-- Q1：新规则命名与落位（倾向 `single_active_iteration.py` 或 `iteration_open_gate.py`，独立规则而非塞进 ledger_status）。（P3 定）
-- Q2：Edit/MultiEdit 的 effective-text 还原——读现文件 + 套用替换后再解析全表（避免 Edit 片段只见新行漏看旧 active）。确认实现口径。（P3 定）
-- Q3：一致性自检落点——`context-persistence` 冷启动段内联，还是单独 schema？倾向内联（控文件数、与 ITER-0017 读序同处）。（P3 定）
-- Q4：是否新增 `/close` 命令？倾向否（先把 §5.5 清单化 + 自检；命令是后续 polish），避免 R2 scope 膨胀。（P3 定）
+- Q1：提交规约放 `versioning-schema.md` 内**独立一节**（现有 §5 之前），还是并进现有节？倾向新增独立节——提交是切版的上位日常动作，值得显式成节。（P3 定）
+- Q2：type 允许集固定为哪些？倾向借鉴 conventional commits 常用类（feat/fix/docs/refactor/chore/test/style）+ 说明 scope 取规则模块名。（P3 定）
+- Q3：rule-card 是否收录提交规约？倾向否（提交非产物链硬门、非封闭枚举，属纪律类），记理由。（P3 定）
+- Q4：是否补一段"仅提交不切版"的日常路径（本仓常见：迭代收口只 commit+push、不切 tag）？倾向补，明确"提交 ≠ 切版"两条路径。（P3 定）

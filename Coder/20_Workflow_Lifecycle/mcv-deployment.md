@@ -84,7 +84,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 1. 读取模板骨架 `templates/CLAUDE.md.template`。
 2. 用 `templates/rule-card.md` 中 `## 角色` 起的章节内容替换 `{{RULE_CARD_CONTENT}}` 占位符（不包含 rule-card.md 的 H1 与顶部引述）；这是浓缩规则卡的内联，确保 AI 在高注意力区域读到核心约束。
 3. 用 butler 仓库的绝对路径替换 `{{BUTLER_PATH}}` 占位符，让深度阅读指针指向真实路径。
-4. 读取 `$BUTLER/VERSION`，用其内容替换 `{{BUTLER_VERSION}}` 占位符，戳上目标项目所基于的 butler 规则源版本（落在 butler 管理区，供后续升级原地重戳；见 `versioning-schema.md §6`）。
+4. 读取 `$BUTLER/VERSION`，用其内容替换 `{{BUTLER_VERSION}}` 占位符，戳上目标项目所基于的 butler 规则源版本（落在 butler 管理区，供后续升级原地重戳；见 `versioning-schema.md §7`）。
 5. 在 `<!-- user-managed -->` 保护区内的"项目特定约束"段填入侦察结果（识别到的技术栈、project 类型、特殊约束等）。保护区标记由 `CLAUDE.md.template` 骨架提供，部署时原样保留，作为后续 `butler-upgrade.md` 协议的升级契约起点。
 6. 写入目标项目根目录 `CLAUDE.md`。
 

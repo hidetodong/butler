@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0020 | 提交与切版 SOP：提交规约成文（`type(scope): 描述 (ITER-NNNN)` + `chore(release)`）+ versioning-schema §5 切版 git 仪式补全 | closed | 2026-07-02 | 2026-07-02 | — | deliveries/ITER-0020-commit-release-sop.md |
 | ITER-0019 | 收口门槛：执行门禁 hook（单 active 迭代不变量）+ 冷启动一致性自检探针 + 原子收口仪式 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0019-close-gate.md |
 | ITER-0018 | 每迭代 changelog 正式化：01_CHANGELOG 重定义为严格 ADD/EDIT/DELETE 变更流 + 新 schema + 收编半成品 + Should-Fix 迁新家 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0018-changelog-formalization.md |
 | ITER-0017 | 新增 .ai/PROJECT.md 常驻项目摘要：冷启动全貌产物（状态取向）+ schema + 读序接线 + 收口前滚 + 部署种子 | closed | 2026-06-30 | 2026-06-30 | MILE-0001 | deliveries/ITER-0017-project-digest.md |
