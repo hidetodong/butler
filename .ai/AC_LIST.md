@@ -2,53 +2,55 @@
 状态: ack-frozen
 ACK 日期: 2026-07-02
 ACK 方式: 危险模式 P2 自审门 self-ACK（非用户显式 ACK）
-迭代: ITER-0022
-里程碑: MILE-0002 R2
+迭代: ITER-0023
+里程碑: MILE-0002 R3
 ---
 
-# AC_LIST — ITER-0022
+# AC_LIST — ITER-0023
 
-> ⚠️ 危险模式：本 AC 清单未经用户显式 ACK，由 P2 自审门（对照 `acceptance-schema.md`）自主冻结；自审结论见 `RUN_LOG.md` ITER-0022 · P2-self-ack。
+> ⚠️ 危险模式：本 AC 清单未经用户显式 ACK，由 P2 自审门（对照 `acceptance-schema.md`）自主冻结；自审结论见 `RUN_LOG.md` ITER-0023 · P2-self-ack。
+> 说明：本迭代是真代码，验证多为**真跑**（node 断言 / 子进程 / Playwright），故置信档不再全 `可靠`——AC8 为 `auto·弱`（浏览器代理验证），正好 dogfood R2 分级置信。
 
-## 分级置信（G1）
+## 桥本体（G1）
 
-- **AC1**：`verify-schema.md` 在分道回填基础上引入**置信档三值**「可靠 / 弱 / 待人」并给判据——可靠=确定性、可复现的机器断言；弱=代理验证产出的弱但真实信号；待人=机器不可测、待人清的残余。记法承 R1 行内式（形如 `(auto·可靠)` / `(auto·弱)` / `(human·待人)`）。
-  - 验证（auto·可靠）：读 `verify-schema.md`，确认三档定义 + 判据 + 记法齐备。
-- **AC2**：`verify-schema.md §3` 模板 AC Status 示例更新为带置信档形式；R1 引入的「人测道小结」块与置信档口径一致（待人项归入其中），模板自洽。
-  - 验证（auto·可靠）：读模板段，确认示例含置信档、无与 R1 字段冲突。
+- **AC1**：`bridge.js` 读 manifest JSON、在 `127.0.0.1` 起 HTTP 服务，`GET /` 返回 200 + 渲染 HTML；HTML 含 manifest 每个 item 的 id / 标题 / 每条分步步骤 / 预期结果。
+  - 验证（auto·可靠）：起服务（`--no-open --port 0`）+ `http` 客户端 GET，断言状态码 200 且 body 含各 item 文本。
+- **AC2**：渲染为 **GitHub 风格分步流程页**——含 sticky 进度条、分步流程卡（编号步骤）、四态按钮、备注框、提交栏（结构保真 `docs/research/MILE-0002-R2-manual-test-bridge-sample.html`）。
+  - 验证（auto·可靠）：断言渲染 HTML 含 `statusbar` / `steps` / `verdicts` / `note` / `submitBtn` 等结构标记。
 
-## 代理验证（G2）
+## 四态回传 + 自退（G2）
 
-- **AC3**：`testing-strategy.md §3` 分道口径补「代理验证」段——对感知 / 主观类项造**弱但真实**的自动检查（截图对基线 diff、VLM 判读截图、启发式断言），earned `弱` 档、留在自动道；明确"能造弱检查的就不算人测残余"，进一步压缩人测道。
-  - 验证（auto·可靠）：读 §3，确认代理验证段 + 手段清单 + 与分道判定的衔接。
-- **AC4**：代理验证的**诚实边界**成文——弱验证不冒充可靠 / 确定性绿，必须标 `弱`；与红线"绝不假绿"呼应。
-  - 验证（auto·可靠）：读 §3，确认弱验证边界句存在。
+- **AC3**：每项四态 `pass / fail / skip / defer`（通过 / 未通过 / 跳过 / 延后处理）+ 备注；全判定后可提交，`POST /submit` 写 `results.json`，内容含 `results[]`（每项 id / state / note）+ `summary`（四态计数）。
+  - 验证（auto·可靠）：POST 模拟四态 payload，断言 `results.json` 落盘且 results / summary 正确。
+- **AC4**：提交后**进程自退**——写完 results、响应 200 后 `process.exit(0)`，服务关闭、端口释放。
+  - 验证（auto·可靠）：`spawn` 子进程，POST 后断言子进程 exit code 0。
 
-## 依赖感知准入 + 无人残余处置（G3）
+## 输入 / 输出契约（G3）
 
-- **AC5**：`dangerous-engine.md` 新增小节（§7.4）「无人残余处置 + 依赖感知准入」——无人值守下人测残余**不阻塞**：异步入欠债账、人有空再清（叶子残余记账即续跑）。
-  - 验证（auto·可靠）：读 §7.4，确认"不阻塞 + 异步入账"成文。
-- **AC6**：§7.4 含**依赖感知准入闸**——卡下游的未验项不许硬闯：要么弱验证顶、要么砍该分支、要么该活儿不具无人跑准入资格（留有人场次）；区分"叶子残余"（可续）与"卡下游残余"（受闸）。
-  - 验证（auto·可靠）：读 §7.4，确认准入闸三处置 + 叶子/卡下游区分。
-- **AC7**：**红线成文**——绝不假绿，置信档如实记入 `VERIFY_REPORT`；`dangerous-engine §8`（终止 / 交还）补一句"待人残余异步入账、不阻塞自治继续"，与 §7.4 呼应闭环。
-  - 验证（auto·可靠）：读 §7.4 + §8，确认红线句 + §8 呼应句。
+- **AC5**：契约成文——工具 `README.md` 定义 manifest 输入 schema（`title / project / iteration / items:[{id,title,steps[],expected}]`）+ results 输出 schema（`iteration / results:[{id,state,note}] / summary`）+ **四态→路由语义**（通过=计入收口 / 未通过=进纠错 / 跳过=N/A / 延后处理=入账不阻塞）。`example/manifest.json` 符合 schema 且能被桥成功渲染。
+  - 验证（auto·可靠）：读 README 确认两 schema + 路由表；对 `example/manifest.json` 跑渲染无异常。
 
-## 接线与一致性（G4）
+## 零依赖 + 自测（G4）
 
-- **AC8**：接线与指针同步且无悬挂——`rule-card.md`（按需补"能造弱检查就造、标弱不假绿"半句）、`Coder/README.md`（dangerous / verify 描述含置信档 + 无人残余处置）、`HUMAN_GUIDE.md`（对应注释）、`.ai/PROJECT.md`（前滚：分级置信 / 代理验证 / 无人残余处置为现行约束）；全仓无 §号错位、无失效引用。
-  - 验证（auto·可靠）：读各接线点 + 交叉核对被引 §号；收口自检 5 不变量。
+- **AC6**：**零三方依赖**——源码仅 `require` Node 内建（`http` / `fs` / `path` / `child_process` / `url` 等）；无第三方 import、无 `node_modules` 依赖。
+  - 验证（auto·可靠）：grep 全部 `require(...)` 确认仅内建；无 `package.json` dependencies 或为空。
+- **AC7**：**自测套件**——`test/bridge.test.js` 用 Node 内建跑端到端（起服务 → GET → POST → 断言 results.json → 断言自退），`node test/bridge.test.js` 退出码 0。
+  - 验证（auto·可靠）：实际运行测试，断言 exit 0 + 打印全过。
+- **AC8**：**浏览器交互实测（代理验证）**——真浏览器打开桥页、逐项点四态、填一条备注、点提交，页面出现"已提交"面板且 `results.json` 落盘。
+  - 验证（auto·弱）：Playwright 驱动真浏览器交互 + 截图（代理验证，见 `testing-strategy §3.1`；置信弱于确定性断言、不冒充可靠）。
 
-## 分道与置信自评（dogfood）
+## 接线注册（G5）
 
-- 本迭代 **8/8 AC 全归自动道**，置信档全 **可靠**：规则仓的验证=读规则正文确认文本存在且自洽，确定性可复现，无感知 / 主观 / 物理设备项 → 无人测道 AC、无弱档、无待人残余。这本身即 R2 口径的自证。
+- **AC9**：`tools/` 顶层目录注册进仓库根 `CLAUDE.md` 目录职责；工具自带 `README.md`；`.ai/PROJECT.md` 收口前滚（新增 tools/ 与桥工具入架构图 / 现行约束）。
+  - 验证（auto·可靠）：读 `CLAUDE.md` / 工具 README / PROJECT 确认注册与前滚。
 
 ## In / Out Scope
 
-- **In**：三处核心规则（verify-schema 置信档 / testing-strategy 代理验证 / dangerous-engine 无人残余处置 + 准入闸）+ 接线 4 点。
-- **Out**：不实现「交付自测」桥（R3）、不接等待-回收-续跑（R4）、不改 P1-P5 状态机 / 四件套脊柱 / AC 验收脊柱 / hook / correction-contract；R1 已定分道二分字段不重构。
+- **In**：桥本体（服务 + 渲染 + 四态 + 自退）+ 输入 / 输出契约 + 零依赖 + 自测（node + Playwright）+ tools/ 注册。
+- **Out**：**不接** P5 / correction-contract / 等待-回收-续跑（R4）；**不写**部署文档 / 真实 dogfood 跑通（R5）；不做多人 / 远程 / 持久看板；不改 Coder 规则正文 / 状态机 / 四件套脊柱 / hook。
 
 ## 风险
 
-- R1：置信档记法若与 R1 lane 标记叠加过密，模板可读性下降 → P3 定最简记法，模板给完整示例。
-- R2：dangerous-engine 新增节与既有 §8 熔断 / 交还语义可能重叠 → P3 明确"熔断=能力 / 安全触顶交还"与"残余入账=不阻塞续跑"两条不同路径的边界。
-- R3：代理验证被误读为"可绿任何 UI" → AC4 诚实边界 + 红线双重约束。
+- R1：浏览器自动化环境（Playwright）不可用 → AC8 弱档验证降级：如实标注"未执行"落 Remaining Risks，不冒称已测（承 R2 红线）；AC1-AC7 可靠档不受影响仍覆盖核心。
+- R2：`process.exit` 自退时机与响应刷新竞态 → 响应 end 后延迟再 exit，测试断言 exit code 兜底。
+- R3：跨平台开浏览器（open / xdg-open / start）差异 → best-effort 且 `--no-open` 可关，不阻塞核心逻辑与测试。
