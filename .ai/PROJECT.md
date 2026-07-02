@@ -9,7 +9,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - `Coder/`：核心 SOP 体系，三层分明——SOP Core（`00` 身份/逻辑/呈现、`20` 生命周期、`30` 质量门禁、`40` 上下文）、Domain Profiles（`10` 按栈启用）、Business Extension（`99` 最高优先级业务约束）。入口 `Coder/README.md`（目录 + 读取顺序真源）。
 - 扩展模块（按需触发）：`50` 脑暴 `/ideation`、`55` 收敛闭环 `/loop`、`60` 代码复核 `/review`、`65` 危险模式 `/dangerous`、`70` 偏好探针 `/preference`。
 - `templates/`：目标项目的 CLAUDE.md 模板、浓缩规则卡（`rule-card.md` SSOT）、交付 HTML 模板、hook 体系（PreToolUse 机械门禁）。
-- `tools/`：butler 驻留可执行工具（非规则、非部署模板；目标项目传参调用、不拷副本）。当前含 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖：manifest JSON → GitHub 风格分步流程页 → 四态回传 → 写 results.json + 自退；MILE-0002 R3，契约见其 README）。
+- `tools/`：butler 驻留可执行工具（非规则、非部署模板；目标项目传参调用、不拷副本）。当前含 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖：manifest JSON → GitHub 风格分步流程页 → 四态回传 → 写 results.json + 自退；MILE-0002 R3，契约见其 README；P5 下游接线协议见 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`，R4）。
 - `Learner/` / `Composer/`：学习事务 / 杂项事务子系统。
 - 发布元数据：`VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（发布史）、`migrations/`（迁移配方）、`deliveries/`（交付总结）。
 
@@ -33,7 +33,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - 每个规则文件 frontmatter 必须标 audience + scope。
 - 版本 semver：MAJOR 破坏 / MINOR 兼容新增 / PATCH 澄清；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检（见 `versioning-schema.md §6`）。
 - 提交规约：commit message 用 `type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release): vX.Y.Z — 聚合 …`、末行 `Co-Authored-By` 署名；提交单元=迭代收口，"提交 ≠ 切版"；非 hook 门禁，靠纪律兜底（见 `versioning-schema.md §5`）。
-- 测试自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测残余；P5 验证按自动道 / 人测道分道回填、叠**分级置信**「可靠 / 弱 / 待人」（见 `testing-strategy.md §3` / `verify-schema.md`）。感知项先造**代理验证**（截图 diff / VLM 判图，`testing-strategy §3.1`）earned 弱档、不冒充可靠绿。非 hook 门禁，靠纪律 + 收口自检兜底。
+- 测试自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测残余；P5 验证按自动道 / 人测道分道回填、叠**分级置信**「可靠 / 弱 / 待人」（见 `testing-strategy.md §3` / `verify-schema.md`）。感知项先造**代理验证**（截图 diff / VLM 判图，`testing-strategy §3.1`）earned 弱档、不冒充可靠绿。人测残余的**回传闭环**走 `human-test-bridge.md`——有人场次经交付自测桥四态回传续跑（通过=收口 / 未通过=纠错 / 延后=入账不阻塞 / 跳过=N/A）、无人值守不起桥走 `dangerous §7.4`。非 hook 门禁，靠纪律 + 收口自检兜底。
 - 无人残余处置（`/dangerous`）：无人值守下人测残余按 `dangerous-engine §7.4` 依赖感知准入闸处置——不阻塞异步入账、卡下游不硬闯（弱验证顶 / 砍分支 / 不具准入资格交还）、**红线绝不假绿**。
 
 ## 已知长期欠债

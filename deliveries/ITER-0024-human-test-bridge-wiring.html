@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图（填自 templates/delivery.html.template）
+  引用真源以同名 .md 为准 · 迭代级已删除 ROADMAP 块 · 语义见 delivery-summary.md §9
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0024 交付总结 · 等待-回收-续跑接线</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.danger { background: var(--warn-soft); color: var(--warn); border-color: #eed888; }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>等待-回收-续跑接线：交付自测桥接进 P5 闭环（新增 human-test-bridge 协议 + 四态路由 + 机械跑通）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0024</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-02</span>
+        <span class="chip danger">⚠️ 危险模式 · P2/P3 自审门 · P5 独立复核</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>MILE-0002 第四个路线项 R4（扁平原子）。承 R1（分道）R2（置信）R3（桥体）——前三项备齐"哪些要人测 / 多大把握 / 人测完怎么回传"，唯独<strong>回传后 butler 怎么接</strong>还悬空。</li>
+        <li>缺口：R3 的桥能自退、能写 <code>results.json</code>，但没有规则告诉 butler 何时起桥、起完怎么等、四态怎么分派。</li>
+        <li>目标：新增<strong>等待-回收-续跑闭环协议</strong>，把桥接进 P5 / 纠错 / 无人降级，定四态路由，并<strong>机械跑通一遍</strong>证明协议可执行——补上 R1-R3 缺的最后一环，结论真正流回 butler、闭环真正合上。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新增</strong> <code>Coder/20_Workflow_Lifecycle/human-test-bridge.md</code>（闭环协议 SSOT，§1-§7）：</li>
+        <li>§2 触发：P5 存在 <code>human·待人</code> 残余 <strong>且</strong> 有人在场（两条件与）；§3 五步：生成 manifest → <code>run_in_background</code> 起桥 → 阻塞等桥自退 → 读 <code>results.json</code> → 四态路由回填；异常退出（无 results.json）不假绿、诚实停。</li>
+        <li>§4 四态路由表（<code>pass</code>=收口 / <code>fail</code>=进 <code>correction-contract</code> 纠错 / <code>defer</code>=入账不阻塞 / <code>skip</code>=N/A）<strong>逐条镜像工具 README</strong>；§5 无人不起桥走 <code>dangerous §7.4</code>；§6 调用形态（传路径不拷副本、部署 defer R5）。</li>
+        <li><strong>接线</strong>（增量、文件名互引、不 renumber）：<code>verify-schema §4</code> / <code>testing-strategy §3</code> / <code>correction-contract §3</code>（人测 <code>fail</code> 进纠错）/ <code>dangerous-engine §7.4/§8</code>（有人起桥 / 无人走准入闸，双向锁死）。</li>
+        <li><strong>注册 + 前滚</strong>：<code>Coder/README.md</code> / <code>rule-card.md</code> / 工具 <code>README.md</code>（R4 已完成）/ <code>.ai/PROJECT.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>人测闭环<strong>真正合上</strong>：P5 遇人测残余（有人场次）→ 生成清单 → 后台起桥弹页面 → 人勾四态 → 桥自退 → butler 读回 → 四态各自续跑。R1-R3 的通道到 R4 才接通下游。</li>
+        <li><strong>一处岔口写死</strong>：有人 → 起桥走四态路由；无人（<code>/dangerous</code>）→ 不起桥走 <code>§7.4</code> 准入闸。两条路互斥、双向一致，杜绝"无人下误起桥永久阻塞"。</li>
+        <li><strong>四态各有确定动作</strong>：通过收口 / 未通过进纠错 / 延后入账不阻塞 / 跳过记 N/A——人无论选哪个 butler 都能续跑；红线绝不假绿（无 <code>results.json</code> 不算通过）。</li>
+        <li>不造新工具：R4 只写规则协议 + 复用 R3 桥，桥代码零改动。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>Coder/20_Workflow_Lifecycle/human-test-bridge.md</code>。</li>
+        <li>改（接线）：<code>verify-schema.md</code> / <code>testing-strategy.md</code> / <code>correction-contract.md</code> / <code>dangerous-engine.md</code> / <code>Coder/README.md</code> / <code>rule-card.md</code> / 工具 <code>README.md</code> / <code>.ai/PROJECT.md</code>。</li>
+        <li>没碰：桥工具代码、hook、四件套 schema、状态机、四态机器码、R5 部署 / dogfood。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>9 条 AC 全满足、全 <code>auto·可靠</code>。主体为规则协议接线，叠一条机械验证真跑桥回路。</li>
+        <li><strong>机械跑通闭环</strong>（AC9）：后台起桥 → <code>GET /health</code> 200 → <code>POST /submit</code> 四态 → 桥进程 <strong>exit 0</strong>（自退）→ 读 <code>results.json</code> summary <code>{pass:1,fail:1,defer:1,skip:1}</code> → 路由脚本按协议表分派四态各归位、ASSERT PASS。真实 butler 以 <code>run_in_background</code> 退出通知替代 <code>wait</code>，机制等价。</li>
+        <li><strong>一致性五不变量全 PASS</strong>：两处四态表逐条一致 / 有人无人双向一致不死锁 / verify §4 未移位（changelog-schema §4 引用不破）/ 全增量无悬挂引用 / 单一来源不重抄。</li>
+        <li><strong>危险模式 P5 §7.3 独立复核</strong>：fresh-context 子 agent 实读规则 + 独立复跑 AC9 + 对抗探测（假绿 / 路由完整性 / 崩溃无 results.json / 越界 R5）。结论：<strong>9/9 confirm、0 Must Fix、1 Should Fix（已补）、1 Nit</strong>；无假绿路径、无越界 R5。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><code>run_in_background</code> 的"进程退出即续跑"依赖 harness 后台能力；本 harness 已机械证明可行，跨 harness 后台语义差异为已知风险。</li>
+        <li>机械验证是程序化 POST（模拟人提交），非真人点页面；真人交互层由 R3 Playwright 弱档覆盖，本迭代不重复。</li>
+        <li>部署路径解析 / <code>mcv-deployment</code> / <code>HUMAN_GUIDE</code> 登记 + 真实项目 dogfood + 长程无人准入闸落地留 <strong>R5</strong>。本迭代只到"协议成文 + 接线 + 机械跑通"。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0024/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>新增协议：<code>Coder/20_Workflow_Lifecycle/human-test-bridge.md</code></li>
+        <li>桥体契约真源：<code>tools/delivery-selftest/README.md</code></li>
+        <li>接线：<code>verify-schema.md</code> / <code>testing-strategy.md</code> / <code>correction-contract.md</code> / <code>dangerous-engine.md</code> / <code>Coder/README.md</code> / <code>rule-card.md</code>；前滚：<code>.ai/PROJECT.md</code></li>
+        <li>危险模式审计：<code>.ai/RUN_LOG.md</code>（ITER-0024 段）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

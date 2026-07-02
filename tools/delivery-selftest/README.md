@@ -6,7 +6,7 @@ butler 驻留的**人测回传桥**：外部项目把"机器测不了、需人�
 - **butler 驻留**：本工具存 butler 仓，**不拷进目标项目**；目标项目通过传 manifest 路径调用。
 - **单机单次握手**：不做多人 / 远程 / 持久看板。
 
-> 归属 MILE-0002 R3。本工具只负责"渲染 + 回传 + 自退"；把它接进 P5 / 纠错闭环、后台等待续跑是 **R4**，部署 / 使用文档 / dogfood 是 **R5**。
+> 归属 MILE-0002 R3。本工具只负责"渲染 + 回传 + 自退"；把它接进 P5 / 纠错闭环、后台等待续跑的 SOP 协议已由 **R4** 补全——何时起桥 / 后台等待 / 四态路由见 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`；部署 / 使用文档 / dogfood 是 **R5**。
 
 ## 用法
 
@@ -57,7 +57,7 @@ node bridge.js <manifest.json> [--out results.json] [--port N] [--no-open]
 - `state` 机器码（ASCII）：`pass` / `fail` / `skip` / `defer`；页面展示对应中文「通过 / 未通过 / 跳过 / 延后处理」。
 - 非法 / 缺失 state 归 `null`（视为未判定，正常流程中提交按钮要求全判定后才可点）。
 
-## 四态 → 路由语义（供 R4 消费）
+## 四态 → 路由语义（R4 `human-test-bridge.md` 消费）
 
 | 状态 | 机器码 | 下游路由 |
 |---|---|---|

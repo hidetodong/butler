@@ -24,13 +24,13 @@
 
 # Execution Steps
 
-- [ ] T1（AC1/AC2/AC3/AC4）：新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`（§1-§7，含四态路由表镜像工具 README、引用契约真源）。
-- [ ] T2（AC5）：接线 `verify-schema.md` §4 + `testing-strategy.md §3`（增量追加、文件名互引、§4 不移位）。
-- [ ] T3（AC6）：接线 `correction-contract.md §3`（人测 fail 进纠错闭环）。
-- [ ] T4（AC7）：接线 `dangerous-engine.md §7.4/§8`（有人起桥 / 无人走准入闸，与桥协议双向一致）。
-- [ ] T5（AC8）：注册 `Coder/README.md`（目录 + 文件说明）；改工具 `README.md`（R4 已完成 + 指向协议）；收录 `rule-card.md` 一句。
-- [ ] T6（AC9）：机械跑通闭环——样例 manifest → run_in_background 起桥 → POST 四态 → 断言 exit 0 + results.json + 路由分派。
-- [ ] T7：一致性对账——grep 所有新引用可解析、四态两表逐条一致、verify §4 未移位、dangerous §7.4↔协议双向指向。
+- [x] T1（AC1/AC2/AC3/AC4）：新增 `Coder/20_Workflow_Lifecycle/human-test-bridge.md`（§1-§7，含四态路由表镜像工具 README、引用契约真源）。
+- [x] T2（AC5）：接线 `verify-schema.md` §4 + `testing-strategy.md §3`（增量追加、文件名互引、§4 不移位）。
+- [x] T3（AC6）：接线 `correction-contract.md §3`（人测 fail 进纠错闭环）。
+- [x] T4（AC7）：接线 `dangerous-engine.md §7.4/§8`（有人起桥 / 无人走准入闸，与桥协议双向一致）。
+- [x] T5（AC8）：注册 `Coder/README.md`（目录 + 文件说明）；改工具 `README.md`（R4 已完成 + 指向协议）；收录 `rule-card.md` 一句。
+- [x] T6（AC9）：机械跑通闭环——样例 manifest → 起桥（&/run_in_background）→ POST 四态 → 断言 exit 0（自退）+ results.json summary{pass:1,fail:1,defer:1,skip:1} + 路由分派 ASSERT PASS。
+- [x] T7：一致性对账——7 处新引用可解析、四态两表逐条一致、verify §4 未移位（changelog-schema §4 引用不破）、dangerous §7.4↔协议 §5 双向指向。
 - [ ] T8：P5 §7.3 独立复核（fresh-context 子 agent，逐 AC + 一致性 + dogfood 可读性）+ 原子收口五步（含 PROJECT 前滚）。
 
 # Impact / Boundary

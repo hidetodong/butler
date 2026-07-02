@@ -48,6 +48,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     acceptance-schema.md
     tech-plan-schema.md
     verify-schema.md
+    human-test-bridge.md
     artifact-style.md
     iteration-schema.md
     changelog-schema.md
@@ -132,6 +133,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用收敛闭环，附审计、回滚与 P5 强制完整审查护栏；无人值守下人测残余按 §7.4 依赖感知准入闸处置（不阻塞入账 / 弱验证顶 / 卡下游不硬闯 / 绝不假绿）。
 - `70_Extension_Preference/preference-probe-engine.md` 是实验性偏好探针：**采集 + 蒸馏经一次性同意后默认常驻**、**反哺 opt-in 仅作用于有监督工作（P2/P3 提案 / 选项排序）、绝不参与 `/dangerous`**；只学真人选择（模型自决不采集）；数据外置（`$BUTLER_PREF`，与本仓库解耦）、先验非权威、绝不侵入迭代数据流。命令：`/preference on`/`off`（隐私总开关）、`reback on`/`off`（反哺）、`distill`（手动蒸馏）。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板；其中 `verify-schema.md` 的 VERIFY_REPORT 含自动道 / 人测道**分道回填**并叠**分级置信**（`(auto·可靠)` / `(auto·弱)` / `(human·待人)` 标记 + 人测道小结），口径见 `30_Quality_Gate/testing-strategy.md §3`（代理验证见 §3.1）。
+- `20_Workflow_Lifecycle/human-test-bridge.md` 定义 P5 人测道残余的**等待-回收-续跑闭环**：有人场次触发条件 → 生成 manifest → `run_in_background` 起 butler 驻留「交付自测桥」（`tools/delivery-selftest/`）→ 阻塞等待桥进程自退 → 读 `results.json` → **四态路由**（通过=收口 / 未通过=进 `correction-contract` 纠错 / 延后=入账不阻塞 / 跳过=N/A）；无人值守（`/dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。桥体输入 / 输出契约以 `tools/delivery-selftest/README.md` 为真源，本协议只接下游消费、不重抄字段。
 - `20_Workflow_Lifecycle/artifact-style.md` 定义四件套字段正文的通用书写口径（讲人话、反啰嗦、分层渐进展开——顶部一句话意图、一行一意、精度单独成层，同时对人和 AI 友好），与四个 schema 分工：schema 管填哪些字段、本文件管字段里的话怎么写；四个 schema 的编写规则均指针引用它（单一来源），rule-card 同步收录紧凑口径。
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
 - `20_Workflow_Lifecycle/changelog-schema.md` 定义 `.ai/01_CHANGELOG.md` 的格式契约：每迭代严格 ADD/EDIT/DELETE 对象级变更流（绑 AC、文件+章节级粒度、完整路径收口必产并归档），并厘清与 delivery / ITERATIONS / PROJECT 四产物分工。
