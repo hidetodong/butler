@@ -1,13 +1,15 @@
 # Task State
 
-> 无活跃迭代 · 活跃里程碑 MILE-0002（自动化测试最大化 + 人测 web 回环）刚开启。
+> 活跃迭代 ITER-0021（MILE-0002 R1）· 阶段 P1 已产 CONCEPT，待用户确认后进 P2。
 
 ## 当前状态
 
-- 无活跃迭代（current=none）。已开启里程碑 **MILE-0002**（active），产出 `.ai/MILESTONE.md`（范围评估 + 理解阐释 + R1-R4 路线图），待用户 soft 对齐。
-- 上一发布 v1.6.0（MILE-0001 已收口，均已 push）。
+- 活跃迭代 **ITER-0021**（active，归属 MILE-0002 路线项 R1）。
+- 阶段 **P1 完成**：`.ai/CONCEPT.md` 已产出（自动化优先纪律 + 分道口径 + verify 双道回填，原子范围）。
+- 四件套已 overwrite-only 覆写为 ITER-0021；AC_LIST=draft（待 P2）、TECH_PLAN/VERIFY=占位（待 P3/P5）、01_CHANGELOG=active 空热数据。
+- 里程碑开题提交为 `a3bc5d8`；本次开迭代改动尚未提交。
 
 ## 下一步入口
 
-- 用户 soft 对齐 MILESTONE.md 后：开 R1 承接迭代（`iteration-schema §5.1` 领 ITER-0021、置 active、自动归属 MILE-0002），P1 起走四件套。
-- R1 主题：自动化优先纪律 + 分道口径（testing-strategy 升级 + verify-schema 分道回填）。
+- 用户确认 CONCEPT 方向后进 **P2**：把 G1-G4 细化为可验收 AC，写入 `AC_LIST.md`，经 **用户 ACK** 置 `ack-frozen` 冻结，再进 P3。
+- CONCEPT 待澄清 Q1-Q4（分道成节位置 / 回填形态 / rule-card 裁决 / 人测道类目清单）留 P3 定。

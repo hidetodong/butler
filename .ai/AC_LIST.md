@@ -3,52 +3,44 @@
 ACK 日期: 2026-07-02
 ---
 
-> ITER-0020（独立迭代，所属 milestone `—`；MILE-0001 虽仍 active，但本 SOP 不在其范围，故不吸附）。分流与背景见 CONCEPT，不重述。
+> ITER-0021（MILE-0002 R1）。分流与背景见 CONCEPT，不重述。验收范围已 ACK 冻结，进 P3。
 
 # Goal
 
-- 把 butler 的"日常提交规约 + 切版 git 仪式"补成一份可照做的 SOP，就地扩写进 `versioning-schema.md`：提交约定从隐性实践固结成文，切版从语义 5 步落到 git 操作层。
+- 把测试纪律升级为**自动化优先**（竭尽自动化，含浏览器自动化覆盖 UI / 交互）+ 在 VERIFY_REPORT 引入**自动道 / 人测道**双道回填；人测道界定为机器不可测残余。
 
 # In Scope
 
-- `versioning-schema.md` 新增「提交规约」节。
-- `versioning-schema.md §5` 扩写为含 git 操作层 + 切版前后自检的仪式。
-- versioning-schema title/scope 更新 + README / CLAUDE / HUMAN_GUIDE 指针同步。
-- rule-card / PROJECT.md 裁决与按需前滚。
+- `testing-strategy.md`：分层建议 → 自动化优先硬纪律 + 分道口径。
+- `verify-schema.md`：VERIFY_REPORT 增分道回填字段。
+- README / rule-card / PROJECT.md 接线与裁决。
 
 # Out of Scope
 
-- 不新建规则文件。
-- 不改 semver 语义 / SSOT / 迁移配方格式 / 里程碑收口机制（均引用既有单一来源）。
-- 不做 git commit 的 hook 机械门禁。
-- 不实际发布 MILE-0001 或切任何版本（本迭代只写 SOP）。
-- 不动 hook Python 代码、四件套字段、P1-P5 状态机。
+- 分级置信（可靠 / 弱 / 待人）、代理验证（截图 diff / VLM 判图）、依赖感知准入 —— R2。
+- 「交付自测」桥实现 —— R3。
+- 不改 P1-P5 状态机、四件套字段脊柱、AC 验收脊柱、hook 代码。
 
 # Acceptance Checklist
 
-- [ ] AC1: `versioning-schema.md` 新增「提交规约」节，明确 commit message 格式 `type(scope): 中文描述 (ITER-NNNN)`——列出允许的 type 集、scope 取值口径（规则模块名）、描述语言（中文）、迭代号尾注规则（可引用多个 ITER）。
-- [ ] AC2: 提交规约节写明发布专用提交形态 `chore(release): vX.Y.Z — 聚合 ITER-NNNN~NNNN (级别)`，并与日常迭代提交区分。
-- [ ] AC3: 提交规约节写明"何时提交 / 一次提交装什么 / commit body 引用 `deliveries/` 与 `ITERATIONS.md` 而不复述"，并显式声明 commit message 非 hook 机械门禁、靠纪律 + 收口自检兜底。
-- [ ] AC4: 提交规约与本仓真实 git 历史自洽——抽查近若干条历史提交（`chore(release): v1.5.0 …`、`feat(hook): … (ITER-0019)` 等）均能被规约覆盖，无冲突。
-- [ ] AC5: `versioning-schema §5` 扩写为含 git 操作层的完整切版仪式，在保留原语义 5 步（定 bump / 改 VERSION / 加 CHANGELOG / 写 migration / 打 tag）基础上补：①切版前预检（复用 `context-persistence.md` 一致性自检 5 不变量 + 待聚合迭代均 `closed`、无悬挂 active）②git 精确序列（add 哪些 → `chore(release)` commit → `git tag vX.Y.Z` → push + push tag）③切版后自检（VERSION 数值 == tag 数字 == CHANGELOG 顶条版本，三者对齐）。
-- [ ] AC6: §5 明确"提交 ≠ 切版"两条路径——日常迭代收口的 commit+push（不切 tag）与聚合发布的切版仪式分开；切版是按需聚合动作、非每迭代触发。
-- [ ] AC7: §5 切版仪式中若本次发布的是一个里程碑，引用 `milestone-schema.md` 的里程碑收口机制处理里程碑台账 / 归档 / 版本级交付，不在 versioning-schema 内重写该机制。
-- [ ] AC8: versioning-schema.md frontmatter `title` 与 `scope` 更新，反映其现在也承载提交规约与切版仪式（不止版本治理）。
-- [ ] AC9: 指针同步——`Coder/README.md §139` versioning-schema 一句话描述、`CLAUDE.md` VERSION 行引用、`HUMAN_GUIDE.md` versioning-schema 注释均更新，与新范围一致；守"无隐式依赖"。
-- [ ] AC10: rule-card 裁决（提交规约是否进强制卡）并记理由；`.ai/PROJECT.md` 现行约束段按需补"提交规约"一句（收口前滚）。
-- [ ] AC11: 不破坏不变量——semver 语义 §2 / SSOT §1 / 迁移配方格式 / 四件套字段 schema / hook 代码 / P1-P5 状态机 / VERSION 数值 / 根 CHANGELOG 已有条目 均未改；本仓五约束自检。
+- [ ] AC1：`testing-strategy.md` §2 从"分层**建议**"改为"**自动化优先**"硬纪律——明确"凡机器能测的必须自动化"，并显式把 UI / 交互纳入自动道（浏览器自动化 / headless / 可编程视觉断言）；§3"关键路径**手动**验证完成"改为"关键路径**默认自动**验证，人测是例外残余"。
+- [ ] AC2：`testing-strategy.md` 新增「分道口径」节——定义自动道（butler 可执行）/ 人测道（机器不可测残余）的判定标准；给出允许落人测道的**类目锚点清单**（主观审美 / 物理设备 / 真人感知 / 外部人工闸）；写明**默认归自动道**——拿不准时先尝试自动化，仅确证机器不可测才落人测道。
+- [ ] AC3：`verify-schema.md` VERIFY_REPORT 模板 `AC Status` 每条 AC 增 **lane 标记**（`(auto)` / `(human)`），并新增「人测道小结」字段——列人测道各项及其待测 / 结论。
+- [ ] AC4：`verify-schema.md` 编写规则补**分道回填要求**——自动道 AC 必须给可复现的自动验证证据；人测道 AC 必须说明为何机器不可测（对应 AC2 类目）。
+- [ ] AC5：`verify-schema.md` **只加**分道字段——既有必填字段（Verification Summary / AC Status / Verification Results / Gate Coverage / Remaining Risks / Handoff）结构与语义不变，不破坏四件套脊柱。
+- [ ] AC6：指针同步——`Coder/README.md` 中 `testing-strategy` / `verify-schema` 的一句话描述更新，反映自动化优先 + 分道；守"无隐式依赖"。
+- [ ] AC7：`templates/rule-card.md` 裁决——"能自动必自动"是否入强制卡并记理由（倾向记一句强纪律）；`.ai/PROJECT.md` 现行纪律段按需前滚补"自动化优先测试纪律"一句（收口时）。
+- [ ] AC8：不破坏不变量——P1-P5 状态机 / 四件套字段脊柱 / AC 验收脊柱 / hook 代码 / correction-contract 等未改；R2 / R3 内容（分级置信 / 代理验证 / 准入 / 桥）未被提前塞入；本仓五约束自检。
 
 # Verification Method
 
-- AC1/2/3: 读改后 versioning-schema 提交规约节，核对格式 / type 集 / scope / release 形态 / 何时提交 / 非门禁声明。
-- AC4: 抽 5-8 条 `git log` 历史提交逐条对照规约，确认无冲突。
-- AC5/6/7: 读改后 §5，核对预检 / git 序列 / 切版后自检三段齐备、两路径分开、里程碑走引用。
-- AC8/9: 读 frontmatter + grep versioning-schema 在 README / CLAUDE / HUMAN_GUIDE 的描述，确认同步。
-- AC10: 看 rule-card 裁决记录 + PROJECT.md diff。
-- AC11: git diff 确认未碰不变量文件 / 段落。
+- AC1/AC2：读改后 `testing-strategy.md`，核对纪律措辞（建议→必须）、UI 归自动道、§3 改写、分道口径节 + 类目清单 + 默认归自动道齐备。
+- AC3/AC4/AC5：读改后 `verify-schema.md` 模板与编写规则，核对 lane 标记 + 人测道小结 + 分道回填要求；比对既有必填字段未增删改。
+- AC6：grep `testing-strategy` / `verify-schema` 在 `README` 的描述，确认同步。
+- AC7：看 rule-card 裁决记录 + PROJECT.md diff。
+- AC8：`git diff --stat` 确认状态机 / 四件套 schema / hook / correction-contract 未动；通读确认无 R2/R3 内容混入。
 
 # Open Questions / Risks
 
-- 见 CONCEPT Open Questions（提交规约成节位置 / type 允许集 / rule-card 裁决 / 是否补"仅提交"路径），P3 定。
-- 风险：与 conventional commits 的关系——采用其格式但用中文描述，须在 SOP 内说明"借鉴其格式、非严格全套遵循"，避免读者误按英文 conventional 全规范执行。
-- 风险：规约作用域——写在 versioning-schema（scope=butler 仓自身版本治理），默认只约束 butler 仓提交；是否推广到目标项目留 Out of Scope / 后续。
+- 见 CONCEPT Open Questions（分道成节位置 / 回填形态 / rule-card 裁决 / 人测道类目清单），P3 定。
+- 风险：R1 与 R2 边界——"浏览器自动化覆盖 UI"（R1，确定性断言）与"代理验证 / 弱视觉判断"（R2，分级置信）易混；本迭代只写"能确定性自动化的必自动"，把弱信号 / 置信分级显式留给 R2。

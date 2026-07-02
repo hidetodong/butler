@@ -17,3 +17,9 @@
 - 2026-06-30 · P2-user-ack · ITER-0016 · 注意：P2 为**用户显式 ACK**（非自审门，真实确认 6 条 AC + 改动预览），`AC_LIST.md` 置 `ack-frozen`、ACK 日期 2026-06-30；危险模式自 P3 起接管把关。
 - 2026-06-30 · P3-self-ack · ITER-0016 · dangerous-ack · 自审门（对照 `tech-plan-schema.md` + `AC_LIST.md`）：TECH_PLAN 逐项映射 AC1–AC6；改动集中在 20/40 两层 3 个规则文件、仅强化既有 `Execution Steps` 字段口径，未命中影响面失控信号（无跨模块 / 契约级代码 / 关键路径）；无 active profile 可违背；已比对更小影响面方案（强化字段 vs 新增第五件套）取前者。Open Questions Q1（任务编号建议不强制）/ Q2（不动 verify-schema）已定。通过，自主 ACK。
 - 2026-06-30 · P5-review · ITER-0016 · dangerous-ack · 强制完整审查（§7.3）升格独立复核：起 fresh-context general-purpose 子 agent，spec-only 逐 AC + 多维审查（一致性 / 可读性 dogfood / 边界），验证者≠实现者。结论：6/6 AC confirm，零 refute，无 Must Fix、无 Should Fix，可收口；2 条 Nit——Nit-1（模板编号示例可能被误读为必填）已就地加"编号可选"括注消解，Nit-2（VERIFY 当时占位）即 P5 报告补齐。
+
+## ITER-0021 — R1 自动化优先纪律 + 分道口径（MILE-0002）
+
+- 2026-07-02 · dangerous-on · ITER-0021 · 用户本回合"开启危险模式，ACK"。butler 仓无 `.ai/local-constraints.md`（规则仓非部署项目，不受自己 hook 管），开关无持久落点；按 ITER-0014/0016 precedent 本会话实质执行：自治 + 本账本审计 + P5 强审 + 回滚锚点 + 交付披露。北极星=**ITER-0021 R1（单迭代）**；R2-R5 设计未锁，不在本次自治范围，收口后交还。
+- 2026-07-02 · iter-context · ITER-0021 · 迭代已于本会话标准模式开 active、`current` 指向它、归属 MILE-0002 R1。**P2 与 P3 均为用户显式 ACK**（AC_LIST 8 条 AC + TECH_PLAN 方案），非自审门；危险模式自 **P4** 起接管把关（P5 强制完整审查）。故 AC_LIST/TECH_PLAN 不加自主 ACK 横幅。
+- 2026-07-02 · rollback-anchor · ITER-0021 · 回滚锚点=本轮 iteration-open 提交（P1-P3 产物 + 台账）；P4 自治改动叠其上，`git reset` 到锚点即回退全部自治改动、保留已 ACK 的计划。待改 6 文件（testing-strategy / verify-schema / rule-card / README / HUMAN_GUIDE / PROJECT）在锚点均已提交干净。
