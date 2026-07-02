@@ -1,2 +1,6 @@
 .worktrees/
 .claude/worktrees/
+
+# Python 字节码缓存（hook 体系 pytest 运行时产生）
+__pycache__/
+*.py[cod]
