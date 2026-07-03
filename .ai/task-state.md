@@ -1,15 +1,15 @@
 # Task State
 
-> 无活跃迭代 · MILE-0002 五路线项 R1~R5 全 closed · 上一收口 ITER-0025（2026-07-02）。
+> 无活跃迭代 · 无活跃里程碑 · MILE-0002 已收口并随 v1.7.0 聚合发布（2026-07-03）。
 
 ## 当前状态
 
-- 无活跃迭代（current=none）。上一收口 **ITER-0025**（MILE-0002 R5，2026-07-02）。
-- 活跃里程碑 **MILE-0002**：R1/R2/R3/R4/R5 全 closed，方向（自动化测试最大化 + 人测 web 回环）达成；里程碑本身尚未聚合切版（仍 active，待发布）。
-- 危险模式：本次自治（ITER-0025 P4→P5→收口）已终止交还；butler 仓无 `.ai/local-constraints.md` 落点，退出即回标准模式。
+- 无活跃迭代（current=none）、无活跃里程碑（MILESTONES current=none）。
+- **MILE-0002「自动化测试最大化 + 人测 web 回环」已收口 + 发布 v1.7.0**（2026-07-03）：R1~R5 全 closed，聚合 ITER-0021~0025；里程碑级交付 `deliveries/milestones/MILE-0002-automation-and-human-test-loop.md(+html)`、快照 `.ai/milestones/MILE-0002/MILESTONE.md`。
+- 发布元数据一致：`VERSION`=1.7.0、tag `v1.7.0`、`CHANGELOG.md` 顶 [1.7.0]、`migrations/v1.7.0.md`（`[regen-claude]` + `[restamp]`）。
+- 危险模式已终止交还（上一自治为 ITER-0025）；butler 仓无 `.ai/local-constraints.md` 落点，退出即回标准模式。
 
 ## 下一步入口
 
-- **发布 MILE-0002**（待用户拍板）：聚合切版 MINOR v1.7.0——更新 `VERSION`、根 `CHANGELOG.md`（聚合 ITER-0021~0025）、里程碑级交付 `deliveries/milestones/MILE-0002-*.md(+html)`、按需 `migrations/`、打 tag、MILESTONES/MILESTONE 收口置 closed。
-- 或开新方向（MILE-0003 已有预研 `docs/research/`，未开题）。
-- 本轮改动**未提交推送**（除 §7.2 回滚锚点 `d82f736`），待用户指令。
+- 开新方向：MILE-0003 已有预研 `docs/research/`，未开题；或开独立迭代。
+- 本轮切版发布已提交推送并打 tag（`chore(release): v1.7.0`）。

@@ -4,6 +4,22 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [1.7.0] - 2026-07-03
+
+向后兼容能力新增版。聚合 ITER-0021 ~ ITER-0025（自 v1.6.0 起新收口），并**收口里程碑 MILE-0002「自动化测试最大化 + 人测 web 回环」**（其下 R1/R2/R3/R4/R5 = ITER-0021/0022/0023/0024/0025）。五个迭代均为向后兼容的规则正文新增 / 新增 butler 驻留工具 / 新增产物与文档，无破坏性变更，按 semver 取区间最高级别为 MINOR。
+
+### 本版新增
+
+- **自动化优先纪律 + 测试分道（ITER-0021 · MILE-0002 R1）**：`30_Quality_Gate/testing-strategy.md` 从"分层建议"升级为"竭尽一切自动化"硬纪律（含浏览器自动化 / headless 覆盖 UI、交互）；`verify-schema.md` 令每条 AC 显式分「自动道 / 人测道」回填，人测道界定为机器不可测残余。详见 `deliveries/ITER-0021-automation-first-testing-lanes.md`。
+- **分级置信 + 代理验证 + 依赖感知准入（ITER-0022 · MILE-0002 R2）**：`VERIFY_REPORT.md` 增「可靠 / 弱 / 待人」分级置信档；感知类造弱自动检查（截图 diff / VLM 判图）earned 弱档不冒充绿；`dangerous-engine §7.4` 无人残余依赖感知准入闸（不阻塞异步入账 / 卡下游不硬闯 / 红线绝不假绿）。详见 `deliveries/ITER-0022-graded-confidence-proxy-and-admission.md`。
+- **交付自测桥工具（ITER-0023 · MILE-0002 R3）**：新增 butler 驻留工具 `tools/delivery-selftest/`（Node 零依赖）——JSON 清单 → GitHub 风格分步流程页 → 每项四态（通过 / 未通过 / 跳过 / 延后）+ 备注 → 写 results.json → 自退；定义输入 / 输出契约。详见 `deliveries/ITER-0023-delivery-selftest-bridge.md`。
+- **等待-回收-续跑接线（ITER-0024 · MILE-0002 R4）**：`human-test-bridge.md` 定义 P5 下游接线协议——`run_in_background` 起桥 + 阻塞等待 + 读结果 + 四态路由（通过→收口 / 未通过→`correction-contract` 纠错 / 跳过→N/A / 延后→入账不阻塞）+ 外部项目调用形态。详见 `deliveries/ITER-0024-human-test-bridge-wiring.md`。
+- **部署 / 使用文档 + dogfood（ITER-0025 · MILE-0002 R5）**：`mcv-deployment.md §6`「butler 驻留工具调用」+ `HUMAN_GUIDE.md §5 人测回环` + `Coder/README` 注册 + 桥 `example/manifest.json` 补齐四态样例；外部调用形态端到端 dogfood 跑通（headless 四态齐全回路 exit 0）。详见 `deliveries/ITER-0025-bridge-usage-docs.md`。
+
+里程碑级聚合交付见 `deliveries/milestones/MILE-0002-automation-and-human-test-loop.md`；聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。
+
+[1.7.0]: 自 v1.6.0 起聚合 ITER-0021 ~ ITER-0025（含 MILE-0002 收口）
+
 ## [1.6.0] - 2026-07-02
 
 向后兼容能力新增版。聚合 ITER-0017 ~ ITER-0020（自 v1.5.0 起新收口），并**收口里程碑 MILE-0001「冷启动可恢复性与收口知识固结」**（其下 R1/R2/R3 = ITER-0017/0018/0019）+ 独立迭代 ITER-0020。四个迭代均为向后兼容的规则正文新增 / 新增 hook 规则 / 新增产物，无破坏性变更，按 semver 取区间最高级别为 MINOR。

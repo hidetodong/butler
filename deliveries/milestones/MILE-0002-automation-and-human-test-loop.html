@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0002 交付总结 · 自动化测试最大化 + 人测 web 回环</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>自动化测试最大化 + 人测 web 回环（MILE-0002）</h1>
+      <div class="meta">
+        <span class="chip id">MILE-0002</span>
+        <span class="chip level">里程碑交付（大版本）</span>
+        <span class="chip date">收口 2026-07-03 · v1.7.0</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>补 P5 验证的两处系统性断裂：① 缺"竭尽自动化"的硬纪律，本可自动化的项（尤其 UI / 交互，其实可用浏览器自动化覆盖）容易随手推给人；② 人测结果<strong>没有回传通道</strong>，闭环断在人这一侧，butler 无法据结果续跑。</li>
+        <li>大版本目标：P5 的人测从"butler 口头说一句、结果断在人这"变成"结构化分道 + web 桥四态回传 + 后台等待续跑"的可审计闭环；自动化覆盖最大化，人测道只剩机器确实不可测的极少残余。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>五件闭环：<strong>自动化优先纪律 + 分道</strong>（R1）、<strong>分级置信 + 代理验证 + 依赖感知准入</strong>（R2）、<strong>交付自测桥工具</strong>（R3）、<strong>等待-回收-续跑 SOP</strong>（R4）、<strong>部署 / 使用文档 + 真 dogfood</strong>（R5），覆盖"竭尽自动化 + 人测残余可回传续跑"两端。逐路线项见下方回填。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>P5 验证升级为"竭尽一切自动化"硬纪律：能自动化的（含浏览器自动化覆盖 UI / 交互）必须自动化，人测道仅留机器不可测残余；每条 AC 显式分「自动道 / 人测道」回填 <code>VERIFY_REPORT.md</code>。</li>
+        <li>验证结论叠<strong>分级置信</strong>「可靠 / 弱 / 待人」：感知类可造弱自动检查（截图 diff / VLM 判图）earned 弱档，<strong>绝不假绿</strong>。</li>
+        <li>人测残余走 <strong>交付自测桥</strong>（butler 驻留、Node 零依赖）：外部项目传 JSON 清单 → GitHub 风格分步流程页 → 每项<strong>四态 + 备注</strong>（通过 / 未通过 / 跳过 / 延后）→ 写 results.json → 自退；桥不拷进目标项目，按路径传参调用。</li>
+        <li>后台等待续跑闭环：<code>run_in_background</code> 起桥 + 阻塞等待，人提交后进程退出即续跑，按四态路由（通过→收口 / 未通过→纠错 / 跳过→N/A / 延后→入账不阻塞）；无人值守不起桥则走 <code>dangerous §7.4</code> 依赖感知准入闸。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增规则 / 产物 / 工具：<code>tools/delivery-selftest/</code>（butler 驻留桥，Node 零依赖）、<code>human-test-bridge.md</code>（P5 下游接线协议）、<code>mcv-deployment §6</code>（驻留工具调用）、<code>HUMAN_GUIDE §5</code>（人测回环）、<code>dangerous-engine §7.4</code>（无人残余依赖感知准入闸）。</li>
+        <li>接线 / 升级：<code>testing-strategy.md</code>（竭尽自动化 + 分道）、<code>verify-schema.md</code>（分道回填 + 分级置信）、<code>correction-contract</code>（人测 fail 接入纠错）、<code>Coder/README</code>（注册）、<code>templates/rule-card.md</code>（强制约束补入，随 v1.7.0 <code>[regen-claude]</code>）。</li>
+        <li>未动：P1-P5 阶段状态机、四件套字段结构、AC 验收脊柱、<code>templates/hooks/</code>（无 hook 变更）。</li>
+      </ul>
+    </section>
+
+    <!-- ROADMAP:START -->
+    <section class="block roadmap">
+      <h2>拆分路线图回填</h2>
+      <table>
+        <thead><tr><th>路线项</th><th>主题</th><th>实际 ITER</th><th>状态</th><th>落点</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>自动化优先纪律 + 分道口径</td><td>ITER-0021</td><td>✅ closed</td><td><code>deliveries/ITER-0021-automation-first-testing-lanes.md</code></td></tr>
+          <tr><td>R2</td><td>分级置信 + 代理验证 + 依赖感知准入</td><td>ITER-0022</td><td>✅ closed</td><td><code>deliveries/ITER-0022-graded-confidence-proxy-and-admission.md</code></td></tr>
+          <tr><td>R3</td><td>交付自测桥工具（Node 零依赖、四态 + 备注）</td><td>ITER-0023</td><td>✅ closed</td><td><code>deliveries/ITER-0023-delivery-selftest-bridge.md</code></td></tr>
+          <tr><td>R4</td><td>等待-回收-续跑接线（四态路由 + P5 / correction-contract）</td><td>ITER-0024</td><td>✅ closed</td><td><code>deliveries/ITER-0024-human-test-bridge-wiring.md</code></td></tr>
+          <tr><td>R5</td><td>部署 / 使用文档 + dogfood</td><td>ITER-0025</td><td>✅ closed</td><td><code>deliveries/ITER-0025-bridge-usage-docs.md</code></td></tr>
+        </tbody>
+      </table>
+      <p>五路线项全部达成。执行顺序为 R1 → R2 → R3 → R4 → R5（先立自动化纪律与置信 / 准入口径，再造桥、接线，末位补文档 + dogfood）。路线项扁平原子（一项 ≈ 一迭代，不设子项）。</p>
+    </section>
+    <!-- ROADMAP:END -->
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>五路线项其下迭代各自 P1-P5 闭环、各自收口交付（见上表链接）；里程碑收口前确认路线图各项均 closed、一致性自检 5 不变量全绿。</li>
+        <li>dogfood（R5 · ITER-0025）：以外部调用形态端到端跑通交付自测桥——headless 起桥、四态齐全（pass/fail/defer/skip）回传、写 results.json、进程 exit 0、四态路由断言通过。真人点击层由 R3 的 Playwright 弱档覆盖（本环境无真实浏览器）。</li>
+        <li>本里程碑随 v1.7.0 聚合发布（聚合 ITER-0021 ~ ITER-0025），迁移配方 <code>migrations/v1.7.0.md</code>（<code>[regen-claude]</code> rule-card 补强制约束 + <code>[restamp]</code>；无 <code>[sync-hooks]</code>，hook 体系未动）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>DD5 样例落点偏离（Should Fix，ITER-0025）</strong>：冻结计划样例落 <code>sample/manifest.sample.json</code>，实际复用既有 <code>example/manifest.json</code>（补 MT-4 凑齐四态，DRY 优先）——已于 ITER-0025 <code>VERIFY_REPORT</code> Remaining Risks 留痕，冻结计划未改。</li>
+        <li>dogfood 只在 headless / 机械回路验证；真实浏览器真人点击的端到端仅靠 R3 Playwright 弱档，本环境未起真浏览器（已知环境约束，非里程碑遗留缺陷）。</li>
+        <li><code>/butler-upgrade</code> 协议仍未在真实老项目实跑（跨里程碑历史 dogfood 债，非本里程碑范围）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>里程碑产物快照：<code>.ai/milestones/MILE-0002/MILESTONE.md</code></li>
+        <li>其下迭代交付：<code>deliveries/ITER-0021-automation-first-testing-lanes.md</code>、<code>deliveries/ITER-0022-graded-confidence-proxy-and-admission.md</code>、<code>deliveries/ITER-0023-delivery-selftest-bridge.md</code>、<code>deliveries/ITER-0024-human-test-bridge-wiring.md</code>、<code>deliveries/ITER-0025-bridge-usage-docs.md</code></li>
+        <li>发布：<code>CHANGELOG.md</code> [1.7.0]、<code>migrations/v1.7.0.md</code>、<code>.ai/ITERATIONS.md</code>、<code>.ai/MILESTONES.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
