@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0003 帮手设计 · 我审出来的问题（说人话版）</title>
+  <style>
+    :root {
+      --fg: #1f2328; --fg-muted: #59636e; --bg: #f6f8fa; --card: #ffffff;
+      --border: #d1d9e0; --accent: #0969da; --accent-soft: #ddf4ff;
+      --warn: #9a6700; --warn-soft: #fff8c5; --danger: #cf222e; --danger-soft: #ffebe9;
+      --ok: #1a7f37; --ok-soft: #dafbe1;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1rem 4rem; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.75; font-size: 15px;
+    }
+    .sheet { max-width: 880px; margin: 0 auto; }
+    header.head {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem 1.75rem; margin-bottom: 1.25rem;
+    }
+    header.head h1 { margin: 0 0 0.6rem; font-size: 1.45rem; line-height: 1.35; }
+    header.head p.sub { margin: 0.4rem 0 0.9rem; color: var(--fg-muted); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center; padding: 0.15rem 0.6rem;
+      border-radius: 999px; font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
+    }
+    .chip.gray { background: #eef1f5; color: var(--fg-muted); }
+    .chip.ok { background: var(--ok-soft); color: var(--ok); }
+    section.block {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.35rem; margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.7rem; font-size: 1.15rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    section.block > h2 .n {
+      display: inline-block; width: 1.6rem; color: var(--accent);
+      font-family: var(--mono); font-weight: 700;
+    }
+    section.block :is(p, ul, ol) { margin: 0.55rem 0; }
+    section.block ul { padding-left: 1.3rem; }
+    section.block li { margin: 0.4rem 0; }
+    code { font-family: var(--mono); font-size: 0.86em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    strong { font-weight: 650; }
+
+    .lead { background: var(--ok-soft); border: 1px solid #a7e3b8;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.2rem 0 0.5rem; }
+    .lead .note { color: var(--fg-muted); font-size: 0.92rem; margin-top: 0.5rem; }
+
+    .dist { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.4rem 0; }
+    .dist .cell { flex: 1 1 30%; min-width: 130px; border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.6rem 0.8rem; background: var(--bg); }
+    .dist .cell .num { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; }
+    .dist .cell.major .num { color: var(--danger); }
+    .dist .cell.minor .num { color: var(--accent); }
+    .dist .cell.nit .num { color: var(--fg-muted); }
+    .dist .cell .lbl { color: var(--fg-muted); font-size: 0.82rem; }
+
+    .pillar { border-left: 4px solid var(--warn); background: var(--bg);
+      border-radius: 0 10px 10px 0; padding: 0.85rem 1.1rem; margin: 0.85rem 0; }
+    .pillar h3 { margin: 0 0 0.4rem; font-size: 1.02rem; }
+    .pillar h3 .idx { display: inline-flex; align-items: center; justify-content: center;
+      min-width: 3.4rem; height: 1.5rem; padding: 0 0.4rem; border-radius: 6px; background: var(--warn);
+      color: #fff; font-family: var(--mono); font-size: 0.78rem; margin-right: 0.5rem; vertical-align: middle; }
+    .pillar .worry { margin: 0.3rem 0; }
+    .pillar .decided { margin-top: 0.5rem; padding: 0.5rem 0.8rem;
+      background: var(--ok-soft); border-left: 3px solid var(--ok); border-radius: 0 8px 8px 0; }
+    .pillar .decided b { color: var(--ok); }
+    .pillar .still { margin-top: 0.5rem; padding: 0.5rem 0.8rem;
+      background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; }
+
+    footer.foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print { body { background: #fff; padding: 0; }
+      section.block, header.head { border-color: #ccc; break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>MILE-0003 帮手设计 · 我审出来的问题</h1>
+      <p class="sub">审的是那份「帮手名册」设计草稿。这一版把话都说白了：术语第一次出现就解释、比喻当场落地、不让英文和变量名光秃秃混在句子里。</p>
+      <div class="meta">
+        <span class="chip">MILE-0003 帮手设计</span>
+        <span class="chip ok">说人话重写版</span>
+        <span class="chip gray">2026-07-03</span>
+      </div>
+    </header>
+
+    <!-- 1 一句话 -->
+    <section class="block">
+      <h2><span class="n">1</span>一句话结论</h2>
+      <div class="lead">
+        <p style="margin:0">这份设计<strong>方向是对的</strong>——把散在好几个文件里的「复核」说明合并成一份、给几个帮手 AI 建一张名册，这两件事该做。问题是它<strong>有几处做多了、也有几处说错了</strong>。</p>
+        <p class="note">下面三个要紧问题里，<strong>前两个你后来已经拍板改了</strong>，我在每条底下标了最终结论；第三个是要改的说法。</p>
+      </div>
+    </section>
+
+    <!-- 2 审了多少 -->
+    <section class="block">
+      <h2><span class="n">2</span>一共审了多少</h2>
+      <p>我从五个方面各审了一遍——<strong>结构合不合理、范围和先后顺序对不对、事实有没有说错、跟现有规则冲不冲突、有没有风险</strong>。每条都试着自己反驳一遍，反驳不掉的才留下，一共 19 条：</p>
+      <div class="dist">
+        <div class="cell major"><div class="num">3</div><div class="lbl">要紧 · 得先解决</div></div>
+        <div class="cell minor"><div class="num">10</div><div class="lbl">中等 · 转正前改</div></div>
+        <div class="cell nit"><div class="num">6</div><div class="lbl">小 · 顺手改</div></div>
+      </div>
+    </section>
+
+    <!-- 3 三个要紧的 -->
+    <section class="block">
+      <h2><span class="n">3</span>三个要紧的问题</h2>
+
+      <div class="pillar">
+        <h3><span class="idx">问题 1</span>「折叠帮手」这一轮该不该做</h3>
+        <p class="worry"><strong>先解释：</strong>「折叠帮手」就是那个在收尾时、把这次改了什么写进项目说明里的帮手 AI（"折叠"是它做的动作——把一堆零散改动收拢进对应的说明文件）。</p>
+        <p class="worry"><strong>我当时的顾虑：</strong>那份大预研（就是「知识文件夹」的总设计，下面叫它"父设计"）说过"这一轮先靠人手工做、自动化留以后"，所以我怕这个帮手算抢跑。</p>
+        <div class="decided"><b>✅ 你的决定：</b>它本来就是这一轮要设计的东西，不算抢跑。<strong>结论：这一轮做。</strong>（父设计里"自动化留以后"那句得顺手改准——留以后的是"完全没人管的后台自动跑"，不是"收尾叫帮手来折叠"。）</div>
+      </div>
+
+      <div class="pillar">
+        <h3><span class="idx">问题 2</span>要不要把帮手「发到每个项目里」</h3>
+        <p class="worry"><strong>我当时的顾虑：</strong>设计里写"帮手的定义文件，像发插件一样带进每个项目"。我算了一下，真要这么干，得改三个地方（部署新项目、升级老项目、写迁移步骤），工作量不小，设计却把它说得很轻。</p>
+        <div class="decided"><b>✅ 你的决定：</b>根本不用发。butler 要用哪个帮手，当场读它的定义就行——跟现在的「复核」（也就是 <code>/review</code> 那个命令）一模一样。<strong>结论：不发，这一整块砍掉。</strong></div>
+      </div>
+
+      <div class="pillar">
+        <h3><span class="idx">问题 3</span>说好的「工具层硬拦」，有一半做不到</h3>
+        <p class="worry">设计里说：给帮手限定"只能用哪几个工具"，就能让"更新说明帮手只准写项目说明那个文件夹"。</p>
+        <p class="worry">这句<strong>一半对、一半错</strong>：限定工具只能管到"给不给它写文件"这个粗粒度，<strong>管不到"只准写哪个文件夹"</strong>。想把文件夹锁死，得再加一层"按路径放行"的配置（先全部禁止、再单独放开那一个文件夹）。</p>
+        <div class="still">这条现在<strong>还成立</strong>，但因为帮手不发到项目里了（见问题 2），这一轮只要<strong>把话说准、不用真去做</strong>。</div>
+      </div>
+    </section>
+
+    <!-- 4 其他值得记的 -->
+    <section class="block">
+      <h2><span class="n">4</span>剩下的里头，几条值得留意</h2>
+      <ul>
+        <li><strong>名册放哪：</strong>别放进管"AI 是谁、怎么干活"的那层规则里（那层是身份规则），单开一个新目录、挨着「复核」那套放。</li>
+        <li><strong>有句话记岔了：</strong>"叫不起来就如实说、别假装做过"这段话，现在其实<strong>只在一个文件里写了正文</strong>，另外两处是引用它；设计稿说"好几个地方各写了一遍"是记错了。改的时候按"一处留正文、其余都指过去"来。</li>
+        <li><strong>两个硬事实错：</strong>①"<code>AGENTS.md</code> 这个规范是 OpenAI 起的"——错了，是 Sourcegraph 公司的 Amp 团队先发起的；②"三十几家工具采用"那个数字，加个时间点（"截至 2026 上半年"），免得过一阵就过时。</li>
+      </ul>
+    </section>
+
+    <!-- 5 总结 -->
+    <section class="block">
+      <h2><span class="n">5</span>总结一句</h2>
+      <div class="lead">
+        这份设计<strong>不是想错了，是想快了一步</strong>——把本该以后做的，提前排进了这一轮。你后来那三个决定（折叠帮手这轮做、帮手不发到项目、"说人话"并进来），正好把范围拉回了正轨。
+      </div>
+    </section>
+
+    <footer class="foot">
+      MILE-0003 帮手设计审计 · 说人话重写版 · 还是讨论阶段、没定死 · docs/research/
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0003 · 接下来要做哪些事（最新版）</title>
+  <style>
+    :root {
+      --fg: #1f2328; --fg-muted: #59636e; --bg: #f6f8fa; --card: #ffffff;
+      --border: #d1d9e0; --accent: #0969da; --accent-soft: #ddf4ff;
+      --warn: #9a6700; --warn-soft: #fff8c5; --danger: #cf222e; --danger-soft: #ffebe9;
+      --ok: #1a7f37; --ok-soft: #dafbe1;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1rem 4rem; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.75; font-size: 15px;
+    }
+    .sheet { max-width: 900px; margin: 0 auto; }
+    header.head {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem 1.75rem; margin-bottom: 1.25rem;
+    }
+    header.head h1 { margin: 0 0 0.6rem; font-size: 1.5rem; line-height: 1.35; }
+    header.head p.sub { margin: 0.4rem 0 0.9rem; color: var(--fg-muted); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center; padding: 0.15rem 0.6rem;
+      border-radius: 999px; font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
+    }
+    .chip.gray { background: #eef1f5; color: var(--fg-muted); }
+    .chip.ok { background: var(--ok-soft); color: var(--ok); }
+    section.block {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.35rem; margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.7rem; font-size: 1.15rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    section.block > h2 .n {
+      display: inline-block; width: 1.6rem; color: var(--accent);
+      font-family: var(--mono); font-weight: 700;
+    }
+    section.block :is(p, ul, ol) { margin: 0.55rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.4rem 0; }
+    code { font-family: var(--mono); font-size: 0.86em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    strong { font-weight: 650; }
+
+    .lead { background: var(--ok-soft); border: 1px solid #a7e3b8;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.2rem 0 0.4rem; font-size: 1.02rem; }
+
+    .step { display: flex; gap: 0.9rem; align-items: flex-start; padding: 0.7rem 0;
+      border-bottom: 1px dashed var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step .idx { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+      width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--accent); color: #fff;
+      font-family: var(--mono); font-weight: 700; font-size: 0.9rem; margin-top: 0.1rem; }
+    .step .body { flex: 1 1 auto; }
+    .step .body .t { font-weight: 650; }
+    .step .body .d { color: var(--fg-muted); font-size: 0.92rem; }
+    .step.side .idx { background: var(--warn); }
+    .step.new .idx { background: var(--ok); }
+
+    .howto { background: var(--accent-soft); border: 1px solid #b6e3ff;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.7rem 0; }
+    .howto h3 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--accent); }
+    .howto .roster { margin: 0.5rem 0 0; }
+    .howto .roster li { margin: 0.25rem 0; }
+
+    .nope { background: var(--danger-soft); border: 1px solid #ffc1bd;
+      border-radius: 10px; padding: 0.75rem 1.1rem; margin: 0.5rem 0; }
+    .nope .h { color: var(--danger); font-weight: 650; }
+    .later { background: #eef1f5; border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.75rem 1.1rem; margin: 0.5rem 0; }
+    .later .h { color: var(--fg-muted); font-weight: 650; }
+
+    .note-fix { background: var(--warn-soft); border-left: 4px solid var(--warn);
+      border-radius: 0 10px 10px 0; padding: 0.8rem 1.1rem; margin: 0.6rem 0; }
+
+    footer.foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print { body { background: #fff; padding: 0; }
+      section.block, header.head { border-color: #ccc; break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>MILE-0003 · 接下来要做哪些事</h1>
+      <p class="sub">按你 2026-07-03 拍的三条决策更新过：折叠帮手这轮就做、帮手不发到项目里、说人话并进来。</p>
+      <div class="meta">
+        <span class="chip">MILE-0003</span>
+        <span class="chip ok">可以开题了</span>
+        <span class="chip gray">最新版 · 2026-07-03</span>
+      </div>
+    </header>
+
+    <!-- 1 一句话 -->
+    <section class="block">
+      <h2><span class="n">1</span>MILE-0003 说到底就一件事</h2>
+      <div class="lead">
+        现在项目的"整体说明"是一个薄薄的 <code>.ai/PROJECT.md</code>（几个关键词 +"细节自己看代码"）。<br>
+        要把它升级成一个 <strong>随着每次干活越补越全、AI 读完就真知道"这项目里有啥"的说明文件夹</strong>。
+      </div>
+    </section>
+
+    <!-- 2 这一轮要做的 -->
+    <section class="block">
+      <h2><span class="n">2</span>这一轮要做的事</h2>
+      <p><strong>主体 —— 说明文件夹本身（5 步）：</strong></p>
+
+      <div class="step">
+        <span class="idx">1</span>
+        <div class="body">
+          <div class="t">定文件夹长什么样</div>
+          <div class="d">把一个 <code>PROJECT.md</code> 拆成一个 <code>.ai/project/</code> 文件夹，里面按主题分文件（项目定位、架构地图、现在能做啥、约束、欠债……），再配一个入口目录页。定清楚每份写多满、写到多详细。</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">2</span>
+        <div class="body">
+          <div class="t">定维护规矩</div>
+          <div class="d">每次干完活收尾时，把"这次改了啥"更新进对应的主题文件（现在可做可不做，改成<strong>每次必做</strong>）。再加一条自检：定期核对"文件夹里写的"和"真实代码"对不对得上，对不上就报出来。</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">3</span>
+        <div class="body">
+          <div class="t">改冷启动</div>
+          <div class="d">让 AI 每次接手项目，第一件事先读这个文件夹。</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">4</span>
+        <div class="body">
+          <div class="t">部署 + 老项目迁移</div>
+          <div class="d">新项目部署时带上空模板；已经在用 <code>PROJECT.md</code> 的老项目，怎么平滑升级过来。</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="idx">5</span>
+        <div class="body">
+          <div class="t">拿 butler 自己练手</div>
+          <div class="d">用新结构把 butler 现在的状态重写一遍，验证这套真能用。</div>
+        </div>
+      </div>
+
+      <p style="margin-top:1rem"><strong>帮手名册 —— 三个帮手这轮一起立好：</strong></p>
+      <div class="step side">
+        <span class="idx">6</span>
+        <div class="body">
+          <div class="t">把三个帮手都写成一份定义 + 建一张名册</div>
+          <div class="d">顺手把"复核帮手"散在 5 个文件里的说明合并成一份；再写几条所有帮手都通用的规矩。<strong>三个帮手这轮都设计</strong>（怎么用、名册长啥样见下方第 3 节）。</div>
+        </div>
+      </div>
+
+      <p style="margin-top:1rem"><strong>顺带做的一件事（你新加的）：</strong></p>
+      <div class="step new">
+        <span class="idx">7</span>
+        <div class="body">
+          <div class="t">让 butler 说人话</div>
+          <div class="d">现在只有一条规矩管"交付文档说人话"，把它扩到 <strong>所有对人说的话</strong>（分析、审计、方案、聊天）——就是我前几版翻车、堆术语的地方。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 帮手怎么用 -->
+    <section class="block">
+      <h2><span class="n">3</span>帮手到底是什么、怎么用（这是这次简化的关键）</h2>
+      <div class="howto">
+        <h3>帮手 = 一份定义资料，放在 butler 规则里</h3>
+        <p>一份定义就写清四件事：<strong>它是谁、给它什么、还你什么、能碰什么</strong>。</p>
+        <p>butler 要用哪个帮手，就<strong>读它的定义、临时起一个干净的子 AI</strong> 去干——<strong>跟现在 <code>/review</code> 一模一样</strong>。不往任何项目里发文件、不搞两层壳。</p>
+        <p style="margin-bottom:0"><strong>三个帮手：</strong></p>
+        <ul class="roster">
+          <li><strong>复核</strong>（现有）—— 拿验收标准挨条核对写得对不对，挑出错就拦住收工。只看不改。</li>
+          <li><strong>更新说明</strong> —— 收尾时被叫起来，把这次的改动折进项目说明文件夹。</li>
+          <li><strong>查过时</strong> —— 对着真实代码查说明有没有过时，只看不改、只报哪里对不上。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4 不碰的 -->
+    <section class="block">
+      <h2><span class="n">4</span>这一轮不碰的</h2>
+      <div class="nope">
+        <span class="h">❌ 不搞"把帮手文件发到每个项目里"</span>
+        <p style="margin:0.3rem 0 0">根本不需要——用的时候读定义就行（你拍的板）。这一刀砍掉了之前一大堆部署、升级、迁移的麻烦。</p>
+      </div>
+      <div class="later">
+        <span class="h">⏳ "系统层面硬拦权限"留以后</span>
+        <p style="margin:0.3rem 0 0">想让复核在工具层面根本点不了"改"——这种硬拦是可选的，留以后再说。这一轮权限靠<strong>定义里写清规矩 + 叫不起来就如实说</strong>兜着，跟现在 <code>/review</code> 一样，够用。</p>
+      </div>
+    </section>
+
+    <!-- 5 顺手改准 -->
+    <section class="block">
+      <h2><span class="n">5</span>开题时顺手改准的一句话</h2>
+      <div class="note-fix">
+        📝 父设计里现在写着"自动化留后续"，跟"折叠帮手这轮就做"字面对不上。开题时把那句改准：<strong>真正留后续的是"完全没人管的后台自动跑"，不是"收尾叫帮手折叠"</strong>（后者这一轮就做）。
+      </div>
+    </section>
+
+    <footer class="foot">
+      MILE-0003 待办梳理（最新版）· 已按 2026-07-03 三条决策更新 · 还是讨论阶段、没定死 · docs/research/
+    </footer>
+  </main>
+</body>
+</html>
