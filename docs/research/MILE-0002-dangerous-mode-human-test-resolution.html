@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0002 预研 · 长程 / 无人值守下人测卡点的处置</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --danger: #cf222e;
+      --danger-soft: #ffebe9;
+      --ok: #1a7f37;
+      --ok-soft: #dafbe1;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 860px; margin: 0 auto; }
+    header.head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.head h1 { margin: 0 0 0.75rem; font-size: 1.5rem; line-height: 1.35; }
+    header.head p.sub { margin: 0.5rem 0 0.9rem; color: var(--fg-muted); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem; border-radius: 999px;
+      font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.gray { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.7rem; font-size: 1.1rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    section.block > h2 .n {
+      display: inline-block; width: 1.6rem; color: var(--accent);
+      font-family: var(--mono); font-weight: 700;
+    }
+    section.block :is(p, ul, ol) { margin: 0.55rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.3rem 0; }
+    code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    strong { font-weight: 650; }
+
+    .contradiction {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.75rem;
+      align-items: stretch; margin: 0.9rem 0 0.4rem;
+    }
+    .contradiction .side {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.8rem 1rem; background: var(--bg);
+    }
+    .contradiction .side h3 { margin: 0 0 0.35rem; font-size: 0.9rem; }
+    .contradiction .side p { margin: 0; font-size: 0.9rem; color: var(--fg-muted); }
+    .contradiction .vs {
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-weight: 700; color: var(--danger);
+      font-size: 1.1rem;
+    }
+    @media (max-width: 620px) {
+      .contradiction { grid-template-columns: 1fr; }
+      .contradiction .vs { padding: 0.2rem; }
+    }
+
+    .pillar {
+      border-left: 4px solid var(--accent);
+      background: var(--bg);
+      border-radius: 0 10px 10px 0;
+      padding: 0.85rem 1.1rem;
+      margin: 0.85rem 0;
+    }
+    .pillar h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .pillar h3 .idx {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.5rem; height: 1.5rem; border-radius: 50%;
+      background: var(--accent); color: #fff; font-family: var(--mono);
+      font-size: 0.85rem; margin-right: 0.5rem; vertical-align: middle;
+    }
+    .pillar.crit { border-left-color: var(--danger); }
+    .pillar.crit h3 .idx { background: var(--danger); }
+
+    table { border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.9rem; }
+    th, td { border: 1px solid var(--border); padding: 0.45rem 0.65rem; text-align: left; vertical-align: top; }
+    th { background: #eef1f5; }
+    td code { white-space: nowrap; }
+    .tier-high { color: var(--ok); font-weight: 650; }
+    .tier-heur { color: var(--warn); font-weight: 650; }
+    .tier-pend { color: var(--danger); font-weight: 650; }
+
+    .flow { margin: 0.6rem 0; }
+    .flow .node {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.55rem 0.85rem; margin: 0.4rem 0; background: var(--bg);
+    }
+    .flow .node.q { background: var(--accent-soft); border-color: #a8d3ff; font-weight: 600; }
+    .flow .node .lbl { font-family: var(--mono); font-size: 0.8rem; color: var(--fg-muted); }
+    .flow .branch { padding-left: 1.4rem; border-left: 2px dashed var(--border); margin-left: 0.6rem; }
+
+    .redline {
+      background: var(--danger-soft); border: 1px solid #ffc1bd;
+      border-radius: 10px; padding: 0.9rem 1.2rem; margin: 0.6rem 0;
+    }
+    .redline h3 { margin: 0 0 0.3rem; color: var(--danger); font-size: 1rem; }
+
+    .landing { background: var(--warn-soft); border-color: #eed888; }
+    .landing > h2 { border-bottom-color: #eed888; }
+    .badge { font-family: var(--mono); font-size: 0.78rem; padding: 0.05rem 0.4rem;
+      border-radius: 5px; background: #eef1f5; color: var(--fg-muted); }
+    .badge.r1 { background: var(--accent-soft); color: var(--accent); }
+    .badge.r4 { background: var(--ok-soft); color: var(--ok); }
+
+    .demote { color: var(--fg-muted); }
+    .demote s { color: var(--fg-muted); }
+
+    footer.foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>长程 / 无人值守下,人测卡点怎么解</h1>
+      <p class="sub">MILE-0002 方向性推演 · 把「人测 web 桥」放进 <code>/dangerous</code> 与长程自治场景后暴露的死点,及其处置模型。</p>
+      <div class="meta">
+        <span class="chip">MILE-0002</span>
+        <span class="chip gray">预研 · 未进体系</span>
+        <span class="chip gray">2026-07-02</span>
+        <span class="chip gray">docs/research/</span>
+      </div>
+    </header>
+
+    <section class="block">
+      <h2><span class="n">1</span>问题的本质</h2>
+      <p>人测 web 桥的机制是<strong>阻塞等人握手</strong>。而 <code>/dangerous</code>(无人值守)的契约恰恰是<strong>人不在环里</strong>。两者直接冲突:</p>
+      <div class="contradiction">
+        <div class="side">
+          <h3>人测桥机制</h3>
+          <p>起服务 → 开浏览器 → 阻塞等人勾选提交 → 收到才续跑</p>
+        </div>
+        <div class="vs">⚔</div>
+        <div class="side">
+          <h3><code>/dangerous</code> 契约</h3>
+          <p>无人值守,跑到完;没有"人"可以握手</p>
+        </div>
+      </div>
+      <p>所以这不是"怎么等得更聪明"的问题——<strong>只要还在等人,就违背了 dangerous 的前提</strong>。要回答的是:<em>当结构上就没有人时,人测残余该被怎么处置。</em></p>
+    </section>
+
+    <section class="block">
+      <h2><span class="n">2</span>长程任务把它加码</h2>
+      <p>进一步:长程自治跑可能持续数小时到数天,<strong>人连"运行前预授权""收到通知在窗口内回"都无法保证</strong>。这打穿了所有"靠人在某个时刻出现"的方案:</p>
+      <ul class="demote">
+        <li><s>前置闸:开跑前让人一次性预授权残余延后</s> → 长程下人开跑时也未必在;且跨多迭代的残余无法一次预见。<span class="badge">降级为机会主义、不承重</span></li>
+        <li><s>通知 + 有界窗口:PushNotification 戳人,窗口内回</s> → 没有任何窗口是可靠的。<span class="badge">降级为机会主义、不承重</span></li>
+      </ul>
+      <p>真正承重的东西必须满足一个硬约束:<strong>在人零次触达的前提下,仍能正确地向前推进。</strong></p>
+    </section>
+
+    <section class="block">
+      <h2><span class="n">3</span>三根承重柱</h2>
+
+      <div class="pillar">
+        <h3><span class="idx">1</span>残余异步入账 · 永不阻塞、永不假绿</h3>
+        <p>长程跑跑完整个<strong>自动道</strong>,人测残余沉淀进一份<strong>持久欠债账</strong>,人按自己的节奏(几天后都行)来清。前进永远不等人。相较早先的"泊留",这里把它从<em>阻塞终态</em>改成<em>非阻塞的持续入账</em>:跑不停,账在攒。</p>
+      </div>
+
+      <div class="pillar">
+        <h3><span class="idx">2</span>把自动化前沿推到「代理验证 + 分级置信」</h3>
+        <p>对本来要人"扫一眼"的感知类项,造一个<strong>更弱但真实</strong>的自动检查(截图对基线视觉 diff、VLM 判读截图、启发式断言)。它不如真人,但是<strong>真信号</strong>。在 <code>VERIFY_REPORT</code> 里如实记<strong>置信档</strong>:</p>
+        <table>
+          <thead><tr><th>置信档</th><th>含义</th><th>手段举例</th><th>能否收口</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code class="tier-high">high</code></td>
+              <td>确定性断言,机器可复现</td>
+              <td>单测 / 集成断言 / 精确比对</td>
+              <td class="tier-high">可 · 直接绿</td>
+            </tr>
+            <tr>
+              <td><code class="tier-heur">heuristic</code></td>
+              <td>代理验证,弱但真实的信号</td>
+              <td>视觉 diff、VLM 判图、启发式</td>
+              <td class="tier-heur">可 · 记方法+档,人事后抽查</td>
+            </tr>
+            <tr>
+              <td><code class="tier-pend">pending-human</code></td>
+              <td>连代理都造不出的真残余</td>
+              <td>真人审美 / 物理设备 / 外部人工闸</td>
+              <td class="tier-pend">否 · 入欠债账</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><code>heuristic</code> <strong>可以收口</strong>——只要如实记"验证方法 + 置信档",这不是假绿,是一条<em>可审计的真陈述</em>。人事后只需抽查 <code>heuristic + pending</code> 这个小集合。即便主观类项,真残余也被压到接近空。</p>
+      </div>
+
+      <div class="pillar crit">
+        <h3><span class="idx">3</span>依赖感知的准入闸 · 最要命的一根</h3>
+        <p>真正的危险不是"有残余",是<strong>残余卡在关键路径上</strong>——下游依赖一个没验的项还硬闯,就是在错误地基上盖楼。按依赖位置分流:</p>
+        <div class="flow">
+          <div class="node q">残余项在哪? <span class="lbl">// 依赖图上的位置</span></div>
+          <div class="branch">
+            <div class="node">在<strong>叶子</strong>(下游无依赖) → 入账、继续跑 <span class="lbl">→ 安全延后</span></div>
+            <div class="node">卡<strong>下游</strong> → 造代理验证则下游按 <code>heuristic</code> 续;造不出则<strong>砍这条分支</strong>,其余独立分支照跑</div>
+            <div class="node">迭代的<strong>关键路径 AC 连代理都造不出</strong> → <strong>不具备长程无人跑的准入资格</strong>,只允许有人时执行</div>
+          </div>
+        </div>
+        <p>即:长程 / dangerous 模式有一条<strong>入场体检</strong>。过不了的,老实留给有人的场次,而不是闯进去卡死或假绿。</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="n">4</span>一条红线</h2>
+      <div class="redline">
+        <h3>绝不写一条假的 "verified"</h3>
+        <p>无论怎么降级,假绿是唯一会腐蚀 <strong>AC 验收脊柱</strong>和 MILE-0001 刚硬化的<strong>冷启动一致性不变量</strong>的做法。<code>heuristic</code> 记档是诚实的"验到什么程度",<code>pending-human</code> 入账是诚实的"没验";两者都真。宁可停在门口,不可撒谎盖章。</p>
+      </div>
+      <p class="demote">注:这里<strong>不</strong>引入此前搁置的"半自治中间档"。泊留 / 入账只是 dangerous 现有引擎的终态,不是新档位。</p>
+    </section>
+
+    <section class="block landing">
+      <h2><span class="n">5</span>路线图落点</h2>
+      <p>长程无人这一刀,把设计从"怎么优雅等人"推向"设计成不需要人也能对"。它给 MILE-0002 加了两个原本没点名的维度,且这俩实质在<strong>扩自动道边界</strong>,得前移到 R1:</p>
+      <table>
+        <thead><tr><th>路线项</th><th>原范围</th><th>建议增补</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge r1">R1</span> 自动化优先纪律 + 分道口径</td>
+            <td>testing-strategy 升级 + verify-schema 分道回填</td>
+            <td>补 <strong>分级置信(high/heuristic/pending)</strong> + <strong>代理验证</strong> + <strong>依赖感知准入</strong> 判据</td>
+          </tr>
+          <tr>
+            <td><span class="badge r4">R4</span> 部署文档 + dogfood</td>
+            <td>"/dangerous 无人值守降级评估"(一句)</td>
+            <td>改为 <strong>长程无人的残余异步入账 + 准入闸落地</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="foot">
+      MILE-0002 方向性推演 · 结论未冻结,可随讨论演进 · butler docs/research/
+    </footer>
+  </main>
+</body>
+</html>

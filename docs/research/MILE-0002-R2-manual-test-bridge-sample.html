@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交付自测 · butler manual-test bridge（样例）</title>
+<style>
+  :root{
+    --fg:#1f2328; --muted:#59636e; --canvas:#ffffff; --subtle:#f6f8fa;
+    --border:#d1d9e0; --border-muted:#d8dee4;
+    --accent:#0969da; --accent-soft:#ddf4ff;
+    --green:#1a7f37; --green-soft:#dafbe1; --green-bd:#2da44e;
+    --red:#cf222e; --red-soft:#ffebe9; --red-bd:#f19d99;
+    --yellow:#9a6700; --yellow-soft:#fff8c5; --yellow-bd:#eed888;
+    --gray:#59636e; --gray-soft:#eef1f5;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:2rem 1rem 5rem; background:var(--subtle); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.6;
+  }
+  .wrap{max-width:840px; margin:0 auto;}
+
+  /* header */
+  header.repo-head{
+    background:var(--canvas); border:1px solid var(--border); border-radius:12px;
+    padding:1.2rem 1.5rem; margin-bottom:1rem;
+  }
+  header.repo-head h1{margin:0 0 .5rem; font-size:1.35rem; display:flex; align-items:center; gap:.5rem;}
+  header.repo-head h1 .oct{color:var(--muted);}
+  .meta{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.3rem;}
+  .chip{display:inline-flex; align-items:center; gap:.3rem; padding:.1rem .55rem; border-radius:999px;
+    font-size:.78rem; font-family:var(--mono); background:var(--gray-soft); color:var(--muted); border:1px solid var(--border-muted);}
+  .chip.acc{background:var(--accent-soft); color:var(--accent); border-color:transparent;}
+
+  /* sticky progress bar */
+  .statusbar{
+    position:sticky; top:0; z-index:5;
+    background:var(--canvas); border:1px solid var(--border); border-radius:10px;
+    padding:.6rem .9rem; margin-bottom:1rem;
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    box-shadow:0 1px 3px rgba(31,35,40,.08);
+  }
+  .statusbar .track{flex:1; min-width:140px; height:8px; border-radius:999px; background:var(--gray-soft); overflow:hidden; display:flex;}
+  .statusbar .track > i{display:block; height:100%;}
+  .count{display:inline-flex; align-items:center; gap:.3rem; font-size:.8rem; font-family:var(--mono);}
+  .dot{width:.6rem; height:.6rem; border-radius:50%; display:inline-block;}
+  .dot.g{background:var(--green-bd);} .dot.r{background:var(--red);} .dot.y{background:var(--yellow-bd);} .dot.k{background:var(--gray);} .dot.p{background:var(--border);}
+
+  /* item card */
+  .item{background:var(--canvas); border:1px solid var(--border); border-radius:12px; margin-bottom:1rem; overflow:hidden;}
+  .item.decided{border-left-width:4px;}
+  .item[data-state="通过"]{border-left-color:var(--green-bd);}
+  .item[data-state="未通过"]{border-left-color:var(--red);}
+  .item[data-state="跳过"]{border-left-color:var(--gray);}
+  .item[data-state="延后处理"]{border-left-color:var(--yellow-bd);}
+  .item-head{display:flex; align-items:flex-start; gap:.6rem; padding:.9rem 1.1rem; border-bottom:1px solid var(--border);}
+  .item-head .idx{font-family:var(--mono); font-size:.75rem; color:var(--muted); background:var(--gray-soft);
+    padding:.1rem .45rem; border-radius:6px; white-space:nowrap; margin-top:.15rem;}
+  .item-head h2{margin:0; font-size:1rem; flex:1;}
+  .verdict-tag{font-size:.72rem; font-family:var(--mono); padding:.12rem .5rem; border-radius:999px; white-space:nowrap;}
+  .verdict-tag.none{background:var(--gray-soft); color:var(--muted);}
+  .verdict-tag.通过{background:var(--green-soft); color:var(--green);}
+  .verdict-tag.未通过{background:var(--red-soft); color:var(--red);}
+  .verdict-tag.跳过{background:var(--gray-soft); color:var(--gray);}
+  .verdict-tag.延后处理{background:var(--yellow-soft); color:var(--yellow);}
+  .item-body{padding:.4rem 1.1rem 1rem;}
+
+  .label{font-size:.75rem; font-weight:650; color:var(--muted); text-transform:uppercase; letter-spacing:.03em; margin:.9rem 0 .35rem;}
+  ol.steps{margin:.2rem 0; padding:0; list-style:none; counter-reset:s;}
+  ol.steps li{counter-increment:s; position:relative; padding:.35rem 0 .35rem 2rem; border-bottom:1px dashed var(--border-muted);}
+  ol.steps li:last-child{border-bottom:none;}
+  ol.steps li::before{content:counter(s); position:absolute; left:0; top:.35rem;
+    width:1.35rem; height:1.35rem; border-radius:50%; background:var(--accent-soft); color:var(--accent);
+    font-family:var(--mono); font-size:.72rem; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .expect{background:var(--subtle); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:6px; padding:.5rem .75rem; font-size:.9rem;}
+  code{font-family:var(--mono); font-size:.85em; background:var(--gray-soft); padding:.05rem .3rem; border-radius:5px;}
+
+  textarea.note{width:100%; min-height:2.4rem; resize:vertical; border:1px solid var(--border); border-radius:6px;
+    padding:.5rem .65rem; font:inherit; font-size:.9rem; background:var(--canvas); color:var(--fg);}
+  textarea.note:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+
+  /* segmented state buttons */
+  .verdicts{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem;}
+  .verdicts button{flex:1; min-width:88px; cursor:pointer; font:inherit; font-size:.85rem; font-weight:600;
+    padding:.5rem .4rem; border-radius:8px; border:1px solid var(--border); background:var(--canvas); color:var(--fg);
+    display:inline-flex; align-items:center; justify-content:center; gap:.35rem; transition:all .12s;}
+  .verdicts button:hover{background:var(--subtle);}
+  .verdicts button .ic{font-size:.95rem;}
+  .verdicts button[data-v="通过"].on{background:var(--green-soft); border-color:var(--green-bd); color:var(--green);}
+  .verdicts button[data-v="未通过"].on{background:var(--red-soft); border-color:var(--red-bd); color:var(--red);}
+  .verdicts button[data-v="跳过"].on{background:var(--gray-soft); border-color:var(--gray); color:var(--gray);}
+  .verdicts button[data-v="延后处理"].on{background:var(--yellow-soft); border-color:var(--yellow-bd); color:var(--yellow);}
+
+  /* submit bar */
+  .submitbar{position:fixed; left:0; right:0; bottom:0; background:var(--canvas); border-top:1px solid var(--border);
+    padding:.7rem 1rem; display:flex; align-items:center; gap:.8rem; justify-content:center; box-shadow:0 -1px 6px rgba(31,35,40,.06);}
+  .submitbar .info{font-size:.82rem; color:var(--muted);}
+  .btn-primary{cursor:pointer; font:inherit; font-size:.9rem; font-weight:650; color:#fff; background:var(--green-bd);
+    border:1px solid rgba(31,35,40,.15); border-radius:8px; padding:.5rem 1.1rem;}
+  .btn-primary:disabled{background:#94d3a2; cursor:not-allowed;}
+
+  /* result panel */
+  .done-panel{display:none; background:var(--canvas); border:1px solid var(--green-bd); border-radius:12px;
+    padding:1.2rem 1.5rem; margin-bottom:1rem;}
+  .done-panel.show{display:block;}
+  .done-panel h2{margin:0 0 .4rem; color:var(--green); font-size:1.1rem;}
+  pre.json{background:#0d1117; color:#e6edf3; border-radius:8px; padding:1rem; overflow:auto; font-family:var(--mono); font-size:.8rem; line-height:1.5;}
+  .foot{text-align:center; color:var(--muted); font-size:.78rem; margin-top:1.5rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="repo-head">
+    <h1><span class="oct">🔧</span> 交付自测 <span style="color:var(--muted);font-weight:400;font-size:1rem;">· manual-test bridge</span></h1>
+    <div class="meta">
+      <span class="chip acc">acme-web</span>
+      <span class="chip">ITER-0042</span>
+      <span class="chip">P5 验证 · 人测道残余</span>
+      <span class="chip" id="total-chip">4 项待测</span>
+    </div>
+  </header>
+
+  <div class="done-panel" id="donePanel">
+    <h2>✓ 已提交，可关闭页面</h2>
+    <p style="margin:.2rem 0 .8rem; color:var(--muted);">结果已写回 <code>results.json</code>，桥进程将自退，butler 按四态路由续跑。</p>
+    <pre class="json" id="jsonOut"></pre>
+  </div>
+
+  <div class="statusbar">
+    <span class="count"><span class="dot g"></span><b id="c-pass">0</b> 通过</span>
+    <span class="count"><span class="dot r"></span><b id="c-fail">0</b> 未通过</span>
+    <span class="count"><span class="dot y"></span><b id="c-defer">0</b> 延后</span>
+    <span class="count"><span class="dot k"></span><b id="c-skip">0</b> 跳过</span>
+    <span class="count"><span class="dot p"></span><b id="c-todo">4</b> 待定</span>
+    <span class="track" id="track"></span>
+  </div>
+
+  <div id="list"></div>
+
+</div>
+
+<div class="submitbar">
+  <span class="info" id="subInfo">还有 <b>4</b> 项待定</span>
+  <button class="btn-primary" id="submitBtn" disabled>提交结果并退出</button>
+</div>
+
+<script>
+// ── 假数据：AI 输出的人测清单 JSON（外部项目传入桥的形状）──────────────
+const ITEMS = [
+  {
+    id: "MT-1",
+    title: "登录页在 iPhone SE 真机上的视觉观感",
+    steps: [
+      "真机打开 https://staging.acme-web/login",
+      "观察表单是否居中、无横向滚动",
+      "点击输入框，看软键盘弹出后按钮是否被遮挡"
+    ],
+    expect: "布局不塌、按钮始终可点，无横向溢出。"
+  },
+  {
+    id: "MT-2",
+    title: "支付成功动效的主观流畅度",
+    steps: [
+      "走一遍下单 → 支付成功流程",
+      "留意成功打勾动画是否顺滑、有无掉帧"
+    ],
+    expect: "动画流畅、不突兀，主观可接受。"
+  },
+  {
+    id: "MT-3",
+    title: "深色模式下品牌主色是否符合审美",
+    steps: [
+      "系统切深色模式，刷新首页",
+      "对比品牌红在深底上的观感"
+    ],
+    expect: "品牌色不刺眼、对比度舒适（审美判断）。"
+  },
+  {
+    id: "MT-4",
+    title: "真实短信验证码是否送达",
+    steps: [
+      "用真实手机号请求验证码",
+      "确认 60s 内收到短信"
+    ],
+    expect: "收到含 6 位验证码的短信（依赖外部短信通道）。"
+  }
+];
+
+const VERDICTS = [
+  {v:"通过",     ic:"✓"},
+  {v:"未通过",   ic:"✕"},
+  {v:"延后处理", ic:"⏳"},
+  {v:"跳过",     ic:"⊘"}
+];
+
+const state = {}; // id -> {verdict, note}
+
+const list = document.getElementById('list');
+ITEMS.forEach(it=>{
+  state[it.id] = {verdict:null, note:""};
+  const el = document.createElement('section');
+  el.className = 'item';
+  el.dataset.id = it.id;
+  el.innerHTML = `
+    <div class="item-head">
+      <span class="idx">${it.id}</span>
+      <h2>${it.title}</h2>
+      <span class="verdict-tag none">待定</span>
+    </div>
+    <div class="item-body">
+      <div class="label">测试步骤</div>
+      <ol class="steps">${it.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+      <div class="label">预期结果</div>
+      <div class="expect">${it.expect}</div>
+      <div class="label">备注 / 反馈（未通过时请填线索）</div>
+      <textarea class="note" placeholder="可选……未通过时写下现象/复现，供 butler 纠错"></textarea>
+      <div class="verdicts">
+        ${VERDICTS.map(x=>`<button data-v="${x.v}"><span class="ic">${x.ic}</span>${x.v}</button>`).join('')}
+      </div>
+    </div>`;
+  list.appendChild(el);
+
+  const tag = el.querySelector('.verdict-tag');
+  el.querySelectorAll('.verdicts button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const v = b.dataset.v;
+      state[it.id].verdict = v;
+      el.querySelectorAll('.verdicts button').forEach(x=>x.classList.toggle('on', x===b));
+      el.dataset.state = v; el.classList.add('decided');
+      tag.className = 'verdict-tag ' + v; tag.textContent = v;
+      refresh();
+    });
+  });
+  el.querySelector('.note').addEventListener('input', e=>{ state[it.id].note = e.target.value; });
+});
+
+function refresh(){
+  const vals = Object.values(state);
+  const n = k => vals.filter(x=>x.verdict===k).length;
+  const pass=n("通过"), fail=n("未通过"), defer=n("延后处理"), skip=n("跳过");
+  const todo = vals.length - pass - fail - defer - skip;
+  document.getElementById('c-pass').textContent=pass;
+  document.getElementById('c-fail').textContent=fail;
+  document.getElementById('c-defer').textContent=defer;
+  document.getElementById('c-skip').textContent=skip;
+  document.getElementById('c-todo').textContent=todo;
+  // track
+  const tot=vals.length;
+  const seg=(w,c)=>w?`<i style="width:${w/tot*100}%;background:${c}"></i>`:'';
+  document.getElementById('track').innerHTML =
+    seg(pass,'var(--green-bd)')+seg(fail,'var(--red)')+seg(defer,'var(--yellow-bd)')+seg(skip,'var(--gray)');
+  document.getElementById('subInfo').innerHTML = todo>0 ? `还有 <b>${todo}</b> 项待定` : `全部已判定，可提交`;
+  document.getElementById('submitBtn').disabled = todo>0;
+}
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const results = {
+    project:"acme-web", iteration:"ITER-0042", phase:"P5",
+    results: ITEMS.map(it=>({ id:it.id, 状态:state[it.id].verdict, 备注:state[it.id].note||null }))
+  };
+  document.getElementById('jsonOut').textContent = JSON.stringify(results,null,2);
+  document.getElementById('donePanel').classList.add('show');
+  document.querySelector('.submitbar').style.display='none';
+  window.scrollTo({top:0, behavior:'smooth'});
+  // 真桥：此处 POST /submit，服务端写 results.json 后 process.exit → 后台进程退出 → butler 续跑
+});
+
+refresh();
+</script>
+<div class="wrap"><p class="foot">样例 · 假数据 · GitHub 风格 · butler MILE-0002 R2 人测桥示意</p></div>
+</body>
+</html>
