@@ -1,9 +1,10 @@
 # 迭代台账
 
-current: none
+current: ITER-0026
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0026 | R1 帮手名册骨架 + 复核三拆 + 通用规矩单源化：新建 Coder/62_Extension_Agents/（overview 总述 + independent-review 复核定义）+ G1–G4 通用规矩提总述当唯一真源 + G2 诚实兜底单源回指 + 注册进 Coder/README | active | 2026-07-05 | — | MILE-0003 | — |
 | ITER-0025 | R5 部署 / 使用文档 + dogfood：mcv-deployment 新增 butler 驻留工具调用节 + HUMAN_GUIDE 人测桥使用说明 + 真样例端到端跑通四态回路（收尾 MILE-0002） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0025-bridge-usage-docs.md |
 | ITER-0024 | R4 等待-回收-续跑接线：新增 human-test-bridge 闭环协议（触发 + run_in_background 起桥 + 阻塞等待 + 读 results.json + 四态路由）+ 接线 P5（verify-schema/testing-strategy）/ 纠错（correction-contract）/ 无人降级（dangerous §7.4）+ 机械跑通验证 | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0024-human-test-bridge-wiring.md |
 | ITER-0023 | R3「交付自测」桥工具：Node 零依赖、GitHub 风格——manifest JSON → 渲染分步流程页 + 本地服务 + 开浏览器 → 每项四态（通过/未通过/跳过/延后处理）+ 备注 → 写 results.json + 进程自退；定义输入/输出契约 + 真测（node 断言 + Playwright） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0023-delivery-selftest-bridge.md |

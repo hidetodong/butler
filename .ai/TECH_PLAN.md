@@ -1,66 +1,71 @@
-# TECH_PLAN — ITER-0025
+# TECH_PLAN — ITER-0026（MILE-0003 R1）
 
-> P3 经**用户显式 ACK**（2026-07-02）。ACK 后用户开启 **/dangerous 危险模式**，P4→P5→收口由模型无人值守自治推进（§7.2 回滚锚点 + §7.3 P5 升格完整审查 + §7.1 审计披露）。R5 = MILE-0002 收尾：部署侧调用文档 + 人类侧使用说明 + 真样例 dogfood。
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过 `dangerous-engine §5.2` 设计自审门），未经用户确认（ITER-0026，2026-07-05）。
 
 # Goal
 
-- 支撑 AC1-AC9：给交付自测桥补"外面怎么用"——`mcv-deployment.md` 新增 butler 驻留工具调用节（AC1/AC2）、`HUMAN_GUIDE.md` 新增人测桥使用说明（AC3/AC4）、按外部调用形态真 dogfood 四态齐全回路（AC5/AC6）、样例固化为工具 fixture + README 指引（AC7）、注册确认（AC8）、收口前滚 + 里程碑收尾（AC9）。
+- 支撑 AC1–AC8：建帮手名册（总述 + 复核完整定义）、复核三拆、G1/G2 通用规矩单源化、README 注册、两处事实校准。
 
 # Files / Modules to Change
 
-- `Coder/20_Workflow_Lifecycle/mcv-deployment.md` — 新增 §6「butler 驻留工具调用」（部署项目如何定位 + 调用桥），承接 §0 路径发现。
-- `HUMAN_GUIDE.md` — §5 扩展模式区新增「人测回环（交付自测桥）」小节，人类用户视角。
-- `tools/delivery-selftest/sample/manifest.sample.json` — 新增 dogfood 样例 fixture（四态齐全示例）。
-- `tools/delivery-selftest/README.md` — 「用法」后补一句"外部项目调用样例"指引，指向 sample。
-- `Coder/README.md` — 确认 mcv-deployment 描述仍准（§6 内嵌，无新文件依赖，按需微调描述）。
-- `.ai/PROJECT.md` — 收口前滚（tools 条 + 现行约束反映"桥可用且调用方式已文档化"）。
-- `.ai/MILESTONE.md` / `.ai/ITERATIONS.md` — 收口时台账翻转（原子仪式步③）。
+**新增**
+
+- `Coder/62_Extension_Agents/overview.md` — 总述：帮手是什么 + 通用规矩 G1–G4（唯一真源）+ 名册表（三帮手，后两标 R4）+ 触发式加载 + 生态事实校准。→ AC1 / AC3(G1 正文) / AC4(G2 正文) / AC7
+- `Coder/62_Extension_Agents/independent-review.md` — 复核完整定义（中立资料：角色 / 输入 / 输出 / 禁止 / 隔离 / 权限 + 触发 / Checker 契约 / 断言核对 / 输出衔接），共享流程回指 60_review。→ AC2 / AC8
+
+**修改**
+
+- `Coder/60_Extension_CodeReview/review-engine.md` — 三拆：①§1 独立性=上下文隔离段、②§6.4 诚实性 fallback 正文 → 上提总述、原地改回指；③§2 独立复核触发 / §3.3 断言核对 / §6.1 隔离形态 / §6.2 Checker 契约 / §6.3 输出衔接 → 搬 independent-review、原地留指针；④§1 审计身份 / §3 流程 / §4 闭环 / §5 简评 → 留原地。**保留 §1–§7 编号骨架**，搬走的小节替换为指针、不 renumber（避免连锁引用失效）。→ AC3 / AC4 / AC8
+- `Coder/65_Extension_Dangerous/dangerous-engine.md` §7.3（line 119）— G2 引用"按其 §6.4"改指名册总述。→ AC4
+- `Coder/20_Workflow_Lifecycle/verify-schema.md` §4（line 73）— G2 引用"review-engine §6.4"改指名册总述。→ AC4
+- `Coder/00_System_Prompt/logic-protocol.md`（line 90）— /review 调度条目末尾加名册指针（轻触，不搬正文）。→ AC4 / AC8
+- `Coder/README.md` — 目录结构树加 `62_Extension_Agents/`；目录说明加一段；读取顺序按"触发式加载、不进冷启动必读"处理。→ AC5
 
 # Interface / Contract
 
-- **桥调用形态（对外契约，文档化不新造）**：`node $BUTLER/tools/delivery-selftest/bridge.js <manifest> [--out <results>] [--port N] [--no-open]`；输入/输出 JSON schema 与四态机器码以 `tools/delivery-selftest/README.md` 为真源，本迭代文档只引用。
-- **路径解析**：复用 `mcv-deployment §0` 的 `$BUTLER` 发现结果（`$BUTLER_PATH` → 全局 CLAUDE.md → 询问），不另造。
-- **落点约定**：目标项目 manifest/results 落本项目 `.ai/human-test/`（建议 gitignore），与四件套隔离——与 `human-test-bridge.md §3` 一致。
+- **帮手定义资料标准结构**：角色 / 输入 / 输出 / 禁止 / 隔离 / 权限——三帮手统一遵循，本轮 `independent-review` 立样板。
+- **通用规矩 G1–G4 唯一真源在总述**；下游（review / dangerous / verify-schema / logic-protocol）改为引用，不再各写正文。
+- **指针格式**：文件名 + 语义锚（如"见 `62_Extension_Agents/overview.md` 通用规矩 G2"），沿用 butler 文件名互引惯例、不写绝对路径。
 
 # State / Boundary
 
-- 只加文档 + 样例 fixture + 一次 dogfood；**不改** `bridge.js`/`render.js` 代码、四态机器码、`human-test-bridge.md` SOP 语义、`dangerous-engine §7.4` 判据、四件套 schema、hook、P1-P5 状态机、根 CHANGELOG/VERSION。
-- §7.4（无人异步入账 + 准入闸）R2 已交付——本迭代只**交叉引用**，不在 mcv-deployment/HUMAN_GUIDE 里重定义无人语义。
-- dogfood 运行产物走临时路径（`/tmp` 或工作树临时目录），不入库；固化的 sample manifest 入库、results 不入库。
+- 落点 `Coder/62_Extension_Agents/`（顶层扩展簇，与 60_review 平级）；不进 `00` 层。
+- 夹内文件零数字前缀；总述触发式加载、不进冷启动必读。
+- **不改**：`/review` 触发方式与产出行为、P1–P5 状态机、四件套字段、hook、知识文件夹本体、其它无关 §6.4（preference / milestone / versioning / butler-upgrade）。
 
 # Design Decisions
 
-- **DD1 mcv-deployment 新增 §6 而非塞进 §5 Hook（AC1）**：驻留工具调用与 hook 注入是两件事（hook 拷进目标项目、驻留工具反之不拷）。独立成 §6「butler 驻留工具调用」更清晰，且为将来其他驻留工具留位。
-- **DD2 `tools/` 抽象为通用"butler 驻留工具"类别（Q2 定：采纳）**：§6 开头一句话定义类别（存 butler 仓、不拷进目标项目、目标项目传参调用、与 hook 副本相反），再具体举 delivery-selftest 桥的调用形态。轻量抽象，不过度工程。
-- **DD3 单一来源纪律（AC2）**：§6 不重抄 manifest/results 字段与四态码，只引用 `tools/delivery-selftest/README.md`（契约）+ `human-test-bridge.md`（下游语义）+ `dangerous-engine §7.4`（无人岔口）。三处文件名互引。
-- **DD4 HUMAN_GUIDE 落 §5 扩展区（AC3/AC4）**：人测桥是 P5 收口时按需触发的能力，与扩展模式（review/dangerous 等可选能力）同类，放 §5 末尾新小节；不动 §2 核心工作流表、不移既有节。措辞用"你会看到一个浏览器页面…点四态…提交后 AI 继续"，人类视角、非指令腔。
-- **DD5 样例 fixture 落 `tools/delivery-selftest/sample/`（Q1 定：采纳）**：跟工具走，README 与使用文档可直接引为示例，dogfood 与"使用样例"复用同一份。fixture 覆盖四态齐全（4 项，各一态）以同时满足 AC6。
-- **DD6 dogfood = 外部调用形态的机械闭环（AC5/AC6）**：模拟部署项目调用——起 `bridge.js sample/manifest.sample.json --no-open --port 0 --out <tmp>/results.json`（`run_in_background`）→ 解析监听端口 → 程序化 POST `/submit` 四态 payload → 断言桥 exit 0 自退 → 读 results.json 断言 summary 四态各≥1 → 按路由表打印 pass/fail/defer/skip 分派。真人点选层 R3 Playwright 已弱档覆盖，不重造；差异记 Remaining Risks。
-- **DD7 Coder/README 按需微调（AC8）**：mcv-deployment 已注册，本迭代只在其内部加 §6，不新增文件、不改读序 → 确认描述仍准即可，若 README 有"驻留工具"可提及处顺手补一句，避免隐式依赖。
-- **DD8 发布节奏延后（Q3 定）**：R5 收口只做原子仪式 + 提交，**不聚合切版**；MILE-0002 三路线项全 closed 后由用户拍板 v1.7.0 发布节奏（承 R4 口径）。
+- **DD1（落点 / 形态）**：名册=一个文件夹（overview + 每帮手一文件），照 `agent-doc-design §3`；不放 `00` 层（会话身份 ≠ 能力目录，混入破坏分层）。→ AC1/AC6
+- **DD2（G1/G2 单源化）**：G1（独立性=上下文隔离）+ G2（诚实兜底）正文上提总述当唯一真源；review §1/§6.4 原地改回指、dangerous §7.3 + verify-schema §4 引用目标改指总述。带地址搬家、原地留指针。→ AC3/AC4
+- **DD3（三拆边界 + 不 renumber）**：共享审查流程（§3 多维 / §4 闭环 / §5 简评）留 60_review（复核本质是"把那套流程放进隔离上下文跑"，流程非其私有）；复核专有搬 independent-review、回指共享流程。**保留 review §编号骨架**，搬走小节替换为指针而非删号，防止跨文件 §引用连锁失效。→ AC3/AC8
+- **DD4（logic-protocol 轻触）**：不搬 §90 调度描述（那是 logic-protocol 职责），仅末尾加一句名册指针，避免它成 G1 第二正文。→ AC4/AC8
+- **DD5（名册表占位）**：名册表先列全三帮手，"更新说明""查过时"标"R4 落地"，本轮只落 independent-review 完整定义。→ AC1
+- **DD6（事实校准）**：AGENTS.md 起源改 Sourcegraph 的 Amp 团队发起、Agent Skills 加"截至 2026 上半年"，落生态说明处、对外措辞按 `agent-doc-design §7`。→ AC7
+- **DD7（读取顺序）**：README 读取顺序不新增 62 为冷启动必读；目录说明注明"触发式加载"。→ AC5/AC6
 
 # Execution Steps
 
-- [ ] T1（AC5/AC6/AC7）：写 `tools/delivery-selftest/sample/manifest.sample.json`（四态齐全 4 项，贴近真实 P5 残余）→ 先落样例，dogfood 与文档共用。
-- [ ] T2（AC5/AC6）：真 dogfood——`run_in_background` 起 `bridge.js sample --no-open --port 0 --out /tmp/...results.json` → 程序化 POST 四态 → 断言 exit 0 + results summary 四态各≥1 + 路由分派一致；证据留待回填 VERIFY。
-- [ ] T3（AC1/AC2）：`mcv-deployment.md` 新增 §6「butler 驻留工具调用」（类别定义 + 桥调用形态 + `.ai/human-test/` 落点 + 引用三处真源 + 无人岔口指 §7.4）。
-- [ ] T4（AC3/AC4）：`HUMAN_GUIDE.md` §5 新增「人测回环（交付自测桥）」小节（何时弹页面 / 点四态+备注 / 提交即续跑 / 四态含义），位置自洽不移既有节。
-- [ ] T5（AC7）：`tools/delivery-selftest/README.md` 补"外部项目调用样例"指引指向 sample。
-- [ ] T6（AC8）：读 `Coder/README.md` 确认 mcv-deployment 描述仍准、无遗漏依赖（按需补"驻留工具"一句）。
-- [ ] T7（AC9）：原子收口五步——归档四件套+changelog切片 / 交付 md+html / 台账翻转+收编 01_CHANGELOG / PROJECT 前滚 / 收口自检 5 不变量；MILESTONE R5→closed + 范围演进。
+- [ ] T1 建 `62_Extension_Agents/overview.md`：帮手定义 + G1–G4 + 名册表 + 加载说明 + 生态事实校准 → AC1/AC3/AC4/AC7
+- [ ] T2 建 `62_Extension_Agents/independent-review.md`：复核中立定义 + 专有契约，共享流程回指 60_review（依赖 T1）→ AC2/AC8
+- [ ] T3 改 review-engine 三拆：§1 独立性段 + §6.4 正文上提改回指；§2/§3.3/§6.1/§6.2/§6.3 搬走留指针；§3/§4/§5 留原地；保留 §编号骨架（依赖 T1/T2）→ AC3/AC4/AC8
+- [ ] T4 改 dangerous §7.3 + verify-schema §4：G2 引用改指总述，只动这两处（依赖 T1）→ AC4
+- [ ] T5 改 logic-protocol §90：末尾加名册指针（依赖 T1）→ AC4/AC8
+- [ ] T6 注册 README：目录树 + 目录说明 + 读取顺序（触发式加载）→ AC5
+- [ ] T7 grep 全仓自检：review §6.4 的 G2 引用无漏网、G1/G2 正文单源、指针可解析、无误伤无关 §6.4 → AC3/AC4
+- [ ] T8 逐条核 frontmatter / 分层 / 功能等价 → AC6/AC8
 
 # Verification Plan
 
-- AC1/AC2：读 mcv-deployment §6 确认三点齐全、不拷副本口径、引用真源无重抄、含无人岔口。
-- AC3/AC4：读 HUMAN_GUIDE 新小节确认覆盖四要点、人类视角、既有节未移位。
-- AC5/AC6：实跑 dogfood，断言退出码 0、results.json 四态齐全可解析、路由分派与协议表一致；证据（命令 + 输出摘要）入 VERIFY_REPORT。
-- AC7：确认 sample manifest 存在、为合法 manifest（dogfood 已解析过）、README 有指引。
-- AC8：读 Coder/README 确认描述准确。
-- AC9：读 PROJECT/MILESTONE 确认前滚 + 路线项状态；收口自检 5 不变量全绿。
+- AC1/2/5: 读文件确认字段齐全、指针解析（确定性可复现）。
+- AC3/4: T7 grep——`§6.4` 区分 review vs 无关；独立性 / 上下文隔离仅总述有正文、review 回指；两处 G2 下游引用已改指总述。
+- AC6: 读 frontmatter + 目录层级 + 对照 CLAUDE.md 分层。
+- AC7: grep `AGENTS` / `Skills` 措辞已改准。
+- AC8: 搬家前后语义逐条对照（P5 独立复核重点核 refute）。
+- 全程 P5 升格独立复核（fresh-context 子 agent，验证者≠实现者）。
 
 # Risks / Open Questions
 
-- R1（环境）：本环境无真人浏览器点选 → dogfood 以 headless 程序化提交证机械闭环；真人层 R3 Playwright 弱档覆盖。差异记 VERIFY Remaining Risks。
-- R2（一致性）：§6 路径发现须引用 §0 不分叉——T3 强制引用兜底。
-- R3（措辞）：HUMAN_GUIDE 易滑成指令腔 → T4 显式人类视角复核。
-- 回滚锚点：本轮 iteration-open（已落台账/四件套 draft）为基线；P4 文档+dogfood 叠其上，`git reset` + 清未跟踪即回退。标准模式无危险模式回滚锚点提交要求。
+- **误伤风险**：全仓多个无关 §6.4——改 G2 引用只动 dangerous:119、verify-schema:73 两处，T7 grep 兜底。
+- **边界风险**：复核专有 vs 共享流程若切不净 → AC3 专项核、独立复核 refute 兜底。
+- **renumber 风险**：三拆若删 review §号会连锁——DD3 定"保留骨架、搬走留指针"规避。
+- 已定：名册表占位三帮手；总述不进冷启动必读。

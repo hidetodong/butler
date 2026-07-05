@@ -1,83 +1,87 @@
-# 里程碑：自动化测试最大化 + 人测 web 回环（MILE-0002）
+# 里程碑：项目知识文件夹升级 + 帮手名册 + 说人话（MILE-0003）
 
-> butler 第二个里程碑。方向性产物，可随推进演进（milestone-schema §7.3），不走 ACK 冻结门。
+> butler 第三个里程碑。方向性产物，可随推进演进（milestone-schema §7.3），不走 ACK 冻结门。
+> 开题 2026-07-05（承 MILE-0002 于 2026-07-03 收口、开题闸解除）。预研总纲见 `docs/research/MILE-0003-preresearch-brief.md`。
 
 ## 范围评估
 
+三条线并行：**主体（知识文件夹）+ 子项一（帮手名册）+ 子项二（说人话）**。
+
 ### In Scope（版本级）
 
-- **自动化优先纪律**：把 P5 验证从"分层建议"升级为"竭尽一切自动化"的硬纪律——凡机器能测的都必须自动化（含用浏览器自动化 / headless 覆盖 UI、交互、可编程视觉断言），只把机器确实测不了的极少数残余留给人。
-- **测试分道**：P5 每条 AC 的验证显式分「自动道」（butler 跑）/「人测道」（残余），并把分道结论回填 `VERIFY_REPORT.md`。
-- **人测 web 桥（butler 驻留工具）**：一个只存在于 butler 仓的工具——外部项目调用时**传入一份 JSON 清单** → 工具据 JSON 渲染单文件 HTML 人测页 → 本地起服务 + 开浏览器 → 收集人测结果写回 results JSON → 提交后自退。Node 实现、零三方依赖。
-- **等待-回收-续跑闭环**：butler 用 `run_in_background` 起桥并阻塞等待，人提交后后台进程退出即续跑；读结果——全过→回填收口，有 fail→进 `correction-contract` 纠错闭环。
-- **接线**：把上述接进 P5（`verify-schema` / `testing-strategy`）与部署 / 使用文档。
+**主体 · 项目知识文件夹**（`PROJECT.md` → `.ai/project/`）
+
+- 把单文件 `.ai/PROJECT.md` 解构为 `.ai/project/` 主题知识文件夹（`00_INDEX.md` 入口 + 按主题分文件 + 每份边界 + 写作密度口径），改写 `project-digest-schema`。
+- 反转维护哲学：从"按需微调"→"每次收口强制按主题折叠 delta"（泛化 `iteration-schema §5.5` / `milestone-schema §7.4`）+ 新增知识文件夹漂移自检不变量（扩冷启动一致性自检）。
+- 冷启动读序切换（`context-persistence §6` 第一读改 `project/00_INDEX` + 主题）+ digest-and-point 纪律（已有真源不复制、只摘全貌 + 指针）。
+- 部署种子（`mcv-deployment` 带空模板）+ 老项目迁移配方（`PROJECT.md → project/` 的 rename+split+restamp）。
+- butler 仓自身 dogfood：用新结构重写自身 `.ai/project/` 并对齐现实。
+
+**子项一 · 帮手名册**（Butler Agent 名册）
+
+- 新建 `Coder/62_Extension_Agents/`：`overview.md` 总述（帮手是啥 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）+ 三帮手完整定义（复核 `independent-review` / 更新说明 `knowledge-fold` / 查过时 `drift-check`）。
+- 帮手 = 一份中立定义资料、用时读、临时起干净子 agent 执行，**不下发到项目**（同现有 `/review`）。
+- 复核帮手三拆：`60_review` 按性质拆（共享审查流程留原地 / 通用规矩提总述 / 复核专有契约进 `independent-review`）；G2 诚实兜底单源回指修正（正文现只在 `review-engine §6.4`，上提总述后 `dangerous §7.3` + `verify-schema §4` 引用改指总述）。
+
+**子项二 · 说人话**（讲人话扩到所有面向人输出）
+
+- 三条硬标准（术语先解释 / 比喻要落地 / 别让英文·变量裸奔）+ 发长文前自检，落进 `presentation-protocol`（对话层）+ `artifact-style`（文档层，从四件套扩到所有面向人输出）。
 
 ### Out of Scope（版本级）
 
-- 不改 P1-P5 阶段状态机、四件套字段结构、AC 验收脊柱。
-- 人测 web 桥**不拷贝进目标项目**——它是 butler 驻留工具，目标项目通过传 JSON 调用，不在每个项目存副本（避免漂移）。
-- 桥本体**零三方依赖**，不引入重型测试框架；目标项目自身的测试框架选型仍由其 profile 决定。
-- 不做多人协作 / 远程人测 / 结果持久化看板——只做"单机、单次人测握手"。
+- 不改 P1–P5 阶段状态机、四件套字段结构、AC 验收脊柱、迭代/里程碑双层。
+- 不把知识文件夹变成变更流（那是 `ITERATIONS`/`CHANGELOG` 的活）；不追细节完整——是广度地图、非疆域百科。
+- ❌ 帮手文件下发到每个项目（明确否掉；用时读定义即可）。
+- ❌ 完全无人值守的后台自动生成 / 自动跑（"自动化留后续"指的是这个，**不是**收尾唤帮手折叠——后者本轮做）。
+- ❌ 权限的"工具层硬拦"（可选增强、留后续；本轮靠契约约定 + G2 诚实兜底兜着）。
 
 ### 关键交付目标
 
-- P5 的人测从"butler 口头说一句、结果断在人这"变成"结构化分道 + web 桥回传 + 后台等待续跑"的闭环。
-- 自动化覆盖最大化：人测道只剩机器不可测的极少数（主观审美、物理设备、真人感知 / 决策、外部人工闸），且这条纪律是硬的、可审计的。
+- 冷启动"整体"产物从薄索引升级为随迭代越来越完整、AI 读完真懂"项目里有什么"的实体知识库；靠"强制 + 可验证的收口折叠"保证不腐（生死前提，见理解阐释）。
+- butler 派出去的帮手从散落 5 文件的"复核"一个，立成名册化三帮手 + 通用规矩唯一真源。
+- butler 输出（对话 + 落地文档）不堆术语黑话，可读性成硬纪律、可自检。
+- **版本级**：本里程碑重构冷启动核心产物契约 + 读序 + 迁移，按 semver 属 **MAJOR**，收口切 **v2.0.0** + 迁移配方 + tag。
 
 ## 理解阐释
 
 ### 核心问题
 
-当前 P5 会产出自动 + 人测混合的验证清单，但两处断裂：① 缺"竭尽自动化"的硬纪律，容易把本可自动化的项（尤其 UI / 交互，其实可用浏览器自动化覆盖）随手推给人；② 人测结果没有回传通道，闭环断在人这一侧，butler 无法据结果续跑。
+- 现 `.ai/PROJECT.md` 是 ≤1500 tokens 的薄索引（几个关键词 + "细节看代码"），AI 冷启动读完并不真知道"项目里有什么"，容易沦为"说几个关键词假装体系有用"。
+- butler 的帮手一直是散的：真正的帮手只有"复核"，其说明摊在 5 个文件各写一遍；MILE-0003 正把帮手从 1 变 3，是立名册最顺的时机。
+- butler 输出容易堆术语黑话，看着专业其实难懂——注意"简短"≠"好懂"。
 
 ### 背景与价值
 
-- 用户实操痛点：butler 给混合清单、标了能测 / 不能测，但人测完无法回传，butler 也没在等。
-- 价值：把人从"能自动化的琐碎验证"里解放出来（最大化自动化），只在机器确实无能为力时以最低摩擦（弹页面、勾选、提交）介入；同时补上结果回流，让 P5 真正闭环。
+- 知识文件夹：把冷启动整体产物从"薄索引"升级为"随迭代越补越全"的知识库，AI 读完真懂项目、少走弯路。代价是更高维护纪律——用"收口强制折叠 + 漂移自检"这笔账换"真能用"。**最大风险**：陈旧的完整比诚实的薄更毒（AI 信滞后内容做错判），整套设计生死系于"强制 + 可验证的收口折叠"。
+- 帮手名册：把帮手能力目录化，便于从 1 扩到 3 及以后；更新说明另起干净帮手做（避免主线刚干完活、快没精力时顺手做导致质量差、说明过时）。
+- 说人话：让 butler 面向人的输出真好懂，覆盖对话与落地文档（文档措辞再严谨些）。
 
 ### 对系统的整体影响
 
-- `30_Quality_Gate/testing-strategy.md`：从建议升级为自动化优先的可执行流程 + 分道口径。
-- `20_Workflow_Lifecycle/verify-schema.md`：`VERIFY_REPORT.md` 增分道回填 / 人测结果通道。
-- 新增 butler 驻留工具（人测 web 桥，Node 零依赖）+ 其 JSON 输入 / 输出契约。
-- `30_Quality_Gate/correction-contract.md` / P4：人测 fail 项接入纠错闭环。
-- `mcv-deployment.md` / `HUMAN_GUIDE.md` / `Coder/README.md`：使用 / 调用方式与注册。
-- `65_Extension_Dangerous`：自治 / 无人值守模式下人不在场，人测桥会永久阻塞——需评估降级策略（跳过 / 超时 / 转记欠债）。
+- `40_Context_Management/project-digest-schema.md`：单文件 schema → 文件夹 schema（主题集 / 边界 / INDEX / 密度）。
+- `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `milestone-schema.md §7.4`：前滚从"单文件·按需"泛化为"文件夹·按主题·必做"。
+- `40_Context_Management/context-persistence.md §6` + 冷启动一致性自检：读序切换 + 扩知识文件夹漂移不变量。
+- `20_Workflow_Lifecycle/mcv-deployment.md` + `migrations/`：部署种子 + 迁移配方。
+- 新增 `Coder/62_Extension_Agents/`（名册）+ 注册进 `Coder/README.md`。
+- `60_Extension_CodeReview/review-engine.md`：复核三拆（带地址的搬家清单）；`65_Extension_Dangerous/dangerous-engine.md §7.3` / `verify-schema.md §4` 的 G2 引用改指总述。
+- `00_System_Prompt/presentation-protocol.md` + `20_Workflow_Lifecycle/artifact-style.md`：说人话三条 + 发长文自检。
+- 版本：MAJOR（v2.0.0）。**利好**：`PROJECT.md` 不受 hook 门禁（hook 只拦 CONCEPT/AC/TECH_PLAN + 台账），本次无需改 hook，耦合面小于看起来。
 
 ## 拆分路线图
 
-预计跨度：5 个迭代承接（一路线项 ≈ 一迭代）。
+预计跨度：约 8 个迭代（ITER-0026 起，一路线项 ≈ 一迭代；实际 ITER 开启时才绑号，见 §5.3 不预占号）。
 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
-| R1 | 自动化优先纪律 + 分道口径：testing-strategy 升级为"竭尽自动化"（含浏览器自动化覆盖 UI / 交互）+ verify-schema 分道回填；人测道界定为机器不可测残余 | ITER-0021 | closed |
-| R2 | 分级置信 + 代理验证 + 依赖感知准入：VERIFY_REPORT 记「可靠 / 弱 / 待人」置信档；对感知类造弱自动检查（截图 diff / VLM 判图）；卡下游的未验项不许无人跑 | ITER-0022 | closed |
-| R3 | 「交付自测」桥工具（butler 驻留、Node 零依赖、GitHub 风格）：JSON 清单输入 → 渲染分步流程页 → 本地服务 + 开浏览器 → 每项四态（通过 / 未通过 / 跳过 / 延后处理）+ 备注 → 收结果写 results JSON → 自退；定义输入 / 输出契约 | ITER-0023 | closed |
-| R4 | 等待-回收-续跑接线：run_in_background 起桥 + 阻塞等待 + 读结果 + 四态路由（通过→收口 / 未通过→纠错 / 跳过→N/A / 延后→入账不阻塞）；接线 P5 + correction-contract + 外部项目调用方式 | ITER-0024 | closed |
-| R5 | 部署 / 使用文档 + dogfood：mcv-deployment / HUMAN_GUIDE / README 注册调用方式；样例跑通一遍；长程 / 无人的残余异步入账 + 准入闸落地 | ITER-0025 | closed |
-
-## 关键设计（2026-07-02 细化）
-
-### 无人 / 长程处置（dangerous 场景）
-
-三句 + 一红线（预研见 `docs/research/MILE-0002-dangerous-mode-human-test-resolution.html`）：
-
-1. 自动测不了的：**不阻塞，记账，人有空再清。**
-2. 尽量造弱自动检查（截图 diff / VLM 判图）顶上，标"弱验证"，不当真绿。
-3. 没验的项**卡下游**：不许硬闯——要么弱验证顶，要么这活儿不进无人跑。
-4. **红线：绝不假绿。** 分级置信「可靠 / 弱 / 待人」如实记入 `VERIFY_REPORT`。
-
-### R2 桥契约（名"交付自测"，样例 `docs/research/MILE-0002-R2-manual-test-bridge-sample.html`）
-
-- **输入**（项目 → 桥 JSON，每项）：`{ 标题, 分步步骤[], 预期结果 }` → 渲染为分步流程卡。
-- **输出**（每项四态 + 备注）→ 路由：**通过**=计入收口 / **未通过**=进纠错（备注当线索）/ **跳过**=记 N/A / **延后处理**=入欠债账、不阻塞收口。
-- 延后处理 = "记账不阻塞"的人工版；四态齐全 → 人无论选哪个，butler 都能续跑，闭环成立。
+| R1 | 帮手名册骨架 + 复核三拆 + 通用规矩单源化：新建 `62_Extension_Agents/`（overview 总述 + independent-review）；G1–G4 提总述当唯一真源、G2 诚实兜底单源回指修正、注册进 `Coder/README`（作知识文件夹"总述+分文件+登记"模式的内部预演） | ITER-0026 | active |
+| R2 | 知识文件夹 schema：`PROJECT.md` 解构为 `.ai/project/`（00_INDEX + 主题集 + 每份边界 + 写作密度口径），改写 `project-digest-schema` | — | planned |
+| R3 | 维护回路：收口强制按主题折叠 delta（泛化 `iteration-schema §5.5` / `milestone §7.4`）+ 知识文件夹漂移自检不变量（扩冷启动一致性自检） | — | planned |
+| R4 | 更新说明 + 查过时两帮手定义成型 + 接线：住进 `62_Extension_Agents/`、登记总述；接维护回路（收尾唤更新说明折叠）与冷启动 / 收口抽查（查过时） | — | planned |
+| R5 | 冷启动读序切换 + digest-and-point 纪律：`context-persistence §6` 第一读改 `project/00_INDEX` + 主题；已有真源不复制 | — | planned |
+| R6 | 部署种子 + 迁移配方：`mcv-deployment` 带空模板；老项目 `PROJECT.md → project/` 的 `[rename]`+`[split]`+`[restamp]` 迁移配方 | — | planned |
+| R7 | 说人话：三条标准 + 发长文自检落进 `presentation-protocol`（对话）+ `artifact-style`（扩到所有面向人输出） | — | planned |
+| R8 | butler 仓自身 dogfood：用新结构重写自身 `.ai/project/` 并对齐现实 + 文档注册（`HUMAN_GUIDE` / `README`）+ 切版 v2.0.0 | — | planned |
 
 ## 范围演进记录
 
-- 2026-07-02：开启 MILE-0002。方向经对话澄清确认——痛点=P5 人测结果无回传通道 + 自动化不够彻底；关键设计（用户定）：① 人测 HTML 只驻留 butler 仓、外部项目传 JSON 渲染（不部署副本）② Node 零依赖实现 ③ 等待机制=服务收到提交自退、后台进程退出即续跑 ④ **自动化最大化为硬纪律**，人测道仅留机器不可测的极少残余（butler 有 Playwright 浏览器自动化能力，UI / 交互应尽量回自动道）。拟拆 R1-R4，实际 ITER 开启时才绑定，不预占号。
-- 2026-07-02（细化）：讨论 dangerous / 长程无人下人测卡点，落定"无人处置三句 + 红线"与"分级置信 / 代理验证 / 依赖感知准入"。桥定名 **交付自测**、GitHub 风格、分步流程页、每项**四态 + 备注**（通过 / 未通过 / 跳过 / 延后处理）及其下游路由。预研与样例落 `docs/research/`。风格约定：设计与描述**言简意赅**。
-- 2026-07-02（路线图结构修正）：确立通用约定——**路线项扁平、原子；一项 ≈ 一迭代；要再拆即追加平级项（顺延编号），不设子项 Rxa/Rxb**。据此拆原 R1 为 R1（纪律 + 分道）与 R2（分级置信 + 代理验证 + 准入），桥 / 接线 / 部署顺延为 R3 / R4 / R5。该约定为通用规则，已回写 `milestone-schema §5.3`。
-- 2026-07-02：开 R5（ITER-0025）——收尾路线项。**scope 对账**：R5 原列的"长程 / 无人残余异步入账 + 准入闸落地"已由 R2（`dangerous-engine §7.4`）交付，R5 对该条只做交叉引用、不重复实现；R5 实际聚焦部署侧调用文档（mcv-deployment 新增驻留工具调用节）+ 人类侧使用说明（HUMAN_GUIDE）+ 真样例端到端 dogfood（外部调用形态跑通四态齐全回路）。收口后三路线项全 closed、MILE-0002 可聚合发布。
-- 2026-07-02：R5 收口（ITER-0025）。**MILE-0002 五路线项 R1/R2/R3/R4/R5 全部 closed**——自动化优先 + 分道（R1）、分级置信 + 代理验证 + 依赖感知准入（R2）、交付自测桥工具（R3）、等待-回收-续跑 SOP 闭环（R4）、部署 / 使用文档 + 真 dogfood（R5）闭环，"自动化测试最大化 + 人测 web 回环"方向达成。里程碑可聚合发布（切版 v1.7.0 + 根 CHANGELOG 聚合 ITER-0021~0025 + 里程碑级交付）——本轮按用户指令只自治到收口、未提交推送 / 未切版，聚合发布留作后续。
-- 2026-07-03：**里程碑收口 + 聚合发布 v1.7.0**（用户指令「切板发布」）。VERSION 1.6.0→1.7.0（MINOR）、根 CHANGELOG 聚合 ITER-0021~0025 [1.7.0] 条目、迁移配方 `migrations/v1.7.0.md`（`[regen-claude]` rule-card 补强制约束 + `[restamp]`，无 `[sync-hooks]`）、里程碑级交付 `deliveries/milestones/MILE-0002-automation-and-human-test-loop.md(+html)`、台账置 closed（收口 2026-07-03）+ current=none、打 tag `v1.7.0`。MILE-0002 归档。
+- 2026-07-05：**开启 MILE-0003**（承 MILE-0002 于 2026-07-03 收口、开题闸解除）。方向据预研总纲 `docs/research/MILE-0003-preresearch-brief.md` 及两份子设计（`MILE-0003-project-knowledge-folder.html` 主体、`MILE-0003-agent-doc-design.md` 帮手名册）合成。三条线：知识文件夹（主体）+ 帮手名册（子项一）+ 说人话（子项二）。已定关键决策并入路线——帮手=定义资料用时读不下发、三帮手本轮都做、权限靠约定 + G2 诚实兜底（硬拦留后续）、复核三拆、名册落 `62_Extension_Agents/`（开题确认）、说人话落 `presentation-protocol` + `artifact-style`。版本定性 MAJOR（收口切 v2.0.0）。路线图为草案，soft 对齐后仍可演进；实际 ITER 开启时才绑号。
