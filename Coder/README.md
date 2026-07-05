@@ -83,6 +83,10 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /60_Extension_CodeReview
     review-engine.md
 
+  /62_Extension_Agents
+    overview.md
+    independent-review.md
+
   /65_Extension_Dangerous
     dangerous-engine.md
 
@@ -100,6 +104,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
 - `50_Extension_Ideation/`：仅在显式 `/ideation` 指令下启用的独立脑暴扩展模块。
+- `62_Extension_Agents/`：butler 派出去干活的帮手（临时子 agent）的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手=一份中立定义资料，用时读、临时起干净子 agent 执行、不下发到项目。当前含复核（`independent-review`），更新说明 / 查过时随 MILE-0003 后续路线项补。
 - `65_Extension_Dangerous/`：仅在显式 `/dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
 - `70_Extension_Preference/`：实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/dangerous`**；只学真人选择，外置存储、与本仓库解耦。
 - `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
@@ -146,6 +151,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `40_Context_Management/project-digest-schema.md` 定义 `.ai/PROJECT.md`（项目常驻全貌摘要、状态取向）的格式契约——字段、有界、指针化、收口前滚维护与四产物边界；它是冷启动第一读。
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认触发同上下文简要自评；**独立复核（opt-in·fresh-context 子 agent·验证者≠实现者）**由手动 `/review` 或项目 `.ai/local-constraints.md` 的 `Review Policy: independent_review: on` 触发，spec-only 输入逐 AC 独立核对作者断言（refute 即阻断收口）。
+- `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` 是复核帮手完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、帮手文件回指它。当前只落复核，"更新说明""查过时"随 MILE-0003 R4 补。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 
 ## 使用原则

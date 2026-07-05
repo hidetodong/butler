@@ -73,7 +73,7 @@
 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
-| R1 | 帮手名册骨架 + 复核三拆 + 通用规矩单源化：新建 `62_Extension_Agents/`（overview 总述 + independent-review）；G1–G4 提总述当唯一真源、G2 诚实兜底单源回指修正、注册进 `Coder/README`（作知识文件夹"总述+分文件+登记"模式的内部预演） | ITER-0026 | active |
+| R1 | 帮手名册骨架 + 复核三拆 + 通用规矩单源化：新建 `62_Extension_Agents/`（overview 总述 + independent-review）；G1–G4 提总述当唯一真源、G2 诚实兜底单源回指修正、注册进 `Coder/README`（作知识文件夹"总述+分文件+登记"模式的内部预演） | ITER-0026 | closed |
 | R2 | 知识文件夹 schema：`PROJECT.md` 解构为 `.ai/project/`（00_INDEX + 主题集 + 每份边界 + 写作密度口径），改写 `project-digest-schema` | — | planned |
 | R3 | 维护回路：收口强制按主题折叠 delta（泛化 `iteration-schema §5.5` / `milestone §7.4`）+ 知识文件夹漂移自检不变量（扩冷启动一致性自检） | — | planned |
 | R4 | 更新说明 + 查过时两帮手定义成型 + 接线：住进 `62_Extension_Agents/`、登记总述；接维护回路（收尾唤更新说明折叠）与冷启动 / 收口抽查（查过时） | — | planned |
@@ -85,3 +85,4 @@
 ## 范围演进记录
 
 - 2026-07-05：**开启 MILE-0003**（承 MILE-0002 于 2026-07-03 收口、开题闸解除）。方向据预研总纲 `docs/research/MILE-0003-preresearch-brief.md` 及两份子设计（`MILE-0003-project-knowledge-folder.html` 主体、`MILE-0003-agent-doc-design.md` 帮手名册）合成。三条线：知识文件夹（主体）+ 帮手名册（子项一）+ 说人话（子项二）。已定关键决策并入路线——帮手=定义资料用时读不下发、三帮手本轮都做、权限靠约定 + G2 诚实兜底（硬拦留后续）、复核三拆、名册落 `62_Extension_Agents/`（开题确认）、说人话落 `presentation-protocol` + `artifact-style`。版本定性 MAJOR（收口切 v2.0.0）。路线图为草案，soft 对齐后仍可演进；实际 ITER 开启时才绑号。
+- 2026-07-05：**R1 收口**（ITER-0026，`/dangerous` 危险模式自治，P5 独立复核 8/8 confirm、0 Must Fix）。帮手名册骨架 `62_Extension_Agents/` 立起（overview 总述 + independent-review），G1–G4 通用规矩单源化落定、复核三拆完成、README 注册。名册"总述+分文件+登记"模式预演跑通，为主体（知识文件夹 R2）验证了结构。路线图未演进。北极星=R1 单迭代已达成、交还用户；R2–R8 及 v2.0.0 切版待后续指令。
