@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0032 交付总结 · 部署种子 + 文件夹化迁移配方（规则层准备）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>部署种子 + 文件夹化迁移配方（规则层准备）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0032</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-07</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R2 定了 <code>.ai/project/</code> 知识文件夹契约、R5 把冷启动第一读接成两态，但两个上游口子一直空着：<strong>新项目怎么带上这个文件夹</strong>（部署种子）、<strong>老项目单文件 <code>.ai/PROJECT.md</code> 怎么升级成文件夹</strong>（迁移配方）。契约/维护/读序再全，没人把它部署出来、迁移过去，就永远只是纸面。</li>
+        <li>R6 补这两块<strong>规则层准备</strong>，让文件夹态"能被部署出来、能被迁移过去"。<strong>边界</strong>：R6 只备规则（部署协议两态化 + <code>[split]</code> 标签 + 配方形态），<strong>不切版、不产 <code>migrations/v2.0.0.md</code> 实例、不迁 butler 自身</strong>——那些是 R8 的活。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p><strong>块1 · 部署种子</strong>（<code>mcv-deployment §2</code>）：</p>
+      <ul>
+        <li>项目全貌产物条从单态（仅 <code>.ai/PROJECT.md</code>）改写为<strong>两态</strong>——新项目用 <code>.ai/project/</code> 知识文件夹、单文件 <code>.ai/PROJECT.md</code> 是遗留/暂态形态（R6 前老项目 + R8 前 butler 自身）。</li>
+        <li>部署时创建<strong>空</strong> <code>.ai/project/</code> 目录种子（同 <code>origin/</code> 空收件箱：建目录、不预置内容）。空目录<strong>标记该项目采用文件夹态</strong>，供收口步④判"折进文件夹还是前滚单文件"。它是<strong>唯一在部署时即建的 <code>.ai/</code> 子目录例外</strong>（<code>references/</code>/<code>iterations/</code>/<code>milestones/</code> 仍按需产生），例外理由已记账。</li>
+        <li><code>00_INDEX</code> <strong>不 stub</strong>——首次收口前滚才由更新说明帮手生成（避免部署时写一份"自信的谎"空地图）。</li>
+        <li>line 45 老项目升级补建指针指向 R6 文件夹化迁移配方。</li>
+      </ul>
+      <p><strong>块2 · 文件夹化迁移配方</strong>（<code>migration-schema §4/§6</code>）：</p>
+      <ul>
+        <li>新增 typed 标签 <strong><code>[split]</code></strong>：把 <code>.ai/</code> 下单文件产物按主题拆成知识文件夹（首例 <code>PROJECT.md → .ai/project/</code>），带起始态校验（旧单文件存在且目标文件夹未成形才动）+ 冲突即停（漂移退 ACK、不覆盖、绝不拆丢用户手写内容）。</li>
+        <li>§6 文档化 <code>PROJECT.md → .ai/project/</code> 迁移配方<strong>形态</strong>（<code>[rename]</code> + <code>[split]</code> + <code>[restamp]</code> 三步骨架），声明实例 <code>migrations/v2.0.0.md</code> 留 R8 切版时产、R6 不预落。</li>
+      </ul>
+      <p><strong>指针翻</strong>：<code>project-digest §9</code> header <code>R3/R5</code>→<code>R3/R5/R6 已接线</code> + R6 路线项待→已（明注 <code>v2.0.0.md</code> 实例仍 R8）；<code>README</code> 部署清单补空 <code>.ai/project/</code> 种子。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>新项目部署后生来带 <code>.ai/project/</code> 空知识文件夹种子</strong>——R5 定的文件夹态第一读从此有真项目可走（首次收口后 <code>00_INDEX</code> 一生即生效）。</li>
+        <li><strong>老项目有了升级路径</strong>：<code>[split]</code> 标签让 <code>PROJECT.md → .ai/project/</code> 的文件夹化成为可照做的配方步（实际实例待 R8 切版产）。</li>
+        <li><strong>R6/R8 边界严守</strong>：R6 只备"标签 + 形态 + 条件式前向指针"，不预写 <code>migrations/v2.0.0.md</code>——那是切版产物（<code>versioning §6.3 步4</code>），此刻写＝引用一个未打的 tag、悬空。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（章节级，5 规则文件）：<code>20_Workflow_Lifecycle/mcv-deployment.md §2</code>、<code>migration-schema.md §4/§6</code>、<code>40_Context_Management/context-persistence.md §6</code>（MF-1 守卫）、<code>project-digest-schema.md §9</code>、<code>Coder/README.md</code>。</li>
+        <li>收口前滚（本迭代自身，butler 单文件态）：<code>.ai/PROJECT.md</code> 知识文件夹条 R6 指针 待→已（R8 仍待）。</li>
+        <li>没碰（R6 边界）：<code>migrations/v2.0.0.md</code> 实例（R8 切版产）、butler 自身 <code>.ai/PROJECT.md → .ai/project/</code> 实体迁移 + <code>VERSION</code> 切版（R8）、R3 折叠必做/第 6 不变量语义、R5 两态第一读语义（仅补空种子守卫）、<code>.ai/project/</code> 结构契约（R2，§1–§8）、hook、<code>presentation-protocol</code>/<code>artifact-style</code>（R7）。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8/8 AC 通过</strong>（AC3 经 P5 MF-1 修复后翻过），全 <strong>auto·可靠</strong>（规则文档：读正文确认 + <code>git</code>/<code>grep</code> 核守恒，确定性可复现）；无人测道残余。</li>
+        <li>P5 <strong>独立复核</strong>（fresh-context 子 agent，验证者≠实现者）：初判 REQUEST-CHANGES（1 Must Fix），修复后逐 AC 复核 8 过。</li>
+        <li><strong>MF-1（已修）· 空种子冷启动踩空</strong>：R6 新引入的"空 <code>.ai/project/</code> 种子"暂态（目录在、<code>00_INDEX</code> 未生）与 <code>context-persistence §6</code> 两态判据措辞"采用 <code>.ai/project/</code> 的项目→读 <code>00_INDEX</code>"存在诱导矛盾——救回它的"键控入口文件"澄清只落在 mcv §2（部署协议），没落进冷启动读者实读的 <code>context-persistence §6</code>。<strong>修复</strong>：给 <code>context-persistence §6</code> line 124 文件夹分支补入口文件存在性守卫（空种子→缺全貌产物倒推、不读空 <code>00_INDEX</code>）+ line 130 点名空种子，修后 mcv §2 ↔ context-persistence §6 双向自洽。</li>
+        <li><strong>边界校正透明记账</strong>：冻结的 AC8 列"无 R5 读序第一读改动"，本轮 touch 了 <code>context-persistence §冷启动读序</code>——但此改是为 R6 <strong>自身新引入的空种子暂态</strong>补冷启动安全守卫（R5 没预见的第三态），<strong>不改 R5 两态第一读语义</strong>，是"把部署种子做安全"这个 R6 交付物的内在部分，非重开 R5，非静默越界。</li>
+        <li><strong>对抗点全过</strong>：<code>migrations/</code> 无 <code>v2.0.0.md</code>、4 处 <code>v2.0.0.md</code> 引用均"留 R8 产"不悬空、前向指针 <code>versioning §6.3 步4</code> 真实、<code>[split]</code> 幂等+漂移即停自洽、单文件分支显式含 butler、<code>project-digest §9</code> 明注实例仍 R8 不虚报。</li>
+        <li>守恒核对：<code>git status</code> 改动集=5 改规则文件 + <code>.ai/</code> 台账 + PROJECT.md 前滚；无 <code>migrations/v2.0.0.md</code> 新增、无 <code>VERSION</code>/<code>CHANGELOG</code> 切版、无 rename（<code>^R</code>=0）、无 hook 改动。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>文件夹态仍无真实项目验证</strong>（承 R5）：R6 只备"能种、能迁"的规则层；真跑要到有新项目部署（走空种子）或 R8 butler 自身迁移后。此前含 butler 在内所有项目仍走单文件态。</li>
+        <li><strong>迁移配方实例 <code>migrations/v2.0.0.md</code> 未产</strong>（R6 边界，非欠债）：配方在切版时产（<code>versioning §6.3 步4</code>），R8 切 v2.0.0 时落。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；MILE-0003 仍 active，剩 R7（说人话）/ R8（butler dogfood + 切 v2.0.0），待用户指令。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0032/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动：<code>Coder/20_Workflow_Lifecycle/mcv-deployment.md</code>、<code>migration-schema.md</code>、<code>Coder/40_Context_Management/context-persistence.md</code>、<code>project-digest-schema.md</code>、<code>Coder/README.md</code></li>
+        <li>相关契约：<code>migration-schema.md §4</code>（<code>[split]</code> typed 标签）/<code>§6</code>（切版产配方）、<code>versioning-schema.md §6.3</code>（切版步骤）、<code>project-digest-schema.md §8</code>（00_INDEX 模板）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

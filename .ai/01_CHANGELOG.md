@@ -1,6 +1,6 @@
 > 无活跃迭代 · dormant · —
 
-本文件是**当前活跃迭代**的对象级变更流（ADD/EDIT/DELETE）。当前无活跃迭代（`ITERATIONS.current: none`）——开新迭代时重写本文件头 + 清空下列分节，收口时归档至 `iterations/ITER-NNNN/CHANGELOG.md`。上一迭代 ITER-0031 的切片见 `iterations/ITER-0031/CHANGELOG.md`。
+本文件是**当前活跃迭代**的对象级变更流（ADD/EDIT/DELETE）。当前无活跃迭代（`ITERATIONS.current: none`）——开新迭代时重写本文件头 + 清空下列分节，收口时归档至 `iterations/ITER-NNNN/CHANGELOG.md`。上一迭代 ITER-0032 的切片见 `iterations/ITER-0032/CHANGELOG.md`。
 
 ## ADD
 

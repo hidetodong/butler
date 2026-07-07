@@ -33,7 +33,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `deliveries/`：完整交付后的人类可读交付总结归档目录。
 - `origin/`：**人类原始概念输入收件箱**——用户自管，存放自由格式的原始想法/概念文件（任意命名、任意数量）；AI **只读、不写不改不重塑不归档**，是 `/milestone` 等录入流的文件通道源（见 `milestone-schema.md` §6.4）。它与 `.ai/references/` 角色互斥：`references/` 是外部第三方资料（API 文档、设计稿），由 AI 处理改名注入；`origin/` 是用户自己的原始概念，始终归用户管。
 
-部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放）；`.ai/` 下的 `references/`、`iterations/`、`milestones/` 等子目录仍按需产生。
+部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放）。`.ai/` 下另建一个**空知识文件夹种子** `.ai/project/`（MILE-0003 R6 起）——它是**唯一在部署时即建的 `.ai/` 子目录例外**（`references/`、`iterations/`、`milestones/` 等仍按需产生），例外理由=它是项目**全貌产物之家**、空目录**标记该项目采用文件夹态**（供收口步④判"折进文件夹还是前滚单文件"），同 `origin/` 先建后投的形态。守本节"仅创建目录、不预置内容"：**只建空目录、不写 `00_INDEX` 占位**——`00_INDEX.md` + 主题文件在**首次收口前滚**时才由更新说明帮手按 `project-digest-schema.md §8` 折叠生成（部署到首收口之间无全貌可读，属与单文件项目首收口前同类暂态，冷启动键控**入口文件是否存在**而非目录存在，不误触"读不存在的 `00_INDEX`"，见 `40_Context_Management/context-persistence.md §6` 缺全貌产物倒推兜底）。
 
 `.ai/` 目录下分为两类文件：
 
@@ -42,7 +42,10 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `00_IDEATION.md`：`/ideation` 模式下的脑暴过程与中间结论；收敛后由 `CONCEPT.md` 承载进入 P2 的已确认结论。
 - `01_CHANGELOG.md`：记录本迭代的**对象级变更流**（严格 ADD/EDIT/DELETE、绑 AC，格式见 `changelog-schema.md`），**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
-- `PROJECT.md`：项目常驻全貌摘要（状态取向），冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`。**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。已部署的老项目由升级补建：新建 `.ai/PROJECT.md` 并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次（实际配方在 butler 切版时按 `versioning-schema §5` 写）。
+- **项目全貌产物**（项目常驻全貌摘要·状态取向，冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`）——**两态**（MILE-0003 R6 起）：
+  - **新项目 → `.ai/project/` 知识文件夹**（部署即带空种子，见 §2）：`00_INDEX.md` 入口 + 按主题分文件。**按需产生**——首次迭代收口前滚时由更新说明帮手按 `project-digest-schema.md §8` 折叠生成，其后每次收口按主题必做折叠（`iteration-schema.md §5.5` 步④）。
+  - **单文件 `.ai/PROJECT.md`**（遗留 / 暂态形态：R6 前部署的老项目 + R8 前的 butler 仓自身）：**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。
+  - **老项目迁移**：R6 前部署、已积累单文件 `.ai/PROJECT.md` 的老项目，其 `PROJECT.md → .ai/project/` 文件夹化由升级按 R6 迁移配方（`[rename]` + `[split]` + `[restamp]`，见 `migration-schema.md §4`）执行；实际配方实例在 butler 切版时产出（`versioning-schema.md §6.3` 步4，R8 切 v2.0.0 时落 `migrations/v2.0.0.md`）。从未产生过 `PROJECT.md` 的更老项目由升级补建：新建全貌产物并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次。
 - `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。

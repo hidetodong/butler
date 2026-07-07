@@ -1,35 +1,38 @@
-# TECH_PLAN — ITER-0031（MILE-0003 R5）
+# TECH_PLAN — ITER-0032（MILE-0003 R6）
 
-> 监督态自驱（非 `/dangerous`）：本产物由用户"继续吧"委托、模型自驱产出，P5 起独立复核守质量（ITER-0031，2026-07-07）。
+> 监督态自驱（非 `/dangerous`）：本产物由用户"继续接下来的迭代"委托、模型自驱产出，P5 起独立复核守质量（ITER-0032，2026-07-07）。
 
 ## 设计决策（DD）
 
-- **DD1 两态用显式分支、单文件分支绝不隐去**（对 AC1/AC8，make-or-break）：`§冷启动读序` 第 1 项写成两个显式分支——"采用 `.ai/project/` → 00_INDEX + 按需主题"与"仍单文件 `.ai/PROJECT.md` → 读 PROJECT.md"。绝不写成无条件 `00_INDEX`。与 R3 收口步④/第 6 不变量同款两态措辞，全仓一致。
-- **DD2 读侧 digest-and-point 只在读序真源写一次**（对 AC2）：读侧纪律（读地图→按需钻主题→指针钻代码、不 slurp）写进 `context-persistence §冷启动读序` 文件夹态分支；写侧密度仍以 `project-digest-schema §5` 为真源、不重抄，只在必要处回指。
-- **DD3 翻指针不删声明、三处齐翻**（对 AC4，吸取 R3 教训）：`project-digest-schema` 的 R5 指针在**介绍段 line 9 + §9 路线项 + §9 header** 三处，必须一次齐翻"待→已"，避免像 R3 那样只翻 §9 漏了介绍段。翻后指向真实落点（`context-persistence §冷启动读序` 两态第 1 项），不动 §1 定位（§1 描述文件夹态读法、本就是文件夹态、无需改）。
-- **DD4 README/handoff 只同步措辞、不重写读序**（对 AC5/AC6）：README §读取顺序 + handoff §1 均**指** `context-persistence §6` 为读序真源，本轮只把它们的两态措辞对齐，不在这两处复述完整读序（DRY、避免多处读序漂移）。
-- **DD5 R5 边界硬钉**（对 AC7）：不碰 `mcv-deployment`（R6 部署仍种单文件，与单文件分支自洽）、`migrations/`（R6）、`VERSION`（R8 切版）、`logic-protocol §1.1`（规则加载序、正交）；不改 R3 强制条与 `.ai/project/` 结构契约。
-- **DD6 收口前滚 butler 自身**（对 AC8）：`.ai/PROJECT.md`「冷启动读序固定」条改两态措辞（butler 自身单文件、走 PROJECT.md 分支）+ 知识文件夹条 R5 指针翻已接线；butler 仍单文件、不拆文件夹（那是 R8）。
+- **DD1 · 空目录种子而非 stub 内容**（AC2/AC3）：部署建**空** `.ai/project/` 目录、不写 `00_INDEX` 占位。理由：R2 已定 `00_INDEX` 三块（一段话/读序地图/主题登记表）须与实际一致，部署时无内容可填，stub 一份空壳＝"自信的谎"（AI 冷启动信一份假地图）。改用**时序**消解——`00_INDEX` 在首次收口前滚由更新说明帮手按 §8 生，与单文件 `PROJECT.md`"首收口前滚生"同构。空目录仅作**采用标记**，不承诺可读。
+- **DD2 · 冷启动键控入口文件、非目录存在**（AC3/两态兼容）：两态判据以**入口文件是否存在**为准（`.ai/project/00_INDEX.md` 在→文件夹态读它；否则 `.ai/PROJECT.md` 在→单文件态读它；都无→缺全貌产物、走 `context-persistence §6` "从迭代 delta 倒推"兜底）。空 `.ai/project/` 目录（部署后·首收口前）落到"都无"分支，**不误触**"文件夹态→读 00_INDEX→踩空"。此为 R5 读序的**运营化澄清**，写进 `mcv-deployment` 部署说明即可，**不改** `context-persistence §冷启动读序` 正文（R5 已定，R6 不碰）。
+- **DD3 · `[split]` 通用定义、首例 PROJECT.md**（AC4）：`[split]` 定义写成通用（"把 `.ai/` 下单文件产物按主题拆成文件夹"），`PROJECT.md → .ai/project/` 作首例，不写死只服务这一个。守 §4 幂等（起始态校验：旧单文件在且目标文件夹未成形才动）+ §5 漂移即停（冲突退 ACK 不覆盖）。
+- **DD4 · R6 只备规则、不产实例**（AC5/AC6）：迁移配方**实例** `migrations/v2.0.0.md` 是切版产物（`versioning-schema §6.3 步4`：定 bump→改 VERSION→加 CHANGELOG→写 `migrations/vX.Y.Z.md`→打 tag），归 R8。R6 写"标签 + 形态 + 条件式前向指针"，前向指针**不硬编 `v2.0.0`**——用"R8 切版时按此形态产出实例"表述，避免断言一个未打的 tag / 未落的文件已存在。
+- **DD5 · 部署种子例外显式记账**（AC2）：`.ai/project/` 成为唯一"部署即建"的 `.ai/` 子目录（`references/`/`iterations/`/`milestones/` 仍按需产生）。这是对 §2 现有"子目录按需产生"叙述的**显式例外**，须在 §2 点名理由（全貌产物之家、标记采用，同 `origin/` 空收件箱先建后投），不留隐式漂移。
 
-## 目标文件与改法
+## 影响面（章节级）
 
-1. `Coder/40_Context_Management/context-persistence.md §冷启动读序`（第 1 项两态分支 + 读侧 digest-and-point 纪律 + 收尾互补句两态）→ AC1/AC2/AC3
-2. `Coder/40_Context_Management/project-digest-schema.md`（介绍段 line 9 + §9 R5 路线项 + §9 header 翻"已接线（两态）"）→ AC4
-3. `Coder/README.md §读取顺序`（冷启动读序描述两态）→ AC5
-4. `Coder/40_Context_Management/handoff-spec.md §1`（状态全貌承载产物措辞两态）→ AC6
-5. `.ai/PROJECT.md`（收口前滚：读序固定条两态 + R5 指针已接线）→ AC8（收口步④落地）
+| 文件 | 改动 | AC |
+|---|---|---|
+| `20_Workflow_Lifecycle/mcv-deployment.md §2` | 全貌产物条两态化 + 部署建空 `.ai/project/`（记账例外）+ 00_INDEX 不 stub·键控入口文件说明；line 45 老项目升级指针指 R6 配方 | AC1/2/3 |
+| `20_Workflow_Lifecycle/migration-schema.md §4` | 新增 `[split]` typed 标签（通用定义 + PROJECT.md 首例 + 起始态校验 + 冲突即停）；§5/§6 关系里点"文件夹化配方形态 + 实例留切版" | AC4/5/6 |
+| `40_Context_Management/project-digest-schema.md §9 + §150` | R6 路线项待→已（注 `v2.0.0.md` 实例仍 R8）、header `R3/R5`→`R3/R5/R6`、§150 `[split]` 表述对齐 §4 | AC7 |
+| `Coder/README.md`（部署目录清单行） | 部署目录集补 `.ai/project/` 空种子 | AC7 |
+| `.ai/PROJECT.md`（收口前滚） | 知识文件夹条 R6 指针 待→已（R8 仍待） | AC7 |
 
-## Execution Steps（可勾选任务清单，镜像 task-state）
+**不碰**：`migrations/`（零新增，AC6）、`context-persistence §冷启动读序`（R5 定，DD2 只在 mcv 侧澄清）、`iteration-schema §5.5`/`milestone §7.4`（R3 折叠语义）、`.ai/project/` 结构契约正文（R2）、hook、`VERSION`/`CHANGELOG`、butler 自身 `.ai/PROJECT.md` 实体结构（R8）。
 
-- [ ] T1 改 `context-persistence §冷启动读序`：第 1 项两态分支 + 读侧 digest-and-point 纪律 + 互补句两态（AC1/AC2/AC3）
-- [ ] T2 翻 `project-digest-schema` R5 指针三处（介绍段 + §9 路线项 + §9 header）（AC4）
-- [ ] T3 改 `Coder/README.md §读取顺序` 两态（AC5）
-- [ ] T4 改 `handoff-spec §1` 承载产物措辞两态（AC6）
-- [ ] T5 自检：两态分支齐 + 单文件分支显式 + R5 指针三处齐翻 + R3 强制语义未动 + `git status` 未越 R6/R8/R7（AC7/AC8）
-- [ ] T6 P5 独立复核子 agent（fresh-context，验证者≠实现者）
+## Execution Steps（可勾选）
 
-## 验证与守恒
+- [ ] S1 · `mcv-deployment §2` 全貌产物条两态化 + 部署建空 `.ai/project/`（例外记账）+ 00_INDEX 不 stub·键控入口文件（AC1/2/3）
+- [ ] S2 · `mcv-deployment` line 45 老项目升级补建指针指 R6 文件夹化配方（AC3）
+- [ ] S3 · `migration-schema §4` 新增 `[split]` 标签（AC4）+ §6 关系点"文件夹化形态 + 实例留切版·不写 v2.0.0.md"（AC5/6）
+- [ ] S4 · `project-digest-schema §9` R6 待→已 + header + §150 对齐（AC7）
+- [ ] S5 · `Coder/README.md` 部署目录清单补空 `.ai/project/` 种子（AC7）
+- [ ] S6 · 自检 6 不变量（butler 单文件态，第 6 条 N/A）+ scope 守恒核对（`git status`：无 `migrations/` 新增、无 VERSION/CHANGELOG、无 rename）（AC8）
+- [ ] S7 · P5 独立复核（fresh-context 子 agent，对抗式：无切版/无 v2.0.0.md 实例/无 butler 实体迁移/`[split]` 已定义/前向指针不悬空/两态兼容不砸单文件）
+- [ ] S8 · 原子收口 5 步（归档 + 交付 md+html + 翻台账 + `.ai/PROJECT.md` 前滚 R6→已 + 6 不变量自检）
 
-- `git status --short` 证明改动集=4 改规则文件（context-persistence/project-digest-schema/README/handoff-spec）+ `.ai/` 台账 + PROJECT.md 前滚，无新增规则文件、无 rename、未触 `mcv-deployment`/`migrations/`/`VERSION`/`logic-protocol`。
-- `/usr/bin/grep` 核：R3"必做"折叠 + 第 6 不变量强制语义未被本轮改动；`.ai/project/` 不存在＝butler 自身仍单文件（未越 R8）。
-- 模拟单文件项目（如 butler 自身）走单文件分支：第一读 `.ai/PROJECT.md`、不被指向不存在的 `00_INDEX`、不踩空。
+## 验证策略
+
+全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git diff`/`grep` 核守恒。核心对抗点＝**两态兼容不砸单文件**（DD2 空目录不踩空）+ **R6/R8 边界**（DD4 无 v2.0.0.md 实例、前向指针不悬空）。无人测道残余。
