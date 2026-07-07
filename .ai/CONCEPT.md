@@ -1,53 +1,47 @@
-> 分流: 完整 | 命中升级信号: 多文件改动、契约变更、跨模块影响、设计取舍 | 2026-07-05
+> 分流: 完整 | 命中升级信号: 多文件改动、设计取舍 | 2026-07-06
 
 # 一句话
 
-butler 派出去干活的"帮手 AI"现在只有"复核"一个，它的说明还摊在 5 个文件里各写一遍。这一迭代给帮手立个"名册"——新建一个专门放帮手定义的目录，先把总述（帮手是什么 + 所有帮手通用的规矩）和"复核"这一个帮手的完整定义搭起来；同时把现在写在复核规则里、其实属于"所有帮手通用"的话，搬进总述当唯一出处，别处改成指过去。这是 MILE-0003 的第一步，也替后面两个新帮手和大知识文件夹探好"总述 + 分文件 + 登记"这套结构。
+butler 现在把"少写代码、别过度工程"的态度只零散提了两句（rule-card"先复用再新增、先最小改动"、maintenance-boundaries"防过度工程"），但没有一条给 P4 执行时用的、可照着爬的"最小实现"操作纪律。这一迭代新建一份 `implementation-discipline.md`，把三样能落地的写码反射收进来：**最小实现阶梯**（需要存在吗→本仓已有吗→标准库→平台原生→已装依赖→一行→才轮到最小新代码）、**有意简化的标记约定**（注释写明天花板 + 升级路径，让人读作意图而非疏忽）、**修 bug 挖根因不打症状补丁**；同时钉死"何时不许偷懒"的边界，防止被当成无脑砍代码的借口。素材取自外部 `ponytail` 技能，但用 butler 自己的话表达、不绑品牌。
 
 # Goal
 
-- G1 新建帮手名册目录 `Coder/62_Extension_Agents/`，含总述 `overview.md`（帮手是什么 + 通用规矩 G1–G4 + 名册表 + 加载方式）与复核帮手完整定义 `independent-review.md`。
-- G2 把所有帮手通用的规矩提炼进总述当唯一真源；`60_review`、`dangerous`、`verify-schema` 里原来各自写或引的地方，改成指向总述。
-- G3 复核帮手"三拆"：`60_review` 里的内容按性质分家——共享审查流程留原地、通用规矩上提总述、复核专有契约进 `independent-review.md`，每处留清晰指针。
-- G4 名册在 `Coder/README.md` 注册（目录结构 + 目录说明 + 是否进读取顺序）。
+- G1 新建 `Coder/30_Quality_Gate/implementation-discipline.md`：P4 执行期的最小实现纪律，与 `correction-contract.md` 并列的常驻底线（无需触发、每次迭代生效）。
+- G2 收进三样净新增内容：最小实现阶梯（7 级、停在第一个成立的档）、有意简化标记约定（天花板 + 升级路径）、修根因不修症状（grep 全 caller、守卫放共享函数一处）。
+- G3 钉边界：信任边界校验 / 防丢数据的错误处理 / 安全 / 无障碍 / 用户明确要求不得简化掉；且绝不对"理解问题"偷懒。
+- G4 单源收口：`rule-card.md` 执行纪律加压缩条指过去、`correction-contract.md` 加一行互引、`Coder/README.md` 注册新文件。
 
 # Current Understanding
 
-- 现状：真正的帮手只有"复核"（`/review`），其说明散在 5 个文件（logic-protocol / review-engine / verify-schema / local-constraints / dangerous）各写或引一遍。
-- 帮手的落地方式已定（预研拍板）：帮手 = 一份中立定义资料，用时读它、临时起一个干净子 agent 执行，跟现在 `/review` 一模一样；不把帮手文件下发到每个项目。
-- 三拆的搬家地址（预研 `MILE-0003-agent-doc-design.md §6` 给了带地址清单，已与 `review-engine.md` 现状核对一致）：
-  - 留 `60_review`：§1 通用审计视角、§3 审查流程、§4 闭环、§5 简评。
-  - 上提总述（通用规矩 G1/G2）：§1"独立性 = 上下文隔离"那段、§6.4 诚实性 fallback。
-  - 进 `independent-review.md`（复核专有）：§2 两个独立复核触发、§3.3 断言核对、§6.1 隔离形态、§6.2 Checker 契约、§6.3 输出衔接。
-- 一个防搬错的关键事实：G2"叫不起来就如实说"的**正文现在只在 `review-engine §6.4` 一处**，`dangerous §7.3`、`verify-schema §4` 是**引用它**、不是各写一遍。上提总述后，这两处引用目标改指总述，改完全仓核对没有漏网还指着 `review §6.4` 的引用。
-- 预期产出：一个能用的帮手名册骨架（总述 + 复核定义），后续 R4 照它套"更新说明""查过时"另两个帮手。
+- butler 已有的相邻表述（不重复、只呼应）：`rule-card §角色`"先复用已有模式再新增、先最小改动再结构优化"（态度层）、`maintenance-boundaries`"防过度工程化"（针对 `.ai/` 维护文件的更新边界，不是写码纪律）、`tech-plan-schema §71`"任务粒度避免过度工程"（针对拆任务粒度）。三者都不是"写实现代码时怎么少写"的操作纪律——这正是空档。
+- 素材来源 `ponytail`（外部技能）净新增三样已在会话里对账清楚：阶梯的中间几级（标准库→平台原生→已装依赖→一行，butler 只有首尾）、有意简化标记（butler 完全没有）、修根因 + grep 全 caller（correction-contract 只覆盖"修到真过 / 诚实停"，没讲"改哪一处最小且不漏兄弟调用点"）。
+- 落点定 `30_Quality_Gate/`：它是"通用质量门禁"，最小实现纪律属于"交付质量"的一环，与同目录 `correction-contract`（纠错底线）性质并列——一个管"写新码时少写、写准"，一个管"修错时挖根因、不假绿"。
+- 修根因归属：ponytail 把它放在"懒惰哲学"里（最小 diff = 一处守卫胜过每个 caller 各补），本质是**最小改动**论证，故与阶梯同住 `implementation-discipline.md`，不拆去 correction-contract；correction-contract 只加一行互引保发现性。
+- 素材解耦：新文件用 butler 语气（必须 / 不得 / 应）重写，不出现 "ponytail" 品牌词，不照抄英文原文——只吸收内容。
 
 # Constraints
 
-- 落点 `Coder/62_Extension_Agents/`（顶层扩展簇，挨着 60_review）；**不放** `00_System_Prompt/`——那层是会话协作身份，名册是"能派哪些帮手"的能力目录，性质不同，混入会破坏分层。落点开题已定、本迭代最终坐实。
-- 夹内文件**不带数字前缀**（`overview.md` 而非 `00_overview.md`）：`Coder/` 目录惯例是夹内零前缀、顺序交 README 排。
-- 总述**触发式加载、不进冷启动必读**（与全体扩展模块一致）；主线用一行很轻的指针知道"有哪些帮手可用"即可，不占冷启动预算。
-- 三拆写成**带地址的搬家清单**（哪段搬哪、原地留指针），不只口头说"互相引用"——butler 没有机器手段能发现两处内容写岔。
-- 权限靠**约定 + 如实说**兜底，本迭代**不做**工具层硬拦（可选增强、留后续）。
-- 不改帮手的对外行为，也不改 `/review` 现有触发方式与产出——只重新组织定义 + 立名册，复核功能等价。
-- 顺手改准两处事实错（预研 §7）：`AGENTS.md` 起源（Sourcegraph 的 Amp 团队发起、非 OpenAI）、Agent Skills 采用数加时间点"截至 2026 上半年"。
-- 遵守 butler 编辑规则（CLAUDE.md）：不破坏分层、新文件必须在 `Coder/README.md` 注册、frontmatter 标 audience/scope。
+- 遵守 butler 编辑规则（`CLAUDE.md`）：不破坏 SOP Core / Domain / Business 三层分工；新文件必须在 `Coder/README.md` 目录结构 + 说明注册（无隐式依赖）；frontmatter 标 audience / scope。
+- 与既有规则**职责不重叠、只互引**：不动 maintenance-boundaries（维护文件边界）、不动 tech-plan-schema §71（任务粒度）、不把 correction-contract 的"修到真过 / 诚实停"搬过来——各守其位。
+- 措辞面向 AI 执行：必须 / 不得 / 应；中文说明、标识符与文件名用英文；文件名互引不写绝对路径。
+- 不改 P1–P5 状态机、四件套字段、迭代 / 里程碑机制、hook 模板、桥代码。
+- **独立迭代**：内容与 MILE-0003（知识文件夹 / 帮手名册 / 说人话）主题正交，不归属该里程碑、不进其路线图，避免稀释里程碑范围（precedent：ITER-0020 独立）。
 
 # Impact Scope
 
-- 新增：`Coder/62_Extension_Agents/overview.md`、`Coder/62_Extension_Agents/independent-review.md`。
-- 改 `Coder/60_Extension_CodeReview/review-engine.md`：三拆搬家 + 原地留指针。
-- 改 `Coder/65_Extension_Dangerous/dangerous-engine.md §7.3`、`Coder/20_Workflow_Lifecycle/verify-schema.md §4`：G2 引用目标改指总述。
-- 改 `Coder/README.md`：注册新目录（目录结构 + 目录说明 + 读取顺序判断）。
-- 待核（P3 逐一确认）：`00_System_Prompt/logic-protocol.md`、`local-constraints-schema.md` 里是否有复核 / 独立性表述需回指总述。
-- 明确不影响：P1–P5 状态机、四件套字段、迭代 / 里程碑机制、`/review` 的触发与产出行为、hook（butler 仓不跑 hook；本迭代也不碰 hook 模板）。
+- 新增：`Coder/30_Quality_Gate/implementation-discipline.md`。
+- 改 `templates/rule-card.md`：执行纪律段加一条压缩纪律（指向新文件，不重抄阶梯全文）。
+- 改 `Coder/30_Quality_Gate/correction-contract.md §3`：加一行互引指针（修根因 / 最小改动定位 → 新文件）。
+- 改 `Coder/README.md`：目录结构树 + 目录说明 + 分文件说明三处注册新文件。
+- 收口前滚 `.ai/PROJECT.md 现行约束`：加"最小实现纪律"一条（close 步④）。
+- 明确不影响：P1–P5 状态机、四件套 schema、迭代 / 里程碑台账机制、`/review`·`/loop`·`/dangerous` 等扩展、hook、桥代码、MILE-0003 路线图。
 
 # Project Type / Active Profiles
 
 - 项目形态：Markdown 规则仓库（butler 自身），非应用代码工程。
-- 未命中任何 `10_Domain_Stack_Profiles/`；按通用 SOP + butler 自身编辑约束（CLAUDE.md）推进。
+- 未命中任何 `10_Domain_Stack_Profiles/`；按通用 SOP + butler 自身编辑约束（`CLAUDE.md`）推进。
 
 # Open Questions
 
-- 总述那条"有哪些帮手可用"的轻指针，放 `Coder/README.md` 目录说明里就够，还是也要在冷启动读序提一句？（倾向只进 README 目录说明、不进冷启动必读——待 P2 定。）
-- 三个帮手文件名定 `independent-review` / `knowledge-fold` / `drift-check`？本迭代只落 `independent-review`，另两个 R4 落；总述名册表要不要先把三个都列上（后两个标"R4 落地"占位）？（倾向先列全三个——待 P2 定。）
+- 有意简化的标记词定什么？（倾向 `butler-min:` 前缀注释——可 grep、绑 butler；项目可自定义一致 token。待 P2 定。）
+- 新文件进不进冷启动读序？（倾向随 `30_Quality_Gate/` 常规读、不单列冷启动必读——与 correction-contract 一致。待 P2 定。）

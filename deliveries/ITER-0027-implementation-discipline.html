@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0027 交付总结 · 吸纳最小实现纪律</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>吸纳最小实现纪律（反过度工程写码底线）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0027</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-06</span>
+        <span class="chip level">独立迭代 · 监督态自驱</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>butler 一直只零散提过"少写代码、别过度工程"（rule-card"先复用再新增、先最小改动"、maintenance-boundaries"防过度工程"），却没有一条给 P4 写实现时照着爬的<strong>操作纪律</strong>。这一迭代把外部 <code>ponytail</code> 技能里三样能落地的写码反射，用 butler 自己的话吸纳成一条常驻规则。</li>
+        <li>只吸内容、不绑品牌：新文件用 butler 语气（必须 / 不得 / 应）重写，不出现 "ponytail" 字样、不照抄英文。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新建 <code>Coder/30_Quality_Gate/implementation-discipline.md</code></strong>（P4 常驻写码底线，与 <code>correction-contract.md</code> 并列）：
+          <ul>
+            <li><strong>§2 最小实现阶梯</strong>：需要存在吗(YAGNI)→本仓已有吗(复用)→标准库→平台原生→已装依赖→一行→才轮到最小新代码，停在第一个成立的档；且"理解在前、爬阶梯在后"。</li>
+            <li><strong>§3 有意简化标记</strong>：用可 grep 的 <code>butler-min:</code> 注释标明"这是有意简化"，正文必须含<strong>已知天花板 + 升级路径</strong>（配 JS/Python 示例）。</li>
+            <li><strong>§4 修根因不修症状</strong>：动手前 grep 全部 caller、守卫放共享函数一处（diff 更小且不漏兄弟调用点）。</li>
+            <li><strong>§5 何时不许偷懒</strong>：信任边界校验 / 防丢数据 / 安全 / 无障碍 / 用户明确要求不得砍；且绝不对"理解问题"偷懒。</li>
+          </ul>
+        </li>
+        <li><strong>单源收口</strong>：<code>rule-card.md</code> 执行纪律加一条压缩纪律（指过去、不重抄全文）；<code>correction-contract.md §3</code> 加一行互引；<code>Coder/README.md</code> 三处注册（目录树 + 目录说明 + 分文件说明）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>P4 执行现在有一条<strong>可照着爬的最小实现纪律</strong>：写新码先爬阶梯少写、有意简化要留天花板+升级路径、修 bug 挖根因。以后 AI 在任何部署了 butler 的项目里写代码，都默认吃这条约束（随 rule-card 内联进 CLAUDE.md）。</li>
+        <li>与既有规则<strong>并列不重叠</strong>：纠错契约管"修到真过 / 诚实停"，本纪律管"写新码少写、修 bug 定位根因"，两者已双向互引。</li>
+        <li>向后兼容：纯新增 + 增量追加，未动状态机 / 四件套 schema / AC 脊柱 / hook / 迭代里程碑双层 / <code>VERSION</code>；既有条目无 renumber。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>Coder/30_Quality_Gate/implementation-discipline.md</code>。</li>
+        <li>改（章节级）：<code>templates/rule-card.md</code>（执行纪律加一条）、<code>Coder/30_Quality_Gate/correction-contract.md §3</code>（加一行互引）、<code>Coder/README.md</code>（三处注册）。</li>
+        <li>收口前滚：<code>.ai/PROJECT.md</code> 现行约束加"最小实现纪律"一条。</li>
+        <li>没碰：P1–P5 状态机、四件套 schema、AC 脊柱、hook、桥代码、迭代/里程碑双层、<code>VERSION</code> / 根 <code>CHANGELOG.md</code>、其它 30_Quality_Gate 文件正文。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8/8 AC 通过</strong>，全 <strong>auto·可靠</strong>（规则文档：读正文确认 + <code>git status</code> / grep 核守恒，确定性可复现）；无人测道残余。</li>
+        <li>P5 <strong>独立复核</strong>（fresh-context 子 agent，验证者≠实现者）：逐 AC <strong>8 confirm</strong>、对抗探测 5 项（职责重叠 / 假绿 / 越界 / 分层 / 可读性）全过——<strong>可收口，0 Must Fix、1 Should Fix、0 Nit</strong>。</li>
+        <li>Should Fix <strong>已就地修</strong>：§6 三处跨目录引用补 <code>20_Workflow_Lifecycle/</code> 前缀（与姊妹文件 testing-strategy.md 约定对齐；同目录裸名未动）。</li>
+        <li>守恒核对：<code>git status</code> 改动集=4 规则文件 + <code>.ai/</code> 台账，无计划外文件；新文件 grep <code>ponytail</code> 0 命中。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>素材源 <code>ponytail</code> 是外部技能、非 butler 契约；本迭代有意只吸内容 + 品牌解耦，未来该技能演进与 butler 无绑定（非风险）。</li>
+        <li>本纪律靠"约定 + 收口自检"生效，butler 仓不 live 跑自己的 hook（既有设计约束），无机器手段强制 <code>butler-min:</code> 标记——与仓内其它纪律同层。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；独立迭代不牵动 MILE-0003（仍 active、R2+ 待指令）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0027/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动：<code>Coder/30_Quality_Gate/implementation-discipline.md</code>、<code>templates/rule-card.md</code>、<code>Coder/30_Quality_Gate/correction-contract.md</code>（§3）、<code>Coder/README.md</code></li>
+        <li>素材源（外部、仅内容参考）：<code>ponytail</code> 技能 <code>skills/ponytail/SKILL.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

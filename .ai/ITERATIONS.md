@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0027 | 吸纳最小实现纪律：新建 Coder/30_Quality_Gate/implementation-discipline.md（最小实现阶梯 + 有意简化标记 + 修根因不修症状 + 不许偷懒边界）+ rule-card 压缩条 + correction-contract 互引 + README 注册（素材取自 ponytail、用 butler 话重写、独立迭代） | closed | 2026-07-06 | 2026-07-06 | — | deliveries/ITER-0027-implementation-discipline.md |
 | ITER-0026 | R1 帮手名册骨架 + 复核三拆 + 通用规矩单源化：新建 Coder/62_Extension_Agents/（overview 总述 + independent-review 复核定义）+ G1–G4 通用规矩提总述当唯一真源 + G2 诚实兜底单源回指 + 注册进 Coder/README | closed | 2026-07-05 | 2026-07-05 | MILE-0003 | deliveries/ITER-0026-agent-roster-review-split.md |
 | ITER-0025 | R5 部署 / 使用文档 + dogfood：mcv-deployment 新增 butler 驻留工具调用节 + HUMAN_GUIDE 人测桥使用说明 + 真样例端到端跑通四态回路（收尾 MILE-0002） | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0025-bridge-usage-docs.md |
 | ITER-0024 | R4 等待-回收-续跑接线：新增 human-test-bridge 闭环协议（触发 + run_in_background 起桥 + 阻塞等待 + 读 results.json + 四态路由）+ 接线 P5（verify-schema/testing-strategy）/ 纠错（correction-contract）/ 无人降级（dangerous §7.4）+ 机械跑通验证 | closed | 2026-07-02 | 2026-07-02 | MILE-0002 | deliveries/ITER-0024-human-test-bridge-wiring.md |

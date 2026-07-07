@@ -54,3 +54,4 @@ scope: P4 执行-验证-收口的常驻底线纪律——默认对每次迭代�
 - **升档**：`55_Extension_ConvergenceLoop/convergence-loop-engine.md`（`/loop`）在本契约之上叠加高强度死磕与定量熔断。
 - **无人值守**：`65_Extension_Dangerous/dangerous-engine.md` 在自治推进中默认继承本契约，其 P4 复用收敛闭环。
 - **人测 fail 回传**：有人场次经交付自测桥回传的 `fail`（未通过）人测残余进本契约纠错闭环——人写的 `note` 当线索，修到真过再回 P5，**不得**因"人说不行"就绕过探测直接改或静默吞（承 §2.3 禁伪造、§2.4 诚实停）；起桥 / 四态路由见 `20_Workflow_Lifecycle/human-test-bridge.md`。
+- **修根因 / 最小改动定位**：本契约管"验证失败后修到真过、禁降级、诚实停"；"具体怎么改最小且不漏"的写码手法——修根因不打症状补丁、grep 全部 caller、守卫放共享函数一处——见 `implementation-discipline.md §4`，二者并列不重叠。

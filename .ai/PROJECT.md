@@ -35,6 +35,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - 版本 semver：MAJOR 破坏 / MINOR 兼容新增 / PATCH 澄清；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检（见 `versioning-schema.md §6`）。
 - 提交规约：commit message 用 `type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release): vX.Y.Z — 聚合 …`、末行 `Co-Authored-By` 署名；提交单元=迭代收口，"提交 ≠ 切版"；非 hook 门禁，靠纪律兜底（见 `versioning-schema.md §5`）。
 - 测试自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测残余；P5 验证按自动道 / 人测道分道回填、叠**分级置信**「可靠 / 弱 / 待人」（见 `testing-strategy.md §3` / `verify-schema.md`）。感知项先造**代理验证**（截图 diff / VLM 判图，`testing-strategy §3.1`）earned 弱档、不冒充可靠绿。人测残余的**回传闭环**走 `human-test-bridge.md`——有人场次经交付自测桥四态回传续跑（通过=收口 / 未通过=纠错 / 延后=入账不阻塞 / 跳过=N/A）、无人值守不起桥走 `dangerous §7.4`。非 hook 门禁，靠纪律 + 收口自检兜底。
+- 最小实现纪律（P4 常驻写码底线，与纠错契约并列，见 `implementation-discipline.md`）：写新码爬「最小实现阶梯」（YAGNI→复用→标准库→平台原生→已装依赖→一行→最小新代码，停在第一个成立的档）；有意简化用 `butler-min:` 注释标明天花板 + 升级路径；修 bug 挖根因不打症状补丁（grep 全 caller、守卫放共享函数一处）。但信任边界校验 / 防丢数据 / 安全 / 无障碍 / 用户明确要求不得砍，且绝不对"理解问题"偷懒。
 - 无人残余处置（`/dangerous`）：无人值守下人测残余按 `dangerous-engine §7.4` 依赖感知准入闸处置——不阻塞异步入账、卡下游不硬闯（弱验证顶 / 砍分支 / 不具准入资格交还）、**红线绝不假绿**。
 
 ## 已知长期欠债

@@ -1,71 +1,66 @@
-# TECH_PLAN — ITER-0026（MILE-0003 R1）
+# TECH_PLAN — ITER-0027（独立迭代）
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 `dangerous-engine §5.2` 设计自审门），未经用户确认（ITER-0026，2026-07-05）。
+> 监督态自驱（非 `/dangerous`）：本产物由用户"帮我吸纳进来"委托、模型自驱产出，P5 起独立复核守质量（ITER-0027，2026-07-06）。
 
 # Goal
 
-- 支撑 AC1–AC8：建帮手名册（总述 + 复核完整定义）、复核三拆、G1/G2 通用规矩单源化、README 注册、两处事实校准。
+- 支撑 AC1–AC8：建 `implementation-discipline.md`（阶梯 + 简化标记 + 修根因 + 不许偷懒边界 + 关系）、单源收口（rule-card 压缩条 + correction-contract 互引 + README 注册）。
 
 # Files / Modules to Change
 
 **新增**
 
-- `Coder/62_Extension_Agents/overview.md` — 总述：帮手是什么 + 通用规矩 G1–G4（唯一真源）+ 名册表（三帮手，后两标 R4）+ 触发式加载 + 生态事实校准。→ AC1 / AC3(G1 正文) / AC4(G2 正文) / AC7
-- `Coder/62_Extension_Agents/independent-review.md` — 复核完整定义（中立资料：角色 / 输入 / 输出 / 禁止 / 隔离 / 权限 + 触发 / Checker 契约 / 断言核对 / 输出衔接），共享流程回指 60_review。→ AC2 / AC8
+- `Coder/30_Quality_Gate/implementation-discipline.md` — frontmatter(audience/scope) + §1 定位（P4 常驻底线、与 correction-contract 并列）+ §2 最小实现阶梯（7 级 + 停在第一个成立的档 + 理解在前）+ §3 有意简化标记（`butler-min:` + 天花板/升级路径 + 双语言示例）+ §4 修根因不修症状（grep 全 caller / 守卫放共享函数一处）+ §5 何时不许偷懒（边界清单 + 不对理解偷懒）+ §6 与其他规则关系。→ AC1/AC2/AC3/AC4/AC5
 
 **修改**
 
-- `Coder/60_Extension_CodeReview/review-engine.md` — 三拆：①§1 独立性=上下文隔离段、②§6.4 诚实性 fallback 正文 → 上提总述、原地改回指；③§2 独立复核触发 / §3.3 断言核对 / §6.1 隔离形态 / §6.2 Checker 契约 / §6.3 输出衔接 → 搬 independent-review、原地留指针；④§1 审计身份 / §3 流程 / §4 闭环 / §5 简评 → 留原地。**保留 §1–§7 编号骨架**，搬走的小节替换为指针、不 renumber（避免连锁引用失效）。→ AC3 / AC4 / AC8
-- `Coder/65_Extension_Dangerous/dangerous-engine.md` §7.3（line 119）— G2 引用"按其 §6.4"改指名册总述。→ AC4
-- `Coder/20_Workflow_Lifecycle/verify-schema.md` §4（line 73）— G2 引用"review-engine §6.4"改指名册总述。→ AC4
-- `Coder/00_System_Prompt/logic-protocol.md`（line 90）— /review 调度条目末尾加名册指针（轻触，不搬正文）。→ AC4 / AC8
-- `Coder/README.md` — 目录结构树加 `62_Extension_Agents/`；目录说明加一段；读取顺序按"触发式加载、不进冷启动必读"处理。→ AC5
+- `templates/rule-card.md` — 「执行纪律」段（`- 不混入无关变更` 一带）追加一条压缩纪律 bullet：最小实现阶梯一行 + 简化标记 + 修根因 + 不许偷懒边界，末尾 `（详见 implementation-discipline.md）`；不重抄阶梯全文。→ AC7
+- `Coder/30_Quality_Gate/correction-contract.md` §3 — 追加一条 bullet：修根因 / 最小改动定位互引 `implementation-discipline.md`（增量、不 renumber）。→ AC7
+- `Coder/README.md` — ①目录结构树 `/30_Quality_Gate` 块加 `implementation-discipline.md`；②目录说明 `30_Quality_Gate/` 那段（line 104 一带）补"+ 最小实现纪律"；③分文件说明（correction-contract 条 line 136 一带）加一条 implementation-discipline 说明。→ AC6
+
+**收口前滚（close 步④）**
+
+- `.ai/PROJECT.md` 现行约束 — 加"最小实现纪律"一条。→ 非 AC，收口仪式
 
 # Interface / Contract
 
-- **帮手定义资料标准结构**：角色 / 输入 / 输出 / 禁止 / 隔离 / 权限——三帮手统一遵循，本轮 `independent-review` 立样板。
-- **通用规矩 G1–G4 唯一真源在总述**；下游（review / dangerous / verify-schema / logic-protocol）改为引用，不再各写正文。
-- **指针格式**：文件名 + 语义锚（如"见 `62_Extension_Agents/overview.md` 通用规矩 G2"），沿用 butler 文件名互引惯例、不写绝对路径。
+- **阶梯是反射不是研究项**：先理解问题与它触及的代码、走通真实流程，再爬阶梯；两级都成立取更高级、别纠结。
+- **简化标记契约**：`butler-min:` 前缀注释 = 有意简化的信号，正文必须含"已知天花板 + 升级触发条件"两要素（例：`// butler-min: 全局锁，吞吐吃紧再拆按账户锁`）。
+- **单一来源**：阶梯 / 标记 / 修根因全文只在 `implementation-discipline.md`；rule-card 与 correction-contract 只放压缩条 + 指针，不重抄。沿用 butler 文件名互引惯例、不写绝对路径。
 
 # State / Boundary
 
-- 落点 `Coder/62_Extension_Agents/`（顶层扩展簇，与 60_review 平级）；不进 `00` 层。
-- 夹内文件零数字前缀；总述触发式加载、不进冷启动必读。
-- **不改**：`/review` 触发方式与产出行为、P1–P5 状态机、四件套字段、hook、知识文件夹本体、其它无关 §6.4（preference / milestone / versioning / butler-upgrade）。
+- 落点 `Coder/30_Quality_Gate/`（与 correction-contract 平级的常驻质量门禁）；非扩展模块、无 `/命令` 触发。
+- **不改**：P1–P5 状态机、四件套字段、迭代 / 里程碑机制、hook、桥代码、maintenance-boundaries、tech-plan-schema §71、其它 30_Quality_Gate 文件（linting / testing-strategy / review-standard 正文）。
+- 独立迭代、不归属 MILE-0003、不进其路线图、不切版。
 
 # Design Decisions
 
-- **DD1（落点 / 形态）**：名册=一个文件夹（overview + 每帮手一文件），照 `agent-doc-design §3`；不放 `00` 层（会话身份 ≠ 能力目录，混入破坏分层）。→ AC1/AC6
-- **DD2（G1/G2 单源化）**：G1（独立性=上下文隔离）+ G2（诚实兜底）正文上提总述当唯一真源；review §1/§6.4 原地改回指、dangerous §7.3 + verify-schema §4 引用目标改指总述。带地址搬家、原地留指针。→ AC3/AC4
-- **DD3（三拆边界 + 不 renumber）**：共享审查流程（§3 多维 / §4 闭环 / §5 简评）留 60_review（复核本质是"把那套流程放进隔离上下文跑"，流程非其私有）；复核专有搬 independent-review、回指共享流程。**保留 review §编号骨架**，搬走小节替换为指针而非删号，防止跨文件 §引用连锁失效。→ AC3/AC8
-- **DD4（logic-protocol 轻触）**：不搬 §90 调度描述（那是 logic-protocol 职责），仅末尾加一句名册指针，避免它成 G1 第二正文。→ AC4/AC8
-- **DD5（名册表占位）**：名册表先列全三帮手，"更新说明""查过时"标"R4 落地"，本轮只落 independent-review 完整定义。→ AC1
-- **DD6（事实校准）**：AGENTS.md 起源改 Sourcegraph 的 Amp 团队发起、Agent Skills 加"截至 2026 上半年"，落生态说明处、对外措辞按 `agent-doc-design §7`。→ AC7
-- **DD7（读取顺序）**：README 读取顺序不新增 62 为冷启动必读；目录说明注明"触发式加载"。→ AC5/AC6
+- **DD1（落点）**：进 `30_Quality_Gate/`（交付质量门禁），与 correction-contract 并列——写新码纪律 vs 纠错底线，性质相邻、职责不同。不进 `20_Workflow_Lifecycle`（那是流程状态机，非写码手法）。→ AC5
+- **DD2（修根因同住不拆）**：修根因本质是"最小改动"论证（一处守卫 < 每 caller 各补），与阶梯同源，放 `implementation-discipline §4`；不搬进 correction-contract（避免与其"修到真过 / 诚实停"混层），correction-contract §3 只加一行互引保发现性。→ AC3/AC7
+- **DD3（边界硬钉）**：`§5 何时不许偷懒` 与阶梯同等篇幅强调——信任边界校验 / 防丢数据 / 安全 / 无障碍 / 用户明确要求不得砍；"绝不对理解问题偷懒"单列，防止阶梯被误用为跳过读代码的借口。→ AC4
+- **DD4（品牌解耦）**：只吸收内容、用 butler 语气重写，不出现 "ponytail"、不照抄英文；标记词自定 `butler-min:`（不沿用来源的 `ponytail:`）。→ AC8
+- **DD5（压缩不重抄）**：rule-card 只放一条压缩纪律 + 指针（rule-card 是 ~800 token 卡、装不下阶梯全文），全文单源在新文件。→ AC7
+- **DD6（不进冷启动必读）**：新文件随 `30_Quality_Gate/` 常规读序生效（P4 前读质量门禁），不单列冷启动必读——与 correction-contract 一致。→ AC6
 
 # Execution Steps
 
-- [ ] T1 建 `62_Extension_Agents/overview.md`：帮手定义 + G1–G4 + 名册表 + 加载说明 + 生态事实校准 → AC1/AC3/AC4/AC7
-- [ ] T2 建 `62_Extension_Agents/independent-review.md`：复核中立定义 + 专有契约，共享流程回指 60_review（依赖 T1）→ AC2/AC8
-- [ ] T3 改 review-engine 三拆：§1 独立性段 + §6.4 正文上提改回指；§2/§3.3/§6.1/§6.2/§6.3 搬走留指针；§3/§4/§5 留原地；保留 §编号骨架（依赖 T1/T2）→ AC3/AC4/AC8
-- [ ] T4 改 dangerous §7.3 + verify-schema §4：G2 引用改指总述，只动这两处（依赖 T1）→ AC4
-- [ ] T5 改 logic-protocol §90：末尾加名册指针（依赖 T1）→ AC4/AC8
-- [ ] T6 注册 README：目录树 + 目录说明 + 读取顺序（触发式加载）→ AC5
-- [ ] T7 grep 全仓自检：review §6.4 的 G2 引用无漏网、G1/G2 正文单源、指针可解析、无误伤无关 §6.4 → AC3/AC4
-- [ ] T8 逐条核 frontmatter / 分层 / 功能等价 → AC6/AC8
+- [ ] T1 写 `implementation-discipline.md`（§1–§6 全量）→ AC1/AC2/AC3/AC4/AC5
+- [ ] T2 改 `rule-card.md` 执行纪律加压缩条（依赖 T1 定稿措辞）→ AC7
+- [ ] T3 改 `correction-contract.md §3` 加互引 bullet（依赖 T1）→ AC7
+- [ ] T4 注册 `Coder/README.md` 三处（目录树 + 目录说明 + 分文件说明）→ AC6
+- [ ] T5 自检：读全文逐 AC 核 + `git diff --stat` 核文件集 + grep `ponytail`（新文件应 0 命中）+ grep 新文件名（注册无遗漏）→ AC8
+- [ ] T6 P5 起独立复核子 agent（fresh-context，验证者≠实现者）→ 全 AC
 
 # Verification Plan
 
-- AC1/2/5: 读文件确认字段齐全、指针解析（确定性可复现）。
-- AC3/4: T7 grep——`§6.4` 区分 review vs 无关；独立性 / 上下文隔离仅总述有正文、review 回指；两处 G2 下游引用已改指总述。
-- AC6: 读 frontmatter + 目录层级 + 对照 CLAUDE.md 分层。
-- AC7: grep `AGENTS` / `Skills` 措辞已改准。
-- AC8: 搬家前后语义逐条对照（P5 独立复核重点核 refute）。
-- 全程 P5 升格独立复核（fresh-context 子 agent，验证者≠实现者）。
+- AC1–AC5: 读 `implementation-discipline.md` 正文逐条核要素 + frontmatter + 落点 + §关系边界。
+- AC6/AC7: 读 README 三处 + rule-card + correction-contract；grep 文件名确认注册、互引可解析。
+- AC8: `git diff --stat` 仅 4 文件（+ 收口产物）；grep `ponytail` 新文件 0 命中；核未触 schema/hook/桥。
+- P5 独立复核逐 AC 裁决 + 对抗探测（越界 / 与既有规则职责重叠 / 假绿 / 品牌词残留）。
 
 # Risks / Open Questions
 
-- **误伤风险**：全仓多个无关 §6.4——改 G2 引用只动 dangerous:119、verify-schema:73 两处，T7 grep 兜底。
-- **边界风险**：复核专有 vs 共享流程若切不净 → AC3 专项核、独立复核 refute 兜底。
-- **renumber 风险**：三拆若删 review §号会连锁——DD3 定"保留骨架、搬走留指针"规避。
-- 已定：名册表占位三帮手；总述不进冷启动必读。
+- **职责重叠风险**：与 correction-contract / maintenance-boundaries / tech-plan §71 边界若切不净 → DD1/DD2 分层 + §关系段明述 + 独立复核 refute 兜底。
+- **误当无脑砍码**：阶梯被误读为"能砍就砍" → DD3 边界段硬钉 + "理解在前"反射化解。
+- 已定：标记词 `butler-min:`；新文件不进冷启动单列必读。
