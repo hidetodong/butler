@@ -1,38 +1,41 @@
-# TECH_PLAN — ITER-0032（MILE-0003 R6）
+# TECH_PLAN — ITER-0033（MILE-0003 R7）
 
-> 监督态自驱（非 `/dangerous`）：本产物由用户"继续接下来的迭代"委托、模型自驱产出，P5 起独立复核守质量（ITER-0032，2026-07-07）。
+> 监督态自驱（非 `/dangerous`）：用户点选 R7 + "继续"ACK，模型自驱产出，P5 起独立复核守质量（ITER-0033，2026-07-07）。目标见 CONCEPT，不重述。
 
 ## 设计决策（DD）
 
-- **DD1 · 空目录种子而非 stub 内容**（AC2/AC3）：部署建**空** `.ai/project/` 目录、不写 `00_INDEX` 占位。理由：R2 已定 `00_INDEX` 三块（一段话/读序地图/主题登记表）须与实际一致，部署时无内容可填，stub 一份空壳＝"自信的谎"（AI 冷启动信一份假地图）。改用**时序**消解——`00_INDEX` 在首次收口前滚由更新说明帮手按 §8 生，与单文件 `PROJECT.md`"首收口前滚生"同构。空目录仅作**采用标记**，不承诺可读。
-- **DD2 · 冷启动键控入口文件、非目录存在**（AC3/两态兼容）：两态判据以**入口文件是否存在**为准（`.ai/project/00_INDEX.md` 在→文件夹态读它；否则 `.ai/PROJECT.md` 在→单文件态读它；都无→缺全貌产物、走 `context-persistence §6` "从迭代 delta 倒推"兜底）。空 `.ai/project/` 目录（部署后·首收口前）落到"都无"分支，**不误触**"文件夹态→读 00_INDEX→踩空"。此为 R5 读序的**运营化澄清**，写进 `mcv-deployment` 部署说明即可，**不改** `context-persistence §冷启动读序` 正文（R5 已定，R6 不碰）。
-- **DD3 · `[split]` 通用定义、首例 PROJECT.md**（AC4）：`[split]` 定义写成通用（"把 `.ai/` 下单文件产物按主题拆成文件夹"），`PROJECT.md → .ai/project/` 作首例，不写死只服务这一个。守 §4 幂等（起始态校验：旧单文件在且目标文件夹未成形才动）+ §5 漂移即停（冲突退 ACK 不覆盖）。
-- **DD4 · R6 只备规则、不产实例**（AC5/AC6）：迁移配方**实例** `migrations/v2.0.0.md` 是切版产物（`versioning-schema §6.3 步4`：定 bump→改 VERSION→加 CHANGELOG→写 `migrations/vX.Y.Z.md`→打 tag），归 R8。R6 写"标签 + 形态 + 条件式前向指针"，前向指针**不硬编 `v2.0.0`**——用"R8 切版时按此形态产出实例"表述，避免断言一个未打的 tag / 未落的文件已存在。
-- **DD5 · 部署种子例外显式记账**（AC2）：`.ai/project/` 成为唯一"部署即建"的 `.ai/` 子目录（`references/`/`iterations/`/`milestones/` 仍按需产生）。这是对 §2 现有"子目录按需产生"叙述的**显式例外**，须在 §2 点名理由（全貌产物之家、标记采用，同 `origin/` 空收件箱先建后投），不留隐式漂移。
+- **DD1 · 三条定义单一真源放 `artifact-style §2`**（主决策，AC1/AC5）：`artifact-style` 本就是书写纪律真源（`§2` 讲人话 + `§4.3` 承重引用已含三条里的两条），三条是它的自然扩充——放这里是**最小改动 + 不搬家**，承 R1 的 G1–G4 单源模式。`presentation-protocol` 只**引用**（声明对话层同守 + 给指针），**不复制**定义，避免"对话一套、文档一套"漂移。
+- **DD2 · `§2` 原地改写、不新增段**（AC1/AC2）：把三条落进现有 `§2`（讲人话 / 反黑话）就地重构，保 `§3–§8` 编号稳定、内部 `§` 引用不碎。三条承接 `§2` 现有内容（判据 / 反面词 / 结构锚点归**标准一 & 三**）+ `§4.3`；全仓真正**新增**的只有**标准二·比喻要落地**。`§8` 现有"命中第 2 节反面词"引用仍解析（反面词留在 `§2` 标准一名下）。
+- **DD3 · `presentation-protocol` 插新 `§7` + 顺移编号**（AC5）：说人话是"规则"类、归 `§3–§6` 规则簇，插为新 `§7`「对话也说人话」，把原 `§7` 弹性条款→`§8`、原 `§8` 边界→`§9`。**必须同步校正**内部 `§` 引用：`§7`(原)"默认按 §3–§6"→"§3–§7"、`§8`(原)样例注"遵守 §3–§6"→"§3–§7"、`§2` 豁免"(见 §8)"→"(见 §9)"。新节只引用 `artifact-style §2`、不重述三条（守 DD1 单一来源）。
+- **DD4 · scope 扩措辞、不碰字段结构**（AC3/AC8）：`artifact-style` frontmatter + `§1` 把适用面从"四件套字段正文"扩到"所有面向人落地文档"（明列四件套 + 交付总结正文 + 知识文件夹 + handoff）；但 `§7` 边界"不改字段结构——四件套字段以四个 schema 为准"**保留**——扩的是"这套书写纪律管哪些文档"，不是"给四件套加字段"。
+- **DD5 · dogfood 自检（自己先照三条写）**（AC9）：本迭代四件套 + 交付总结自身收口前逐条过三条硬标准（写"说人话"的迭代不许自己说黑话），VERIFY 记录扫查结论。
 
 ## 影响面（章节级）
 
 | 文件 | 改动 | AC |
 |---|---|---|
-| `20_Workflow_Lifecycle/mcv-deployment.md §2` | 全貌产物条两态化 + 部署建空 `.ai/project/`（记账例外）+ 00_INDEX 不 stub·键控入口文件说明；line 45 老项目升级指针指 R6 配方 | AC1/2/3 |
-| `20_Workflow_Lifecycle/migration-schema.md §4` | 新增 `[split]` typed 标签（通用定义 + PROJECT.md 首例 + 起始态校验 + 冲突即停）；§5/§6 关系里点"文件夹化配方形态 + 实例留切版" | AC4/5/6 |
-| `40_Context_Management/project-digest-schema.md §9 + §150` | R6 路线项待→已（注 `v2.0.0.md` 实例仍 R8）、header `R3/R5`→`R3/R5/R6`、§150 `[split]` 表述对齐 §4 | AC7 |
-| `Coder/README.md`（部署目录清单行） | 部署目录集补 `.ai/project/` 空种子 | AC7 |
-| `.ai/PROJECT.md`（收口前滚） | 知识文件夹条 R6 指针 待→已（R8 仍待） | AC7 |
+| `20_Workflow_Lifecycle/artifact-style.md` frontmatter + `§1` | scope 从"四件套字段正文"扩到"所有面向人落地文档" + `§1` 定位重写（三条为跨层通则真源） | AC3 |
+| `artifact-style.md §2` | 改写为「说人话三条硬标准」——承 `§2/§4.3` 去重 + 新增标准二·比喻要落地 | AC1/2 |
+| `artifact-style.md §8` | "收口前自检"扩为"发长文 / 收口前自检"（含逐条扫三条） | AC4 |
+| `00_System_Prompt/presentation-protocol.md` frontmatter + 新 `§7` + 顺移 `§8/§9` | 对话层引用节（只引 `artifact-style §2` 不重述）+ 内部 `§` 引用校正 | AC5 |
+| `templates/rule-card.md`（`artifact-style` 紧凑条） | 同步收录三条（与 `§2` 一致、压缩不新增语义） | AC6 |
+| `Coder/README.md`（`§目录说明` 两处） | `presentation-protocol` 增说人话应用、`artifact-style` 改"面向人落地文档 + 三条真源" | AC7 |
+| `.ai/PROJECT.md`（收口前滚） | 说人话 / 输出可读性条 R7 待→已（R8 仍待） | 收口·AC8 |
 
-**不碰**：`migrations/`（零新增，AC6）、`context-persistence §冷启动读序`（R5 定，DD2 只在 mcv 侧澄清）、`iteration-schema §5.5`/`milestone §7.4`（R3 折叠语义）、`.ai/project/` 结构契约正文（R2）、hook、`VERSION`/`CHANGELOG`、butler 自身 `.ai/PROJECT.md` 实体结构（R8）。
+**不碰**：`identity.md`（已指 `presentation-protocol`、本轮不扩正文）、`delivery-summary.md`（`§8` 散文口径与字段）、四件套字段结构（四 schema）、hook、`VERSION`/`CHANGELOG`（切版 R8）、`project-digest-schema` 结构契约（R2）/ 读序（R5）/ 维护回路（R3）、rename。
 
 ## Execution Steps（可勾选）
 
-- [ ] S1 · `mcv-deployment §2` 全貌产物条两态化 + 部署建空 `.ai/project/`（例外记账）+ 00_INDEX 不 stub·键控入口文件（AC1/2/3）
-- [ ] S2 · `mcv-deployment` line 45 老项目升级补建指针指 R6 文件夹化配方（AC3）
-- [ ] S3 · `migration-schema §4` 新增 `[split]` 标签（AC4）+ §6 关系点"文件夹化形态 + 实例留切版·不写 v2.0.0.md"（AC5/6）
-- [ ] S4 · `project-digest-schema §9` R6 待→已 + header + §150 对齐（AC7）
-- [ ] S5 · `Coder/README.md` 部署目录清单补空 `.ai/project/` 种子（AC7）
-- [ ] S6 · 自检 6 不变量（butler 单文件态，第 6 条 N/A）+ scope 守恒核对（`git status`：无 `migrations/` 新增、无 VERSION/CHANGELOG、无 rename）（AC8）
-- [ ] S7 · P5 独立复核（fresh-context 子 agent，对抗式：无切版/无 v2.0.0.md 实例/无 butler 实体迁移/`[split]` 已定义/前向指针不悬空/两态兼容不砸单文件）
-- [ ] S8 · 原子收口 5 步（归档 + 交付 md+html + 翻台账 + `.ai/PROJECT.md` 前滚 R6→已 + 6 不变量自检）
+- [x] S1 · `artifact-style §2` 改写为说人话三条硬标准（承 `§2/§4.3`、新增比喻落地；保 `§3–§8` 编号）→ AC1/AC2
+- [x] S2 · `artifact-style` frontmatter + `§1` scope 扩到所有面向人落地文档 → AC3
+- [x] S3 · `artifact-style §8` 扩为"发长文 / 收口前自检"（含三条扫查）→ AC4
+- [x] S4 · `presentation-protocol` 插新 `§7` 对话层引用节 + 顺移 `§8/§9` + 校正内部 `§` 引用（§3–§6→§3–§7、(见 §8)→(见 §9)）→ AC5
+- [x] S5 · `templates/rule-card.md` `artifact-style` 条同步收录三条 → AC6
+- [x] S6 · `Coder/README.md` 两处 scope 描述同步 → AC7
+- [x] S7 · dogfood 扫本迭代四件套过三条（AC9，命中 `BLUF`/`fresh-context 子 agent`/`dogfood` 已改）+ scope 守恒核对（`git status`：仅 4 规则文件 + `.ai/`；无 `identity`/`delivery-summary`/hook/`VERSION`/rename）→ AC8
+- [x] S8 · P5 独立复核（干净上下文的子 agent[不带本轮记忆去复核]，对抗式：三条无双写·单一来源 / 比喻落地确为新增 / scope 扩不破字段结构 / `presentation` `§` 引用无悬空 / rule-card 与 `§2` 不漂移）→ REQUEST-CHANGES→修 MF1/MF2→AC1–9 过
+- [ ] S9 · 原子收口 5 步（归档 + 交付 md+html + 翻台账 + `.ai/PROJECT.md` 前滚 R7→已 + 6 不变量自检[单文件态第 6 条 N/A]）
 
 ## 验证策略
 
-全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git diff`/`grep` 核守恒。核心对抗点＝**两态兼容不砸单文件**（DD2 空目录不踩空）+ **R6/R8 边界**（DD4 无 v2.0.0.md 实例、前向指针不悬空）。无人测道残余。
+全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git diff`/`grep` 核守恒。核心对抗点＝**单一来源不双写**（三条只在 `artifact-style §2`、`presentation` 只引用）+ **scope 扩不误改字段结构**（DD4）+ **`presentation` 顺移编号后内部引用不碎**（DD3）。dogfood：四件套自身过三条。无人测道残余。

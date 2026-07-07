@@ -1,27 +1,31 @@
 ---
 状态: ack-frozen
 ACK 日期: 2026-07-07
-迭代: ITER-0032
-里程碑: MILE-0003 R6
+迭代: ITER-0033
+里程碑: MILE-0003 R7
 ---
 
-# AC_LIST — ITER-0032（MILE-0003 R6 部署种子 + 文件夹化迁移配方）
+# AC_LIST — ITER-0033（MILE-0003 R7 说人话三条硬标准 + 发长文前自检）
 
-> 监督态自驱（用户"继续接下来的迭代"委托，非 /dangerous）。验收脊柱贯穿 P4→P5；全为规则文档改动，验证=读正文确认 + `git`/`grep` 核守恒，确定性可复现（auto·可靠）。
+> 监督态自驱（用户点选 R7，非 /dangerous）。验收脊柱贯穿 P4→P5；全为规则文档改动，验证=读正文确认 + `git`/`grep` 核守恒，确定性可复现（auto·可靠）。
 
-## 块1 · 部署种子
+## 块1 · 说人话三条硬标准（`artifact-style` 单一真源）
 
-- **AC1**：`mcv-deployment §2` 的项目全貌产物条**两态化**——明写新项目采用 `.ai/project/` 知识文件夹（`00_INDEX` + 主题按需产生于首次收口前滚、回指本 schema 折叠机制）、单文件 `.ai/PROJECT.md` 标为遗留/暂态形态（老项目 + R8 前 butler 自身）。旧的"仅 PROJECT.md"单态描述被取代，非并列冗余。
-- **AC2**：`mcv-deployment §2` 明确部署时创建**空** `.ai/project/` 目录（列入部署即建的目录集、与 `origin/` 同档），并显式说明它是**唯一在部署时即建的 `.ai/` 子目录例外**（`references/`/`iterations/`/`milestones/` 仍按需产生），例外理由=全貌产物之家、标记文件夹采用。守 §2"仅创建目录、不预置任何 `.md` 内容"——空目录不含 `00_INDEX` stub。
-- **AC3**：`mcv-deployment §2` 写明 `00_INDEX` **不在部署时 stub**、首次收口前滚才生；空目录到首收口的暂态由冷启动**入口文件键控**兜底（不误触"读不存在的 00_INDEX"），与"单文件项目首收口前"同类暂态。`mcv-deployment` line 45 老项目升级补建指针指向 R6 文件夹化迁移配方（`migration-schema`），不再只指 `versioning §5` 的单文件回填。
+- **AC1**：`artifact-style §2` 改写为「说人话三条硬标准」，三条各有名字、各带一句话可执行判据——**术语先解释**（真实对象→用名字 + 一句话解释 / 偷懒简写→换大白话；结构锚点保留）、**比喻要落地**（比喻须点明对应本任务里的具体对象、悬空即删）、**别让英文 / 变量裸奔**（英文术语 / 变量 / 函数 / 表名首现不裸奔、结构锚点例外）。三条显式声明为**跨对话与文档的通则**、`artifact-style` 为其单一真源。承接并去重现有 `§2/§4.3`，不与之矛盾或冗余重复。
+- **AC2**：「比喻要落地」是三条中**新增**内容——全仓 `grep` 现有规则无等价条款（非把旧内容改名充数）。
 
-## 块2 · 文件夹化迁移配方
+## 块2 · scope 扩到所有面向人输出
 
-- **AC4**：`migration-schema §4` 新增 typed 标签 **`[split]`**——定义=把 `.ai/` 下单文件产物按主题拆成文件夹（首例 `PROJECT.md → .ai/project/`），带**起始态校验**（旧单文件存在且目标文件夹未成形才动）+ **冲突即停退 ACK**（不覆盖），显式归入 §4"所有标签必须幂等"与 §5"漂移即停"契约。
-- **AC5**：文档化 `PROJECT.md → .ai/project/` 迁移配方**形态**（`[rename]` + `[split]` + `[restamp]` 三步骨架）作为 R8 模板，附**条件式前向指针**指 R8/v2.0.0 切版时产出实例——**不硬编版本号**、不出现已成型的 `migrations/v2.0.0.md` 路径断言为"已存在"。
-- **AC6**：**不写** `migrations/v2.0.0.md` 实例文件（`migrations/` 目录内容零新增）；规则内以"配方在切版时产出（`versioning-schema §6.3 步4`）、R8 落实例"表述，边界清晰不悬空引用未打 tag。
+- **AC3**：`artifact-style` frontmatter 的 `scope` + `§1` 定位从"四件套字段正文"扩为"**所有面向人的落地文档**"，明列适用对象含四件套 + 交付总结正文 + 知识文件夹 + handoff 等（四件套只是其一）；旧"仅四件套"表述被取代、非并列冗余。
+- **AC4**：`artifact-style §8` 从"收口前自检（四件套）"扩为"**发长文 / 收口前自检**"——含逐条扫三条硬标准 + 保留原有反面词 / 整段重述 / 超 2 层嵌套检查，适用对象为所有面向人长文档。
 
-## 指针 / 守恒
+## 块3 · 对话层引用同守（不双写）
 
-- **AC7**：接线状态指针如实翻——`project-digest-schema §9` R6 路线项 待→已（规则层已备、注明 `v2.0.0.md` 实例仍 R8）、§9 header `R3/R5 已接线` → `R3/R5/R6 已接线`、§150 `[split]` 表述与 §4 新定义一致（不再是"未定义"隐含）；`.ai/PROJECT.md` 收口前滚 R6 指针 待→已（R8 仍待）。`README §读取顺序` 部署目录清单补 `.ai/project/` 空种子（与 §2 一致）。
-- **AC8**：scope 守恒——改动集限于 `mcv-deployment.md` / `migration-schema.md` / `project-digest-schema.md`（§9+§150）/ `Coder/README.md` + `.ai/` 台账与 `.ai/PROJECT.md` 前滚；**无** `migrations/v2.0.0.md` 新增、**无** butler 自身实体迁移、**无** `VERSION`/`CHANGELOG` 切版改动、**无** R3 折叠必做/第 6 不变量语义改动、**无** R5 读序第一读改动、**无** hook 改动、**无** rename。
+- **AC5**：`presentation-protocol` 新增一节，声明对话层的方案 / 分析 / 较长输出同守说人话三条硬标准 + 给对话层发长文前自检；该节**只引用** `artifact-style §2` 为定义真源、**不重述**三条定义（单一来源，无双写）。`presentation-protocol` 原有呈现结构（结论先行 / 统一标号 / 表格 / 概念后置）语义不变、新节与之并列不冲突；因插节产生的内部 `§` 编号引用（如"§3–§6"）同步校正、无悬空引用。
+
+## 指针 / 同步 / 守恒
+
+- **AC6**：`templates/rule-card.md` 的 `artifact-style` 紧凑条同步收录说人话三条（与 `§2` 一致、压缩不新增语义、不与 `§2` 漂移）。
+- **AC7**：`Coder/README.md` 目录说明两处 scope 描述同步——`presentation-protocol` 条增"说人话三条对话层应用"、`artifact-style` 条从"四件套字段正文的通用书写口径"改"面向人落地文档书写口径 + 说人话三条真源"；与改后文件自洽。
+- **AC8**：scope 守恒——改动集限于 `artifact-style.md` / `presentation-protocol.md` / `templates/rule-card.md` / `Coder/README.md` + `.ai/` 台账与四件套 + `.ai/PROJECT.md` 前滚；**无** `identity.md` 改动、**无** `delivery-summary.md` 字段 / 散文定性改动、**无**四件套字段结构改动、**无** hook / `VERSION` / `CHANGELOG` 切版、**无** R2/R3/R5 目标文件语义改动、**无** rename。
+- **AC9（dogfood·自身也照三条写）**：本迭代四件套 + 交付总结自身过说人话三条硬标准自检——收口前逐条扫、命中即改，VERIFY 记录扫查结论。

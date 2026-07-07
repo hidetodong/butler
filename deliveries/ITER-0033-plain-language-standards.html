@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0033 交付总结 · 说人话三条硬标准 + 发长文前自检</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>说人话三条硬标准 + 发长文前自检</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0033</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-07</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>butler 一直在说“讲人话”，但这条纪律有两个漏洞：一是<strong>只管四件套</strong>（写在 <code>artifact-style</code> 里、适用面写死“四件套字段正文”，交付总结、知识文件夹这些同样给人读的文档不受管）；二是<strong>对话框里没人管</strong>（<code>presentation-protocol</code> 只管结构：结论先行、标号、表格，字词该怎么说人话完全没约束）。</li>
+        <li>R7 把“说人话”收敛成<strong>三条有名字的硬标准</strong>，定义只写一次、扩到所有给人读的输出，对话层和文档层都守同一份。这是 MILE-0003 三条线里的最后一条（前两条知识文件夹、帮手名册已落），之后就是 R8 切版。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>三条硬标准立起来（真源放 <code>artifact-style §2</code>）</strong>：
+          <ul>
+            <li><strong>术语先解释</strong>——术语 / 黑话 / 关键符号第一次出现，顺带一句话说清是什么；能用大白话替代的偷懒简写（如“护栏”“正交”）必须换掉。</li>
+            <li><strong>比喻要落地</strong>（全新）——用比喻帮理解时，得点明“像 X 的 Y”里的 X 到底对应本任务里的谁；接不回真实对象的悬空比喻，删掉直说。</li>
+            <li><strong>别让英文 / 变量裸奔</strong>——英文术语、变量名、函数名、表名第一次出现，要么中文解释在旁、要么一句话点明它在本项目里是什么；字段名 / 编号 / 路径这类“锚点”除外。</li>
+          </ul>
+        </li>
+        <li><strong>适用面从四件套扩到所有给人读的文档</strong>：<code>artifact-style</code> 的定位从“四件套字段正文”改成“所有面向人的落地文档”（四件套 + 交付总结正文 + 知识文件夹 + 会话交接等）；收口自检也从“只扫四件套”扩成“发任何长文档前都扫一遍三条”。</li>
+        <li><strong>对话层引用同守、不另写一份</strong>：<code>presentation-protocol</code> 新增一节，声明对话里的方案 / 分析 / 较长输出也守这三条——但只<strong>指向</strong> <code>artifact-style §2</code> 那份定义，不把三条再抄一遍（避免“对话一套、文档一套”以后各改各的、越走越偏）。</li>
+        <li><strong>同步</strong>：浓缩规则卡 <code>rule-card</code>、子系统入口 <code>README</code> 两处说明同步收录三条与新的适用面。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>以后所有给人看的输出都有一把统一的尺子</strong>：不管是对话框里的方案、还是落进文件的交付总结 / 知识文件夹，都过同一份“说人话三条”。</li>
+        <li><strong>“简短”不再等于交差</strong>——把话砍短之后还得让不在你脑子里的人接得住，三条就是这句话的可执行清单，发长文前能逐条自检。</li>
+        <li><strong>一处定义、多处引用</strong>：三条只在 <code>artifact-style §2</code> 写一次，对话协议、规则卡、README 都只引用它，改一处全体生效。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（4 个规则 / 模板文件）：<code>20_Workflow_Lifecycle/artifact-style.md</code>（三条真源 + 适用面扩 + 自检扩 + 边界消歧）、<code>00_System_Prompt/presentation-protocol.md</code>（对话层引用节 + 编号顺移校正）、<code>templates/rule-card.md</code>（两条同步）、<code>Coder/README.md</code>（两处说明同步）。</li>
+        <li>收口前滚（本迭代自身、butler 仍是单文件形态）：<code>.ai/PROJECT.md</code> 说人话 / 可读性条 R7 指针 待→已（R8 仍待）。</li>
+        <li>没碰（守边界）：<code>identity.md</code>、<code>delivery-summary.md</code>（交付摘要的散文口吻与字段）、四件套字段结构、hook、<code>VERSION</code>/<code>CHANGELOG</code>（切版属 R8）、知识文件夹结构（R2）/ 读序（R5）/ 维护回路（R3）/ 部署迁移（R6）、无任何改名。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>9/9 验收项通过</strong>（AC9 自身守三条经收口扫改后翻过），全 <strong>auto·可靠</strong>（规则文档：读改后正文确认 + <code>git diff</code>/<code>git grep</code> 核对，确定性可复现）；无人测残余。</li>
+        <li>核心对抗点全过：<strong>三条只写一次</strong>（完整定义只在 <code>artifact-style §2</code>，对话协议 / 规则卡 / README 都是引用或压缩指针）、<strong>比喻要落地确为新增</strong>（pre-R7 <code>git grep "比喻|类比"</code> 零命中）、<strong>编号顺移后引用不碎</strong>（对话协议插节后逐个引用重解析、无悬空）。</li>
+        <li>收口时修复 P5 独立复核（另起干净上下文的子 agent，专门挑毛病）揪出的 2 条：验证报告重写成本迭代内容；本迭代自己没守三条的 3 个黑话（<code>BLUF</code>/<code>fresh-context 子 agent</code>/<code>dogfood</code>）逐条改掉。另主动消解一处矛盾：<code>artifact-style</code> 原“不管对话层”收窄为“不管对话层的呈现结构”并挑明三条为唯一跨层例外。</li>
+        <li>守恒核对：<code>git status</code> 改动集 = 4 规则 / 模板文件 + <code>.ai/</code> 台账与四件套 + <code>.ai/PROJECT.md</code> 前滚；无越界、无改名、无切版。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>三条落到规则层、可自检，但“输出真的更好懂”要靠后续每次迭代照做 + 收口自检兜底——书写质量不做机器门禁（它不是能机械判真假的封闭项），靠规则 + 自检守。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；MILE-0003 仍 active，剩 R8（butler 自身用新结构改造 <code>.ai/project/</code> + 切 v2.0.0），待用户指令。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0033/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动：<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>、<code>Coder/00_System_Prompt/presentation-protocol.md</code>、<code>templates/rule-card.md</code>、<code>Coder/README.md</code></li>
+        <li>相关契约：<code>artifact-style.md §2</code>（说人话三条真源）、<code>§8</code>（发长文前自检）、<code>presentation-protocol.md §7</code>（对话层引用）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

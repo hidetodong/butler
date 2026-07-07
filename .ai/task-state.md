@@ -1,11 +1,11 @@
 # Task State
 
-> 无活跃迭代 · dormant（`ITERATIONS.current: none`）。上一迭代 ITER-0032（MILE-0003 R6，部署种子 + 文件夹化迁移配方）已收口。
+> 无活跃迭代 · dormant（`ITERATIONS.current: none`）。上一迭代 ITER-0033（MILE-0003 R7，说人话三条硬标准 + 发长文前自检）已收口。
 
 ## 当前状态
 
-- 无活跃迭代。MILE-0003 仍 active，已收 R1（ITER-0026）/R2（ITER-0028）/R3（ITER-0029）/R4（ITER-0030）/R5（ITER-0031）/R6（ITER-0032），剩 R7/R8（v2.0.0 切版在 R8）。
-- 下一步待用户指令：继续 R7（说人话：三条标准 + 发长文自检落进 `presentation-protocol` + `artifact-style`）或 R8（butler 自身 dogfood + 切 v2.0.0）。
+- 无活跃迭代。MILE-0003 仍 active，已收 R1（ITER-0026）/R2（ITER-0028）/R3（ITER-0029）/R4（ITER-0030）/R5（ITER-0031）/R6（ITER-0032）/R7（ITER-0033），**剩 R8**（butler 自身 dogfood 迁 `.ai/project/` + 切 v2.0.0，收尾 MILE-0003 与整个大版本）。
+- 下一步待用户指令：开 R8（v2.0.0 切版，压轴）。
 
 ## 下一步入口
 
