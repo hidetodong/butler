@@ -1,64 +1,53 @@
-# TECH_PLAN — ITER-0028（MILE-0003 R2）
+# TECH_PLAN — ITER-0029（MILE-0003 R3）
 
-> 监督态自驱（非 `/dangerous`）：本产物由用户"继续"委托、模型自驱产出，P5 起独立复核守质量（ITER-0028，2026-07-06）。
+> 监督态自驱（非 `/dangerous`）：本产物由用户"继续吧"委托、模型自驱产出，P5 起独立复核守质量（ITER-0029，2026-07-07）。
 
 # Goal
 
-- 支撑 AC1–AC8：把 `project-digest-schema.md` 整篇改写为 `.ai/project/` 知识文件夹契约（结构 + INDEX + topic 集 + 边界 + 密度 + 折叠模型声明 + 受控扩展 + 骨架 + 关系），README 描述行改准。
+- 支撑 AC1–AC8：把 R2 声明的折叠模型接线成活跃收口仪式——泛化收口步④（两态）+ 加第 6 不变量（条件）+ 全仓 5→6 同步 + 修 §5→§6 漂移 + 翻 R3 指针 + PROJECT.md 前滚。
 
 # Files / Modules to Change
 
-**改写（整篇）**
+**改（章节级，6 规则文件）**
 
-- `Coder/40_Context_Management/project-digest-schema.md` — 新结构：frontmatter（scope 改文件夹）+ §1 定位（知识文件夹 = 整体/积分、越补越全、冷启动第一读 00_INDEX、四产物边界表）+ §2 核心哲学（三条矛盾消解 + 最大风险）+ §3 文件夹结构 + 00_INDEX 契约 + 推荐 topic 集 + §4 每份边界 + §5 写作密度（digest-and-point + 校准样例）+ §6 折叠维护模型（声明 + 强制留 R3 标注）+ §7 受控扩展登记 + §8 模板骨架（00_INDEX + topic 骨架）+ §9 与其他规则关系（前向指针 R3/R5/R6/R8）。→ AC1–AC8
+1. `Coder/20_Workflow_Lifecycle/iteration-schema.md` — §5.5 步④ 改两态（文件夹态按主题折 delta 必做 / 单文件暂态前滚，引用改 §6）；步⑤ 计数 5→6 + 列举补第 6 条（带条件）。→ AC1/AC4/AC5
+2. `Coder/20_Workflow_Lifecycle/milestone-schema.md` — §7.4 步④ 两态泛化（注明迭代级已增量折、里程碑保版本级全貌，引用改 §6）。→ AC2/AC5
+3. `Coder/40_Context_Management/context-persistence.md` — §冷启动一致性自检 第 5 条后加**第 6 条「知识文件夹漂移自检」**（条件适用 + N/A 标注 + 可操作核法）；不动 §冷启动读序第一读目标。→ AC3/AC5/AC7
+4. `Coder/20_Workflow_Lifecycle/lifecycle.md` — §迭代收口段 步④ 语义对齐两态 + 步⑤ 5→6。→ AC4
+5. `Coder/20_Workflow_Lifecycle/versioning-schema.md` — §切版自检（当前"5 不变量"）5→6 + 列举补第 6 条（条件）。→ AC4
+6. `Coder/40_Context_Management/project-digest-schema.md` — §6 折叠模型段 + §9 R3 前向指针：待→已接线，指向真实落点（iteration-schema §5.5 / context-persistence 第 6 不变量）。→ AC6
 
-**改（一行描述）**
+**收口前滚（close 步④）**
 
-- `Coder/README.md` — 分文件说明里 `project-digest-schema.md` 那条：`.ai/PROJECT.md 格式契约` → `.ai/project/ 知识文件夹格式契约`，反映文件夹 + 保留"冷启动第一读 00_INDEX"（读序实际切换 R5）。→ AC8
-
-**收口前滚（close 步④，按判据）**
-
-- `.ai/PROJECT.md`「关键长期决策与不变量」— 若判据成立，记一句"项目全貌产物契约升级为知识文件夹（schema 已定，butler 自身 R8 适配）"。→ 非 AC，收口仪式
-
-# Interface / Contract
-
-- **知识文件夹结构**：`.ai/project/00_INDEX.md`（入口）+ 主题文件（`identity.md` / `architecture.md` / `capabilities.md` / `invariants.md` / `constraints.md` / `debt.md` / `frontier.md`，推荐核心集、可受控扩展）。
-- **00_INDEX 契约**：冷启动第一读；含①一段话项目是什么 ②文件夹读序/地图 ③topic 登记表（每 topic 一行 + 边界）。新 topic 必登记（无隐式依赖）。
-- **密度 = digest-and-point**：每项 = 名 + 它到底干什么 + 真源指针；已有真源（如 `Coder/README.md` / `architecture-overview`）不逐字抄，只摘当前全貌 + 补真源没有的现状/成熟度层 + 指针。
-- **折叠模型（声明）**：收口时本迭代 delta 按主题路由折进对应文件、overwrite 当前真相、成本∝改动量。**强制化 + 漂移自检不变量的接线**=后续路线项 R3，本 schema 不实现。
-
-# State / Boundary
-
-- 落点 `Coder/40_Context_Management/`（不变）；文件名不改（沿用 `project-digest-schema.md`）。
-- **不改**：`.ai/PROJECT.md` 现结构、`iteration-schema §5.5`、`milestone-schema §7.4`、`context-persistence §6`、`mcv-deployment`、`migrations/`、P1–P5 状态机、四件套字段、hook、VERSION。
-- 归属 MILE-0003 R2；不预占 R3–R8。
+- `.ai/PROJECT.md` — 「关键长期决策与不变量」：收口仪式 bullet（步④两态语义）+ 冷启动读序 bullet（一致性自检 5→6）+ 知识文件夹 bullet（R3 已接线）。→ AC8
 
 # Design Decisions
 
-- **DD1（哲学切换写进 §2 独立成段）**：把"薄索引→知识地图"的反转 + 三条矛盾消解 + 最大风险显式成 §2，不埋在定位里——这是本迭代的价值内核，也是防"腐坏的完整"的认知护栏。→ AC5
-- **DD2（折叠模型声明、强制留 R3）**：schema §6 只**声明**折叠维护模型（what），强制化（泛化收口步为必做）+ 漂移自检（扩一致性自检）明标"R3 接线"。理由：R2/R3 边界据 MILESTONE 路线图分明；schema 定契约、收口步定强制是两件事。防"要求了没强制"的假绿由如实标注化解。→ AC6/AC7
-- **DD3（文件名不 rename）**：沿用 `project-digest-schema.md`，改名连锁 5+ 处引用失效、违最小实现纪律（`implementation-discipline §4`：最小改动定位）；内容改、名不动，rename 留后续 tidy。→ AC8
-- **DD4（前向指针不越位）**：§9 关系段用"待后续路线项 R3/R5/R6/R8"如实标注下游接线，本轮一字不改那些文件；`git diff` 兜底证明。→ AC7
-- **DD5（topic 集照预研定稿）**：核心 topic 集直接采预研 §7 草案（identity/architecture/capabilities/invariants/constraints/debt/frontier），标"推荐核心、可受控扩展"，不自创新主题（保真预研、避免未拍板设计混入）。→ AC3
-- **DD6（butler 自身暂态不一致如实说）**：schema 定"采用知识文件夹时的契约"；butler 自身 `.ai/PROJECT.md` 仍单文件、R8 适配；§1 / §9 说清暂态，不制造"schema 生效但自身没跟上"的隐性矛盾。→ AC1/AC7
+- **DD1 两态措辞用显式分支**：步④写"若项目已采用 `.ai/project/`（知识文件夹）：…必做折叠；若仍单文件 `.ai/PROJECT.md`（未迁移暂态）：…按需前滚"，两分支并列可见，不用"泛化后按需即必做"这类会被误读成无条件的写法。（对 AC1/AC2/AC5）
+- **DD2 第 6 不变量定为条件不变量**：不做无条件 5→6。第 6 条正文首句即"（条件：项目采用 `.ai/project/` 知识文件夹时适用；仍单文件 PROJECT.md 的项目 N/A）"。计数处统一写"6 条（第 6 条为知识文件夹漂移，采用知识文件夹的项目适用）"。（对 AC3/AC4/AC5）
+- **DD3 第 6 不变量放 context-persistence 真源、其余处引用计数**：定义只在 `context-persistence §冷启动一致性自检` 一处写全（DRY）；`iteration-schema/lifecycle/versioning` 只同步"6 条"计数 + 一句列举，不重抄核法。（对 AC4，最小实现纪律 §4 修根因/单源）
+- **DD4 §5→§6 引用顺修、不扩范围**：只把两处"project-digest-schema.md §5"改成 §6，不重写这两步的其它内容。（对 AC1/AC2）
+- **DD5 R3 指针翻面不删声明**：`project-digest-schema §6` 保留折叠模型正文，只把"待 R3 接线 / 本 schema 不实现 / 在 R3 接线前…"这几句改成"R3 已接线（见 …）"；§9 R3 条同改。不动 R5/R6/R8 指针（仍"待"）。（对 AC6/AC7）
+- **DD6 读序第一读不碰**：`context-persistence §冷启动读序` 的 1. `.ai/PROJECT.md` 第一读**保持不变**（切 00_INDEX 是 R5）；只在其下方 §冷启动一致性自检加第 6 条。（对 AC7）
 
-# Execution Steps
+# Execution Steps（镜像到 task-state）
 
-- [ ] T1 整篇改写 `project-digest-schema.md`（§1–§9）→ AC1–AC8
-- [ ] T2 改 `Coder/README.md` 描述行 → AC8
-- [ ] T3 自检：读全文逐 AC 核 + 对预研 HTML §4/§5/§7 保真 + `git status --short` 证明未触 R3/R5/R6/R8 文件、未 rename → AC7/AC8
-- [ ] T4 P5 起独立复核子 agent（fresh-context，验证者≠实现者，重点预研保真 + scope 边界）→ 全 AC
+- [ ] T1 改 `iteration-schema §5.5`：步④两态 + §5→§6 + 步⑤ 5→6 → AC1/AC4/AC5
+- [ ] T2 改 `milestone-schema §7.4`：步④两态 + §5→§6 → AC2/AC5
+- [ ] T3 改 `context-persistence §冷启动一致性自检`：加第 6 条（条件 + 核法）→ AC3/AC5
+- [ ] T4 改 `lifecycle §收口` + `versioning-schema §切版自检`：5→6 同步 → AC4
+- [ ] T5 翻 `project-digest-schema §6/§9` R3 指针（待→已）→ AC6
+- [ ] T6 自检：`grep` 全仓 5→6 无残留 + §5→§6 已修 + git status 证明未越 R5/R6/R8 → AC4/AC7/AC8
+- [ ] T7 P5 独立复核子 agent（两态兼容 + 计数守恒 + scope 边界 + 预研保真）
 
-# Verification Plan
+# Test / Verify Strategy
 
-- AC1–AC6: 读改写后正文逐条核要素 + 对预研设计保真。
-- AC7: 读 §9 前向指针 + `git status --short` 证明 iteration-schema/milestone-schema/context-persistence/mcv-deployment/migrations/.ai/PROJECT.md 结构未在改动集。
-- AC8: 读 frontmatter + 骨架 + README 描述行；`git status` 核文件集=schema + README + .ai 台账，无 rename、无越界。
-- P5 独立复核逐 AC + 预研保真 + scope 边界 + 对抗探测（越界改 R3/R5 / 伪强制折叠 / 密度自相矛盾 / 历史层复活 / topic 自创未拍板）。
+- 全 AC 属文档类：读改后正文确认要素齐 + `/usr/bin/grep` 核计数守恒（`auto·可靠`，确定性可复现）。
+- 关键对抗核：模拟 butler 自身（单文件）走新收口步④ + 第 6 不变量，确认命中"单文件暂态/N/A"分支、不假红、不悬空。
+- `git status --short` 证明改动集=6 规则文件 + `.ai/` 台账 + PROJECT.md，无 rename、未触 `mcv-deployment`/`migrations/`/`VERSION`、`context-persistence` 读序第一读未改。
 
-# Risks / Open Questions
+# Risks / Rollback
 
-- **伪强制风险**：§6 折叠模型若读成"已强制"→ DD2 明标"R3 接线"+ 独立复核核。
-- **暂态不一致**：文件夹契约 vs 自身单文件 PROJECT.md → DD6 §1/§9 说清、butler R8 适配。
-- **越界风险**：改写时手滑改了 R3/R5 文件 → DD4 前向指针 + T3 `git status` 兜底。
-- 已定：topic 集照预研 §7；折叠只声明强制留 R3；文件不 rename。
+- 风险：5→6 漏改一处 → T6 全仓 grep 兜底。
+- 风险：两态漏写单文件分支 → AC5 + P5 专项。
+- 回滚：全为文本增量改动，`git checkout -- <file>` 可逐文件回退；未切版、未动 hook/桥。

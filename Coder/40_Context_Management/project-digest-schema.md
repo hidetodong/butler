@@ -6,7 +6,7 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 
 # project-digest-schema（.ai/project/ 知识文件夹格式契约）
 
-本文件是 `.ai/project/` 知识文件夹的唯一结构契约。何时把改动折叠进来由 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的收口步负责；冷启动如何读由 `context-persistence.md §6` 负责（这两处的强制化与读序切换是 MILE-0003 后续路线项，见 §9）。
+本文件是 `.ai/project/` 知识文件夹的唯一结构契约。何时把改动折叠进来由 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的收口步负责（折叠**已由 MILE-0003 R3 接线为强制**，见 §6/§9）；冷启动如何读由 `context-persistence.md §6` 负责（第一读切到 `00_INDEX` 是后续路线项 R5，见 §9）。
 
 > 文件名沿用旧名 `project-digest-schema.md`（"digest" 是它单文件时代的叫法）；内容本轮已从"单文件薄摘要"升级为"知识文件夹"。不改名是为了不让全仓 5+ 处引用它的地方失效（最小改动定位，见 `30_Quality_Gate/implementation-discipline.md`）。
 
@@ -92,14 +92,14 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 
 其余写作口径（讲人话、不啰嗦、分层渐进展开）以 `20_Workflow_Lifecycle/artifact-style.md` 为准（单一来源，不在此重复）。状态取向自检：每写一条先问"这是现在仍成立的整体事实，还是一次变更 / 一个断点？"——后两者分别归 `ITERATIONS` / `handoff`，不写进知识文件夹。
 
-## 6. 折叠维护模型（声明；强制接线见 §9 R3）
+## 6. 折叠维护模型（已接线为收口仪式，见 §9 R3）
 
 知识文件夹靠"**部分喂养整体**"保持既新又不腐：**整体** = `.ai/project/`（当前真相全貌）；**部分** = 每个迭代的 `CHANGELOG`（ADD/EDIT/DELETE 增量）。收口时把本迭代的 delta **按主题路由折进对应主题文件**——不是重写整个文件夹，是**定向折叠**。写代码 = 记"改了什么"，收口 = 把"改了什么"折进"现在是什么"。
 
 - **形态**：overwrite 当前结论（改动落在它该在的主题文件里），不堆历史层。
 - **成本可控**：delta 已在 `CHANGELOG` 记好、绑 AC，折叠是**路由**不是重推导——成本正比于**本迭代改动量**，**不**正比于文件夹大小。
 
-> 本 §只**声明**折叠模型（该怎么维护）。把它变成"**每次收口必做**"（泛化 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的前滚步）+ 加一条"知识文件夹漂移自检"不变量（文件夹 vs 现实脱节就报出来，扩冷启动一致性自检）——这套**强制接线是 MILE-0003 R3**，本 schema 不实现（见 §9）。在 R3 接线前，折叠仍按现有"收口按需前滚"执行，不构成"要求了却没人强制"。
+> 本 §声明折叠模型（该怎么维护）；其**强制接线已由 MILE-0003 R3 落地**：收口步④已泛化为"文件夹态按主题**必做**折叠 / 单文件暂态按需前滚"（`20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4`），冷启动一致性自检已加**第 6 条"知识文件夹漂移自检"**（`context-persistence.md §冷启动一致性自检`，条件不变量、单文件项目 N/A）。故采用知识文件夹的项目每次收口**必**折叠 delta 并自检漂移——不再是"要求了却没人强制"。
 
 ## 7. 受控扩展登记
 
@@ -144,8 +144,8 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 - 本文件负责 `.ai/project/` 的**结构与写作契约**。
 - `20_Workflow_Lifecycle/artifact-style.md`：字段正文通用书写口径（讲人话 / 反啰嗦 / 分层），单一来源。
 - `handoff-spec.md`（`02_SESSION_HANDOFF.md`）：瞬时断点入口，与本文件互补、不重叠。
-- **前向指针（后续路线项，本轮 R2 不实现）**：
-  - **R3 — 折叠强制化 + 漂移自检**：把 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的前滚从"单文件·按需"泛化为"文件夹·按主题·**必做**"，并加一条"知识文件夹漂移自检"不变量扩进冷启动一致性自检。§6 已声明模型、待 R3 接线强制。
+- **路线项接线状态（R3 已接线；R5 / R6 / R8 待实现）**：
+  - **R3 — 折叠强制化 + 漂移自检（✅ 已接线）**：`20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 收口步④ 已泛化为两态（文件夹·按主题·**必做** / 单文件暂态按需），`context-persistence.md §冷启动一致性自检` 已加**第 6 条"知识文件夹漂移自检"**（条件不变量、单文件项目 N/A）。§6 折叠模型即由此强制。
   - **R5 — 冷启动读序切换**：`context-persistence §6` 把第一读从 `.ai/PROJECT.md` 切到 `.ai/project/00_INDEX.md` + 相关主题，落 digest-and-point 读取纪律。切换前部署项目仍按现读序。
   - **R6 — 部署种子 + 迁移**：`20_Workflow_Lifecycle/mcv-deployment.md` 部署时带空的 `.ai/project/` 种子；老项目 `PROJECT.md → .ai/project/` 的迁移配方（`[rename]` + `[split]` + `[restamp]`）落 `migrations/`。
   - **R8 — butler 自身适配 + 切版**：用本 schema 把 butler 自己的 `.ai/PROJECT.md` 重写为 `.ai/project/` 并对齐现实，切版 **v2.0.0**（本次重构冷启动核心产物契约，按 semver 属 MAJOR）。

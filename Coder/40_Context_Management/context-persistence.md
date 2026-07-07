@@ -129,20 +129,21 @@ PROJECT.md 与 handoff 互补：前者给"系统整体状态"、后者给"此刻
 
 ### 冷启动一致性自检
 
-读完台账后、动手前，核对台账↔产物↔交付无漂移。部署项目的 hook 只在**写台账时**机械兜底（`single_active_iteration` 等），此自检覆盖全部漂移面、对所有项目（含不跑自身 hook 的 butler 仓）生效。发现漂移先暴露、不静默继续：
+读完台账后、动手前，核对台账↔产物↔交付↔知识文件夹无漂移。部署项目的 hook 只在**写台账时**机械兜底（`single_active_iteration` 等），此自检覆盖全部漂移面、对所有项目（含不跑自身 hook 的 butler 仓）生效。发现漂移先暴露、不静默继续：
 
 1. **current ↔ 状态**：`current` 指向的迭代号，其台账行须为 `active`；`current: none` 时台账无 `active` 行。
 2. **至多一个 active**：`ITERATIONS.md` 至多一行 `active`（多于一行 = 上一迭代未收口就开新）。
 3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且 `deliveries/<链接>` 文件存在。
 4. **closed 有归档**：每个 `closed` 行须有 `iterations/ITER-NNNN/` 归档快照。
 5. **路线项对账**：`MILESTONE.md` 拆分路线图各路线项状态与其绑定迭代的实际台账状态一致（见 `20_Workflow_Lifecycle/milestone-schema.md §5.3`）。
+6. **知识文件夹漂移自检**（条件不变量：**项目采用 `.ai/project/` 知识文件夹时适用**；仍单文件 `.ai/PROJECT.md` 的项目本条 N/A）：`.ai/project/` 内容与现实无脱节——近期各 `iterations/ITER-NNNN/CHANGELOG.md` 的 delta 都已按主题折进对应 topic 文件、无被取代结论残留、无"该建未建"的主题缺口；脱节先暴露、当场补折，不放任"陈旧的完整"（`project-digest-schema.md §2` 最大风险）。核法为人工 / prompt 级抽查（非自动化脚本），折叠契约见 `project-digest-schema.md §6`。
 
-这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）：收口后立即自检，确保本轮没把台账 / 产物 / 交付改漂。
+前 5 条是台账↔产物↔交付的对账，第 6 条是知识文件夹↔现实的对账。这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）：收口后立即自检，确保本轮没把台账 / 产物 / 交付 / 知识文件夹改漂。
 
 ## 7. 与其他规则的关系
 
 - 本规则负责"何时写、写什么、写到哪"。
 - `handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的格式契约。
-- `project-digest-schema.md` 负责 `.ai/PROJECT.md`（项目状态全貌、冷启动第一读）的格式契约；其前滚维护在收口步触发（`20_Workflow_Lifecycle/iteration-schema.md §5.5`）。
+- `project-digest-schema.md` 负责项目全貌产物（`.ai/project/` 知识文件夹契约；采用前的单文件 `.ai/PROJECT.md` 属未迁移暂态、冷启动第一读）的格式；其前滚维护在收口步以两态触发（`20_Workflow_Lifecycle/iteration-schema.md §5.5` 步④），漂移由本节第 6 不变量兜底。
 - `20_Workflow_Lifecycle/progressive-handoff.md` 负责"长链路任务何时拆分与接力"。
 - `role-switch.md` 负责角色切换时的职责边界。
