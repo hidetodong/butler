@@ -6,7 +6,7 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 
 # project-digest-schema（.ai/project/ 知识文件夹格式契约）
 
-本文件是 `.ai/project/` 知识文件夹的唯一结构契约。何时把改动折叠进来由 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的收口步负责（折叠**已由 MILE-0003 R3 接线为强制**，见 §6/§9）；冷启动如何读由 `context-persistence.md §6` 负责（第一读切到 `00_INDEX` 是后续路线项 R5，见 §9）。
+本文件是 `.ai/project/` 知识文件夹的唯一结构契约。何时把改动折叠进来由 `20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 的收口步负责（折叠**已由 MILE-0003 R3 接线为强制**，见 §6/§9）；冷启动如何读由 `context-persistence.md §6` 负责（第一读**已由 MILE-0003 R5 接线为两态**：采用 `.ai/project/` 的项目先读 `00_INDEX` + 按需主题、仍单文件的项目读 `.ai/PROJECT.md`，见 §9）。
 
 > 文件名沿用旧名 `project-digest-schema.md`（"digest" 是它单文件时代的叫法）；内容本轮已从"单文件薄摘要"升级为"知识文件夹"。不改名是为了不让全仓 5+ 处引用它的地方失效（最小改动定位，见 `30_Quality_Gate/implementation-discipline.md`）。
 
@@ -144,9 +144,9 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 - 本文件负责 `.ai/project/` 的**结构与写作契约**。
 - `20_Workflow_Lifecycle/artifact-style.md`：字段正文通用书写口径（讲人话 / 反啰嗦 / 分层），单一来源。
 - `handoff-spec.md`（`02_SESSION_HANDOFF.md`）：瞬时断点入口，与本文件互补、不重叠。
-- **路线项接线状态（R3 已接线；R5 / R6 / R8 待实现）**：
+- **路线项接线状态（R3 / R5 已接线；R6 / R8 待实现）**：
   - **R3 — 折叠强制化 + 漂移自检（✅ 已接线）**：`20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 收口步④ 已泛化为两态（文件夹·按主题·**必做** / 单文件暂态按需），`context-persistence.md §冷启动一致性自检` 已加**第 6 条"知识文件夹漂移自检"**（条件不变量、单文件项目 N/A）。§6 折叠模型即由此强制。
-  - **R5 — 冷启动读序切换**：`context-persistence §6` 把第一读从 `.ai/PROJECT.md` 切到 `.ai/project/00_INDEX.md` + 相关主题，落 digest-and-point 读取纪律。切换前部署项目仍按现读序。
+  - **R5 — 冷启动读序切换（✅ 已接线）**：`context-persistence.md §冷启动读序` 第 1 项已泛化为**两态**——采用 `.ai/project/` 的项目第一读 `.ai/project/00_INDEX.md` + 按需相关主题（落 digest-and-point 读侧纪律：读地图 → 按需钻主题 → 指针钻代码，不 slurp），仍单文件 `.ai/PROJECT.md` 的项目（未迁移暂态）第一读 `.ai/PROJECT.md`。单文件分支保证 R6/R8 未落地前含 butler 自身在内的单文件项目冷启动不踩空。
   - **R6 — 部署种子 + 迁移**：`20_Workflow_Lifecycle/mcv-deployment.md` 部署时带空的 `.ai/project/` 种子；老项目 `PROJECT.md → .ai/project/` 的迁移配方（`[rename]` + `[split]` + `[restamp]`）落 `migrations/`。
   - **R8 — butler 自身适配 + 切版**：用本 schema 把 butler 自己的 `.ai/PROJECT.md` 重写为 `.ai/project/` 并对齐现实，切版 **v2.0.0**（本次重构冷启动核心产物契约，按 semver 属 MAJOR）。
 - **暂态说明**：本 schema 定的是"项目采用知识文件夹时的契约"；butler 仓自身的 `.ai/PROJECT.md` 在 R8 前仍是单文件，属已知暂态、非矛盾。

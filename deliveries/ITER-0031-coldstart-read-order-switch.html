@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0031 交付总结 · 冷启动读序切换 + digest-and-point 读纪律</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>冷启动读序切换 + digest-and-point 读纪律（两态第一读）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0031</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0003 R5</span>
+        <span class="chip date">收口 2026-07-07</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R2 立了 <code>.ai/project/</code> 知识文件夹契约、R3 把折叠维护 + 漂移自检接成活跃仪式、R4 补齐了执行帮手；但<strong>冷启动到底先读哪个文件</strong>至今写死在 <code>context-persistence §冷启动读序</code> 指 <code>.ai/PROJECT.md</code>（R2/R3/R4 都明确留给 R5）。知识文件夹再全，AI 冷启动不去读 <code>00_INDEX</code> 就白搭。</li>
+        <li>R5 补这一环：把"第一读"泛化成<strong>两态</strong>——采用 <code>.ai/project/</code> 的项目先读 <code>00_INDEX</code> 拿地图、按需钻主题；仍单文件的项目照旧读 <code>.ai/PROJECT.md</code>。<strong>这是"知识地图真被用起来"的最后一段接线</strong>。<strong>边界</strong>：R6（部署种子/迁移）、R8（butler 自身迁移 + 切版）仍留后续。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong><code>context-persistence §冷启动读序</code> 第 1 项两态化</strong>（主改动）：从写死 <code>.ai/PROJECT.md</code> 拆成两个显式分支——采用 <code>.ai/project/</code> → 第一读 <code>00_INDEX.md</code> + 按需相关主题；仍单文件 <code>.ai/PROJECT.md</code>（未迁移暂态，<strong>含 butler 仓自身</strong>）→ 读 <code>.ai/PROJECT.md</code>。收尾"互补"句同步两态。</li>
+        <li><strong>读侧 digest-and-point 纪律</strong>（读侧对齐写侧）：文件夹态第一读写明"读 <code>00_INDEX</code> 拿地图 → 只钻与当前任务相关的主题（<strong>不必一次性读全部</strong>）→ 再按指针钻代码"，点明冷启动预算随文件夹越补越全仍<strong>有界</strong>（读地图 + 定向钻取，不 slurp）；写侧密度契约仍以 <code>project-digest-schema §5</code> 为真源、回指不重抄。</li>
+        <li><strong>翻 <code>project-digest-schema</code> R5 指针三处</strong>（一次齐翻，吸取 R3 曾只翻 §9 漏介绍段的教训）：介绍段 line 9 + §9 header（"R3 / R5 已接线；R6 / R8 待实现"）+ §9 R5 路线项（"✅ 已接线"+ 指向真实落点），从"待实现/后续路线项 R5"翻成已接线。</li>
+        <li><strong>README + handoff-spec 两态措辞同步</strong>（只同步措辞、不重写读序）：<code>README §读取顺序</code> 冷启动读序描述两态、仍指 <code>context-persistence §6</code> 为真源；<code>handoff-spec §1</code> "状态全貌由 <code>.ai/PROJECT.md</code> 承载"改为两态产物（单文件或 <code>.ai/project/</code> 文件夹）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>采用 <code>.ai/project/</code> 知识文件夹的项目，冷启动<strong>从此先读 <code>00_INDEX</code> 地图、按需钻主题</strong>——R2 定的文件夹读法从纸面契约变成活跃读序，知识地图真正被用起来。</li>
+        <li><strong>两态兼容是核心设计约束</strong>（同 R3、不是可选优化）：R6 部署种子 / R8 butler 迁移都没落地，此刻含 butler 仓自己在内的绝大多数项目仍是单文件 <code>.ai/PROJECT.md</code>、根本没有 <code>.ai/project/</code> 目录。冷启动读序是<strong>活规则</strong>（butler 读这些规则冷启动自己）——若把第一读<strong>无条件</strong>改成 <code>00_INDEX</code>，单文件项目会被指去读一个<strong>不存在的文件</strong>、当场踩空。故第一读一律<strong>只在项目采用 <code>.ai/project/</code> 时切到 <code>00_INDEX</code></strong>，单文件项目继续读 <code>.ai/PROJECT.md</code>、不踩空。</li>
+        <li>读纪律让冷启动预算<strong>有界</strong>：知识文件夹随项目越长越全，但冷启动只读地图 + 定向钻取、不 slurp 全部主题。</li>
+        <li>向后兼容：未加部署种子（R6）、未迁移 butler 自身实体（R8）、未改 R3 折叠必做 / 第 6 不变量、未改 <code>.ai/project/</code> 结构（R2）、未切版；未动状态机 / 四件套 / hook / 迭代里程碑双层 / <code>logic-protocol §1.1</code> 规则加载序。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（章节级，4 规则文件）：<code>40_Context_Management/context-persistence.md §冷启动读序</code>、<code>project-digest-schema.md</code>（介绍段 + §9）、<code>Coder/README.md §读取顺序</code>、<code>40_Context_Management/handoff-spec.md §1</code>。</li>
+        <li>收口前滚（本迭代自身，butler 单文件态按需）：<code>.ai/PROJECT.md</code> 两处——「冷启动读序固定」条改两态（butler 自身走单文件分支）+ 知识文件夹条 R5 指针翻已接线。</li>
+        <li>没碰（R5 边界）：<code>mcv-deployment</code> / <code>migrations/</code>（R6）、butler 自身 <code>.ai/PROJECT.md → .ai/project/</code> 实体迁移 + <code>VERSION</code> 切版（R8）、<code>presentation-protocol</code> / <code>artifact-style</code>（R7）、<code>logic-protocol §1.1</code>（SOP 规则加载序、正交）、R3 强制语义（折叠必做 / 第 6 不变量）、<code>.ai/project/</code> 结构契约。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8/8 AC 通过</strong>，全 <strong>auto·可靠</strong>（规则文档：读正文确认 + <code>git</code>/<code>grep</code> 核守恒，确定性可复现）；无人测道残余。</li>
+        <li>P5 <strong>独立复核</strong>（fresh-context 子 agent，验证者≠实现者）：<strong>核心对抗点（两态兼容）四处逐处 confirm</strong>——context-persistence / project-digest §9 / README / handoff 第一读均两态、单文件分支显式（前两处显式含 butler 自身）、全仓无一处无条件 <code>00_INDEX</code>；R5 指针三处齐翻、指真实落点；R3 折叠必做 + 第 6 不变量 + <code>logic-protocol §1.1</code> 均不在 diff（一字未动）；scope 未越 R6/R7/R8——<strong>APPROVE，0 Must Fix</strong>。</li>
+        <li>1 Should Fix（收口守门项）：<code>.ai/PROJECT.md</code> line 25 读序 + line 29 R5 指针须前滚，否则收口后 line 29 残留"R5 待接线"、line 25 与新两态规则自相矛盾——<strong>已在收口步④落地</strong>。1 Nit（不阻断）：handoff/README 单文件分支未点名 butler（语义完整、不踩空，不改）。</li>
+        <li>守恒核对：<code>git status</code> 改动集=4 改规则文件（context-persistence/project-digest-schema/README/handoff-spec）+ <code>.ai/</code> 台账 + PROJECT.md 前滚，无新增规则文件、无 rename、未触 <code>mcv</code>/<code>migrations</code>/<code>VERSION</code>/<code>logic-protocol</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>两态兼容依赖措辞纪律</strong>（承 R3）：暂态靠"文件夹态第一读 <code>00_INDEX</code> / 单文件态第一读 <code>.ai/PROJECT.md</code>"显式分支兜住；R6 部署种子 / R8 butler 迁移落地后单文件分支才逐步退场。此前任何改动误把第一读写成无条件 <code>00_INDEX</code> 即会砸单文件项目冷启动——已由本轮四处显式分支 + P5 对抗核过兜底。</li>
+        <li><strong>知识文件夹读法尚无真实项目验证</strong>：R5 定的文件夹态第一读要到 R6（部署种子建 <code>.ai/project/</code>）/ R8（butler 自身迁移）后才有真项目走这条分支；在此之前含 butler 在内所有项目都走单文件分支，文件夹态读序属"已定义未实跑"。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；MILE-0003 仍 active，剩 R6/R7/R8（v2.0.0 切版在 R8），待用户指令。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0031/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动：<code>Coder/40_Context_Management/context-persistence.md</code>、<code>project-digest-schema.md</code>、<code>handoff-spec.md</code>、<code>Coder/README.md</code></li>
+        <li>相关契约：<code>Coder/40_Context_Management/project-digest-schema.md §5</code>（写侧 digest-and-point 密度真源）、<code>§6</code>（折叠模型）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,52 +1,51 @@
 ---
 状态: ack-frozen
 ACK 日期: 2026-07-07
-迭代: ITER-0030
-里程碑: MILE-0003 R4
+迭代: ITER-0031
+里程碑: MILE-0003 R5
 ---
 
-> 监督态自驱：本迭代由用户"继续吧"委托执行（非 `/dangerous`），P1–P3 自驱、不设自审门横幅、不写 RUN_LOG；P5 起独立复核子 agent 守质量（重点：两帮手 opt-in 非强制不砸起不了子 agent 的环境 + 不改 R3 折叠必做语义 + scope 不越 R5/R6/R8 + 名册 co-edit 一致）；用户可随时叫停 / 回退（ITER-0030，2026-07-07）。
+> 监督态自驱：本迭代由用户"继续吧"委托执行（非 `/dangerous`），P1–P3 自驱、不设自审门横幅、不写 RUN_LOG；P5 起独立复核子 agent 守质量（重点：第一读切换是否两态·不砸单文件项目 + 未越 R6/R8 + 不改 R3 强制语义 + digest-and-point 读纪律落位）；用户可随时叫停 / 回退（ITER-0031，2026-07-07）。
 
 # Goal
 
-- 把帮手名册的另两个帮手（更新说明 `knowledge-fold` / 查过时 `drift-check`）补成完整中立定义 + 登记 + 接线到 R3 回路（折叠 / 漂移自检）。目标细节见 `CONCEPT.md`，不重述。
+- 把冷启动"第一读"从写死 `.ai/PROJECT.md` 泛化成两态（文件夹态先读 `00_INDEX` + 按需主题 / 单文件态读 `.ai/PROJECT.md`），并补 digest-and-point 读侧纪律。目标细节见 `CONCEPT.md`，不重述。
 
 # In Scope
 
-- 新建 `knowledge-fold.md`（更新说明帮手：收尾把 delta 折进 `.ai/project/`、只写该目录）+ `drift-check.md`（查过时帮手：抽查说明是否过时、只读）完整定义。
-- `overview.md §2` 名册表两行 🔜→✅ + 去占位；co-edit 保持总述↔定义文件一致。
-- 最小回指接线：`iteration §5.5 步④` 可唤 knowledge-fold、`context-persistence 第 6 条` 可唤 drift-check。
-- `Coder/README.md` 注册两新文件。
+- `context-persistence §冷启动读序` 第 1 项两态化 + 收尾互补句同步 + 加读侧 digest-and-point 纪律。
+- `project-digest-schema` 介绍段 + §9 的 R5 指针翻"已接线（两态）"。
+- `Coder/README.md §读取顺序` 冷启动读序描述两态化。
+- `handoff-spec §1` 状态全貌承载产物措辞两态化（仍指 context-persistence §6 为读序真源）。
 
 # Out of Scope
 
-- 不改 R3 强制语义：折叠仍是收口步④"文件夹态必做"、漂移仍是第 6 条不变量；两帮手是**推荐执行方式**，不写"必须唤帮手"。
-- 不追工具层权限硬拦（承 R1：契约约定 + G2 诚实兜底，硬拦留后续）。
-- 不做完全无人值守后台自动生成 / 自动跑（本里程碑只做"收尾唤帮手折叠"的定义 + 接线）。
-- 不碰冷启动读序第一读切换（R5）、部署种子 + 迁移（R6）、butler 自身实体迁移（R8）、说人话（R7）。
-- 不改 P1–P5 状态机 / 四件套字段 / hook / 迭代里程碑双层 / `.ai/project/` 结构 / `VERSION`。
+- 不碰 R6：`mcv-deployment`（部署仍种单文件）、`migrations/`。
+- 不碰 R8：butler 自身 `.ai/PROJECT.md → .ai/project/` 实体迁移、`VERSION` / 切版。
+- 不碰 R7：`presentation-protocol` / `artifact-style` 说人话。
+- 不改 R3 强制语义（折叠必做 / 第 6 不变量）、不改 `.ai/project/` 结构契约（R2 已定）、不改 `logic-protocol §1.1`（SOP 规则加载序、非产物冷启动序）。
+- 不动 P1–P5 状态机 / 四件套字段 / hook / 迭代里程碑双层。
 
 # Acceptance Checklist
 
-- [ ] AC1（帮手·knowledge-fold 定义）: 新建 `Coder/62_Extension_Agents/knowledge-fold.md`，含 §1 一句话 + §2 中立定义表（角色=折叠者/输入=本迭代 CHANGELOG delta + 当前 `.ai/project/`/输出=更新后的说明文件/禁止/隔离=fresh-context/**权限=只准写 `.ai/project/`**）+ §触发（每次收工且动了结构）+ §执行（按主题路由折叠、overwrite 禁历史层、承 `project-digest-schema §6`）+ §输出衔接 + §诚实兜底（回指 `overview §3` G2）；通用规矩 G1–G4 回指 overview 不重写。
-- [ ] AC2（帮手·drift-check 定义）: 新建 `Coder/62_Extension_Agents/drift-check.md`，同款结构；角色=查过时者、输入=`.ai/project/` 说明 + 真实代码、输出=哪几处对不上（漂移清单）、**权限=只看不改**、隔离=fresh-context；§触发（冷启动 / 收口抽查，接第 6 不变量）；§输出衔接（落 `.ai/references/`）；G1–G4 回指 overview。
-- [ ] AC3（名册·overview co-edit）: `overview.md §2` 名册表更新说明 / 查过时两行状态 🔜 R4 → ✅ 本轮立，"只准碰"列与定义文件权限一致；删 §2 占位说明句（"随 R4 补完整定义…占位"）；同一次编辑完成（co-edit）。
-- [ ] AC4（接线·最小回指）: `iteration-schema §5.5 步④` 文件夹态折叠处加一句"（可唤 `62_Extension_Agents/knowledge-fold.md` 帮手 fresh-context 执行）"；`context-persistence §冷启动一致性自检 第 6 条` 加一句"（可唤 `62_Extension_Agents/drift-check.md` 帮手抽查）"；两处**折叠必做 / 漂移强制**语义保持不变（未被改写成"必须唤帮手"）。
-- [ ] AC5（定位·不下发 + opt-in）: 两帮手定义只在 `62_Extension_Agents/`、无下发到项目的动作；接线措辞为"可唤 / 推荐"非"必须"；两定义 §诚实兜底均回指 G2（起不了子 agent 则主线做并如实标注"未由帮手执行"，绝不假称）。
-- [ ] AC6（规矩·权限约定单源）: 两帮手权限声明（knowledge-fold 只写 `.ai/project/` / drift-check 只读）与 overview 名册表"只准碰"列一致；G1–G4 只回指 `overview §3`、不在两定义里重写；本轮无工具层硬拦（契约约定 + G2）。
-- [ ] AC7（边界·不越 R5/R6/R8 + 不改 R3 语义）: R3 的收口步④"文件夹态必做折叠"与第 6 不变量的强制性未被削弱（只加"可唤帮手"选项）；`context-persistence §冷启动读序` 第一读仍 `.ai/PROJECT.md`（未切 00_INDEX）；`mcv-deployment` / `migrations/` / `VERSION` 未改；butler 自身 `.ai/PROJECT.md` 仍单文件；`git status` 证明。
-- [ ] AC8（合规·守恒·注册）: 两新文件 frontmatter 标 audience/scope；措辞必须/不得/应、中文说明英文标识符、跨目录引用带目录前缀、增量不 renumber overview 既有节；`Coder/README.md` 注册两文件（目录树 + 分文件说明）；名册自检 3 帮手 ↔ 3 定义文件 ↔ 权限一致（overview §5）；`git status` 改动集=2 新增 + overview/iteration/context-persistence/README + `.ai/` 台账，无 rename、无计划外文件。
+- [ ] AC1（读序·两态第一读）: `context-persistence §冷启动读序` 第 1 项由写死 `.ai/PROJECT.md` 改为**两态分支**——采用 `.ai/project/` 的项目第一读 `00_INDEX.md` + 按需相关主题；仍单文件 `.ai/PROJECT.md` 的项目（未迁移暂态）第一读 `.ai/PROJECT.md`。两分支均标明"冷启动第一读"、格式指 `project-digest-schema.md`。
+- [ ] AC2（读序·digest-and-point 读纪律）: 文件夹态第一读处写明读侧纪律——读 `00_INDEX` 拿全貌与地图 → 按当前任务需要钻相关主题文件（**不必一次性读全部主题**）→ 再按指针钻代码；点明冷启动预算随之有界（读地图 + 定向钻取，不 slurp 整个文件夹）。
+- [ ] AC3（读序·互补句同步）: `§冷启动读序` 收尾"PROJECT.md 与 handoff 互补"句改为两态措辞（项目全貌产物无论单文件或文件夹，均与 handoff 互补：前者给系统整体状态、后者给此刻断点），不残留只提 `.ai/PROJECT.md` 的单文件中心表述。
+- [ ] AC4（指针·翻 R5 已接线）: `project-digest-schema` 介绍段（"第一读切到 `00_INDEX` 是后续路线项 R5"）+ §9 R5 路线项 + §9 header（"R3 已接线；R5/R6/R8 待实现"）翻为"读序切换已由 R5 接线（两态）"；指向真实落点（`context-persistence §冷启动读序` 两态第 1 项），R6/R8 仍标待实现。
+- [ ] AC5（同步·README 读序）: `Coder/README.md §读取顺序` 冷启动读序描述改两态（文件夹态 `00_INDEX` + 按需主题 / 单文件态 `.ai/PROJECT.md`），仍指 `context-persistence.md §6` 为读序细节真源。
+- [ ] AC6（顺修·handoff-spec 措辞）: `handoff-spec §1` "项目的状态全貌由 `.ai/PROJECT.md` 承载"改为两态产物措辞（单文件 `.ai/PROJECT.md` 或 `.ai/project/` 知识文件夹），仍指 `context-persistence §6` 为冷启动读序真源、不在此重写读序。
+- [ ] AC7（边界·不越 R6/R8/R7 + 不改 R3 语义）: R3 折叠必做 / 第 6 不变量强制性未被改动；`.ai/project/` 结构契约（R2）未改；`mcv-deployment` / `migrations/` / `VERSION` 未改；`logic-protocol §1.1` 未改；butler 自身 `.ai/PROJECT.md` 仍单文件（只字段前滚、未拆文件夹）；`git status` 证明。
+- [ ] AC8（合规·守恒·两态兼容）: 措辞必须/不得/应、中文说明英文标识符、跨目录引用带目录前缀、增量不 renumber 既有节；两态第一读的**单文件分支显式保留**（模拟 butler 自身冷启动仍走 `.ai/PROJECT.md`、不被指向不存在的 `00_INDEX`）；`.ai/PROJECT.md` 收口前滚两处（读序两态 + R5 指针）；`git status` 改动集=4 改规则文件（context-persistence/project-digest-schema/README/handoff-spec）+ `.ai/` 台账，无新增规则文件、无 rename、无计划外文件。
 
 # Verification Method
 
-- AC1–AC2: 逐条读两新定义文件确认要素齐（六项中立定义 + 触发 + 执行 + 衔接 + 兜底）、格式与 `independent-review.md` 对齐、权限正确。
-- AC3/AC6: 读 `overview.md §2` 名册表核状态/权限一致、占位句已删；grep 两帮手文件确认 G1–G4 回指不重写。
-- AC4/AC5/AC7: 读 iteration/context-persistence 两处回指确认"可唤"措辞 + R3 强制语义未变；`git status --short` 证明未触 R5/R6/R8 目标（读序第一读 / mcv / migrations / VERSION / butler PROJECT.md 结构）。
-- AC8: 读 frontmatter + README 注册 + overview §5 名册自检（3↔3↔权限）；`git status` 核改动集守恒、无 rename。
-- 全程 P5 起独立复核（fresh-context 子 agent，验证者≠实现者）：逐 AC + 预研保真 + 对抗探测（帮手写成"必须唤"砸无子 agent 环境 / 削弱 R3 折叠必做 / 越界 R5/R6/R8 / 权限声明与名册表不一致 / G1–G4 被重写破坏单源 / 帮手定义暗含下发）。
+- AC1–AC3: 逐条读改后 `context-persistence §冷启动读序` 正文，确认第 1 项两分支齐、读侧 digest-and-point 纪律在、互补句两态。
+- AC4/AC5/AC6: 读 `project-digest-schema` 介绍段/§9、`README §读取顺序`、`handoff-spec §1`，确认 R5 指针翻已接线、README/handoff 两态措辞、指向真源不重写读序。
+- AC7/AC8: `git status --short` 证明未触 `mcv-deployment`/`migrations/`/`VERSION`/`logic-protocol`、butler `.ai/project/` 不存在（仍单文件）；grep R3 强制语义（折叠"必做" / 第 6 不变量）未被本轮改动；模拟单文件项目走单文件分支无踩空；改动集守恒、无 rename、无新增规则文件。
+- 全程 P5 起独立复核（fresh-context 子 agent，验证者≠实现者）：逐 AC + 预研保真 + 对抗探测（第一读写成无条件 `00_INDEX` 砸单文件项目 / 漏一态 / 越界改 R6 部署或 R8 迁移或切版 / 误改 R3 强制语义 / digest-and-point 读纪律缺失 / R5 指针伪翻未指真实落点）。
 
 # Open Questions / Risks
 
-- 风险：接线措辞若写成"必须唤帮手折叠"，会让起不了子 agent 的环境卡死收口——AC4/AC5 专项核"可唤"+ G2 兜底。
-- 风险：两帮手权限声明与名册表"只准碰"列漂移——AC6 + overview §5 名册自检兜底。
-- 已定（承 CONCEPT）：折叠必做（R3）不变、唤帮手 opt-in；权限靠约定 + G2（硬拦留后续）；不越 R5/R6/R8。
+- 风险（make-or-break）：第一读若写成无条件 `00_INDEX`，会砸掉含 butler 自身在内所有单文件项目的冷启动（指向不存在文件）——AC1/AC8 专项核两态分支 + 单文件分支显式保留。
+- 风险：R5 指针只翻一半（§9 翻了、介绍段没翻，同 R3 曾漏 line 9）——AC4 专项核介绍段 + §9 + header 三处齐翻。
+- 已定（承 CONCEPT）：两态纪律与 R3 收口步④/第 6 不变量同源；不越 R6/R8/R7；不改 R3 强制语义与 `.ai/project/` 结构。

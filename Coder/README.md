@@ -128,7 +128,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 
-冷启动 / clean-slate 重启时，先读项目 `.ai/PROJECT.md`（状态全貌、系统现在整体是什么）建立认知，再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节见 `40_Context_Management/context-persistence.md §6`。
+冷启动 / clean-slate 重启时，先读项目**状态全貌产物**（系统现在整体是什么）建立认知——两态：采用 `.ai/project/` 知识文件夹的项目先读 `.ai/project/00_INDEX.md` 拿地图、按需钻相关主题；仍单文件的项目读 `.ai/PROJECT.md`。再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节（含两态第一读与 digest-and-point 读纪律）见 `40_Context_Management/context-persistence.md §6`。
 
 其中：
 

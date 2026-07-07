@@ -1,44 +1,47 @@
-> 分流: 完整 | 命中升级信号: 新增契约文件、多文件改动、设计取舍（帮手强制度 / 接线粒度）| 2026-07-07 | MILE-0003 R4
+# 冷启动读序切换 + digest-and-point 读纪律（两态第一读）
 
-# 一句话
+> 分流：完整迭代（P1–P5）· ITER-0031 · MILE-0003 R5 · 监督态自驱（用户"继续吧"委托，非 /dangerous）
 
-R1 把帮手名册骨架立起来了（`62_Extension_Agents/overview.md` 总述 + 复核帮手 `independent-review.md`），名册表里"更新说明""查过时"两行还是 🔜 R4 占位。这一迭代把这两个帮手**补成完整定义并接线**：**更新说明**（`knowledge-fold`）= 收尾时把本迭代 delta 折进 `.ai/project/` 知识文件夹；**查过时**（`drift-check`）= 冷启动 / 收口时对着真实代码抽查说明有没有过时。两者都接到 R3 刚建的回路上——knowledge-fold 接收口步④折叠、drift-check 接第 6 条漂移自检。**定位**：折叠本身 R3 已定为**必做**，这两个帮手是"**推荐唤起的 fresh-context 专职帮手**"（避免主线跑完迭代快没精力时顺手折叠 / 自查，质量差、说明过时）——opt-in 增强、非强制，同复核帮手。
+## 一句话
 
-# Goal
+把冷启动"第一读"从写死的 `.ai/PROJECT.md` 泛化成**两态**：采用 `.ai/project/` 知识文件夹的项目先读 `00_INDEX.md` 拿地图、再按需钻主题（digest-and-point 读纪律）；仍单文件的项目照旧读 `.ai/PROJECT.md`——把 R2 定的文件夹读法接成活跃读序，且**不砸**任何还没迁移的项目。
 
-- G1 新建 `Coder/62_Extension_Agents/knowledge-fold.md`（更新说明帮手完整定义，镜像 `independent-review.md` 格式：角色/输入/输出/禁止/隔离/权限 + 触发 + 执行 + 输出衔接 + 诚实兜底）；**权限=只准写 `.ai/project/`**，别的不碰。
-- G2 新建 `Coder/62_Extension_Agents/drift-check.md`（查过时帮手完整定义，同款格式）；**权限=只看不改**（读 + 搜，输出"哪几处对不上"）。
-- G3 `overview.md §2` 名册表：更新说明 / 查过时两行状态 🔜 R4 → ✅ 本轮立；去掉 §2 占位说明句（co-edit：同一次编辑改总述 + 两定义文件）。
-- G4 接线到 R3 回路（最小回指）：`iteration-schema §5.5 步④` 文件夹态折叠处注明"可唤 `knowledge-fold` 帮手 fresh-context 执行"；`context-persistence §冷启动一致性自检 第 6 条` 注明"可唤 `drift-check` 帮手抽查"。折叠**必做**语义（R3）不变，唤帮手是推荐执行方式。
-- G5 `Coder/README.md` 注册两新文件（目录树 + 分文件说明）。
-- G6 两帮手回指 `overview.md §3` 通用规矩 G1–G4（干净上下文 / 叫不起来如实说 / 权限约定 / 中立定义），不重写；权限声明与名册表一致（overview §5 名册自检兜底）。
+## 为什么现在做
 
-# Current Understanding
+- R2 立了 `.ai/project/` 知识文件夹契约、R3 把折叠维护 + 漂移自检接成活跃仪式、R4 补齐了执行帮手；但**冷启动到底先读哪个文件**至今还写死在 `context-persistence §冷启动读序` 指 `.ai/PROJECT.md`（R2/R3/R4 都明确留给 R5、没碰）。知识文件夹再全，AI 冷启动不去读 `00_INDEX` 就白搭。
+- R5 就补这一环：读序第一读切成两态。**这是"知识地图真被用起来"的最后一段接线**——R6（部署种子/迁移）、R8（butler 自身迁移 + 切版）仍留后续。
 
-- **设计基准**（预研 `MILE-0003-agent-doc-design.md` §表 + §107/108）：三帮手本轮都做（R1 复核已立，R4 补更新说明 + 查过时）。更新说明"每次收工且动了结构时"把改动清单折进 `.ai/project/`、只改该目录；查过时"冷启动/收工抽查"、只看不改、报哪几处对不上。**为什么非子 agent**：Skill 在同对话跑给不了干净新脑子，检查/折叠图的就是隔离 + 避免主线疲劳。
-- **两帮手 = R3 回路的"专职执行者"**：R3 已把"收口折叠"（步④文件夹态必做）和"漂移自检"（第 6 不变量）定成规则；R4 不改这两条的**强制性**，只补"这活推荐派谁做"——knowledge-fold 做折叠、drift-check 做抽查。主线自己做也行（G2：起不了子 agent 就主线做并如实标注），但推荐 fresh-context 帮手做（质量更高）。
-- **R4 边界**（据 `.ai/MILESTONE.md` 路线图）：本轮=两帮手定义成型 + 登记 + 接线。**不碰**：冷启动读序第一读切换（R5）、部署种子 + 迁移（R6）、butler 自身实体迁移（R8）、说人话（R7）；不改 R3 折叠必做 / 第 6 不变量的强制语义；不追工具层权限硬拦（承 R1：契约约定 + G2 兜底，硬拦留后续）。
+## make-or-break：第一读切换必须两态（不是可选优化）
 
-# Constraints
+- 冷启动读序是**活规则**：每个部署项目、乃至 butler 仓自己下一次冷启动，都按它建立上下文（butler 读这些规则来接手自己）。
+- 而 R6 部署种子 / R8 butler 迁移都没落地——**此刻含 butler 在内的绝大多数项目仍是单文件 `.ai/PROJECT.md`**。
+- 若把第一读**无条件**改成 `.ai/project/00_INDEX.md`，单文件项目冷启动会被指去读一个**不存在的文件**、当场踩空。
+- 故必须两态：**采用 `.ai/project/` → 第一读 `00_INDEX.md` + 按需主题；仍单文件 → 第一读 `.ai/PROJECT.md`**。这与 R3 收口步④、第 6 不变量用的是同一套两态纪律（`iteration-schema §5.5` / `context-persistence 第 6 不变量`），保持一致。
 
-- 遵守 butler 编辑规则（`CLAUDE.md`）：新增规则文件必须在 `Coder/README.md` 注册；frontmatter 标 audience / scope；三层分工不混（帮手名册属扩展模块 62，不混入 SOP Core）。
-- **帮手不下发到项目**（承 G4 中立定义）：定义只放 `62_Extension_Agents/`，目标项目用时读、不拷副本。
-- **不改 R3 的强制语义**：折叠仍是收口步④"文件夹态必做"、漂移仍是第 6 条不变量；两帮手是"推荐执行方式"，接线用"可唤 / 推荐唤"措辞，不写成"必须唤帮手"（否则起不了子 agent 的环境会卡死收口，违 G2）。
-- **权限靠约定 + G2 诚实兜底**：knowledge-fold 只写 `.ai/project/`、drift-check 只读，写进各自定义；本轮不做工具层硬拦（可选增强、留后续）。
-- 增量编辑、不 renumber overview 既有节；文件名互引不写绝对路径、跨目录带目录前缀。
+## digest-and-point 读纪律（读侧对齐写侧）
 
-# Impact Scope
+- 写侧 digest-and-point 密度（消化过的真内容 + 指针、已有真源不复制）R2 已落 `project-digest-schema §5`；R5 补**读侧对齐**：冷启动读 `00_INDEX` 拿全貌与地图 → **按当前任务需要钻相关主题文件（不必一次性读全部主题）** → 再按指针钻代码。
+- 这样即使知识文件夹随项目越长越全，冷启动预算仍**有界**（读地图 + 定向钻取，不 slurp 整个文件夹）。
 
-- 新增：`Coder/62_Extension_Agents/knowledge-fold.md`、`Coder/62_Extension_Agents/drift-check.md`。
-- 改（章节级）：`overview.md §2`（名册表两行 + 去占位）、`iteration-schema §5.5 步④`（一句回指 knowledge-fold）、`context-persistence §冷启动一致性自检 第 6 条`（一句回指 drift-check）、`Coder/README.md`（注册两文件）。
-- 明确不影响：R3 折叠必做 / 第 6 不变量强制语义、P1–P5 状态机、四件套字段、hook、迭代/里程碑双层、`.ai/project/` 结构、冷启动读序第一读（R5）、部署种子迁移（R6）、butler 自身实体迁移（R8）、`VERSION`。
+## 做什么（G1–G4）
 
-# Project Type / Active Profiles
+- **G1 两态化第一读**（主）：`context-persistence §冷启动读序` 第 1 项从写死 `.ai/PROJECT.md` 改为两态分支（文件夹态 `00_INDEX` + 按需主题 / 单文件态 `.ai/PROJECT.md`）；收尾"互补"句同步两态措辞。加读侧 digest-and-point 纪律一句。
+- **G2 翻 R5 指针**：`project-digest-schema` 介绍段 line 9 + §9 R5 路线项 + §9 header，从"待实现/后续路线项 R5"翻成"✅ 已接线（两态）"（同 R3 翻 §6/§9 的做法）。
+- **G3 同步 README 读序**：`Coder/README.md §读取顺序` 冷启动读序描述改两态。
+- **G4 顺修 handoff-spec 单文件中心措辞**：`handoff-spec §1` "状态全貌由 `.ai/PROJECT.md` 承载"改为两态产物（单文件 `.ai/PROJECT.md` 或 `.ai/project/` 文件夹），仍指 context-persistence §6 为读序真源、不重写读序。
 
-- 项目形态：Markdown 规则仓库（butler 自身），非应用代码工程。未命中任何 `10_Domain_Stack_Profiles/`；按通用 SOP + butler 编辑约束推进。
+## 不做（边界）
 
-# Open Questions
+- 不碰 R6：`mcv-deployment`（部署仍种单文件、老项目迁移配方）、`migrations/`。
+- 不碰 R8：butler 自身 `.ai/PROJECT.md → .ai/project/` 实体迁移、切版 `VERSION`/v2.0.0。
+- 不碰 R7 说人话（`presentation-protocol` / `artifact-style`）。
+- 不改 R3 强制语义（折叠必做 / 第 6 不变量）、不改 `.ai/project/` 结构契约（R2 已定）、不改 `logic-protocol §1.1`（那是 SOP 规则加载序、与 `.ai/` 产物冷启动序无关）。
+- 不动 P1–P5 状态机 / 四件套字段 / hook / 迭代里程碑双层。
 
-- 接线粒度：iteration §5.5 步④ + context-persistence 第 6 条各加一句回指是否够？（倾向够——主接线在帮手 §3 触发，schema 侧只需一句可发现性回指，不重复帮手正文。milestone §7.4 步④ 是否也加待 P2 定，倾向由 knowledge-fold 触发覆盖收工不单独加。）
-- drift-check 输出落哪？（倾向落 `.ai/references/`，同复核帮手 `insight-*`；待 P2 定。）
-- 两帮手"推荐 vs 必须"措辞：确认 opt-in（非强制），承复核帮手先例。
+## 收口前滚（本迭代自身，butler 单文件态按需）
+
+- `.ai/PROJECT.md`：「冷启动读序固定」条改两态措辞（规则已两态、butler 自身单文件走 PROJECT.md 分支）+ 知识文件夹条 R5 指针翻已接线。
+
+## 明确不影响
+
+- R3 折叠必做 / 第 6 不变量强制语义、`.ai/project/` 结构、P1–P5 状态机、四件套字段、hook、迭代/里程碑双层、部署种子迁移（R6）、butler 实体迁移（R8）、`VERSION`、`logic-protocol §1.1` 规则加载序。
