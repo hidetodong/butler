@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0030 交付总结 · 更新说明 + 查过时两帮手定义成型 + 接线</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>更新说明 + 查过时两帮手定义成型 + 接线（帮手名册补齐至三）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0030</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0003 R4</span>
+        <span class="chip date">收口 2026-07-07</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1 立起帮手名册骨架（总述 + 复核帮手），另两个帮手（更新说明 / 查过时）只在名册表占位、等 R4 补完整定义；R3 又刚把折叠维护回路 + 冷启动漂移自检接成活跃仪式，但那套回路"谁来执行"还悬着。</li>
+        <li>R4 把另两个帮手补成完整中立定义、接到 R3 的回路上：<strong>更新说明 <code>knowledge-fold</code></strong> 接收口步④折叠、<strong>查过时 <code>drift-check</code></strong> 接冷启动/收口第 6 漂移不变量。<strong>核心定位</strong>：折叠必做（R3）不变、两帮手是<strong>推荐唤起的 fresh-context 专职执行者</strong>（避免主线刚干完活、快没精力时顺手折导致质量差、说明过时），opt-in 非强制。<strong>边界</strong>：不改 R3 强制语义、不碰读序切换（R5）/ 部署迁移（R6）/ butler 自身迁移（R8）/ 说人话（R7）。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新建更新说明帮手定义</strong> <code>Coder/62_Extension_Agents/knowledge-fold.md</code>（六段式镜像 <code>independent-review</code>）：§1 一句话 + §2 中立定义表（角色=Folder / 输入=本迭代 CHANGELOG delta + 当前 <code>.ai/project/</code> / 输出=更新后 topic 文件 overwrite 禁历史层 / 禁止=改 <code>.ai/project/</code> 外 · 叠历史 · 凭空编 · 逐字复制 / 隔离=fresh-context G1 / <strong>权限=只准写 <code>.ai/project/</code></strong>）+ §3 触发（收口步④文件夹态、折叠必做时推荐唤）+ §4 定向折叠路由（承 <code>project-digest-schema §6</code>）+ §5 输出衔接 + §6 诚实兜底（回指 G2）。</li>
+        <li><strong>新建查过时帮手定义</strong> <code>Coder/62_Extension_Agents/drift-check.md</code>（同款六段）：角色=Checker（<strong>不是</strong> Folder）/ 输入=<code>.ai/project/</code> + 真实代码 + 近期 CHANGELOG delta / 输出=<strong>漂移清单</strong>（哪几处对不上、哪条 delta 漏折、有无被取代结论残留，带证据指针）/ <strong>权限=只读</strong> / 隔离=fresh-context；§3 触发接第 6 不变量（冷启动/收口抽查、单文件项目 N/A）；§5 漂移清单落 <code>.ai/references/insight-drift-check.md</code>（同复核帮手 <code>insight-*</code> 命名族）。</li>
+        <li><strong><code>overview.md §2</code> 名册表 co-edit</strong>：更新说明 / 查过时两行状态 🔜 R4 落地 → ✅ 本轮立，"只准碰"列与定义文件权限逐字一致；删占位说明句、替换为三帮手接线摘要句。名册从"1 已立 + 2 占位"成"<strong>3 帮手均完整定义</strong>"。</li>
+        <li><strong>最小回指接线</strong>（只加可发现性、不重复正文）：<code>iteration §5.5 步④</code> 文件夹态折叠句加"推荐唤 <code>knowledge-fold.md</code> 帮手 fresh-context 执行、起不了则主线自折并如实标注（G2）、不因此跳过折叠"；<code>context-persistence 第 6 不变量</code> 加"推荐唤 <code>drift-check.md</code> 帮手抽查、起不了则主线自查（G2）"。两处 R3 强制正文（折叠必做 / 第 6 不变量）未删改。</li>
+        <li><strong><code>Coder/README.md</code> 注册</strong>：目录树 <code>/62_Extension_Agents</code> 补两文件 + 分文件说明更新为"住册三帮手"（回指真源）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>帮手名册从 1 个完整帮手（复核）扩成 <strong>3 个</strong>（复核 / 更新说明 / 查过时）——R3 建好的折叠回路 + 漂移自检回路，现在都有了专职的隔离执行者定义可唤。</li>
+        <li><strong>opt-in 非强制是核心设计约束</strong>（不是随口一提）：折叠本身 R3 已定"必做"，但"谁折"必须是<strong>推荐</strong>唤帮手、<strong>不能</strong>写成"必须唤帮手"——否则起不了子 agent 的环境（含 butler 仓自己）会在收口时卡死。接线两处 + 两帮手 §诚实兜底逐处保证"推荐唤 + 起不了则主线自做并如实标注（G2）、绝不冒称已由帮手做、绝不因此跳过折叠/自检本身"。</li>
+        <li>帮手仍<strong>不下发到项目</strong>（承 R1）：定义只住 butler <code>62_Extension_Agents/</code>，目标项目用时读定义、临时起干净子 agent，不存副本、不日久漂移。权限（只写 <code>.ai/project/</code> / 只读）本轮靠<strong>契约约定 + G2 诚实兜底</strong>，工具层硬拦留后续。</li>
+        <li>向后兼容：不改 R3 折叠必做 / 第 6 不变量强制性、未切读序第一读（仍 PROJECT.md，切 00_INDEX 是 R5）、未加部署种子（R6）、未迁移 butler 自身（R8）、未切版；未动状态机 / 四件套 / hook / 迭代里程碑双层。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（2 帮手定义文件）：<code>Coder/62_Extension_Agents/knowledge-fold.md</code>、<code>drift-check.md</code>。</li>
+        <li>改（章节级，4 规则文件）：<code>62_Extension_Agents/overview.md §2</code>（名册表 co-edit）、<code>20_Workflow_Lifecycle/iteration-schema.md §5.5 步④</code>、<code>40_Context_Management/context-persistence.md 第 6 不变量</code>、<code>Coder/README.md</code>（注册）。</li>
+        <li>收口前滚（本迭代自身，单文件态按需）：<code>.ai/PROJECT.md</code> 帮手名册条——从"1 已立 + 2 占位"更新为"3 帮手均完整定义 + opt-in 非强制"。</li>
+        <li>没碰（R4 边界）：R3 强制正文（<code>iteration §5.5 步④</code> 必做折叠 / <code>context-persistence 第 6 不变量</code>）、<code>context-persistence §冷启动读序</code>第一读（R5）、<code>mcv-deployment</code> / <code>migrations/</code>（R6）、butler 自身 <code>.ai/PROJECT.md → .ai/project/</code> 实体迁移（R8）、<code>presentation-protocol</code> / <code>artifact-style</code>（R7）、<code>VERSION</code>、状态机 / 四件套 / hook。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8/8 AC 通过</strong>，全 <strong>auto·可靠</strong>（规则文档：读正文确认 + <code>git</code>/<code>grep</code> 核守恒，确定性可复现）；无人测道残余。</li>
+        <li>P5 <strong>独立复核</strong>（fresh-context 子 agent，验证者≠实现者）：<strong>核心对抗点（opt-in 非强制）逐处过关</strong>——接线 2 处 + 两帮手 §诚实兜底 2 处均"推荐唤"非"必须唤"、G2 兜底在；全仓 <code>grep 必须唤\|强制唤\|必须起</code> 0 命中；R3"必做"计数未减；G1–G4 两文件 0 重写（只回指 overview §3）；权限声明与名册表逐字一致；scope 未越 R5/R6/R8——<strong>APPROVE，0 Must Fix、0 Should Fix</strong>。</li>
+        <li>1 Nit（不阻断）：drift-check §5 输出落点文件名 <code>insight-drift-check.md</code> 系实现者自拟（AC 只说"落 <code>.ai/references/</code>"），与复核帮手 <code>insight-independent-review.md</code> 同族、命名合理，无需改。</li>
+        <li>守恒核对：<code>git status</code> 改动集=2 新增 + <code>overview</code>/<code>iteration</code>/<code>context-persistence</code>/<code>README</code> + <code>.ai/</code> 台账，无 rename、无越界（<code>mcv</code>/<code>migrations</code>/<code>VERSION</code>/butler <code>.ai/project/</code> 均未触）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>opt-in 措辞依赖纪律</strong>：折叠必做（R3）不变、"谁折"是推荐唤帮手；靠"推荐唤 + 起不了主线自做（G2）、绝不跳过折叠/自检本身"的显式兜底兜住无子 agent 环境。后续改动若误把某处写成"必须唤帮手"即会砸起不了子 agent 的环境收口——已由本轮两处"推荐"措辞 + 两 §诚实兜底 + P5 对抗核过兜底，属受控。</li>
+        <li><strong>权限本轮靠约定 + G2</strong>（承 R1）：knowledge-fold 只写 <code>.ai/project/</code> / drift-check 只读是契约约定、无工具层硬拦；硬拦留后续可选增强。</li>
+        <li>收口非 hook 门禁，butler 仓不 live 跑自己的 hook（既有设计约束）；本迭代不新增 hook 需求。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；MILE-0003 仍 active，剩 R5/R6/R7/R8（v2.0.0 切版在 R8），待用户指令。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0030/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>新增：<code>Coder/62_Extension_Agents/knowledge-fold.md</code>、<code>drift-check.md</code></li>
+        <li>改动：<code>Coder/62_Extension_Agents/overview.md</code>、<code>Coder/20_Workflow_Lifecycle/iteration-schema.md</code>、<code>Coder/40_Context_Management/context-persistence.md</code>、<code>Coder/README.md</code></li>
+        <li>设计基准（预研，未追踪）：<code>docs/research/MILE-0003-agent-doc-design.md</code>（更新说明 / 查过时两帮手职责 + 权限表）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0030 | R4 更新说明 + 查过时两帮手定义成型 + 接线：新建 62_Extension_Agents/knowledge-fold.md（收尾把 delta 折进 .ai/project/、只写该目录）+ drift-check.md（冷启动/收口抽查说明过时、只读）+ overview 名册表两行转 ✅ + 最小回指接线（iteration §5.5 步④ / context-persistence 第 6 条）+ README 注册；两帮手 opt-in 非强制、不改 R3 折叠必做语义 | closed | 2026-07-07 | 2026-07-07 | MILE-0003 | deliveries/ITER-0030-fold-drift-helpers.md |
 | ITER-0029 | R3 维护回路接线：泛化收口步④为两态（文件夹态按主题必做折叠 / 单文件暂态前滚，iteration §5.5 + milestone §7.4）+ 冷启动一致性自检加第 6 条知识文件夹漂移（条件适用）+ 全仓 5→6 计数同步 + 顺修 R2 遗留 §5→§6 引用漂移 + 翻 project-digest §6/§9 R3 指针 | closed | 2026-07-07 | 2026-07-07 | MILE-0003 | deliveries/ITER-0029-maintenance-loop-wiring.md |
 | ITER-0028 | R2 知识文件夹 schema：改写 project-digest-schema 为 .ai/project/ 文件夹契约（00_INDEX 入口 + 推荐 topic 集 + 每份边界 + digest-and-point 密度 + 折叠模型声明 + 受控扩展）；哲学切换薄索引→知识地图，强制折叠/读序/迁移/自身适配留 R3/R5/R6/R8 | closed | 2026-07-06 | 2026-07-07 | MILE-0003 | deliveries/ITER-0028-knowledge-folder-schema.md |
 | ITER-0027 | 吸纳最小实现纪律：新建 Coder/30_Quality_Gate/implementation-discipline.md（最小实现阶梯 + 有意简化标记 + 修根因不修症状 + 不许偷懒边界）+ rule-card 压缩条 + correction-contract 互引 + README 注册（素材取自 ponytail、用 butler 话重写、独立迭代） | closed | 2026-07-06 | 2026-07-06 | — | deliveries/ITER-0027-implementation-discipline.md |

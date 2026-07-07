@@ -136,7 +136,7 @@ PROJECT.md 与 handoff 互补：前者给"系统整体状态"、后者给"此刻
 3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且 `deliveries/<链接>` 文件存在。
 4. **closed 有归档**：每个 `closed` 行须有 `iterations/ITER-NNNN/` 归档快照。
 5. **路线项对账**：`MILESTONE.md` 拆分路线图各路线项状态与其绑定迭代的实际台账状态一致（见 `20_Workflow_Lifecycle/milestone-schema.md §5.3`）。
-6. **知识文件夹漂移自检**（条件不变量：**项目采用 `.ai/project/` 知识文件夹时适用**；仍单文件 `.ai/PROJECT.md` 的项目本条 N/A）：`.ai/project/` 内容与现实无脱节——近期各 `iterations/ITER-NNNN/CHANGELOG.md` 的 delta 都已按主题折进对应 topic 文件、无被取代结论残留、无"该建未建"的主题缺口；脱节先暴露、当场补折，不放任"陈旧的完整"（`project-digest-schema.md §2` 最大风险）。核法为人工 / prompt 级抽查（非自动化脚本），折叠契约见 `project-digest-schema.md §6`。
+6. **知识文件夹漂移自检**（条件不变量：**项目采用 `.ai/project/` 知识文件夹时适用**；仍单文件 `.ai/PROJECT.md` 的项目本条 N/A）：`.ai/project/` 内容与现实无脱节——近期各 `iterations/ITER-NNNN/CHANGELOG.md` 的 delta 都已按主题折进对应 topic 文件、无被取代结论残留、无"该建未建"的主题缺口；脱节先暴露、当场补折，不放任"陈旧的完整"（`project-digest-schema.md §2` 最大风险）。核法为人工 / prompt 级抽查（非自动化脚本）——推荐唤 `62_Extension_Agents/drift-check.md` 帮手 fresh-context 隔离执行、起不了则主线自查并如实标注（G2）；折叠契约见 `project-digest-schema.md §6`。
 
 前 5 条是台账↔产物↔交付的对账，第 6 条是知识文件夹↔现实的对账。这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）：收口后立即自检，确保本轮没把台账 / 产物 / 交付 / 知识文件夹改漂。
 

@@ -122,7 +122,7 @@ current: ITER-0002
   2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`；全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据（已归档切片不再留在全局文件）。
   4. **前滚项目全貌产物**（两态，按项目是否已采用 `.ai/project/` 知识文件夹分支）：
-     - **已采用 `.ai/project/` 知识文件夹**：把本迭代 `01_CHANGELOG.md` 的 ADD/EDIT/DELETE **按主题路由折进对应 topic 文件**（identity / architecture / invariants / …），**必做**——有对象级 delta 即折，不再"按需"。当前真相 overwrite 旧结论、被取代内容删除不叠（禁历史层）；是定向路由不是重写全份，成本 ∝ 本迭代改动量、不 ∝ 文件夹大小。判据与格式见 `40_Context_Management/project-digest-schema.md §6`（折叠维护模型）。
+     - **已采用 `.ai/project/` 知识文件夹**：把本迭代 `01_CHANGELOG.md` 的 ADD/EDIT/DELETE **按主题路由折进对应 topic 文件**（identity / architecture / invariants / …），**必做**——有对象级 delta 即折，不再"按需"。当前真相 overwrite 旧结论、被取代内容删除不叠（禁历史层）；是定向路由不是重写全份，成本 ∝ 本迭代改动量、不 ∝ 文件夹大小。判据与格式见 `40_Context_Management/project-digest-schema.md §6`（折叠维护模型）。折叠**必做**，"谁折"推荐唤 `62_Extension_Agents/knowledge-fold.md` 帮手 fresh-context 执行（避免主线疲劳顺手折质量差）；起不了子 agent 则主线自折并如实标注（G2），不因此跳过折叠。
      - **仍单文件 `.ai/PROJECT.md`**（未迁移暂态，含尚未部署知识文件夹种子的项目）：本迭代若改变了某条长期事实（架构 / 不变量 / 现行约束 / 长期欠债）才更新对应字段，否则不动（多数迭代只动 0-2 行或不动）。迁移到知识文件夹的时机见 `40_Context_Management/project-digest-schema.md §9`（部署种子 R6 / 自身适配 R8）。
   5. **收口自检**（原子仪式最后一步）：跑 `40_Context_Management/context-persistence.md` §冷启动一致性自检的 6 条不变量（current↔状态 / 至多一个 active / closed 有交付 / closed 有归档 / 路线项对账 / 知识文件夹漂移[第 6 条条件不变量，采用 `.ai/project/` 的项目适用、单文件暂态 N/A]），确认台账↔产物↔交付↔知识文件夹无漂移；有漂移当场修正，不留待冷启动才发现。
 - 收口后工作区四件套保留原位（作为最近一迭代的只读残影），直到下一迭代开启时被 §5.1 整体覆写；其权威副本以 `iterations/ITER-NNNN/` 为准。

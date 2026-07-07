@@ -1,14 +1,15 @@
-> 无活跃迭代 · 上一收口 ITER-0029（2026-07-07）
+> 无活跃迭代 · dormant · —
 
-本文件是**当前活跃迭代**的对象级变更流（ADD/EDIT/DELETE）。当前无活跃迭代——上一迭代 ITER-0029 已收口，其变更流已归档至 `iterations/ITER-0029/CHANGELOG.md`。
-
-开启下一迭代（P3 起产生对象级改动）时，按 `Coder/20_Workflow_Lifecycle/changelog-schema.md` 重写本文件：顶部 `> <标题> · active · —`，三段 `## ADD` / `## EDIT` / `## DELETE`（严格三类，空写"无"不省段）。
+本文件是**当前活跃迭代**的对象级变更流（ADD/EDIT/DELETE）。当前无活跃迭代（`ITERATIONS.current: none`）——开新迭代时重写本文件头 + 清空下列分节，收口时归档至 `iterations/ITER-NNNN/CHANGELOG.md`。上一迭代 ITER-0030 的切片见 `iterations/ITER-0030/CHANGELOG.md`。
 
 ## ADD
-- 无
+
+- （待开新迭代）
 
 ## EDIT
-- 无
+
+- （待开新迭代）
 
 ## DELETE
-- 无
+
+- （待开新迭代）
