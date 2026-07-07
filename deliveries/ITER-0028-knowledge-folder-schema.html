@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0028 交付总结 · 项目知识文件夹 schema（薄索引 → 知识地图）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>项目知识文件夹 schema（薄索引 → 知识地图）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0028</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0003 R2</span>
+        <span class="chip date">收口 2026-07-07</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>冷启动"整体"产物一直是 <code>.ai/PROJECT.md</code>——一份 ≤1500 tokens 的<strong>薄索引</strong>（几个关键词 + "细节看代码"），AI 读完并不真知道"项目里有什么"，容易沦为"报几个关键词假装体系有用"。MILE-0003 R2 把它的格式契约 <code>project-digest-schema.md</code> 整篇改写为 <code>.ai/project/</code> <strong>知识文件夹</strong>契约：AI 读完就真懂项目、且随迭代越补越全。</li>
+        <li>R2 边界：<strong>只定 schema 文档</strong>。强制折叠接线 / 冷启动读序切换 / 部署迁移 / butler 自身适配都是后续路线项（R3/R5/R6/R8），本轮用前向指针标注、不实现。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p><strong>整篇改写 <code>Coder/40_Context_Management/project-digest-schema.md</code></strong>（单文件薄索引契约 → 知识文件夹契约，文件名不改以免破坏全仓 5+ 处引用）：</p>
+      <ul>
+        <li><strong>§1 定位</strong>：<code>.ai/project/</code> = 按主题分文件的常驻知识地图、整体/积分取向、冷启动第一读 <code>00_INDEX</code>；保留四产物边界表（project/ vs ITERATIONS vs handoff vs MILESTONE）。</li>
+        <li><strong>§2 核心哲学</strong>：钉三条<strong>矛盾消解</strong>——①完整=广度覆盖≠细节深度（地图≠疆域）②完整≠变长（overwrite 当前真相、禁历史层、被取代内容删除不叠）③知识地图（要完整）≠ harness 机器（要精简）正交；点名<strong>最大风险</strong>"陈旧的完整比诚实的薄更毒"。</li>
+        <li><strong>§3 结构 + <code>00_INDEX</code> 契约 + 推荐核心 topic 集</strong>：<code>00_INDEX</code>（一段话讲清项目 + 读序/地图 + 主题登记表）+ 七份推荐核心主题（identity/architecture/capabilities/invariants/constraints/debt/frontier，可受控扩展）。</li>
+        <li><strong>§4 每份边界</strong>：有界、能一次整篇读完、满则拆新文件；体积∝项目复杂度、不∝迭代数。</li>
+        <li><strong>§5 写作密度 digest-and-point</strong>：名 + 它到底干什么 + 真源指针；已有真源不逐字抄（只摘全貌 + 补现状/成熟度 + 指针）；配 architecture.md 校准样例。</li>
+        <li><strong>§6 折叠维护模型</strong>：声明"收口时本迭代 delta 按主题路由折进对应文件、overwrite、成本∝改动量"；<strong>明确标注</strong>强制化 + 漂移自检的接线由 <strong>R3</strong> 落、本 schema 只声明不实现——不制造"要求了却没强制"的假象。</li>
+        <li><strong>§7 受控扩展登记</strong> + <strong>§8 模板骨架</strong>（00_INDEX + topic 骨架）+ <strong>§9 关系</strong>（R3/R5/R6/R8 前向指针）。</li>
+      </ul>
+      <p><strong>改准 <code>Coder/README.md</code></strong> 对本 schema 的分文件描述行（单文件 → 知识文件夹契约）。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>冷启动"整体"产物的<strong>目标形态</strong>从"薄索引"翻转为"随迭代越补越全、读完真懂的知识地图"——这是一次有意的哲学切换（反转旧的 ≤1500t / 指针化 / 按需微调三条价值），换"真能用"、代价是更高维护纪律。</li>
+        <li>用户现在能看到一份<strong>可照着建知识文件夹的契约</strong>：建哪些主题文件、<code>00_INDEX</code> 写什么、每份写多满、密度什么标准、收口怎么折叠。</li>
+        <li><strong>但本轮只是 schema</strong>：真正让文件夹落地并保持不腐的强制折叠（R3）、冷启动改读它（R5）、部署/迁移带上它（R6）、butler 自己用起来（R8）都还没接线——已用前向指针如实标注。</li>
+        <li>向后兼容：<code>.ai/PROJECT.md</code> 自身仍是单文件（R8 才适配），schema 定为"项目采用知识文件夹时的契约"，暂态并存、非矛盾；未动状态机 / 四件套 schema / hook / 迭代里程碑双层 / <code>VERSION</code>；文件未 rename。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（整篇）：<code>Coder/40_Context_Management/project-digest-schema.md</code>。</li>
+        <li>改（描述行）：<code>Coder/README.md</code>（分文件说明 project-digest-schema 一行）。</li>
+        <li>收口前滚：<code>.ai/PROJECT.md</code> 关键长期决策与不变量加"知识文件夹产物契约升级"一条。</li>
+        <li>没碰（R2 边界）：<code>iteration-schema.md §5.5</code> / <code>milestone-schema.md §7.4</code>（强制折叠=R3）、<code>context-persistence.md §6</code>（读序切换=R5）、<code>mcv-deployment.md</code> / <code>migrations/</code>（部署种子+迁移=R6）、<code>.ai/PROJECT.md</code> 结构（butler 自身适配=R8）；P1–P5 状态机 / 四件套 schema / hook / 桥代码 / <code>VERSION</code> / 根 <code>CHANGELOG.md</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8/8 AC 通过</strong>，全 <strong>auto·可靠</strong>（规则文档：读正文确认 + <code>git status</code> / grep 核守恒，确定性可复现）；无人测道残余。</li>
+        <li>P5 <strong>独立复核</strong>（fresh-context 子 agent，验证者≠实现者）：逐 AC <strong>8 confirm</strong>、预研保真核对、对抗探测 4 项（越界改 R3/R5/R6 文件 / 折叠模型伪强制 / 密度口径自相矛盾 / 历史层复活）全 negative——<strong>APPROVE-WITH-NITS，0 Must Fix、0 false-green</strong>。</li>
+        <li>Nit <strong>已就地修</strong>：跨目录引用前缀不一致（iteration-schema / milestone-schema / mcv-deployment 补 <code>20_Workflow_Lifecycle/</code> 前缀，同目录 handoff-spec 反向去前缀、context-persistence 裸名保留）；<code>implementation-discipline</code> 锚点去 §4 改指整篇。</li>
+        <li>守恒核对：<code>git status</code> 改动集=2 规则文件（schema + README）+ <code>.ai/</code> 台账，无 rename、未触 R3/R5/R6/R8 目标文件与 <code>.ai/PROJECT.md</code> 结构。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>陈旧的完整比诚实的薄更毒</strong>（最大风险）：schema 已声明折叠模型对冲，但<strong>机器强制 + 漂移自检在 R3</strong>——R2 收口到 R3 落地前，折叠靠人工"收口按需前滚"，属已知阶段性缺口（§6 已如实标注，非伪绿）。</li>
+        <li>butler 自身 <code>.ai/PROJECT.md</code> 仍单文件、R8 才 dogfood，暂态并存。</li>
+        <li>本轮按惯例收口即提交，<strong>未推送、未切版</strong>；MILE-0003 仍 active，剩 R3–R8（v2.0.0 切版在 R8），待用户指令。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0028/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动：<code>Coder/40_Context_Management/project-digest-schema.md</code>、<code>Coder/README.md</code></li>
+        <li>设计基准（预研，未追踪）：<code>docs/research/MILE-0003-project-knowledge-folder.html</code>（§4/§5/§7）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

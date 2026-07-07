@@ -26,6 +26,7 @@ butler 是一套面向 AI 辅助工程开发的通用协作 SOP **规则仓库**
 - **收口是原子仪式**：`iteration-schema §5.5` 五步——①归档四件套+changelog切片 ②交付 md+html ③翻台账+收编 01_CHANGELOG ④按需前滚 PROJECT ⑤收口自检；前三必做、缺一不可，末步强制自检。
 - **每迭代对象级变更流**：`01_CHANGELOG.md` 记本迭代 ADD/EDIT/DELETE（绑 AC、文件+章节级），收口归档 `iterations/ITER-NNNN/CHANGELOG.md`（见 `changelog-schema.md`）；Review/自评的 Should Fix 归 `VERIFY_REPORT.md` 的 Remaining Risks，不入 changelog。
 - **帮手名册（MILE-0003 R1 起）**：butler 派出去的"帮手"= 一份中立定义资料、用时读、临时起干净子 agent 执行、**不下发到项目**；总述 `62_Extension_Agents/overview.md` 是名册与通用规矩 G1–G4（干净上下文 / 叫不起来如实说·绝不假装做过 / 权限约定 / 定义资料用时读不下发）的**唯一真源**，各引用点回指不双写。当前住册：复核 `independent-review`（已立）；更新说明 / 查过时（占位，R4）。复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源，名册只管"把流程放进隔离上下文跑"的专有部分。
+- **冷启动全貌产物契约升级为知识文件夹（MILE-0003 R2 起）**：`project-digest-schema.md` 已把冷启动"整体"产物从单文件薄索引（≤1500t、指针化、按需微调）改写为 `.ai/project/` 知识文件夹契约（`00_INDEX` 入口 + 推荐主题集 + digest-and-point 密度 + 收口折叠模型；哲学=越补越全的知识地图、overwrite 禁历史层）。**折叠强制化 + 漂移自检=R3、冷启动读序切换=R5、部署种子+迁移=R6、butler 自身 `.ai/PROJECT.md → .ai/project/` 适配 + 切 v2.0.0=R8，均未接线**；故 butler 仓自身当前仍用单文件 `.ai/PROJECT.md`（本文件），属 R8 前已知暂态、与新契约并存非矛盾。
 
 ## 现行约束
 

@@ -150,7 +150,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的字段与最小模板，在基地车部署的本地化适配步骤产出；它也是**项目级 butler 功能开关的统一持久落点**——「Butler 功能开关」段（`dangerous` / `independent_review` 默认 off、`preference` 默认 on）承载持久模式状态，AI 会话起始读取并据此执行、命令回写或用户手改（§4.1）；其中 `preference` 是 **per-project 抑制开关**（本项目采集闸），consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
-- `40_Context_Management/project-digest-schema.md` 定义 `.ai/PROJECT.md`（项目常驻全貌摘要、状态取向）的格式契约——字段、有界、指针化、收口前滚维护与四产物边界；它是冷启动第一读。
+- `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、推荐主题集、每份边界、digest-and-point 写作密度、收口折叠维护模型与四产物边界；它是冷启动第一读。（文件名沿用旧名 project-digest-schema；内容已从单文件薄索引升级为知识文件夹。）
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认触发同上下文简要自评；**独立复核（opt-in·fresh-context 子 agent·验证者≠实现者）**由手动 `/review` 或项目 `.ai/local-constraints.md` 的 `Review Policy: independent_review: on` 触发，spec-only 输入逐 AC 独立核对作者断言（refute 即阻断收口）。
 - `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` 是复核帮手完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、帮手文件回指它。当前只落复核，"更新说明""查过时"随 MILE-0003 R4 补。
