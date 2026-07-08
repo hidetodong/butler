@@ -1,46 +1,36 @@
-# VERIFY_REPORT — ITER-0033（MILE-0003 R7）
+# VERIFY_REPORT — ITER-0034（MILE-0003 R8 · dogfood 迁 .ai/project/ + 切 v2.0.0）
 
-> 监督态自驱（非 `/dangerous`）· 全为规则文档改动，验证=读改后正文确认 + `git diff`/`git grep` 核守恒，确定性可复现（**auto·可靠**）· 无人测道残余。
+> 监督态自驱（非 `/dangerous`）· 全为规则 / 文档 / 台账改动，验证=读产物核契约 + `git`/`grep` 核守恒 + dogfood 冷启动走查，确定性可复现（**auto·可靠**）· 无人测道残余（纯文档、无运行时）。分段A（AC1–9、16–17，本报告已验）+ 段B（AC10–15，切版时补验）。
 
-## 验收结果（逐 AC）
+## 段A 验收结果（逐 AC · auto·可靠）
 
-- [x] **AC1 ✓** `artifact-style §2` 已改写为「说人话三条硬标准」，三条各有名字 + 一句话判据（术语先解释 / 比喻要落地 / 别让英文·变量裸奔），line 17 声明"跨对话与文档通则"、line 19 声明"单一真源"；line 28 交叉引用 §4.3 去重、不冗余。
-- [x] **AC2 ✓** `git grep "比喻\|类比" HEAD -- Coder/ templates/` pre-R7 零命中——"比喻要落地"确为全仓新增，非旧条改名。
-- [x] **AC3 ✓** frontmatter `scope`（line 4）+ §1（line 11）从"四件套字段正文"扩到"所有面向人落地文档"，明列四件套 + 交付总结 + 知识文件夹 + handoff；旧"仅四件套"被取代非并列。
-- [x] **AC4 ✓** §8（line 122）从"收口前自检"扩为"发长文 / 收口前自检"，含逐条扫三条 + 保留反啰嗦/超 2 层嵌套检查，适用所有面向人长文档。
-- [x] **AC5 ✓** `presentation-protocol` 新 §7（line 55–61）只引用 `artifact-style §2`、显式"不重述定义"；三条完整定义 header 仅在 artifact-style 出现（git grep 证）。顺移编号后引用全解析、无悬空：(见 §9)、§3–§7 均对，旧 (见 §8)/§3-§6(指本文件) 已清；line 69/73/76 的 §8 均指外部 `delivery-summary §8`（非本文件节号）。
-- [x] **AC6 ✓** `rule-card.md` 对话条 + 产物条均同步收录三条、标"真源 artifact-style §2"、压缩不新增语义、与 §2 不漂移。
-- [x] **AC7 ✓** `README` line 105（presentation-protocol 条增说人话应用）+ line 146（artifact-style 条改"面向人落地文档 + 三条真源"），两处与改后文件自洽。
-- [x] **AC8 ✓** `git status` 改动集=4 规则文件（artifact-style / presentation-protocol / rule-card / README）+ `.ai/` 台账与四件套 + `.ai/PROJECT.md` 前滚；无 `identity`/`delivery-summary`/四 schema/hook/`VERSION`/`CHANGELOG`/rename（`^R`=0）/`migrations/` 新增 / R2·R3·R5·R6 目标语义改动。
-- [x] **AC9 ✓** dogfood 扫查已跑（见下）；四件套自身命中的反面词逐条改过。
+- [x] **AC1 ✓** `.ai/project/00_INDEX.md` 已建，含 R2 §8 入口三块：一段话"butler 是什么"+ 读序地图（7 条"想知道 X → 读 Y"）+ 主题登记表（7 主题各一行 = 文件名 + 管什么 + 边界）。
+- [x] **AC2 ✓** 7 主题文件全建（`identity`/`architecture`/`capabilities`/`invariants`/`constraints`/`debt`/`frontier`）。旧单文件 6 段无遗漏迁入：目的→`identity`、架构→`architecture`、不变量→`invariants`、约束→`constraints`、欠债→`debt`、指针→`00_INDEX` 读序 + 各主题指针；R2 新增两层 `capabilities`（命令 / P1–P5 SOP / 驻留工具 / 帮手）+ `frontier`（v2.0.0 在即 + MILE-0003 收尾 + 下一瓶颈）从现状新写。
+- [x] **AC3 ✓** 密度守 digest-and-point（名 + 干什么 + 指针），每份有界可整篇读完。`architecture` 只摘三层全貌 + 补"成熟度"层（真源没有的现状），目录树 / 各规则一句话职责显式指 `Coder/README.md` 不抄；`capabilities` 引擎细节指各扩展模块。无一主题整段搬真源。
+- [x] **AC4 ✓** 迁入内容守 R7 说人话（术语先解释 / 无悬空比喻 / 英文变量首现带解释）；各主题只承载当前真相、无历史层（overwrite 语义）。
+- [x] **AC5 ✓** `.ai/PROJECT.md` 已删（`git status` 显 `D`）。`.ai/project/` 内引用 PROJECT.md 仅 2 处且合法：`frontier.md`（"从 PROJECT.md 迁走"的历史叙述）、`invariants.md`（"单文件老项目读 PROJECT.md"的通用规则）——**非** butler 自身全貌产物的踩空活引用。
+- [x] **AC6 ✓** `.ai/task-state.md` 冷启动入口改 `.ai/project/00_INDEX.md`、butler 自身描述转"文件夹态"。
+- [x] **AC7 ✓** 对齐现实 3 处，单文件分支逻辑**保留**（红线守住）：`mcv-deployment.md §2`（"R6 前部署尚未迁移的老项目"，去 butler 自身）、`context-persistence.md §6`（单文件分支去 butler、注"butler 走文件夹分支"）、`project-digest-schema.md §9`（R8 待→已接线 ITER-0034 + line 149/152 两态并存说明）。`milestone-schema` grep 无"含 butler 单文件"命中、无需动。
+- [x] **AC8 ✓** README 为通用规则描述（两态分支都在、不点 butler 自身现状），核对无需改。
+- [x] **AC9 ✓（dogfood 走查通过）** ①从 `00_INDEX` 登记表可定位任一主题、7 登记 = 7 实际文件（对账一致）；②`git grep --untracked` 证 `.ai/project/` 无指向已删 `PROJECT.md` 的踩空自引用（2 处合法）、其余指针真源（README/各 schema/HUMAN_GUIDE/CLAUDE.md）均存在；③第 6 不变量（知识文件夹漂移）对 butler 自身转适用，主题从当前现实新写、当轮不漂移。
 
-## dogfood 自检（AC9）
+## scope 守恒（AC16）
 
-- 独立复核抽查四件套，命中标准一自列的反面词 3 项，逐条改：
-  - `BLUF`（CONCEPT / AC_LIST）→ 改"结论先行"。
-  - `fresh-context 子 agent`（TECH_PLAN）→ 改"干净上下文的子 agent[不带本轮记忆去复核]"。
-  - `dogfood`（CONCEPT / AC_LIST / TECH_PLAN）→ 首现加"自己先照做"大白话解释。
-- 命中即改，改后四件套自身守三条；本 VERIFY + 交付总结同守三条书写。
+- [x] **AC16 ✓** `git status` 段A 改动集 = `.ai/project/`（新 8 文件）+ `.ai/PROJECT.md`（删）+ `.ai/` 四件套与台账 + 3 规则文件对齐（`mcv-deployment`/`context-persistence`/`project-digest-schema`）。**无** VERSION/CHANGELOG/migrations（段B）、**无** hook 代码 / 四件套字段结构 / 两态分支逻辑 / R2·R3·R5·R7 定义 / `Learner`·`Composer` / rename 改动。
 
-## 独立复核（P5·验证者≠实现者）
+## dogfood 说人话自检（AC17）
 
-- 干净上下文子 agent 对抗式逐 AC 核对：初判 **REQUEST-CHANGES**，2 条 Must Fix 均为"收口步该做未做"——MF1（VERIFY 未写 R7）、MF2（四件套 dogfood 反面词未改）；规则改动本身 AC1–AC8 全 confirm。
-- 对抗点全过：**单一来源真单一**（三条完整定义只在 `artifact-style §2` 一处、别处均引用或压缩指针）、**§7 边界矛盾已消解**（`artifact-style §7` line 119 从"不管对话层"收窄为"不管对话层呈现结构" + 显式例外挑明三条为跨层通则）。
-- MF1（本 VERIFY）/ MF2（dogfood 反面词已改）已在本收口步修复，复核放行。
+- [x] **AC17 ✓** 四件套 + `.ai/project/` 8 文件 + （交付于收口产）按 R7 三条自检：术语（digest-and-point / dogfood / 冷启动 / 两态 / 折叠）首现均有一句话解释或比喻落地；英文标识（`00_INDEX` / `[split]` / `$BUTLER` / `single_active_iteration`）首现带上下文；无悬空比喻。
 
-## scope 守恒（守恒核对）
+## 段B 待验（切版时补，AC10–15）
 
-- `git status` 改动集与 AC8 列名一致；`^R`（rename）=0；`migrations/` 零新增；`VERSION`/`CHANGELOG` 未动（切版属 R8）；hook 未动。
-- **未越界**：`identity.md` 未触、`delivery-summary.md` 字段与散文定性未动、四件套字段结构（四 schema）未动、R2 `.ai/project/` 结构契约 / R3 折叠语义 / R5 读序 / R6 部署迁移目标均未触。
-- 6 不变量自检（收口仪式第 5 步）：butler 自身仍单文件态、第 6 条知识文件夹漂移 N/A；其余 5 条随收口翻台账时一并核过（current↔状态 / 至多一 active / closed 有交付 / closed 有归档 / 路线项对账）。
+- [ ] AC10 VERSION 2.0.0 + MAJOR 判级 / AC11 CHANGELOG [2.0.0] 聚合 / AC12 `migrations/v2.0.0.md`（`[split]`+`[regen-claude]`+`[restamp]` 幂等）/ AC13 收口 MILE-0003 / AC14 两提交分离 / AC15 切版前后一致性 + tag 用户放行。
 
-## 已知剩余风险 / 延后事项
+## 独立复核
 
-- 说人话三条落规则层已定、可自检；真正"输出更好懂"要靠后续每次迭代照做 + 收口自检兜底（书写质量不做 hook 机械门禁，见 `artifact-style §7`）。
-- 本轮按惯例收口即提交，**未推送、未切版**；MILE-0003 仍 active，剩 R8（butler 自身 dogfood 迁 `.ai/project/` + 切 v2.0.0），待用户指令。
+- **结论 APPROVE**（干净上下文子 agent、验证者≠实现者、只读、对抗式）。逐条核过 7 个对抗重点：迁移无遗漏（旧 6 段全进新 7 主题）/ 不逐字抄真源（`architecture` 回指 README 不搬目录、`capabilities` 不搬引擎正文）/ 单文件分支逻辑未误删（红线守住）/ 指针不踩空（无指向已删 `PROJECT.md` 的活引用）/ `00_INDEX` 三块齐 + 登记表对账 / 说人话无裸奔黑话 / scope 守恒无越界。**无 Must Fix、无 Should Fix。**
 
-## 引用（只引用路径，不嵌全文）
+## Remaining Risks
 
-- 归档四件套 + 切片：`.ai/iterations/ITER-0033/CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` / `CHANGELOG.md`
-- 改动：`Coder/20_Workflow_Lifecycle/artifact-style.md`、`Coder/00_System_Prompt/presentation-protocol.md`、`templates/rule-card.md`、`Coder/README.md`
-- 相关契约：`artifact-style.md §2`（说人话三条真源）、`presentation-protocol.md §7`（对话层引用）
+- 段B `git tag v2.0.0` 不可逆、对外发布锚点——执行前须用户明确放行（AC15 闸）。
+- `/butler-upgrade` 仍未真跑（既存欠债，见 `debt.md`），本轮产的 `migrations/v2.0.0.md` `[split]` 配方首次真实老项目端到端验证仍悬。

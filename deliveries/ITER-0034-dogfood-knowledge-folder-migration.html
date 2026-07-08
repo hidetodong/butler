@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0034 交付总结 · butler 自身 dogfood：单文件迁知识文件夹（.ai/project/）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>butler 自身 dogfood：单文件迁知识文件夹（.ai/project/）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0034 段A</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-08</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>MILE-0003 前七轮（R1–R7）把知识文件夹的一整套规则——契约、维护回路、冷启动读序、部署种子、迁移配方、帮手名册、说人话——全给<strong>别的项目</strong>建好了，但 butler <strong>自己</strong>还在用旧的单文件 <code>.ai/PROJECT.md</code>（一份一千多字的薄索引）。规则从没在真实项目上验证过。</li>
+        <li>R8 让 butler 拿自己当第一个真实用户（这就是"dogfood"，自己吃自己做的狗粮）：按 R2 契约把自身全貌产物迁成 <code>.ai/project/</code> 知识文件夹、对齐全仓"butler 还是单文件"的旧说法。<strong>段A（本交付）只做迁移 + 对齐</strong>；聚合切 v2.0.0、收口整个里程碑是随后的独立发布段（段B），切版不可逆、单独等用户放行。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>建起 <code>.ai/project/</code> 知识文件夹（8 个文件）</strong>：
+          <ul>
+            <li><code>00_INDEX.md</code> 入口——一段话讲清 butler 是什么 + 冷启动读序地图（想知道 X 就读哪份）+ 7 主题登记表。</li>
+            <li>7 个主题文件：<code>identity</code>（定位）/ <code>architecture</code>（三层模块地图）/ <code>capabilities</code>（现在能做的命令、SOP、工具）/ <code>invariants</code>（不能碰的长期决策）/ <code>constraints</code>（干活的硬边界）/ <code>debt</code>（欠债）/ <code>frontier</code>（当前在攻什么、下一个瓶颈）。</li>
+            <li>旧单文件 6 段无遗漏迁入，并补上 R2 契约新增的两层——<code>capabilities</code>（旧薄索引根本没有的"现在到底能干什么"清单）和 <code>frontier</code>（变得最快的那层）。</li>
+          </ul>
+        </li>
+        <li><strong>删掉旧单文件 <code>.ai/PROJECT.md</code></strong>：内容已按主题拆走，这一步就是迁移配方里 <code>[split]</code>（把一份切成一个文件夹）动作作用在 butler 自己身上。</li>
+        <li><strong>对齐现实（把"butler 还是单文件"的旧说法翻新）</strong>：改了 3 处规则文件里拿 butler 自身当"单文件例子"的地方（部署协议 <code>mcv-deployment §2</code>、冷启动读序 <code>context-persistence §6</code>、知识文件夹契约 <code>project-digest-schema §9</code> 的路线状态），标明 butler 已转文件夹态。</li>
+        <li><strong>红线守住</strong>：两态规则（"用文件夹的项目这样读、还用单文件的项目那样读"）的<strong>单文件分支逻辑一行没删</strong>——R6 之前部署的老项目仍然是单文件，规则得继续支持它们；这次只是把 butler 自己从"单文件例子"里挪出来，不是砍掉单文件支持。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>butler 冷启动方式变了</strong>：以后 AI 从零接手 butler 仓，第一读不再是那份薄索引，而是 <code>.ai/project/00_INDEX.md</code>——先拿地图，再按手头任务钻相关主题，不用一次性读完整个项目摘要。</li>
+        <li><strong>知识文件夹设计第一次真实落地</strong>：R2–R6 都是纸面规则，这次 butler 自己吃下去，验证了"AI 迁完能不能真读懂自己"。独立复核确认：从入口出发能定位到任一主题、指针不踩空。</li>
+        <li><strong>butler 从此进入"漂移自检"范围</strong>：迁成文件夹态后，一致性自检第 6 条（知识文件夹和真实代码有没有脱节）对 butler 自身开始生效，每次收口按主题折叠新变化。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（<code>.ai/project/</code> 8 文件）：<code>00_INDEX</code> + 7 主题。</li>
+        <li>删除：<code>.ai/PROJECT.md</code>（迁走）。</li>
+        <li>改（3 个规则文件对齐 butler 自身现状，分支逻辑不动）：<code>mcv-deployment.md §2</code>、<code>context-persistence.md §6</code>、<code>project-digest-schema.md §9</code>；<code>.ai/task-state.md</code> 冷启动入口。</li>
+        <li>没碰（守边界）：两态规则的单文件分支逻辑、知识文件夹结构契约（R2）/ 折叠语义（R3）/ 读序逻辑（R5）/ 说人话定义（R7）、hook 代码、四件套字段结构、<code>Learner</code>/<code>Composer</code>、无任何改名；<strong>VERSION / CHANGELOG / migrations 属发布段（段B），本段不碰</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>段A 11 项验收（AC1–9、AC16–17）全过</strong>，全 <strong>auto·可靠</strong>（规则 / 文档 / 台账：读产物核契约 + <code>git</code>/<code>grep</code> 核守恒 + dogfood 冷启动走查，确定性可复现）；无人测残余（纯文档、无运行时）。</li>
+        <li><strong>独立复核 APPROVE、零 Must Fix</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式挑毛病）：迁移无遗漏、<code>architecture</code> 只摘全貌不抄 README 目录树、单文件分支逻辑未误删、指针不踩空、<code>00_INDEX</code> 三块齐 + 登记表对账、说人话无裸奔黑话、scope 无越界。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>段B（v2.0.0 切版）待用户放行</strong>：VERSION 1.7.0→2.0.0（大版本，因冷启动核心产物契约破坏性重构）+ CHANGELOG 聚合 + <code>migrations/v2.0.0.md</code> 配方实例 + 收口 MILE-0003 + <code>git tag v2.0.0</code>。tag 不可逆、对外发布锚点，单独等放行。</li>
+        <li><strong><code>/butler-upgrade</code> 仍未真跑</strong>（既存欠债，见 <code>.ai/project/debt.md</code>）：本轮迁移就是段B <code>migrations/v2.0.0.md</code> 的 <code>[split]</code> 配方要覆盖的场景，但真实老项目端到端升级验证仍悬着。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0034/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>新增产物：<code>.ai/project/00_INDEX.md</code> + <code>identity/architecture/capabilities/invariants/constraints/debt/frontier.md</code></li>
+        <li>对齐改动：<code>Coder/20_Workflow_Lifecycle/mcv-deployment.md §2</code>、<code>Coder/40_Context_Management/context-persistence.md §6</code>、<code>Coder/40_Context_Management/project-digest-schema.md §9</code></li>
+        <li>相关契约：<code>project-digest-schema.md</code>（知识文件夹结构真源）、<code>migration-schema.md §4/§6</code>（<code>[split]</code> 配方形态）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

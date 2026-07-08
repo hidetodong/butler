@@ -144,9 +144,9 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 - 本文件负责 `.ai/project/` 的**结构与写作契约**。
 - `20_Workflow_Lifecycle/artifact-style.md`：字段正文通用书写口径（讲人话 / 反啰嗦 / 分层），单一来源。
 - `handoff-spec.md`（`02_SESSION_HANDOFF.md`）：瞬时断点入口，与本文件互补、不重叠。
-- **路线项接线状态（R3 / R5 / R6 已接线；R8 待实现）**：
+- **路线项接线状态（R3 / R5 / R6 / R8 已接线）**：
   - **R3 — 折叠强制化 + 漂移自检（✅ 已接线）**：`20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4` 收口步④ 已泛化为两态（文件夹·按主题·**必做** / 单文件暂态按需），`context-persistence.md §冷启动一致性自检` 已加**第 6 条"知识文件夹漂移自检"**（条件不变量、单文件项目 N/A）。§6 折叠模型即由此强制。
-  - **R5 — 冷启动读序切换（✅ 已接线）**：`context-persistence.md §冷启动读序` 第 1 项已泛化为**两态**——采用 `.ai/project/` 的项目第一读 `.ai/project/00_INDEX.md` + 按需相关主题（落 digest-and-point 读侧纪律：读地图 → 按需钻主题 → 指针钻代码，不 slurp），仍单文件 `.ai/PROJECT.md` 的项目（未迁移暂态）第一读 `.ai/PROJECT.md`。单文件分支保证 R6/R8 未落地前含 butler 自身在内的单文件项目冷启动不踩空。
+  - **R5 — 冷启动读序切换（✅ 已接线）**：`context-persistence.md §冷启动读序` 第 1 项已泛化为**两态**——采用 `.ai/project/` 的项目第一读 `.ai/project/00_INDEX.md` + 按需相关主题（落 digest-and-point 读侧纪律：读地图 → 按需钻主题 → 指针钻代码，不 slurp），仍单文件 `.ai/PROJECT.md` 的项目（未迁移暂态）第一读 `.ai/PROJECT.md`。单文件分支保证 R6 前部署、尚未迁移的单文件老项目冷启动不踩空（butler 自身已于 R8/ITER-0034 迁为文件夹态、走文件夹分支）。
   - **R6 — 部署种子 + 文件夹化迁移配方（✅ 规则层已接线）**：`20_Workflow_Lifecycle/mcv-deployment.md §2` 已两态化并**部署即建空 `.ai/project/` 种子**（唯一"部署即建"的 `.ai/` 子目录例外、`00_INDEX` 不 stub·首收口前滚生、冷启动键控入口文件不踩空）；`20_Workflow_Lifecycle/migration-schema.md §4` 已补 **`[split]`** typed 标签（`PROJECT.md → .ai/project/` 首例 + 起始态校验 + 冲突即停），文件夹化配方形态（`[rename]` + `[split]` + `[restamp]`）已文档化（`migration-schema.md §6`）。**注**：配方**实例** `migrations/v2.0.0.md` 仍留 R8 切版时产出（配方在切版时产，见 `migration-schema.md §6` / `versioning-schema.md §6.3` 步4）——R6 只备标签与形态、不预落实例。
-  - **R8 — butler 自身适配 + 切版**：用本 schema 把 butler 自己的 `.ai/PROJECT.md` 重写为 `.ai/project/` 并对齐现实，切版 **v2.0.0**（本次重构冷启动核心产物契约，按 semver 属 MAJOR）。
-- **暂态说明**：本 schema 定的是"项目采用知识文件夹时的契约"；butler 仓自身的 `.ai/PROJECT.md` 在 R8 前仍是单文件，属已知暂态、非矛盾。
+  - **R8 — butler 自身适配 + 切版（✅ 迁移已接线 ITER-0034）**：已用本 schema 把 butler 自己的 `.ai/PROJECT.md` 迁为 `.ai/project/`（`00_INDEX` + 7 主题）并对齐现实；切版 **v2.0.0**（本次重构冷启动核心产物契约，按 semver 属 MAJOR）随本迭代发布段落落地、收尾 MILE-0003。
+- **两态并存说明**：本 schema 定的是"项目采用知识文件夹时的契约"。butler 仓自身已于 ITER-0034 迁为 `.ai/project/` 文件夹态；单文件 `.ai/PROJECT.md` 仍是 R6 前部署、尚未迁移老项目的**受支持形态**（两态并存、非矛盾），其文件夹化由 `/butler-upgrade` 按 `migrations/v2.0.0.md` 配方执行。

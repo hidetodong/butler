@@ -1,13 +1,14 @@
 # Task State
 
-> 无活跃迭代 · dormant（`ITERATIONS.current: none`）。上一迭代 ITER-0033（MILE-0003 R7，说人话三条硬标准 + 发长文前自检）已收口。
+> 无活跃迭代 · dormant（`ITERATIONS.current: none`）。ITER-0034 段A（MILE-0003 R8 dogfood 迁 `.ai/project/` + 对齐现实）已收口。**待用户放行段B**——v2.0.0 切版 + 收口 MILE-0003。
 
 ## 当前状态
 
-- 无活跃迭代。MILE-0003 仍 active，已收 R1（ITER-0026）/R2（ITER-0028）/R3（ITER-0029）/R4（ITER-0030）/R5（ITER-0031）/R6（ITER-0032）/R7（ITER-0033），**剩 R8**（butler 自身 dogfood 迁 `.ai/project/` + 切 v2.0.0，收尾 MILE-0003 与整个大版本）。
-- 下一步待用户指令：开 R8（v2.0.0 切版，压轴）。
+- 无活跃迭代。ITER-0034 段A 已收口（`.ai/project/` 8 文件建齐、旧 `.ai/PROJECT.md` 已删、3 规则文件对齐、独立复核 APPROVE、`feat` 提交）。butler 自身**现为文件夹态**。
+- MILE-0003 仍 active——R1–R8 段A 全落，**剩段B 发布动作收尾整个里程碑与大版本**。
+- **动手闸**：段B `git tag v2.0.0` 不可逆、对外发布锚点，执行前另请用户明确放行。
 
 ## 下一步入口
 
-- 开新迭代：走 P1（CONCEPT）→ P2（AC_LIST ack-frozen）→ P3（TECH_PLAN）→ P4 → P5，绑 ITER-NNNN + 写台账 active。
-- 冷启动先读项目全貌产物（butler 自身单文件 → `.ai/PROJECT.md`）→ `.ai/ITERATIONS.md` / `.ai/MILESTONE.md` → 本文件 → 代码。
+- **段B（切 tag 前请用户放行）**：`git log v1.7.0..HEAD` 核 hooks/schema 变更 → VERSION 1.7.0→2.0.0 + CHANGELOG `[2.0.0]` 聚合 ITER-0026~0034 + 产 `migrations/v2.0.0.md`（`[split]`+`[regen-claude]`+`[restamp]`）→ 收口 MILE-0003（MILESTONE 快照 + 聚合交付 + MILESTONES closed）→ 切版前 6 不变量预检 → `chore(release)` 提交 + `git tag v2.0.0` → 切版后三处版本载体对齐。
+- 冷启动读序（butler 自身**现为文件夹态**）：`.ai/project/00_INDEX.md`（第一读，拿地图 → 按需钻主题）→ `.ai/ITERATIONS.md` / `.ai/MILESTONE.md` → 本文件 → 代码。

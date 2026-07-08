@@ -44,7 +44,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
 - **项目全貌产物**（项目常驻全貌摘要·状态取向，冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`）——**两态**（MILE-0003 R6 起）：
   - **新项目 → `.ai/project/` 知识文件夹**（部署即带空种子，见 §2）：`00_INDEX.md` 入口 + 按主题分文件。**按需产生**——首次迭代收口前滚时由更新说明帮手按 `project-digest-schema.md §8` 折叠生成，其后每次收口按主题必做折叠（`iteration-schema.md §5.5` 步④）。
-  - **单文件 `.ai/PROJECT.md`**（遗留 / 暂态形态：R6 前部署的老项目 + R8 前的 butler 仓自身）：**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。
+  - **单文件 `.ai/PROJECT.md`**（遗留 / 暂态形态：R6 前部署、尚未迁移的老项目；butler 仓自身已于 ITER-0034 迁为文件夹态，不再属此类）：**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。
   - **老项目迁移**：R6 前部署、已积累单文件 `.ai/PROJECT.md` 的老项目，其 `PROJECT.md → .ai/project/` 文件夹化由升级按 R6 迁移配方（`[rename]` + `[split]` + `[restamp]`，见 `migration-schema.md §4`）执行；实际配方实例在 butler 切版时产出（`versioning-schema.md §6.3` 步4，R8 切 v2.0.0 时落 `migrations/v2.0.0.md`）。从未产生过 `PROJECT.md` 的更老项目由升级补建：新建全貌产物并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次。
 - `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。

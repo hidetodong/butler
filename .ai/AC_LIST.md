@@ -1,31 +1,44 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-07
-迭代: ITER-0033
-里程碑: MILE-0003 R7
+ACK 日期: 2026-07-08
+迭代: ITER-0034
+里程碑: MILE-0003 R8
 ---
 
-# AC_LIST — ITER-0033（MILE-0003 R7 说人话三条硬标准 + 发长文前自检）
+# AC_LIST — ITER-0034（MILE-0003 R8 · butler 自身 dogfood 迁 .ai/project/ + 切 v2.0.0）
 
-> 监督态自驱（用户点选 R7，非 /dangerous）。验收脊柱贯穿 P4→P5；全为规则文档改动，验证=读正文确认 + `git`/`grep` 核守恒，确定性可复现（auto·可靠）。
+> 监督态自驱（用户"继续"接力，非 /dangerous）。验收脊柱贯穿 P4→P5。分**段A 迭代**（AC1–AC9，`feat` 提交）+**段B 发布**（AC10–AC15，独立 `chore(release)`，**tag 前另请用户放行**）。验证=读产物核契约 + `git`/`grep` 核守恒 + dogfood 冷启动走查，确定性可复现（auto·可靠）。
 
-## 块1 · 说人话三条硬标准（`artifact-style` 单一真源）
+## 段A · 迭代：迁自身 + 对齐现实（`feat`）
 
-- **AC1**：`artifact-style §2` 改写为「说人话三条硬标准」，三条各有名字、各带一句话可执行判据——**术语先解释**（真实对象→用名字 + 一句话解释 / 偷懒简写→换大白话；结构锚点保留）、**比喻要落地**（比喻须点明对应本任务里的具体对象、悬空即删）、**别让英文 / 变量裸奔**（英文术语 / 变量 / 函数 / 表名首现不裸奔、结构锚点例外）。三条显式声明为**跨对话与文档的通则**、`artifact-style` 为其单一真源。承接并去重现有 `§2/§4.3`，不与之矛盾或冗余重复。
-- **AC2**：「比喻要落地」是三条中**新增**内容——全仓 `grep` 现有规则无等价条款（非把旧内容改名充数）。
+### 块1 · 建 `.ai/project/` 知识文件夹（消费 R2 契约）
 
-## 块2 · scope 扩到所有面向人输出
+- **AC1**：新建 `.ai/project/00_INDEX.md`，含 R2 §8 入口三块——一段话"butler 是什么"+ 读序地图（先读哪个主题）+ 主题登记表（每主题一行：名 + 干什么 + 指针）。
+- **AC2**：按 P1 主题映射表拆出 7 份主题文件（`identity` / `architecture` / `capabilities` / `invariants` / `constraints` / `debt` / `frontier`），现单文件 `.ai/PROJECT.md` 六段内容**无遗漏**迁入，且补齐 R2 新增的 `capabilities`（现状命令 + SOP + 驻留工具）与 `frontier`（当前形态 + 下一瓶颈）两层。
+- **AC3**：密度守 R2 digest-and-point（名 + 它干什么 + 指针），每份有界；**已有真源不逐字抄**——`architecture` 摘全貌 + 补成熟度 + 指 `README`/`architecture-overview`，不复制目录树；无一主题文件把别处真源整段搬来。
+- **AC4**：迁入内容**说人话**（承 R7 三条）+ 各主题**只承载当前真相**、不留历史层（R2 overwrite 语义）。
 
-- **AC3**：`artifact-style` frontmatter 的 `scope` + `§1` 定位从"四件套字段正文"扩为"**所有面向人的落地文档**"，明列适用对象含四件套 + 交付总结正文 + 知识文件夹 + handoff 等（四件套只是其一）；旧"仅四件套"表述被取代、非并列冗余。
-- **AC4**：`artifact-style §8` 从"收口前自检（四件套）"扩为"**发长文 / 收口前自检**"——含逐条扫三条硬标准 + 保留原有反面词 / 整段重述 / 超 2 层嵌套检查，适用对象为所有面向人长文档。
+### 块2 · 删旧单文件 + 对齐现实
 
-## 块3 · 对话层引用同守（不双写）
+- **AC5**：`.ai/PROJECT.md` 删除（内容已迁 `.ai/project/`，即 `[split]` 作用于 butler 自身）；全仓无残留指向 `.ai/PROJECT.md` 作为 butler **自身**全貌产物的活引用（两态规则里"单文件项目读 `.ai/PROJECT.md`"的**通用**表述保留给老项目，不算残留）。
+- **AC6**：`.ai/task-state.md` 冷启动入口从 `.ai/PROJECT.md` 改 `.ai/project/00_INDEX.md`；butler 自身状态描述转"文件夹态"。
+- **AC7**：全仓"butler 仓自身（单文件例子 / R8 前暂态）"的括号例子对齐为"已迁移文件夹态"——含 `mcv-deployment.md`、`context-persistence.md`、`project-digest-schema.md §9`（R8 指针 待→已 + line 149/152）、`milestone-schema.md`（若点名）；**红线**：两态规则的**单文件分支逻辑保留**（老项目仍支持），只挪走 butler 自身作例。
+- **AC8**：`Coder/README.md` 中涉及 butler 自身现状 / 读序的描述对齐（若有）；无隐式依赖残留。
 
-- **AC5**：`presentation-protocol` 新增一节，声明对话层的方案 / 分析 / 较长输出同守说人话三条硬标准 + 给对话层发长文前自检；该节**只引用** `artifact-style §2` 为定义真源、**不重述**三条定义（单一来源，无双写）。`presentation-protocol` 原有呈现结构（结论先行 / 统一标号 / 表格 / 概念后置）语义不变、新节与之并列不冲突；因插节产生的内部 `§` 编号引用（如"§3–§6"）同步校正、无悬空引用。
+### 块3 · dogfood 收口自洽
 
-## 指针 / 同步 / 守恒
+- **AC9（dogfood 即验收）**：迁完后按 butler 冷启动读序走查——从 `.ai/project/00_INDEX.md` 出发能定位到任一主题、指针不踩空（无指向已删 `PROJECT.md`）、第 6 不变量（知识文件夹漂移）对 butler 自身转适用且当轮不漂移；ITER-0034 收口走**文件夹态**（收口步④按主题折叠进 `.ai/project/`，首次真实 dogfood 折叠）。VERIFY 记录走查结论。
 
-- **AC6**：`templates/rule-card.md` 的 `artifact-style` 紧凑条同步收录说人话三条（与 `§2` 一致、压缩不新增语义、不与 `§2` 漂移）。
-- **AC7**：`Coder/README.md` 目录说明两处 scope 描述同步——`presentation-protocol` 条增"说人话三条对话层应用"、`artifact-style` 条从"四件套字段正文的通用书写口径"改"面向人落地文档书写口径 + 说人话三条真源"；与改后文件自洽。
-- **AC8**：scope 守恒——改动集限于 `artifact-style.md` / `presentation-protocol.md` / `templates/rule-card.md` / `Coder/README.md` + `.ai/` 台账与四件套 + `.ai/PROJECT.md` 前滚；**无** `identity.md` 改动、**无** `delivery-summary.md` 字段 / 散文定性改动、**无**四件套字段结构改动、**无** hook / `VERSION` / `CHANGELOG` 切版、**无** R2/R3/R5 目标文件语义改动、**无** rename。
-- **AC9（dogfood·自身也照三条写）**：本迭代四件套 + 交付总结自身过说人话三条硬标准自检——收口前逐条扫、命中即改，VERIFY 记录扫查结论。
+## 段B · 发布 v2.0.0（独立 `chore(release)`，`versioning §6.3`；**tag 前请用户放行**）
+
+- **AC10**：`VERSION` 由 `1.7.0` 改 `2.0.0`；bump 级别 = **MAJOR**（理由：重写冷启动第一读 + 全貌产物契约 + 维护回路，属破坏性、要求老项目迁移，`versioning §2`）。
+- **AC11**：`CHANGELOG.md` 加 `## [2.0.0] - <日期>`，聚合 ITER-0026~0034（含独立 ITER-0027）+ 收口 MILE-0003；**只引用**（`deliveries/` / `ITERATIONS.md`）**不复述**，格式随现有条目。
+- **AC12**：产 `migrations/v2.0.0.md`（R6 备的文件夹化配方**首次实例**）——含 `[split]`（`.ai/PROJECT.md → .ai/project/`，起始态校验 + 冲突即停退 ACK）+ `[regen-claude]`（区间内 `rule-card` 改过）+ `[restamp]`；每个 typed 步骤**幂等**、格式随现有 `migrations/v1.x.md`；核对并声明是否需 `[sync-hooks]` / `[add-field]`（不需则显式写明无 hook / schema 字段变更）。
+- **AC13**：收口 MILE-0003（`milestone-schema §7`）——`MILESTONE.md` 快照进 `milestones/MILE-0003/`、聚合交付 `deliveries/milestones/MILE-0003-*.md`+`.html`、`MILESTONES.md` 台账翻 closed 且含迭代补齐 ITER-0033/0034。
+- **AC14**：段A 与段B **两提交分离**（`versioning §5.3`）——段A `feat` 提交**不含** VERSION/CHANGELOG/migration/里程碑收口产物；段B `chore(release)` 提交**不含**规则逻辑改动。
+- **AC15**：切版一致性——切版前预检 6 不变量、切版后三处版本载体（`VERSION` / `CHANGELOG` 顶条 / tag）互相对齐；`git tag v2.0.0` **经用户明确放行后**才打。
+
+## 守恒 / 边界
+
+- **AC16**：scope 守恒——**不改**两态规则的单文件分支逻辑、**不改** R2 结构契约 / R3 折叠语义 / R5 读序逻辑 / R7 说人话定义、**不动** hook 代码、**不改**四件套字段结构、**不碰** `Learner/` `Composer/`；改动集=`.ai/project/`（新增）+ `.ai/PROJECT.md`（删）+ 对齐现实的少数规则文件括号例子 + `README` + 发布元数据（VERSION/CHANGELOG/migrations/里程碑收口）。
+- **AC17（dogfood·自身照说人话写）**：本迭代四件套 + `.ai/project/` 全部主题 + 交付总结过 R7 说人话三条自检，收口前逐条扫、命中即改，VERIFY 记录结论。
