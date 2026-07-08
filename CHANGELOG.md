@@ -4,6 +4,28 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.0.0] - 2026-07-08
+
+破坏性重构版（首个 MAJOR 之后的大版本）。聚合 ITER-0026 ~ ITER-0034（自 v1.7.0 起新收口），并**收口里程碑 MILE-0003「项目知识文件夹升级 + 帮手名册 + 说人话」**（其下 R1~R8 = ITER-0026/0028/0029/0030/0031/0032/0033/0034，另含正交独立迭代 ITER-0027）。本里程碑**重写了冷启动第一读、项目全貌产物契约与收口维护回路**——把单文件薄索引 `.ai/PROJECT.md` 升级为 `.ai/project/` 主题知识文件夹，按 semver 属**破坏性**（要求已部署老项目按迁移配方文件夹化），取区间最高级别为 **MAJOR**。
+
+### 破坏性变更（需老项目迁移）
+
+- **冷启动全貌产物：单文件 → 知识文件夹（ITER-0028 R2 起，butler 自身 ITER-0034 R8 落地）**：`.ai/PROJECT.md` 薄索引契约整体改写为 `.ai/project/` 知识文件夹契约（`00_INDEX` 入口 + 推荐主题集 + 每份边界 + digest-and-point 密度 + 收口按主题强制折叠 + overwrite 禁历史层）。哲学从"摘要不是百科·按需微调"反转为"越补越全的知识地图·每次收口折叠 delta"。已部署老项目须按 `migrations/v2.0.0.md`（`[split]`）把单文件文件夹化；**两态并存**——R6 前部署、尚未迁移的老项目仍受单文件分支支持，不强制立即迁。详见 `deliveries/milestones/MILE-0003-knowledge-folder-agents-plainlang.md`。
+
+### 本版新增
+
+- **帮手名册（ITER-0026 R1 + ITER-0030 R4）**：新建 `Coder/62_Extension_Agents/`——`overview.md` 名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 触发式加载）+ 三帮手完整定义（复核 `independent-review` / 更新说明 `knowledge-fold` / 查过时 `drift-check`）。帮手 = 一份中立定义资料、用时读、临时起干净子 agent 执行、不下发到项目。详见 `deliveries/ITER-0026-agent-roster-review-split.md` / `deliveries/ITER-0030-fold-drift-helpers.md`。
+- **知识文件夹维护回路（ITER-0029 R3）**：收口步④泛化为两态（文件夹态按主题必做折叠 / 单文件态按需前滚）+ 冷启动一致性自检加第 6 条「知识文件夹漂移自检」（条件不变量、单文件项目 N/A）。详见 `deliveries/ITER-0029-maintenance-loop-wiring.md`。
+- **冷启动读序两态切换 + digest-and-point 读纪律（ITER-0031 R5）**：`context-persistence §6` 第一读泛化为两态（文件夹态先读 `00_INDEX` + 按需主题 / 单文件态读 `.ai/PROJECT.md`），落读地图→定向钻取→指针钻代码、不 slurp。详见 `deliveries/ITER-0031-coldstart-read-order-switch.md`。
+- **部署种子 + 文件夹化迁移配方（ITER-0032 R6）**：部署即建空 `.ai/project/` 种子（`00_INDEX` 不 stub、首收口前滚生）+ `migration-schema §4` 补 `[split]` typed 标签 + 文件夹化配方形态（`[rename]`+`[split]`+`[restamp]`）。详见 `deliveries/ITER-0032-deploy-seed-and-folder-migration.md`。
+- **说人话三条硬标准 + 发长文前自检（ITER-0033 R7）**：`artifact-style §2` 立「说人话三条」（术语先解释 / 比喻要落地 / 别让英文·变量裸奔）为跨对话与文档的通则·单一真源，适用面从四件套扩到所有面向人落地文档；`presentation-protocol §7` 对话层引用同守（不双写）。详见 `deliveries/ITER-0033-plain-language-standards.md`。
+- **butler 自身 dogfood 迁知识文件夹（ITER-0034 R8）**：butler 拿自己当第一个真实用户，把自身 `.ai/PROJECT.md` 迁成 `.ai/project/`（`00_INDEX` + 7 主题），对齐全仓"butler 还是单文件"的旧说法，验证知识文件夹设计第一次真实落地。详见 `deliveries/ITER-0034-dogfood-knowledge-folder-migration.md`。
+- **最小实现纪律（ITER-0027 · 独立迭代，与本里程碑正交）**：新增 `30_Quality_Gate/implementation-discipline.md`（P4 常驻底线——最小实现阶梯 + `butler-min:` 有意简化标记 + 修根因不打症状补丁）。详见 `deliveries/ITER-0027-implementation-discipline.md`。
+
+里程碑级聚合交付见 `deliveries/milestones/MILE-0003-knowledge-folder-agents-plainlang.md`；聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.0.0.md`。
+
+[2.0.0]: 自 v1.7.0 起聚合 ITER-0026 ~ ITER-0034（含 MILE-0003 收口）
+
 ## [1.7.0] - 2026-07-03
 
 向后兼容能力新增版。聚合 ITER-0021 ~ ITER-0025（自 v1.6.0 起新收口），并**收口里程碑 MILE-0002「自动化测试最大化 + 人测 web 回环」**（其下 R1/R2/R3/R4/R5 = ITER-0021/0022/0023/0024/0025）。五个迭代均为向后兼容的规则正文新增 / 新增 butler 驻留工具 / 新增产物与文档，无破坏性变更，按 semver 取区间最高级别为 MINOR。
