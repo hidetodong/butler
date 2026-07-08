@@ -71,9 +71,11 @@ AI 必须依次完成以下动作并简要汇报：
 
 1. **逐版逐步执行**：对队列中每个 `migrations/vV.md`，按其 `## 迁移步骤` 顺序处理标签：
    - `[regen-claude]`：提取目标 user-managed 区暂存 → 按最新 `templates/CLAUDE.md.template` + `rule-card.md` 重建 butler 管理区骨架 → 原样填回 user-managed 区。
-   - `[rename]`：见 §6.1。`[add-field]`：见 §6.2。`[sync-hooks]`：见 §6.4。
+   - `[rename]`：见 §6.1。`[add-field]`：见 §6.2。`[sync-hooks]`：见 §6.4。`[split]`：见 §6.5。
    - `[restamp]`：把 `{{BUTLER_VERSION}}` 戳重戳为该步目标版本。
    - `[no-op]`：本版无结构影响，跳到 restamp。
+
+   > 步骤性质分两类：**机械步**（`[regen-claude]` / `[rename]` / `[add-field]` / `[sync-hooks]` / `[restamp]`）起始态符合即静默自动落地；**结构迁移步 `[split]`** 是哲学级形态迁移（单文件 → 知识文件夹），**opt-in、非自动**——执行器碰到它时先问用户迁不迁，见 §6.5。两类都幂等、都先校验起始态。
 2. **起始态校验与冲突**：每步执行前校验起始态是否符合配方预期。**符合**才动；**不符合**（目标已手工漂移）则停下、报告差异、退回用户 ACK，**不**强行套用（守 `versioning-schema.md §8`"内容差异为主"）。
 3. **呈报升级清单给用户**：版本 gap（旧戳 → 仓库当前版本）、队列覆盖的配方版本、每版关键步骤；user-managed 区原样保留、无变化。
 4. **用户 ACK 后写入**：写 `CLAUDE.md` 及改动的 `.ai/` / `.claude/hooks/`；末尾 `[restamp]` 到仓库当前 `VERSION`。
@@ -116,6 +118,18 @@ AI 必须依次完成以下动作并简要汇报：
 - 同步后按 `mcv-deployment.md §5.3` 跑一次 hook 自检命令确认可用。
 - 本小节补齐 `mcv-deployment.md §5.4` 指出、但此前未落地的"hook 副本随升级同步"缺口。
 
+### 6.5 单文件文件夹化（`[split]`）
+
+把老项目的单文件全貌产物 `.ai/PROJECT.md` 拆成 `.ai/project/` 知识文件夹。标签**语义定义**（拆什么、判据、冲突即停）以 `migration-schema.md §4` 为真源，本小节只定"升级执行器怎么落地它"。
+
+- **性质：opt-in、非自动**。与其它机械步不同，`[split]` 是形态迁移（薄索引 → 知识文件夹），执行器**不静默自动拆**，而是先向用户呈一个选择：
+  - **现在迁**：执行下面的拆分动作。
+  - **继续单文件、以后再迁**：**跳过本步**，`.ai/PROJECT.md` 原样保留、单文件分支继续受支持（冷启动第一读 / 收口前滚 / 第 6 漂移不变量都有单文件回退，见 `context-persistence.md §6`）；其余机械步（`[regen-claude]` / `[restamp]`）照常执行。这与"两态并存、不强制立即迁"（`project-digest-schema.md §9`、`migrations/v2.0.0.md`）对齐。
+- **起始态校验（符合才动）**：旧 `.ai/PROJECT.md` 存在**且** `.ai/project/00_INDEX.md` 尚未成形。二者不满足则本步无操作（已迁过则幂等跳过；无单文件可拆的更老项目走 `mcv-deployment.md §2` 空种子 + 首次收口生成路径，不在本步）。
+- **拆分动作**（用户选"现在迁"后）：按 `project-digest-schema.md §3` 主题集，把单文件内容路由进 `00_INDEX.md`（入口三块）+ 各主题文件（`identity` / `architecture` / `capabilities` / `invariants` / `constraints` / `debt` / `frontier`，项目暂无内容的主题不建）。拆出的新文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠本次 commit 说明追溯）；删除旧 `.ai/PROJECT.md`。
+- **冲突即停**：判据与冲突处理**同 `migration-schema.md §4`**（＝ §5 步骤 2 的漂移即停纪律）——目标文件夹已部分成形、或旧单文件被手工改得与预期不符（目标项目漂移），则**不覆盖**、停下报差异、退回用户 ACK，**绝不把用户手写内容拆丢**。
+- **幂等**：迁过（`00_INDEX` 已成形）则本步跳过；用户选暂缓则单文件保持、下次升级仍会再问。
+
 ## 7. 验证与回退
 
 升级完成后，AI 应回顾并向用户报告：
@@ -126,6 +140,7 @@ AI 必须依次完成以下动作并简要汇报：
 - `local-constraints.md` 必填字段齐全（按最新 schema）。
 - 配方队列每一版均已应用（无遗漏、无因漂移而中途搁置未报告的步骤）。
 - `.claude/hooks/` 副本与仓库 `templates/hooks/` 一致（`[sync-hooks]` 已执行且自检通过）。
+- 若队列含 `[split]`：结果二选一如实报告——**已迁文件夹态**（`.ai/project/00_INDEX.md` 成形、旧 `.ai/PROJECT.md` 已删）/ **用户选择暂缓**（单文件保留、继续两态支持）；不得有"该停没停 / 暂缓未报告 / 拆丢用户内容"的静默。
 
 如果用户对升级结果不满意，回退路径：
 

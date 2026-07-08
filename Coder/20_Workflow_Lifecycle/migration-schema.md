@@ -34,7 +34,7 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 每个迁移步骤必须以下列标签之一起头。所有标签**必须幂等**：先校验起始态，满足才动，重复执行不重复改。
 
 - `[rename]`：重命名 `.ai/` 下过时文件。判据=旧名存在才改；git 项目走 `git mv` 保血缘。
-- `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。
+- `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。**升级执行语义**——本标签在 `/butler-upgrade` 里是 **opt-in、非自动**（执行器先问"现在迁 / 继续单文件以后再迁"，选后者则跳过、两态并存继续支持），落地细则见 `butler-upgrade.md §6.5`；本条只定标签语义，执行落地不在此重述。
 - `[add-field]`：给 `.ai/` 下 schema 文件补新增的必填字段。判据=字段缺失才补；草稿值交用户 ACK。
 - `[regen-claude]`：rule-card 内容变更时，重生成目标 `CLAUDE.md` 的 `{{RULE_CARD_CONTENT}}` 内联段。判据=始终重建 butler 管理区，`<!-- user-managed -->` 保护区内容原样保留。**漏判防线**：切版时只要本版聚合的**任一**迭代改动过 `templates/rule-card.md` 或 `templates/CLAUDE.md.template`，配方就**必须**含本步——rule-card 内联进每个目标 `CLAUDE.md`，漏掉会让目标规则卡停留旧文（用 `git log -- templates/rule-card.md` 核区间内提交）。
 - `[sync-hooks]`：hook 体系变更时，按 `mcv-deployment.md §5.1` 重新拷贝 `.claude/hooks/` 副本（以 butler 版本为准覆盖）。判据=比对副本与仓库版本，不一致才覆盖。

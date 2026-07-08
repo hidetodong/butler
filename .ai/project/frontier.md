@@ -14,4 +14,4 @@
 
 ## 下一个瓶颈
 
-- 两笔历史欠债还悬着（见 `debt.md`）：hook 在 butler 侧不 live、`/butler-upgrade` 从未真跑——后者随 v2.0.0 这个带 `[split]` 迁移的大版本，最需要一次真实老项目端到端升级验证来兜底（`migrations/v2.0.0.md` 的 `[split]` 是首个真实文件夹化配方、尚未在真项目上跑过）。
+- 两笔历史欠债还悬着（见 `debt.md`）：hook 在 butler 侧不 live、`/butler-upgrade` 从未真跑——后者随 v2.0.0 这个带 `[split]` 迁移的大版本，最需要一次真实老项目端到端升级验证来兜底。`[split]` 的升级执行器接线已于 ITER-0035 补齐（`butler-upgrade §6.5` opt-in 选择闸就位），**就差真实老项目跑一遍**：`migrations/v2.0.0.md` 的 `[split]` 是首个真实文件夹化配方、尚未在真项目上跑过。
