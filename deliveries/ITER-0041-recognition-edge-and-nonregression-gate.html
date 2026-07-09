@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0041 交付总结 · 改版认亲的疑难边缘 + 一条不许碰老路的红线：MILE-0004 收官</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>改版认亲的疑难边缘 + 一条不许碰老路的红线：MILE-0004 收官</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0041</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-09</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1–R5 已把 PRD 全生命周期链建成（导入 → 挂里程碑 → 钉版 → 改版同步），但留了一处<strong>边缘</strong>加两个<strong>收尾</strong>缺口：改版时模块<strong>改名 / 合并 / 拆分</strong>怎么认回旧身份（R5 只做了"新增 / 消失"两态）；"不碰非 PRD 老路"的承诺只散落在各迭代验收清单里、没有一处常驻保证；<code>/prd</code> 命令族对人类用户还没用法说明。</li>
+        <li>本轮把这三块补齐、收官 MILE-0004：① <strong>认亲对账松边</strong>——给改名/合并/拆分一套"提候选 → 你确认、绝不自动认"的规则；② <strong>非回归门</strong>——把"PRD 先行永远是可选加层、不动任何老路"固化成一条<strong>可验证</strong>红线；③ <strong>收尾</strong>——HUMAN_GUIDE 补 <code>/prd</code> 用法节 + flip R6 指针 + 全 PRD 子系统说人话自检。做完六块齐，MILE-0004 可收口、可切版。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>认亲对账松边（扩 <code>prd-update.md §4</code>，改版主流程零改动）</strong>：§4 拆成两层——<strong>§4.1 基础态</strong>（新增发新代号 slug / 消失置"已移除"，纯增纯消到此为止）+ <strong>§4.2 松边</strong>。松边只在"某些 slug 消失"与"某些 slug 新增"<strong>同次出现</strong>时才启动：机器按标题/内容相近度<strong>提候选</strong>（一对一近似→改名、一对多→拆分、多对一→合并），<strong>只提不改、一律等你确认</strong>。认亲落法守 slug 终身——<strong>改名 = 保留旧 slug 只换标题/章节</strong>（换门牌不换身份证，旧引用照样命中）；合并/拆分按你确认发新 slug、旧的置"已移除"。<strong>松边红线</strong>：拿不准（改动大、配对不唯一、你没确认）就<strong>退回基础态</strong>记成两条独立记录，宁可不认也不误并——认错身份比没认出坏得多。</li>
+        <li><strong>非回归门（<code>references-schema</code> 加常驻红线 §9）</strong>：显式列出 PRD 子系统<strong>不得触碰</strong>的五条非 PRD 老路——对话驱动录入 / <code>origin/</code> brief 收件箱 / 扁平态 references 注入（<code>api-</code>/<code>design-</code>/<code>insight-</code>）/ 核心 P1–P5 产物链状态机 / 里程碑非 PRD 合成管线，各自标真源。<strong>验证判据成文 = 改这个子系统时上述文件/路径 <code>git diff</code> 必须为空</strong>——把散落各迭代 AC 的口头承诺固化成一处任何人可复核的硬线。</li>
+        <li><strong>收尾三件</strong>：HUMAN_GUIDE §5 里程碑与 <code>/review</code> 之间插入「<strong>PRD 先行（大规格版本化）</strong>」用法节（人话讲清 <code>/prd update</code> 改版同步全程每步确认 + <code>/prd status</code> 只读看板 + 绝不静默动已冻结工作，机制真源回指 <code>prd-update.md</code>）；flip <code>references-schema §4</code> 认亲边缘句 + <code>§8</code> R6 行为 ✅（至此 §8 表 R1–R6 全绿）；全 PRD 子系统（references-schema / prd-split / prd-update）过说人话三条自检。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>改版认亲不再断身份</strong>：模块改个名，不再被当成"旧的没了 + 新的冒出来"两条无关记录——只要你确认，slug 终身链续得上，跨版本审计对得齐。合并/拆分同理有章可循。</li>
+        <li><strong>但绝不自动认</strong>：认亲全是"机器提候选、你拍板"。机器拿不准就老实退回基础态，绝不擅自把两个模块并成一个（那会让规格串味）。</li>
+        <li><strong>"不碰老路"从承诺变成可验证的门</strong>：以后任何一次改 PRD 子系统，非 PRD 老路的 <code>git diff</code> 为空是硬性收口条件——不用再靠人肉记得"别碰对话流"。</li>
+        <li><strong>人类用户第一次有了 <code>/prd</code> 说明书</strong>：HUMAN_GUIDE 里能读到 PRD 先行是什么、改版怎么走、为什么绝不暗中改你验收过的活。</li>
+        <li><strong>不用 PRD 的人依旧完全无感</strong>：本轮恰恰是亲自守住那条门——改动全在 PRD 子系统 + HUMAN_GUIDE 用法节，普通开发流一字未动。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>认亲扩展（1 处）：<code>Coder/40_Context_Management/prd-update.md §4</code>（拆 §4.1 基础态 + 新增 §4.2 松边；§2/§3/§5/§6 字节未动）。</li>
+        <li>契约加节 + flip（1 份）：<code>Coder/40_Context_Management/references-schema.md</code>（新增 §9 非回归门 + flip §4 认亲边缘句 + §8 R6 行 ✅ + frontmatter scope）。</li>
+        <li>收尾接线（2 处）：<code>HUMAN_GUIDE.md §5</code>（PRD 先行用法节）、<code>Coder/README.md</code>（prd-update 行"留 R6"过时指针 flip 为"§4.2 松边、R6 落地"）。</li>
+        <li>没碰（守边界·本轮亲自守非回归门）：<code>references-schema §3</code> 登记表字段（没加列）、<code>prd-split</code> 切分算法、<code>prd_version</code> 钉版字段、<code>prd-update</code> 改版主流程（§2/§3/§5/§6）、核心 P1–P5、非 PRD 流五条老路、<code>project-digest</code>/<code>context-persistence</code>/hook/<code>VERSION</code>。<strong>不做</strong>全自动认亲，<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>7 项验收（AC1–7）全过</strong>，全 <strong>auto·可靠</strong>（纯规则文档：读改后正文核契约 + <code>git --no-pager diff</code> 核非回归 + <code>git diff --stat</code> 核守恒，确定性可复现），无人测残余。</li>
+        <li><strong>独立复核 APPROVE-with-nits</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式）：七条 AC 逐条核过——松边成文且改版主流程字节未动、非回归门本轮亲自守（门内文件 diff 全空、cited 真源皆存在）、slug 终身 / 新增 §-锚点（§4.2、§9）全解析。提出 1 Must Fix（MILESTONE §5.3 R6 缺 ✅，收口步 ⑤ 落定）+ 1 Should Fix（<code>README</code> 过时 R6 指针，已 flip），均已整改；Nit（prd-split 的 R6 路由陈述）判定合理保留。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>认亲是"提候选"非"判定器"</strong>：本轮只定"怎么提、怎么落、拿不准怎么退"，配对精度靠你确认兜底，与"绝不自动认"一致——极端诡异改法（大改一片又拆又并）会退回基础态，不追求全覆盖。</li>
+        <li><strong>协议成文、从未真跑</strong>：改名/合并/拆分认亲、非回归门判据都靠执行遵从，真到用户端到端改一次版才第一次实战检验。</li>
+        <li><strong>端到端老项目 PRD 升级未实跑</strong>：MILE-0004 §5.1 Out of Scope 已声明的既有 dogfood 债，另论。</li>
+        <li><strong>收官后续（非本迭代）</strong>：R6 收口后 MILE-0004 六块齐，可收口里程碑 + 独立 <code>chore(release)</code> 切版（聚合 ITER-0036~0041），待用户放行。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0041/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/40_Context_Management/prd-update.md §4</code>（§4.1/§4.2）、<code>Coder/40_Context_Management/references-schema.md</code>（§9 + flip §4/§8）、<code>HUMAN_GUIDE.md §5</code>、<code>Coder/README.md</code></li>
+        <li>里程碑与前置：<code>.ai/MILESTONE.md</code>（MILE-0004 §5.3 路线图 R6 项 + §5.4 松边归入记录）、<code>prd-update.md</code>（R5 改版主流程，认亲扩在其 §4）、<code>references-schema.md</code>（R1 契约 §4 身份地基，被认亲/非回归门回指）、<code>prd-split.md</code>（R2 切分，被松边重新派生复用）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

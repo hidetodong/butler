@@ -26,7 +26,7 @@
 | `/dangerous` | 无人值守长程自治（自审门替 ACK、强制 P5 全审护栏） | `65_Extension_Dangerous/dangerous-engine.md` |
 | `/preference` | 偏好探针开关（`on`/`off`/`reback`/`distill`） | `70_Extension_Preference/preference-probe-engine.md` |
 | `/milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3） | `20_Workflow_Lifecycle/milestone-schema.md`（§6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针） |
-| `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5） | `40_Context_Management/prd-update.md`（首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`） |
+| `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 登记表认亲（新增·消失 + 松边改名/合并/拆分启发式提候选→确认、绝不自动认，R6）/ 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5–R6） | `40_Context_Management/prd-update.md`（§4.2 松边、首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`；非回归门见 `references-schema §9`） |
 | `/butler-upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行） | `20_Workflow_Lifecycle/butler-upgrade.md`（**注：从未真跑，见 debt**） |
 
 ## 部署与维护能力

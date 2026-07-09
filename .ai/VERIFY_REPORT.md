@@ -1,27 +1,50 @@
-# VERIFY_REPORT — ITER-0040（MILE-0004 R5 · 改版同步 `/prd update`）
+# VERIFY_REPORT — ITER-0041（MILE-0004 R6 · 认亲边缘 + 非回归门 + 收尾）
 
-> 监督态自驱。全为规则文档接线（新建 `prd-update.md` + 接线 4 处 + flip references §7/§8）。验证 = 读改后正文核契约 + `git diff` 核非回归 + `git status` 核守恒，确定性可复现（**auto·可靠**）· 无人测道残余。
+> 逐条对 AC_LIST 核。验证 = 读改后正文核契约 + `git --no-pager diff` 核守恒（规则文档、确定性可复现）。
 
-## 验收结果（逐 AC · auto·可靠）
+## 逐条
 
-- [x] **AC1 ✓** 新建 `Coder/40_Context_Management/prd-update.md`，§1 定位镜像 `prd-split`——契约 vs 动作 + **回指表**（结构/slug/逐字/落盘/边界一律回指 references-schema 与 prd-split、不复述）+ 显式分工"`prd-split` 管首切、`prd-update` 管改版（V→V+1）"+ "改版走本机制非重新注入"。
-- [x] **AC2 ✓** §2 变更检测三步成文——**清单优先**（用户修改项清单为主）→ **diff 兜底**（旧版 live 切片 vs 新版 PRD 逐字比对防漏）→ **对账**（清单∪diff，清单没提但 diff 检出的必须亮出来问、**不静默采信任一方**）；产出受影响模块清单。对应决议 c。
-- [x] **AC3 ✓** §3 重新派生按 `prd-split §2/§4` 复用（不复述算法）；落盘**硬顺序红线成文**——`.archive/v<旧版>/` 全量快照**必须在 live 覆盖之前**冻好（否则旧版原文没了、R4 回溯读落空）+ 再更 live + bump 全局版本；落盘形态回指 `references-schema §7`。对应决议 live+快照 a、全局版本 b。
-- [x] **AC4 ✓** §4 登记表认亲基础态——新增→发新 slug/首见版本=新版/`active`；消失→置 `removed`、slug 不回收（守 `references-schema §4`）；用现有登记表字段、**未加列**；模块合并/拆分/改名认亲**显式声明留 R6**。
-- [x] **AC5 ✓** §5 三态影响面报告——没开工/进行中/已收口分类表（判定挂 `ITERATIONS` 台账）+ **硬约束"亮牌不自动默认"**成文（只把三态摆台面让用户定夺、绝不静默改已冻结/已收口工作）。对应决议 a。
-- [x] **AC6 ✓** §6 受影响路由——进行中→amend 重冻（**回指 `iteration-schema §5.3`+`acceptance-schema §4`**）/ 已收口→closed 不可改、开新迭代承接（**回指 `iteration-schema §5.4`**）/ 没开工→无动作；明写"只回指路由、不改写 amend/扩张仪式本身"。
-- [x] **AC7 ✓** §7 `/prd status` 只读看板（当前全局版本 + 登记表 active/removed + 最近改版三态影响面）+ §8 soft 对齐硬约束（改版同 split 提议→确认→落盘，未经确认不得覆盖 live/冻快照/重冻 AC）；status 明定"只读、非改版入口、与 `/milestone status` 同类"。
-- [x] **AC8 ✓** 接线四处 + flip：`logic-protocol` 注入表大 PRD 行补"改版走 `/prd update` 非重新注入"；`acceptance §4` "属 `/prd update`"补指 `prd-update.md`；`references §7` 快照产生动作 bullet flip 已落地 + `§8` R5 行 flip **✅ 已由 `prd-update.md` 落地**；`README` 结构树 + 说明段注册 `prd-update.md`。
-- [x] **AC9 ✓（守恒 + 非回归 + 分层）** 源改动集 = 新增 `prd-update.md` + 改 `logic-protocol` / `acceptance-schema §4` / `references-schema §7·§8` / `README`（`git status` 佐证）。**非回归红线**：`git diff` 4 处删除均系 flip/append **行替换**（首切行为、`prd_version` 语义、§7/§8 旧文本全保留、只增补），无纯删除、无内容丢失；非 PRD 流（Confluence/MasterGo/insight/其他文档注入行）一字未动。**不做** 合并/拆分/改名认亲(R6)；**不改** `references-schema §3` 登记表字段（未加列）/`prd-split` 切分算法/`prd_version` 钉版字段/核心 P1–P5 与 amend·扩张仪式本身（只回指）/`project-digest`/`context-persistence`/hook/`VERSION`；**不切版**。改动在 SOP Core（`00`/`20`/`40`）+ README，分层未破坏。
-- [x] **AC10 ✓（dogfood·说人话）** 改版同步（"PRD 出新版怎么同步"）/ 重新派生（"按新版原文重切受影响模块"）/ 冻旧版快照（"旧版整份复制冻存"）/ 三态影响面（表 + 每态一句）/ 亮牌（"亮出来给人看、等人拍板，不是检测到就自动改"）/ 认亲（"新版模块对回旧版是谁"）/ `/prd update`·`/prd status`（首现带释义）均带解释；英文命令有中文语境包裹、无裸变量残留。
+| AC | 结论 | 证据 |
+|---|---|---|
+| **AC1** 认亲扩 `prd-update §4`·松边·不改改版主流程 | ✅ | §4 拆为 §4.1 基础态 + §4.2 松边（改名/合并/拆分：启发式提候选 → 用户确认、绝不自动认）。diff 证 §2/§3/§5/§6 一行未动（改动全在 §4 区块 @@ -47,14）。 |
+| **AC2** 认亲落法·守 slug 终身 + 松边退化 | ✅ | §4.2 成文：改名 = 保留旧 slug 只更新标题/章节（守 `references-schema §4`）；合并/拆分 = 用户确认后发新 slug + 旧置 removed；**松边红线**"拿不准退回 §4.1 基础态、宁可不认也不误并"落字，并给出误并代价论证。 |
+| **AC3** 非回归门·常驻可验证红线 | ✅ | `references-schema §9` 新增：列五条非 PRD 流（对话驱动 / `origin/` brief / 扁平 references / 核心 P1–P5 / 里程碑合成）+ 真源；判据成文"这些文件/路径 `git diff` 为空"。**本轮亲自守**：diff --stat 证这五类文件零改动（见收官核对）。 |
+| **AC4** HUMAN_GUIDE 加"PRD 先行"用法节 | ✅ | §5 里程碑与 `/review` 之间插入「PRD 先行（大规格版本化）」：首切随 `/milestone`、`/prd update` 改版同步（清单优先+diff 防漏、先冻后更、三态影响面、每步确认）、`/prd status` 只读、绝不静默动冻结工作；真源回指 `prd-update.md`。人话口径、无新造语义。 |
+| **AC5** flip R6 收口指针 | ✅ | `references-schema §4` 认亲边缘句 flip 为"已由 `prd-update.md §4.2` 落地"；`§8` R6 行 flip 为"**R6 ✅ 已由 `prd-update.md §4.2` 落地**"。§8 表 R1–R6 六行全绿（R1✅/R2✅/R3✅/R4✅/R5✅/R6✅）。 |
+| **AC6** 全子系统说人话自检·dogfood | ✅ | 三份过说人话三条：**松边**（"边界模糊、宁松勿错"/"拿不准就不硬认"）、**非回归门**（"回归=老功能被带崩"）、**opt-in 加层**（"要用才用"）、**启发式**（"只是猜"）首现即释；slug/soft 对齐/认亲在既有正文已释。裸英文变量：无。零星修正：无（旧文本已合规）。四件套同守。 |
+| **AC7** scope 守恒 + 非回归 + 分层 + 收官核对 | ✅ | 见下"守恒 / 非回归 / 收官核对"。 |
 
-## 独立复核
+## 守恒 / 非回归核对
 
-- **执行**：干净上下文子 agent，验证者≠实现者、只读、对抗式；核心对抗点（亮牌不自动/不静默改已冻结 · 落盘先冻后更 · 复用不造轮子只回指 · 契约动作分离 · 不越界做 R6/不改契约结构/钉版字段/核心仪式）逐点核。
-- **结论**：**APPROVE**（clean，无 Must/Should/Nit）。八对抗点全过——① 亮牌不自动双重钉死（§5「绝不静默替用户改已冻结/已收口」+ §8「不得自动重冻任何 AC」）；② 落盘先冻后更硬顺序成文、明写颠倒后果（旧版原文丢失废掉 R4 回溯）；③ 切分复用 prd-split 不抄算法、重冻/扩张回指 `iteration-schema §5.3(Amend)/§5.4(Escalate)`、落盘回指 references §7，被回指目标全部真实且语义对得上；④ §1 回指表未复述契约、§7/§8 flip 正确指向 prd-update；⑤ 认亲只做新增/消失、R6 显式留、references §3 登记表未加列、§8 R6 行未 flip、prd-split/钉版字段 diff 空、非 PRD 注入四行一字未动。AC1–AC10 逐条 confirm。**悬空指针专查**：16 处 §-引用逐个核实真实存在，无 ITER-0035/0039 那类把有序列表项写成不存在子节号的问题。Must/Should/Nit 均无。
+- **scope 守恒**：`git diff --stat` = `.ai/*`（四件套 + 台账，迭代记账）+ `prd-update.md`（§4）+ `references-schema.md`（§9 + flip §4·§8）+ `HUMAN_GUIDE.md`（用法节）。**恰是 R6 change set，无越界文件**。
+- **非回归（§9 门自检，本轮亲自守）**：`logic-protocol.md` / `milestone-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` / `prd-split.md` / `project-digest-schema.md` / `context-persistence.md` / hooks / `VERSION` **均不在 diff 中** → 非 PRD 流与 R1–R5 主体（契约结构 §3/切分算法/钉版字段/改版主流程 §2/§3/§5/§6）一行未动。
+- **两 Coder 文件删除行审计**：全为 flip/heading/scope 的**整行替换**，无正文内容丢失（逐行比对 diff 确认）。
+- **不越界**：认亲只扩 `prd-update §4`（新增 §4.1/§4.2 子节）；未做全自动认亲（一律"提候选 → 确认"）；未切版。
 
-## Remaining Risks
+## 收官核对（MILE-0004）
 
-- **改版协议成文、但从未真跑**：`/prd update` 全套（检测→重新派生→冻快照→三态影响面→路由）靠执行遵从，真到用户端到端拿一份 PRD 改一次版才第一次实战检验——这也是 R4 钉版回溯路径的首次兑付点。
-- **三态判定依赖引用可发现**：进行中/已收口判定靠"迭代 AC 引用了变更 slug"——若某迭代引用了 PRD 却没在 `External References`/frontmatter 如实标 slug 与 `prd_version`，影响面扫描可能漏判。取决于 R4 钉版纪律的执行遵从。
-- **认亲只到新增/消失**：模块改名/合并/拆分在本轮会被误判为"旧的消失 + 新的新增"（两条独立记录），真正的跨版本身份延续待 R6 认亲对账。
+- `MILESTONE.md §5.3` 路线图 R1–R6 **六项全部绑定实际 ITER**（R6 = ITER-0041，收口时补 ✅）。
+- `references-schema §8` 前向指针表 R1–R6 **全绿**（R6 本轮 flip）。
+- MILE-0004 六块（R1 契约基座 / R2 切分 / R3 首切入口 / R4 钉版 / R5 改版同步 / R6 认亲+非回归+收尾）**齐**，可收口里程碑 + 独立切版（发布动作、待放行、非本迭代）。
+
+## 残余风险
+
+- **无人测道残余**：全为规则文档，无运行时/视觉/外部通道验证项。
+- **认亲启发式是"提候选"非"判定器"**：本轮只定"怎么提、怎么落、拿不准怎么退"，不追求配对算法精度——精度靠用户确认兜底，与"绝不自动认"一致，非缺陷。
+- **端到端老项目 PRD 升级未实跑**：既有 dogfood 债（MILE-0004 §5.1 Out of Scope 已声明），另论。
+
+## 结论（自评）
+
+七条 AC 全绿，scope 守恒、非回归门本轮亲自守通过、MILE-0004 收官核对齐。**自评 PASS**，待独立复核确认后收口。
+
+---
+
+## 独立复核结论
+
+**干净上下文子 agent、对抗式、验证者≠实现者、只读**。结论 **APPROVE-with-nits**——七条 AC 逐条核过：AC1/AC2 松边成文且 §2/§3/§5/§6 字节未动、AC3 非回归门本轮亲自守（门内文件 diff 全空）、AC4/AC5/AC6/AC7 均 PASS，slug 终身 / 松边不硬认 / scope 守恒 / 新增 §-锚点（§4.2、§9）全解析。整改：
+
+- **Must Fix（已改）**：`MILESTONE.md §5.3` R6 行绑了 ITER-0041 但缺 ✅，与 AC7"R1–R6 全绿"收官核对冲突 → **收口仪式步 ⑤补 ✅**（本迭代收口时落定）。
+- **Should Fix（已改）**：`Coder/README.md` prd-update 行"合并/拆分/改名留 R6"过时指针 → 已 flip 为"§4.2 松边、R6 落地"。属 R6"README 注册"收尾职责、README 非 §9 非回归门内文件，改动合规。
+- **Nit（不改·合理保留）**：`prd-split.md §4/§25`、`references-schema §4` 的 R6/"R2–R6"是路线槽 / scope 排除的路由陈述（认亲仍是 R6 的活、已落 prd-update、"不在此"依旧准），非过时未办声明，保留。
+
+整改后复评：Must Fix 由收口步 ⑤ 落定、Should Fix 已 flip，无遗留阻断。**准予收口。**

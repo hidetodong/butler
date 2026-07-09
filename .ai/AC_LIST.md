@@ -1,32 +1,26 @@
 ---
 状态: ack-frozen
 ACK 日期: 2026-07-09
-迭代: ITER-0040
-里程碑: MILE-0004（R5）
+迭代: ITER-0041
+里程碑: MILE-0004（R6·收官）
 ---
 
-# AC_LIST — ITER-0040（MILE-0004 R5 · 改版同步 `/prd update`）
+# AC_LIST — ITER-0041（MILE-0004 R6 · 认亲边缘 + 非回归门 + 收尾）
 
-> 监督态自驱。全为规则文档接线（新建 `prd-update.md` + 接线 4 处 + flip references §7/§8），验证 = 读改后正文核契约 + `git grep`/`git diff` 核守恒 + 非回归核对，确定性可复现（auto·可靠）。**待 ACK 冻结后方可进 P4。**
+> 监督态自驱。全为规则文档接线（扩 `prd-update §4` + `references-schema` 加非回归节/flip §4·§8 + HUMAN_GUIDE 用法节 + 说人话自检），验证 = 读改后正文核契约 + `git grep`/`git diff` 核守恒 + 非回归核对，确定性可复现（auto·可靠）。**待 ACK 冻结后方可进 P4。**
 
-## 块1 · 动作层新建 + 变更检测
+## 块1 · 认亲对账松边
 
-- **AC1（新建动作层·镜像 split·契约动作分离）**：新建 `Coder/40_Context_Management/prd-update.md`，定位为改版同步**动作层**——`prd/` 结构/slug 身份/切片逐字/落盘形态一律**回指 `references-schema`、不复述不改写**（同 `prd-split` 手法）；成文分工"`prd-split` 管首切、`prd-update` 管改版（导入后每次 V→V+1）"。
-- **AC2（变更检测：清单优先 + diff 兜底 + 对账）**：`prd-update.md` 写死检测协议——以用户**修改项清单**为主 + old/new PRD **diff 兜底** + 两者**对账**（清单没提但 diff 检出的变更必须亮出来问，不静默采信任一方）。对应 grilling 决议 c。
+- **AC1（认亲对账扩 `prd-update §4`·松边·不改改版主流程）**：`prd-update.md §4` 从"只做新增/消失"扩为含**改名 / 合并 / 拆分**跨版本认亲对账——检测到"slug 消失 + slug 新增"时**启发式提候选**（标题/内容相近→改名；一消失对多新增→拆分；多消失对一新增→合并），**提议 → 用户确认、绝不自动认**。改动限于 §4，`prd-update §2/§3/§5/§6`（检测/落盘/三态/路由）**不动**。
+- **AC2（认亲落法·守 slug 终身 + 松边退化）**：成文——**改名**认亲 = 保留旧 slug、只更新标题/章节（守 `references-schema §4` slug 终身、换门牌不换身份证）；**合并/拆分** = 按确认落 slug 关系 + 登记表状态。**松边红线**：拿不准就退回"新增/消失"两条独立记录，**宁可不认也不误并**（认错身份比不认更坏）。
 
-## 块2 · 重新派生落盘 + 登记表认亲基础态
+## 块2 · 非回归门
 
-- **AC3（重新派生 + 冻旧版 + 更新 live + bump 版本）**：受影响模块按 `prd-split` 切分机制**重新派生**（复用、不复述算法）；**先冻旧版整份进 `.archive/v<旧版号>/`**（全量快照、自包含）再更新 live 切片到新版；全局版本号 bump（一份 PRD 一个号）。落盘形态**回指 `references-schema §7`**。对应决议 live+快照 a、全局版本 b。
-- **AC4（登记表认亲基础态：只做新增 / 消失）**：`prd-update.md` 成文——新版**新增**模块 → 发新 slug、首见版本 = 新版号、状态 `active`；**消失**模块 → 状态置 `removed`、slug 不回收（守 `references-schema §4`）。**显式声明**模块合并/拆分/改名认亲对账**留 R6、本轮不做**。
+- **AC3（非回归门·常驻可验证红线）**：`references-schema` 新增一节，显式列出 PRD 子系统作为 opt-in 加层**不得触碰**的非 PRD 流——对话驱动 / `origin/` brief / 普通 references 注入（`api-`/`design-`/`insight-`）/ 核心 P1–P5 状态机 / 里程碑非 PRD brief 合成；**验证判据成文 = 改本子系统时这些文件/路径 `git diff` 为空**。把散落各迭代 AC 的口头承诺固化成一处可核对契约。
 
-## 块3 · 三态影响面 + 受影响路由
+## 块3 · 收尾（用法 · flip · 说人话）
 
-- **AC5（三态影响面报告·亮牌不自动默认）**：`prd-update.md` 定义改版后扫"哪些工作引用了变更切片"，按三态分类亮牌——**没开工**（未来迭代/路线项）/ **进行中**（active 迭代已引用）/ **已收口**（closed 迭代按旧版验收过）；**只报告、不自动改任何已冻结工作**（"亮牌"＝摆台面让用户定夺、绝不静默默认动作）。对应决议 a。
-- **AC6（受影响工作路由·接既有仪式不改流程）**：进行中 → 接 amend 重冻（**回指 `iteration-schema §5.3` + `acceptance-schema §4`** `prd_version` 重绑）；已收口 → closed 不可改、建议开新迭代承接（**回指 `iteration-schema §5.4`** 扩张转迭代）；没开工 → 无需动作。R5 **只回指路由、不改写 amend/扩张仪式本身**。
-
-## 块4 · status · 接线 · flip · 守恒 · 说人话
-
-- **AC7（`/prd status` 只读看板）**：`prd-update.md`（或同文件内一节）定义 `/prd status`——不改盘、只汇总当前 PRD 全局版本 + 登记表（active/removed）+ 最近一次改版三态影响面；定位为只读，与 `/milestone status` 同类。
-- **AC8（接线 + flip 收口指针）**：`logic-protocol` 注入表首切行补"改版走 `/prd update`、非重新注入"；`acceptance-schema §4` 那句"属 `/prd update`"补指 `prd-update.md`；`references-schema §7`（快照产生动作）+ `§8` R5 行 flip 为 **✅ 已由 `prd-update.md` 落地**；`README` 结构树 + 说明段注册 `prd-update.md`。
-- **AC9（scope 守恒 + 非回归 + 分层）**：改动集限于**新增** `prd-update.md` + **接线** `logic-protocol.md` / `acceptance-schema.md §4` / `references-schema.md §7·§8` / `README.md`。**不做** 模块合并/拆分/改名认亲(R6)；**不改** `references-schema` 契约结构（§3 不加列）/ `prd-split` 切分算法 / `prd_version` 钉版字段 / 核心 P1–P5 与 amend/扩张仪式本身（只回指）/ `project-digest` / `context-persistence` / hook / `VERSION`；**不切版**。**非回归红线**：非 PRD 流一行不动。分层不破坏（改动在 SOP Core `00`/`20`/`40` + README）。
-- **AC10（dogfood·说人话）**：本迭代四件套 + `prd-update.md` 正文按说人话三条自检（术语先解释 / 比喻落地 / 别让英文·变量裸奔）；改版同步 / 重新派生 / 冻旧版快照 / 三态影响面 / 亮牌 / 认亲 / `/prd update`·`/prd status` 等首现带一句解释或比喻。
+- **AC4（HUMAN_GUIDE 加"PRD 先行"用法节）**：HUMAN_GUIDE §5 扩展模式加一节，人话讲清 `/prd update`（改版同步：给新版 + 说改了啥 → 检测/重切/冻旧版/报三态影响面，每步确认）+ `/prd status`（只读看板），摆在里程碑节附近；口径与规则真源一致、不新造语义。
+- **AC5（flip R6 收口指针）**：`references-schema §4`（合并/拆分/改名认亲边缘那句）+ `§8` 前向指针表 R6 行 flip 为 **✅ 已落地**（指 `prd-update §4`）。至此 §8 表 R1–R6 全绿。
+- **AC6（全子系统说人话自检·dogfood）**：`references-schema` / `prd-split` / `prd-update` 三份过说人话三条（术语先解释 / 比喻落地 / 别让英文·变量裸奔），发现问题当场修；本迭代四件套同守。认亲 / 改名 / 合并 / 拆分 / 非回归门 / opt-in 加层等首现带解释。
+- **AC7（scope 守恒 + 非回归 + 分层 + 收官核对）**：改动集限于 `prd-update.md §4`（认亲对账）+ `references-schema.md`（加非回归节 + flip §4·§8）+ `HUMAN_GUIDE.md`（PRD 用法节）+ 说人话自检触发的零星修正。**不改** R1–R5 主体（契约结构/切分算法/钉版字段/改版主流程 §2/§3/§5/§6）；**不做**全自动认亲；**不碰**非 PRD 流（本轮亲自守）/ `project-digest` / `context-persistence` / hook / `VERSION`；**不切版**（收口 MILE-0004 + 切版是独立发布动作、待放行）。分层不破坏（改动在 SOP Core `40` + 仓根 HUMAN_GUIDE）。收官核对：MILE-0004 §5.3 路线图 R1–R6 全部 ✅、`references-schema §8` 表全绿。

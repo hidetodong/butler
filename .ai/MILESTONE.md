@@ -36,8 +36,9 @@
 | **R3** | **首切入口并进 `/milestone` + 两海拔交叉指针**：milestone 录入认"brief 是大 PRD"分支 → 触发 R2 切分；路线图项 ↔ 模块 slug 互指（焊上里程碑→references 源指针缺口） | ITER-0038 ✅ |
 | **R4** | **AC 钉版 + P2/P3/P5 接线**：AC frontmatter `prd_version`（冻结绑定、之后钉住）+ 版本化 slug 引用锚点 + 扩展 acceptance/tech-plan/verify（External References 版本化、Compliance 对钉住版核） | ITER-0039 ✅ |
 | **R5** | **改版同步 `/prd update`**：重新派生 + 变更检测（清单优先 + diff 兜底 + 对账）+ `.archive/vN/` 全量快照 + 三态影响面报告（没开工/进行中/已收口）+ 接 amend 重冻 + `/prd status`；登记表认亲基础态（新增 / 消失） | ITER-0040 ✅ |
-| **R6** | **登记表认亲边缘 + 非回归 + 收尾**：模块合并/拆分/改名跨版本认亲对账（松边）+ 非回归门（非 PRD 流一行未动的显式验证）+ README 注册 / HUMAN_GUIDE 用法 / 说人话自检 / dogfood | — |
+| **R6** | **登记表认亲边缘 + 非回归 + 收尾**：模块合并/拆分/改名跨版本认亲对账（松边）+ 非回归门（非 PRD 流一行未动的显式验证）+ README 注册 / HUMAN_GUIDE 用法 / 说人话自检 / dogfood | ITER-0041 ✅ |
 
 ## 5.4 范围演进记录
 
 - 2026-07-08 · 开启 MILE-0004（承 MILE-0003 于 2026-07-08 收口、开题闸解除）。范围与路线图源自当日 PRD 先行设计 grilling 的十节点决议：真源模型 A（源为真、references 可重生投影）/ 全局版本 b（留版本、执行读最新）/ 冻结绑定 ii / 模块粒度粗 / 检测 c（清单优先+diff兜底）/ 三态 a（亮牌不自动默认）/ slug 登记表 b / 混合触发 c（首切并进 milestone、改版走 /prd update）/ 小 PRD 单模块 b / live+快照 a。松边（模块合并/拆分/改名认亲）显式归入 R6。
+- 2026-07-09 · R6（ITER-0041）收口，**MILE-0004 路线图 R1–R6 六块齐**：认亲松边落 `prd-update §4.2`（启发式提候选→确认、绝不自动认、拿不准退回基础态）、非回归门落 `references-schema §9`（不得触碰的非 PRD 流 + 判据 git diff 为空）、收尾（HUMAN_GUIDE PRD 用法节 / flip §4·§8 / 说人话自检）。范围无扩张。**收口里程碑 + 独立切版（聚合 ITER-0036~0041）为发布动作、待用户放行**（同 MILE-0003 v2.0.0 分开走的先例）。
