@@ -1,35 +1,35 @@
-# 补 [split] 升级接线缺口
+# MILE-0004 R1 · references 索引化基座
 
-> 独立迭代 · ITER-0035 · 监督态自驱（用户点选"做A"接力，非 /dangerous）· 不切版
+> ITER-0036 · 里程碑 MILE-0004 首块 · 监督态自驱（承 grilling 十节点决议）· 不切版（纯规则新增）
 
 ## 一句话
 
-`[split]`（把老项目单文件 `.ai/PROJECT.md` 拆成 `.ai/project/` 知识文件夹）这个标签在 R6 加进 `migration-schema`、R8 产了第一个实例 `migrations/v2.0.0.md`，但**升级执行器 `butler-upgrade.md` 从没同步接线**——`§5/§6` 只会执行 `[regen-claude]`/`[rename]`/`[add-field]`/`[sync-hooks]`/`[restamp]`/`[no-op]`，碰到 `[split]` 没有路由；本轮把它接上，并定死 `[split]` 是 **opt-in（问一句再迁）非自动**，与"两态并存、不强制立即迁"对齐。
+`references/` 子系统当年没被 MILE-0003 的知识文件夹待遇覆盖到——**无 schema、无索引、无读纪律**。R1 新建 `references-schema.md`，给它补上"索引 + 渐进读"的**契约层**：定义 `references/prd/` 知识文件夹形态（`00_INDEX` 入口 + 模块登记表）、digest-and-point 读纪律、"索引可摘要 / 切片必原文"硬区分、live + `.archive` 落盘契约。**只定契约**，切分动作 / 入口 / 钉版 / 同步留 R2–R5。
 
-## 背景（这缺口怎么来的）
+## 背景（这块地基为什么先做）
 
-- R6（ITER-0032）只在 `migration-schema §4` 定义了 `[split]` 标签**语义**（拆什么、判据、冲突即停），没碰升级执行器。
-- R8（ITER-0034）产了 `migrations/v2.0.0.md` 实例、其步骤 1 就是 `[split]`。
-- 但 `/butler-upgrade` 的执行器 `butler-upgrade §5.1` 逐条枚举它认得的标签时**漏了 `[split]`**、`§6` 落地细则也没有 `[split]` 小节。结果：真跑 `/butler-upgrade` 到 `[split]` 那步，AI 没有明确执行路径，只能临时回退去读 `migration-schema §4` 的语义定义拼——不是设计好的自动路径。
-- 附带一个未定的口径：typed 步骤默认自动跑，但规则又说"不强制立即迁"。`[split]` 到底自动拆还是问一句？没定死（`v2.0.0.md` 写了"可暂缓"、和"它是配方里的一步"打架）。
+- references/ 现状：`logic-protocol` 定注入、`mcv-deployment` 定目录、`acceptance/tech-plan/verify` 定 `External References` 字段——但**没有一份 schema** 说 references/ 内部怎么组织、怎么读。
+- MILE-0004 要 PRD 先行 + 版本化改版同步，全都得踩在"references 有索引、有稳定模块身份、有版本落盘"的地基上。R1 就是这块地基（契约）：R2 切、R3 接入口、R4 钉版、R5 同步全依赖它。地基先浇，动作后砌。
 
-## 做什么
+## 做什么（DD）
 
-- **DD1 · `[split]` 是 opt-in 结构迁移、非机械自动步**：机械标签（`[regen-claude]`/`[restamp]`）升级时静默自动跑；`[split]` 不同——它是哲学级形态迁移，执行器碰到它时**把它抛成一道用户选择**："本版可把你的单文件 `PROJECT.md` 迁成知识文件夹——现在迁 / 继续单文件、以后再迁？"。选"继续单文件"则跳过 `[split]`、单文件分支照常受支持（守两态并存），其余机械步（`[regen-claude]`+`[restamp]`）照跑。
-- **A1**：`butler-upgrade §5.1` 标签枚举补 `[split]`（指向新 `§6.5`）。
-- **A2**：`butler-upgrade` 新增 `§6.5 [split] 落地细则`——起始态校验（旧单文件在**且** `.ai/project/00_INDEX.md` 未成形才动）+ **opt-in 迁移选择闸**（迁 / 暂缓）+ 拆分动作（按 `project-digest-schema §8` 主题集路由进 `00_INDEX` + 主题文件、拆出文件走 `git add`）+ **冲突即停**（目标已部分成形 / 旧单文件手工漂移 → 停下报差异退 ACK、绝不拆丢用户内容）+ 暂缓分支（跳过但如实报告、单文件继续支持）。
-- **A3**：`migration-schema §4` 的 `[split]` 定义补一句执行语义交叉引用（"升级时的 opt-in 选择闸见 `butler-upgrade §6.5`"），语义真源仍在 §4。
-- **A4**：`butler-upgrade §7` 验证清单加一行（`[split]` 结果二选一如实报告：已迁文件夹态 / 用户选择暂缓继续单文件）。
-- **A5**：核 `migrations/v2.0.0.md` 措辞与新口径自洽（已写"可暂缓"，确认不需改或微调）。
+- **DD1 · 新建 `Coder/40_Context_Management/references-schema.md`**：references/ 子系统首份契约。两部分——通用（references/ 是什么；既有扁平单文件 `api-`/`design-`/`insight-` 归入"扁平态"）+ prd/ 知识文件夹态（下列 DD2–DD5）。
+- **DD2 · `references/prd/00_INDEX` 契约**：入口（这份 PRD 是什么 + 模块地图）+ **模块登记表**——每模块一行：`slug`（终身身份）↔ 当前标题/章节（会变的门牌）↔ 首见版本 ↔ 当前版本 ↔ 状态（active / removed）。slug 一次分配、跨改版不变（Q7）。
+- **DD3 · digest-and-point 读纪律**：读 references/prd 先读 `00_INDEX` 地图 → 按需钻用到的那片 `prd/<slug>.md` → 指针钻源。执行默认读 live 最新（Q2）。借 `.ai/project` 的读法用在参考资料上。
+- **DD4 · "索引可摘要 / 切片必原文"硬区分**：`00_INDEX`（含登记表）**可以是摘要 / 路由**；`prd/<slug>.md` 切片**必须逐字原文、无损**（少一字验收就错）。这是 references 相对 `.ai/project` 的命门差异——project 全是有损摘要，references 的切片是无损真源。
+- **DD5 · 落盘契约**：live 目录 `references/prd/<slug>.md` = 最新版、无版本前缀、执行直读（Q10）；`.archive/vN/` = 改版时冻的旧版**全量快照**、自包含（Q2/Q10）。`prd_version` 只在回溯（钉版迭代 / 闭档审计）时去 `.archive` 找。
+- **DD6 · README 注册**：新 schema 登进 `Coder/README.md` 目录结构 + 读取顺序（守"新规则文件必须注册"）。
 
 ## 边界（不做）
 
-- 不改 `[split]` 的**语义定义**（拆什么、判据、冲突即停仍以 `migration-schema §4` 为真源）——只接**执行器**。
-- 不改其它 typed 标签的执行逻辑、不改 `mcv-deployment` 部署种子、不改 `.ai/project/` 结构契约。
-- 不真跑 `/butler-upgrade`（那是 dogfood 债、需真实老项目，非本轮范围）。
-- 不切版（纯规则接线补齐、向后兼容，属独立迭代；是否随下个版本发布另论）。
+- 不做**切分动作**（怎么把一份 PRD 切成 slug 切片、边界算法、soft 对齐拆法）——R2。
+- 不动 `/milestone` 入口、不做首切触发、不做路线图 ↔ 模块交叉指针——R3。
+- 不碰 AC frontmatter `prd_version` 钉版、不改 acceptance/tech-plan/verify 接线——R4。
+- 不做 `/prd update` 同步、变更检测、影响面、`.archive` 快照的**产生动作**（R1 只定 `.archive` 的**契约/形态**，不写"何时怎么冻"）——R5。
+- 不改 references/ 既有扁平用法（`api-`/`design-`/`insight-` 注入照旧）、不动非 PRD 流、不切版。
 
 ## 关键设计约束
 
-- **opt-in 不破坏"配方幂等按序执行"模型**：`[split]` 的用户选择闸类比已有的 `[add-field]` 草稿值 ACK、漂移即停 ACK——结构性 / 高风险步骤本就带确认闸，不是纯机械同步。执行器逐步处理时，`[split]` 这步内含一次 opt-in 分叉，仍是幂等的（迁过了不重迁、暂缓则单文件保持）。
-- **语义真源不搬家**：`[split]` 定义仍在 `migration-schema §4`，`butler-upgrade §6.5` 只写"执行器怎么落地它"（起始态校验调用 + opt-in 闸 + git 动作），回指 §4 不重述语义（守单一来源）。
+- **契约层与动作层分离**：R1 只定"references/prd 长什么样、怎么读、怎么落盘"，一切**产生 / 变更动作**归 R2–R5。R1 是纯声明式契约、可被后续迭代当地基引用，不含执行逻辑。
+- **无损 vs 有损的红线（DD4）**：整个 MILE-0004 的命门——一旦有人拿 `project-digest` 的有损 overwrite 语义套到 prd 切片上，PRD 精确文案就废了。schema 里把这条写成硬约束、显式对比 `.ai/project`。
+- **slug 终身身份**：DD2 的 slug 不随章节重编号变（Q7），是 R5 改版认亲的锚点。R1 定死"slug 一次分配、只增不改（除非模块真 removed）"。

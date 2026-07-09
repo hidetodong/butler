@@ -74,6 +74,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     role-switch.md
     handoff-spec.md
     project-digest-schema.md
+    references-schema.md
 
   /50_Extension_Ideation
     ideation-engine.md
@@ -153,6 +154,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
 - `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、推荐主题集、每份边界、digest-and-point 写作密度、收口折叠维护模型与四产物边界；它是冷启动第一读。（文件名沿用旧名 project-digest-schema；内容已从单文件薄索引升级为知识文件夹。）
+- `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平态（`api-`/`design-`/`insight-` 单文件，注入真源仍在 `logic-protocol.md`）与知识文件夹态（`prd/` 索引 + 模块登记表 + slug 终身身份 + digest-and-point 读纪律 + 无损切片 + `live`/`.archive/vN/` 版本落盘）；与 `project-digest-schema` 职责分明（项目全貌**有损摘要** vs 外部规格**含无损切片**）。本文件（MILE-0004 R1）只定契约/结构，PRD 切分/入口/钉版/改版同步动作属 R2–R5。
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认触发同上下文简要自评；**独立复核（opt-in·fresh-context 子 agent·验证者≠实现者）**由手动 `/review` 或项目 `.ai/local-constraints.md` 的 `Review Policy: independent_review: on` 触发，spec-only 输入逐 AC 独立核对作者断言（refute 即阻断收口）。
 - `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` 分别是复核 / 更新说明 / 查过时三帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，各帮手文件回指对应真源不重写。三帮手 G1–G4 均回指 overview §3。

@@ -10,7 +10,7 @@
   - `00_System_Prompt` — 协作身份 + 总调度逻辑 + 输出呈现协议（结论先行 / 统一标号 / 表格化 / 说人话）。
   - `20_Workflow_Lifecycle` — P1→P5 状态机 + 四件套 schema + 迭代 / 里程碑 / 版本 / 迁移 / 交付 / 部署规则。**最大一层、骨架所在**。
   - `30_Quality_Gate` — linting / 测试策略 / 复核标准 + P4 常驻底线（纠错契约 `correction-contract`、最小实现纪律 `implementation-discipline`）。
-  - `40_Context_Management` — 状态外化、冷启动读序、handoff、知识文件夹契约（`project-digest-schema`）、角色切换。
+  - `40_Context_Management` — 状态外化、冷启动读序、handoff、知识文件夹契约（`project-digest-schema` 管项目自身全貌 / `references-schema` 管外部参考资料 `.ai/references/` 的索引与渐进读）、角色切换。
 - **Domain / Stack Profiles**（`10`）——按项目技术栈**识别后才启用**（vue3 / typescript / build-tooling），不默认前置。
 - **Business Extension**（`99`）——业务侧**最高优先级**约束，若存在则压过通用 SOP。当前仓内只有 `.gitkeep`（占位）。
 
@@ -34,6 +34,7 @@
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。
+- **最新、契约层未踩过**：`references-schema`（MILE-0004 R1，`.ai/references/` 索引 + 渐进读 + 无损切片契约地基）——只定契约、切分/入口/钉版/同步动作留 R2–R5，正确性待后续真踩上来才完全证伪。
 - **实验性**：`/dangerous` 无人值守自治、`/preference` 偏好反哺——护栏齐但真实使用少。
 - **欠债**：hook 门禁在 butler 仓自身不 live 运行、`/butler-upgrade` 从未真跑，见 `debt.md`。
 

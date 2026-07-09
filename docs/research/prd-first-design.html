@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+  设计理解图 · PRD 先行 × 里程碑 brief 是否重复
+  预研讨论产物（非规则、非交付）。一次性理解用，不进规则体系。
+  单文件自包含、可离线双击打开。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD 先行 × 里程碑 brief —— 是否重复？</title>
+<style>
+  :root{
+    --fg:#1f2328; --muted:#59636e; --bg:#f6f8fa; --card:#fff; --border:#d1d9e0;
+    --accent:#0969da; --accent-soft:#ddf4ff;
+    --hi:#8250df; --hi-soft:#f3eefc;      /* 方向层 紫 */
+    --lo:#1a7f37; --lo-soft:#e6f4ea;      /* 细节层 绿 */
+    --warn:#9a6700; --warn-soft:#fff8c5;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:2rem 1rem 4rem;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;}
+  .sheet{max-width:920px;margin:0 auto;}
+  h1{font-size:1.55rem;margin:0 0 .3rem;}
+  .sub{color:var(--muted);margin:0 0 1.5rem;font-size:.95rem;}
+  .thesis{background:var(--accent-soft);border:1px solid #a6d3ff;border-radius:12px;
+    padding:1rem 1.4rem;margin-bottom:1.5rem;font-size:1.05rem;}
+  .thesis b{color:var(--accent);}
+  section{background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:1.2rem 1.6rem 1.4rem;margin-bottom:1.2rem;}
+  section>h2{margin:0 0 .9rem;font-size:1.12rem;padding-bottom:.45rem;border-bottom:1px solid var(--border);}
+  code{font-family:var(--mono);font-size:.86em;background:#eef1f5;padding:.05rem .35rem;border-radius:5px;}
+  .muted{color:var(--muted);}
+
+  /* ---- 分流图 ---- */
+  .flow{display:flex;flex-direction:column;align-items:center;gap:.2rem;}
+  .prd-box{background:#24292f;color:#fff;border-radius:10px;padding:.7rem 1.6rem;
+    font-weight:600;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+  .prd-box small{display:block;font-weight:400;opacity:.7;font-size:.75rem;margin-top:.15rem;}
+  .split{font-size:1.5rem;color:var(--muted);line-height:1;margin:.15rem 0;}
+  .rails{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;margin-top:.4rem;}
+  .rail{border-radius:12px;padding:1rem 1.1rem;border:1.5px solid;}
+  .rail.hi{background:var(--hi-soft);border-color:#c9b3ef;}
+  .rail.lo{background:var(--lo-soft);border-color:#a9d8b8;}
+  .rail .tag{display:inline-block;font-size:.72rem;font-family:var(--mono);
+    padding:.1rem .5rem;border-radius:999px;color:#fff;margin-bottom:.5rem;}
+  .rail.hi .tag{background:var(--hi);}
+  .rail.lo .tag{background:var(--lo);}
+  .rail h3{margin:.1rem 0 .5rem;font-size:1rem;}
+  .rail .step{background:#fff;border:1px solid var(--border);border-radius:8px;
+    padding:.5rem .7rem;margin:.4rem 0;font-size:.9rem;}
+  .rail .arrow{text-align:center;color:var(--muted);font-size:1.1rem;line-height:1;margin:.1rem 0;}
+  .rail .out{font-weight:600;}
+  .badge{display:inline-block;font-size:.7rem;padding:.05rem .45rem;border-radius:5px;margin-left:.3rem;vertical-align:middle;}
+  .badge.reuse{background:var(--lo-soft);color:var(--lo);border:1px solid #a9d8b8;}
+  .badge.new{background:var(--accent-soft);color:var(--accent);border:1px solid #a6d3ff;}
+  .crosslink{text-align:center;margin-top:.9rem;padding:.55rem;border:1px dashed var(--muted);
+    border-radius:8px;font-size:.9rem;color:var(--muted);background:#fafbfc;}
+  .crosslink b{color:var(--fg);}
+
+  /* ---- 对比表 ---- */
+  table{border-collapse:collapse;width:100%;font-size:.92rem;margin-top:.3rem;}
+  th,td{border:1px solid var(--border);padding:.5rem .7rem;text-align:left;vertical-align:top;}
+  th{background:#eef1f5;}
+  th.hcol{background:var(--hi-soft);color:var(--hi);}
+  th.lcol{background:var(--lo-soft);color:var(--lo);}
+  td.axis{background:#f6f8fa;font-weight:600;white-space:nowrap;}
+
+  /* ---- 三态卡 ---- */
+  .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+  .mode{border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;}
+  .mode h4{margin:.1rem 0 .5rem;font-size:.98rem;}
+  .mode ul{margin:.3rem 0 0;padding-left:1.1rem;font-size:.88rem;}
+  .mode li{margin:.2rem 0;}
+  .mode .pill{font-size:.7rem;font-family:var(--mono);padding:.08rem .45rem;border-radius:999px;background:#eef1f5;color:var(--muted);}
+
+  /* ---- 复用 vs 新增 ---- */
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+  .col{border-radius:10px;padding:.9rem 1.1rem;}
+  .col.reuse{background:var(--lo-soft);border:1px solid #a9d8b8;}
+  .col.new{background:var(--accent-soft);border:1px solid #a6d3ff;}
+  .col h4{margin:.1rem 0 .5rem;}
+  .col ul{margin:0;padding-left:1.1rem;font-size:.9rem;}
+  @media(max-width:680px){.rails,.modes,.verdict{grid-template-columns:1fr;}}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:1.5rem;}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <h1>PRD 先行 × 里程碑 brief —— 是否重复？</h1>
+  <p class="sub">一句话答案 + 一张分流图，看懂为什么"不重复、但要小心一个交叠点"。</p>
+
+  <div class="thesis">
+    <b>功能不重复，实现上有一个交叠点。</b> brief 管<b>方向</b>（有损、一次性、可丢），PRD-references 管<b>细节</b>（无损、常驻、验收对账）——两个海拔。
+    真正要防的是：别为 PRD 再造一套"合成里程碑"的平行管线。正解 = <b>一份 PRD 输入，喂两个海拔</b>。
+  </div>
+
+  <!-- ============ 分流图 ============ -->
+  <section>
+    <h2>核心图：一份输入，喂两个海拔</h2>
+    <div class="flow">
+      <div class="prd-box">📄 一份 PRD<small>用户的原始规格文档（可能很长、含精确文案与校验规则）</small></div>
+      <div class="split">╱&nbsp;&nbsp;&nbsp;╲</div>
+      <div class="rails">
+
+        <div class="rail hi">
+          <span class="tag">高空 · 方向层</span>
+          <h3>① 当 brief 用<span class="badge reuse">复用现有</span></h3>
+          <div class="step">走现有 <code>/milestone</code> 录入通道</div>
+          <div class="arrow">↓ 合成（有损，概括成范围+路线图）</div>
+          <div class="step out">📋 <code>MILESTONE.md</code> 路线图</div>
+          <p class="muted" style="font-size:.82rem;margin:.5rem 0 0;">非权威 · 一次性 · 合成完可丢 · 概括没关系，方向层本就该粗</p>
+        </div>
+
+        <div class="rail lo">
+          <span class="tag">贴地 · 细节层</span>
+          <h3>② 切进 references<span class="badge new">唯一新加</span></h3>
+          <div class="step">按模块 / 组件边界切分 + 建索引</div>
+          <div class="arrow">↓ 逐字保真（无损，原文不动一个字）</div>
+          <div class="step out">🗂️ <code>references/prd/</code> 原文片 + <code>00_INDEX</code></div>
+          <p class="muted" style="font-size:.82rem;margin:.5rem 0 0;">权威真源 · 跨迭代常驻 · P2/P3/P5 反复读、验收对着它核</p>
+        </div>
+
+      </div>
+      <div class="crosslink">
+        🔗 交叉引用：<b>路线图第 N 项</b> ↔ <b>prd 模块 N</b>　—— 顺手把"里程碑→references 源指针"缺口也焊上
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 对比表 ============ -->
+  <section>
+    <h2>为什么不是同一个东西：六轴对照</h2>
+    <table>
+      <tr><th>轴</th><th class="hcol">origin brief → MILESTONE.md</th><th class="lcol">PRD → references</th></tr>
+      <tr><td class="axis">管什么</td><td>方向 / 范围（这版要干嘛）</td><td>细节（每个组件精确怎么做）</td></tr>
+      <tr><td class="axis">保真度</td><td>有损——概括成路线图</td><td>无损——逐字保真</td></tr>
+      <tr><td class="axis">权威性</td><td>非权威、可丢</td><td>权威真源，验收逐条核</td></tr>
+      <tr><td class="axis">生命周期</td><td>一次性、不归档</td><td>独立生命周期、跨迭代常驻</td></tr>
+      <tr><td class="axis">被谁读</td><td>录入时读一次</td><td>每迭代 P2/P3/P5 反复读</td></tr>
+      <tr><td class="axis">海拔</td><td>高（俯瞰全局）</td><td>低（贴地实现）</td></tr>
+    </table>
+    <p class="muted" style="margin:.7rem 0 0;">一个"把想法压成路线图然后扔"，一个"把规格钉墙上反复照抄"。<b>互补，不是二选一。</b></p>
+  </section>
+
+  <!-- ============ 交叠点 ============ -->
+  <section style="background:var(--warn-soft);border-color:#eed888;">
+    <h2 style="border-bottom-color:#eed888;">⚠ 你闻到的味道是真的：交叠点在实现，不在功能</h2>
+    <p>PRD 先行时，<b>同一份文档同时干两份活</b>：既是定义里程碑范围的原始输入（brief 角色），又是实现细节真源（references 角色）。butler 现在把这两个角色分给两个通道（<code>origin</code> / <code>references</code>）。</p>
+    <p style="margin-bottom:0;">所以重复风险 <b>不在"要不要 references"，而在"要不要为 PRD 再造一套里程碑合成"</b>。答案是<b>不造</b>——PRD 当 brief 喂给现有 <code>/milestone</code>，路线图照旧出；只额外加"切分+索引"这一步。</p>
+  </section>
+
+  <!-- ============ 三态 ============ -->
+  <section>
+    <h2>落地后三种情况</h2>
+    <div class="modes">
+      <div class="mode">
+        <h4><span class="pill">无 PRD</span></h4>
+        <ul>
+          <li>只跑 brief 通道</li>
+          <li>跟今天<b>一模一样</b></li>
+          <li class="muted">→ 满足"非 PRD 先行照常跑"</li>
+        </ul>
+      </div>
+      <div class="mode">
+        <h4><span class="pill">小 PRD</span></h4>
+        <ul>
+          <li>brief 通道 +</li>
+          <li>整份塞 <code>references/prd-xxx.md</code></li>
+          <li class="muted">不切、不建索引</li>
+        </ul>
+      </div>
+      <div class="mode">
+        <h4><span class="pill">大 PRD</span></h4>
+        <ul>
+          <li>brief 通道 +</li>
+          <li>切模块 + <code>00_INDEX</code></li>
+          <li class="muted">指针渐进加载、只读用到的那片</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 复用 vs 新增 ============ -->
+  <section>
+    <h2>结账：复用什么 / 只新加什么（＝没有平行机器）</h2>
+    <div class="verdict">
+      <div class="col reuse">
+        <h4>✅ 复用（一行不改）</h4>
+        <ul>
+          <li><code>/milestone</code> 录入 + brief→MILESTONE 合成</li>
+          <li><code>origin/</code> 收件箱语义</li>
+          <li>核心 P1–P5 链</li>
+          <li>references 的 P2/P3/P5 接线（External References / Compliance）</li>
+        </ul>
+      </div>
+      <div class="col new">
+        <h4>➕ 新加（唯一增量）</h4>
+        <ul>
+          <li>PRD 切分机制（按语义/组件边界，原文无损）</li>
+          <li><code>references/prd/00_INDEX</code> 索引 + 渐进读纪律</li>
+          <li>路线图项 ↔ prd 模块交叉指针</li>
+          <li>改版同步协议（PRD 出 V1.2 时怎么办）<span class="badge new">待设计</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>预研理解图 · 非规则非交付 · 关键区分：索引可为摘要，PRD 切片必须逐字原文</footer>
+</main>
+</body>
+</html>
