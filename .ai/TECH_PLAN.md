@@ -1,39 +1,42 @@
-# TECH_PLAN — ITER-0039（MILE-0004 R4 · AC 钉版 + P2/P3/P5 接线）
+# TECH_PLAN — ITER-0040（MILE-0004 R5 · 改版同步 `/prd update`）
 
-> 监督态自驱。目标见 CONCEPT、验收见 AC_LIST，不重述。全为规则文档接线（扩展 3 schema + flip 1 指针，无新文件）。
+> 监督态自驱。目标见 CONCEPT、验收见 AC_LIST，不重述。全为规则文档接线（新建 1 + 接线 4 + flip，无代码）。
 
 ## 设计决策（DD）
 
-- **DD1 · 可选字段守非回归**：`prd_version` 挂在 `acceptance-schema §3` frontmatter，与 `状态`/`ACK 日期` 并列但**标可选**——非 PRD 迭代不写此行、frontmatter 逐字不变；hook 不校验它（旧 AC 无字段按 legacy）。这是 AC7 非回归红线的结构保证。
-- **DD2 · 版本单一存 frontmatter、引用不重复**：版本化锚点 = slug + frontmatter 全局 `prd_version`；正文引用 `prd/<slug>.md` 不带版本后缀，解析时用 frontmatter 补齐。同 R3"映射单一真源"手法，防多处写漂移。
-- **DD3 · 解析/核对靠回指、不复述落盘**：解析规则（live vs `.archive/vN/`）与"执行读最新"读侧纪律**回指 `references-schema §5 步骤 2/§7`**，acceptance/verify 侧只写"取哪一版核"、不重抄快照落盘契约。
-- **DD4 · P3 跟 AC 走、不自立版本**：`tech-plan-schema` External References 引用 prd 切片时版本**继承 AC 钉住的 `prd_version`**、口径回指 `acceptance-schema`，技术方案不另记版本。
-- **DD5 · P5 兑付点对钉住版核**：`verify-schema` References Compliance 从"对 `.ai/references/` 核"细化为"prd 切片对 AC 钉住 `prd_version` 核"；同迭代内 live 即钉住版（读 live），仅回溯复核历史迭代才读 `.archive/vN/`——不给 P5 常规路径加负担。
-- **DD6 · amend 重冻只加一句**：`acceptance-schema §4` 补"amend 重冻可重绑 `prd_version`"，接 `iteration-schema §5.3` 既有退回-重 ACK 流程，不改 amend 本身；改版同步完整协议属 R5。
-- **DD7 · flip 用既有翻牌手法**：`references-schema §7` bullet + §8 R4 行由待落地 → ✅ 已由三 schema 落地，与 R1/R2/R3 翻 §8 指针一致。
+- **DD1 · 镜像 `prd-split` 的动作层骨架**：`prd-update.md` frontmatter + §1 定位（契约 vs 动作、回指表、split=首切/update=改版分工）严格对照 `prd-split.md` 写，读者一眼看出两者同族。回指 `references-schema` 的规矩沿用 split 的回指表，不复述契约。
+- **DD2 · 检测协议成文为"三步"**：清单优先（读用户修改项清单）→ diff 兜底（old live 切片 vs new PRD 对应段）→ 对账（清单∪diff，差集亮出来问）。不写具体 diff 工具命令（规则层不绑实现），只定"清单为主、diff 防漏、分歧必亮"的口径。
+- **DD3 · 落盘顺序写死"先冻后更"**：`.archive/v<旧版>/` 全量快照**必须在** live 更新**之前**冻好（否则旧版原文被覆盖就冻不出了）——这是 AC3 的硬顺序。快照形态/live 形态回指 `references-schema §7`，不复述。切分复用 `prd-split`、只写"按 split 重新派生受影响模块"，不抄算法。
+- **DD4 · 认亲基础态挂登记表状态字段**：新增/消失只动 `00_INDEX` 登记表的 `状态`（active/removed）+ 新增行的 `首见版本`——用的是 `references-schema §3` 已有字段，**不加列**（守 AC9）。合并/拆分/改名显式一句"留 R6"。
+- **DD5 · 三态判定靠台账、路由靠回指**：三态用现成台账判（没开工=路线项/无引用；进行中=`ITERATIONS` active 迭代引用了变更 slug；已收口=closed 迭代引用了）。路由到 amend（`iteration §5.3`）/ 扩张（`iteration §5.4`）/ acceptance §4 重绑，全**回指、不改写**那些仪式。"亮牌不自动"写成硬约束句。
+- **DD6 · `/prd status` 定位只读**：与 `/milestone status` 同类，明确"不改盘、只读汇总"，避免被误用为改版入口。
+- **DD7 · 接线最小侵入 + flip 用既有翻牌手法**：`logic-protocol` 首切行**尾部加一句**（不动首切主体）；`acceptance §4` 那句"属 `/prd update`"**补个指针**（不改语义）；`references §7` 快照产生动作 bullet + `§8` R5 行由待→✅（同 R1–R4 翻牌）；`README` 结构树 + 说明段各加一行。
 
 ## 影响面（章节级）
 
 | 文件 | 改动 | AC |
 |---|---|---|
-| `Coder/20_Workflow_Lifecycle/acceptance-schema.md` | §2 交付约定列 `prd_version` · §3 模板 frontmatter 加 `prd_version: —` 行 + 版本化 External References 示例 · §4 绑定/钉住语义 + amend 重绑 · §5 编写规则（版本取 frontmatter/不重复、标 AC↔slug） | AC1–3 |
-| `Coder/20_Workflow_Lifecycle/tech-plan-schema.md` | §2 可选字段口径 · §3 模板 External References 版本化示例 · §4 编写规则（引用 prd 切片继承 AC 钉住版、回指 acceptance） | AC4 |
-| `Coder/20_Workflow_Lifecycle/verify-schema.md` | §3 模板 References Compliance 行注钉住版 · §4 编写规则（对钉住 `prd_version` 核，回溯读 `.archive/vN/`，回指 references §5 步骤 2/§7） | AC5 |
-| `Coder/40_Context_Management/references-schema.md` | §7 `prd_version` bullet flip 为已落地（指 acceptance）· §8 R4 行 flip ✅ | AC6 |
+| **新增** `Coder/40_Context_Management/prd-update.md` | frontmatter + §1 定位（契约vs动作/回指表/split·update 分工）+ §2 变更检测（清单优先+diff兜底+对账）+ §3 重新派生+落盘（先冻旧版快照再更 live、复用 split、回指 §7）+ §4 登记表认亲基础态（新增/消失、合并拆分改名留 R6）+ §5 三态影响面（亮牌不自动）+ §6 受影响路由（回指 amend/扩张）+ §7 `/prd status` 只读 + §8 soft 对齐硬约束 | AC1–7 |
+| `Coder/00_System_Prompt/logic-protocol.md` | 注入表首切行尾补"改版走 `/prd update`（见 prd-update.md）、非重新注入" | AC8 |
+| `Coder/20_Workflow_Lifecycle/acceptance-schema.md §4` | `prd_version` bullet 那句"属 `/prd update`"补指 `prd-update.md` | AC8 |
+| `Coder/40_Context_Management/references-schema.md §7·§8` | §7 快照产生动作 bullet flip 已落地 + §8 R5 行 flip ✅（指 prd-update.md） | AC8 |
+| `Coder/README.md` | 结构树 + 说明段注册 `prd-update.md` | AC8 |
 
-**不碰**：`milestone-schema`（R3 入口）、`prd-split` 切分算法、`references-schema §3` 登记表字段（不加列）、`logic-protocol`、`project-digest`、`context-persistence`、hook、`VERSION`、`/prd update` 同步/快照产生/认亲动作。
+**不碰**：`references-schema §3` 登记表字段（不加列）、`prd-split` 切分算法、`prd_version` 钉版字段与解析、`milestone-schema`、核心 P1–P5 与 amend/扩张仪式本身（只回指）、`project-digest`、`context-persistence`、hook、`VERSION`；不做合并/拆分/改名认亲(R6)；不切版。
 
 ## Execution Steps（可勾选）
 
-- [ ] S1 · `acceptance-schema §2` 交付约定加 `prd_version`（可选、引用 prd/ 时必填）+ §3 模板 frontmatter 加 `prd_version: —` 行 + 注释 → AC1
-- [ ] S2 · `acceptance-schema §3` External References 示例补 prd 切片版本化引用 + §5 编写规则写"版本取 frontmatter/正文不重复 + 解析 live/.archive 回指 references §5 步骤 2/§7 + 标 AC↔slug" → AC2/AC1
-- [ ] S3 · `acceptance-schema §4` 冻结字段补 `prd_version` 绑定/钉住语义 + amend 重冻可重绑（接 iteration §5.3）→ AC3
-- [ ] S4 · `tech-plan-schema §2/§3/§4` External References 接线——引用 prd 切片继承 AC 钉住 `prd_version`、口径回指 acceptance、不自立版本 → AC4
-- [ ] S5 · `verify-schema §3/§4` References Compliance 接线——对 AC 钉住 `prd_version` 核（同迭代 live 即钉住版 / 回溯读 `.archive/vN/`）、读侧回指 references §5 步骤 2 → AC5
-- [ ] S6 · flip `references-schema §7` bullet + `§8` R4 行为 ✅ 已落地（指三 schema）→ AC6
-- [ ] S7 · scope 守恒核对（`git status` 限 4 文件）+ **非回归核对**（`git diff` 无删除、非 PRD frontmatter 字面未动、hook 未碰）+ 说人话三条自检 → AC7/AC8
-- [ ] S8 · P5 独立复核（干净上下文子 agent、对抗式）→ 收口
+- [ ] S1 · 新建 `prd-update.md` frontmatter + §1 定位（镜像 prd-split：契约vs动作 + 回指表 + split首切/update改版分工）→ AC1
+- [ ] S2 · §2 变更检测（清单优先 → diff 兜底 → 对账，分歧必亮、不静默采信）→ AC2
+- [ ] S3 · §3 重新派生 + 落盘（**先冻旧版 `.archive/v<旧版>/` 全量快照再更 live**、复用 prd-split 切分不复述、bump 全局版本、回指 references §7）→ AC3
+- [ ] S4 · §4 登记表认亲基础态（新增发新 slug/首见版本、消失置 removed、slug 不回收；合并/拆分/改名留 R6）→ AC4
+- [ ] S5 · §5 三态影响面（没开工/进行中/已收口分类 + **亮牌不自动默认**硬约束）→ AC5
+- [ ] S6 · §6 受影响路由（进行中→amend 回指 iteration §5.3 + acceptance §4 / 已收口→扩张回指 iteration §5.4 / 没开工→无动作，不改仪式）→ AC6
+- [ ] S7 · §7 `/prd status` 只读看板 + §8 soft 对齐硬约束（改版同 split 提议→确认→落盘）→ AC7
+- [ ] S8 · 接线：`logic-protocol` 注入表 + `acceptance §4` 补指针 + `references §7·§8` flip + `README` 注册 → AC8
+- [ ] S9 · scope 守恒（`git status`）+ 非回归核对（`git diff` 非 PRD 流未动、契约结构/切分算法/钉版字段未碰）+ 说人话三条自检 → AC9/AC10
+- [ ] S10 · P5 独立复核（干净上下文子 agent、对抗式）→ 收口
 
 ## 验证策略
 
-全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git grep`/`git diff` 核守恒。核心对抗点＝**非回归**（`prd_version` 纯增量可选、非 PRD frontmatter 字面不变、hook 未动）+ **版本单一真源**（版本只在 frontmatter、正文/P3/P5 不重复）+ **引用不复述**（解析/落盘回指 references §5 步骤 2/§7、P3 版本回指 acceptance）+ **不越界**（只接钉版记录+核对，不做 R5 同步/快照产生、不碰 R3 入口/切分算法/契约结构）。dogfood：四件套 + 改动正文过说人话三条。无人测道残余。
+全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git grep`/`git diff` 核守恒。核心对抗点＝**亮牌不自动**（三态只报告、不静默改已冻结工作）+ **落盘先冻后更**（旧版快照在 live 更新前冻好）+ **复用不造轮子**（切分复用 split、重冻/扩张复用既有仪式只回指）+ **契约动作分离**（update 回指 references 契约不复述）+ **不越界**（认亲只到新增/消失、不做 R6，不改契约结构/钉版字段/核心仪式）。dogfood：四件套 + prd-update 正文过说人话三条。无人测道残余。

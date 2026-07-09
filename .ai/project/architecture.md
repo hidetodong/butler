@@ -10,7 +10,7 @@
   - `00_System_Prompt` — 协作身份 + 总调度逻辑 + 输出呈现协议（结论先行 / 统一标号 / 表格化 / 说人话）。
   - `20_Workflow_Lifecycle` — P1→P5 状态机 + 四件套 schema + 迭代 / 里程碑 / 版本 / 迁移 / 交付 / 部署规则。**最大一层、骨架所在**。
   - `30_Quality_Gate` — linting / 测试策略 / 复核标准 + P4 常驻底线（纠错契约 `correction-contract`、最小实现纪律 `implementation-discipline`）。
-  - `40_Context_Management` — 状态外化、冷启动读序、handoff、知识文件夹契约（`project-digest-schema` 管项目自身全貌 / `references-schema` 管外部参考资料 `.ai/references/` 的索引与渐进读契约 / `prd-split` 管把大 PRD 切成 `prd/` 切片的动作）、角色切换。
+  - `40_Context_Management` — 状态外化、冷启动读序、handoff、知识文件夹契约（`project-digest-schema` 管项目自身全貌 / `references-schema` 管外部参考资料 `.ai/references/` 的索引与渐进读契约 / `prd-split` 管把大 PRD 切成 `prd/` 切片的首切动作 / `prd-update` 管 PRD 改版同步）、角色切换。
 - **Domain / Stack Profiles**（`10`）——按项目技术栈**识别后才启用**（vue3 / typescript / build-tooling），不默认前置。
 - **Business Extension**（`99`）——业务侧**最高优先级**约束，若存在则压过通用 SOP。当前仓内只有 `.gitkeep`（占位）。
 
@@ -34,7 +34,7 @@
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。
-- **最新、未端到端踩过**：MILE-0004 references/PRD 版本化子系统——`references-schema`(R1 契约地基) + `prd-split`(R2 切分动作层) + `/milestone` 大 PRD 并进入口(R3) + AC 钉版 `prd_version` 接进 P2/P3/P5(R4，验收对钉住版核而非 live 最新) 均已落地；"绝不切碎/逐字保真/soft 对齐"护栏与钉版的跨改版审计价值靠执行遵从、待真切一份大 PRD + 真跑一次改版才完全兑付；改版同步(R5)/认亲(R6) 仍在路线图。
+- **最新、未端到端踩过**：MILE-0004 references/PRD 版本化子系统——`references-schema`(R1 契约地基) + `prd-split`(R2 切分动作层) + `/milestone` 大 PRD 并进入口(R3) + AC 钉版 `prd_version` 接进 P2/P3/P5(R4，验收对钉住版核而非 live 最新) + `prd-update` 改版同步 `/prd update`(R5，变更检测清单优先+diff兜底 / 先冻旧版快照再更 live / 三态影响面亮牌不自动) 均已落地；"绝不切碎/逐字保真/soft 对齐/亮牌不自动"护栏与钉版的跨改版审计价值靠执行遵从、待真切一份大 PRD + 真跑一次改版才完全兑付；模块合并/拆分/改名认亲(R6) 是 MILE-0004 最后一块、仍在路线图。
 - **实验性**：`/dangerous` 无人值守自治、`/preference` 偏好反哺——护栏齐但真实使用少。
 - **欠债**：hook 门禁在 butler 仓自身不 live 运行、`/butler-upgrade` 从未真跑，见 `debt.md`。
 

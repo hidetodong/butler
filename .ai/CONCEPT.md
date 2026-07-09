@@ -1,39 +1,37 @@
-# MILE-0004 R4 · AC 钉版 + P2/P3/P5 接线
+# MILE-0004 R5 · 改版同步 `/prd update`
 
-> ITER-0039 · 里程碑 MILE-0004 第四块 · 监督态自驱（承 R1 契约 + R2 切分 + R3 入口）· 不切版（纯规则接线）
+> ITER-0040 · 里程碑 MILE-0004 第五块 · 监督态自驱（承 R1 契约 + R2 切分 + R3 入口 + R4 钉版）· 不切版（纯规则接线）
 
 ## 一句话
 
-R3 让 butler 会把大 PRD 一份输入喂两个海拔了，但里程碑指向切片的指针指的都是"当前最新"——PRD 一改版（V1.1→V1.2），就无从锚定"当初冻结这条 AC 时对的是哪一版"。R4 给验收清单**钉版**：AC 顶部加一个 `prd_version` 字段，在 ACK 冻结那一刻绑定当时的 PRD 全局版本号、之后**钉住**（钉住＝锁死不随 PRD 后续改版漂移）；再把这个钉住版接进 P2/P3/P5——P3 对着钉住版设计、**P5 对着钉住版核**（不是对 live 最新核）。这样"验收对的是当初冻结时那一版规格"跨改版可审计，也给 R5 的改版同步铺好前置。
+R1–R4 让"一份 PRD → 切片 → 挂里程碑 → 钉版引用"都成了，但**全是"第一次导入"的静态视角**。R5 补上动态的另一半——PRD 真出 V1.2 时怎么办：新建 **`/prd update` 改版同步机制**（重新派生切片 + 检测变了哪些 + 冻旧版快照 + **三态影响面报告**：谁受影响/没开工·进行中·已收口），受影响的已冻结工作按既有仪式重冻或开新迭代承接；外加 **`/prd status`** 只读看板。这是 MILE-0004"改版有确定性协议兜底"的收官核心。
 
 ## 背景（为什么现在做、缺口在哪）
 
-- R1–R3 已让"一份 PRD → 切片 → 挂进里程碑"闭环成型，但**全都指向 live 最新**：`references/prd/<slug>.md` 永远是 PRD 当前态。真实项目 PRD 天然按"修改项"迭代改版，一旦改版，之前已冻结/已验收的 AC 引用的那条精确规则可能已经变了——却**没有任何锚点**记住"这条 AC 当初核的是 V1.1 的规格"。
-- 缺的正是**把引用钉到版本**这一块。grilling 十节点已定死方向：**全局版本**（一份 PRD 一个版本号，不给每片单独编版）+ **执行读最新、留版本可回溯**（Q2=b）+ **冻结绑定**（Q3=ii，ACK 那刻绑、之后钉住）。R4 就是把这三条决议物化成 AC 字段 + P2/P3/P5 接线。
+- R4 钉版钉住了"这条 AC 当初对的是哪一版"，但**没定版本怎么往前走**。PRD 改版这件事天然要做三件配套动作，一件都没接：① live 目录要更新到最新切片；② 旧版要**冻存**（`.archive/vN/`）供钉版回溯读——否则 R4 说的"回溯读 `.archive/vN/`"根本无处可读；③ 已按旧版冻结的工作要被**告知**"你依赖的规格变了"，不能静默漂移。
+- 真实项目 PRD 就是按"修改项"迭代改版的（用户实例即"V1.2 修改项"）。缺了 `/prd update`，改版就是一团乱麻：切片手改还是重切？旧版留不留？哪些已验收的 AC 受影响？R5 把这套变成**确定性协议**。
 
 ## 做什么（DD）
 
-- **DD1 · AC frontmatter 加 `prd_version`（全局版本 · 冻结绑定 · 之后钉住 · 可选字段）**：`acceptance-schema` 的 AC_LIST 顶部 frontmatter 增一个 `prd_version` 字段。语义——当本迭代引用了 `references/prd/` 切片时，此字段记 **ACK 冻结那一刻 PRD 的全局版本号**（如 `v1.1`），冻结即绑定、之后钉住。**全局**＝一份 PRD 一个版本号（非逐片编版，守 Q2=b）。字段**可选**：只有引用 prd/ 知识文件夹的迭代才填；对话驱动 / 普通 references（api-/design-/insight-）/ 非 PRD 迭代**不带**此字段（非回归红线——绝大多数迭代 frontmatter 一字不变）。
-- **DD2 · 版本化引用锚点 = slug + frontmatter 的全局版本（版本单一存 frontmatter、引用处不重复）**：引用锚点概念上是 (slug, 版本) 对，但**版本号只存 frontmatter 一处**（全局、单一真源），正文引用 `prd/<slug>.md` 时不逐条重复版本号——解析时用 frontmatter 的 `prd_version` 补齐。这守"版本单一真源"（同 R3 映射不双写）。解析规则：(slug, prd_version) → PRD 仍在该版则 live `prd/<slug>.md` 即钉住版；PRD 已改版超过它则回溯读 `.archive/v<prd_version>/<slug>.md`（§7 全量快照自包含、一定取得到当年原文）。
-- **DD3 · P2 `acceptance-schema` 接线**：§2 交付约定 + §3 模板 frontmatter 增 `prd_version`（可选、引用 prd/ 时必填）；§4 冻结状态字段补一条绑定语义（冻结绑当前全局版、之后钉住；amend 重冻可重绑，见下）；§5 编写规则补"引用 prd 切片时版本取 frontmatter、不逐条重复 + 标哪些 AC 源自哪个 slug"。
-- **DD4 · P3 `tech-plan-schema` 接线**：`External References` 引用 prd 切片时**继承 AC 钉住的 `prd_version`**（跟 AC 走、技术方案不自立版本），回指 `acceptance-schema`。方案对着钉住版设计。
-- **DD5 · P5 `verify-schema` 接线（核心兑付点：对钉住版核、不对 live 最新核）**：`References Compliance` 逐项对照 prd 切片时，**对着 AC frontmatter 钉住的 `prd_version` 核**。同一迭代内 live 通常就等于钉住版（读 live 即可）；只有**回溯复核历史迭代**（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/` 核。这是钉版的兑付——保证验收对的是当初冻结那一版。
-- **DD6 · references-schema 收口指针**：§7 落盘契约里"`prd_version` 如何在 AC 里记/绑定——属 R4"那条 flip 为已落地、指 `acceptance-schema`；§8 边界表 R4 行 flip 为 ✅。
-
-## amend 重冻可重绑（钉版与既有仪式的接点）
-
-`iteration-schema §5.3` amend（迭代内小修）把 `状态` 退回 `draft` 重新 ACK 时，若 PRD 期间恰好改了版，`prd_version` **可随重冻重绑到新的当前版**（重冻＝重新绑定当刻）。这是 R4 与既有 amend 仪式的唯一接点，R4 只加"重绑"一句、不改 amend 流程本身；改版**同步**的完整协议（重新派生 + 影响面 + 主动重冻路径）属 R5。
+- **DD1 · 新建 `prd-update.md` 动作层（镜像 `prd-split.md`）**：与 split 同为**产生/变更动作层**，回指 `references-schema` 契约、不复述不改写。分工一句话——**`prd-split` 管"首切"（第一次导入），`prd-update` 管"改版"（导入之后每次 V→V+1）**。
+- **DD2 · 变更检测：清单优先 + diff 兜底 + 对账**（grilling 决议 c）：以用户给的**修改项清单**为主（人最清楚改了啥）；同时对 old/new PRD 做 **diff 兜底**（机器防漏）；两者**对账**——清单没提但 diff 检出的变更必须亮出来问，不静默采信任一方。
+- **DD3 · 重新派生 + 落盘（复用切分 + live 最新 + 冻旧版快照）**（决议 live+快照 a、全局版本 b）：受影响模块按 `prd-split` 切分机制**重新派生**（复用、不复述算法）；**先把旧版整份冻进 `.archive/v<旧版号>/`**（全量快照、自包含），再把 live 切片更新到新版；全局版本号 bump（一份 PRD 一个号）。落盘形态守 `references-schema §7`。
+- **DD4 · 登记表认亲基础态（只做新增 / 消失）**：新版**新增**模块 → 发新 slug、首见版本 = 新版号、状态 `active`；某版起**消失**的模块 → 状态置 `removed`、slug 不回收（切片留档不再是当前规格）。**模块合并 / 拆分 / 改名的跨版本认亲对账显式留 R6**，本轮只做"多了谁 / 少了谁"这层基础态（守 `references-schema §4` slug 只增不改）。
+- **DD5 · 三态影响面报告（亮牌不自动默认）**（决议 a）：改版后扫一遍"哪些工作引用了变更切片"，按三态分类亮牌——**没开工**（未来迭代/路线项，尚未引用）/ **进行中**（active 迭代已引用）/ **已收口**（closed 迭代按旧版验收过）。**只报告、不自动改任何已冻结工作**（"亮牌"＝摆到台面让用户决定，绝不静默默认某个动作）。
+- **DD6 · 受影响工作路由（接既有仪式、不改流程本身）**：进行中（active）→ 接 **amend 重冻**（`iteration-schema §5.3`：退回 `draft` 重新 ACK、`prd_version` 重绑新版，见 `acceptance-schema §4`）；已收口（closed）→ closed 不可改，亮牌**建议开新迭代承接**（`iteration-schema §5.4` 扩张转迭代）；没开工 → 无需动作（将来引用时自然对新版）。R5 只**回指路由**，不改 amend/扩张流程。
+- **DD7 · `/prd status` 只读看板**：不改盘，只汇总当前——PRD 全局版本 + 模块登记表（active/removed）+ 最近一次改版的三态影响面。与 `/milestone status` 只读看板同类。
+- **DD8 · 接线**：`logic-protocol` 注入表首切行补一句"改版走 `/prd update`、非重新注入"；`acceptance-schema §4` 那句"属 `/prd update`"落地为指 `prd-update.md`；`references-schema §7`（快照产生动作）+ `§8` R5 行 flip 为 ✅；`README` 注册新文件。
 
 ## 边界（不做）
 
-- 不做 `/prd update` **改版同步** / 变更检测 / `.archive/vN/` 快照**产生**动作——R5。R4 只定钉版"怎么记 / 怎么解析 / 怎么核"，**消费**既有落盘契约（§7 已定 `.archive/vN/` 存在）、**不造**快照。
-- 不做模块**合并 / 拆分 / 改名认亲**——R6。
-- **不改 R3 已建的入口**（`milestone-schema §6.4/§5.3` 一字不动）、不改 `prd-split` 切分算法、不改 `references-schema` 契约**结构**（§3 登记表字段不加列，只 flip §7/§8 指针）。
-- **不动 hook**：`prd_version` 是可选字段、旧 AC 无它按 legacy 放行；不给它加机械校验（守非回归、旧 AC_LIST 不被误杀）。
-- 不碰 `project-digest` / `context-persistence` / `logic-protocol` / `VERSION`；**不切版**。
+- **不做模块合并 / 拆分 / 改名的跨版本认亲对账**——R6。本轮登记表认亲只到"新增 / 消失"基础态。
+- **不改 R1–R4 已建的**：`references-schema` 契约结构（§3 登记表字段不加列）、`prd-split` 切分算法、`prd_version` 钉版字段与解析。
+- **不改核心 P1–P5 与 amend / 扩张流程本身**——只**回指路由**到 `iteration-schema §5.3/§5.4` + `acceptance-schema §4`，不改写那些仪式。
+- 不碰 `project-digest` / `context-persistence` / hook / `VERSION`；**非 PRD 流一行不动**（非回归红线）；**不切版**。
 
 ## 关键设计约束
 
-- **版本单一存 frontmatter**：全局版本号只在 AC frontmatter 记一次，正文引用、P3 方案、P5 核对全跟它走、不重复——同 R3"映射单一真源"，防多处写将来漂移。
-- **执行读最新、核对读钉住**（Q2=b + Q3=ii 的兑现）：P4 干活正常读 live `prd/<slug>.md`（同一迭代内 live 即钉住版，读侧规则回指 `references-schema §5 步骤 2`）；钉版的价值在 **P5 核对**（对钉住版核）与**跨迭代 / R5 改版影响面对账**，不在 P4——所以 R4 不改 P4 读法。
-- **可选字段守非回归**：`prd_version` optional，非 PRD 迭代 frontmatter 逐字不变、hook 不校验它——这是 MILE-0004"不碰非 PRD 流"承诺在 R4 的落点。
+- **亮牌不自动默认**：改版影响已冻结/已收口工作时，只把三态影响面摆出来让用户定夺，**绝不静默替用户改已冻结的东西**——这是决议 a 的红线，也是"改版不暗中破坏已验收工作"的命门。
+- **清单优先、diff 兜底、对账**：人给的修改项清单为主（准），机器 diff 为安全网（全），两者对不上的地方必须亮出来——防"人漏报"也防"机器误判"。
+- **复用不造轮子**：切分复用 `prd-split`、重冻复用 amend/扩张、快照复用 `references §7` 落盘——R5 是把这些**串成改版流程**，不新造平行机器（同 MILE-0004 一贯的"几乎全在复用既有仪式"）。
+- **契约 / 动作分离**：`prd-update` 是动作层，`prd/` 该长什么样、slug 身份、切片逐字、落盘形态一律回指 `references-schema`、不两头同步。

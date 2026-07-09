@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0040 交付总结 · PRD 出新版怎么办：改版同步机制 /prd update</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>PRD 出新版怎么办：改版同步机制 /prd update</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0040</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-09</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>前四块（R1–R4）让"一份 PRD → 切成模块切片 → 挂进里程碑 → 验收钉住版本"都成了，但<strong>全是"第一次导入"的静态视角</strong>。真实项目里 PRD 天天改版（V1.1→V1.2 改个校验、加个功能），却一直没定<strong>改版了怎么办</strong>。</li>
+        <li>本轮新建 <strong><code>/prd update</code> 改版同步机制</strong>——把"PRD 出新版"变成一套确定性流程：搞清楚改了哪些模块、按新版重切这些切片、<strong>先把旧版整份冻存</strong>再更新到最新、然后<strong>报告谁受影响</strong>（还没开工的 / 正在做的 / 已经收工的三类），受影响的活按既有规矩重做或另开一轮。外加 <strong><code>/prd status</code></strong> 只读看板随时查现状。这是 MILE-0004"改版有兜底协议"的收官核心。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p>新建规则文件 <code>Coder/40_Context_Management/prd-update.md</code>（改版同步<strong>动作层</strong>，与 R2 的 <code>prd-split</code> 同族——split 管第一次切、update 管之后每次改版），八节：</p>
+      <ul>
+        <li><strong>变更检测（清单优先 + diff 兜底 + 对账）</strong>：以你给的"修改项清单"为主（你最清楚改了啥），同时机器把旧切片和新 PRD 逐字比一遍兜底防漏，两者<strong>对不上的地方必须亮出来问你</strong>——不因你没提就当没改，也不擅自采信机器。</li>
+        <li><strong>重新派生 + 先冻后更</strong>：受影响模块按 R2 的切分规矩重切；落盘有<strong>硬顺序红线</strong>——旧版整份先冻进 <code>.archive/v&lt;旧版&gt;/</code> 全量快照（打开就是当年完整规格），<strong>然后才</strong>把最新切片覆盖上去。顺序不能颠倒：live 一旦覆盖，旧版原文就没了，R4 钉版说的"回头能读到旧版"就落空。</li>
+        <li><strong>登记表认亲基础态</strong>：新版多出来的模块发个新代号（slug），少掉的模块标成"已移除"（切片留档、代号不回收）。至于模块改名、两个并一个、一个拆两个这种"还是不是同一个"的疑难认亲，<strong>明确留给下一块 R6</strong>，本轮只回答"多了谁、少了谁"。</li>
+        <li><strong>三态影响面报告（亮牌不自动）</strong>：改版后扫一遍"哪些活引用了这次改的切片"，分<strong>没开工 / 进行中 / 已收口</strong>三类摆给你看。<strong>只报告、绝不自动去改任何已冻结或已验收的东西</strong>——这是全机制的命门红线：静默改已冻结的活，就等于废掉了钉版和冻结的全部意义。</li>
+        <li><strong>受影响工作怎么处理（接既有规矩、只指路不改流程）</strong>：正在做的 → 走迭代内修订重新确认（amend 重冻）；已经收工的 → 收口的不能改，只能另开一轮承接（扩张转迭代）；还没开工的 → 不用动，将来做时自然对最新版。</li>
+        <li><strong><code>/prd status</code> 只读看板</strong>：不改任何东西，只汇总当前 PRD 版本 + 模块清单 + 最近一次改版的影响面，随时可查。</li>
+        <li><strong>soft 对齐硬约束</strong>：改版和第一次切一样"先提议、经你确认、再落盘"——改版牵一发动全身（旧版会被冻、已冻结的活会被牵连），比首切更需要你在落盘前过目，绝不擅自改版。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>PRD 改版从此有章可循</strong>：给一份新版 PRD + 一句"改了哪些"，<code>/prd update</code> 会带你走完检测→重切→冻旧版→报影响面全程，每一步都要你确认。</li>
+        <li><strong>改版绝不暗中破坏已验收的活</strong>：受影响的已冻结/已收口工作只会被"亮牌提醒"，要不要动、怎么动由你拍板——不会有任何自动重写。</li>
+        <li><strong>旧版永远查得到</strong>：每次改版旧版都冻成自包含快照，配合 R4 钉版，回头审计"当年那次验收对的是哪一版规格"始终有据。</li>
+        <li><strong>不用 PRD 的人完全无感</strong>：这是一条新增的 opt-in 机制，普通开发流、对话驱动流、别的参考资料注入（Confluence/设计稿等）一字未改。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（1 份规则）：<code>Coder/40_Context_Management/prd-update.md</code>（改版同步动作层，八节）。</li>
+        <li>接线（4 处，均增补/翻牌）：<code>logic-protocol.md</code> 注入表大 PRD 行补"改版走 <code>/prd update</code>"、<code>acceptance-schema §4</code> 补指 <code>prd-update.md</code>、<code>references-schema §7/§8</code> 翻 R5 牌为已落地、<code>README</code> 注册新文件（并顺修 prd-split 行尾 R4/R5 已落地）。</li>
+        <li>没碰（守边界）：<code>references-schema</code> 登记表字段（没加列）、<code>prd-split</code> 切分算法、<code>prd_version</code> 钉版字段、核心 P1–P5 与 amend/扩张仪式本身（只回指）、<code>project-digest</code>/<code>context-persistence</code>、hook、<code>VERSION</code>、非 PRD 注入流。<strong>不做</strong>模块合并/拆分/改名认亲(R6)，<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>10 项验收（AC1–10）全过</strong>，全 <strong>auto·可靠</strong>（纯规则文档：读改后正文核契约 + <code>git diff</code> 核非回归 + <code>git status</code> 核守恒，确定性可复现），无人测残余。</li>
+        <li><strong>独立复核 APPROVE（clean）</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式）：八个对抗重点——亮牌不自动/不静默改已冻结、落盘先冻后更、复用不造轮子只回指、契约动作分离、不越界做 R6、非 PRD 流未动、说人话、悬空指针专查——逐条过。16 处章节引用逐个核实真实存在（未重蹈 ITER-0035/0039 悬空标号）。<strong>无 Must Fix / Should Fix / Nit</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>协议成文、从未真跑</strong>：<code>/prd update</code> 全套靠执行遵从，真到用户端到端拿一份 PRD 改一次版才第一次实战检验——这也是 R4 钉版回溯路径的首次兑付点。</li>
+        <li><strong>三态判定依赖引用如实标注</strong>：影响面靠"迭代引用了变更切片"来判——若某迭代用了 PRD 却没在验收清单如实标 slug 与 <code>prd_version</code>，扫描可能漏判。取决于 R4 钉版纪律的遵从。</li>
+        <li><strong>认亲只到新增/消失</strong>：模块改名/合并/拆分本轮会被当成"旧的消失 + 新的新增"两条独立记录，真正的跨版本身份延续待 R6。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0040/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/40_Context_Management/prd-update.md</code>（新建）、<code>Coder/00_System_Prompt/logic-protocol.md</code>（注入表）、<code>Coder/20_Workflow_Lifecycle/acceptance-schema.md §4</code>、<code>Coder/40_Context_Management/references-schema.md §7/§8</code>、<code>Coder/README.md</code></li>
+        <li>里程碑与前置：<code>.ai/MILESTONE.md</code>（MILE-0004 §5.3 路线图，R5 项）、<code>prd-split.md</code>（R2 首切机制，被 update 复用）、<code>references-schema.md</code>（R1 契约 §4 身份/§7 落盘）、<code>acceptance-schema.md</code>（R4 钉版 prd_version）、<code>iteration-schema.md §5.3/§5.4</code>（amend/扩张，被路由回指）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

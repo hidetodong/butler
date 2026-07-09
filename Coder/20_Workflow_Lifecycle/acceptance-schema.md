@@ -64,7 +64,7 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 - 流程：AC_LIST 写完先置 `draft`；用户 ACK 后改为 `ack-frozen` 并填 `ACK 日期`，方可进入 P3。
 - hook 联动：在部署了 butler hook 的项目，AC_LIST 处于 `draft` 时源码写操作会被 `phase_gate` 拦截，直到置 `ack-frozen`。无该字段的旧 AC_LIST 按 legacy 放行，不被误杀。
 - amend 退回：迭代内小幅修订（`iteration-schema.md §5.3`）必须把 `状态` 退回 `draft`、重新等待 ACK 后再置 `ack-frozen`。
-- `prd_version` 绑定（仅引用 `references/prd/` 切片的迭代适用）：置 `ack-frozen` 时把 `prd_version` **绑定到当刻 PRD 的全局版本号**（如 `v1.1`），之后**钉住**——即锁死不随 PRD 后续改版漂移；本迭代 P3 设计、P5 核对全对着这一版（引用锚点与解析见 §5）。amend 重冻（上一条退回 `draft` 重新 ACK）时，若 PRD 期间已改版，`prd_version` **可随重冻重绑到新的当前版**。改版的完整同步协议（重新派生 + 影响面 + 主动重冻）属 `/prd update`，不在本字段展开。
+- `prd_version` 绑定（仅引用 `references/prd/` 切片的迭代适用）：置 `ack-frozen` 时把 `prd_version` **绑定到当刻 PRD 的全局版本号**（如 `v1.1`），之后**钉住**——即锁死不随 PRD 后续改版漂移；本迭代 P3 设计、P5 核对全对着这一版（引用锚点与解析见 §5）。amend 重冻（上一条退回 `draft` 重新 ACK）时，若 PRD 期间已改版，`prd_version` **可随重冻重绑到新的当前版**。改版的完整同步协议（重新派生 + 影响面 + 主动重冻）属 `/prd update`（见 `40_Context_Management/prd-update.md`），不在本字段展开。
 - 简化路径：`状态` 字段可选；省略即按 legacy 放行。简化路径的一行分流记录写在 AC_LIST 顶部（格式见 §3）。
 
 ## 5. 编写规则
