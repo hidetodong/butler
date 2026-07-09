@@ -4,6 +4,24 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.1.0] - 2026-07-09
+
+向后兼容能力新增版。聚合 ITER-0035 ~ ITER-0041（自 v2.0.0 起新收口），并**收口里程碑 MILE-0004「PRD 先行 + references 版本化改版同步」**（其下 R1~R6 = ITER-0036/0037/0038/0039/0040/0041，另含正交独立迭代 ITER-0035）。本里程碑给参考资料区 `.ai/references/` 补上"索引 + 渐进读"待遇，并新建 **PRD 先行一等入口 + 版本化改版同步协议**：一份 PRD 从导入→切片→挂里程碑→钉版→验收→改版同步全链路可走，细节逐字保真、跨改版可审计、已冻结/已收口工作不被静默破坏。全部为新增能力（新 schema / 新命令 / 新模块 / 可选字段），且**不动任何既有非 PRD 流**（非回归门显式保证），取区间最高级别为 **MINOR**。
+
+### 本版新增
+
+- **references 索引化基座（ITER-0036 · MILE-0004 R1）**：新建 `Coder/40_Context_Management/references-schema.md`——`references/prd/00_INDEX` 契约（入口 + 模块登记表 slug↔标题/章节↔首见版本）+ digest-and-point 读纪律 + "索引可摘要 / 切片必逐字原文"硬区分 + `live` 目录 vs `.archive/vN/` 版本落盘契约。详见 `deliveries/ITER-0036-references-index-schema.md`。
+- **PRD 切分机制（ITER-0037 · R2）**：新建 `prd-split.md`（履行 R1 契约的产生动作层）——按 PRD 自身语义/模块边界切 `prd/<slug>.md`（逐字保真、**绝不切碎一条完整规则**）+ slug 首切分配（终身身份）+ 写 `00_INDEX`/登记表 + 小 PRD 单模块退化态 + soft 对齐（提议→确认→落盘）。详见 `deliveries/ITER-0037-prd-split-mechanism.md`。
+- **首切并进 `/milestone` + 两海拔交叉指针（ITER-0038 · R3）**：`milestone-schema §6.4` 加"brief 是大 PRD"并进分支（除合成路线图外触发 `prd-split` 切片，一份输入喂方向层路线图 + 细节层切片）+ 路线项 ↔ 模块 slug 双向交叉指针。详见 `deliveries/ITER-0038-milestone-prd-entry.md`。
+- **AC 钉版 `prd_version` + P2/P3/P5 接线（ITER-0039 · R4）**：`acceptance-schema` frontmatter 加**可选**字段 `prd_version`（冻结绑定、之后钉住；非 PRD 迭代逐字不变、hook 不校验）+ 版本化引用锚点（slug + 全局版本）+ `tech-plan`/`verify` 版本化引用继承与"对钉住版核而非 live 最新"（回溯读 `.archive/vN/`）。详见 `deliveries/ITER-0039-ac-prd-version-pinning.md`。
+- **改版同步 `/prd update`（ITER-0040 · R5）**：新建 `prd-update.md` 改版同步动作层——变更检测（修改项清单优先 + 逐字 diff 兜底 + 对账，分歧必亮）+ 重新派生 + **先冻旧版 `.archive/v<旧版>/` 全量快照再更 live** + 三态影响面报告（没开工/进行中/已收口，**亮牌不自动**）+ 受影响活路由（amend 重冻 / 开新迭代 / 无动作）+ `/prd status` 只读看板。详见 `deliveries/ITER-0040-prd-update-revision-sync.md`。
+- **登记表认亲边缘 + 非回归门 + 收尾（ITER-0041 · R6·收官）**：`prd-update §4.2` 加改名/合并/拆分跨版本认亲松边（启发式提候选→用户确认、**绝不自动认**、改名保留旧 slug、拿不准退回基础态）+ `references-schema §9` 非回归门（列不得触碰的非 PRD 流 + 判据 `git diff` 为空）+ HUMAN_GUIDE PRD 先行用法节 + 说人话自检。详见 `deliveries/ITER-0041-recognition-edge-and-nonregression-gate.md`。
+- **补 `[split]` 升级接线缺口（ITER-0035 · 独立迭代，与本里程碑正交）**：`butler-upgrade §5/§6` 加 `[split]` 执行细则（起始态校验 + opt-in 迁移选择闸 + 冲突即停 + git add 拆出文件）+ 定死 `[split]` 是 opt-in 非自动 + `migration-schema §4` 交叉引用。详见 `deliveries/ITER-0035-split-upgrade-wiring.md`。
+
+里程碑级聚合交付见 `deliveries/milestones/MILE-0004-prd-first-versioned-references.md`；聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.1.0.md`（`[no-op]` + `[restamp]`，部署面模板零改动）。
+
+[2.1.0]: 自 v2.0.0 起聚合 ITER-0035 ~ ITER-0041（含 MILE-0004 收口）
+
 ## [2.0.0] - 2026-07-08
 
 破坏性重构版（首个 MAJOR 之后的大版本）。聚合 ITER-0026 ~ ITER-0034（自 v1.7.0 起新收口），并**收口里程碑 MILE-0003「项目知识文件夹升级 + 帮手名册 + 说人话」**（其下 R1~R8 = ITER-0026/0028/0029/0030/0031/0032/0033/0034，另含正交独立迭代 ITER-0027）。本里程碑**重写了冷启动第一读、项目全貌产物契约与收口维护回路**——把单文件薄索引 `.ai/PROJECT.md` 升级为 `.ai/project/` 主题知识文件夹，按 semver 属**破坏性**（要求已部署老项目按迁移配方文件夹化），取区间最高级别为 **MAJOR**。

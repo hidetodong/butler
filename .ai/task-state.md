@@ -1,15 +1,15 @@
 # Task State
 
-> **无活跃迭代**（`ITERATIONS.current: none`）。里程碑 **MILE-0004** 路线图 R1–R6 **六块齐**，R6（ITER-0041）已收口——**MILE-0004 收官，待收口里程碑 + 切版（发布动作、待放行）**。
+> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**MILE-0004 已收口 + 随 v2.1.0 发布**（MINOR，聚合 ITER-0035~0041）。等下一个方向。
 
 ## 当前状态
 
-- `ITERATIONS.current: none`。ITER-0041（MILE-0004 R6·收官）已收口：认亲松边（`prd-update §4.2`）+ 非回归门（`references-schema §9`）+ 收尾（HUMAN_GUIDE PRD 用法节 / flip §4·§8 / 说人话自检）全落地，独立复核 APPROVE-with-nits（Must/Should Fix 均已整改），6 不变量已过。
-- `MILESTONES.current: MILE-0004`（active，路线图 R1–R6 见 `.ai/MILESTONE.md §5.3`，六项全 ✅）。PRD 全生命周期链成文：导入(R1/R2)→挂里程碑(R3)→钉版(R4)→改版同步(R5)→认亲边缘+非回归门+收尾(R6)。
-- 全貌产物（`frontier.md` / `architecture.md` / `capabilities.md`）已前滚到 R6 收口态（六块齐、战线转收口+切版）。
+- 无进行中工作。MILE-0004"PRD 先行 + references 版本化改版同步"六块齐（R1–R6）已收口，版本级交付 `deliveries/milestones/MILE-0004-prd-first-versioned-references.md`+`.html`，里程碑快照 `.ai/milestones/MILE-0004/MILESTONE.md`。
+- **v2.1.0 已切版**：`VERSION=2.1.0`、`CHANGELOG.md [2.1.0]`、`migrations/v2.1.0.md`（`[no-op]`+`[restamp]`，部署面模板零改动）、tag `v2.1.0`。聚合 ITER-0035~0041（ITER-0035 为正交独立迭代，MILE-0004 = ITER-0036~0041）。
+- 全貌产物（`frontier.md` / `architecture.md` / `capabilities.md`）已前滚到 v2.1.0 发布态。
 
 ## 下一步入口
 
-- **收口 MILE-0004 + 切版（待用户放行、非自动）**：六块齐后可收口里程碑（`MILESTONES.md` 翻 closed + 版本级交付 `deliveries/milestones/MILE-0004-<slug>.md`+`.html`）+ 独立 `chore(release)` 切版（聚合 ITER-0036~0041，VERSION/CHANGELOG/migrations/tag）。同 MILE-0003 v2.0.0 分开走的先例，**待用户明确放行**。
-- **六提交未推**：ITER-0036~0041 六个迭代提交均在本地 main、**未推送**（a9dd72d / 2d19d92 / 002839d / 3f9bb9c / 02c1c3d / 本次 R6）。推送待用户说"推送"。
-- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/MILESTONE.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。
+- **待用户给方向**：新里程碑 / 独立迭代由用户发起。候选——PRD 全链真实 dogfood（拿一份真 PRD 走导入→改版全程），可一并还上"从未真跑"的欠账。
+- **推送**：v2.1.0 发布提交 + tag、以及 ITER-0035~0041 全部迭代提交**均在本地 main、未推送**。推送待用户说"推送"（含 `git push && git push --tags`）。
+- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。
