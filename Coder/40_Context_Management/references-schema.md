@@ -101,7 +101,7 @@ prd/ 按**版本**落盘，两处：
 
 | 动作 | 归属 |
 |---|---|
-| 把一份 PRD **切成** `prd/<slug>.md`（边界算法、soft 对齐拆法） | R2 |
+| 把一份 PRD **切成** `prd/<slug>.md`（边界算法、soft 对齐拆法） | **R2 ✅ 已由 `prd-split.md` 落地** |
 | 从 `/milestone` **触发**首切 + 路线图项 ↔ 模块 slug 交叉指针 | R3 |
 | AC frontmatter **钉** `prd_version` + P2/P3/P5 版本化引用接线 | R4 |
 | `/prd update` **改版同步**（重新派生 + 变更检测 + `.archive` 快照 + 三态影响面 + amend 重冻） | R5 |

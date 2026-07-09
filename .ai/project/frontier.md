@@ -5,15 +5,16 @@
 ## 当前形态
 
 - **版本**：**v2.0.0 已发布**（MILE-0003 收尾切版，MAJOR——冷启动核心产物契约破坏性重构）。上一版 v1.7.0。本版之后的迭代均未再切版。
-- **活跃里程碑 MILE-0004**（"PRD 先行 + references 版本化改版同步"，2026-07-08 开启）：给 `.ai/references/` 补上当年只给了 `.ai/project/` 的"索引 + 渐进读"待遇，并新增 PRD 先行入口与改版同步协议。路线图 R1–R6 见 `.ai/MILESTONE.md §5.3`。
-- **R1（ITER-0036）已收口**：新建 `Coder/40_Context_Management/references-schema.md`——references 子系统首份结构契约（`prd/00_INDEX` + 模块登记表 slug 身份 + digest-and-point 读纪律 + "索引可摘要/切片必逐字原文"硬区分 + live/`.archive` 落盘）。**只定契约地基、不做产生动作**。
+- **活跃里程碑 MILE-0004**（"PRD 先行 + references 版本化改版同步"，2026-07-08 开启，路线图 R1–R6 见 `.ai/MILESTONE.md §5.3`）。已落两块：
+  - **R1（ITER-0036）**：`references-schema.md`——references 子系统的**契约**（prd/ 结构 + slug 终身身份 + 无损切片 + live/`.archive` 落盘）。
+  - **R2（ITER-0037）**：`prd-split.md`——履行契约的**切分动作**（按 PRD 自身边界切、绝不切碎一条规则、逐字保真、小 PRD 单模块退化、soft 对齐提议→确认）+ `logic-protocol` 注入表补"大 PRD → 走切分"最小触发。
 
 ## 活跃战线
 
-- **MILE-0004 契约地基已浇（R1），下一步砌动作层**：R1 把 references/prd 的结构、身份、读法、落盘一次定死；R2–R5 才是真正把 PRD 切成片、从 `/milestone` 触发首切、给 AC 钉版、`/prd update` 改版同步的**产生动作**。
-- **贯穿整个里程碑的命门红线已立**：PRD 切片必须逐字原文、无损，绝不能拿 `.ai/project/` 的有损 overwrite 概括去套（`references-schema §6` 硬约束）——这条要在 R2 真切分时靠执行遵从守住。
+- **MILE-0004 已有"契约 + 切分动作 + 一个通用触发"，下一步接里程碑入口**：R1 定形、R2 会切、注入表能接住"用户手动丢 PRD"。但 PRD 先行最顺的路——"里程碑 brief 本身就是大 PRD、一份输入喂方向层（路线图）和细节层（切片）两个海拔"——还没接。
+- **命门红线（切片逐字无损、绝不切碎）已写进 R2**，靠执行遵从守；真到用户端到端切一份大 PRD 才第一次被实战检验。
 
 ## 下一个瓶颈
 
-- **紧接 R2 · PRD 切分机制**：按语义/模块边界切 `prd/<slug>.md`（逐字保真）+ 写登记表 + 小 PRD 单模块退化态 + soft 对齐拆法（提议→确认、绝不切碎一条规则）。这是把 R1 契约"真踩上去"的第一步，也是最先能证伪契约设计的地方。
-- **两笔历史欠债仍悬着**（见 `debt.md`）：hook 在 butler 侧不 live、`/butler-upgrade` 从未真跑——后者带 `[split]` 迁移的升级执行器接线已于 ITER-0035 补齐（`butler-upgrade §6.5` opt-in 选择闸就位），就差真实老项目端到端跑一遍。
+- **紧接 R3 · 首切入口并进 `/milestone` + 两海拔交叉指针**：让里程碑录入认出"这个 brief 是大 PRD"→ 触发 R2 切分机制；同时把路线图项 ↔ 模块 slug 互相挂指针（焊上"里程碑方向层→references 细节层"的源指针缺口）。这是让 PRD 先行闭环真正合拢的一块。
+- **两笔历史欠债仍悬着**（见 `debt.md`）：hook 在 butler 侧不 live、`/butler-upgrade` 从未真跑（带 `[split]` 迁移的升级执行器接线已于 ITER-0035 补齐，就差真实老项目端到端跑一遍）。

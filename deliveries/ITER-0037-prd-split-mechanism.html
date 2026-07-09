@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图（渲染自同名 .md，模板 SSOT = templates/delivery.html.template）
+  引用真源以 deliveries/ITER-0037-prd-split-mechanism.md 为准。
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0037 交付总结 · 把大 PRD 切成切片的机制</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>把大 PRD 切成切片的机制（PRD 切分机制）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0037</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0004 R2</span>
+        <span class="chip date">收口 2026-07-09</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>上一块（R1）建了一份契约，规定"一份 PRD 存进 <code>.ai/references/prd/</code> 之后该长什么样"——每个模块一片、切片必须逐字原文、每个模块有个终身不变的英文代号（slug）、带版本落盘。但它<strong>刻意只定了"结果该长什么样"，没定"怎么动手把 PRD 变成那个样子"</strong>——这个切分动作被明确留给了本轮 R2。</li>
+        <li>本轮就是兑现它：新建一份<strong>机制文档</strong>，把"拿到一份大 PRD、怎么一步步切成那个知识文件夹"的程序写清楚。核心是四条纪律——顺着 PRD 自己的结构切、绝不把一条完整规则拦腰切碎、每片逐字照搬不概括、<strong>切之前先把方案摆给用户确认再落盘</strong>（不搞全自动黑箱）。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p><strong>新建 <code>Coder/40_Context_Management/prd-split.md</code></strong>——PRD 切分机制的程序规范，六节：</p>
+      <ul>
+        <li><strong>§1 定位（契约 vs 动作）</strong>：讲清本文件是"动作层"、去<strong>履行</strong> R1 的 <code>references-schema</code> 契约；两者分工——"契约说结果该长什么样，本文件说怎么动手做出来"。用一张表把 slug 身份、无损切片、落盘、结构、判据五项<strong>全部回指 references-schema、不复制一份过来</strong>（避免将来两头改漂移）。</li>
+        <li><strong>§2 边界识别（怎么切）</strong>：按 PRD <strong>自己的</strong>结构切——它分几章讲几个功能、按"V1.1 修改项 1/2/3"组织，就顺着切，不自造边界。立<strong>红线：绝不把一条完整的规则/校验/文案从中间截断跨两片</strong>；两难时<strong>宁可切得粗</strong>（一片多含点）也不切碎（切碎会让某片验收时找不到完整规则）。</li>
+        <li><strong>§3 slug 分配 + 写索引</strong>：首切时给每个模块分一个见名知意的<strong>终身英文代号</strong>（如 <code>save-validation</code>），此后 PRD 怎么改版都不动它；写 <code>00_INDEX</code>（这份 PRD 是什么 + 模块地图 + 登记表）。字段与规则全守 R1 契约。</li>
+        <li><strong>§4 逐字保真</strong>：每片是对应模块原文的<strong>无损照搬</strong>——精确文案、精确校验规则一个字都不改、不删、不"顺手总结成一句"（少一字，将来验收就对不上真源）。唯一能摘要的地方是索引里的导航叙述。</li>
+        <li><strong>§5 小 PRD 退化态</strong>：PRD 很小（就一个功能）时不另开特例、也不退回单文件——走同一套模型、只是模块数=1，这样它将来改版/钉版本一样无缝。</li>
+        <li><strong>§6 soft 对齐（提议→确认→落盘）</strong>："soft 对齐"就是<strong>不硬切</strong>——AI 先把切分方案（模块清单、每个 slug、每片边界依据）摆给用户看、<strong>此时不写盘</strong>，用户确认或调整（"这两个该合成一片""这条规则被你切到两片了，并回去"）后才真落盘。配一条硬约束："未经确认不得落盘，宁可停下来问，也不擅自切。"</li>
+      </ul>
+      <p><strong>补最小触发</strong>：<code>logic-protocol.md</code> 的"外部参考资料注入"类型表加一行——用户在任意阶段丢来一份大/结构化 PRD，就走这套切分机制（而不是像小文档那样直接存成单文件）。判据回指 R1 契约、不重写。</p>
+      <p><strong>翻牌 + 注册</strong>：<code>references-schema §8</code> 里"把 PRD 切成切片"那条从"待 R2 落地"翻成"✅ 已由 <code>prd-split.md</code> 落地"；README 双处注册新文档（结构树里紧挨着它履行的那份契约）。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>butler 现在知道"怎么把一份大 PRD 切开"了</strong>：以前只有"切完该长什么样"的契约、没有"怎么切"的程序；现在补齐。你在任意阶段丢来一份大 PRD，它会走这套机制处理，而不是笨拙地整份塞进一个文件。</li>
+        <li><strong>切分不会背着你硬来</strong>：最关键的用户可感知点——切之前 AI <strong>一定先把切分方案摆给你确认</strong>（分几片、每片叫什么、边界怎么划），你点头或调整后才落盘。它不会自作主张把你 PRD 里一条完整的校验规则从中间截断。</li>
+        <li><strong>本轮仍是"半成品链条的一环"</strong>：这套机制目前只接了"用户手动丢 PRD"这一个入口。"开里程碑时 brief 本身就是大 PRD、自动触发切分并和路线图交叉挂钩"那条更顺的路是下一块（R3）的活，本轮还没接。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（1 份规则文件）：<code>Coder/40_Context_Management/prd-split.md</code>（六节机制，约 60 行）。</li>
+        <li>改（3 份）：<code>Coder/00_System_Prompt/logic-protocol.md</code>（注入表 +1 行）、<code>Coder/40_Context_Management/references-schema.md §8</code>（flip R2 指针一处）、<code>Coder/README.md</code>（结构树 + 说明段各注册一条）。</li>
+        <li>没碰（守边界）：<code>/milestone</code> 入口（milestone-schema）、验收/设计/验证四件套接线、R1 契约本身的语义、references 既有扁平用法、<code>project-digest</code>/<code>context-persistence</code>、<code>mcv-deployment</code>、hook、<code>VERSION</code>。<strong>不做</strong>钉版(R4)/改版同步(R5)/认亲(R6)，<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>9 项验收（AC1–9）全过</strong>，全 <strong>auto·可靠</strong>（纯规则文档：读改后正文核契约 + <code>git status</code>/<code>git grep</code> 核守恒，确定性可复现），无人测残余。</li>
+        <li><strong>独立复核 APPROVE（干净）</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式）：四个对抗重点——"切分红线够不够硬""契约 vs 动作有没有双写复述""soft 对齐真是提议→确认还是留了自动切暗门""有没有越界去做 R3–R6 的活"——逐条过，无 Must Fix、无 Should Fix。挑出 1 个 Nit（§1 里 slug 首次出现时解释偏简）已<strong>顺手修掉</strong>（补内联注解"模块的终身英文代号，如 save-validation"）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>三条护栏靠执行遵从、非机器强制</strong>：绝不切碎、逐字保真、提议→确认，都是规则文字约束——真到用户丢来一份大 PRD 端到端切一次，才完全证伪（和知识文件夹折叠质量、<code>[split]</code> 先问再迁属同一套信任模型）。</li>
+        <li><strong>PRD 先行闭环还没合拢</strong>：本轮只接了"手动丢 PRD"这一个通用入口；"里程碑 brief 就是大 PRD、一份输入喂方向层和细节层两个海拔"要等 R3 接 <code>/milestone</code> 才成型。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0037/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/40_Context_Management/prd-split.md</code>（新建，§1–§6）、<code>Coder/00_System_Prompt/logic-protocol.md</code>（§外部参考资料注入）、<code>Coder/40_Context_Management/references-schema.md §8</code>（flip R2 指针）、<code>Coder/README.md</code>（注册）</li>
+        <li>里程碑与前置契约：<code>.ai/MILESTONE.md</code>（MILE-0004 §5.3 路线图，R2 项）、<code>Coder/40_Context_Management/references-schema.md</code>（R1 契约，本机制履行对象）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

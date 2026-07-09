@@ -107,6 +107,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 | Confluence 页面链接 | 调用 `confluence-api-extractor` skill 提取结构化 API 文档 | `.ai/references/api-<name>.md` |
 | MasterGo 设计稿链接 | 调用 `mastergo-codegen` skill 提取组件规格或生成代码 | `.ai/references/design-<name>.md` |
 | 独立 Agent 产出的分析报告 | 直接读取（报告由用户另启 agent 使用 skill 生成） | `.ai/references/insight-<name>.md` |
+| 大 / 结构化 PRD（逐字权威规格；判据见 `40_Context_Management/references-schema.md §2`） | 走 `40_Context_Management/prd-split.md` 切分机制切成知识文件夹态（**提议→确认→落盘**，绝不擅自硬切；小 PRD 走单模块退化态、不退扁平） | `.ai/references/prd/`（`00_INDEX` + `<slug>.md` 逐字切片） |
 | 其他文档或文件 | 直接读取并提炼关键信息 | `.ai/references/<name>.md` |
 
 处理规则：

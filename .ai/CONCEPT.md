@@ -1,35 +1,37 @@
-# MILE-0004 R1 · references 索引化基座
+# MILE-0004 R2 · PRD 切分机制
 
-> ITER-0036 · 里程碑 MILE-0004 首块 · 监督态自驱（承 grilling 十节点决议）· 不切版（纯规则新增）
+> ITER-0037 · 里程碑 MILE-0004 第二块 · 监督态自驱（承 R1 契约地基）· 不切版（纯规则新增）
 
 ## 一句话
 
-`references/` 子系统当年没被 MILE-0003 的知识文件夹待遇覆盖到——**无 schema、无索引、无读纪律**。R1 新建 `references-schema.md`，给它补上"索引 + 渐进读"的**契约层**：定义 `references/prd/` 知识文件夹形态（`00_INDEX` 入口 + 模块登记表）、digest-and-point 读纪律、"索引可摘要 / 切片必原文"硬区分、live + `.archive` 落盘契约。**只定契约**，切分动作 / 入口 / 钉版 / 同步留 R2–R5。
+R1 定了"references/prd 长什么样、怎么读、怎么落盘"的**契约**，但**怎么把一份大 PRD 真切成 `prd/<slug>.md` 切片**这个**产生动作**显式留给了 R2。本轮新建 `prd-split.md`——切分机制程序规范：按 PRD 自身的语义/模块边界切、给每个模块分终身 slug、写 `00_INDEX` + 登记表、逐字保真、小 PRD 单模块退化，且**切分不是黑箱**——先提议方案给用户确认再落盘（soft 对齐、绝不擅自切碎一条规则）。再补一条最小触发（注入表认"大 PRD"）让机制可达。
 
-## 背景（这块地基为什么先做）
+## 背景（为什么现在做、落在哪）
 
-- references/ 现状：`logic-protocol` 定注入、`mcv-deployment` 定目录、`acceptance/tech-plan/verify` 定 `External References` 字段——但**没有一份 schema** 说 references/ 内部怎么组织、怎么读。
-- MILE-0004 要 PRD 先行 + 版本化改版同步，全都得踩在"references 有索引、有稳定模块身份、有版本落盘"的地基上。R1 就是这块地基（契约）：R2 切、R3 接入口、R4 钉版、R5 同步全依赖它。地基先浇，动作后砌。
+- R1（ITER-0036）建了 `references-schema.md` 契约层，§8 明确把"把一份 PRD **切成** `prd/<slug>.md`（边界算法、soft 对齐拆法）"标为 **R2** 的前向指针、本轮不落实现。R2 就是来兑现这张指针的。
+- 切分是**产生动作**（P 侧），不是契约。为守 R1 立下的"契约层 ≠ 动作层"分离，**不把切分塞回 references-schema**（那会污染契约的声明式纯度），而是**新开一份机制文档** `prd-split.md`，让它去**履行** references-schema 定下的契约（slug 身份 §4 / 无损切片 §6 / 落盘 §7）。
+- 注入侧现状：`logic-protocol.md §外部参考资料注入` 的类型表只认**扁平态**（Confluence→`api-`、MasterGo→`design-`、报告→`insight-`、其他→`<name>.md`），**没有"大/结构化 PRD → 走切分"这一路**。R2 补上这条最小触发，机制才不至于成为无人调用的孤儿文档。
 
 ## 做什么（DD）
 
-- **DD1 · 新建 `Coder/40_Context_Management/references-schema.md`**：references/ 子系统首份契约。两部分——通用（references/ 是什么；既有扁平单文件 `api-`/`design-`/`insight-` 归入"扁平态"）+ prd/ 知识文件夹态（下列 DD2–DD5）。
-- **DD2 · `references/prd/00_INDEX` 契约**：入口（这份 PRD 是什么 + 模块地图）+ **模块登记表**——每模块一行：`slug`（终身身份）↔ 当前标题/章节（会变的门牌）↔ 首见版本 ↔ 当前版本 ↔ 状态（active / removed）。slug 一次分配、跨改版不变（Q7）。
-- **DD3 · digest-and-point 读纪律**：读 references/prd 先读 `00_INDEX` 地图 → 按需钻用到的那片 `prd/<slug>.md` → 指针钻源。执行默认读 live 最新（Q2）。借 `.ai/project` 的读法用在参考资料上。
-- **DD4 · "索引可摘要 / 切片必原文"硬区分**：`00_INDEX`（含登记表）**可以是摘要 / 路由**；`prd/<slug>.md` 切片**必须逐字原文、无损**（少一字验收就错）。这是 references 相对 `.ai/project` 的命门差异——project 全是有损摘要，references 的切片是无损真源。
-- **DD5 · 落盘契约**：live 目录 `references/prd/<slug>.md` = 最新版、无版本前缀、执行直读（Q10）；`.archive/vN/` = 改版时冻的旧版**全量快照**、自包含（Q2/Q10）。`prd_version` 只在回溯（钉版迭代 / 闭档审计）时去 `.archive` 找。
-- **DD6 · README 注册**：新 schema 登进 `Coder/README.md` 目录结构 + 读取顺序（守"新规则文件必须注册"）。
+- **DD1 · 新建 `Coder/40_Context_Management/prd-split.md`**：PRD 切分机制的程序规范（procedure）。开宗写明它**履行** `references-schema.md` 契约、是其 §8 指的 R2 动作层，两者"契约 vs 动作"分工。
+- **DD2 · 边界识别（怎么切）**：按 PRD **自身**的语义/模块边界切——章节 / 功能模块 / "修改项"分组即天然切线；一个模块 = 一片 = 一个 slug。**红线：绝不把一条完整规则/校验/文案拦腰切碎跨两片**（宁可粗、不可碎）。
+- **DD3 · slug 首切分配 + 写登记表**：首切时给每个模块分一个**语义化终身 slug**（英文短横线，如 `save-validation`）；写 `00_INDEX`——入口叙述（这份 PRD 是什么 + 版本 + 模块地图）+ 模块登记表（slug / 标题·章节 / 首见版本=当前 PRD 版本 / 当前版本 / 状态 `active`），字段与规则守 references-schema §3/§4。
+- **DD4 · 逐字保真**：每片 `prd/<slug>.md` 是该模块原文的**无损投影**（守 references-schema §6 命门），只搬运不概括；`00_INDEX` 可摘要、切片不可。
+- **DD5 · 小 PRD 单模块退化态**：模块数=1 时走**同一套模型**（`00_INDEX` + 1 片），不为小 PRD 另开特例、不退回扁平态（守 references-schema §2 判据）。
+- **DD6 · soft 对齐拆法（提议→确认）**：切分**不是全自动黑箱**——AI 先**提议**切分方案（模块清单 + 每模块 slug + 边界依据）给用户看，确认/调整后才真落盘。绝不擅自猜边界硬切、绝不静默切碎。与 `[split]` opt-in"问一句再迁"、`[add-field]` 草稿值确认是**同一套信任模型**。
+- **DD7 · 触发接线（最小）+ 注册**：`logic-protocol.md §外部参考资料注入` 类型表补一行"大/结构化 PRD（逐字权威规格）→ 走 `prd-split.md` 切分为 `prd/` 知识文件夹态"，与扁平态并列；判据回指 references-schema §2。README 注册新文档；flip references-schema §8 的 R2 前向指针（切分动作 → 已由 `prd-split.md` 落地）。
 
 ## 边界（不做）
 
-- 不做**切分动作**（怎么把一份 PRD 切成 slug 切片、边界算法、soft 对齐拆法）——R2。
-- 不动 `/milestone` 入口、不做首切触发、不做路线图 ↔ 模块交叉指针——R3。
-- 不碰 AC frontmatter `prd_version` 钉版、不改 acceptance/tech-plan/verify 接线——R4。
-- 不做 `/prd update` 同步、变更检测、影响面、`.archive` 快照的**产生动作**（R1 只定 `.archive` 的**契约/形态**，不写"何时怎么冻"）——R5。
-- 不改 references/ 既有扁平用法（`api-`/`design-`/`insight-` 注入照旧）、不动非 PRD 流、不切版。
+- 不做 **/milestone brief 并进**入口 + 路线图项 ↔ 模块 slug **交叉指针**——那是 R3（本轮只认注入表这一条通用触发，不碰里程碑入口）。
+- 不做 AC frontmatter `prd_version` **钉版**、不改 acceptance/tech-plan/verify 接线——R4。
+- 不做 `/prd update` **改版同步**、变更检测、`.archive/vN/` 快照的**产生动作**——R5（本轮只**首切**，不处理"再切一次/改版")。
+- 不做模块**合并 / 拆分 / 改名**跨版本**认亲**——R6。
+- 不改 references 既有**扁平用法**（`api-`/`design-`/`insight-` 注入照旧）、不动 `project-digest-schema` / `context-persistence` 语义、不动 hook / `VERSION`、**不切版**。
 
 ## 关键设计约束
 
-- **契约层与动作层分离**：R1 只定"references/prd 长什么样、怎么读、怎么落盘"，一切**产生 / 变更动作**归 R2–R5。R1 是纯声明式契约、可被后续迭代当地基引用，不含执行逻辑。
-- **无损 vs 有损的红线（DD4）**：整个 MILE-0004 的命门——一旦有人拿 `project-digest` 的有损 overwrite 语义套到 prd 切片上，PRD 精确文案就废了。schema 里把这条写成硬约束、显式对比 `.ai/project`。
-- **slug 终身身份**：DD2 的 slug 不随章节重编号变（Q7），是 R5 改版认亲的锚点。R1 定死"slug 一次分配、只增不改（除非模块真 removed）"。
+- **契约 vs 动作分离守到底**：R1 是声明式契约、R2 是产生动作，分属两文件。`prd-split.md` **引用** references-schema 的契约（不复述、不改写），references-schema 保持契约纯度不被动作污染。
+- **soft 对齐是命门护栏（DD6）**：切分最大的风险是"AI 自作主张把一条规则从中间截断、或把两个无关模块并成一片"。提议→确认把边界决策权交回用户，是防切坏的唯一闸。宁可提议偏粗（一片多含点）也不许擅自切碎。
+- **逐字保真不可妥协（DD4）**：切分过程中每一片必须是原文搬运。一旦"顺手概括一下"，PRD 精确文案/校验规则即废，R1 立的命门红线就在 R2 这里第一次真被踩——守不住则整个 MILE-0004 失去意义。
