@@ -44,6 +44,8 @@ scope: 把一份大而结构化的 PRD 切成 references/prd/ 知识文件夹的
 
 每片 `prd/<slug>.md` 的正文＝该模块的原文（见 §4）。
 
+> **由 `/milestone` 触发首切时**（brief 就是这份大 PRD，见 `20_Workflow_Lifecycle/milestone-schema.md §6.4` 步 6）：`00_INDEX` 入口叙述额外记一句 **所属里程碑号**（这份 PRD 归哪个里程碑）——"本 PRD 服务 `MILE-NNNN`，模块 ↔ 路线项映射见其 §5.3"。这是"references 细节 → 里程碑方向"的回指指针。**只回指、不重列映射**：模块对应哪个路线项，真源单一在里程碑路线图（§5.3 的「相关 slug」标注），此处重列必将来漂移。手动注入（非里程碑触发）的 PRD 无 owning 里程碑，此句省略。
+
 ## 4. 逐字保真
 
 **每一片 `prd/<slug>.md` 是对应模块原文的无损投影——照搬，不概括。** 这是 `references-schema §6` 立的命门红线，切分是第一个真踩上它的动作：

@@ -1,39 +1,36 @@
-# TECH_PLAN — ITER-0037（MILE-0004 R2 · PRD 切分机制）
+# TECH_PLAN — ITER-0038（MILE-0004 R3 · 首切入口并进 /milestone + 两海拔交叉指针）
 
-> 监督态自驱。目标见 CONCEPT、验收见 AC_LIST，不重述。全为规则文档（1 份新机制文档 + 注入表触发 + README 注册 + flip R1 指针）。
+> 监督态自驱。目标见 CONCEPT、验收见 AC_LIST，不重述。全为规则文档接线（改 3 份 + flip 1 指针）。
 
 ## 设计决策（DD）
 
-- **DD1 · `prd-split.md` 结构照 `references-schema`/`project-digest` 分节风格**（frontmatter + 编号小节），置于 `40_Context_Management`、README 结构树里**紧跟 `references-schema.md`**（契约→动作相邻，读者顺藤摸瓜）。
-- **DD2 · 契约 vs 动作分离靠"只引用不复述"落地**：`prd-split` 对 slug 身份（§4）/ 无损切片（§6）/ 落盘（§7）/ 结构（§3）/ 两态判据（§2）一律**回指 references-schema**，不抄字段、不改写语义——契约留在 R1、动作留在 R2，任何一方改了不必两头同步。
-- **DD3 · soft 对齐写成"提议→确认→落盘"三拍**：程序里显式三步、绝不自动切；措辞**复用** `[split]` opt-in / `[add-field]` 草稿确认的既有信任模型（不另发明范式，守 AI 协作约束"优先复用现有模式"）。
-- **DD4 · 触发最小化、判据不双写**：只在 `logic-protocol §外部参考资料注入` 类型表**加一行**（大/结构化 PRD → `prd-split`），"何为大/结构化"的判据**回指 `references-schema §2`**、不在注入表重写；`/milestone` 入口一行不碰（R3）。
-- **DD5 · flip 指针用既有手法**（同 ITER-0032/0035 的条件式指针翻牌）：`references-schema §8` R2 行由"待落地前向指针"翻成"已由 `prd-split.md` 落地"，§8 收尾"动作落地前"一句相应对齐。
+- **DD1 · 加分支不改主干（非回归第一）**：`milestone-schema §6.4` 合成协议的现有五步**原样保留**，"大 PRD 并进"作为**新增一步（步 6）+ 分支条件**挂在其后；普通 brief 走到步 6 判定"非大 PRD"直接跳过。这样非 PRD 流的字面路径零改动，是 AC7 非回归红线的结构保证。
+- **DD2 · 触发靠引用、判据靠回指**：分支正文只写"触发 `prd-split.md` 切成 `references/prd/`"，切分算法（边界/逐字/soft 对齐）**不抄**；"何为大 PRD"**回指 `references-schema §2`**、不在 milestone 侧重写判据。
+- **DD3 · 合并对齐写进步 6**：PRD 触发时，步 5（方向 soft 对齐）与 prd-split §6 的切分提议→确认**合并为一次呈交**——在步 6 显式写"路线图 + 切分方案一并给用户确认，不分两轮"。
+- **DD4 · 交叉指针双向、映射单一真源**：方向→细节放 `§5.3` 路线图（路线项**可选**列"相关 slug"）；细节→方向放 `prd-split §3`（`00_INDEX` 入口叙述记 owning 里程碑号 + 回指 §5.3 映射、**不重列**）。映射真源单一在路线图，`00_INDEX` 只反向指路——防两头漂移（同 R1/R2 回指不复述纪律）。
+- **DD5 · flip 用既有翻牌手法**：`references-schema §8` R3 行由待落地 → **✅ 已由 `milestone-schema §6.4/§5.3` 落地**，与 R1(ITER-0036)/R2(ITER-0037) 翻 §8 指针一致。
 
 ## 影响面（章节级）
 
 | 文件 | 改动 | AC |
 |---|---|---|
-| `Coder/40_Context_Management/prd-split.md`（新建） | §1 定位/契约履行分工 · §2 边界识别+不切碎红线 · §3 slug 首切+00_INDEX/登记表 · §4 逐字保真 · §5 小 PRD 退化 · §6 soft 对齐三拍 | AC1–6 |
-| `Coder/00_System_Prompt/logic-protocol.md` §外部参考资料注入 | 类型表 +1 行（大 PRD → `prd-split` 切分），判据回指 §2 | AC7 |
-| `Coder/40_Context_Management/references-schema.md` §8 | flip R2 前向指针（待→已由 prd-split 落地） | AC8 |
-| `Coder/README.md` | 结构树（紧跟 references-schema）+ 规则说明段注册 `prd-split` | AC8 |
+| `Coder/20_Workflow_Lifecycle/milestone-schema.md` | §6.4 合成协议加步 6"大 PRD 并进分支"（触发 prd-split + 合并对齐）· §6.4 brief 定位补"PRD 喂两海拔"段 · §5.3 路线图路线项可选标注"相关 slug" | AC1–4 |
+| `Coder/40_Context_Management/prd-split.md` §3 | `/milestone` 触发首切时 `00_INDEX` 入口叙述记 owning 里程碑号 + 回指 §5.3 映射（不重列） | AC5 |
+| `Coder/40_Context_Management/references-schema.md` §8 | flip R3 前向指针（待→已由 milestone-schema 落地） | AC6 |
 
-**不碰**：`/milestone`（milestone-schema）、acceptance/tech-plan/verify 接线、`project-digest-schema` / `context-persistence` 语义、references 既有扁平用法（`api-`/`design-`/`insight-` 注入照旧）、`mcv-deployment`、hook、`VERSION`、切分之外的钉版/同步/认亲动作。
+**不碰**：§6.4 现有五步的字面内容、`prd-split` 切分算法（§2/§4/§6）、`references-schema` 登记表字段（§3 不加列）、R2 注入表手动入口（`logic-protocol` 大 PRD 行）、acceptance/tech-plan/verify 接线、`project-digest` / `context-persistence`、hook、`VERSION`、`prd_version` 钉版/同步/认亲动作。
 
 ## Execution Steps（可勾选）
 
-- [x] S1 · 写 `prd-split.md` frontmatter + §1 定位/契约履行（履行 references-schema、契约 vs 动作分工）→ AC1
-- [x] S2 · §2 边界识别（按 PRD 自身语义/模块边界切 + **绝不切碎一条规则**红线）→ AC2
-- [x] S3 · §3 slug 首切分配 + 写 `00_INDEX`/登记表（字段与规则守 references-schema §3/§4）→ AC3
-- [x] S4 · §4 逐字保真（每片原文无损投影、只搬不概括、守 §6 命门）→ AC4
-- [x] S5 · §5 小 PRD 单模块退化态（模块数=1 同一套模型、不开特例、守 §2 判据）→ AC5
-- [x] S6 · §6 soft 对齐（提议→确认→落盘三拍、复用 [split]/[add-field] 信任模型）→ AC6
-- [x] S7 · `logic-protocol` 注入表补行（大 PRD → prd-split，判据回指 §2、不双写）→ AC7
-- [x] S8 · `README` 双处注册（结构树紧跟 references-schema + 说明段）+ flip `references-schema §8` R2 指针 → AC8
-- [x] S9 · scope 守恒核对（`git status`）+ 说人话三条自检 → AC8/AC9
-- [x] S10 · P5 独立复核（APPROVE 干净，四对抗点全过、Nit 已修）→ 收口
+- [x] S1 · `milestone-schema §6.4` 合成协议加**步 6 大 PRD 并进分支**（判据回指 references-schema §2、触发 prd-split 不复述算法、普通 brief 跳过）→ AC1
+- [x] S2 · `§6.4` 合并对齐写进步 6（路线图 + 切分方案一次呈交确认）→ AC3
+- [x] S3 · `§6.4 brief 定位`补"PRD 喂两海拔"段（origin PRD 喂 brief + 派生 references/prd、生命周期独立、origin 只读）→ AC2
+- [x] S4 · `§5.3` 拆分路线图路线项加**可选"相关模块 slug"标注**（方向→细节指针，非 PRD 里程碑不需要）→ AC4
+- [x] S5 · `prd-split §3` 补"/milestone 触发首切时 00_INDEX 记所属里程碑号 + 回指 §5.3 映射、不重列"（细节→方向指针）→ AC5
+- [x] S6 · flip `references-schema §8` R3 指针为 ✅ 已落 → AC6
+- [x] S7 · scope 守恒核对（`git status`）+ **非回归核对**（`git diff` 零删除，非 PRD brief 五步字面未动）+ 说人话三条自检（去裸英文 owning）→ AC7/AC8
+- [x] S8 · P5 独立复核（APPROVE-with-nits，四对抗点全过、Should Fix README 漂移已修）→ 收口
 
 ## 验证策略
 
-全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git grep` 核守恒。核心对抗点＝**"绝不切碎一条规则"红线够不够硬**（防 AI 硬切）+ **逐字保真守 §6**（防顺手概括）+ **soft 对齐真是"提议→确认"非黑箱**（护栏是否落到程序）+ **契约 vs 动作分离**（prd-split 只引用不复述 references-schema）+ **触发不越界**（只碰注入表、不碰 /milestone 入口 R3）。dogfood：四件套 + prd-split 过说人话三条。无人测道残余。
+全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git grep`/`git diff` 核守恒。核心对抗点＝**非回归**（非 PRD brief 合成路径字面逐字不变、分支纯增量）+ **引用不复述**（milestone 分支不抄 prd-split 算法、判据回指 §2）+ **交叉映射单一真源**（模块↔路线项只存路线图、00_INDEX 只回指不重列）+ **不越界**（只接 milestone 入口，不做钉版/同步/认亲）。dogfood：四件套 + 改动正文过说人话三条。无人测道残余。

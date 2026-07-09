@@ -33,7 +33,7 @@
 |---|---|---|
 | **R1** | **references 索引化基座**：新建/扩展 references-schema——`prd/00_INDEX` 契约 + 模块登记表（slug 身份）+ digest-and-point 读纪律 + "索引可摘要/切片必原文"硬区分 + live 目录 vs `.archive/vN/` 落盘契约 | ITER-0036 ✅ |
 | **R2** | **PRD 切分机制**：按语义/模块边界切 `prd/<slug>.md`（逐字保真）+ 写登记表 + 小 PRD 单模块退化态 + soft 对齐拆法（提议→确认，绝不切碎一条规则） | ITER-0037 ✅ |
-| **R3** | **首切入口并进 `/milestone` + 两海拔交叉指针**：milestone 录入认"brief 是大 PRD"分支 → 触发 R2 切分；路线图项 ↔ 模块 slug 互指（焊上里程碑→references 源指针缺口） | — |
+| **R3** | **首切入口并进 `/milestone` + 两海拔交叉指针**：milestone 录入认"brief 是大 PRD"分支 → 触发 R2 切分；路线图项 ↔ 模块 slug 互指（焊上里程碑→references 源指针缺口） | ITER-0038 ✅ |
 | **R4** | **AC 钉版 + P2/P3/P5 接线**：AC frontmatter `prd_version`（冻结绑定、之后钉住）+ 版本化 slug 引用锚点 + 扩展 acceptance/tech-plan/verify（External References 版本化、Compliance 对钉住版核） | — |
 | **R5** | **改版同步 `/prd update`**：重新派生 + 变更检测（清单优先 + diff 兜底 + 对账）+ `.archive/vN/` 全量快照 + 三态影响面报告（没开工/进行中/已收口）+ 接 amend 重冻 + `/prd status`；登记表认亲基础态（新增 / 消失） | — |
 | **R6** | **登记表认亲边缘 + 非回归 + 收尾**：模块合并/拆分/改名跨版本认亲对账（松边）+ 非回归门（非 PRD 流一行未动的显式验证）+ README 注册 / HUMAN_GUIDE 用法 / 说人话自检 / dogfood | — |

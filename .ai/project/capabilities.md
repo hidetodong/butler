@@ -25,7 +25,7 @@
 | `/review` | 独立复核（干净上下文子 agent、验证者≠实现者、逐 AC 核对） | `60_Extension_CodeReview/review-engine.md` + `62_Extension_Agents/independent-review.md` |
 | `/dangerous` | 无人值守长程自治（自审门替 ACK、强制 P5 全审护栏） | `65_Extension_Dangerous/dangerous-engine.md` |
 | `/preference` | 偏好探针开关（`on`/`off`/`reback`/`distill`） | `70_Extension_Preference/preference-probe-engine.md` |
-| `/milestone` | 里程碑录入 / `status` 只读看板 | `20_Workflow_Lifecycle/milestone-schema.md` |
+| `/milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3） | `20_Workflow_Lifecycle/milestone-schema.md`（§6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针） |
 | `/butler-upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行） | `20_Workflow_Lifecycle/butler-upgrade.md`（**注：从未真跑，见 debt**） |
 
 ## 部署与维护能力
