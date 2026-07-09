@@ -29,6 +29,7 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 # External References
 - .ai/references/api-xxx.md — 接口契约来源，影响 Interface / Contract 定义
 - .ai/references/design-xxx.md — UI 规格来源，影响 Files / Design Decisions
+- .ai/references/prd/save-validation.md — PRD 切片来源（版本继承 AC frontmatter prd_version，方案不自立版本），影响 Interface / Design Decisions
 
 # Interface / Contract
 - 涉及的接口契约
@@ -66,6 +67,7 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 - 文件范围、接口契约、边界与验证方式必须明确。
 - 若存在 active profiles，应写明其约束点；未命中时只按通用 SOP 与质量门禁设计。
 - 若 `.ai/references/` 下存在已处理的外部参考资料，必须在 `External References` 中列出，并在 `Interface / Contract` 和 `Design Decisions` 中标注哪些决策来源于参考资料。
+- 引用 `references/prd/` 切片时，版本**继承 `AC_LIST.md` frontmatter 钉住的 `prd_version`**（技术方案跟 AC 走、不自立版本、不重复版本号），版本口径与解析规则回指 `acceptance-schema.md §5`、此处不复述；方案对着钉住版设计。
 - 不把执行细节写成流水账，重点保留关键设计与实现边界。
 - `Execution Steps` 列为可勾选任务清单：每项一行、动词开头、绑定所服务的 AC（`→ ACn`）；有依赖标"依赖 T<m>"、可并行标 `[P]`；任务编号 `T<n>` 建议但不强制，小迭代可省。
 - 任务清单粒度随迭代大小：大迭代（多文件 / 可并行 / TDD）展开到任务级；极小 / 简化路径保持粗粒度实现顺序即可，不强制细拆，避免过度工程。

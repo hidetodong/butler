@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0039 交付总结 · 给验收清单钉住 PRD 版本（改版后也认得当初对的是哪一版）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>给验收清单钉住 PRD 版本（改版后也认得当初对的是哪一版）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0039</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-09</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1–R3 已经让"一份 PRD → 切成模块切片 → 挂进里程碑"跑通了，但所有指针指的都是"<strong>当前最新</strong>"的切片。真实项目里 PRD 天然会改版（V1.1→V1.2 修个校验规则），一旦改版，之前<strong>已经验收过</strong>的那条验收标准，当初对的到底是哪一版规格，就再也无从查证了。</li>
+        <li>本轮给验收清单（AC_LIST）<strong>钉版</strong>——"钉版"就是在验收标准冻结（你 ACK）的那一刻，把当时 PRD 的版本号记下来、之后<strong>钉住不动</strong>（哪怕 PRD 后来又改了好几版）。再把这个钉住的版本接进技术方案（P3）和验证报告（P5）：方案对着钉住版设计、<strong>验收也对着钉住版核对，而不是对最新版</strong>。这样"这条 AC 当初验收的是 V1.1 的规格"永远有据可查，也给下一块 R5 的改版同步铺好了地基。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>验收清单顶部加一个可选字段 <code>prd_version</code></strong>（<code>acceptance-schema</code>）：当这个迭代引用了 PRD 切片时，它记下 ACK 冻结那刻 PRD 的<strong>全局版本号</strong>（一份 PRD 一个版本号，不给每个模块单独编版）。字段<strong>可选</strong>——不用 PRD 的普通迭代、对话驱动的迭代<strong>根本不写这一行</strong>，验收清单顶部一个字都不变。</li>
+        <li><strong>版本号只记在一个地方</strong>：引用某个切片时，锚点是"模块代号 + 顶部那个全局版本号"，但版本号<strong>只存在顶部 frontmatter 一处</strong>，正文里引用切片时不再逐条重抄版本号（解析时自动用顶部的补齐）——防止将来多处各写一个版本号、改出分歧。</li>
+        <li><strong>接进三个阶段模板（P2/P3/P5）</strong>：
+          <ul>
+            <li><strong>P2 验收</strong>：写清楚冻结时怎么绑定、之后怎么钉住；迭代内小修（amend）重新走一遍 ACK 时，如果 PRD 期间恰好改了版，版本号<strong>可以随重冻重绑到新版</strong>。</li>
+            <li><strong>P3 技术方案</strong>：引用 PRD 切片时版本<strong>跟着验收清单走</strong>（继承那个钉住的版本号），方案不自己另立一套版本。</li>
+            <li><strong>P5 验证</strong>（本轮的核心兑付点）：核对 PRD 规格时<strong>对着钉住的那一版核、不对最新版核</strong>——同一个迭代里最新版通常就是钉住版（直接读就行）；只有回头复核老迭代（PRD 后来已经改版）时，才去翻当年冻存的旧版快照来核。</li>
+          </ul>
+        </li>
+        <li><strong>翻牌收口</strong>：R1 契约文件里"钉版怎么记—属 R4"那两处待办指针，翻成"✅ 已落地"。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>用 PRD 开发的项目，验收从此可追溯到具体版本</strong>：每条引用了 PRD 的验收标准，都钉着"我当初对的是哪一版"。PRD 后面改多少版，都不影响回头审计当年那次验收。</li>
+        <li><strong>验收对的是"当初冻结那一版"，不是漂移中的最新版</strong>：避免"AC 早就冻了、PRD 又偷偷改了、结果拿新规格核旧验收"的错位。</li>
+        <li><strong>不用 PRD 的人完全无感</strong>：<code>prd_version</code> 是可选字段，普通迭代的验收清单一字不变、机械门禁（hook）也没给它加任何校验——旧项目、旧清单照常放行。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（4 份规则文件，纯接线无新文件）：<code>acceptance-schema.md</code>（加 <code>prd_version</code> 字段 + 绑定/钉住语义 + amend 重绑 + 编写规则）、<code>tech-plan-schema.md</code>（引用切片继承钉住版）、<code>verify-schema.md</code>（验收对钉住版核）、<code>references-schema.md</code>（§7/§8 翻 R4 牌）。</li>
+        <li>没碰（守边界）：R3 的 <code>/milestone</code> 入口、<code>prd-split</code> 切分算法、<code>references-schema</code> 登记表字段（没加列）、<code>logic-protocol</code>、<code>project-digest</code>、<code>context-persistence</code>、hook、<code>VERSION</code>。<strong>不做</strong>改版同步(R5)/模块认亲(R6)，<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>8 项验收（AC1–8）全过</strong>，全 <strong>auto·可靠</strong>（纯规则文档：读改后正文核契约 + <code>git diff</code> 核非回归 + <code>git status</code> 核守恒，确定性可复现），无人测残余。</li>
+        <li><strong>独立复核 APPROVE-with-nits</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式）：四个对抗重点——"可选字段真非回归/hook 没碰""版本是否单一真源不双写""引用解析是否靠回指不复述""有没有越界做 R5/R6"——逐条过。无 Must Fix。1 个 <strong>Should Fix</strong>（两处引用把 references 读纪律写成不存在的"§5.2"子节，仓库 ITER-0035 有同款判例）已<strong>当轮修掉</strong>，改成"§5 步骤 2"并同步四件套。1 个 Nit（归档路径占位写法小不一）不影响正确性、不改。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>钉版协议就位、但要 R5 才首次实战兑付</strong>：本轮只定了钉版"怎么记 / 怎么解析 / 怎么核"，还没有真正冻出旧版快照的动作——回头复核老迭代要读的 <code>.archive/vN/</code> 快照，得等 R5 的 <code>/prd update</code> 改版同步真跑起来才生得出。在那之前，钉住版永远等于最新版（同迭代内不改版），钉版的跨改版审计价值待 R5 兑现。</li>
+        <li><strong>"版本单一存顶部、正文不重抄"靠遵从守</strong>：真到一个迭代引用多个切片、多条 AC 时，是否始终不在正文私自补版本号，取决于执行遵从（同既有"回指不复述"信任模型）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 切片：<code>.ai/iterations/ITER-0039/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/20_Workflow_Lifecycle/acceptance-schema.md</code>（§2/§3/§4/§5）、<code>Coder/20_Workflow_Lifecycle/tech-plan-schema.md</code>（§3/§4）、<code>Coder/20_Workflow_Lifecycle/verify-schema.md</code>（§3/§4）、<code>Coder/40_Context_Management/references-schema.md</code>（§7/§8）</li>
+        <li>里程碑与前置：<code>.ai/MILESTONE.md</code>（MILE-0004 §5.3 路线图，R4 项）、<code>references-schema.md</code>（R1 契约 §4 身份/§5 读纪律/§7 落盘）、<code>prd-split.md</code>（R2 机制）、<code>milestone-schema.md</code>（R3 入口）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

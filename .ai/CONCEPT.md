@@ -1,37 +1,39 @@
-# MILE-0004 R3 · 首切入口并进 /milestone + 两海拔交叉指针
+# MILE-0004 R4 · AC 钉版 + P2/P3/P5 接线
 
-> ITER-0038 · 里程碑 MILE-0004 第三块 · 监督态自驱（承 R1 契约 + R2 切分机制）· 不切版（纯规则接线）
+> ITER-0039 · 里程碑 MILE-0004 第四块 · 监督态自驱（承 R1 契约 + R2 切分 + R3 入口）· 不切版（纯规则接线）
 
 ## 一句话
 
-R2 让 butler 会把大 PRD 切成切片，但只接了"用户手动丢一份 PRD"这一个入口。R3 把切分接进 **`/milestone` 录入**：当开里程碑用的那份 brief **本身就是一份大 PRD** 时，除了照常合成里程碑路线图（方向层、有损），**同一份输入还顺手触发 `prd-split` 切成 `references/prd/` 切片**（细节层、无损）——**一份输入喂两个海拔**。再把两层焊起来：路线图项 ↔ 模块 slug **双向交叉指针**，让"里程碑方向"能顺指针钻到"PRD 细节"、反之亦然。
+R3 让 butler 会把大 PRD 一份输入喂两个海拔了，但里程碑指向切片的指针指的都是"当前最新"——PRD 一改版（V1.1→V1.2），就无从锚定"当初冻结这条 AC 时对的是哪一版"。R4 给验收清单**钉版**：AC 顶部加一个 `prd_version` 字段，在 ACK 冻结那一刻绑定当时的 PRD 全局版本号、之后**钉住**（钉住＝锁死不随 PRD 后续改版漂移）；再把这个钉住版接进 P2/P3/P5——P3 对着钉住版设计、**P5 对着钉住版核**（不是对 live 最新核）。这样"验收对的是当初冻结时那一版规格"跨改版可审计，也给 R5 的改版同步铺好前置。
 
 ## 背景（为什么现在做、缺口在哪）
 
-- 里程碑路线图是**有损方向图**（"这个大版本要做哪几块"），扛不住组件级实现细节（精确文案、校验规则）；`references/prd/` 切片是**无损细节真源**。真实项目里，这两者常常源自**同一份 PRD**——PRD 既定方向也定细节。
-- R1（契约）+ R2（切分机制 + 手动注入触发）已就位，但 `/milestone` 录入还只会把 brief 合成成路线图、**不会顺手把同一份 PRD 的细节切进 references**；而且路线图和切片各说各话、**没有互指指针**——里程碑说"要做保存校验"，却指不到 `references/prd/save-validation.md` 那条精确规则。R3 补的就是这道"里程碑方向 → references 细节"的源指针缺口。
+- R1–R3 已让"一份 PRD → 切片 → 挂进里程碑"闭环成型，但**全都指向 live 最新**：`references/prd/<slug>.md` 永远是 PRD 当前态。真实项目 PRD 天然按"修改项"迭代改版，一旦改版，之前已冻结/已验收的 AC 引用的那条精确规则可能已经变了——却**没有任何锚点**记住"这条 AC 当初核的是 V1.1 的规格"。
+- 缺的正是**把引用钉到版本**这一块。grilling 十节点已定死方向：**全局版本**（一份 PRD 一个版本号，不给每片单独编版）+ **执行读最新、留版本可回溯**（Q2=b）+ **冻结绑定**（Q3=ii，ACK 那刻绑、之后钉住）。R4 就是把这三条决议物化成 AC 字段 + P2/P3/P5 接线。
 
 ## 做什么（DD）
 
-- **DD1 · `/milestone` 合成协议加"大 PRD 并进"分支（不改主干）**：`milestone-schema §6.4` 现有 brief→MILESTONE 五步**一字不动**；只加一条**分支**——若 brief / `origin/` 材料是**大 PRD**（逐字权威规格，判据回指 `references-schema §2`），则在合成三段之外**额外触发 `prd-split.md`** 把它切成 `references/prd/`。普通 brief（非 PRD）**零影响**照旧走（守非回归）。
-- **DD2 · 触发靠引用不复述**：milestone 分支只"调用" `prd-split` 机制、**不抄切分算法**；"何为大 PRD"判据回指 `references-schema §2`，不在 milestone 侧重写。
-- **DD3 · 两次 soft 对齐合并成一次**：milestone §6.4 的方向对齐（路线图）与 prd-split §6 的切分提议→确认，PRD 触发时**合并为一次呈交**——路线图 + 切分方案（模块清单 + slug + 边界）一起给用户确认，不让用户点两轮。
-- **DD4 · 两海拔交叉指针（双向、各栖一层、映射单一真源）**：
-  - **方向 → 细节**：`milestone-schema §5.3` 拆分路线图，路线项**可选标注"相关模块 slug"**（PRD 派生里程碑时，路线项 → 它实现的 prd 切片）。这是里程碑→references 的下钻指针。
-  - **细节 → 方向**：`prd-split §3` 写 `00_INDEX` 时，若由 `/milestone` 触发，**入口叙述记 owning 里程碑号**（"本 PRD 服务 `MILE-NNNN`，模块↔路线项映射见其 §5.3"）——**只回指、不重列映射**（映射真源单一在路线图，避免两头漂移）。
-- **DD5 · flip R3 指针**：`references-schema §8` 前向指针表里 R3 行（"从 `/milestone` **触发**首切 + 路线图项 ↔ 模块 slug 交叉指针"）翻成 ✅ 已落地。
+- **DD1 · AC frontmatter 加 `prd_version`（全局版本 · 冻结绑定 · 之后钉住 · 可选字段）**：`acceptance-schema` 的 AC_LIST 顶部 frontmatter 增一个 `prd_version` 字段。语义——当本迭代引用了 `references/prd/` 切片时，此字段记 **ACK 冻结那一刻 PRD 的全局版本号**（如 `v1.1`），冻结即绑定、之后钉住。**全局**＝一份 PRD 一个版本号（非逐片编版，守 Q2=b）。字段**可选**：只有引用 prd/ 知识文件夹的迭代才填；对话驱动 / 普通 references（api-/design-/insight-）/ 非 PRD 迭代**不带**此字段（非回归红线——绝大多数迭代 frontmatter 一字不变）。
+- **DD2 · 版本化引用锚点 = slug + frontmatter 的全局版本（版本单一存 frontmatter、引用处不重复）**：引用锚点概念上是 (slug, 版本) 对，但**版本号只存 frontmatter 一处**（全局、单一真源），正文引用 `prd/<slug>.md` 时不逐条重复版本号——解析时用 frontmatter 的 `prd_version` 补齐。这守"版本单一真源"（同 R3 映射不双写）。解析规则：(slug, prd_version) → PRD 仍在该版则 live `prd/<slug>.md` 即钉住版；PRD 已改版超过它则回溯读 `.archive/v<prd_version>/<slug>.md`（§7 全量快照自包含、一定取得到当年原文）。
+- **DD3 · P2 `acceptance-schema` 接线**：§2 交付约定 + §3 模板 frontmatter 增 `prd_version`（可选、引用 prd/ 时必填）；§4 冻结状态字段补一条绑定语义（冻结绑当前全局版、之后钉住；amend 重冻可重绑，见下）；§5 编写规则补"引用 prd 切片时版本取 frontmatter、不逐条重复 + 标哪些 AC 源自哪个 slug"。
+- **DD4 · P3 `tech-plan-schema` 接线**：`External References` 引用 prd 切片时**继承 AC 钉住的 `prd_version`**（跟 AC 走、技术方案不自立版本），回指 `acceptance-schema`。方案对着钉住版设计。
+- **DD5 · P5 `verify-schema` 接线（核心兑付点：对钉住版核、不对 live 最新核）**：`References Compliance` 逐项对照 prd 切片时，**对着 AC frontmatter 钉住的 `prd_version` 核**。同一迭代内 live 通常就等于钉住版（读 live 即可）；只有**回溯复核历史迭代**（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/` 核。这是钉版的兑付——保证验收对的是当初冻结那一版。
+- **DD6 · references-schema 收口指针**：§7 落盘契约里"`prd_version` 如何在 AC 里记/绑定——属 R4"那条 flip 为已落地、指 `acceptance-schema`；§8 边界表 R4 行 flip 为 ✅。
+
+## amend 重冻可重绑（钉版与既有仪式的接点）
+
+`iteration-schema §5.3` amend（迭代内小修）把 `状态` 退回 `draft` 重新 ACK 时，若 PRD 期间恰好改了版，`prd_version` **可随重冻重绑到新的当前版**（重冻＝重新绑定当刻）。这是 R4 与既有 amend 仪式的唯一接点，R4 只加"重绑"一句、不改 amend 流程本身；改版**同步**的完整协议（重新派生 + 影响面 + 主动重冻路径）属 R5。
 
 ## 边界（不做）
 
-- 不做 AC frontmatter `prd_version` **钉版** + P2/P3/P5 版本化引用接线——R4。
-- 不做 `/prd update` **改版同步**、变更检测、`.archive` 快照——R5。
-- 不做模块**合并/拆分/改名认亲**——R6。
-- 不改 R2 已建的**注入表手动入口**（`logic-protocol` 大 PRD 行照旧，那是 ad-hoc 路径；R3 只加 milestone 路径，两入口并存不重叠）。
-- 不动 `prd-split` 的切分算法本身（§2 边界识别 / §4 逐字保真 / §6 soft 对齐三拍）、不改 `references-schema` 契约结构（§3 登记表字段不加列）、不碰 `project-digest` / `context-persistence` / hook / `VERSION`、**不切版**。
-- **非 PRD 里程碑流一行不动**（非回归红线）：只加分支、不改普通 brief 合成。
+- 不做 `/prd update` **改版同步** / 变更检测 / `.archive/vN/` 快照**产生**动作——R5。R4 只定钉版"怎么记 / 怎么解析 / 怎么核"，**消费**既有落盘契约（§7 已定 `.archive/vN/` 存在）、**不造**快照。
+- 不做模块**合并 / 拆分 / 改名认亲**——R6。
+- **不改 R3 已建的入口**（`milestone-schema §6.4/§5.3` 一字不动）、不改 `prd-split` 切分算法、不改 `references-schema` 契约**结构**（§3 登记表字段不加列，只 flip §7/§8 指针）。
+- **不动 hook**：`prd_version` 是可选字段、旧 AC 无它按 legacy 放行；不给它加机械校验（守非回归、旧 AC_LIST 不被误杀）。
+- 不碰 `project-digest` / `context-persistence` / `logic-protocol` / `VERSION`；**不切版**。
 
 ## 关键设计约束
 
-- **一份输入喂两个海拔、但不重复造机器**：PRD 同时喂"方向层路线图（有损）"和"细节层切片（无损）"，复用既有 `/milestone` 合成 + 既有 `prd-split` 切分，R3 只是把两者在录入点**并联**起来 + 加交叉指针，不新造管线。
-- **交叉映射单一真源**：模块↔路线项的对应关系**只存路线图一处**（方向→细节列出 slug），`00_INDEX` 侧只回指里程碑号、不重列映射——防两头写将来漂移（同 R1/R2 一贯的"回指不复述"纪律）。
-- **非回归是硬边界**：普通（非 PRD）brief 的合成路径必须**逐字不变**，PRD 分支是纯增量 opt-in——这是 MILE-0004"不碰非 PRD 流"承诺在 R3 的落点。
+- **版本单一存 frontmatter**：全局版本号只在 AC frontmatter 记一次，正文引用、P3 方案、P5 核对全跟它走、不重复——同 R3"映射单一真源"，防多处写将来漂移。
+- **执行读最新、核对读钉住**（Q2=b + Q3=ii 的兑现）：P4 干活正常读 live `prd/<slug>.md`（同一迭代内 live 即钉住版，读侧规则回指 `references-schema §5 步骤 2`）；钉版的价值在 **P5 核对**（对钉住版核）与**跨迭代 / R5 改版影响面对账**，不在 P4——所以 R4 不改 P4 读法。
+- **可选字段守非回归**：`prd_version` optional，非 PRD 迭代 frontmatter 逐字不变、hook 不校验它——这是 MILE-0004"不碰非 PRD 流"承诺在 R4 的落点。

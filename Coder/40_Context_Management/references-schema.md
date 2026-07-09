@@ -92,7 +92,7 @@ prd/ 按**版本**落盘，两处：
 要点：
 
 - 版本维度（live / `.archive/vN/`）和 `.ai/project` 的"文件夹态 / 单文件态"**不是一回事**——那是产物形态，这是版本快照，别混。
-- `prd_version`（哪个迭代钉在哪版）如何在 AC 里记、如何绑定——属 R4，本节只定"版本这样落盘"。
+- `prd_version`（哪个迭代钉在哪版）如何在 AC 里记、如何绑定——**已由 `acceptance-schema.md §4`（冻结绑定/钉住）+ §5（引用锚点解析）落地**；本节只定"版本这样落盘"。
 - **本节只定落盘形态，不定"何时、怎么冻"**——快照的产生动作（改版时重新派生 + 冻旧版）属 R5（`/prd update`，见 §8）。
 
 ## 8. 边界（本轮只定契约，动作留 MILE-0004 后续）
@@ -103,7 +103,7 @@ prd/ 按**版本**落盘，两处：
 |---|---|
 | 把一份 PRD **切成** `prd/<slug>.md`（边界算法、soft 对齐拆法） | **R2 ✅ 已由 `prd-split.md` 落地** |
 | 从 `/milestone` **触发**首切 + 路线图项 ↔ 模块 slug 交叉指针 | **R3 ✅ 已由 `milestone-schema §6.4/§5.3` 落地** |
-| AC frontmatter **钉** `prd_version` + P2/P3/P5 版本化引用接线 | R4 |
+| AC frontmatter **钉** `prd_version` + P2/P3/P5 版本化引用接线 | **R4 ✅ 已由 `acceptance-/tech-plan-/verify-schema` 落地** |
 | `/prd update` **改版同步**（重新派生 + 变更检测 + `.archive` 快照 + 三态影响面 + amend 重冻） | R5 |
 | 模块**合并 / 拆分 / 改名**跨版本认亲对账 | R6 |
 
