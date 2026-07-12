@@ -1,26 +1,32 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-09
-迭代: ITER-0041
-里程碑: MILE-0004（R6·收官）
+ACK 日期: 2026-07-12
+迭代: ITER-0042
+里程碑: —（MILE-0004 已收、独立迭代）
 ---
 
-# AC_LIST — ITER-0041（MILE-0004 R6 · 认亲边缘 + 非回归门 + 收尾）
+# AC_LIST — ITER-0042（PRD 先行触发加固）
 
-> 监督态自驱。全为规则文档接线（扩 `prd-update §4` + `references-schema` 加非回归节/flip §4·§8 + HUMAN_GUIDE 用法节 + 说人话自检），验证 = 读改后正文核契约 + `git grep`/`git diff` 核守恒 + 非回归核对，确定性可复现（auto·可靠）。**待 ACK 冻结后方可进 P4。**
+> 监督态。三层修触发接线：①注入表按内容分类（规则文本）②里程碑并进闸前移（规则文本）③新增 PostToolUse advisory hook（代码 + 测试 + 部署接线）。验证 = 读改后正文核语义 + `git diff` 核非回归 + `pytest` 跑 hook 测试（auto·可靠）。**待 ACK 冻结后方可进 P4。**
 
-## 块1 · 认亲对账松边
+## 块1 · 注入表按内容分类（洞 B）
 
-- **AC1（认亲对账扩 `prd-update §4`·松边·不改改版主流程）**：`prd-update.md §4` 从"只做新增/消失"扩为含**改名 / 合并 / 拆分**跨版本认亲对账——检测到"slug 消失 + slug 新增"时**启发式提候选**（标题/内容相近→改名；一消失对多新增→拆分；多消失对一新增→合并），**提议 → 用户确认、绝不自动认**。改动限于 §4，`prd-update §2/§3/§5/§6`（检测/落盘/三态/路由）**不动**。
-- **AC2（认亲落法·守 slug 终身 + 松边退化）**：成文——**改名**认亲 = 保留旧 slug、只更新标题/章节（守 `references-schema §4` slug 终身、换门牌不换身份证）；**合并/拆分** = 按确认落 slug 关系 + 登记表状态。**松边红线**：拿不准就退回"新增/消失"两条独立记录，**宁可不认也不误并**（认错身份比不认更坏）。
+- **AC1（`logic-protocol §外部参考资料注入` 重构为「来源→提取、内容→定落点」）**：注入表/说明改为两拍——先按来源提取内容（Confluence/MCP/MasterGo/文件皆为取内容手段），再按**内容类型**定落点（逐字权威规格 PRD → `prd/` 切分；API 契约 → `api-`；设计规格 → `design-`；分析报告 → `insight-`；其他 → `<name>`）。成文点死「**来源 ≠ 落点，落点由内容类型决定**」。装 PRD 的 Confluence 不再默认落 `api-` 扁平。
+- **AC2（补「MCP 直读文档」入口覆盖）**：注入规则显式覆盖「经 MCP 直读进来的结构化文档」——不再假设 Confluence 只走 `confluence-api-extractor` skill；凡 MCP 读进来的同样过 AC1 的内容分类。原 Fallback（skill 不可用时人工粘贴）保留不动。
 
-## 块2 · 非回归门
+## 块2 · 里程碑并进闸前移（洞 A）
 
-- **AC3（非回归门·常驻可验证红线）**：`references-schema` 新增一节，显式列出 PRD 子系统作为 opt-in 加层**不得触碰**的非 PRD 流——对话驱动 / `origin/` brief / 普通 references 注入（`api-`/`design-`/`insight-`）/ 核心 P1–P5 状态机 / 里程碑非 PRD brief 合成；**验证判据成文 = 改本子系统时这些文件/路径 `git diff` 为空**。把散落各迭代 AC 的口头承诺固化成一处可核对契约。
+- **AC3（`milestone §6.4` 把 PRD 分类从跳过式步6附录前移为合成前必过闸）**：`§6.4 合成协议`改为——任何外部结构化文档当 brief（对话/`origin/`/MCP 直读），**在合成路线图之前先过一道 PRD 分类闸**：判定大 PRD → 先经 `prd-split` 切 `references/prd/` 再合成；判定非 PRD → 照旧到步 5 即止。「PRD 分类」由末尾 opt-in 附录变为前置动作。切分机制仍以 `prd-split` 为准、此处不复述（回指）。
+- **AC4（非回归·非大 PRD brief 流不变）**：非大 PRD 的普通 brief 合成路径（步 1–5）语义与改前一致——分类闸判否即等价于原流程，不新增阻塞、不改产物。`milestone-schema` 除 §6.4（必要时 §6.5 命令说明）外不动。
 
-## 块3 · 收尾（用法 · flip · 说人话）
+## 块3 · PostToolUse advisory hook（洞 C·无 hook 兜底）
 
-- **AC4（HUMAN_GUIDE 加"PRD 先行"用法节）**：HUMAN_GUIDE §5 扩展模式加一节，人话讲清 `/prd update`（改版同步：给新版 + 说改了啥 → 检测/重切/冻旧版/报三态影响面，每步确认）+ `/prd status`（只读看板），摆在里程碑节附近；口径与规则真源一致、不新造语义。
-- **AC5（flip R6 收口指针）**：`references-schema §4`（合并/拆分/改名认亲边缘那句）+ `§8` 前向指针表 R6 行 flip 为 **✅ 已落地**（指 `prd-update §4`）。至此 §8 表 R1–R6 全绿。
-- **AC6（全子系统说人话自检·dogfood）**：`references-schema` / `prd-split` / `prd-update` 三份过说人话三条（术语先解释 / 比喻落地 / 别让英文·变量裸奔），发现问题当场修；本迭代四件套同守。认亲 / 改名 / 合并 / 拆分 / 非回归门 / opt-in 加层等首现带解释。
-- **AC7（scope 守恒 + 非回归 + 分层 + 收官核对）**：改动集限于 `prd-update.md §4`（认亲对账）+ `references-schema.md`（加非回归节 + flip §4·§8）+ `HUMAN_GUIDE.md`（PRD 用法节）+ 说人话自检触发的零星修正。**不改** R1–R5 主体（契约结构/切分算法/钉版字段/改版主流程 §2/§3/§5/§6）；**不做**全自动认亲；**不碰**非 PRD 流（本轮亲自守）/ `project-digest` / `context-persistence` / hook / `VERSION`；**不切版**（收口 MILE-0004 + 切版是独立发布动作、待放行）。分层不破坏（改动在 SOP Core `40` + 仓根 HUMAN_GUIDE）。收官核对：MILE-0004 §5.3 路线图 R1–R6 全部 ✅、`references-schema §8` 表全绿。
+- **AC5（新增 PostToolUse advisory 机制·与 `butler_gate` 分离）**：新增独立 PostToolUse dispatcher（不改现有 PreToolUse `butler_gate.py` 及其 rules），承载「放行 + 向模型注入 `additionalContext`」的 advisory 能力；零三方依赖、advisory 自身出错 fail-open（绝不因 advisory 异常而阻塞或报错升级）。
+- **AC6（MILESTONE 落盘自检 rule）**：新 rule——匹配 Write/Edit/MultiEdit 写 `.ai/MILESTONE.md`，若 `.ai/references/prd/` 不存在 → 经 `hookSpecificOutput.additionalContext` 注入**条件式自检提醒**（brief 若源自外部权威规格则先 `prd-split` 落盘再合成、否则忽略）；`references/prd/` 已存在或目标非 MILESTONE.md → 静默不注入。**绝不 deny、绝不阻塞**（非 PRD 里程碑写结果与加 rule 前逐字一致）。
+- **AC7（hook 测试·dogfood）**：新 rule 有 pytest 覆盖——`references/prd/` 缺失→注入 advisory、存在→静默、非 MILESTONE 目标→静默、advisory 永不 deny；现有 hook 测试全绿（非回归）。
+- **AC8（部署 / 文档接线）**：`mcv-deployment §5` Hook 注入节补 PostToolUse dispatcher 拷贝 + settings 合并（新增 `PostToolUse` 键，幂等去重）+ 冒烟自检加一条；`templates/settings.hooks-snippet.json` 加 PostToolUse 条目；`Coder/README.md`（line 172 hook 枚举 + 若引入新文件的目录注册）同步。
+
+## 块4 · 守恒 · 非回归 · 说人话
+
+- **AC9（scope 守恒 + 非回归门 + 分层）**：改动集限于 `logic-protocol.md §注入`（AC1/2）+ `milestone-schema.md §6.4`（AC3/4）+ `templates/hooks/`（新 PostToolUse dispatcher + rule + 测试，AC5–7）+ `templates/settings.hooks-snippet.json` + `mcv-deployment.md §5` + `README.md`（AC8）。守 `references-schema §9` 非回归——对话录入 / `origin/` 非 PRD brief 合成 / 扁平态注入 / 核心 P1–P5 状态机 / `references-schema` 契约结构 / `prd-split` 切分算法 / `prd-update` 改版认亲主流程 / `prd_version` 字段的**语义** `git diff` 为空（除本 AC 明列的 PRD 相关触发接线改动）。不切版、不改 `VERSION`。分层不破坏（SOP Core `00`/`20` + templates + README）。
+- **AC10（说人话自检·dogfood）**：改动的规则文本过说人话三条（术语先解释 / 比喻落地 / 别让英文·变量裸奔）；本迭代四件套同守。advisory / PostToolUse / additionalContext / 来源解耦 等首现带解释。

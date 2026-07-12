@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0042 交付总结 · PRD 先行触发加固</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>PRD 先行触发加固：堵住 Confluence + MCP + /milestone 的漏切通道</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0042</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-12</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>MILE-0004 建成的「PRD 先行」全生命周期链，<strong>实战里被一条真实通道穿透</strong>：用户给一份 Confluence 文档地址、AI 经 MCP 直读当 <code>/milestone</code> brief，结果 <strong>MILESTONE.md 合成了，但从没提切分、<code>references/prd/</code> 从没建</strong>——PRD 的逐字规格蒸发进上下文、没落盘。</li>
+        <li>根因是整条切分链<strong>软触发、零强制</strong>，而「Confluence + MCP 直读 + /milestone」恰好同时穿过三层最薄的纸。本轮三层一起补：把软触发<strong>挪到难错过的位置</strong> + 给唯一可观测的落盘点<strong>加一道非阻塞自检</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>① 注入表按内容分类（改 <code>logic-protocol.md</code>）</strong>：外部资料注入从"按来源信号一步定落点"改成<strong>两拍</strong>——第一拍按来源取内容（Confluence / <strong>经 MCP 直读的文档</strong> / MasterGo / 粘贴文本…都只是取内容的手段），第二拍<strong>按内容类型定落点</strong>（逐字权威规格 PRD → <code>prd/</code> 切分、API 契约 → <code>api-</code>、设计 → <code>design-</code>、分析报告 → <code>insight-</code>）。落一条命门：<strong>来源 ≠ 落点，落点只由内容是什么决定</strong>。装 PRD 的 Confluence 从此走 <code>prd/</code>，绝不因"它是 Confluence / 来自 MCP"默认落 <code>api-</code> 扁平。Fallback（人工粘贴）同样按内容分类——粘贴一份大 PRD 一样走切分。</li>
+        <li><strong>② 里程碑分类闸前移（改 <code>milestone-schema §6.4</code>）</strong>：把"这份 brief 是不是大 PRD"的判断，从<strong>末尾一个默认跳过的附录步</strong>，提成<strong>合成 MILESTONE 之前必过的分类闸</strong>：任何外部结构化文档当 brief（对话 / <code>origin/</code> / MCP 直读），合成路线图前先判——是 PRD 就先切再合成，不是就照旧。判定从"可选、易漏"变成"前置、必过"。</li>
+        <li><strong>③ 新增 PostToolUse 落盘自检 hook（兜唯一可观测点）</strong>：新增一套与现有门禁<strong>分离</strong>的 PostToolUse 提醒 hook（<code>butler_advisor.py</code> + <code>prd_split_reminder</code> 规则）——写完 <code>.ai/MILESTONE.md</code> 后，若 <code>references/prd/</code> 还不存在，就经 <code>additionalContext</code> 给模型注入一句条件式自检（"brief 若源自外部权威规格，先切 <code>references/prd/</code> 再推进；否则忽略"）。配套：<code>Advisory</code> 类型 + pytest 覆盖 + 部署/settings/README 接线。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>给一份 Confluence/PRD 链接开里程碑，不再只建 MILESTONE 就完事</strong>：内容是 PRD 就会被识别、提议切成 <code>references/prd/</code> 逐字切片，后续验收能对着真源核。</li>
+        <li><strong>落点跟"从哪来"脱钩</strong>：同一份 PRD，无论来自对话粘贴、<code>origin/</code> 文件、还是 MCP 直读，都走同一条内容分类——不再有"从 MCP 进来就漏切"的暗门。</li>
+        <li><strong>漏了会被当场提醒</strong>：万一还是没切，写 MILESTONE 时 hook 会注入一句自检提醒，把"漏切"从静默变可见。</li>
+        <li><strong>提醒绝不挡路</strong>：这道 hook 只提醒、永远放行（PostToolUse + fail-open），非 PRD 的普通里程碑读一句即可忽略，写操作结果一字不变。</li>
+        <li><strong>不用 PRD 的人完全无感</strong>：老门禁一行没动，对话录入 / 普通 brief 合成 / 扁平态注入全程未变。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则文本（2 处）：<code>Coder/00_System_Prompt/logic-protocol.md</code>（§注入两拍重构 + MCP 直读入口 + 来源≠落点 + Fallback 分类）、<code>Coder/20_Workflow_Lifecycle/milestone-schema.md §6.4</code>（PRD 分类闸前移）。</li>
+        <li>新 hook（4 新文件）：<code>templates/hooks/butler_advisor.py</code>（PostToolUse dispatcher）、<code>rules/prd_split_reminder.py</code>、<code>tests/test_prd_split_reminder.py</code> + <code>tests/test_advisor_integration.py</code>。</li>
+        <li>hook 接线（1 改）：<code>templates/hooks/lib/io.py</code>（加 <code>Advisory</code> 类型）。</li>
+        <li>部署 / 文档（4 处）：<code>templates/settings.hooks-snippet.json</code>、<code>Coder/20_Workflow_Lifecycle/mcv-deployment.md §5</code>、<code>templates/hooks/README.md</code>、<code>Coder/README.md</code>。</li>
+        <li>没碰（守非回归门 <code>references-schema §9</code>）：<code>references-schema</code> 契约结构、<code>prd-split</code> 切分算法、<code>prd_version</code> 钉版字段、<code>prd-update</code> 改版认亲主流程、核心 P1–P5、现有 PreToolUse 门禁（<code>butler_gate.py</code> 及全部 rules）、<code>VERSION</code>。<strong>不做</strong>全自动 PRD 识别，<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>10 项验收（AC1–10）全过</strong>，全 <strong>auto·可靠</strong>：<code>pytest tests/</code> <strong>109 passed</strong>（原 97 + 新 12，现有测试零回归）+ dispatcher subprocess 三态冒烟（MILESTONE 无 prd/→注入 additionalContext / 源码写→静默 / 坏 stdin→fail-open exit 0）+ 规则文本读正文核语义 + <code>git diff</code> 核非回归。无人测残余。</li>
+        <li><strong>非回归门机器核对</strong>：14 个关键真源（契约 / 切分 / 钉版 / 改版主流程 / 核心 P1–P5 / 现有门禁）+ <code>VERSION</code> 逐一 <code>git diff --quiet</code> 全 clean。</li>
+        <li><strong>独立复核 APPROVE-with-nits</strong>（另起干净上下文子 agent、验证者≠实现者、只读、对抗式）：十条 AC 逐条核过，六个对抗点全部<strong>证实、无 REFUTE</strong>——③ 绝不 deny（11 个畸形 stdin 实测全 exit 0）、非回归 diff 亲跑全 clean、AC4 非 PRD 步 1–5 逐字未改、来源解耦成文无歧义、settings 幂等、无 AC 虚报。无 Must-Fix / 无 Should-Fix；1 Nit 已改（Fallback 落点补 <code>prd/</code>）、1 Nit 记录保留（prd 若为文件的异常态、无害）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>hook 只兜可观测的 MILESTONE 落盘点</strong>：纯注入路径（贴 PRD / 给链接但<strong>不开里程碑</strong>）没有可 hook 的写点，仍靠 ①②（内容路由 + 分类闸）+ AI 识别，无 hook backstop。这是 PRD 识别不可机械化的固有边界，已明写、非缺陷。</li>
+        <li><strong>提醒条件式、每次开里程碑触发</strong>：里程碑罕见、非 PRD 一句可忽略、非阻塞——噪音可忽略。</li>
+        <li><strong>PRD 全链端到端仍未走完</strong>：本轮实战暴露并修掉了触发漏切，但那次没走到切分 / 钉版 / 改版；命门红线与 R4 钉版回溯、R5 冻快照仍待真"拿一份大 PRD 走导入→改版全程"检验。</li>
+        <li><strong>切版待放行</strong>：加 PostToolUse hook 属能力新增，判 <strong>MINOR（v2.2.0）</strong>，需 <code>[sync-hooks]</code> + settings 合并迁移；切版是收口后的独立 <code>chore(release)</code> 发布动作，待用户放行。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0042/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/00_System_Prompt/logic-protocol.md</code>、<code>Coder/20_Workflow_Lifecycle/milestone-schema.md §6.4</code>、<code>templates/hooks/butler_advisor.py</code>、<code>templates/hooks/rules/prd_split_reminder.py</code>、<code>templates/hooks/lib/io.py</code>、<code>templates/hooks/tests/</code>、<code>templates/settings.hooks-snippet.json</code>、<code>Coder/20_Workflow_Lifecycle/mcv-deployment.md §5</code>、<code>templates/hooks/README.md</code>、<code>Coder/README.md</code></li>
+        <li>被修复的前置真源：<code>Coder/40_Context_Management/references-schema.md</code>（§2 判据、§9 非回归门）、<code>Coder/40_Context_Management/prd-split.md</code>（R2 切分动作，触发指向它）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

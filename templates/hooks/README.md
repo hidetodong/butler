@@ -1,42 +1,56 @@
 ---
-title: Butler Hook Gate — 贡献者说明
+title: Butler Hooks — 贡献者说明
 audience: 开发者
 scope: templates/hooks/ 的结构、运行机制、测试与应急流程
 ---
 
-# Butler Hook Gate
+# Butler Hooks
 
-`templates/hooks/` 是 butler 的 Claude Code PreToolUse hook SSOT。`mcv-deployment.md` 协议在部署目标项目时，把这里除 `tests/` 外的内容拷到目标 `.claude/hooks/`，并把 `../settings.hooks-snippet.json` 合并进目标 `.claude/settings.json`。
+`templates/hooks/` 是 butler 的 Claude Code hook SSOT，含两套平行 hook：**PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）与 **PostToolUse 提醒**（`butler_advisor.py`，advisory-only、fail-open）。`mcv-deployment.md` 协议在部署目标项目时，把这里除 `tests/` 外的内容拷到目标 `.claude/hooks/`，并把 `../settings.hooks-snippet.json`（含 PreToolUse + PostToolUse 两个键）合并进目标 `.claude/settings.json`。
+
+两套为何分开：**风险方向相反**。门禁宁可错拦（fail-closed，任何异常都 `exit 2`）；提醒宁可漏提（fail-open，任何异常都静默 `exit 0`）。advisory 若混进门禁的 deny 链，会误伤正常写操作——例如非 PRD 里程碑写 `.ai/MILESTONE.md` 本该放行，却因提醒逻辑被拦。
 
 ## 目录结构
 
 ```txt
-butler_gate.py           # PreToolUse 入口
+butler_gate.py           # PreToolUse 门禁入口（deny-based, fail-closed）
+butler_advisor.py        # PostToolUse 提醒入口（advisory-only, fail-open）
 rules/
-  protected_paths.py     # 拦 99_Business_Extension/
-  phase_gate.py          # 拦源码路径在 P1/P2/P3 产物缺失 / AC_LIST 未冻结时
-  ledger_status.py       # 拦 .ai/ITERATIONS.md 状态列越界（封闭枚举 active/closed/abandoned）
-  single_active_iteration.py  # 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
-  artifact_chain.py      # 占位，未来承载 AC-ID linkage 等规则
+  protected_paths.py     # [门禁] 拦 99_Business_Extension/
+  phase_gate.py          # [门禁] 拦源码路径在 P1/P2/P3 产物缺失 / AC_LIST 未冻结时
+  ledger_status.py       # [门禁] 拦 .ai/ITERATIONS.md 状态列越界（封闭枚举 active/closed/abandoned）
+  single_active_iteration.py  # [门禁] 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
+  artifact_chain.py      # [门禁] 占位，未来承载 AC-ID linkage 等规则
+  prd_split_reminder.py  # [提醒] 写 .ai/MILESTONE.md 且无 .ai/references/prd/ 时，注入 PRD 先行自检
 lib/
-  io.py                  # Context, Decision, parse_stdin, resolve_target, is_gated, GATED_BLACKLIST
-  bypass.py              # BUTLER_BYPASS 评估 + RUN_LOG 追加
+  io.py                  # Context, Decision(门禁), Advisory(提醒), parse_stdin, resolve_target, is_gated
+  bypass.py              # BUTLER_BYPASS 评估 + RUN_LOG 追加（仅门禁用）
 tests/                   # 本目录的测试（不分发到目标项目）
 ```
 
 ## 运行机制
+
+### PreToolUse 门禁（butler_gate.py）
 
 1. Claude Code 在 `Edit` / `Write` / `MultiEdit` 前通过 PreToolUse 调用 `python3 .claude/hooks/butler_gate.py`，stdin 传入 JSON。
 2. Dispatcher 顺序执行 `RULE_MODULES`（`protected_paths → phase_gate → ledger_status → single_active_iteration → artifact_chain`），任一 `deny` 即终止。`ledger_status` 与 `single_active_iteration` 仅在目标为 `.ai/ITERATIONS.md` 时生效：前者校验「状态」列只取封闭枚举 active/closed/abandoned（见 `iteration-schema.md §4.2`）；后者还原写入后全表，拦截 ≥2 个 active 行（等价于 iteration-schema §5.1「上一迭代未收口不得开新」，Edit/MultiEdit 无法可靠还原时按 allow-on-uncertainty 放行）。
 3. `deny` 后走 `lib/bypass.py`：若 `BUTLER_BYPASS=1` 且 `.ai/bypass-reason.md` 非空，追加 `.ai/RUN_LOG.md` 后放行；否则 `exit 2` + stderr 给 AI 可读的违规摘要。
 4. 任何未捕获异常由 dispatcher 顶层 catch，`exit 2`（**fail-closed**）。
 
+### PostToolUse 提醒（butler_advisor.py）
+
+1. Claude Code 在 `Edit` / `Write` / `MultiEdit` **之后**通过 PostToolUse 调用 `python3 .claude/hooks/butler_advisor.py`，stdin 传入 JSON（形状同 PreToolUse，另含 `tool_response`）。
+2. Dispatcher 顺序执行 `ADVISORY_MODULES`（当前只有 `prd_split_reminder`），每条 rule 返回 `Advisory`（`rule_id` + `message`，`message` 为空即静默）；各 rule 独立、互不短路。
+3. 收集到非空 `message` → stdout 输出 `{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext": …}}`（模型可见的提醒），`exit 0`。无提醒 → 不输出、`exit 0`。
+4. 任何未捕获异常静默 `exit 0`（**fail-open**）——提醒绝不阻塞、绝不改写工具结果。
+
 ## 退出码契约
 
-| exit | 含义 |
-|---|---|
-| 0 | 放行（允许工具执行） |
-| 2 | 拒绝（含规则 deny 与 internal error） |
+| hook | exit | 含义 |
+|---|---|---|
+| 门禁 `butler_gate` | 0 | 放行（允许工具执行） |
+| 门禁 `butler_gate` | 2 | 拒绝（含规则 deny 与 internal error，fail-closed） |
+| 提醒 `butler_advisor` | 0 | **永远放行**；stdout 有 `additionalContext` JSON 则模型看到提醒，无则静默（含 fail-open 的异常路径） |
 
 ## Bypass 流程
 

@@ -100,15 +100,29 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 ### 外部参考资料注入 (Reference Injection)
 
-当用户在任意阶段提供外部参考资料时，AI 必须自动识别类型并处理：
+当用户在任意阶段提供外部参考资料时，AI 必须**分两拍**处理，绝不把两拍并成一步——**先按来源把内容取到手，再按内容类型定落到哪**。
 
-| 输入信号 | 处理方式 | 存储位置 |
+**第一拍——按来源取内容**（来源只是"怎么把内容拿到手"的手段，**不决定落点**）：
+
+| 来源 | 取内容的手段 |
+|---|---|
+| Confluence 页面链接 | 优先 `confluence-api-extractor` skill；skill 不可用走下方 Fallback |
+| 经 MCP 直读的文档（Confluence / 其他挂了 MCP 的知识库、文档系统、需求平台） | 用对应 MCP 工具读出正文——**MCP 读进来的文档一样要走第二拍分类落盘**，绝不因"来自 MCP、已读进上下文"就跳过落盘 |
+| MasterGo 设计稿链接 | 调用 `mastergo-codegen` skill 提取组件规格 / 生成代码 |
+| 独立 Agent 产出的分析报告 | 直接读取（报告由用户另启 agent 用 skill 生成） |
+| 用户直接粘贴的文本 / 项目内文件 | 直接读取 |
+
+**第二拍——按内容类型定落点**（**落点只由"内容是什么"决定，与它从哪来无关**）：
+
+| 内容类型 | 落点 | 处理 |
 |---|---|---|
-| Confluence 页面链接 | 调用 `confluence-api-extractor` skill 提取结构化 API 文档 | `.ai/references/api-<name>.md` |
-| MasterGo 设计稿链接 | 调用 `mastergo-codegen` skill 提取组件规格或生成代码 | `.ai/references/design-<name>.md` |
-| 独立 Agent 产出的分析报告 | 直接读取（报告由用户另启 agent 使用 skill 生成） | `.ai/references/insight-<name>.md` |
-| 大 / 结构化 PRD（逐字权威规格；判据见 `40_Context_Management/references-schema.md §2`） | 首切走 `40_Context_Management/prd-split.md` 切分机制切成知识文件夹态（**提议→确认→落盘**，绝不擅自硬切；小 PRD 走单模块退化态、不退扁平）；已切进来的 PRD 出新版走 `40_Context_Management/prd-update.md` 改版同步、**非重新注入** | `.ai/references/prd/`（`00_INDEX` + `<slug>.md` 逐字切片） |
-| 其他文档或文件 | 直接读取并提炼关键信息 | `.ai/references/<name>.md` |
+| **逐字权威规格 PRD**（大、结构化、逐字为准；判据见 `40_Context_Management/references-schema.md §2`） | `.ai/references/prd/`（`00_INDEX` + `<slug>.md` 逐字切片） | 首切走 `40_Context_Management/prd-split.md` 切分机制（**提议→确认→落盘**，绝不擅自硬切；小 PRD 走单模块退化态、不退扁平）；已切进来的出新版走 `40_Context_Management/prd-update.md` 改版同步、**非重新注入** |
+| API 契约 / 接口文档 | `.ai/references/api-<name>.md` | 提炼结构化接口文档 |
+| UI / 设计规格 | `.ai/references/design-<name>.md` | 提炼组件规格 |
+| 独立分析报告（复核 / 查过时 / 脑暴产出等） | `.ai/references/insight-<name>.md` | 直接落盘 |
+| 其他文档 | `.ai/references/<name>.md` | 提炼关键信息 |
+
+> **来源 ≠ 落点（本节命门）**：一个 Confluence 页面、一份经 MCP 读来的文档，**内容若是 PRD 就走 `prd/` 切分，绝不因为"它是 Confluence / 来自 MCP"就默认落 `api-` 扁平**。`api-` 只给"内容本身就是 API 契约"的资料。**先判内容是什么，再定落到哪**——这一步判错，PRD 就会被当成普通文档草草读过、逐字规格漏落盘（切分与钉版全落空）。
 
 处理规则：
 
@@ -121,7 +135,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 - 若目标 skill 未安装、认证失败或调用超时，**不得**自行使用 WebFetch 等工具越权访问外部资源。
 - 应主动提示用户手动提取参考资料内容并粘贴到对话，例如："`confluence-api-extractor` skill 不可用，请将 <URL> 页面内容粘贴到对话，我将落盘到 `.ai/references/api-<name>.md`"。
-- 收到用户粘贴的文本后，按上表"存储位置"约定落盘，命名前缀保持一致（`api-` / `design-` / `insight-` / 无前缀）。
+- 收到用户粘贴的文本后，**仍按第二拍"内容类型→落点"分类落盘**（Fallback 只换了取内容的手段——从 skill 改成人工粘贴，不改落点判定）：内容是逐字权威规格 PRD → 走 `prd/` 切分（同 `prd-split`），API 契约 → `api-`，设计规格 → `design-`，分析报告 → `insight-`，其他 → 无前缀。**别因为"是粘贴进来的"就一律当普通文档落 `api-`/无前缀**——粘贴一份大 PRD 一样要切。
 - Fallback 路径产出的参考资料，在 `AC_LIST.md` / `TECH_PLAN.md` 的 `External References` 中必须标注"用户手动提供"，以便审计区分 skill 自动化产物与人工产物。
 
 ## 5. 流程总调度

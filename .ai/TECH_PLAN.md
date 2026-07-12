@@ -1,37 +1,45 @@
-# TECH_PLAN — ITER-0041（MILE-0004 R6 · 认亲边缘 + 非回归门 + 收尾）
+# TECH_PLAN — ITER-0042（PRD 先行触发加固）
 
-> 监督态自驱。目标见 CONCEPT、验收见 AC_LIST，不重述。全为规则文档接线（扩 1 节 + 加 1 节 + 用法节 + flip，无新文件）。
+> 监督态。目标见 CONCEPT、验收见 AC_LIST，不重述。两处规则文本改（①②）+ 一套新 PostToolUse hook（③，含代码/测试/部署接线）。
 
 ## 设计决策（DD）
 
-- **DD1 · 认亲对账扩在 `prd-update §4` 内、改版主流程零改动**：R5 的 §4 只有"新增/消失"两态；R6 在同节**追加**"改名/合并/拆分"认亲对账，§2 检测 / §3 落盘 / §5 三态 / §6 路由**一字不动**——认亲是 §4 内部的登记表处置细化，不是新流程。
-- **DD2 · 认亲靠启发式候选 + 提议确认（松边）**：检测"slug 消失 + slug 新增"配对——标题/内容相近→改名候选、一消失对多新增→拆分候选、多消失对一新增→合并候选；一律**提议给用户确认**，不自动认。改名落法守 `references-schema §4`（保留旧 slug、只更新登记表标题/章节字段）。拿不准**退回 R5 新增/消失基础态**（宁可不认也不误并）——这是松边的兜底。
-- **DD3 · 非回归门做成 `references-schema` 独立小节 + 硬判据**：不是散文，是"列举不得触碰的非 PRD 流 + 验证 = 这些文件/路径 `git diff` 为空"的可核对契约。放 `references-schema`（PRD 子系统的契约入口）最自然，作为整个子系统 R1–R6 的常驻边界声明。
-- **DD4 · HUMAN_GUIDE 用法节口径回归则真源**：`/prd update`·`/prd status` 的人话说明摆在里程碑节之后（同属"大规格/大版本"入口族），只讲"怎么用、会发生什么"，机制真源仍指 `prd-update.md`、不在 HUMAN_GUIDE 重写规则。
-- **DD5 · flip 用既有翻牌手法 + 收官核对**：`references-schema §4` 认亲边缘句 + `§8` R6 行由待→✅（指 `prd-update §4`），至此 §8 表 R1–R6 全绿；收口自检额外确认 MILE-0004 §5.3 路线图六项全 ✅。
-- **DD6 · 说人话自检当场修**：三份 PRD 子系统文件通读，裸英文/悬空比喻当场修（属本迭代 dogfood 改动、记进 changelog）；无问题则只在 VERIFY 记"已自检通过"。
+- **DD1 · 注入表改「两拍」结构（AC1/2）**：`logic-protocol §外部参考资料注入` 从"按来源信号一步定落点"改成"先提取内容 → 再按内容类型定落点"。表保留（读者仍要一眼看到映射），但在表前加一句总纲、表列语义从「输入信号→落点」重解为「取内容手段 / 内容类型→落点」，并显式加「经 MCP 直读的结构化文档」一行 + 点死「来源 ≠ 落点」。装 PRD 的 Confluence 因此走 `prd/` 而非 `api-`。
+- **DD2 · §6.4 分类闸前移（AC3/4）**：把原步 6「大 PRD 并进分支（默认跳过）」的**判定动作**上提到合成协议开头（新步 0 或改写步 1）——"收集输入后、合成三段前，先判 brief 是不是大 PRD"。判是 → 先走 `prd-split` 再合成 + 落交叉指针；判否 → 走原步 1–5。原步 6 的**切分执行细节**保留（回指 prd-split 不复述），只是"要不要走"的开关从末尾前移到开头、从 opt-in 附录变必过闸。非大 PRD 路径逐字等价原流程。
+- **DD3 · 新增独立 PostToolUse advisory 通道（AC5/6）**：**不碰** PreToolUse `butler_gate.py`（保持纯 deny、fail-closed）。新增平行的 `butler_advisor.py`（PostToolUse dispatcher，**fail-open**：任何异常静默 exit 0，advisory 绝不破坏流程）+ `rules/prd_split_reminder.py`（advisory rule）。`lib/io.py` 加 `Advisory` 轻量类型（rule_id + message，message="" 即静默）。dispatcher 收集非空 message → `{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext": …}}` stdout + exit 0。
+- **DD4 · advisory 判据（AC6）**：`prd_split_reminder` 匹配写 `.ai/MILESTONE.md` 且 `.ai/references/prd/` 目录不存在 → 注入条件式提醒；`prd/` 已存在 / 目标非 MILESTONE.md → 静默。提醒措辞条件式（外部权威规格才需切、否则忽略），非 PRD 里程碑读一句即可判忽略。
+- **DD5 · 部署接线（AC8）**：`mcv-deployment §5` 标题与首段从"PreToolUse hook 体系"扩为"PreToolUse + PostToolUse"；§5.1 拷贝清单加 `butler_advisor.py`（`rules/` 已整目录拷、自动含新 rule）；§5.2 settings 合并加 PostToolUse 键的幂等规则；§5.3 验证加一条 advisory 冒烟。`settings.hooks-snippet.json` 加 PostToolUse 条目。`templates/hooks/README.md` + `Coder/README.md`（line 172 枚举）同步。
 
-## 影响面（章节级）
+## 影响面（文件级）
 
 | 文件 | 改动 | AC |
 |---|---|---|
-| `Coder/40_Context_Management/prd-update.md §4` | 追加改名/合并/拆分认亲对账（启发式候选 + 提议确认 + 守 slug 终身 + 松边退回基础态）；§2/§3/§5/§6 不动 | AC1–2 |
-| `Coder/40_Context_Management/references-schema.md` | 加"非回归门"小节（列非 PRD 流 + git diff 为空判据）+ flip §4 认亲边缘句 + §8 R6 行 ✅ | AC3/AC5 |
-| `HUMAN_GUIDE.md §5` | 加"PRD 先行（大规格版本化）"用法节：/prd update + /prd status 人话说明 | AC4 |
-| `Coder/40_Context_Management/{references-schema,prd-split,prd-update}.md` | 说人话三条自检的零星修正（若有） | AC6 |
+| `Coder/00_System_Prompt/logic-protocol.md` | §注入表两拍重构 + MCP 直读行 + 来源≠落点 | AC1/2 |
+| `Coder/20_Workflow_Lifecycle/milestone-schema.md §6.4` | PRD 分类闸从步6附录前移为合成前必过 | AC3/4 |
+| `templates/hooks/lib/io.py` | 加 `Advisory` dataclass | AC5 |
+| `templates/hooks/butler_advisor.py` | **新增** PostToolUse dispatcher（fail-open） | AC5 |
+| `templates/hooks/rules/prd_split_reminder.py` | **新增** advisory rule | AC6 |
+| `templates/hooks/tests/test_prd_split_reminder.py` | **新增** rule 单测 | AC7 |
+| `templates/hooks/tests/test_advisor_integration.py` | **新增** dispatcher subprocess 测试 | AC7 |
+| `templates/settings.hooks-snippet.json` | 加 PostToolUse 条目 | AC8 |
+| `Coder/20_Workflow_Lifecycle/mcv-deployment.md §5` | PostToolUse 拷贝 + settings 合并 + 验证 | AC8 |
+| `templates/hooks/README.md` | 结构/机制/退出码补 advisor | AC8 |
+| `Coder/README.md` line 172 | hook 枚举加 advisory | AC8 |
 
-**不碰**：`references-schema §3` 登记表字段（不加列）、`prd-split` 切分算法、`prd_version` 钉版字段、`prd-update §2/§3/§5/§6`、核心 P1–P5、非 PRD 流、`project-digest`/`context-persistence`/hook/`VERSION`；不做全自动认亲；不切版。
+**不碰**：`butler_gate.py` 及现有 PreToolUse rules、`references-schema` 契约结构、`prd-split` 切分算法、`prd_version` 字段、`prd-update` 改版认亲主流程、核心 P1–P5、非 PRD 流语义；不做全自动 PRD 识别；不改 `VERSION`、不切版。
 
 ## Execution Steps（可勾选）
 
-- [ ] S1 · `prd-update §4` 追加改名/合并/拆分认亲对账（启发式候选→提议确认、绝不自动认、改名守 slug 终身、松边退回新增/消失）→ AC1/AC2
-- [ ] S2 · `references-schema` 加"非回归门"小节（列 opt-in 不得碰的非 PRD 流 + 验证判据 git diff 为空）→ AC3
-- [ ] S3 · `HUMAN_GUIDE §5` 加"PRD 先行"用法节（/prd update 改版同步每步确认 + /prd status 只读看板，真源指 prd-update.md）→ AC4
-- [ ] S4 · flip `references-schema §4` 认亲边缘句 + `§8` R6 行为 ✅ 已由 prd-update §4 落地 → AC5
-- [ ] S5 · 通读 `references-schema`/`prd-split`/`prd-update` 三份说人话三条自检、当场修 → AC6
-- [ ] S6 · scope 守恒（`git status`）+ 非回归核对（`git diff` 非 PRD 流零改动、R1–R5 主体未碰）+ 收官核对（MILE-0004 §5.3 六项全 ✅、references §8 表全绿）→ AC7
-- [ ] S7 · P5 独立复核（干净上下文子 agent、对抗式）→ 收口
+- [ ] S1 · `lib/io.py` 加 `Advisory` 类型 → AC5
+- [ ] S2 · 新建 `rules/prd_split_reminder.py`（MILESTONE 写 + prd/ 缺失 → 条件式提醒） → AC6
+- [ ] S3 · 新建 `butler_advisor.py` PostToolUse dispatcher（fail-open、emit additionalContext） → AC5
+- [ ] S4 · 新建 `tests/test_prd_split_reminder.py` + `tests/test_advisor_integration.py`；跑 `pytest tests/` 全绿 → AC7
+- [ ] S5 · `logic-protocol §注入` 两拍重构 + MCP 行 + 来源≠落点 → AC1/2
+- [ ] S6 · `milestone-schema §6.4` 分类闸前移（非大 PRD 路径逐字等价） → AC3/4
+- [ ] S7 · `settings.hooks-snippet.json` + `mcv-deployment §5` + `templates/hooks/README.md` + `Coder/README.md` 部署/文档接线 → AC8
+- [ ] S8 · scope 守恒 + `references-schema §9` 非回归核对（非 PRD 流/契约/切分/钉版/改版主流程 git diff 为空）+ 说人话自检 → AC9/10
+- [ ] S9 · P5 独立复核（干净上下文子 agent、对抗式）→ 收口
 
 ## 验证策略
 
-全 auto·可靠（规则文档）：每 AC 读改后正文确认 + `git grep`/`git diff` 核守恒。核心对抗点＝**松边不硬认**（认亲提议→确认、退回基础态、不自动误并）+ **slug 终身**（改名只换门牌）+ **非回归门可验证**（判据 git diff 为空、且本轮非 PRD 流真零改动）+ **不越界**（认亲只扩 §4、改版主流程/契约结构/钉版字段未碰、不切版）+ **收官完整**（六块全 ✅、§8 全绿）。dogfood：四件套 + 三子系统文件过说人话三条。无人测道残余。
+hook 部分＝确定性 auto·可靠：`pytest tests/` 全绿（新 rule 三分支 + advisory 永不 deny + 现有测试非回归）+ `butler_advisor.py` subprocess 冒烟（emit 合法 additionalContext JSON / 非 MILESTONE 静默 / 坏 stdin fail-open exit 0）。规则文本部分＝读改后正文核语义 + `git diff` 核非回归。核心对抗点：**③ 绝不 deny**（构造上 PostToolUse + fail-open，测试断言无 exit 2 路径）+ **非回归**（老 `butler_gate` 及其测试零改动、非 PRD 里程碑写结果不变）+ **来源解耦**（Confluence+PRD 落 `prd/` 非 `api-`）+ **不越界**（契约结构/切分算法/钉版/改版主流程未碰、不切版）。无人测道残余。

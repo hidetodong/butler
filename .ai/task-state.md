@@ -1,15 +1,16 @@
 # Task State
 
-> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**MILE-0004 已收口 + 随 v2.1.0 发布**（MINOR，聚合 ITER-0035~0041）。等下一个方向。
+> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**ITER-0042（PRD 先行触发加固）已收口、待切 v2.2.0**（MINOR）。等下一个方向。
 
 ## 当前状态
 
-- 无进行中工作。MILE-0004"PRD 先行 + references 版本化改版同步"六块齐（R1–R6）已收口，版本级交付 `deliveries/milestones/MILE-0004-prd-first-versioned-references.md`+`.html`，里程碑快照 `.ai/milestones/MILE-0004/MILESTONE.md`。
-- **v2.1.0 已切版**：`VERSION=2.1.0`、`CHANGELOG.md [2.1.0]`、`migrations/v2.1.0.md`（`[no-op]`+`[restamp]`，部署面模板零改动）、tag `v2.1.0`。聚合 ITER-0035~0041（ITER-0035 为正交独立迭代，MILE-0004 = ITER-0036~0041）。
-- 全貌产物（`frontier.md` / `architecture.md` / `capabilities.md`）已前滚到 v2.1.0 发布态。
+- 无进行中工作。ITER-0042 独立迭代（MILE-0004 已收）修掉了 v2.1.0 PRD 子系统的实战缺陷——Confluence 地址经 MCP 直读当 `/milestone` brief 时漏切 `references/prd/`。三层已补（注入表内容路由 + `milestone §6.4` 分类闸前移 + 新增 PostToolUse advisory hook `butler_advisor.py`）。交付 `deliveries/ITER-0042-prd-trigger-hardening.md`+`.html`，归档 `.ai/iterations/ITER-0042/`。
+- **未切版**：`VERSION` 仍 `2.1.0`。ITER-0042 判 **MINOR（v2.2.0）**——加 PostToolUse hook 属能力新增，切版需 `migrations/v2.2.0.md`（`[sync-hooks]` 拷 `butler_advisor.py`/`prd_split_reminder.py` + settings 合并补 PostToolUse 键 + `[restamp]`）。切版是独立 `chore(release)` 发布动作、待用户放行。
+- 全貌产物（`frontier.md` / `architecture.md`）已折叠 ITER-0042 delta。
 
 ## 下一步入口
 
+- **切 v2.2.0**（待放行）：聚合 ITER-0042，写 `migrations/v2.2.0.md`（首个含 `[sync-hooks]` 的迁移配方——既有部署需补 PostToolUse hook）。
 - **待用户给方向**：新里程碑 / 独立迭代由用户发起。候选——PRD 全链真实 dogfood（拿一份真 PRD 走导入→改版全程），可一并还上"从未真跑"的欠账。
-- **推送**：v2.1.0 发布提交 + tag、以及 ITER-0035~0041 全部迭代提交**均在本地 main、未推送**。推送待用户说"推送"（含 `git push && git push --tags`）。
+- **推送**：ITER-0042 迭代提交 + 历史 v2.1.0 发布与 ITER-0035~0041 提交**均在本地 main、未推送**。推送待用户说"推送"。
 - 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。

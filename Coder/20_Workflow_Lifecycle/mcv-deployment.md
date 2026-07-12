@@ -101,14 +101,18 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 5. Hook 注入 (Hook Injection)
 
-把 butler 的 PreToolUse hook 体系部署到目标项目的 `.claude/`。Hook 提供机制化的流程约束——源码路径写操作在 P1/P2/P3 产物缺失时被拦截、AC_LIST 未冻结（`状态` 非 `ack-frozen`；无该字段的旧产物按 legacy 放行）时被拦截、`99_Business_Extension/` 写操作被拦截、迭代台账 `.ai/ITERATIONS.md` 状态列出现封闭枚举（active/closed/abandoned）外的值（如 `planned`）时被拦截、写入台账后出现 ≥2 个 `active` 迭代行（上一迭代未收口就开新）时被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+把 butler 的 hook 体系部署到目标项目的 `.claude/`。分两类：
+
+- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的流程约束：源码路径写操作在 P1/P2/P3 产物缺失时被拦截、AC_LIST 未冻结（`状态` 非 `ack-frozen`；无该字段的旧产物按 legacy 放行）时被拦截、`99_Business_Extension/` 写操作被拦截、迭代台账 `.ai/ITERATIONS.md` 状态列出现封闭枚举（active/closed/abandoned）外的值（如 `planned`）时被拦截、写入台账后出现 ≥2 个 `active` 迭代行（上一迭代未收口就开新）时被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+- **PostToolUse 提醒**（`butler_advisor.py`，advisory-only、fail-open）——非阻塞自检：工具执行**之后**跑，只经 `hookSpecificOutput.additionalContext` 向模型注入提醒、**绝不 deny、绝不改写操作结果**。当前承载一条——写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，提醒"brief 若源自外部权威规格先经 prd-split 落盘再推进"（`prd_split_reminder`，兜 PRD 先行软触发被绕过的漏切）。为什么与门禁分两套：风险方向相反——门禁宁可错拦（fail-closed），提醒宁可漏提（fail-open），advisory 混进 deny 链会误伤正常的非 PRD 里程碑写。
 
 ### 5.1 文件拷贝
 
 将 `$BUTLER/templates/hooks/` 除 `tests/` 子目录外的内容全部拷贝到 `<target>/.claude/hooks/`：
 
-- `butler_gate.py`
-- `rules/` 整目录
+- `butler_gate.py`（PreToolUse 门禁入口）
+- `butler_advisor.py`（PostToolUse 提醒入口）
+- `rules/` 整目录（含门禁 rules 与 advisory rules，如 `prd_split_reminder.py`）
 - `lib/` 整目录
 - `README.md`
 
@@ -116,26 +120,33 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ### 5.2 settings.json 幂等合并
 
-读 `$BUTLER/templates/settings.hooks-snippet.json`，合并进 `<target>/.claude/settings.json`：
+读 `$BUTLER/templates/settings.hooks-snippet.json`（含 `hooks.PreToolUse` 与 `hooks.PostToolUse` 两个键），合并进 `<target>/.claude/settings.json`。对**每个** hook 键（`PreToolUse` → `butler_gate.py`、`PostToolUse` → `butler_advisor.py`）各自套用同一套幂等规则：
 
-1. 若目标 `settings.json` 不存在 → 直接写入 snippet 内容。
-2. 若存在但无 `hooks.PreToolUse` 数组 → 添加 `hooks.PreToolUse = [snippet 中的条目]`。
-3. 若已有 `hooks.PreToolUse` 数组 → 检查是否已有 `matcher == “Edit|Write|MultiEdit”` 且 `command` 以 `python3 .claude/hooks/butler_gate.py` 结尾的条目；已有则跳过，否则追加。
+1. 若目标 `settings.json` 不存在 → 直接写入整份 snippet 内容。
+2. 若存在但无该键的数组 → 添加 `hooks.<键> = [snippet 中该键的条目]`。
+3. 若已有该键的数组 → 检查是否已有 `matcher == “Edit|Write|MultiEdit”` 且 `command` 以对应入口（`butler_gate.py` / `butler_advisor.py`）结尾的条目；已有则跳过，否则追加。
 
-合并规则的去重键：`hooks.PreToolUse[*].matcher` 字面比较；AI 执行此步骤时必须幂等，重复部署不重复插入。
+合并规则的去重键：`hooks.<键>[*].matcher` + `command` 入口文件名字面比较；AI 执行此步骤时必须幂等，重复部署不重复插入。**升级既有部署时**：只有 PreToolUse 的旧项目，本步会为其补上 PostToolUse 键（幂等，不动已有 PreToolUse 条目）。
 
 ### 5.3 验证
 
 部署完成后，在目标项目根执行：
 
 ```bash
+# PreToolUse 门禁：产物缺失时应拒绝
 echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$(pwd)"'"}' \
   | python3 .claude/hooks/butler_gate.py
-echo "exit=$?"
+echo "gate exit=$?"
+
+# PostToolUse 提醒：写 MILESTONE.md 且无 references/prd/ 时应放行(exit=0)且吐 additionalContext
+echo '{"tool_name":"Write","tool_input":{"file_path":".ai/MILESTONE.md","content":"x"},"cwd":"'"$(pwd)"'"}' \
+  | python3 .claude/hooks/butler_advisor.py
+echo "advisor exit=$?"
 ```
 
-- 若 `.ai/CONCEPT.md` 等产物尚未产生 → 期望 `exit=2` 且 stderr 含 `phase_gate`。
-- 这条验证命令写入部署报告。
+- 门禁：若 `.ai/CONCEPT.md` 等产物尚未产生 → 期望 `gate exit=2` 且 stderr 含 `phase_gate`。
+- 提醒：`advisor exit=0`（**永远放行**）；若目标项目尚无 `.ai/references/prd/` → stdout 含 `additionalContext` 与 `references/prd`；已有则 stdout 为空。
+- 这两条验证命令写入部署报告。
 
 ### 5.4 与 butler-upgrade 的联动（Follow-up）
 

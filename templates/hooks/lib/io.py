@@ -36,6 +36,17 @@ class Decision:
     remediation: str = ""
 
 
+@dataclass(frozen=True)
+class Advisory:
+    """PostToolUse advisory：放行 + 可选向模型注入的提醒。
+
+    与 Decision（PreToolUse 的 allow/deny 门禁）刻意分开——advisory 只在工具
+    执行之后跑，没有 verdict、不能 deny、不改工具结果。message 为空即静默不注入。
+    """
+    rule_id: str
+    message: str = ""
+
+
 def parse_stdin() -> dict:
     """Reads Claude Code PreToolUse JSON from stdin."""
     return json.loads(sys.stdin.read())
