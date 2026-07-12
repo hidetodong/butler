@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.3.0] - 2026-07-12
+
+向后兼容能力新增版。聚合 ITER-0043（自 v2.2.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把用户提供的一份外部「工程宪法」prompt 用奥卡姆剃刀做减法——13 条里 butler 已有 10 条（照搬即违反其自身 DRY），只吸收 3 条真增量到哲学层与 P1 口径。全为规则正文的原则增强（无新命令 / 新产物 / 字段结构变更 / 部署面变化），按 semver 取 **MINOR**。
+
+### 本版新增
+
+- **工程原则增量吸收（ITER-0043 · 独立迭代）**：① **Trade-off 意识普适化**——`identity §3.1` 新增「任何方案都须交代取舍成本与潜在技术债」价值 + `presentation §5` 把「代价·取舍」从「仅 ≥2 方案对比时列」松绑为「给任何方案都须交代」；② **KISS 可操作判据**——`identity §3.1`「可解释性高于魔法」条并入「复杂到一句话讲不清就该重构」；③ **剥离伪需求 / MVP 质询**——`lifecycle P1` 新增主动质疑伪需求 / 低 ROI / MVP 的一问 + P1 质询 vs P2 冻结锁定的时序消歧。守 DRY 不双写已有原则、③ 只落 lifecycle 不碰 `concept-schema`。独立复核 APPROVE-with-nits（9/9 AC、0 refute）。详见 `deliveries/ITER-0043-engineering-principles-absorption.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.3.0.md`（`[no-op]`+`[restamp]`，部署面模板零改动）。
+
+[2.3.0]: 自 v2.2.0 起聚合 ITER-0043
+
 ## [2.2.0] - 2026-07-12
 
 向后兼容能力新增版。聚合 ITER-0042（自 v2.1.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代修 v2.1.0 PRD 先行子系统的一个实战缺陷——给一份 Confluence 文档地址、经 MCP 直读当 `/milestone` brief 时，MILESTONE 合成了却从没切 `references/prd/`、PRD 逐字规格没落盘。修法在补规则的同时**新增一整套 PostToolUse 提醒 hook**（与既有 PreToolUse 门禁分离、fail-open、只提醒不阻断），属能力新增；且**不动任何既有非 PRD 流与现有 PreToolUse 门禁**（非回归门 `references-schema §9` 机器核过），按 semver 取 **MINOR**。
