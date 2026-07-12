@@ -1,15 +1,22 @@
 # Task State
 
-> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**v2.2.0 已切版（本地 tag，未推送）**——聚合 ITER-0042（PRD 先行触发加固）。等下一个方向。
+> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**ITER-0043（工程原则增量吸收）已收口、待切 v2.3.0**（MINOR）。v2.2.0 已切版（本地 tag，聚合 ITER-0042，未推送）。等下一个方向。
 
-## 当前状态
+## ITER-0043 收口小结
 
-- 无进行中工作。ITER-0042 独立迭代（MILE-0004 已收）修掉了 v2.1.0 PRD 子系统的实战缺陷——Confluence 地址经 MCP 直读当 `/milestone` brief 时漏切 `references/prd/`。三层已补（注入表内容路由 + `milestone §6.4` 分类闸前移 + 新增 PostToolUse advisory hook `butler_advisor.py`）。交付 `deliveries/ITER-0042-prd-trigger-hardening.md`+`.html`，归档 `.ai/iterations/ITER-0042/`。
-- **v2.2.0 已切版（本地）**：`VERSION`=`2.2.0`、`CHANGELOG.md` 顶条 `## [2.2.0]`、tag `v2.2.0` 打在发布提交上、`migrations/v2.2.0.md` 已写（**本仓首个含 `[sync-hooks]`** 的配方——既有部署需拷 `butler_advisor.py`/`prd_split_reminder.py`/更新 `lib/io.py` + settings 合并补 PostToolUse 键 + `[restamp]`）。发布是独立 `chore(release)` 提交，与 ITER-0042 迭代提交（`0930bc8`）分开。
-- 全貌产物（`frontier.md` / `architecture.md`）已折叠 ITER-0042 delta；`frontier.md` 已前滚至 v2.2.0 已切版态。
+- 吸收外部「工程宪法」的 3 条真增量（减法后 13 条留 3）：① Trade-off 普适化（`identity §3.1` 加价值 + `presentation §5` 单方案也须交代取舍）；② KISS 判据（`identity §3.1` 并入「可解释性」条）；③ 伪需求质询（`lifecycle P1` 加第 3 问 + 时序消歧）。③ 只落 lifecycle、不碰 `concept-schema`（守 DRY）。
+- 9 条 AC 全过（AC1–8 auto·可靠 + AC9 独立复核 APPROVE-with-nits，0 refute，Should-Fix「要→须」+ Nit「MVP 注解」已改）。改动仅 3 规则文件（6 增 2 删），边界文件全 clean。
+- 交付 `deliveries/ITER-0043-engineering-principles-absorption.md`+`.html`，归档 `.ai/iterations/ITER-0043/`。全貌产物已折（`capabilities` P1 行 + `frontier`）。
+- **未切版**：`VERSION` 仍 `2.2.0`。ITER-0043 判 MINOR，下次切版 v2.3.0 聚合它（规则正文原则增强、无部署面变化 → 迁移预计 `[no-op]`+`[restamp]`）。
+
+## 背景（近两迭代 + 版本态）
+
+- ITER-0042（PRD 先行触发加固）已收口并**聚合切版 v2.2.0**：`VERSION`=`2.2.0`、`CHANGELOG` 顶条 `## [2.2.0]`、tag `v2.2.0` 在发布提交 `41ee299`、`migrations/v2.2.0.md`（本仓首个 `[sync-hooks]`）。
+- ITER-0043（本迭代）已收口、**未切版**（见上方小结）。
 
 ## 下一步入口
 
-- **推送**（待放行）：v2.2.0 发布提交 + tag、ITER-0042 迭代提交 + 历史 v2.1.0 发布与 ITER-0035~0041 提交**均在本地 main、未推送**。推送待用户说"推送"（一推会把整批本地历史 + `v2.2.0` tag 一起推上去）。
+- **推 v2.2.0 tag**：main 分支已 `git push`（远端已到 `41ee299`）；但 **`v2.2.0` tag 仍未推**（`git push` 不带 tag）。要上远端需 `git push origin v2.2.0`——待用户放行。
+- **切 v2.3.0**（待放行）：聚合 ITER-0043（判 MINOR）；迁移预计 `[no-op]`+`[restamp]`（规则正文原则增强、无部署面变化）。可与 ITER-0043 一起或攒后续迭代再发。
 - **待用户给方向**：新里程碑 / 独立迭代由用户发起。候选——PRD 全链真实 dogfood（拿一份真 PRD 走导入→改版全程），可一并还上"从未真跑"的欠账。
 - 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。

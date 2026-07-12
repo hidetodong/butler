@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0043 交付总结 · 工程原则增量吸收</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>工程原则增量吸收：把外部「工程宪法」减到骨头，只吸收 3 条真增量</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0043</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-12</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>用户提供了一份外部「工程宪法」prompt（奥卡姆 / KISS / YAGNI / DRY / 高内聚低耦合 / Trade-off / 需求质询 / 极简输出等约 13 条），希望吸收其中有用的规则。</li>
+        <li>直接照搬会<strong>违反这份宪法自己的 DRY 原则</strong>——butler 早已覆盖其中大半。核心动作是<strong>先做减法</strong>：逐条比对后判定 13 条里 butler 已有 10 条，只有 3 条是真增量，把这 3 条各归其位地落进规则。这次迭代本身就是「对宪法用奥卡姆剃刀」的示范。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>减法核证（不落文件、落在决策）</strong>：已有、不吸收的 10 条各有真源——奥卡姆/YAGNI（<code>implementation-discipline §2</code>）、DRY/SSOT（butler 骨架 + <code>identity §1</code>）、高内聚低耦合（<code>identity §3.2</code>）、极简/结构化/表格（<code>presentation §3–§5</code> + <code>artifact-style §2</code>）、代码注释 Why-not-What（<code>review-standard §2.3</code>）、边界/异常（AC/verify）。照搬即双写，一律不加。</li>
+        <li><strong>增量①·Trade-off 意识普适化</strong>：<code>identity.md §3.1</code> 新增第 5 条价值「任何方案都须交代取舍成本与潜在技术债——没有免费的架构」；<code>presentation-protocol.md §5</code> 把「代价·取舍」从「仅 ≥2 方案对比时列表格」松绑为「给任何方案都须交代取舍/代价、不得只报优点」。哲学层立价值 + 呈现层给动作，一呼一应。</li>
+        <li><strong>增量②·KISS 可操作判据</strong>：<code>identity.md §3.1</code>「可解释性高于魔法」条尾并入一把落地尺子——「复杂到一句话讲不清的方案就该重构（KISS）」。补齐旧口径「只有精神、没有判据」的缺。</li>
+        <li><strong>增量③·剥离伪需求 / MVP 质询</strong>：<code>lifecycle.md</code> P1「AI 必须回答」新增第 3 问（有没有伪需求 / 低 ROI / 该缩到 MVP 或提替代），把 P1 从被动理解升级为主动质询；并加一段消歧，写清质询在 P1、与 P2 冻结后的「固定需求锁定」不冲突。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>提方案的姿态变了</strong>：AI 今后给任何方案（哪怕只有一个）都必须交代代价与技术债，不再只报优点——Trade-off 从「多方案对比才有」变成「哲学层常驻价值」。</li>
+        <li><strong>P1 会主动质疑需求</strong>：给需求时 AI 会先问「有没有伪需求、投入产出比过低、能不能缩到 MVP」，而非照单全收；但只发生在 P1（冻结前），P2 ACK 之后仍守「固定需求锁定」——不会「冻结了还乱推翻」。</li>
+        <li><strong>哲学层多了两把尺子</strong>：KISS「一句话讲不清就重构」和 Trade-off「没有免费的架构」进了 <code>identity</code>，所有任务读它时都受这两条约束。</li>
+        <li><strong>不用这些的人无感</strong>：改的是既有规则正文的口径增强，无新命令、无新产物、无部署面变化。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则正文（3 文件，6 insertions / 2 deletions）：<code>identity.md §3.1</code>、<code>presentation-protocol.md §5</code>、<code>lifecycle.md</code> P1。</li>
+        <li>没碰（守 DRY + 最小影响面）：<code>concept-schema.md</code>（③ 决策只落 lifecycle 一处）、<code>rule-card.md</code>、<code>CLAUDE.md.template</code>、<code>templates/hooks/**</code>、四件套 schema 字段结构、命令语义、核心 P1–P5 状态机、<code>VERSION</code>——逐个 <code>git diff --quiet</code> 全 clean。<strong>不切版</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>9 项验收（AC1–AC9）全过</strong>，AC1–AC8 均 <strong>auto·可靠</strong>：改动落位经 <code>git diff</code> 逐处核、影响面守恒经边界文件 <code>git diff --quiet</code> 机器核（仅 3 规则文件正文变更）、DRY 守恒经逐条比对减法表 + 全仓 grep（伪需求质询除新行外零命中）。</li>
+        <li><strong>独立复核 APPROVE-with-nits</strong>（fresh-context 子 agent、验证者≠实现者、只读、对抗式）：9/9 confirm、0 refute、无 Must-Fix。对抗点全过——DRY 不双写（增量与 YAGNI 属不同海拔 P1 vs P4）、影响面守恒、AC5 决策合理、AC4 时序与 <code>iteration-schema §5.2/§5.3</code> 一致。1 Should-Fix（「要→须」）+ 1 Nit（MVP 加中文注解）已改，1 Nit（技术债定义）判同句已点明义、不改。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>改哲学底座影响面无形</strong>：<code>identity</code> 被所有任务读，加价值有膨胀成口号堆的风险——已靠独立复核 +「融入不堆砌」（并入而非另起小节）+ DRY 守恒三重兜底，本轮确认无膨胀；后续新增哲学条目仍须守同一底线。</li>
+        <li><strong>切版待放行</strong>：判 MINOR（兼容的规则正文原则增强），本迭代不切版；聚合发布待用户放行（预留 v2.3.0）。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0043/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>改动产物：<code>Coder/00_System_Prompt/identity.md §3.1</code>、<code>Coder/00_System_Prompt/presentation-protocol.md §5</code>、<code>Coder/20_Workflow_Lifecycle/lifecycle.md</code> P1</li>
+        <li>减法对照的既有真源：<code>implementation-discipline.md §2</code>、<code>review-standard.md §2.3</code>、<code>artifact-style.md §2</code>、<code>iteration-schema.md §5</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

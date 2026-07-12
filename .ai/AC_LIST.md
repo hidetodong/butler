@@ -1,32 +1,46 @@
 ---
 状态: ack-frozen
 ACK 日期: 2026-07-12
-迭代: ITER-0042
-里程碑: —（MILE-0004 已收、独立迭代）
+prd_version: —
 ---
 
-# AC_LIST — ITER-0042（PRD 先行触发加固）
+# Goal
+- 把外部工程宪法的 3 条真增量（Trade-off 意识普适化 / KISS 可操作判据 / 剥离伪需求-MVP 质询）落进 butler 对应规则文件，补齐哲学层与 P1 分析口径，且不双写已有原则、不扩部署面。
 
-> 监督态。三层修触发接线：①注入表按内容分类（规则文本）②里程碑并进闸前移（规则文本）③新增 PostToolUse advisory hook（代码 + 测试 + 部署接线）。验证 = 读改后正文核语义 + `git diff` 核非回归 + `pytest` 跑 hook 测试（auto·可靠）。**待 ACK 冻结后方可进 P4。**
+# In Scope
+- `identity.md §3` 增 Trade-off 价值 + KISS 判据。
+- `presentation-protocol.md §5` 代价列口径松绑。
+- `lifecycle.md P1` 增伪需求质询姿态（含与「固定需求锁定」时序的消歧）。
+- `concept-schema.md` 至多一句 P1 质询口径 / 指针（避免与 lifecycle 双写）。
 
-## 块1 · 注入表按内容分类（洞 B）
+# Out of Scope
+- 已有的 10 条宪法原则一律不重写（DRY）。
+- 不动 `rule-card.md` / `CLAUDE.md.template`（不扩部署面）、不改任何 hook、四件套 schema 字段结构、命令语义、核心 P1–P5 状态机流转。
+- 不建 `references/`（理念类输入已消化）。
+- 不切版（判 MINOR，v2.3.0 发布待放行）。
 
-- **AC1（`logic-protocol §外部参考资料注入` 重构为「来源→提取、内容→定落点」）**：注入表/说明改为两拍——先按来源提取内容（Confluence/MCP/MasterGo/文件皆为取内容手段），再按**内容类型**定落点（逐字权威规格 PRD → `prd/` 切分；API 契约 → `api-`；设计规格 → `design-`；分析报告 → `insight-`；其他 → `<name>`）。成文点死「**来源 ≠ 落点，落点由内容类型决定**」。装 PRD 的 Confluence 不再默认落 `api-` 扁平。
-- **AC2（补「MCP 直读文档」入口覆盖）**：注入规则显式覆盖「经 MCP 直读进来的结构化文档」——不再假设 Confluence 只走 `confluence-api-extractor` skill；凡 MCP 读进来的同样过 AC1 的内容分类。原 Fallback（skill 不可用时人工粘贴）保留不动。
+# Acceptance Checklist
+- [ ] AC1: `identity.md §3.1` 新增一条「Trade-off 意识」价值——任何方案都须交代取舍成本 / 潜在技术债，与现有 4 条价值同风格融入（非硬凑列表）。
+- [ ] AC2: `presentation-protocol.md §5` 代价口径松绑——从「仅 ≥2 方案对比时列代价」扩为「给出任何方案都须交代取舍/代价」，且不破坏 §5 表格骨架与 §9 标准骨架样例的一致性。
+- [ ] AC3: `identity.md §3` 补 KISS 可操作判据「复杂到一句话讲不清就该重构」，并入或紧邻现有「可解释性高于魔法」，不新增独立小节堆砌。
+- [ ] AC4: `lifecycle.md P1 Analysis` 的「AI 必须回答」新增一条主动质询——需求里有无伪需求 / 低 ROI 项、是否该提替代（MVP）；正文显式写清质询在 P1、与 P2 冻结后的「固定需求锁定」时序不同、不冲突。
+- [ ] AC5: 若 ③ 同时触及 `concept-schema.md`，只加一句口径或指针、不与 `lifecycle` 重复表述；能只落一处则只落一处。
+- [ ] AC6: DRY 守恒——3 条均为 CONCEPT 已核的真增量，不与 butler 已有原则（奥卡姆/YAGNI/DRY/高内聚低耦合/极简/注释 Why-not-What/边界异常）重复；已有 10 条正文一字未加。
+- [ ] AC7: 最小影响面守恒——`git diff` 核对：改动仅落在 `identity` / `presentation-protocol` / `lifecycle` / `concept-schema` 四文件正文；`rule-card.md`、`CLAUDE.md.template`、`templates/hooks/**`、四件套 schema 字段结构、`VERSION` 全部无改动。
+- [ ] AC8: 新增正文守 `artifact-style.md §2` 说人话三条 + 不啰嗦；措辞用「必须/不得/应」（butler 规则写作风格）。
+- [ ] AC9: opt-in 独立复核通过——验证者≠实现者、fresh-context、逐 AC 核对，无 refute 阻断（`identity` 是哲学底座，改它必过独立复核）。
 
-## 块2 · 里程碑并进闸前移（洞 A）
+# Verification Method
+- AC1: 读 `identity.md §3.1` 核新价值条目存在、语义正确、风格一致。
+- AC2: 读 `presentation-protocol.md §5`+§9 核口径已松绑且样例未破。
+- AC3: 读 `identity.md §3` 核 KISS 判据落位、未另起冗余小节。
+- AC4: 读 `lifecycle.md P1` 核质询条 + 时序消歧句存在。
+- AC5: 读 `concept-schema.md` 核（若改）单句无双写；未改则说明只落 lifecycle 的理由。
+- AC6: 逐条比对新增文本 vs CONCEPT 减法表，确认无重复；`git diff` 核已有条目未动。
+- AC7: `git diff --stat` + 对边界文件 `git diff --quiet` 核影响面。
+- AC8: 读新增正文核说人话三条 + 措辞。
+- AC9: 起 fresh-context 子 agent 独立复核（spec-only 逐 AC）。
 
-- **AC3（`milestone §6.4` 把 PRD 分类从跳过式步6附录前移为合成前必过闸）**：`§6.4 合成协议`改为——任何外部结构化文档当 brief（对话/`origin/`/MCP 直读），**在合成路线图之前先过一道 PRD 分类闸**：判定大 PRD → 先经 `prd-split` 切 `references/prd/` 再合成；判定非 PRD → 照旧到步 5 即止。「PRD 分类」由末尾 opt-in 附录变为前置动作。切分机制仍以 `prd-split` 为准、此处不复述（回指）。
-- **AC4（非回归·非大 PRD brief 流不变）**：非大 PRD 的普通 brief 合成路径（步 1–5）语义与改前一致——分类闸判否即等价于原流程，不新增阻塞、不改产物。`milestone-schema` 除 §6.4（必要时 §6.5 命令说明）外不动。
-
-## 块3 · PostToolUse advisory hook（洞 C·无 hook 兜底）
-
-- **AC5（新增 PostToolUse advisory 机制·与 `butler_gate` 分离）**：新增独立 PostToolUse dispatcher（不改现有 PreToolUse `butler_gate.py` 及其 rules），承载「放行 + 向模型注入 `additionalContext`」的 advisory 能力；零三方依赖、advisory 自身出错 fail-open（绝不因 advisory 异常而阻塞或报错升级）。
-- **AC6（MILESTONE 落盘自检 rule）**：新 rule——匹配 Write/Edit/MultiEdit 写 `.ai/MILESTONE.md`，若 `.ai/references/prd/` 不存在 → 经 `hookSpecificOutput.additionalContext` 注入**条件式自检提醒**（brief 若源自外部权威规格则先 `prd-split` 落盘再合成、否则忽略）；`references/prd/` 已存在或目标非 MILESTONE.md → 静默不注入。**绝不 deny、绝不阻塞**（非 PRD 里程碑写结果与加 rule 前逐字一致）。
-- **AC7（hook 测试·dogfood）**：新 rule 有 pytest 覆盖——`references/prd/` 缺失→注入 advisory、存在→静默、非 MILESTONE 目标→静默、advisory 永不 deny；现有 hook 测试全绿（非回归）。
-- **AC8（部署 / 文档接线）**：`mcv-deployment §5` Hook 注入节补 PostToolUse dispatcher 拷贝 + settings 合并（新增 `PostToolUse` 键，幂等去重）+ 冒烟自检加一条；`templates/settings.hooks-snippet.json` 加 PostToolUse 条目；`Coder/README.md`（line 172 hook 枚举 + 若引入新文件的目录注册）同步。
-
-## 块4 · 守恒 · 非回归 · 说人话
-
-- **AC9（scope 守恒 + 非回归门 + 分层）**：改动集限于 `logic-protocol.md §注入`（AC1/2）+ `milestone-schema.md §6.4`（AC3/4）+ `templates/hooks/`（新 PostToolUse dispatcher + rule + 测试，AC5–7）+ `templates/settings.hooks-snippet.json` + `mcv-deployment.md §5` + `README.md`（AC8）。守 `references-schema §9` 非回归——对话录入 / `origin/` 非 PRD brief 合成 / 扁平态注入 / 核心 P1–P5 状态机 / `references-schema` 契约结构 / `prd-split` 切分算法 / `prd-update` 改版认亲主流程 / `prd_version` 字段的**语义** `git diff` 为空（除本 AC 明列的 PRD 相关触发接线改动）。不切版、不改 `VERSION`。分层不破坏（SOP Core `00`/`20` + templates + README）。
-- **AC10（说人话自检·dogfood）**：改动的规则文本过说人话三条（术语先解释 / 比喻落地 / 别让英文·变量裸奔）；本迭代四件套同守。advisory / PostToolUse / additionalContext / 来源解耦 等首现带解释。
+# Open Questions / Risks
+- ③ 落点（lifecycle 单点 vs lifecycle+concept-schema）与 KISS 判据（并入 vs 单列）在 P3 定；已在 AC3/AC5 用「并入优先/只落一处优先」约束倾向，降低发散。
+- 风险：改哲学层（`identity`）影响面无形（所有任务读它）——用 AC9 独立复核 + AC6 DRY 守恒 + AC1/AC3「融入不堆砌」共同兜底，防止哲学层膨胀成口号堆。

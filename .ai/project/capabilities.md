@@ -8,7 +8,7 @@
 
 | 阶段 | 干什么 | 产物 |
 |---|---|---|
-| P1 Analysis | 分析需求、识别项目类型 | `.ai/CONCEPT.md` |
+| P1 Analysis | 分析需求、识别项目类型、**主动质询伪需求/低 ROI（该剥离/缩 MVP/提替代）** | `.ai/CONCEPT.md` |
 | P2 Acceptance | 定验收标准（AC）、冻结 | `.ai/AC_LIST.md`（`状态: ack-frozen`） |
 | P3 Design | 技术方案 + 执行步骤 | `.ai/TECH_PLAN.md` |
 | P4 Execute | 按步骤写码，常驻纠错 + 最小实现底线 | 源码 + `.ai/01_CHANGELOG.md` |
