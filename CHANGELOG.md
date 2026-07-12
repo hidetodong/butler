@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.2.0] - 2026-07-12
+
+向后兼容能力新增版。聚合 ITER-0042（自 v2.1.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代修 v2.1.0 PRD 先行子系统的一个实战缺陷——给一份 Confluence 文档地址、经 MCP 直读当 `/milestone` brief 时，MILESTONE 合成了却从没切 `references/prd/`、PRD 逐字规格没落盘。修法在补规则的同时**新增一整套 PostToolUse 提醒 hook**（与既有 PreToolUse 门禁分离、fail-open、只提醒不阻断），属能力新增；且**不动任何既有非 PRD 流与现有 PreToolUse 门禁**（非回归门 `references-schema §9` 机器核过），按 semver 取 **MINOR**。
+
+### 本版新增
+
+- **PRD 先行触发加固（ITER-0042 · 独立迭代）**：三层一起补堵住「Confluence + MCP 直读 + /milestone」漏切通道——① `logic-protocol` 外部资料注入表从"按来源一步定落点"重构为**两拍**（来源只是取内容手段 → 落点只由内容类型决定，立"来源 ≠ 落点"命门）；② `milestone-schema §6.4` 把 PRD 分类判断从末尾默认跳过的附录步**前移**为合成 MILESTONE 前的必过闸；③ **新增 PostToolUse 提醒 hook** `templates/hooks/butler_advisor.py` + `rules/prd_split_reminder.py`（写完 MILESTONE 若 `references/prd/` 未建则经 `additionalContext` 注入条件式自检）+ `Advisory` 类型 + pytest 覆盖（109 passed）+ 部署/settings/README 接线。详见 `deliveries/ITER-0042-prd-trigger-hardening.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.2.0.md`（**首个含 `[sync-hooks]` 的配方**——既有部署需补 PostToolUse hook 副本 + settings.json PostToolUse 键 + `[restamp]`）。
+
+[2.2.0]: 自 v2.1.0 起聚合 ITER-0042
+
 ## [2.1.0] - 2026-07-09
 
 向后兼容能力新增版。聚合 ITER-0035 ~ ITER-0041（自 v2.0.0 起新收口），并**收口里程碑 MILE-0004「PRD 先行 + references 版本化改版同步」**（其下 R1~R6 = ITER-0036/0037/0038/0039/0040/0041，另含正交独立迭代 ITER-0035）。本里程碑给参考资料区 `.ai/references/` 补上"索引 + 渐进读"待遇，并新建 **PRD 先行一等入口 + 版本化改版同步协议**：一份 PRD 从导入→切片→挂里程碑→钉版→验收→改版同步全链路可走，细节逐字保真、跨改版可审计、已冻结/已收口工作不被静默破坏。全部为新增能力（新 schema / 新命令 / 新模块 / 可选字段），且**不动任何既有非 PRD 流**（非回归门显式保证），取区间最高级别为 **MINOR**。
