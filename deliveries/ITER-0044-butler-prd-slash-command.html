@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0044 交付总结 · /butler-prd 一等命令入口纳管</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>/butler-prd 一等命令入口纳管：butler 第一个真实 slash command 文件</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0044</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-13</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>butler 的 slash command 长期只是规则正文里的<strong>散文触发词</strong>（<code>/prd</code>、<code>/milestone</code> 等到处被引用，却没有一个真实的 Claude Code 命令文件）——命令在补全菜单里零存在感，用户既看不到、也记不住。</li>
+        <li>本次把已原型化并实跑验证过的 <code>/butler-prd</code> <strong>正式落为一个真实、受版本管理的命令文件</strong> <code>.claude/commands/butler-prd.md</code>，成为 butler 第一个「真命令」。追认式收口：文件已成型，本轮做纳管 + 逐项验收 + 切版。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>命令文件纳入版本管理</strong>：<code>.claude/commands/butler-prd.md</code> 从未跟踪原型正式 <code>git add</code> 纳管，成 butler 仓第一个真实 slash command 文件。本迭代<strong>不改其内容</strong>——菜单文字前序会话已说人话化、正文薄壳经本会话 <code>/butler-prd status</code> 实跑验证可用。</li>
+        <li><strong>菜单可见两行说人话</strong>：<code>description</code> = 「把权威 PRD 拆进项目知识库，并随改版保持同步——首次拆分 / 改版对齐 / 只读看板」；<code>argument-hint</code> = 「[status=只读看板 | update=改版同步 | 贴 PRD 或路径；留空=首次拆分]」。去掉「薄壳 / 首切 / 真源规则」等内部术语（只留正文、菜单不可见）。</li>
+        <li><strong>正文是薄壳路由器（守 DRY）</strong>：① 第 0 步强制先读 <code>references-schema</code> 契约；② 按 <code>$ARGUMENTS</code> 三分支路由（留空/贴 PRD → <code>prd-split</code> 首切、<code>update</code> → <code>prd-update</code> 改版、<code>status</code> → <code>prd-update §7</code> 只读看板）；③ 委托真源、声明「算法以被指向规则为准、本文件不复述」。</li>
+        <li><strong>知识文件夹前滚</strong>：<code>capabilities.md</code> 命令表加真实文件行、<code>frontier.md</code> 刷新 v2.4.0、<code>debt.md</code> 记「命令未下发」待定。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong><code>/butler-prd</code> 现在是真命令了</strong>：在 butler 仓里敲 <code>/butler-prd</code>，补全菜单能看到它、能读懂它在干什么（PRD 先行：首次拆分 / 改版同步 / 只读看板），不再藏在规则正文里。</li>
+        <li><strong>只在编辑 butler 仓时可用</strong>：命令住 butler 自己的 <code>.claude/</code>，<strong>未下发给目标项目</strong>——用 butler 部署的其他项目暂时没有 <code>/butler-prd</code>。这是本轮有意的边界，不是遗漏。</li>
+        <li><strong>对已部署项目零影响</strong>：命令不在 <code>templates/</code> 里，目标项目升级到 v2.4.0 无结构变化，只需重打版本戳。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>纳管（1 新文件，迭代内容提交）：<code>.claude/commands/butler-prd.md</code>。</li>
+        <li>知识文件夹前滚：<code>.ai/project/capabilities.md</code> / <code>frontier.md</code> / <code>debt.md</code>。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.3.0→2.4.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.4.0.md</code>。</li>
+        <li>没碰（守最小影响面）：任何 <code>Coder/**</code> 规则正文、<code>templates/**</code>、四件套 schema 字段结构、<code>templates/hooks/**</code>、<code>.gitignore</code>、核心 P1–P5 状态机——逐个 <code>git status</code> / <code>git show --stat</code> 核清。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>6 项验收（AC1–AC6）全过</strong>，AC2/AC3/AC4/AC5 均 <strong>auto·可靠</strong>、对<strong>真实文件 + 真实 git 状态</strong>核：frontmatter 术语黑名单 grep 零命中（AC2）、正文薄壳三要点齐（AC3）、<code>git status</code> 确认唯一非 <code>.ai/</code> 改动即该命令文件（AC4）、交付 + <code>frontier</code>/<code>debt</code> 写清「butler 自用未下发」边界（AC5）。</li>
+        <li><strong>AC1/AC6 依赖提交与切版动作</strong>：feat 提交后 <code>git ls-files</code> 命中该路径；收口五步齐 + v2.4.0 三处版本载体（<code>VERSION</code> == tag <code>v2.4.0</code> == <code>CHANGELOG</code> 顶条）对齐 + <code>migrations/v2.4.0.md</code> 就部署面给 <code>[no-op]</code>+<code>[restamp]</code>。</li>
+        <li><strong>未触发独立复核</strong>：改动是纳管一个既有、已实跑验证的 Markdown 命令文件，无逻辑 / 无代码 / 无契约面，影响面经 git 机器核封死——不满足复核触发条件。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong><code>/butler-prd</code> 仅 butler 自用、未下发目标项目</strong>：编辑 butler 仓时可用，目标项目无此命令——已入 <code>debt.md</code>。下发是独立决策，待定、不隐藏。</li>
+        <li><strong>切版意义如实标注</strong>：MINOR 标的是「本仓新增命令能力」；<code>migrations/v2.4.0.md</code> 就部署面诚实给 <code>[no-op]</code>，不夸大 v2.4.0 对目标项目的影响。</li>
+        <li><strong>追认式迭代</strong>：产物后于文件成型，但全部 AC 对真实文件 / git 状态核过，非事后补声明——风险已闭。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0044/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>纳管产物：<code>.claude/commands/butler-prd.md</code></li>
+        <li>命令委托的真源规则：<code>Coder/40_Context_Management/references-schema.md</code> / <code>prd-split.md</code> / <code>prd-update.md</code></li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.4.0]</code>）、<code>migrations/v2.4.0.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

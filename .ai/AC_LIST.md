@@ -1,46 +1,37 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-12
+ACK 日期: 2026-07-13
 prd_version: —
 ---
 
 # Goal
-- 把外部工程宪法的 3 条真增量（Trade-off 意识普适化 / KISS 可操作判据 / 剥离伪需求-MVP 质询）落进 butler 对应规则文件，补齐哲学层与 P1 分析口径，且不双写已有原则、不扩部署面。
+- 把 `.claude/commands/butler-prd.md` 正式纳入版本管理，使 `/butler-prd` 成为 butler 仓一等命令入口；确认其菜单说人话、正文薄壳守 DRY、影响面守恒、butler 自用不下发的边界如实记录。
 
 # In Scope
-- `identity.md §3` 增 Trade-off 价值 + KISS 判据。
-- `presentation-protocol.md §5` 代价列口径松绑。
-- `lifecycle.md P1` 增伪需求质询姿态（含与「固定需求锁定」时序的消歧）。
-- `concept-schema.md` 至多一句 P1 质询口径 / 指针（避免与 lifecycle 双写）。
+- 纳管 `.claude/commands/butler-prd.md` 一个文件（迭代内容提交）。
+- 独立发布提交切 MINOR v2.4.0（VERSION / CHANGELOG / migration）。
 
 # Out of Scope
-- 已有的 10 条宪法原则一律不重写（DRY）。
-- 不动 `rule-card.md` / `CLAUDE.md.template`（不扩部署面）、不改任何 hook、四件套 schema 字段结构、命令语义、核心 P1–P5 状态机流转。
-- 不建 `references/`（理念类输入已消化）。
-- 不切版（判 MINOR，v2.3.0 发布待放行）。
+- 不改任何 `Coder/**` 规则正文、不动 `templates/`、不改四件套 schema / hook / `.gitignore`。
+- 不把命令下发给目标项目（不进 `templates/`）。
+- 不把 `/milestone` / `/prd` 等其他散文命令一并落文件（本轮只追认 `/butler-prd`）。
 
 # Acceptance Checklist
-- [ ] AC1: `identity.md §3.1` 新增一条「Trade-off 意识」价值——任何方案都须交代取舍成本 / 潜在技术债，与现有 4 条价值同风格融入（非硬凑列表）。
-- [ ] AC2: `presentation-protocol.md §5` 代价口径松绑——从「仅 ≥2 方案对比时列代价」扩为「给出任何方案都须交代取舍/代价」，且不破坏 §5 表格骨架与 §9 标准骨架样例的一致性。
-- [ ] AC3: `identity.md §3` 补 KISS 可操作判据「复杂到一句话讲不清就该重构」，并入或紧邻现有「可解释性高于魔法」，不新增独立小节堆砌。
-- [ ] AC4: `lifecycle.md P1 Analysis` 的「AI 必须回答」新增一条主动质询——需求里有无伪需求 / 低 ROI 项、是否该提替代（MVP）；正文显式写清质询在 P1、与 P2 冻结后的「固定需求锁定」时序不同、不冲突。
-- [ ] AC5: 若 ③ 同时触及 `concept-schema.md`，只加一句口径或指针、不与 `lifecycle` 重复表述；能只落一处则只落一处。
-- [ ] AC6: DRY 守恒——3 条均为 CONCEPT 已核的真增量，不与 butler 已有原则（奥卡姆/YAGNI/DRY/高内聚低耦合/极简/注释 Why-not-What/边界异常）重复；已有 10 条正文一字未加。
-- [ ] AC7: 最小影响面守恒——`git diff` 核对：改动仅落在 `identity` / `presentation-protocol` / `lifecycle` / `concept-schema` 四文件正文；`rule-card.md`、`CLAUDE.md.template`、`templates/hooks/**`、四件套 schema 字段结构、`VERSION` 全部无改动。
-- [ ] AC8: 新增正文守 `artifact-style.md §2` 说人话三条 + 不啰嗦；措辞用「必须/不得/应」（butler 规则写作风格）。
-- [ ] AC9: opt-in 独立复核通过——验证者≠实现者、fresh-context、逐 AC 核对，无 refute 阻断（`identity` 是哲学底座，改它必过独立复核）。
+- [ ] AC1: `.claude/commands/butler-prd.md` 作为真实文件被纳入版本管理（提交后 `git ls-files` 命中、不再是 `??` 未跟踪），且含合法 Claude Code 命令 frontmatter（`description` + `argument-hint` 两字段齐全）。
+- [ ] AC2: 菜单可见字段说人话——`description` / `argument-hint` 中**无**「薄壳 / 首切 / 真源规则」等内部实现术语；每个参数（`status` / `update` / 留空）在 `argument-hint` 里标注了对应动作含义，守 `artifact-style §2` 说人话三条。
+- [ ] AC3: 命令正文是薄壳路由器——① 有「第 0 步强制读 `references-schema` 契约」；② 按 `$ARGUMENTS` 三分支路由（留空/贴 PRD→`prd-split` 首切、`update`→`prd-update` 改版、`status`→`prd-update §7` 只读看板）；③ 正文显式声明「算法以被指向规则为准、本文件不复述」，不搬运任何真源算法（守 DRY）。
+- [ ] AC4: 影响面守恒——迭代内容提交（feat）**只**含 `.claude/commands/butler-prd.md`；`git diff` 核 `Coder/**`、`templates/**`、四件套 schema、`.gitignore`、`VERSION` 均未被该提交触碰（`VERSION` 变更只出现在独立 release 提交）。
+- [ ] AC5: 边界如实记录——交付总结与 `frontier`/`debt` 明确写清 `/butler-prd` 住 butler 自身 `.claude/`、只在编辑 butler 仓时可用、**未下发目标项目**，不制造「目标项目也能用」的误解（no 假绿）。
+- [ ] AC6: 收口 + 切版一致性——四件套说人话、ITER-0044 收口五步齐（归档 / 交付 .md+.html / 台账 closed·current:none / 折叠 `capabilities`+`frontier` / 6 不变量自检）；v2.4.0 三处版本载体对齐（`VERSION` == tag `v2.4.0` == `CHANGELOG` 顶条），`migrations/v2.4.0.md` 就部署面如实给 `[no-op]`+`[restamp]`。
 
 # Verification Method
-- AC1: 读 `identity.md §3.1` 核新价值条目存在、语义正确、风格一致。
-- AC2: 读 `presentation-protocol.md §5`+§9 核口径已松绑且样例未破。
-- AC3: 读 `identity.md §3` 核 KISS 判据落位、未另起冗余小节。
-- AC4: 读 `lifecycle.md P1` 核质询条 + 时序消歧句存在。
-- AC5: 读 `concept-schema.md` 核（若改）单句无双写；未改则说明只落 lifecycle 的理由。
-- AC6: 逐条比对新增文本 vs CONCEPT 减法表，确认无重复；`git diff` 核已有条目未动。
-- AC7: `git diff --stat` + 对边界文件 `git diff --quiet` 核影响面。
-- AC8: 读新增正文核说人话三条 + 措辞。
-- AC9: 起 fresh-context 子 agent 独立复核（spec-only 逐 AC）。
+- AC1: `git ls-files .claude/commands/butler-prd.md` 提交后有输出；读文件头核 frontmatter 两字段。
+- AC2: 读 frontmatter 两行 + grep 术语黑名单（薄壳/首切/真源）应只在正文出现、不在 frontmatter。
+- AC3: 读正文核第 0 步 + 三分支 + 「不复述」声明；确认无算法搬运。
+- AC4: `git show --stat`（feat 提交）应仅列 `.claude/commands/butler-prd.md`；`git diff` 核边界文件。
+- AC5: 读 `deliveries/ITER-0044-*.md` 与 `frontier.md`/`debt.md` 核边界句存在。
+- AC6: 收口后跑 6 不变量自检；切版后 `git tag --points-at HEAD` + 三载体比对。
 
 # Open Questions / Risks
-- ③ 落点（lifecycle 单点 vs lifecycle+concept-schema）与 KISS 判据（并入 vs 单列）在 P3 定；已在 AC3/AC5 用「并入优先/只落一处优先」约束倾向，降低发散。
-- 风险：改哲学层（`identity`）影响面无形（所有任务读它）——用 AC9 独立复核 + AC6 DRY 守恒 + AC1/AC3「融入不堆砌」共同兜底，防止哲学层膨胀成口号堆。
+- 追认式迭代（文件先于产物存在）：风险是产物沦为「事后补作业」。缓解——ACn 全部对着真实文件与真实 git 状态核，非纸面声明；AC4/AC1 依赖提交后状态、在收口验证阶段实测回填。
+- 「切版是否值得」已在决策阶段与用户确认走规范路径（Option C）；本迭代如实按 MINOR 记，migration 就部署面零影响给 `[no-op]`，不夸大版本意义。
