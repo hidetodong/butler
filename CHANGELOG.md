@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.4.0] - 2026-07-13
+
+向后兼容能力新增版。聚合 ITER-0044（`/butler-prd` 一等命令入口纳管，自 v2.3.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把已成型的未跟踪原型 `.claude/commands/butler-prd.md` 正式纳入版本管理，成 butler **第一个真实 Claude Code slash command 文件**——补齐历史「命令只是规则正文里的散文触发词、补全菜单零存在感」的缺。按 semver「新增命令」取 **MINOR**；但命令住 butler 自身 `.claude/`、**未进部署模板 `templates/`、未下发目标项目**，对已部署项目零结构影响（`migrations/v2.4.0.md` 为 `[no-op]`+`[restamp]`）。
+
+### 本版新增
+
+- **`/butler-prd` 一等命令入口纳管（ITER-0044 · 独立迭代）**：`.claude/commands/butler-prd.md` 从未跟踪原型纳管为真命令文件——PRD 先行薄壳路由器（第 0 步强制读 `references-schema` 契约 → 按 `$ARGUMENTS` 三分支 留空/贴 PRD=`prd-split` 首切·`update`=`prd-update` 改版·`status`=`prd-update §7` 只读看板 → 委托真源、声明「算法以被指向规则为准、本文件不复述」守 DRY），菜单可见 `description`/`argument-hint` 已说人话（去「薄壳/首切/真源」术语）。本迭代不改文件内容、只追认纳管 + 逐 AC 对真实文件/git 状态核（6/6 AC，未触发独立复核）。**命令 butler 自用、未下发目标项目**（记 `debt`）。详见 `deliveries/ITER-0044-butler-prd-slash-command.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.4.0.md`（`[no-op]`+`[restamp]`，命令未进部署面、目标项目零改动）。
+
+[2.4.0]: 自 v2.3.0 起聚合 ITER-0044
+
 ## [2.3.0] - 2026-07-12
 
 向后兼容能力新增版。聚合 ITER-0043（自 v2.2.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把用户提供的一份外部「工程宪法」prompt 用奥卡姆剃刀做减法——13 条里 butler 已有 10 条（照搬即违反其自身 DRY），只吸收 3 条真增量到哲学层与 P1 口径。全为规则正文的原则增强（无新命令 / 新产物 / 字段结构变更 / 部署面变化），按 semver 取 **MINOR**。
