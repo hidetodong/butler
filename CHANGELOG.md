@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.6.1] - 2026-07-13
+
+不改变行为的修订版（PATCH）。收紧 v2.6.0 新增的沟通风格正本 `communication-style.md` 的措辞与结构——头部 5 行说明压成 1 行、各节去掉解释性铺陈只留祈使规矩、4 条「说人话」的 ❌/✅ 例子由各占两行并成一行；篇幅 77→51 行（约减三分之一）。**规矩与全部 ❌/✅ 例子逐条保留，无一条增删或语义改动**——纯排版 / 措辞打磨，故取 **PATCH**。非完整迭代、无 ITER 号（简化直改），聚合提交 `d87b0d2`（`style(voice)`）。对目标项目零影响、`migrations/v2.6.1.md` 为 `[no-op]`+`[restamp]`；正本走全局 `@import`、路径不变，本机随 git 更新内容即生效、无需重跑 `setup.sh`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.6.1.md`（`[no-op]`+`[restamp]`）。
+
+[2.6.1]: 自 v2.6.0 起聚合 style(voice) 收紧提交 d87b0d2
+
 ## [2.6.0] - 2026-07-13
 
 向后兼容能力新增版。聚合 ITER-0046（自 v2.5.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把过去散在本机 Matrix 输出风格（只有切到该输出风格才生效）与多个记忆文件里的「AI 该怎么跟用户说话」规矩，**收敛成 butler 仓根唯一正本 `communication-style.md`**（随 git 跨机器同步），并由 `setup.sh` 在全局 `~/.claude/CLAUDE.md` 配置块内 `@import` 它，使其**每会话每项目常开**、与「切没切某个输出风格」无关。正本 = 原 Matrix 7 节逐字保真 ＋ 两条真增量（「话砍到骨头」折进详略、「别急着抛选择菜单」独立成节），说人话每条带一对 ❌/✅。按 semver「新增常开能力」取 **MINOR**。分发与 ITER-0045 同模型（全局机器级、不进 `templates/`、不逐项目部署）：对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.6.0.md` 为 `[no-op]`+`[restamp]`），既有安装升级需一个**机器级动作**——重跑 `./scripts/setup.sh` 装上 @import。Matrix 输出风格作为过渡产物退休（本机一次性迁移：删 `~/.claude/output-styles/matrix.md` + 拆 `claudep` 的 `--settings` 参数 + 掏薄壳三风格记忆）。
