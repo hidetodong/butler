@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.5.0] - 2026-07-13
+
+向后兼容能力新增版。聚合 ITER-0045（自 v2.4.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代闭掉 v2.4.0 遗留的分发缺口——`/butler-prd` 之前只住 butler 仓自身 `.claude/`、仅编辑本仓时可用，现经 `setup.sh` **全局软链**进 `~/.claude/commands/`，在**所有项目**可用；命令正文加「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定使其跨 cwd 成立。按 semver「新增分发能力」取 **MINOR**。选型全局软链（不进 `templates/`、不逐项目部署）：对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.5.0.md` 为 `[no-op]`+`[restamp]`），但既有安装升级到本版需一个**机器级动作**——重跑一次 `./scripts/setup.sh` 装上全局软链。
+
+### 本版新增
+
+- **slash command 全局下发目标项目（ITER-0045 · 独立迭代）**：`scripts/setup.sh` 加第 3 步——逐文件把 `.claude/commands/*.md` 软链进 `~/.claude/commands/`（幂等 `ln -sfn`、`compgen -G` 空目录守卫、逐文件不接管整目录、不误删用户自有命令）；`.claude/commands/butler-prd.md` 加路径约定段（路由三分支一字未改）；README/HUMAN_GUIDE 注册全局命令安装。7/7 AC，P5 隔离 HOME 端到端实跑 setup.sh 并抓修一个 `set -u` 下变量后接全角括号触发 unbound 的真 bug；未触发独立复核（幂等 bash + 文档、无契约面）。详见 `deliveries/ITER-0045-slash-command-global-distribution.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.5.0.md`（`[no-op]`+`[restamp]`；命令走全局软链、目标项目 `.ai/` 零改动，但需重跑一次 `setup.sh` 装全局命令）。
+
+[2.5.0]: 自 v2.4.0 起聚合 ITER-0045
+
 ## [2.4.0] - 2026-07-13
 
 向后兼容能力新增版。聚合 ITER-0044（`/butler-prd` 一等命令入口纳管，自 v2.3.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把已成型的未跟踪原型 `.claude/commands/butler-prd.md` 正式纳入版本管理，成 butler **第一个真实 Claude Code slash command 文件**——补齐历史「命令只是规则正文里的散文触发词、补全菜单零存在感」的缺。按 semver「新增命令」取 **MINOR**；但命令住 butler 自身 `.claude/`、**未进部署模板 `templates/`、未下发目标项目**，对已部署项目零结构影响（`migrations/v2.4.0.md` 为 `[no-op]`+`[restamp]`）。
