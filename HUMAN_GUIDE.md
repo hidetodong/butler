@@ -70,13 +70,14 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 ./scripts/setup.sh
 ```
 
-它会自动完成三件事：
+它会自动完成四件事：
 
 1. 在 `~/.zshrc`（或 `~/.bashrc`）中写入 `BUTLER_PATH` 环境变量
 2. 在 `~/.claude/CLAUDE.md` 中写入全局配置，让 Claude Code 在所有项目中都能自动发现 butler
 3. 把 butler 的 slash 命令（`.claude/commands/*.md`，如 `/butler-prd`）**软链**到 `~/.claude/commands/`，让它们在**所有项目**里都能用——不再只有编辑 butler 仓时才能敲。用软链而非拷贝：butler 仓一改命令，全局立即生效、无需重装
+4. 在 `~/.claude/CLAUDE.md` 的全局配置里 `@import` 一行**沟通风格正本**（`communication-style.md`），规定 AI 该怎么跟你说话（语气、详略、说人话）。它跟着 butler 仓走、每个会话常开、跨机器同步；想调说话风格，改这个文件即可
 
-执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用。
+执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用，AI 也按你的沟通风格说话。
 
 > 命令是**全局**安装（机器级、一次到位），跟逐项目的「基地车部署」是两回事——它不进目标项目的 `.ai/`，也不随目标仓走。换机器用 butler，重跑一次 `setup.sh` 即可。
 

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0046 交付总结 · 个人沟通风格常开正本</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>个人沟通风格常开正本：一份 <code>communication-style.md</code>，一次 <code>setup.sh</code> 让 AI 到处都按你的说话规矩说话</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0046</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-13</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>「AI 该怎么跟你说话」的规矩此前<strong>散在两处</strong>：本机 Matrix 输出风格（<code>~/.claude/output-styles/matrix.md</code>，只有切到该输出风格才生效）装了整套基调 / 详略 / 说人话 / 结尾块；几个记忆文件又各记一条（话砍到骨头、别抛选择菜单），说人话还和 matrix <strong>各写一份</strong>。散、条件生效、还双写。</li>
+        <li>本次把这套规矩<strong>收敛成一份唯一正本</strong> <code>communication-style.md</code>（住 butler 仓根、随 git 跨机器同步），由 <code>setup.sh</code> 写一行 <code>@import</code> 进全局 <code>~/.claude/CLAUDE.md</code>，让它<strong>每个会话、每个项目、每台装了 butler 的机器都常开</strong>——跟切没切某个输出风格无关。Matrix 输出风格作为过渡产物退休。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新增沟通风格唯一正本 <code>communication-style.md</code>（仓根）</strong>：开篇写清定位（唯一正本 / 常开 / 跨机器同步 / 只管说话方式 / 以后反馈往这写），下辖 8 节——基调、详略（含并入的「话砍到骨头」）、抓重点、说人话（术语先解释 / 比喻要落地 / 别让英文变量裸奔 / 别把词掐短，<strong>4 条各带一对 ❌/✅</strong>）、别急着抛选择菜单（<strong>新增</strong>，讨论 + 执行两侧都别甩菜单，带 ❌/✅ 与 grill 例外）、格式、结尾决策块、边界。原 Matrix 7 节措辞逐字保真搬入，只新增两条真增量。</li>
+        <li><strong><code>setup.sh</code> 接上 @import 常开线</strong>：在既有 <code>&lt;!-- butler-global-config --&gt;</code> 受管配置块（awk 删旧块 + heredoc 重写、幂等）里加一行 <code>@$BUTLER_DIR/communication-style.md</code>。路径用绝对 <code>$BUTLER_DIR</code> 展开——随 setup 在每台机器上正确、随 butler 仓走。</li>
+        <li><strong>Matrix 输出风格退休（本机一次性迁移）</strong>：删 <code>~/.claude/output-styles/matrix.md</code>；把 <code>claudep</code> 里为启用它加的 <code>--settings '{"outputStyle":"Matrix"}'</code> 参数从 fish（<code>~/.config/fish/config.fish</code>）与 zsh（<code>~/.zshrc</code>）两处都拆掉（保留 <code>proxyon</code> + <code>claude</code>，退回成纯「开代理起 claude」的启动器）；查 <code>~/.claude/settings.json</code> 无 Matrix 残留。</li>
+        <li><strong>三风格记忆掏薄壳</strong>：<code>style-concise</code> / <code>style-plain-language</code> / <code>discussion-mode-no-forced-menus</code> 的规矩正文删除，只留「哪天因为什么事定的」来龙去脉 + 一句「规矩正文见 <code>communication-style.md</code>」；<code>MEMORY.md</code> 三条索引同步改；<code>style-plain-language</code> 内指向 MILE-0003 的引用原样保留。</li>
+        <li><strong>文档注册</strong>：<code>README.md</code>（目录结构树登记正本 + 快速上手注释）、<code>HUMAN_GUIDE.md</code> §3 安装（「三件事」改「四件事」+ 第 4 条讲清 @import 沟通风格正本）。</li>
+        <li><strong>知识文件夹前滚</strong>：<code>capabilities.md</code>（加「个人沟通风格全局常开正本 + setup @import 能力」）、<code>frontier.md</code>（刷 v2.6.0）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>AI 现在到处都按你的沟通风格说话，且不依赖切输出风格</strong>：重跑一次 <code>./scripts/setup.sh</code>，之后任意项目、任意会话，AI 都读同一份 <code>communication-style.md</code>。</li>
+        <li><strong>想调说话风格，只改一个文件</strong>：改 <code>communication-style.md</code> 即全局生效、跨机器同步；不用再在输出风格文件和几个记忆文件之间来回改、也不会两处写拧。</li>
+        <li><strong>换机器只需重跑 setup</strong>：正本随 butler 仓走，新机器装好 butler、跑一次 <code>setup.sh</code>，沟通风格即到位。</li>
+        <li><strong>Matrix 输出风格不再需要</strong>：<code>claudep</code> 现在就是「开代理起 claude」；风格改由常开的 @import 提供。</li>
+        <li><strong>对已部署项目</strong>：目标项目 <code>.ai/</code> 结构零变化（升级配方 <code>[no-op]</code>+<code>[restamp]</code>）；要拿到常开沟通风格，做一个<strong>机器级动作</strong>——重跑 <code>./scripts/setup.sh</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（仓内正本）：<code>communication-style.md</code>（仓根）。</li>
+        <li>改（分发装法）：<code>scripts/setup.sh</code>（受管 heredoc +一行 @import）。</li>
+        <li>改（文档注册）：<code>README.md</code>、<code>HUMAN_GUIDE.md</code>。</li>
+        <li>知识文件夹前滚：<code>.ai/project/capabilities.md</code> / <code>frontier.md</code>。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.5.0→2.6.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.6.0.md</code>。</li>
+        <li>本机迁移（<strong>不进仓提交</strong>，是 <code>~/</code> 下本机配置）：删 <code>~/.claude/output-styles/matrix.md</code>；拆两处 <code>claudep</code> 的 <code>--settings</code> 参数；掏薄壳三风格记忆 + 改 <code>MEMORY.md</code>。</li>
+        <li>没碰（守最小影响面）：任何 <code>Coder/**</code> 规则正文、<code>templates/**</code>、四件套 schema、<code>templates/hooks/**</code>、<code>.gitignore</code>、核心 P1–P5 状态机、既有「偏好探针」子系统。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p><strong>8 项验收（AC1–AC8）全过。</strong>AC1–AC6 <strong>auto·可靠</strong>、非纸面：</p>
+      <ul>
+        <li>正本 8 节齐、说人话 4 条各带例、别抛菜单节带例、开篇定位在、边界干净无工程规矩混入（AC1）。</li>
+        <li>隔离 HOME 端到端实跑 <code>setup.sh</code>：受管块内 <code>@…communication-style.md</code> 行<strong>恒为 1</strong>、<strong>连跑两次仍为 1</strong>（幂等无重复）、退出 0（AC2）；从受管块抽出 <code>@</code> 行的绝对路径 <code>test -f</code> 为真、指向真实存在的正本（AC3）。</li>
+        <li>文档注册句在位、说人话（AC4）。</li>
+        <li><strong>迁移前先逐节核 matrix→正本无遗漏（21 个关键锚点全 ✓）才删</strong>；删后 <code>matrix.md</code> 不存在、两处 <code>claudep</code> 无 <code>--settings</code>/Matrix 残留、<code>settings.json</code> 无 Matrix（AC5）；三记忆规矩正文已删、只剩来龙去脉 + 指向正本，<code>MEMORY.md</code> 已改，MILE-0003 引用留存（AC6）。</li>
+      </ul>
+      <p><strong>AC7/AC8</strong>：<code>migrations/v2.6.0.md</code> 就目标项目部署面给 <code>[no-op]</code>+<code>[restamp]</code> + 机器级重跑 setup 装 @import + 本机一次性清理 matrix/claudep 可选手动步；收口五步齐 + v2.6.0 三载体（<code>VERSION</code> == tag <code>v2.6.0</code> == <code>CHANGELOG</code> 顶条 <code>## [2.6.0]</code>）对齐 + feat 与 chore(release) 提交分离。</p>
+      <p><strong>未触发独立复核</strong>：改动是一段幂等 bash（@import 行）+ 一份手写风格正本 + 文档 + 本机配置迁移，无跨多规则契约面 / 哲学底座变更；核心风险（bash 正确性 + 内容不丢）已由隔离实跑与迁移前逐节核验覆盖。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>@import 运行时并入属 Claude Code 行为</strong>：非本仓可断言，验证止于路径绝对正确 + 目标文件存在 + 受管块合法。真正生效需在<strong>主检出</strong>重跑一次 <code>setup.sh</code>（本机动作，migration 写清）。</li>
+        <li><strong>本机迁移跨机器不自动传播</strong>：<code>matrix.md</code> 与 <code>claudep</code> 都是本机配置；换机器若也有旧设置需同样清一遍。但新机器的沟通风格来源已是同步的正本 + @import，本身不依赖 matrix。</li>
+        <li><strong>常驻 token 开销</strong>：正本每会话加载（约 matrix 量级、几百 token）——用户已拍板「带例子换规矩能落地，值」。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0046/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>沟通风格正本：<code>communication-style.md</code></li>
+        <li>分发装法：<code>scripts/setup.sh</code>（受管 heredoc 的 @import 行）</li>
+        <li>文档：<code>README.md</code>、<code>HUMAN_GUIDE.md</code>（§3 安装）</li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.6.0]</code>）、<code>migrations/v2.6.0.md</code></li>
+        <li>本机迁移（不在仓内）：<code>~/.claude/output-styles/matrix.md</code>（已删）、<code>~/.config/fish/config.fish</code> 与 <code>~/.zshrc</code> 的 <code>claudep</code>、风格记忆薄壳</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

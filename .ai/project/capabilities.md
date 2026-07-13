@@ -32,7 +32,8 @@
 
 ## 部署与维护能力
 
-- **全局安装（`scripts/setup.sh`）**：一次性、机器级——写 shell rc 的 `BUTLER_PATH` + `~/.claude/CLAUDE.md` 全局配置（让所有项目发现 butler 规则）+ **软链 `.claude/commands/*.md` → `~/.claude/commands/`**（让 `/butler-*` 命令全局可用，ITER-0045）。与逐项目基地车部署**不同层**：命令是全局软链、不进目标项目 `.ai/`。
+- **全局安装（`scripts/setup.sh`）**：一次性、机器级——写 shell rc 的 `BUTLER_PATH` + `~/.claude/CLAUDE.md` 全局配置（让所有项目发现 butler 规则）+ **软链 `.claude/commands/*.md` → `~/.claude/commands/`**（让 `/butler-*` 命令全局可用，ITER-0045）+ **在全局配置块内 `@import` 个人沟通风格正本 `communication-style.md`**（规定 AI 怎么跟用户说话：语气 / 详略 / 说人话 / 别抛菜单，每会话常开、跨机器同步，ITER-0046·v2.6.0）。与逐项目基地车部署**不同层**：命令与沟通风格都是全局机器级、不进目标项目 `.ai/`。
+- **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 8 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
 - **基地车部署**：把 butler 规则装进目标项目——建 `.ai/`（含空 `.ai/project/` 知识文件夹种子）/ `deliveries/` / `origin/`、注入 CLAUDE.md + hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
 - **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC 写源码 / 越界写 / 双 active 迭代 / 台账非法状态值。真源 `templates/hooks/` + `mcv-deployment §5`。

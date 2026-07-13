@@ -1,53 +1,60 @@
-# TECH_PLAN — ITER-0045（slash command 全局下发目标项目 · 软链装法）
+# TECH_PLAN — ITER-0046（个人沟通风格常开正本 · communication-style.md + setup.sh @import + matrix 退休）
 
 # Goal
-- 支撑 AC1–AC7：给 `setup.sh` 接上「软链命令到 `~/.claude/commands/`」这条分发线、把命令正文改成跨 cwd 健壮、注册文档、折叠收口、独立切 MINOR v2.5.0。
+- 支撑 AC1–AC8：新建收敛后的沟通风格正本、给 `setup.sh` 接上「@import 正本进全局 CLAUDE.md」这条常开分发线、注册文档、退休 matrix（本机迁移 + 拆 claudep 参数）、掏薄壳记忆、折叠收口、独立切 MINOR v2.6.0。
 
 # Files / Modules to Change
-- **`scripts/setup.sh`**（分发装法核心）：现有第 1 步（BUTLER_PATH 环境变量）、第 2 步（`~/.claude/CLAUDE.md` 全局配置）之后，加**第 3 步**——逐文件软链 `$BUTLER_DIR/.claude/commands/*.md` → `$HOME/.claude/commands/`；末尾「使用方式」提示补一句命令全局可用。支撑 AC1/AC2/AC3。
-- **`.claude/commands/butler-prd.md`**（跨 cwd 健壮）：在开篇薄壳说明后、第 0 步前，插入一段 `> **路径约定**`——`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目。路由三分支正文一字不改。支撑 AC4。
-- **`README.md`**：快速上手第 1 条 `setup.sh` 注释 + 目录结构 `.claude/commands/` 一行，注明全局命令安装。支撑 AC5。
-- **`HUMAN_GUIDE.md`** §3 安装：把「自动完成两件事」改「三件事」，加第 3 条软链命令 + 一句「命令全局可用（所有项目）」。支撑 AC5。
-- **折叠（收口 step 4）**：`.ai/project/capabilities.md`（`/butler-prd` 行 + setup 能力改「全局下发」）、`frontier.md`（刷 v2.5.0 + 战线）、`debt.md`（**删**第 3 笔「未下发」欠债）。支撑 AC6/AC7。
-- **发布层（独立 chore(release)）**：`VERSION`(2.4.0→2.5.0)、`CHANGELOG.md`(顶条 v2.5.0)、`migrations/v2.5.0.md`(`[no-op]`+`[restamp]`+机器级重跑 setup)。支撑 AC6/AC7。
-- **不改**：`Coder/**`、`templates/**`、schema、hook、`.gitignore`。
+- **`communication-style.md`**（新增，仓根 · 唯一正本）：开篇 `>` 定位块（唯一正本 / 常开 / 跨机器同步 / 只管说话方式 / 反馈往这写）＋ 8 节：`## 基调`（照 matrix 逐字）`## 详略`（照 matrix + 折入「话砍到骨头」：默认往短写、三句能说清不写一段、一表能说清不铺长文、反感凑篇幅的铺垫客套流水账）`## 抓重点`（照 matrix）`## 说人话`（照 matrix，4 条各留一对 ❌/✅）`## 别急着抛选择菜单`（**新增**，并入 discussion-mode-no-forced-menus，含一对 ❌/✅）`## 格式`（照 matrix）`## 结尾决策块`（照 matrix）`## 边界`（照 matrix，强化「只改说话方式、不动工程/工具/butler 规矩、交付正式文档另有模板」）。支撑 AC1。
+- **`scripts/setup.sh`**（分发装法）：第 2 步受管 heredoc（第 63–75 行 `cat >> ... << EOF ... EOF`）内，在 butler 规则说明段之后加一行 `@$BUTLER_DIR/communication-style.md` + 一句注释说明它是常开的个人沟通风格正本；末尾「使用方式」提示可补一句。因走既有 awk 删旧块 + heredoc 重写机制，天然幂等、绝对路径。支撑 AC2/AC3。
+- **`README.md`**：目录结构树登记 `communication-style.md` 一行（标个人全局配置、经 setup @import 常开、**不进** Coder SOP 阅读顺序）。支撑 AC4。
+- **`HUMAN_GUIDE.md`** 安装节：点明「重跑 `setup.sh` 同时装上全局常开的沟通风格配置（`@import` communication-style.md）」+ 一句它管什么。支撑 AC4。
+- **折叠（收口 step 4）**：`.ai/project/capabilities.md`（加「个人沟通风格全局常开正本 + setup @import 能力」；沟通风格从「散在 matrix/记忆」改「收敛单一正本」）、`frontier.md`（刷 v2.6.0 + 战线）。支撑 AC7/AC8。
+- **发布层（独立 chore(release)）**：`VERSION`(2.5.0→2.6.0)、`CHANGELOG.md`(顶条 v2.6.0)、`migrations/v2.6.0.md`(`[no-op]`+`[restamp]`+机器级重跑 setup + 本机手动清理清单)。支撑 AC7/AC8。
+- **本机迁移（不进仓提交，验证时执行并读本机文件核）**：删 `~/.claude/output-styles/matrix.md`；`~/.config/fish/config.fish` + `~/.zshrc` 两处 `claudep` 去 `--settings '{"outputStyle":"Matrix"}'`；查 `~/.claude/settings.json`；三记忆掏薄壳 + `MEMORY.md`。支撑 AC5/AC6。
+- **不改**：`Coder/**`、`templates/**`、schema、hook、`.gitignore`、`preference-*`。
 
 # Interface / Contract
-- **软链契约**：`ln -sfn "$src" "$dest"`——`-s` 符号链接、`-f` 强制替换已存在目标、`-n` 不解引用已存在的目录符号链接（BSD/macOS 与 GNU 均支持）。目标 `$dest = $HOME/.claude/commands/$(basename src)`。源为 butler 仓真实路径（软链常青、butler 改即生效）。
-- **空目录守卫**：`compgen -G "$BUTLER_CMD_DIR/*.md"` 测存在性（bash 内建，脚本 shebang 为 bash），无匹配走 else 分支打印跳过，`set -euo pipefail` 下不触发非零退出。
-- 命令契约不变：Claude Code 命令 frontmatter `description`+`argument-hint`、`$ARGUMENTS` 承参。无 butler 侧新契约、无 schema/hook 变更。
+- **@import 契约**：全局 `~/.claude/CLAUDE.md` 内一行 `@<绝对路径>` 触发 Claude Code 把该文件内容并入记忆（支持绝对路径、跟随软链、≤4 跳；已查证）。路径由 heredoc 里 `$BUTLER_DIR` 展开为绝对路径，随 setup 在每台机器上正确。
+- **受管块幂等**：沿用 setup.sh 现有机制——有 `<!-- butler-global-config -->` 标记则 awk 删旧块、再 heredoc 追加新块；`@import` 行在块内，重跑即删后重写，恒定一行、无重复。
+- **claudep 契约变更**：去掉 `--settings '{"outputStyle":"Matrix"}'` 后，`claudep` = `proxyon` + `claude <args>`；语义从「开代理 + 强制 Matrix 风格起 claude」变为「开代理起 claude」，风格改由常开 @import 提供，不再依赖 CLI 参数。
+- 无 butler 侧新 schema/hook；不改四件套字段结构。
 
 # State / Boundary
-- 迭代 feat 提交（装 setup.sh + 命令文件 + README + HUMAN_GUIDE + `.ai/` 收口产物）与 release 提交（VERSION/CHANGELOG/migration + tag）**分离**（守 `versioning-schema §5.2/§6.1`）。
-- 分发是**全局机器级**、非逐项目——命令不进 `templates/`、不进基地车部署。目标项目 `.ai/` 部署面零结构变化。
-- 边界写进 migration + 交付：升级只需「重跑 setup.sh」这一个机器级动作。
+- 迭代 feat 提交（communication-style.md + setup.sh + README + HUMAN_GUIDE + `.ai/` 收口产物）与 release 提交（VERSION/CHANGELOG/migration + tag）**分离**（守 `versioning-schema §5.2/§6.1`）。
+- 分发是**全局机器级**、非逐项目——正本不进 `templates/`、不进基地车部署。目标项目 `.ai/` 部署面零结构变化。
+- 本机迁移（matrix/claudep/settings/记忆）落在 `~/` 下本机配置，**不在** butler 仓 diff 内；作为一次性手动步写进 migration + 交付，与 ITER-0045「机器级重跑 setup」同类。
+- 边界强化：正本全局常开后更要防渗进工程行为——「边界」节明确只管说话方式。
 
 # Design Decisions
-- **决策 1：软链，不拷贝**。理由：与 butler 分发规则的方式（全局引用 `$BUTLER_PATH`、不逐项目拷贝）同构；软链使命令永远追随 butler 仓当前版本，零漂移、免 `/butler-upgrade` 同步命令副本。代价（仓库被挪则悬空）可接受，BUTLER_PATH 本机器本地。
-- **决策 2：全局 `~/.claude/commands/`，不逐项目 `templates/`**。理由：逐项目唯一好处「随目标仓走」是空的——命令依赖 `$BUTLER_PATH/Coder/…`，无 butler 的机器跑不起来；全局装法一次到位、所有项目可见（正治「记不住用」）、不给每个项目留副本与升级债。
-- **决策 3：逐文件软链、不整目录 symlink/接管**。理由：用户 `~/.claude/commands/` 可能已有自己的命令；只软链 butler 的 `butler-*.md`，不碰别人。
-- **决策 4：命令正文只加「路径约定」一句、不重写路由**。理由：DRY + 最小实现；路由三分支逐条保留，只补 cwd 无关的解析规则，让同一薄壳在 butler 仓内（cwd==BUTLER_PATH）与目标项目（cwd≠）都成立。
-- **决策 5：判 MINOR、migration 部署面 `[no-op]`+`[restamp]` 但注明机器级重跑 setup**。理由：`versioning-schema §2` 新增分发能力=MINOR；目标项目 `.ai/` 无结构变化=`[no-op]`；但「装上命令」需重跑 setup，是既有项目升级要知道的真实动作，如实写、不藏。
+- **决策 1：单一正本走「全局 CLAUDE.md @import」，不走输出风格**。理由：输出风格**不支持 @import**（已查证）且只有被选中才生效；用户要「永远在 + 跨机器同步」，唯有落随 git 走的仓内文件 + 常开的 CLAUDE.md 导入满足。与 ITER-0045「全局引用、不逐项目拷贝」同模型。
+- **决策 2：收敛去重，规矩正文只此一份**。理由：说人话此前 matrix/记忆双写、正是漂移之源；matrix 7 节 + 记忆两条真增量并进正本，matrix 清空退休、记忆掏薄壳（只留原因）。DRY 到底。
+- **决策 3：matrix 直接删、不留指路壳；claudep 同步拆参数**。理由：matrix 是过渡产物，留空壳是噪音；但删风格必须**同时**拆掉 claudep 里 `--settings '{"outputStyle":"Matrix"}'`，否则命令指向不存在的风格。settings.json 一并查残留。
+- **决策 4：带 ❌/✅ 例子**。理由：用户实证——光写规矩不带例子管不住（matrix 最初只写「要简洁」压不住黑话，补具体病症对照才治住）；每条留一对，不铺一堆，token 换「规矩能落地」值。
+- **决策 5：名字 `communication-style.md`、放仓根、不进 Coder SOP 阅读顺序**。理由：「preference/偏好」已被工程决策探针占用，须避让；它是个人全局配置、非工程 SOP 规则，故登记结构树但不进 SOP 读序。
+- **决策 6：判 MINOR、migration 部署面 `[no-op]`+`[restamp]` + 注明机器级重跑 setup + 本机手动清理**。理由：`versioning-schema §2` 新增常开能力=MINOR；目标项目 `.ai/` 无结构变化=`[no-op]`；但「装上 @import」需重跑 setup，本机迁移需手动清 matrix/claudep——如实写、不藏（与 ITER-0045 配方同型）。
 
 # Execution Steps
-- [ ] T1 开 ITER-0045：`.ai/ITERATIONS.md` 领号 active + `current` 指向、`task-state` 状态块、`01_CHANGELOG` 重置 → 随四件套开启
-- [ ] T2 [P] 改 `scripts/setup.sh` 加第 3 步软链 + 提示 → AC1/AC2/AC3
-- [ ] T3 [P] 改 `.claude/commands/butler-prd.md` 加路径约定段（不动路由）→ AC4
-- [ ] T4 [P] 注册文档 `README.md` + `HUMAN_GUIDE.md` → AC5
-- [ ] T5 隔离 HOME 实跑 setup.sh 验证（软链目标/解引用/幂等连跑两次/空目录跳过/非butler命令保留）→ 回填 VERIFY AC1–AC3
-- [ ] T6 收口五步：归档 `iterations/ITER-0045/` → 交付 `.md`+`.html` → 台账 closed/current:none → 折叠 `capabilities`+`frontier`+`debt`（删第3笔）→ 6 不变量自检 → AC6/AC7
-- [ ] T7 feat 提交（setup.sh + 命令 + 文档 + `.ai/` 产物）；提交后 `git show --stat` 核 → 回填 AC7
-- [ ] T8 独立切 v2.5.0：VERSION / CHANGELOG / migration → `chore(release)` 提交 + tag `v2.5.0` → 三载体对齐自检 → AC6/AC7
-- [ ] T9 push 分支 + 开 draft PR（本 job 在 worktree、需 ship）
+- [ ] T1 开 ITER-0046：`.ai/ITERATIONS.md` 领号 active + `current` 指向、`task-state` 状态块、`01_CHANGELOG` 重置 → 随四件套开启
+- [ ] T2 [P] 新建 `communication-style.md`（8 节，先把 matrix 逐字搬全 + 折入两条增量 + 开篇定位）→ AC1
+- [ ] T3 改 `scripts/setup.sh` 受管 heredoc 加 `@import` 行 → AC2/AC3（依赖 T2 的文件名/路径确定）
+- [ ] T4 [P] 注册文档 `README.md` + `HUMAN_GUIDE.md` → AC4
+- [ ] T5 隔离 HOME 实跑 setup.sh 验证（@import 行计数=1 / 幂等连跑两次仍=1 / 抽路径 test -f 为真）→ 回填 VERIFY AC2/AC3
+- [ ] T6 本机迁移：先核 matrix 各节已全在正本（内容不丢）→ 删 matrix.md → 拆 fish+zsh 两处 claudep 参数 → 查 settings.json → 掏薄壳三记忆 + 改 MEMORY.md → 读文件核 → AC5/AC6
+- [ ] T7 收口五步：归档 `iterations/ITER-0046/` → 交付 `.md`+`.html` → 台账 closed/current:none → 折叠 `capabilities`+`frontier` → 6 不变量自检 → AC7/AC8
+- [ ] T8 feat 提交（communication-style.md + setup.sh + 文档 + `.ai/` 产物）；提交后 `git show --stat` 核 → 回填 AC8
+- [ ] T9 独立切 v2.6.0：VERSION / CHANGELOG / migration → `chore(release)` 提交 + tag `v2.6.0` → 三载体对齐自检 → AC7/AC8
+- [ ] T10 push 分支 + 开 draft PR（本 job 在 worktree、需 ship）
 
 # Verification Plan
-- AC1/AC2/AC3：`env HOME=$CLAUDE_JOB_DIR/tmp/fakehome bash scripts/setup.sh` 实跑；`readlink` 核 `$dest` 指向仓内源、`cat` 解引用核内容一致；连跑两次核幂等无重复；在 fakehome `commands/` 预置 `zzz-other.md` 跑后确认仍在；临时把命令挪空核 else 跳过不崩。
-- AC4：读命令文件核路径约定段 + `git diff` 核路由三分支未动、只加约定。
-- AC5：读 README/HUMAN_GUIDE 改动段核注册句在。
-- AC6：读 migration 核三标签语义 + 机器级重跑说明；`debt.md` 确认第 3 笔已删。
-- AC7：6 不变量自检；`git tag --points-at HEAD` 含 `v2.5.0`；`VERSION`==tag==CHANGELOG 顶条；两提交分离。
+- AC1：读 `communication-style.md` 核 8 节齐、说人话 4 条各 ❌/✅、别抛菜单节 ❌/✅、开篇定位在；通读确认边界干净（无工程/工具规矩）。
+- AC2/AC3：`env HOME=$CLAUDE_JOB_DIR/tmp/fakehome-0046 bash scripts/setup.sh` 实跑；`grep -c '@.*communication-style.md' <fakehome>/.claude/CLAUDE.md` == 1；连跑两次再核 == 1；`sed`/`awk` 抽该行路径 → `test -f` 为真。
+- AC4：读 README/HUMAN_GUIDE 改动段核注册句在、说人话。
+- AC5：迁移前逐节 diff 核 matrix→正本无遗漏；`test ! -e ~/.claude/output-styles/matrix.md`；`grep outputStyle ~/.config/fish/config.fish ~/.zshrc ~/.claude/settings.json` 无 Matrix 残留。
+- AC6：读三记忆 + MEMORY.md 核薄壳化、MILE-0003 引用留存。
+- AC7：读 migration 核三事项（`[no-op]`+`[restamp]` / 机器级重跑 setup / 本机手动清理清单）。
+- AC8：6 不变量自检；`git tag --points-at HEAD` 含 `v2.6.0`；三载体对齐；两提交分离。
 
 # Risks / Open Questions
-- 两个 Open Question 已在本阶段关闭（决策 1 软链 / 决策 2 全局；批量落其它命令记 frontier 不做）。
-- `ln -sfn` 跨 BSD/GNU 语义一致性：两平台 `-sfn` 均支持，实测在 macOS（本机 darwin）跑通即够；不承诺其它平台但语法通用。
-- 「补全菜单真列出」属 Claude Code 运行时，非本仓可断言——验证止于文件落位 + 内容可读 + frontmatter 合法（AC_LIST 已记此边界）。
+- Open Questions 已在本阶段关闭（决策 1 走 @import / 决策 3 直接删 matrix + 拆 claudep / 结尾块保留 / 记忆留薄壳）。
+- @import 运行时并入属 Claude Code 行为，非本仓可断言——验证止于路径正确 + 文件存在 + 受管块合法（AC3 已记边界）。
+- 本机迁移跨机器不自动传播——migration 配方写清换机器需同样清理，但新机器不依赖 matrix。

@@ -83,8 +83,9 @@ flowchart TB
 ## 🚀 快速上手
 
 ```bash
-# 1. 一次性全局安装（写入全局配置 + 把 slash 命令软链进 ~/.claude/commands/，
-#    之后所有项目自动发现 butler 规则、并能用 /butler-* 命令）
+# 1. 一次性全局安装（写入全局配置 + 把 slash 命令软链进 ~/.claude/commands/
+#    + @import 个人沟通风格进全局 CLAUDE.md 常开；
+#    之后所有项目自动发现 butler 规则、能用 /butler-* 命令、按你的沟通风格说话）
 ./scripts/setup.sh
 
 # 2. 可选 · 启用偏好探针（opt-in，数据外置）
@@ -101,6 +102,7 @@ butler/
 ├── README.md                       # 本文件 · 总览与分流
 ├── CLAUDE.md                       # 给 AI 的仓库开发约定
 ├── HUMAN_GUIDE.md                  # 面向人类的操作手册
+├── communication-style.md          # 个人沟通风格正本（setup.sh @import 进全局 CLAUDE.md 常开；个人配置、非 SOP 规则、不进 Coder 阅读顺序）
 │
 ├── scripts/
 │   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
