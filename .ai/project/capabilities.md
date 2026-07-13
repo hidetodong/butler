@@ -27,11 +27,12 @@
 | `/preference` | 偏好探针开关（`on`/`off`/`reback`/`distill`） | `70_Extension_Preference/preference-probe-engine.md` |
 | `/milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3） | `20_Workflow_Lifecycle/milestone-schema.md`（§6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针） |
 | `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 登记表认亲（新增·消失 + 松边改名/合并/拆分启发式提候选→确认、绝不自动认，R6）/ 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5–R6） | `40_Context_Management/prd-update.md`（§4.2 松边、首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`；非回归门见 `references-schema §9`） |
-| `/butler-prd` | **butler 第一个真实命令文件**（ITER-0044·v2.4.0）——PRD 先行动作的薄壳路由器：第 0 步强制读 `references-schema` 契约 → 按参数三分支（留空/贴 PRD=首切 / `update`=改版 / `status`=只读看板），委托真源不复述算法。**注：住 butler 自身 `.claude/`、仅编辑本仓时可用，未进 `templates/`、未下发目标项目**（见 debt） | `.claude/commands/butler-prd.md`（薄壳，真源 `references-schema.md` / `prd-split.md` / `prd-update.md`） |
+| `/butler-prd` | **butler 第一个真实命令文件**（ITER-0044）——PRD 先行动作的薄壳路由器：第 0 步强制读 `references-schema` 契约 → 按参数三分支（留空/贴 PRD=首切 / `update`=改版 / `status`=只读看板），委托真源不复述算法。**全局下发（ITER-0045·v2.5.0）**：`setup.sh` 软链进 `~/.claude/commands/`，**所有项目可用**（不再限编辑 butler 仓）；正文含「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定，跨 cwd 成立 | `.claude/commands/butler-prd.md`（薄壳，真源 `references-schema.md` / `prd-split.md` / `prd-update.md`） |
 | `/butler-upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行） | `20_Workflow_Lifecycle/butler-upgrade.md`（**注：从未真跑，见 debt**） |
 
 ## 部署与维护能力
 
+- **全局安装（`scripts/setup.sh`）**：一次性、机器级——写 shell rc 的 `BUTLER_PATH` + `~/.claude/CLAUDE.md` 全局配置（让所有项目发现 butler 规则）+ **软链 `.claude/commands/*.md` → `~/.claude/commands/`**（让 `/butler-*` 命令全局可用，ITER-0045）。与逐项目基地车部署**不同层**：命令是全局软链、不进目标项目 `.ai/`。
 - **基地车部署**：把 butler 规则装进目标项目——建 `.ai/`（含空 `.ai/project/` 知识文件夹种子）/ `deliveries/` / `origin/`、注入 CLAUDE.md + hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
 - **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC 写源码 / 越界写 / 双 active 迭代 / 台账非法状态值。真源 `templates/hooks/` + `mcv-deployment §5`。

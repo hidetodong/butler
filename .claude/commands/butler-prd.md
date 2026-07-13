@@ -5,6 +5,8 @@ argument-hint: "[status=只读看板 | update=改版同步 | 贴 PRD 或路径�
 
 你正在执行 butler 的 **PRD 先行**动作。本命令是**薄壳路由器**——只做三件事：① 保证把对的规则读进上下文（治"该响应时没响应"的老病），② 按参数分派，③ 委托真源规则执行。**具体算法一律以被指向的规则文件为准，本文件不复述**（守 butler DRY 红线）。
 
+> **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析——**不是**当前项目下的路径。若当前目录没有 `Coder/`，就去 `$BUTLER_PATH/Coder/…` 读。反过来，一切产出（`.ai/references/prd/…` 等）一律落**当前项目**，绝不落 butler 仓。
+
 ## 第 0 步（强制）先读契约
 无论走哪条分支，先读 `Coder/40_Context_Management/references-schema.md`——PRD 切片的**契约层**：`prd/` 结构、slug 终身身份、逐字无损红线、live/`.archive` 落盘形态、§2 "是不是大 PRD"的判据。这是所有分支的公共地基，不可跳。
 

@@ -83,7 +83,8 @@ flowchart TB
 ## 🚀 快速上手
 
 ```bash
-# 1. 一次性全局安装（写入全局配置，之后所有项目自动发现 butler）
+# 1. 一次性全局安装（写入全局配置 + 把 slash 命令软链进 ~/.claude/commands/，
+#    之后所有项目自动发现 butler 规则、并能用 /butler-* 命令）
 ./scripts/setup.sh
 
 # 2. 可选 · 启用偏好探针（opt-in，数据外置）
@@ -102,8 +103,11 @@ butler/
 ├── HUMAN_GUIDE.md                  # 面向人类的操作手册
 │
 ├── scripts/
-│   ├── setup.sh                    # 一次性全局安装
+│   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
 │   └── preference-init.sh          # 偏好探针存储初始化（opt-in）
+│
+├── .claude/commands/               # butler slash 命令（setup.sh 软链到全局，所有项目可用）
+│   └── butler-prd.md               #   /butler-prd · PRD 先行薄壳路由
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template

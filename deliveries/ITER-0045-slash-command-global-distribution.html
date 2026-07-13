@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0045 交付总结 · slash command 全局下发目标项目</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>slash command 全局下发目标项目：一次 <code>setup.sh</code> 让 <code>/butler-*</code> 在所有项目可用</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0045</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-13</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li><code>/butler-prd</code>（ITER-0044 落为 butler 第一个真命令文件）之前住 butler 仓自己的 <code>.claude/commands/</code>，只有<strong>编辑 butler 仓时</strong>才能用——目标项目里敲不出来。这正是 <code>debt.md</code> 记的分发缺口。</li>
+        <li>本次把它<strong>全局下发</strong>：给 <code>setup.sh</code> 接上一条软链线，把 butler 仓的 slash 命令软链进 <code>~/.claude/commands/</code>，让 <code>/butler-*</code> 在<strong>所有项目</strong>里可用；同时让命令正文跨目录健壮，在目标项目（当前目录不是 butler 仓）里也跑得通。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong><code>setup.sh</code> 加第 3 步「全局软链命令」</strong>：逐文件把 <code>$BUTLER_DIR/.claude/commands/*.md</code> 软链到 <code>~/.claude/commands/</code>。用<strong>软链</strong>而非拷贝——butler 仓一改命令，全局立即生效、零漂移、无需逐项目同步副本。装法<strong>幂等</strong>（<code>ln -sfn</code> 原子替换）、命令目录为空时<strong>优雅跳过</strong>（<code>compgen -G</code> 守卫、<code>set -euo pipefail</code> 下不崩）、<strong>逐文件</strong>软链不接管整个 <code>~/.claude/commands/</code>（你自己的其它命令原样保留）。</li>
+        <li><strong>命令正文加「路径约定」，跨 cwd 健壮</strong>：<code>butler-prd.md</code> 开篇补一句——引用的 <code>Coder/…</code> 规则相对 <code>$BUTLER_PATH</code> 解析（不是当前项目路径），产出的 <code>.ai/references/prd/…</code> 落<strong>当前项目</strong>。原三分支路由（第 0 步契约读 + 首切/改版/看板 + 「不复述」DRY 声明）<strong>一字未改</strong>。</li>
+        <li><strong>文档注册</strong>：<code>README.md</code>（快速上手 + 目录结构）、<code>HUMAN_GUIDE.md</code> §3 安装（「两件事」改「三件事」+ 点明命令<strong>全局可用</strong>、与逐项目「基地车部署」是两回事）。</li>
+        <li><strong>知识文件夹前滚</strong>：<code>capabilities.md</code>（<code>/butler-prd</code> 行 + 部署节改「全局软链下发」）、<code>frontier.md</code>（刷 v2.5.0）、<code>debt.md</code>（<strong>删掉</strong>已还的第 3 笔「未下发」欠债）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong><code>/butler-prd</code> 现在在所有项目里都能用了</strong>：重跑一次 <code>./scripts/setup.sh</code>，之后在任意项目敲 <code>/butler-prd</code>，补全菜单都能看到、也能执行——不再只有编辑 butler 仓时才有。</li>
+        <li><strong>换机器只需重跑 setup</strong>：命令是全局机器级安装（软链），不随目标仓走；到新机器装好 butler、跑一次 <code>setup.sh</code> 即可。</li>
+        <li><strong>对已部署项目</strong>：目标项目的 <code>.ai/</code> 结构零变化（升级配方 <code>[no-op]</code>+<code>[restamp]</code>）；要拿到命令，做一个<strong>机器级动作</strong>——重跑 <code>./scripts/setup.sh</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改（分发装法）：<code>scripts/setup.sh</code>（+第 3 步软链）。</li>
+        <li>改（跨 cwd 健壮）：<code>.claude/commands/butler-prd.md</code>（+路径约定，路由不动）。</li>
+        <li>改（文档注册）：<code>README.md</code>、<code>HUMAN_GUIDE.md</code>。</li>
+        <li>知识文件夹前滚：<code>.ai/project/capabilities.md</code> / <code>frontier.md</code> / <code>debt.md</code>（删第 3 笔）。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.4.0→2.5.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.5.0.md</code>。</li>
+        <li>没碰（守最小影响面）：任何 <code>Coder/**</code> 规则正文、<code>templates/**</code>、四件套 schema 字段结构、<code>templates/hooks/**</code>、<code>.gitignore</code>、核心 P1–P5 状态机。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><strong>7 项验收（AC1–AC7）全过</strong>，AC1–AC5 <strong>auto·可靠</strong>、隔离 HOME 端到端实跑 <code>setup.sh</code>（非纸面）：软链存在·指向仓内源·解引用内容一致（AC1）；连跑两次退出 0·计数=1·预置的非 butler 命令保留（AC2 幂等+不接管）；空命令目录走跳过分支·不崩·退出 0（AC3）；命令路由三分支逐条仍在、只加路径约定（AC4）；README/HUMAN_GUIDE 注册句在位 + <code>bash -n</code> 语法通过（AC5）。</li>
+        <li><strong>P5 实测抓到并修掉一个真 bug</strong>：<code>setup.sh</code> 里 <code>echo</code> 变量 <code>$CLAUDE_CMD_DIR</code> 后紧跟全角 <code>（</code>，<code>set -u</code> 下 bash 把首字节并进变量名报 <code>unbound variable</code>、脚本非零退出（软链已建但没干净收尾）——加花括号 <code>${CLAUDE_CMD_DIR}</code> 消歧后复跑退出 0。这正是隔离实跑而非纸面声明的价值。</li>
+        <li><strong>AC6/AC7</strong>：<code>migrations/v2.5.0.md</code> 就目标项目部署面给 <code>[no-op]</code>+<code>[restamp]</code> 并注明机器级动作「重跑 <code>setup.sh</code>」；<code>debt.md</code> 第 3 笔已删；收口五步齐 + v2.5.0 三载体（<code>VERSION</code> == tag <code>v2.5.0</code> == <code>CHANGELOG</code> 顶条）对齐 + feat 与 chore(release) 提交分离。</li>
+        <li><strong>未触发独立复核</strong>：改动是一段幂等 bash + 命令路径约定 + 文档，无跨多规则契约面 / 哲学底座变更；核心风险（bash 正确性）已由隔离实跑覆盖并抓修一个 bug。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>软链悬空</strong>：用户挪走/删掉 butler 仓后 <code>~/.claude/commands/</code> 里的软链失效——已知取舍（BUTLER_PATH 本机器本地、butler 按机器装），本轮不加自愈；挪仓/换机后重跑 <code>setup.sh</code> 即可（已写进 HUMAN_GUIDE）。</li>
+        <li><strong>「补全菜单真列出」属 Claude Code 运行时</strong>：非本仓可断言，验证止于文件落位 + 内容可读 + frontmatter 合法。</li>
+        <li><strong>命令成体系化未做</strong>：本轮只打通分发链路 + 以 <code>/butler-prd</code> 为范本；把 <code>/milestone</code>·<code>/prd</code>·<code>/review</code> 等散文命令逐个落成真实 <code>butler-*</code> 文件是后续独立方向——一旦落文件，随 <code>setup.sh</code> 自动全局可用，无需再改分发。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0045/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>分发装法：<code>scripts/setup.sh</code>（第 3 步）</li>
+        <li>命令文件：<code>.claude/commands/butler-prd.md</code>（路径约定段）</li>
+        <li>文档：<code>README.md</code>、<code>HUMAN_GUIDE.md</code>（§3 安装）</li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.5.0]</code>）、<code>migrations/v2.5.0.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
