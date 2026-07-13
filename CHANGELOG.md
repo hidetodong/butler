@@ -4,6 +4,18 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.6.0] - 2026-07-13
+
+向后兼容能力新增版。聚合 ITER-0046（自 v2.5.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代把过去散在本机 Matrix 输出风格（只有切到该输出风格才生效）与多个记忆文件里的「AI 该怎么跟用户说话」规矩，**收敛成 butler 仓根唯一正本 `communication-style.md`**（随 git 跨机器同步），并由 `setup.sh` 在全局 `~/.claude/CLAUDE.md` 配置块内 `@import` 它，使其**每会话每项目常开**、与「切没切某个输出风格」无关。正本 = 原 Matrix 7 节逐字保真 ＋ 两条真增量（「话砍到骨头」折进详略、「别急着抛选择菜单」独立成节），说人话每条带一对 ❌/✅。按 semver「新增常开能力」取 **MINOR**。分发与 ITER-0045 同模型（全局机器级、不进 `templates/`、不逐项目部署）：对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.6.0.md` 为 `[no-op]`+`[restamp]`），既有安装升级需一个**机器级动作**——重跑 `./scripts/setup.sh` 装上 @import。Matrix 输出风格作为过渡产物退休（本机一次性迁移：删 `~/.claude/output-styles/matrix.md` + 拆 `claudep` 的 `--settings` 参数 + 掏薄壳三风格记忆）。
+
+### 本版新增
+
+- **个人沟通风格常开正本（ITER-0046 · 独立迭代）**：新增 `communication-style.md`（仓根唯一正本，8 节：基调 / 详略〔含话砍到骨头〕/ 抓重点 / 说人话〔4 条各带 ❌/✅〕/ 别急着抛选择菜单〔讨论 + 执行两侧〕/ 格式 / 结尾决策块 / 边界）；`scripts/setup.sh` 受管 heredoc 加一行 `@$BUTLER_DIR/communication-style.md`（绝对路径、幂等）；README/HUMAN_GUIDE 注册。AC1–AC6 实测（隔离 HOME 实跑 setup.sh 核 @import 行恒=1 + 幂等 + 抽路径 test -f；本机迁移后读文件核 matrix 退休 / claudep 拆参 / 记忆薄壳）；未触发独立复核（幂等 bash + 手写正本 + 文档、无契约面）。收敛去重后规矩正文只此一份（DRY），记忆改留来龙去脉薄壳、指向正本。详见 `deliveries/ITER-0046-communication-style-voice-file.md`。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.6.0.md`（`[no-op]`+`[restamp]`；沟通风格走全局 @import、目标项目 `.ai/` 零改动，但需重跑一次 `setup.sh` 装上 @import；Matrix/claudep 本机清理为可选手动步）。
+
+[2.6.0]: 自 v2.5.0 起聚合 ITER-0046
+
 ## [2.5.0] - 2026-07-13
 
 向后兼容能力新增版。聚合 ITER-0045（自 v2.4.0 起新收口的唯一迭代，独立迭代、无所属里程碑）。本迭代闭掉 v2.4.0 遗留的分发缺口——`/butler-prd` 之前只住 butler 仓自身 `.claude/`、仅编辑本仓时可用，现经 `setup.sh` **全局软链**进 `~/.claude/commands/`，在**所有项目**可用；命令正文加「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定使其跨 cwd 成立。按 semver「新增分发能力」取 **MINOR**。选型全局软链（不进 `templates/`、不逐项目部署）：对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.5.0.md` 为 `[no-op]`+`[restamp]`），但既有安装升级到本版需一个**机器级动作**——重跑一次 `./scripts/setup.sh` 装上全局软链。
