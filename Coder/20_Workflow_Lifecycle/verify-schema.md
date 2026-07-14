@@ -63,8 +63,8 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
   - `可靠`：确定性、可复现的机器断言（单测 / 类型检查 / 构建 / 精确视觉断言等），自动道默认档。
   - `弱`：代理验证产出的弱但真实信号（截图对基线 diff / VLM 判读截图 / 启发式断言，见 `30_Quality_Gate/testing-strategy.md §3.1`）；仍属自动道，但**不冒充 `可靠`**。
   - `待人`：机器（含代理验证）都测不了、只能人判定的残余，即人测道；须在「人测道小结」记类目与状态。
-  - 红线：`弱` 不标 `可靠`、`待人` 不标已验——`/dangerous` 无人值守下尤须如实（残余处置见 `65_Extension_Dangerous/dangerous-engine.md §7.4`）。
-- **人测道回传闭环**：`(human·待人)` 档残余不止于"标记待人"——有人场次须经**交付自测桥**回传结论并按四态路由回填（触发 / 后台起桥 / 阻塞等待 / 读回 / 四态路由流程见 `human-test-bridge.md`）：`pass` 计入收口 / `fail` 进纠错（`correction-contract.md`）/ `defer` 记 `Remaining Risks` 不阻塞 / `skip` 记 N/A；无人值守（`/dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。
+  - 红线：`弱` 不标 `可靠`、`待人` 不标已验——`/butler:dangerous` 无人值守下尤须如实（残余处置见 `65_Extension_Dangerous/dangerous-engine.md §7.4`）。
+- **人测道回传闭环**：`(human·待人)` 档残余不止于"标记待人"——有人场次须经**交付自测桥**回传结论并按四态路由回填（触发 / 后台起桥 / 阻塞等待 / 读回 / 四态路由流程见 `human-test-bridge.md`）：`pass` 计入收口 / `fail` 进纠错（`correction-contract.md`）/ `defer` 记 `Remaining Risks` 不阻塞 / `skip` 记 N/A；无人值守（`/butler:dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。
 - 验证方式应尽量具体到命令、检查动作或人工确认口径。
 - `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。**PRD 切片专项**：对着 `AC_LIST.md` frontmatter 钉住的 `prd_version` 核、**非对 live 最新核**——同一迭代内 live 即钉住版（读 live 即可），仅回溯复核历史迭代（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/<slug>.md`（钉住版语义见 `acceptance-schema.md §4`、读侧纪律回指 `40_Context_Management/references-schema.md §5 步骤 2`）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。

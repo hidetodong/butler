@@ -98,7 +98,7 @@ current: ITER-0002
 
 ### 5.2 冻结 (Freeze)
 
-- 时机：`AC_LIST.md` 被用户 ACK 后。（`/dangerous` 危险模式下，改为模型过 `65_Extension_Dangerous/dangerous-engine.md` §5.1 自审门后自主 ACK 即冻结，冻结纪律不变。）
+- 时机：`AC_LIST.md` 被用户 ACK 后。（`/butler:dangerous` 危险模式下，改为模型过 `65_Extension_Dangerous/dangerous-engine.md` §5.1 自审门后自主 ACK 即冻结，冻结纪律不变。）
 - 物化标志：冻结 = AC_LIST 顶部 `状态: ack-frozen`（字段定义见 `acceptance-schema.md §4`）。部署了 hook 的项目，未冻结（`draft`）时源码写操作会被 `phase_gate` 拦截，使"冻结"从对话约定变成可校验状态。
 - 含义：本迭代验收范围锁定，进入 P3/P4 后默认不再扩张。
 

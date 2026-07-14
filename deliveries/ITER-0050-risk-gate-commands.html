@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0050 交付总结 · /butler:loop + /butler:dangerous 两个高风险命令的风险闸（MILE-0005 收官）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.mile  { background: #fff8c5; color: #9a6700; }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>/butler:loop + /butler:dangerous 落地：两个高风险命令的「命令化不降门槛」风险闸</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0050</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0005 R4</span>
+        <span class="chip mile">⚠️ 里程碑收官</span>
+        <span class="chip date">收口 2026-07-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1（地基）→ R2（批量三命令）→ R3（最宽参数 preference）之后，命名空间里只剩最后两个、也是唯一带风险的能力：<strong>收敛闭环死磕</strong> <code>/loop</code>（把 P4 执行升到高强度「执行→探测→反思→修正」死磕到全绿或熔断）与<strong>无人值守长程自治</strong> <code>/dangerous</code>（模型自审替人 ACK、自动拆迭代跑完整生命周期）。它俩的独特难点不是参数，而是<strong>风险闸</strong>——把散文暗号做成随手可敲的 slash 命令，<strong>绝不能降低它们「郑重、显式触发」的门槛</strong>（否则等于把高风险能力变成手滑就开）。</li>
+        <li>本次验证一件事：<strong>薄壳范式能不能在「不复述护栏（守 DRY）」与「不降风险门槛」之间两全</strong>。做法定为三招——① frontmatter 描述带显式 ⚠️ 让补全菜单里一眼见风险；② 第 0 步前置一段风险提醒（点明高强度/无人值守/建议隔离环境）；③ <strong>真正的闸交回引擎</strong>（薄壳不重写确认对话/护栏/熔断算法，只把显式意图接进引擎）。R4 收口即整体收 MILE-0005。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新落 2 个高风险薄壳命令</strong>（结构与 R1–R3 同构：读对规则进上下文 → 按 <code>$ARGUMENTS</code> 分派 → 委托真源不复述算法〔守 DRY 红线〕→ 第 0 步优雅降级），但都多戴了风险闸：
+          <ul>
+            <li><strong><code>/butler:loop</code></strong>——全批<strong>最薄</strong>：一次性 P4 升档，<strong>无持久态、无 <code>off</code></strong>（跑到验证全绿或 §6 定量熔断自然结束），近乎无参（空参=开启、多余参数一句提示无子命令）。委托 <code>convergence-loop-engine.md</code> §3 核心逻辑 / §4 闭环程序 / §6 定量熔断。</li>
+            <li><strong><code>/butler:dangerous</code></strong>——on/off/status 三路分派：空参→开启（回写 <code>dangerous: on</code> + §3 回声 + §7 护栏）、<code>off</code>→关闭、<code>status</code>→只读回声当前开关态（<strong>不改开关</strong>）、未知参数→兜底列合法参数。状态外化到<strong>当前项目</strong> <code>.ai/local-constraints.md</code> 的 <code>dangerous</code> 字段、跨会话（§3.1 announce-on-read）。委托 <code>dangerous-engine.md</code> §3/§3.1/§7。</li>
+          </ul>
+        </li>
+        <li><strong>风险闸三招齐、逐命令核</strong>：两命令 frontmatter 均带显式 ⚠️（loop=「高强度·长时·消耗大·郑重触发」、dangerous=「实验性·风险显著高于标准·建议隔离/可回滚环境」）；第 0 步均前置风险提醒；护栏/确认/熔断算法<strong>一律不在薄壳复述</strong>、交回引擎——薄壳只接显式意图、不省风险提醒（<strong>门槛不降</strong>）也不重写护栏（<strong>守 DRY</strong>）。</li>
+        <li><strong><code>/butler:dangerous</code> 空参=开启，与 preference 空参=只读回声有意不同</strong>：引擎 §3 已定义 bare <code>/dangerous</code>=开启，薄壳不擅改语义；这是范式内的<strong>受控差异</strong>、非漏写。</li>
+        <li><strong>旧触发名 <code>/loop</code>·<code>/dangerous</code> 全仓活文档迁成 <code>/butler:*</code>（22 文件）</strong>：两引擎 + <code>logic-protocol</code>（§89/§92 加旧名识别注）+ <code>review-engine</code>/<code>preference-probe-engine</code>/<code>correction-contract</code>/<code>testing-strategy</code>/<code>independent-review</code>/<code>lifecycle</code>/<code>local-constraints-schema</code>/<code>human-test-bridge</code>/<code>verify-schema</code>/<code>iteration-schema</code>/<code>mcv-deployment</code>/<code>acceptance-schema</code>/<code>Coder/README</code>/<code>HUMAN_GUIDE</code>/<code>README</code> + 项目 digest。迁移用负向前瞻 <code>(?!-)</code> 保护 <code>/dangerous-engine.md</code> 路径引用不被腐蚀。</li>
+        <li><strong><code>/loop</code> 与 Claude Code 自带 <code>/loop</code> 撞名精确处理</strong>：<code>dangerous-engine.md:21</code> 引用的是 <strong>harness 级</strong> <code>/loop</code>（Claude Code 自带循环、非 butler 收敛闭环），<strong>保留裸 <code>/loop</code> 不迁</strong>并加澄清注——不会被误读成 <code>/butler:loop</code>。</li>
+        <li><strong>刻意不碰 <code>templates/</code> 部署面</strong>：<code>templates/rule-card.md</code>、<code>templates/preference/*</code> 里的 <code>/loop</code>·<code>/dangerous</code> <strong>保留不迁</strong>——命令是靠全局软链的个人工具、不下发目标项目，目标项目里保证生效的是散文旧名（迁后 logic-protocol 仍认作旧名触发）。迁 templates 会破边界 + 触发 <code>[regen-claude]</code>、违反 ACK。</li>
+        <li><strong>文档更新</strong>：<code>capabilities.md</code> 命令表把 <code>/butler:loop</code>·<code>/butler:dangerous</code> 两行从「指引擎」<strong>升级</strong>为一等入口（真源指命令文件 + 引擎章节、注风险闸/参数/持久态）；<code>README.md</code> <code>butler/</code> 子树补两命令（带 ⚠️）+ 扩展模式表 + Coder 目录 <code>55/65</code> 行迁。</li>
+        <li><strong>迁移配方 + 切版</strong>：<code>migrations/v2.10.0.md</code>（部署面 <code>[no-op]</code>+<code>[restamp]</code>；新命令由 R1 目录软链自动托管、无需重跑 setup.sh、触发名迁移不碰 templates 故无 <code>[regen-claude]</code>、harness-<code>/loop</code> 精确保留）；VERSION 2.9.0→2.10.0、CHANGELOG 顶条 <code>[2.10.0]</code>（判 MINOR）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>多了两个命令</strong>：<code>/butler:loop</code>（留空=开启收敛闭环死磕，无 off、跑到全绿或熔断自然结束）、<code>/butler:dangerous</code>（留空=开启无人值守自治、<code>off</code> 关、<code>status</code> 只看状态）。补全菜单里两条描述都带 ⚠️、一眼见风险。</li>
+        <li><strong><code>/loop</code>·<code>/dangerous</code> 改敲 <code>/butler:*</code></strong>：路由行为一字未改（闭环/熔断/自治/自审门/护栏算法引擎里没动），只是换了命名空间触发名并加了风险闸包装；旧名 <code>/loop</code>·<code>/dangerous</code> 与「死磕 / 放手做」自然语言触发照常识别。</li>
+        <li><strong><code>/butler:loop</code> 与你熟的 Claude Code <code>/loop</code> 不是一回事</strong>：敲 <code>/loop</code> 命中的是 harness 自带循环、敲 <code>/butler:loop</code> 才是 butler 收敛闭环——命名空间前缀天然消歧，引擎里也加了注。</li>
+        <li><strong>无需任何安装动作就能用</strong>：R1 已把整个命令目录软链进全局，这两个新命令<strong>自动</strong>在所有项目可用。<strong>唯一例外</strong>：从没跑过 R1 的 setup.sh 就补跑一次。</li>
+        <li><strong>对已部署项目</strong>：<code>.ai/</code> 结构零变化，规则卡文案里的 <code>/loop</code>·<code>/dangerous</code> 也原样不变、旧名仍工作（命令是个人工具、不下发）。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（命令层）：<code>.claude/commands/butler/loop.md</code>、<code>.claude/commands/butler/dangerous.md</code>。</li>
+        <li>改（活文档·触发名 22 文件，仅命令引用非算法）：两引擎（<code>convergence-loop-engine.md</code> 3 行、<code>dangerous-engine.md</code> 8 行含 harness-<code>/loop</code> 保留加注）、<code>logic-protocol.md</code>（§89/§92 + 旧名注）、<code>review-engine</code>/<code>preference-probe-engine</code>/<code>correction-contract</code>/<code>testing-strategy</code>/<code>independent-review</code>/<code>lifecycle</code>/<code>local-constraints-schema</code>/<code>human-test-bridge</code>/<code>verify-schema</code>/<code>iteration-schema</code>/<code>mcv-deployment</code>/<code>acceptance-schema</code>/<code>Coder/README</code>/<code>HUMAN_GUIDE</code>/<code>.ai/project/{architecture,constraints}</code>。</li>
+        <li>改（活文档·命令表/目录树/前滚）：<code>.ai/project/capabilities.md</code>（行升级）、<code>README.md</code>（子树补两命令 + 扩展模式表 + Coder 目录）、<code>.ai/project/frontier.md</code>（前滚 v2.10.0/8 命令/里程碑收口）。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.9.0→2.10.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.10.0.md</code>。</li>
+        <li>没碰（守最小影响面 / AC6 边界守恒）：两引擎<strong>算法</strong>（§3/§4/§6 闭环熔断、§3/§4/§5/§7 自治/自审门/护栏）、<code>local-constraints-schema</code> 的 <code>dangerous:</code> 字段管辖、<code>templates/**</code>（含 <code>rule-card.md</code>、<code>preference/</code> 刻意保留旧名）、四件套 schema、<code>templates/hooks/**</code>、<strong><code>setup.sh</code>（R1 目录软链已托管，一行未动）</strong>、harness-<code>/loop</code>（<code>dangerous-engine.md:21</code> 精确保留）——<code>git diff --stat -- templates/</code> 与 <code>-- scripts/setup.sh</code> 均空。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p><strong>9 项验收（AC1–AC9）全过</strong>，<code>auto·可靠</code>为主 + 结构核/人读三招核：</p>
+      <ul>
+        <li><strong>隔离假 HOME 实跑 <code>setup.sh</code>（exit 0）8/8 命令经目录软链可达</strong>：两新命令 loop/dangerous + R1–R3 的 prd/review/milestone/upgrade/ideation/preference 全部 <code>test -e</code> 通过、无 <code>butler/butler</code> 套娃、<strong><code>setup.sh</code> 未改一行</strong>——续验 R1 目录软链红利（这次 8 命令）（AC1/AC8）。</li>
+        <li><strong>风险闸三招逐命令核</strong>（AC2·本迭代脊柱）：frontmatter ⚠️ 可见 + 第 0 步风险提醒 + 闸交回引擎不复述——三招齐、门槛不降、DRY 不破。</li>
+        <li><strong>参数分派逐路径核</strong>（AC3）：dangerous 空/off/status/未知四路 + loop 空/多余二路，委托锚点 loop §3/§6、dangerous §3/§3.1/§7 回引擎<strong>逐一真实存在</strong>、零捏造。</li>
+        <li><strong>触发名迁移双轮普查 + 专项守卫</strong>（AC4）：<code>/loop</code>·<code>/dangerous</code> 全仓活文档残留<strong>零裸旧命令名</strong>（templates 刻意保留 / 文件名引用 / harness-<code>/loop</code> / 历史归档 均合法）；路径腐蚀专项 grep <code>butler:dangerous-engine</code>=0；分隔符假阳性 <code>[A-Za-z0-9]/butler:</code>=0；harness-<code>/loop</code> 仍在且加注。</li>
+        <li>两引擎 <code>git diff</code> 逐行核<strong>仅触发名 + 1 处 harness 加注、算法零改</strong>（AC6）；capabilities 两行升级、README 子树 8 命令齐（AC7）；VERSION/CHANGELOG/migration 三载体一致 v2.10.0（AC9）。</li>
+        <li><strong>标准模式复核</strong>：两处真实新面——风险闸「命令化不降门槛」、22 文件最宽迁移面 + harness 撞名——均已定向复核（AC2 三招逐条、AC4 双轮普查 + 路径守卫 + harness 保留专项核）。P5 自评 + 客观隔离 HOME 实跑无 shaky 处，未升格强制独立复核。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>计划-实际差异 1 处（已记 VERIFY_REPORT）</strong>：ACK 口径「71 处」，实测触发名分布 22 文件（多为 SOP-core schema 交叉引用）；已按 TECH_PLAN DD4 上前枚举全集迁移、按 DD7 刻意留 templates，差异为 ACK 口径按 occurrence 数表述、实际按文件数看更宽，仍在「全迁外科式·命名空间统一」ACK 意图内、非范围外扩张。</li>
+        <li><strong>良性内容增补 1 处（非算法）</strong>：<code>dangerous-engine.md:21</code> harness-<code>/loop</code> 除保留不迁外加了句澄清注，自文档化防未来误迁。</li>
+        <li><strong>双名并存（引擎说 <code>/butler:*</code>、templates 保留旧名）</strong>：靠 logic-protocol §89/§92 保留旧名识别接住，目标项目侧规则卡文案不变、旧名仍工作（DD7 决策 + migration 说明覆盖，非缺陷）。</li>
+        <li><strong>命令菜单「可见性」headless 不可实敲</strong>：沿用 R1–R3 代理验法（文件存在 + 命名空间结构正确 + 经目录软链可达 + <code>setup.sh</code> exit 0）。真正菜单可见需在<strong>主检出</strong>跑过 R1 的 setup.sh。</li>
+        <li><strong>两命令运行时行为未新验</strong>：命令只落触发入口、未改引擎算法，收敛闭环死磕 / 无人值守自治的端到端运行时行为由两引擎既有实现保证；<code>/butler:dangerous</code> 端到端从未真跑的历史欠债见 <code>debt.md</code> 仍悬。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0050/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>命令（新）：<code>.claude/commands/butler/loop.md</code> / <code>.claude/commands/butler/dangerous.md</code></li>
+        <li>触发名迁移（22 文件）：两引擎 <code>Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md</code> / <code>Coder/65_Extension_Dangerous/dangerous-engine.md</code>、<code>Coder/00_System_Prompt/logic-protocol.md</code>（§89/§92）等——详见归档 <code>CHANGELOG.md</code></li>
+        <li>文档：<code>.ai/project/capabilities.md</code>（命令表）、<code>README.md</code>（<code>butler/</code> 子树 8 命令 + 扩展模式表）、<code>.ai/project/frontier.md</code>（前滚）</li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.10.0]</code>）、<code>migrations/v2.10.0.md</code></li>
+        <li>里程碑：<code>.ai/MILESTONE.md</code>（MILE-0005 §5.3 路线图 R4·收官）、<code>deliveries/milestones/MILE-0005-command-namespace-system.md</code>（聚合交付）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

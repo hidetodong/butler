@@ -5,57 +5,52 @@ ACK 日期: 2026-07-14
 
 # Goal
 
-MILE-0005 R3：套薄壳路由器范本落 `/butler:preference`——全批**参数面最宽**的命令。把偏好探针 4 子命令（`on`/`off`/`reback on|off`/`distill`）+ 空参只读回声，用一个薄壳分派清楚、覆盖全路径、委托 `preference-probe-engine` 真源不复述算法、收尾回声状态。验证「薄壳范本能吃下二级嵌套参数」。
+MILE-0005 R4（收官）：把最后两个高风险能力落成 `/butler:*` 命令——`/butler:loop`（收敛闭环死磕）+ `/butler:dangerous`（无人值守自治）。**唯一新面是风险闸**：命令化后敲一下就触发的便利**绝不能**降低它们「该被郑重、显式触发」的门槛。薄壳不复述护栏算法（守 DRY），改用 frontmatter ⚠️ 标记 + 第 0 步前置风险提醒 + 把真正的闸交回引擎。收口即整体收 MILE-0005。
 
 # In Scope
 
-- 新建 1 个薄壳命令 `.claude/commands/butler/preference.md`，结构与 `prd.md`/`review.md`/`milestone.md` 同构，含**二级参数分派**（`reback` 后再收 `on`/`off`）。
-- 参数分派覆盖 6 条路径：空参、`on`、`off`、`reback on`、`reback off`、`distill`，外加裸 `reback`（缺第二 token）兜底。
-- 各分支委托真源对应章节：开关→§2.3、reback→§2.2/§7、distill→§6、同意协议→§2.4（首次 `on`）、状态回声→§2.3。空参→只读回声（默认 Q3）。
-- **`/preference` 触发名一并迁 `/butler:preference`**（默认 Q2）：引擎 `preference-probe-engine.md` 里作命令引用的 `/preference`（约 7–8 处：§2.2/§2.3 命令表/§2.4 同意披露/§2.5/§4.1/§10）全迁 + 命令表主行加「旧名 `/preference`」注 + 更新 capabilities 对应行。保留「偏好/记住这条」自然语言触发。
-- capabilities 命令表 `/preference` 行**转换**为 `/butler:preference` 一等入口；README 目录树 `butler/` 子树补 preference.md。
-- 切一版（默认判 MINOR，见 AC9）。
+- 新建 2 个薄壳命令 `.claude/commands/butler/loop.md` + `dangerous.md`，结构与 `prd.md`/`review.md`/`preference.md` 同构。
+- **`/butler:loop`**：一次性 P4 升档，委托 `convergence-loop-engine.md`（§3 闭环 / §6 定量熔断）；无持久状态、无 off、近乎无参数；风险提醒=高强度 / 长时 / 消耗大。
+- **`/butler:dangerous`**：持久开关，委托 `dangerous-engine.md`（§3 激活/关闭 + §3.1 跨会话 announce-on-read + §7 护栏）；空参=开启（走引擎 §3 回声闸）/ `off`=关闭 / `status`=只读回声当前 `dangerous` 开关态；状态外化 `.ai/local-constraints.md`「Butler 功能开关」`dangerous`（命令只读写开关值、不改 schema）。
+- **风险闸**（本迭代脊柱）：两命令 frontmatter `description` 带显式 ⚠️；第 0 步前置一句风险提醒（dangerous 点明「实验性 + 无人值守 + 建议可隔离/可回滚环境」、loop 点明「高强度死磕 + 长时」）+ 委托引擎自己的闸（**不复述护栏 / 熔断 / 自审门算法**）。
+- **`/loop`·`/dangerous` 触发名迁 `/butler:*`**（策略待 ACK，默认全迁外科式）：作命令引用的散文触发词迁 `/butler:*`，**精确排除** `dangerous-engine.md:21` 的 harness-`/loop`（Claude Code 自带）；logic-protocol §89/§92 加「旧名仍识别」注 + 保留自然语言触发。
+- capabilities 命令表补两行；README 扩展模式表 + `butler/` 子树补两命令 + Coder 目录 `55/65` 行迁。
+- 切一版（默认判 MINOR → v2.10.0，见 AC9）。
 
 # Out of Scope
 
-- **不改引擎算法**：`preference-probe-engine.md §1、§3–§10` 的采集/蒸馏/反哺/安全底线/隔离/存储契约一字不动；只动 §2.x 等处的触发**名**（非算法）。
-- **不碰本项目级抑制开关**：`.ai/local-constraints.md` 的 `preference: on|off`（§2.5）由 `local-constraints-schema` 管，命令只**读**它作状态回声、**不 toggle**、不双写。
+- **不改引擎算法**：`convergence-loop-engine.md §1–§8`、`dangerous-engine.md §1–§10` 的闭环 / 熔断 / 自治 / 自审门 / 护栏 / checkpoint 一字不动；只动触发**名**（非算法）。
+- **不碰 `.ai/local-constraints.md` 的 `dangerous:` 字段 schema**：由 `local-constraints-schema` 管；命令只按引擎 §3 读写开关值，不改字段定义、不双写 schema。
 - **不动 `setup.sh`**：R1 目录软链已托管全套。
-- **不碰存储骨架 / 初始化脚本**：`templates/preference/`、`preference-init.sh` 不动（惰性自举由引擎 §4.1 管）。
-- **不下发目标项目**：命令不进 `templates/`、部署面零影响。
-- **不新造能力**：只把散文 `/preference` 落成命名空间真命令，不发明新子命令、不扩语义。
+- **不下发目标项目**：命令不进 `templates/`（含 rule-card 里 `/loop`·`/dangerous` 散文——同 R3，命令不下发、目标项目靠散文旧名兜底）、部署面零影响。
+- **不新造能力 / 不改风险语义**：只把散文触发词落成命名空间真命令，不发明新子命令、不降低也不加码引擎既有的风险门槛（薄壳只把闸交回引擎、不自造确认对话）。
 
 # Acceptance Checklist
 
-- [ ] **AC1（命令成立·可达）**：`.claude/commands/butler/preference.md` 建立；命名空间映射 `butler/preference.md`→`/butler:preference` 结构正确；隔离 HOME 实跑 `setup.sh` 报 **6 个 /butler:* 命令**、preference 经目录软链 `test -e` 可达。
-- [ ] **AC2（参数分派完整·本迭代脊柱）**：薄壳按 `$ARGUMENTS` 覆盖全路径，逐条委托对的真源章节——
-  - 空参 → 只读状态回声（读 `$PREF/config.md` consent + reback 态 + 本项目抑制态，不写）；
-  - `on` / `off` → §2.3 隐私总开关（`on` 首次触发 §2.4 同意协议，委托不复述）；
-  - `reback on` / `reback off` → §2.2/§7 影响回路开关（**二级参数**：首 token `reback` 再看第二 token）；
-  - `distill` → §6 手动蒸馏+维护（§8 安全边界触发）；
-  - 裸 `reback`（无第二 token）→ 兜底（回声当前 reback 态或提示补 on/off，不误开关）；
-  - 未知参数 → 优雅提示合法参数集、不瞎猜执行。
-- [ ] **AC3（触发名迁移无残留）**：`preference-probe-engine.md` 里作命令引用的 `/preference` 全迁 `/butler:preference`（含同意披露「怎么关」文案）；命令表主行加旧名注；全仓无残留裸 `/preference`（历史归档冻结快照 + `preference-*.sh`/`preference-probe-engine.md` 文件名引用除外）。
-- [ ] **AC4（范式一致性）**：与 `prd.md`/`review.md`/`milestone.md` 同构——① 薄壳三件事声明 + DRY 不复述红线；② 跨 cwd 路径约定段；③ 第 0 步优雅降级（说清「实验性 + 数据外置 `$PREF`、开关全局、不强依赖当前项目 `.ai/`」）；④ frontmatter 说人话无裸术语；⑤ `$ARGUMENTS` 路由；⑥ 委托的真源 section 锚点（§2.2/§2.3/§2.4/§6/§7）回真源核**真实存在**、无捏造。
-- [ ] **AC5（状态回声 + 只读默认）**：任何开关变更收尾**当回合回声当前状态**（§2.3 硬要求）；空参分支纯只读（不写 `$PREF`、不写 `.ai/`）。
-- [ ] **AC6（边界守恒）**：引擎 §1、§3–§10 算法、`local-constraints-schema`、`setup.sh`、`templates/**`（含 `preference/`）、`preference-init.sh`、四件套 schema、hook、其他命令一行未动；`git diff` 佐证改动仅落 `.claude/commands/butler/preference.md`、`preference-probe-engine.md`(§2.x 触发名)、`capabilities.md`/`README.md`、发布层。
-- [ ] **AC7（文档更新）**：`capabilities.md` 命令表 `/preference` 行转换为 `/butler:preference` 一等入口（真源指命令文件 + 引擎）；`README.md` `butler/` 子树补 preference.md。
-- [ ] **AC8（目录软链自动托管·实跑）**：隔离 HOME 实跑 `setup.sh`，确认 preference 经 `~/.claude/commands/butler` 目录软链可达、`setup.sh` 未改一行、无 `butler/butler` 套娃——续验 R1 红利（这次 6 命令）。
-- [ ] **AC9（切版三载体对齐）**：判 **MINOR**（纯新增 1 命令、无破坏面）；`VERSION` bump、`CHANGELOG.md` 顶条、git tag 三者一致；`migrations/vX.Y.Z.md` 为部署面 `[no-op]`+`[restamp]`。
+- [ ] **AC1（两命令成立·可达）**：`.claude/commands/butler/loop.md` + `dangerous.md` 建立；命名空间映射 `butler/<name>.md`→`/butler:<name>` 结构正确；隔离 HOME 实跑 `setup.sh` 报 **8 个 /butler:* 命令**、两新命令经目录软链 `test -e` 可达。
+- [ ] **AC2（风险闸·本迭代脊柱）**：命令化不降低「郑重显式触发」门槛，逐条可核——
+  - 两命令 frontmatter `description` 均含显式 ⚠️ 风险标记（说人话、菜单可见）；
+  - 第 0 步前置风险提醒：`dangerous` 点明「实验性 / 无人值守自治 / 风险显著高于标准 / 建议可隔离·可回滚环境」、`loop` 点明「高强度死磕 / 长时 / 消耗大」；
+  - **闸交回引擎、不复述**：`dangerous` 委托 §3（回写 `on`+对话层回声）+ §3.1（announce-on-read）+ §7（审计 / checkpoint / P5 强制完整审查），`loop` 委托 §6（定量熔断）——薄壳**不重写**确认对话 / 护栏 / 熔断算法（守 DRY），也**不省略**风险提醒（不降门槛）。
+- [ ] **AC3（参数分派）**：`/butler:dangerous` 按 `$ARGUMENTS`——空参→开启（走引擎 §3 回声闸，**与 preference 空参=只读回声有意不同**，因引擎 §3 已定义 bare=开启）、`off`→关闭（§3）、`status`→只读回声当前 `dangerous` 开关态（不改开关）、未知参数→兜底列合法参数不瞎猜；`/butler:loop`→开启闭环（无 off、无持久态），有多余参数则一句提示 loop 无子命令、仍按开启处理或提示。
+- [ ] **AC4（触发名迁移 + harness 撞车排除）**：`/loop`·`/dangerous` 作命令引用处按 ACK 策略迁 `/butler:*`；**`dangerous-engine.md:21` 的 harness-`/loop`（Claude Code 自带）保留不迁**（专项核对）；logic-protocol §89/§92 加旧名注；全仓活文档无残留裸命令名（历史归档 + `convergence-loop-engine.md`/`dangerous-engine.md` 文件名引用 + harness-`/loop` + 刻意保留的 templates 除外）。
+- [ ] **AC5（范式一致性）**：两命令与 `prd.md`/`review.md`/`preference.md` 同构——① 薄壳声明 + DRY 红线；② 跨 cwd 路径约定段；③ 第 0 步优雅降级（没接 butler → 一句话说清、不报错不空跑）；④ frontmatter 说人话无裸术语；⑤ 委托真源 section 锚点（loop §3/§6、dangerous §3/§3.1/§7）回真源核**真实存在**、无捏造。**良性差异如实**：`loop` 无参数分派（一次性升档、无子命令），是真实结构差异非漏写。
+- [ ] **AC6（边界守恒）**：两引擎 §1–§8 / §1–§10 算法、`local-constraints-schema`、`setup.sh`、`templates/**`、四件套 schema、hook、其他命令一行未动；`git diff --stat` 佐证改动仅落两新命令 + 触发名活文档 + `capabilities.md`/`README.md` + 发布层。
+- [ ] **AC7（文档更新）**：`capabilities.md` 命令表补 `/butler:loop`·`/butler:dangerous` 两行（真源指命令文件 + 引擎、注风险闸）；`README.md` 扩展模式表两行迁 `/butler:*` + `butler/` 子树补两命令（`└──` 收尾正确）+ Coder 目录 `55/65` 行迁。
+- [ ] **AC8（目录软链自动托管·实跑）**：隔离 HOME 实跑 `setup.sh`，两新命令经 `~/.claude/commands/butler` 目录软链可达、`setup.sh` 未改一行、无 `butler/butler` 套娃——续验 R1 红利（这次 **8 命令**）。
+- [ ] **AC9（切版三载体对齐）**：判 **MINOR → v2.10.0**（纯新增 2 命令、无破坏面）；`VERSION` bump、`CHANGELOG.md` 顶条、git tag 三者一致；`migrations/v2.10.0.md` 为部署面 `[no-op]`+`[restamp]`。里程碑收官——本版收口后 MILE-0005 整体收、聚合交付 `deliveries/milestones/`。
 
 # Verification Method
 
-- **AC1/AC8**：`test -f` 命令文件 + 隔离 HOME `bash scripts/setup.sh` → `test -e ~/.claude/commands/butler/preference.md` + 报 6 命令（auto·可靠）。
-- **AC2**：读命令文件，对 6 条路径 + 裸 reback 兜底 + 未知参数逐条核「有分支 + 委托对的 §」（人读路径清单核）。
-- **AC3**：`grep -rn '/preference' Coder .ai/project README.md`（历史归档 + 文件名引用除外）应零裸旧名（auto·可靠）。
-- **AC4**：与三前例命令结构逐要点对照 + 真源 §2.2/§2.3/§2.4/§6/§7 锚点回引擎核（人读同构核 + auto 锚点核）。
-- **AC5**：读命令收尾段确认回声状态 + 空参分支无写操作（人读）。
+- **AC1/AC8**：`test -f` 两命令文件 + 隔离 HOME `bash scripts/setup.sh` → `test -e` 两新命令 + 报 8 命令（auto·可靠）。
+- **AC2/AC3/AC5**：读两命令文件，对风险闸三要点（frontmatter ⚠️ / 第0步风险提醒 / 闸交回引擎不复述）+ dangerous 参数四路径 + 委托锚点逐条核（人读 + auto 锚点核）。
+- **AC4**：`grep -rn '/loop' '/dangerous'`（历史归档 + 文件名 + harness-`/loop` + templates 除外）应零裸旧命令名；**专项核** `dangerous-engine.md:21` harness-`/loop` 仍在（auto·可靠）。
 - **AC6/AC7**：`git diff --stat` 无越界（auto）+ 读 capabilities/README 核更新到位（人读）。
 - **AC9**：`cat VERSION` == tag == CHANGELOG 顶条（auto·可靠）。
 
 # Open Questions / Risks（呈 ACK 时请一并确认三默认）
 
-1. **切版号**：默认 **MINOR**（纯新增命令能力，与 R1/R2 同类）。
-2. **`/preference` 触发名一并迁 + 迁移面**（AC3）：默认**全迁**（引擎作命令引用的约 7–8 处 + capabilities，触发名非算法、与 R2 一致；保留自然语言触发）。比 R2 面宽，普查要到位。若想保守只加命令、不碰引擎正文，可否掉、`/preference` 散文名与 `/butler:preference` 命令并存。
-3. **空参默认 = 只读状态回声**（AC2/AC5）：引擎 §2.3 未定义空参 / `status`；薄壳给空参加「只读回声 consent/reback/本项目抑制态」默认，与 milestone/review 只读默认同构、纯读不写。默认**采纳**；若想严格照引擎命令面、空参报「用法提示」，可否掉。
-- **风险**：命令菜单「可见性」headless 不可实敲，沿用 R1/R2 代理验法（文件/软链存在 + 结构正确 + 经软链可达）；`reback` 二级参数是分派最易漏的点，AC2 路径清单专盯。
+1. **切版号**：默认 **MINOR → v2.10.0**（纯新增 2 命令能力，与 R1–R3 同类）。
+2. **`/loop`·`/dangerous` 触发名迁移策略**（AC4）：默认**全迁外科式**（作命令引用的 71 处迁 `/butler:*`、保命名空间统一，精确排除 harness-`/loop`）。备选保守=只迁面向人文档（README/HUMAN_GUIDE/capabilities）+ 命令文件 + 旧名注，引擎正文密集交叉引用留散文（避 71 处大改 + 撞车风险）。二者都不改算法。
+3. **一迭代做完两命令 + `/dangerous` 空参=开启**（AC1/AC3）：默认**一个迭代 ITER-0050 做完 loop+dangerous**、收口即收 MILE-0005；`/butler:dangerous` 空参=开启（走引擎 §3 闸）、`status` 只读——与 preference 空参=只读回声有意不同。若想拆两迭代分开切版、或让 dangerous 的 bare 也走「只读回声、要 `on` 才开」更保守姿态，可否掉。
+- **风险**：① 触发名迁移面 71 处最宽 + harness-`/loop` 撞车，普查最易漏，AC4 专项核对兜底；② 「命令化不降门槛」是本迭代成败点，AC2 把「frontmatter ⚠️ + 第0步风险提醒 + 闸交回引擎不复述」写成可核检查点；③ 命令菜单「可见性」headless 不可实敲，沿用 R1–R3 代理验法（文件/软链存在 + 结构正确 + 经软链可达）。

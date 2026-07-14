@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0005 里程碑交付 · butler 命令命名空间系统（/butler:* 一整套 slash 命令）</title>
+  <style>
+    :root {
+      --fg: #1f2328; --fg-muted: #59636e; --bg: #f6f8fa; --card: #ffffff;
+      --border: #d1d9e0; --accent: #0969da; --accent-soft: #ddf4ff;
+      --warn: #9a6700; --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1rem 4rem; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7; font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem 1.75rem; margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 { margin: 0 0 0.75rem; font-size: 1.5rem; line-height: 1.35; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center; padding: 0.15rem 0.6rem;
+      border-radius: 999px; font-size: 0.8rem; font-family: var(--mono);
+      background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    .chip.mile  { background: #fff8c5; color: #9a6700; }
+    section.block {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem; margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem; font-size: 1.05rem; padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    .table-scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>butler 命令命名空间系统：散文触发词收敛成一整套 /butler:* 真实 slash 命令</h1>
+      <div class="meta">
+        <span class="chip id">MILE-0005</span>
+        <span class="chip level">里程碑交付（跨版本聚合）</span>
+        <span class="chip mile">v2.7.0 → v2.10.0</span>
+        <span class="chip date">收口 2026-07-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>一条主线，补 butler 长期停在「散文触发词」的缺口。缺口三层：① 规则正文里 <code>/milestone</code>、<code>/review</code>、<code>/dangerous</code>、<code>/loop</code>、<code>/preference</code> 到处当暗号被引用，但<strong>只有 <code>/butler-prd</code> 一个真实命令文件</strong>，其余在补全菜单里零存在感；② 全局安装用通用名<strong>易与别的插件 / 用户自定义命令撞名</strong>；③ 没有统一命名空间、命令能力零成体系。</li>
+        <li>里程碑目标：把整套 butler 能力都获得<strong>一等命令入口</strong>——<code>.claude/commands/butler/</code> 子目录＝Claude Code 的 <code>/butler:&lt;name&gt;</code> 命名空间（冒号是真实调用分隔符），<code>butler:</code> 前缀天然隔离撞名，<code>setup.sh</code> 一条目录软链托管全套、<strong>任意项目补全菜单可见可用</strong>、加命令自动全局生效。全部走<strong>薄壳路由器</strong>范式（读对规则进上下文 → 按 <code>$ARGUMENTS</code> 分派 → 委托真源不复述算法），<strong>不改任何 <code>Coder/**</code> 规则算法、不下发目标项目</strong>。逐项属 semver <strong>MINOR</strong>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p>四个路线项（R1~R4）一条主线闭环。链路顺序：<strong>地基 + prd 迁移 + 首命令验证（R1）→ 批量补低风险纯薄壳命令（R2）→ 最宽参数命令〔二级嵌套参数〕（R3）→ 高风险命令加风险闸〔收官〕（R4）</strong>。全程复用同一薄壳路由器范本，逐轮抬升复杂度证明范式够用：R1 立范本、R2 证批量可复制、R3 证吃得下二级嵌套参数、R4 证扛得住风险闸——无平行机制。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>命名空间地基 + <code>/butler-prd</code> 破坏性迁入</strong>（R1）：建 <code>.claude/commands/butler/</code> 子目录；<code>/butler-prd</code> <code>git mv</code> 迁成 <code>butler/prd.md</code>→<code>/butler:prd</code>（<code>[rename]</code> 配方 + 清旧全局软链 + 正文引用更新）；<code>setup.sh</code> 从「逐文件软链」改为<strong>软链整个 <code>butler/</code> 目录</strong>——一条目录软链管全套、加命令自动全局生效、无需重跑 setup。同轮落 <code>/butler:review</code> 验证范本可复制。</li>
+        <li><strong>批量补三个低风险纯薄壳命令</strong>（R2）：<code>/butler:milestone</code>（+<code>status</code>）、<code>/butler:upgrade</code>（原 <code>/butler-upgrade</code> 一并迁触发名）、<code>/butler:ideation</code>。各含「没接 butler 优雅降级」+ 跨 cwd 路径约定段。隔离 HOME 实跑坐实 R1 目录软链自动托管（5/5 可达、<code>setup.sh</code> 未改一行）。</li>
+        <li><strong>最宽参数命令 <code>/butler:preference</code></strong>（R3）：一个薄壳吃下全批<strong>参数面最宽</strong>的能力——<code>on</code>/<code>off</code>、<code>reback on|off</code>（全批<strong>唯一二级嵌套参数</strong>：首 token 是 <code>reback</code> 才读第二 token）、<code>distill</code>、空参=只读状态回声。委托 <code>preference-probe-engine</code> 真源不复述。证明薄壳范式吃得下二级嵌套参数。</li>
+        <li><strong>高风险命令加风险闸〔收官〕</strong>（R4）：<code>/butler:loop</code>（收敛闭环死磕，无参 / 无持久态 / 无 off）+ <code>/butler:dangerous</code>（无人值守自治，空=开启 / off / status 只读，持久态外化跨会话）。<strong>唯一新面是风险闸</strong>——命令化不得降低「郑重、显式触发」门槛，三招：① frontmatter ⚠️ + ② 第 0 步前置风险提醒 + ③ 把真正的闸交回引擎（不复述护栏、守 DRY；不省风险提醒、门槛不降）。<code>/butler:loop</code> 与 Claude Code 自带 <code>/loop</code> 靠命名空间前缀消歧、harness 引用精确保留加注。</li>
+        <li><strong>散文触发名成体系迁移</strong>：R1–R4 逐轮把命令引用旧名（<code>/butler-prd</code>、<code>/butler-upgrade</code>、<code>/preference</code>、<code>/loop</code>、<code>/dangerous</code>）迁成 <code>/butler:*</code>，并在 <code>logic-protocol</code> 保留旧名识别——旧名与自然语言触发照常工作、新名是命名空间一等入口。</li>
+        <li><strong>对不装/不用的人无感</strong>：命令是靠全局软链的个人工具，<strong>不进 <code>templates/</code>、不下发目标项目、目标项目 <code>.ai/</code> 部署面零变化</strong>（逐迭代 <code>[no-op]</code>+<code>[restamp]</code>）；规则卡文案里的旧名原样保留、仍工作。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（命令层·8 个薄壳命令）：<code>.claude/commands/butler/</code> 下 <code>prd</code>（迁入）/ <code>review</code> / <code>milestone</code> / <code>upgrade</code> / <code>ideation</code> / <code>preference</code> / <code>loop</code> / <code>dangerous</code>。</li>
+        <li>改（分发）：<code>scripts/setup.sh</code>（R1 一次性改成目录软链，此后 R2–R4 未再动一行——新命令自动托管）。</li>
+        <li>改（活文档·触发名迁移，仅命令引用非算法）：两引擎（<code>convergence-loop-engine</code> / <code>dangerous-engine</code>）、<code>logic-protocol</code>、<code>preference-probe-engine</code>、<code>review-engine</code>、多份 <code>20_Workflow_Lifecycle</code> schema、<code>Coder/README</code>、<code>HUMAN_GUIDE</code>、<code>README</code>、<code>.ai/project/*</code> digest。</li>
+        <li>改（文档·命令表/目录树）：<code>.ai/project/capabilities.md</code>（逐轮转换为 <code>/butler:*</code> 一等入口）、<code>README.md</code>（<code>butler/</code> 子树 8 命令 + 扩展模式表 + Coder 目录）。</li>
+        <li>未动（守里程碑 Out of Scope）：<strong>所有 <code>Coder/**</code> 规则算法</strong>（两引擎的闭环/熔断/自治/自审门/护栏一字未改）、<code>templates/**</code>（含 <code>rule-card</code>、<code>preference/</code> 刻意保留旧名）、四件套 schema 结构、<code>templates/hooks/**</code>、harness 级 <code>/loop</code>（精确保留）。逐迭代 <code>git diff --stat -- templates/</code> 均空。</li>
+        <li>发布层：逐迭代独立 chore(release) 提交 + 本地 tag（v2.7.0/v2.8.0/v2.9.0/v2.10.0）+ 各自 <code>migrations/vX.Y.Z.md</code>（均部署面 <code>[no-op]</code>+<code>[restamp]</code>）。</li>
+      </ul>
+    </section>
+
+    <section class="block roadmap">
+      <h2>拆分路线图回填</h2>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>路线项</th><th>主题</th><th>实际 ITER</th><th>状态</th><th>切版</th><th>落点</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>命名空间地基 + <code>/butler-prd</code>→<code>/butler:prd</code> 迁移 + <code>setup.sh</code> 目录软链 + 首命令 <code>/butler:review</code></td><td>ITER-0047</td><td>✅ closed</td><td>v2.7.0</td><td><code>deliveries/ITER-0047-command-namespace-foundation.md</code></td></tr>
+          <tr><td>R2</td><td>批量补低风险纯薄壳命令 <code>/butler:milestone</code>（+status）/<code>upgrade</code>/<code>ideation</code></td><td>ITER-0048</td><td>✅ closed</td><td>v2.8.0</td><td><code>deliveries/ITER-0048-namespace-commands-batch.md</code></td></tr>
+          <tr><td>R3</td><td>最宽参数命令 <code>/butler:preference</code>（含二级嵌套参数 <code>reback on|off</code> + 空参只读回声）</td><td>ITER-0049</td><td>✅ closed</td><td>v2.9.0</td><td><code>deliveries/ITER-0049-preference-namespace-command.md</code></td></tr>
+          <tr><td>R4</td><td>高风险命令加风险闸 <code>/butler:loop</code> + <code>/butler:dangerous</code>〔收官〕</td><td>ITER-0050</td><td>✅ closed</td><td>v2.10.0</td><td><code>deliveries/ITER-0050-risk-gate-commands.md</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>四路线项全部达成。执行顺序 R1 → R2 → R3 → R4（先立地基与范本，再批量复制、抬到二级嵌套参数、末位扛住风险闸收官）。全程单主线、无正交子项、逐轮抬复杂度验证同一范式。</p>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>四路线项其下迭代各自 P1–P5 闭环、各自收口交付、各自 P2 用户 ACK 冻结。R1 走危险模式自治全程 + 独立复核 0 Must Fix；R2–R4 标准模式，真实新面（批量复制 / 二级嵌套参数 / 风险闸 + 最宽迁移面）均定向复核。</li>
+        <li><strong>命名空间可达性逐轮实跑坐实</strong>：隔离假 HOME 实跑 <code>setup.sh</code>（exit 0），命令数逐轮增长、<strong>末轮 R4 达 8/8 命令经目录软链可达、无 <code>butler/butler</code> 套娃、<code>setup.sh</code> 自 R1 后未改一行</strong>——「往 <code>butler/</code> 丢一个薄壳 <code>.md</code> 即全局可用」连续四轮验证。</li>
+        <li><strong>边界守恒逐轮核</strong>：<code>Coder/**</code> 规则算法（两引擎逐行 <code>git diff</code> 仅触发名 + 1 处 harness 加注）、<code>templates/**</code>、<code>setup.sh</code>（R2 起）均 <code>git diff</code> 为空。</li>
+        <li>里程碑收口前确认 §5.3 路线图 R1–R4 四项全 closed、8 命令齐、一致性自检 6 不变量全绿。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>命令入口已成体系，运行时行为多数未新验</strong>：8 命令入口都已结构验证 + 经目录软链可达，但命令只是把既有引擎能力摆上菜单、委托真源执行——<strong>未改也未新验引擎运行时行为</strong>。尤其 <code>/butler:dangerous</code>（无人值守自治端到端）、<code>/butler:upgrade</code>（真实老项目端到端升级）两笔历史欠债仍悬（见 <code>debt.md</code>）。</li>
+        <li><strong>命令菜单「可见性」headless 不可实敲</strong>：全程用代理验法（文件存在 + 命名空间结构正确 + 经目录软链可达 + <code>setup.sh</code> exit 0）。真正菜单可见需在<strong>主检出</strong>跑过 R1 的 <code>setup.sh</code>。</li>
+        <li><strong>双名并存（引擎/文档说 <code>/butler:*</code>、templates 保留旧名）</strong>：有意分层——靠 <code>logic-protocol</code> 保留旧名识别接住，目标项目侧规则卡文案不变、旧名仍工作（逐迭代 DD 决策 + migration 说明覆盖，非缺陷）。</li>
+        <li><strong><code>/butler:loop</code> 与 Claude Code 自带 <code>/loop</code> 用户心智撞名</strong>：命令层用 <code>/butler:loop</code> 消歧、<code>dangerous-engine.md:21</code> 加注澄清，但这是 Claude Code 命名空间机制的固有现象、非缺陷。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用</h2>
+      <ul>
+        <li>里程碑产物快照：<code>.ai/milestones/MILE-0005/MILESTONE.md</code></li>
+        <li>其下迭代交付：见上方回填表 4 条 <code>deliveries/ITER-00NN-*.md</code></li>
+        <li>发布：<code>CHANGELOG.md</code> [2.7.0]/[2.8.0]/[2.9.0]/[2.10.0]、<code>migrations/v2.7.0.md</code>~<code>v2.10.0.md</code>、<code>.ai/ITERATIONS.md</code>、<code>.ai/MILESTONES.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

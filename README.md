@@ -75,9 +75,9 @@ flowchart TB
 | 模式 | 触发 | 用途 |
 |---|---|---|
 | 💡 **Ideation** | `/ideation` | 需求脑暴与完善 |
-| 🔁 **收敛闭环** | `/loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
+| 🔁 **收敛闭环** | `/butler:loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
 | 🔎 **Review** | `/review` | 代码审查：P5 默认简评 + opt-in 独立复核（fresh-context 子 agent，手动 / 项目配置） |
-| ⚠️ **Dangerous** | `/dangerous` | 无人值守长程自治（实验性） |
+| ⚠️ **Dangerous** | `/butler:dangerous` | 无人值守长程自治（实验性） |
 | 🧠 **Preference** | `/butler:preference` | 跨项目偏好蒸馏（实验性 · 采集经同意默认开 / 反哺 opt-in） |
 
 ## 🚀 快速上手
@@ -115,7 +115,9 @@ butler/
 │       ├── ideation.md             #     /butler:ideation · 需求脑暴（不进执行主线）
 │       ├── milestone.md            #     /butler:milestone · 里程碑录入 / status 看板
 │       ├── upgrade.md              #     /butler:upgrade · 已部署项目升级到最新版
-│       └── preference.md           #     /butler:preference · 偏好探针开关（on/off/reback/distill）
+│       ├── preference.md           #     /butler:preference · 偏好探针开关（on/off/reback/distill）
+│       ├── loop.md                 #     /butler:loop · 收敛闭环死磕 ⚠️（高强度·长时·郑重触发）
+│       └── dangerous.md            #     /butler:dangerous · 无人值守长程自治 ⚠️（实验性·空/off/status）
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template
@@ -133,9 +135,9 @@ butler/
 │   ├── 30_Quality_Gate/            #   质量门禁
 │   ├── 40_Context_Management/      #   长任务上下文治理
 │   ├── 50_Extension_Ideation/      #   脑暴        /ideation
-│   ├── 55_Extension_ConvergenceLoop/ # 收敛闭环    /loop
+│   ├── 55_Extension_ConvergenceLoop/ # 收敛闭环    /butler:loop
 │   ├── 60_Extension_CodeReview/    #   代码审查    /review
-│   ├── 65_Extension_Dangerous/     #   无人值守自治 /dangerous ⚠️
+│   ├── 65_Extension_Dangerous/     #   无人值守自治 /butler:dangerous ⚠️
 │   ├── 70_Extension_Preference/    #   偏好探针    /butler:preference ⚠️
 │   └── 99_Business_Extension/      #   业务约束（最高优先级）
 │

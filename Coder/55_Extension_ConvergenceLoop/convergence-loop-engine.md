@@ -1,7 +1,7 @@
 ---
 title: Butler 收敛闭环引擎
 audience: AI / 开发者
-scope: P4 执行阶段的高强度纠错升档——在常驻「纠错收口契约」之上叠加死磕式执行-探测-反思-修正闭环、定量熔断与 RCA。仅在 /loop 激活时生效
+scope: P4 执行阶段的高强度纠错升档——在常驻「纠错收口契约」之上叠加死磕式执行-探测-反思-修正闭环、定量熔断与 RCA。仅在 /butler:loop 激活时生效
 ---
 
 # Butler 收敛闭环引擎
@@ -20,7 +20,7 @@ scope: P4 执行阶段的高强度纠错升档——在常驻「纠错收口契�
 
 满足以下任一条件时激活：
 
-- 用户输入 `/loop`；
+- 用户输入 `/butler:loop`；
 - 用户提到"死磕"、"必须变绿"、"不准报错"、"严格校验"；
 - Butler 检测到极高复杂度任务，并经用户确认后开启。
 
@@ -77,6 +77,6 @@ scope: P4 执行阶段的高强度纠错升档——在常驻「纠错收口契�
 
 ## 8. 与其他规则的关系
 
-- **常驻契约（`30_Quality_Gate/correction-contract.md`）**：本模块的底座；未激活 `/loop` 时，P4 仍受契约约束，只是用诚实停而非定量熔断。
+- **常驻契约（`30_Quality_Gate/correction-contract.md`）**：本模块的底座；未激活 `/butler:loop` 时，P4 仍受契约约束，只是用诚实停而非定量熔断。
 - **无人值守（`65_Extension_Dangerous/dangerous-engine.md`）**：其 P4 直接复用本模块的闭环与熔断；危险模式是把本模块的自治范围从"P4 单阶段"扩张到"全生命周期 + 多迭代连续"的外层壳。
 - **代码审查（`60_Extension_CodeReview/review-engine.md`）**：Review 发现的 Must Fix 在本模块激活时直接进入下一轮迭代修复。
