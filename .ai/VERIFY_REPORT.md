@@ -1,41 +1,48 @@
-# VERIFY_REPORT — ITER-0046（个人沟通风格常开正本 · communication-style.md + setup.sh @import + matrix 退休）
+# VERIFY_REPORT — ITER-0047（butler 命令命名空间系统地基 · MILE-0005 R1）
+
+> ⚠️ 危险模式：本迭代 P2 为用户显式 ACK，P3 起由自审门替代 ACK、P4→P5→收口自治执行；P5 升格独立复核（`dangerous-engine §7.3`）。审计轨迹见 `RUN_LOG.md` ITER-0047。
 
 # Verification Summary
-- 覆盖：新建收敛后的沟通风格唯一正本、给 `setup.sh` 接上「@import 正本进全局 CLAUDE.md 常开」这条分发线、注册文档、matrix 输出风格退休（本机迁移 + 拆 claudep 参数 + 查 settings）、三风格记忆掏薄壳、折叠收口 + 切版。
-- 总体结论：**AC1–AC8 全过**。AC1–AC6 已实测全过（读文件核 + 隔离 HOME 实跑 setup.sh + 本机迁移后读文件核，非纸面）；AC7（migration 配方）与 AC8（收口五步 + 三载体对齐 + 两提交分离）于收口 / 发布阶段完成并核。
-- 迁移前做了**内容不丢核验**：matrix 全部小节与关键 ❌/✅ 例子逐条确认已在正本，才删 matrix.md。
+- 覆盖：新建 `.claude/commands/butler/` 命名空间目录、`/butler-prd`→`/butler:prd` 破坏性迁移（`git mv` 正文零改）、新落 `/butler:review` 薄壳范本、`setup.sh` 逐文件软链→命名空间目录软链（含旧软链迁移清理）、4 活文档引用更新、`[rename]` 迁移配方、MINOR 切版三载体。
+- 总体结论：**AC1–AC8 全过**。P4 实测：隔离假 HOME 实跑 `setup.sh` ×3 场景 **16/16 断言全绿**、`git mv` 后 grep 确认 prd 无自引用、`git diff --stat` 边界守恒。
+- **P5 独立复核（升格）确认全绿**：fresh-context 子 agent 自写隔离 HOME 压测 **18/18**、byte-level diff 确认 prd 等价、真源锚点逐一核无捏造——confirm 8 / refute 0 / **0 Must Fix / 0 Should Fix**。
 
 # AC Status（道 + 置信档）
-- [x] AC1 (auto·可靠): 已满足 ✓（正本 8 节齐、说人话 4 条各带例、别抛菜单节带例、开篇定位在、边界干净）
-- [x] AC2 (auto·可靠): 已满足 ✓（隔离 HOME 实跑，受管块内 @import 行恒=1、连跑两次仍=1、退出 0）
-- [x] AC3 (auto·可靠): 已满足 ✓（抽出 @import 绝对路径 `test -f` 为真、目标文件存在）
-- [x] AC4 (auto·可靠): 已满足 ✓（README 结构树登记 + 快速上手注释；HUMAN_GUIDE「四件事」第 4 条 + 说人话）
-- [x] AC5 (auto·可靠): 已满足 ✓（matrix.md 已删；fish/zsh 两处 claudep 无 `--settings`/Matrix 残留、保留 proxyon+claude；settings.json 无 Matrix）
-- [x] AC6 (auto·可靠): 已满足 ✓（三记忆掏薄壳、只留来龙去脉 + 指向正本；MEMORY.md 三索引改；MILE-0003 引用留存）
-- [x] AC7 (auto·可靠): 已满足 ✓（`migrations/v2.6.0.md` 写清目标项目 `.ai/` 部署面 `[no-op]`+`[restamp]` + 机器级重跑 setup 装 @import + 本机一次性清理 matrix/claudep 可选手动步）
-- [x] AC8 (auto·可靠): 已满足 ✓（收口五步齐：归档 `iterations/ITER-0046/` + 交付 `.md`+`.html` + 台账 `closed`/`current: none` + 折叠 `capabilities`+`frontier` + 6 不变量自检；三载体对齐 `VERSION`==tag `v2.6.0`==`CHANGELOG` 顶条 `## [2.6.0]`；feat 提交与 `chore(release)` 提交分离）
+- [x] AC1 (auto·可靠): 命名空间成立 ✓（`butler/` 目录 + `prd.md`+`review.md` 在、旧 `butler-prd.md` 已删，子目录＝冒号前缀映射正确）
+- [x] AC2 (auto·可靠): 旧命令干净移除 ✓（活文档 grep `butler-prd`：Coder/README/HUMAN_GUIDE 零命中；`.ai/project` 仅 2 处「原名」历史陈述合法；旧全局软链经隔离 HOME 实跑确认被清；冻结归档未动）
+- [x] AC3 (auto·可靠): prd 功能等价 ✓（`git show dc6fa11:...butler-prd.md` 与现 `butler/prd.md` **byte-identical**；原文从不自称命令名，三分支路由一字未改）
+- [x] AC4 (auto·可靠): setup.sh 目录软链 ✓（隔离 HOME 实跑：旧扁平软链清理、`~/.claude/commands/butler` 指向仓库命名空间目录、prd+review 经软链可达、幂等重跑无 `butler/butler` 套娃、`-L` 守卫不误删用户真文件）
+- [x] AC5 (auto 结构核 + 人读): review 薄壳范本 ✓（委托 `review-engine §5`/`independent-review`/`overview §3` 并声明不复述〔DRY〕、第 0 步优雅降级、frontmatter 两行说人话、`$ARGUMENTS` 分派默认自检/independent；与 prd.md 同构，真源锚点全部真实）
+- [x] AC6 (auto·可靠): 迁移配方 ✓（`migrations/v2.7.0.md` 含个人命令层 `[rename]`〔清旧软链+重跑 setup.sh〕+ 部署面 `[no-op]`+`[restamp]` + `[global-install]` 机器动作）
+- [x] AC7 (auto·可靠): 切版三载体对齐 ✓（VERSION=2.7.0、CHANGELOG 顶条 `[2.7.0]`、`migrations/v2.7.0.md` 区间 `v2.6.1→v2.7.0` 一致；MINOR 语义自洽；git tag 于发布提交时打——见 Handoff）
+- [x] AC8 (auto·可靠): 边界守恒 ✓（`git diff dc6fa11 --stat` 仅命令层 2 + setup.sh + migrations + VERSION/CHANGELOG + 4 活文档 + RUN_LOG；`Coder/**` 算法/状态机、`templates/**`、schema、hook 一行未动）
 
 # Verification Results
-- **AC1**: `communication-style.md`（仓根）通读——开篇 `>` 定位块（唯一正本 / 常开 / 跨机器同步 / 只管说话方式 / 反馈往这写）在；8 节齐：基调 / 详略〔含「话往短里写」折入的「话砍到骨头」〕/ 抓重点 / 说人话〔术语先解释·比喻要落地·别让英文变量裸奔·别把词掐短，4 条各一对 ❌/✅〕/ 别急着抛选择菜单〔讨论 + 执行两侧 + 一对 ❌/✅ + grill 例外〕/ 格式 / 结尾决策块 / 边界〔强化「只改说话方式、全局常开更要守」〕；边界节确认无工程 / 工具 / 任务执行规矩混入。✓
-- **AC2**: `env HOME=<tmp> bash scripts/setup.sh` 首跑退出 0；`<tmp>/.claude/CLAUDE.md` 受管标记 `<!-- butler-global-config -->` 恰 2 行（一对包裹）、块内 `@…communication-style.md` 恰 1 行；连跑第二次退出 0、该行仍恰 1（awk 删旧块重写、幂等无重复）。✓
-- **AC3**: 从受管块抽出 `@` 行去掉前缀得绝对路径 `…/communication-style.md`，`test -f` 为真——路径绝对、指向真实存在的正本文件。Claude Code 运行时是否真并入属运行时行为，验证止于「路径正确 + 文件存在 + 受管块合法」（对齐 ITER-0045「止于文件落位」边界）。✓
-- **AC4**: `README.md` 目录结构树新增 `communication-style.md` 行（标个人全局配置 / setup @import 常开 / 不进 Coder 阅读顺序）+ 快速上手第 1 条注释补「@import 沟通风格常开」；`HUMAN_GUIDE.md` §3 安装从「三件事」改「四件事」、第 4 条讲清 @import 沟通风格正本 + 一句它管什么、结尾补「AI 也按你的沟通风格说话」。措辞说人话。✓
-- **AC5**: 迁移前逐节核 matrix→正本无遗漏（21 个关键锚点全 ✓）；`rm ~/.claude/output-styles/matrix.md` 后 `test -e` 为假、目录空；`~/.config/fish/config.fish` 与 `~/.zshrc` 两处 `claudep` 去掉 `--settings '{"outputStyle":"Matrix"}'`、现为 `proxyon` + `claude <args>`，grep `outputStyle`/`Matrix`/`--settings` 零命中；`~/.claude/settings.json` 无 Matrix（无该配置项）。✓
-- **AC6**: `style-concise` / `style-plain-language` / `discussion-mode-no-forced-menus` 三文件规矩正文（How to apply 块）删除、首段改「规矩正文已迁到唯一正本 communication-style.md …本文件只留来龙去脉」薄壳声明 + 保留出处 incident；`MEMORY.md` 三索引行改薄壳描述；`style-plain-language` 内 `[[mile-0003-agent-doc-design]]` 引用原样保留。✓
+- AC1/AC3：`ls .claude/commands/butler/` 见 prd.md+review.md；`git show dc6fa11:.claude/commands/butler-prd.md` diff 现 `butler/prd.md` 退出 0（byte-identical）。
+- AC2：`rtk proxy grep -rn butler-prd` 活文档——残留仅 capabilities/frontier 各 1 处「原名 `/butler-prd`」历史陈述、setup.sh 迁移清理代码（引用旧名必须），均合法。
+- AC4：隔离假 HOME `HOME=<tmp> bash scripts/setup.sh` ×3（旧软链迁移 / 幂等重跑 / 全新装）16/16；P5 复核独立自写测试 18/18 复现。
+- AC5：读 `butler/review.md` 核四要点 + 真源 section 锚点（overview §3/G1/G2、independent-review §5、`insight-independent-review.md`、VERIFY_REPORT `Independent Review` 字段）逐字对上、无捏造路径。
+- AC6/AC7：读 `migrations/v2.7.0.md` + `cat VERSION` + CHANGELOG 顶条，三载体版本号一致、标签齐备。
+- AC8：`git diff dc6fa11 --stat` 逐文件核，无越界。
 
 # Gate Coverage
-- 通用质量门禁：核心改动含一段 bash（`setup.sh` 受管 heredoc 加 @import 行）——已隔离 HOME 端到端实跑（首跑 / 幂等连跑两次 / 抽路径 test -f 三路径）+ `bash scripts/setup.sh` 退出 0。文件类改动（正本 / 文档 / 记忆薄壳 / claudep）经读文件 + grep 逐条核，含**迁移前内容不丢核验**。
-- Active Profiles：无命中（butler 规则仓自身 dogfood），N/A。
-- Tech Plan Alignment：6 条 Design Decisions 全兑现——决策 1（走 @import 非输出风格）✓、决策 2（收敛去重单一正本）✓、决策 3（直接删 matrix + 拆 claudep + 查 settings）✓、决策 4（带 ❌/✅ 例子）✓、决策 5（名 communication-style、仓根、不进 SOP 读序）✓、决策 6（MINOR + 部署面 `[no-op]`+`[restamp]` + 机器级重跑 + 本机手动清理）→ AC7 发布回填。
-- References Compliance：本轮无 `.ai/references/`，N/A。
+- 通用质量门禁：不破坏分层（命令层改动不入 Coder/templates）+ 新命令 README 目录树注册（无隐式依赖）+ 文件名互引不写绝对路径 + review.md frontmatter 两行说人话 ✓
+- Active Profiles：无（规则仓，未命中 domain profile）。
+- Tech Plan Alignment：DD1–DD6 全兑现（命名空间映射 / prd git mv 零改 / setup.sh 目录软链+迁移清理 / review 薄壳 / MINOR 三载体 / 边界守恒）；T1–T8 全落。
+- References Compliance：N/A（无外部参考资料）。
 
-# Independent Review
-- 未触发独立复核：改动是一段幂等 bash（@import 行）+ 一份手写风格正本 + 文档 + 本机配置迁移，无跨多规则的契约面 / 哲学底座变更；核心风险（bash 正确性 + 内容不丢）已由隔离 HOME 实跑与迁移前逐节核验覆盖。opt-in 复核按需，本轮 N/A。
+# Independent Review（P5 强制完整审查升格，dangerous §7.3）
+- 复核方式：fresh-context 子 agent（general-purpose，验证者≠实现者，agentId ab402c531621f2ace），spec-only 逐 AC + 自写隔离 HOME 压测（18/18）+ byte-level diff + 全树对抗 grep + 真源锚点逐一核。
+- 逐 AC 裁决：**confirm 8 / refute 0 / 未能验证 0**。
+- 结论：**可收口**——**0 Must Fix、0 Should Fix、3 Nice-to-Have**（均不阻断）。
 
 # Remaining Risks
-- **@import 运行时并入属 Claude Code 行为**：非本仓可断言，验证止于路径绝对正确 + 目标文件存在 + 受管块合法（AC3 已记此边界）。真正生效需用户在**主检出**重跑一次 `setup.sh`（本机迁移动作，migration 配方写清）。
-- **本机迁移跨机器不自动传播**：matrix.md 与 claudep 都是本机配置；换机器若也有旧的同样设置需同样清一遍。但新机器的沟通风格来源已是同步的正本 + setup 的 @import，本身不依赖 matrix。
-- **全局常开的常驻 token 开销**：正本约 matrix 量级（几百 token），每会话加载。用户已拍板「带例子换规矩能落地，值」，接受。
+- 命令菜单「可见性」无法在 headless 实敲——用「文件/软链存在 + 命名空间结构正确 + 经软链可达」作可靠代理（命名空间机制经 claude-code-guide 查证 + 隔离 HOME 实跑，同 ITER-0044 验法）。
+- 独立复核 3 条 Nice-to-Have（均不阻断，不改）：
+  - N-1：`[rename]` 标签语义轻微过载——`migration-schema §4` 正典义是「重命名 `.ai/` 下过时文件」，v2.7.0 复用其描述「个人命令别名」改名。实现者已隔离处理（`[rename]` 只在明标「与目标项目无关」的说明段、未混进执行器消费的迁移步骤列表〔步骤里只有 `[global-install]`+`[restamp]`〕），且 AC6 点名要该标签，非缺陷。
+  - N-2：git tag `v2.7.0` 需在发布提交时补打，才算含 tag 的三载体完全闭合——当前文档三载体已齐。
+  - N-3：review.md `argument-hint` 用「fresh 子 agent」「验证者≠作者」略带术语，已算内联可读，可更白话，非必改。
 
 # Handoff / Next Step
-- 已达可交付闭环（AC1–AC6 实测过，AC7/AC8 待发布回填）。收口五步 → feat 提交（communication-style.md + setup.sh + 文档 + `.ai/` 产物）→ 独立 `chore(release)` 切 v2.6.0（含 migration）→ push 分支 + 开 draft PR。
+- 独立复核通过（0 Must Fix）→ 进原子收口五步（归档四件套 + 交付 md/html + 台账/路线图 + PROJECT 前滚 + 收口自检）+ 切版 git 仪式（本地 tag v2.7.0）。
+- 北极星（MILE-0005 R1 单迭代）达成即交还；R2–R4 设计未锁、不擅自连跑。按用户「危险模式 ACK」授权：本轮自治到收口 + 提交 + 推分支 + draft PR；**不合并 main、不推 tag 到远端**（待用户授权）。

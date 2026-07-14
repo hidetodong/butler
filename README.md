@@ -108,8 +108,10 @@ butler/
 │   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
 │   └── preference-init.sh          # 偏好探针存储初始化（opt-in）
 │
-├── .claude/commands/               # butler slash 命令（setup.sh 软链到全局，所有项目可用）
-│   └── butler-prd.md               #   /butler-prd · PRD 先行薄壳路由
+├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
+│   └── butler/                     #   /butler:* 命名空间（子目录=命名空间前缀）
+│       ├── prd.md                  #     /butler:prd · PRD 先行薄壳路由
+│       └── review.md               #     /butler:review · 代码/产物复核（默认自检 / independent 独立复核）
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template

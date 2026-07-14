@@ -34,7 +34,7 @@
 
 | 路线项 | 主题（方向 → 一个迭代） | 实际 ITER | 状态 |
 |---|---|---|---|
-| **R1** | **命名空间地基 + prd 迁移 + 首个新命令验证**：建 `.claude/commands/butler/` 骨架 + `/butler-prd`→`/butler:prd`（`[rename]` 迁移 + 清旧全局软链 + 正文/文档引用更新）+ 改 `setup.sh` 软链整目录 + 顺带落 `/butler:review`（纯薄壳，验证「薄壳路由器」范式在命名空间下可复制） | ITER-0047 | active |
+| **R1** | **命名空间地基 + prd 迁移 + 首个新命令验证**：建 `.claude/commands/butler/` 骨架 + `/butler-prd`→`/butler:prd`（`[rename]` 迁移 + 清旧全局软链 + 正文/文档引用更新）+ 改 `setup.sh` 软链整目录 + 顺带落 `/butler:review`（纯薄壳，验证「薄壳路由器」范式在命名空间下可复制） | ITER-0047 | closed |
 | **R2** | **批量补低风险纯薄壳命令**：`/butler:milestone`（+ `status` 参数）、`/butler:upgrade`、`/butler:ideation`——三个语义清晰、无风险闸的命令，套 R1 固化的范本批量产出 + 各自「没接 butler 优雅降级」 | — | planned |
 | **R3** | **`/butler:preference`（子命令最多）**：`on`/`off`/`reback`/`distill` 四子命令全走 `$ARGUMENTS` 参数路由，委托 `70_Extension_Preference` 真源；单开一迭代因参数面最宽、要把参数分派写扎实 | — | planned |
 | **R4** | **高风险命令加闸**：`/butler:loop` + `/butler:dangerous`（含 `on`/`off`）——命令薄壳前置风险提示与确认闸，委托 `55_Extension_ConvergenceLoop` / `65_Extension_Dangerous` 真源；单独设计以确保命令化不降低「郑重显式触发」门槛 | — | planned |
@@ -42,3 +42,4 @@
 ## 5.4 范围演进记录
 
 - 2026-07-14 · 开启 MILE-0005（承 MILE-0004 于 2026-07-09 收口、`current` 为 none，开题闸解除）。方向源自 2026-07-13~14 对话：用户要「一套 `/butler:xxx` 命名空间命令系统」。地基事实经 claude-code-guide 查证：子目录＝冒号命名空间、`~/.claude/commands/butler/` user 级全局同理、多级可嵌套、frontmatter（description/argument-hint/`$ARGUMENTS`）照常、command `.md` 软链已由 ITER-0045 实跑验证可用（故维持 commands 路线、不迁 skills）。已 soft 对齐的关键决策：命令清单 8 个、子命令走参数不拆多级、`loop`/`dangerous` 加风险闸、`/butler-prd` 破坏性改名一并迁入、命令仍不下发目标项目（个人工具边界沿用 ITER-0044）。
+- 2026-07-14 · **R1 收口**（ITER-0047，危险模式自治、独立复核 0 Must Fix）。地基落成：`.claude/commands/butler/` 命名空间目录建立、`/butler-prd`→`/butler:prd` 破坏性迁移（`git mv` 正文零改 + 旧软链迁移清理）、`setup.sh` 逐文件软链→命名空间目录软链、`/butler:review` 薄壳范本落地（后续 R2–R4 复制样板）。聚合切 v2.7.0（MINOR）。**里程碑仍 active**——R2（批量补 milestone/upgrade/ideation）、R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。范本已固化：新命令＝往 `butler/` 丢一个薄壳 `.md`（委托真源不复述 + 第 0 步优雅降级 + frontmatter 两行说人话），随目录软链自动全局可用。

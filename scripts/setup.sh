@@ -78,26 +78,31 @@ $MARKER
 $MARKER
 EOF
 
-# --- 3. Claude Code 全局 slash 命令（软链，随 butler 仓自动更新） ---
-# 把 butler 仓 .claude/commands/*.md 逐个软链到 ~/.claude/commands/，
-# 使 /butler-* 命令在所有项目里都能被 Claude Code 发现（不只是编辑 butler 仓时）。
-# 用软链而非拷贝：butler 仓一改命令即全局生效、零漂移，无需再逐项目同步副本。
+# --- 3. Claude Code 全局 slash 命令（软链整个 butler/ 命名空间目录，随仓自动更新） ---
+# 把 butler 仓 .claude/commands/butler/ 命名空间目录整体软链到 ~/.claude/commands/butler，
+# 使 /butler:<name> 命令在所有项目里都能被 Claude Code 发现（子目录=命名空间，冒号前缀）。
+# 用软链而非拷贝：butler 仓一加/改命令即全局生效、零漂移，无需重跑本脚本、无需逐项目同步副本。
 
-BUTLER_CMD_DIR="$BUTLER_DIR/.claude/commands"
+BUTLER_CMD_NS="$BUTLER_DIR/.claude/commands/butler"
 CLAUDE_CMD_DIR="$HOME/.claude/commands"
 
-if compgen -G "$BUTLER_CMD_DIR/*.md" > /dev/null 2>&1; then
+# 迁移清理（v2.7.0 起命令收进 butler/ 命名空间）：移除旧的扁平命令软链，
+# 只删软链（-L 判定）、绝不误删你自己放在 ~/.claude/commands/ 的真文件。
+if [ -L "$CLAUDE_CMD_DIR/butler-prd.md" ]; then
+  rm -f "$CLAUDE_CMD_DIR/butler-prd.md"
+  echo "[清理] 移除旧扁平命令软链 butler-prd.md（已迁入 /butler:prd）"
+fi
+
+if [ -d "$BUTLER_CMD_NS" ]; then
   mkdir -p "$CLAUDE_CMD_DIR"
-  linked=0
-  for src in "$BUTLER_CMD_DIR"/*.md; do
-    # -s 符号链接 / -f 强制替换已存在目标 / -n 不跟随已存在的目录软链
-    # 逐文件软链、不接管整个目录：你自己放在 ~/.claude/commands/ 的其它命令原样保留
-    ln -sfn "$src" "$CLAUDE_CMD_DIR/$(basename "$src")"
-    linked=$((linked + 1))
-  done
-  echo "[软链] ${linked} 个 butler slash 命令 → ${CLAUDE_CMD_DIR}（随 butler 仓自动更新）"
+  # -s 符号链接 / -f 强制替换已存在目标 / -n 不跟随已存在的目录软链
+  # （-n 关键：目标已是指向目录的软链时，防止把新链接建进其内部成 butler/butler）
+  # 软链整个命名空间目录、不接管 ~/.claude/commands/ 根：你自己放的其它命令原样保留
+  ln -sfn "$BUTLER_CMD_NS" "$CLAUDE_CMD_DIR/butler"
+  count=$(find "$BUTLER_CMD_NS" -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
+  echo "[软链] butler 命名空间（${count} 个 /butler:* 命令）→ ${CLAUDE_CMD_DIR}/butler（随 butler 仓自动更新）"
 else
-  echo "[跳过] $BUTLER_CMD_DIR 下暂无 *.md，无 slash 命令可安装"
+  echo "[跳过] $BUTLER_CMD_NS 不存在，无 slash 命令可安装"
 fi
 
 echo ""
@@ -106,7 +111,7 @@ echo ""
 echo "使用方式："
 echo "  在任何项目中启动 AI 会话，直接给工程任务即可。"
 echo "  AI 会自动从入口文件读取规则，新项目会自动触发基地车部署。"
-echo "  slash 命令（如 /butler-prd）已全局安装，在所有项目里都能用。"
+echo "  slash 命令（如 /butler:prd）已全局安装，在所有项目里都能用。"
 echo ""
 echo "可选（实验性）：偏好探针 /preference 默认关、数据外置。"
 echo "  如需启用，运行一次：./scripts/preference-init.sh"
