@@ -111,7 +111,10 @@ butler/
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
 │   └── butler/                     #   /butler:* 命名空间（子目录=命名空间前缀）
 │       ├── prd.md                  #     /butler:prd · PRD 先行薄壳路由
-│       └── review.md               #     /butler:review · 代码/产物复核（默认自检 / independent 独立复核）
+│       ├── review.md               #     /butler:review · 代码/产物复核（默认自检 / independent 独立复核）
+│       ├── ideation.md             #     /butler:ideation · 需求脑暴（不进执行主线）
+│       ├── milestone.md            #     /butler:milestone · 里程碑录入 / status 看板
+│       └── upgrade.md              #     /butler:upgrade · 已部署项目升级到最新版
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template

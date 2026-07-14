@@ -1,60 +1,57 @@
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 §5.2 P3 自审门），未经用户确认（ITER-0047，2026-07-14）
+# TECH_PLAN — ITER-0048（MILE-0005 R2 批量补低风险命名空间命令）
+
+> 标准模式，P2 AC_LIST 经用户 ACK（三默认全收：MINOR / `/butler-upgrade` 触发名迁 / capabilities 转换）。无危险横幅。
 
 # Goal
-支撑 AC1–AC8：搭 `.claude/commands/butler/` 命名空间地基、`/butler-prd`→`/butler:prd` 破坏性迁移、`setup.sh` 改目录软链、落 `/butler:review` 薄壳范本、出 `[rename]` 迁移配方、切版 MINOR、边界守恒。
 
-# Files / Modules to Change
-- `.claude/commands/butler/`（新目录）— 命名空间根 → AC1
-- `.claude/commands/butler/prd.md`（`git mv` 自 `butler-prd.md`）— 保留 git 血缘；正文经 grep 确认不自称 `butler-prd`，仅核示例引用 → AC1/AC3
-- `.claude/commands/butler-prd.md`（`git mv` 移走即删）→ AC2
-- `.claude/commands/butler/review.md`（新建薄壳路由器）→ AC5
-- `scripts/setup.sh`（软链段 81–101：逐文件软链 → 目录软链；加旧 `butler-prd.md` 软链清理；echo/注释里 `/butler-prd`→`/butler:prd`）→ AC4/AC2
-- `migrations/v2.7.0.md`（新建迁移配方）→ AC6
-- `VERSION`（2.6.1→2.7.0）、`CHANGELOG.md`（顶条 `[2.7.0]`）、git tag `v2.7.0`（本地）→ AC7
-- 活文档引用更新 `/butler-prd`→`/butler:prd`：`README.md`、`HUMAN_GUIDE.md`、`.ai/project/capabilities.md`、`.ai/project/frontier.md` → AC2
+套 R1 `prd.md`/`review.md` 薄壳范本，批量落 3 个纯薄壳命令，各委托既有真源、带优雅降级、不复述算法。验证范式可批量复制 + R1 目录软链自动托管新命令（不动 `setup.sh`）。
 
-# Interface / Contract
-- **命名空间映射**：`.claude/commands/butler/<name>.md` → `/butler:<name>`（Claude Code 子目录＝冒号命名空间，已 claude-code-guide 查证）。
-- **setup.sh 软链契约**：`~/.claude/commands/butler` --symlink--> `$BUTLER_DIR/.claude/commands/butler`；幂等 `ln -sfn`（`-n` 防止对已存在目录软链嵌套建链 `butler/butler`）。旧扁平软链 `~/.claude/commands/butler-prd.md` 用 `[ -L ]` 判定后 `rm`（只删软链、不误删真文件）。
-- **prd 薄壳**：三分支路由（留空|贴 PRD → 首切 / `update` → 改版 / `status` → 只读看板）语义**一字不改**，仅命令自称/示例 `/butler-prd`→`/butler:prd`。
-- **review 薄壳**：`$ARGUMENTS` 空 → 默认同上下文简要自评；`independent` → 独立复核（fresh-context 子 agent）；委托 `60_Extension_CodeReview/review-engine.md`（+ `62_Extension_Agents/independent-review.md`）真源、不复述算法。
+# Files
 
-# State / Boundary
-- 只碰：命令层（`.claude/commands/**`）、`scripts/setup.sh`、发布层（VERSION/CHANGELOG/migrations/tag）、四处活文档引用。
-- **不碰**：`Coder/**` 任何规则算法、`templates/**`、四件套 schema、hook 体系、核心 P1–P5 状态机。
-- **引用更新边界**：活文档改；历史归档（`.ai/iterations/**`、`deliveries/**`、既有 `migrations/v2.4.0|v2.5.0.md`、`CHANGELOG.md` 既有版本条目）与当前迭代工作区的**迁移叙述**（`.ai/*.md` 里"把 /butler-prd 迁成 /butler:prd"这类语境正确的提及）一律不动。
+- 新增：`.claude/commands/butler/milestone.md`、`.claude/commands/butler/upgrade.md`、`.claude/commands/butler/ideation.md`
+- 改：`Coder/20_Workflow_Lifecycle/butler-upgrade.md`（仅 §2 触发词 `/butler-upgrade`→`/butler:upgrade`）、`.ai/project/capabilities.md`（命令表转换）、`README.md`（目录树补 3 命令）
+- 发布层：`VERSION`、`CHANGELOG.md`、`migrations/vX.Y.Z.md`
+- 不碰：`setup.sh`、`templates/**`、schema、hook、任何规则算法、`prd.md`/`review.md`
+
+# Interface（三命令的路由设计）
+
+- **`/butler:milestone`** — frontmatter：`description` 里程碑录入/看板说人话、`argument-hint "[status=只读看板 | 贴 brief 或留空=录入/开里程碑]"`。第 0 步优雅降级（没接 butler）。分支：留空/给 brief → 委托 `milestone-schema.md §6.4`（录入 brief，含「brief 是大 PRD」并进 `prd-split` 分支）+ §6.1 启动信号 + §7.1 开启；`status` → 委托 `milestone-schema.md §6.5`（`/milestone status` 只读看板：读 MILESTONES+MILESTONE 报路线项进度，不写文件）。收口/废弃/演进走语义、不命令化（§6.5 已定）。
+- **`/butler:upgrade`** — frontmatter：`description` 已部署项目升级说人话、`argument-hint "[留空=把当前项目升级到最新 butler 版]"`。第 0 步优雅降级（当前项目没接 butler / 无 `CLAUDE.md` butler 区）。委托 `butler-upgrade.md`：按 §3 侦察（读保护区标记 + 版本 gap）→ §4 首次升级（老项目）/ §5 常规升级（有戳走 `migrations/` 区间配方队列）→ §7 验证回退。升级对象＝**当前项目**。
+- **`/butler:ideation`** — frontmatter：`description` 需求脑暴说人话、`argument-hint "[贴模糊需求或留空=进入脑暴]"`。第 0 步：脑暴是需求打磨、不强依赖 `.ai/`，但若在已接 butler 项目里可衔接 P1；委托 `ideation-engine.md §3`（意图探测→展开→压力测试→AC 收敛）。无子参数。
+
+# State
+
+无运行时状态。命令是静态 Markdown 薄壳；`$ARGUMENTS` 由 Claude Code 注入。新命令随 R1 `~/.claude/commands/butler` 目录软链自动全局可达。
 
 # Design Decisions
-- **DD1（命名空间＝子目录，不迁 skills）**：维持 commands 路线——command `.md` 软链已 ITER-0045 实跑验证可用；`butler/` 子目录自动成 `/butler:` 前缀。→ AC1
-- **DD2（prd 用 git mv）**：保留 git 血缘；grep 已证正文不自称 `butler-prd`，故迁移后功能等价、改动近乎零，风险最低。→ AC3
-- **DD3（setup.sh 目录软链 + 旧软链清理）**：一条 `ln -sfn` 软链整个 `butler/` 目录，比逐文件更省、butler 仓加命令自动全局生效；`-n` 保幂等不嵌套；加旧软链清理让**所有机器重跑 setup 即自动清残留**（不靠人手删）。→ AC4/AC2
-- **DD4（review 薄壳同构 prd）**：四要点范式（第 0 步读契约 + 没接 butler 降级 / `$ARGUMENTS` 分派 / 委托真源不复述 / 两行说人话 frontmatter），作 R2–R4 复制范本。→ AC5
-- **DD5（切版 MINOR v2.7.0）**：命名空间是新增能力（当前 VERSION 2.6.1 → 下一 MINOR 2.7.0）；`/butler-prd`→`/butler:prd` 的破坏面局限「个人命令层」，由迁移配方 `[rename]` 承接、目标项目部署面 `[no-op]`。→ AC7
-- **DD6（边界守恒 git diff 佐证）**：收口前 `git diff --stat` 确认改动仅落在上述文件集。→ AC8
+
+- **DD1（严格套范本）**：三命令逐段对齐 `prd.md`/`review.md` 骨架——frontmatter 两行说人话 → 薄壳三件事声明 + DRY 红线 → 跨 cwd 路径约定段 → 第 0 步优雅降级 → `$ARGUMENTS` 路由 → 一句话收尾。→ AC5
+- **DD2（真源锚点真实）**：每处委托带具体 section 号（milestone §6.4/§6.5、butler-upgrade §3/§4/§5/§7、ideation §3），写前 grep 核对真源确有该节。→ AC2/3/4/5
+- **DD3（触发名迁移最小面）**：`butler-upgrade.md` 只改 §2 一行触发词 `/butler-upgrade`→`/butler:upgrade`，保留「升级 butler / 同步新版」自然语言触发；§8 line 159「butler 仓库自身的升级」不含命令名、不动。→ AC3/AC9
+- **DD4（capabilities 转换非并列）**：`/ideation`·`/milestone`·`/butler-upgrade` 三行改成 `/butler:*` 一等入口 + 路径 `.claude/commands/butler/<name>.md`；顺清 R1 遗留 `/review`↔`/butler:review` 冗余（合并为一行 `/butler:review`）。→ AC7
+- **DD5（不动 setup.sh）**：R1 目录软链托管全套，仅靠 AC6 隔离 HOME 实跑证明新命令自动可达。→ AC6
+- **DD6（MINOR + 迁移配方）**：纯新增命令、无破坏面 → MINOR；配方部署面 `[no-op]`+`[restamp]` + `[global-install]`（重跑 setup 拿新命令，含触发名迁移属本机命令层）。→ AC8
 
 # Execution Steps
-- [ ] T1 建 `.claude/commands/butler/` + `git mv butler-prd.md butler/prd.md` → AC1
-- [ ] T2 核 `butler/prd.md`：grep 确认无 `/butler-prd` 自称残留、示例引用若有则改 `/butler:prd`，三分支路由语义不动 → AC3
-- [ ] T3 [P] 读 `review-engine.md` + `independent-review.md` 真源，写 `butler/review.md` 薄壳（四要点 + `$ARGUMENTS` 分派 default/independent + 降级）→ AC5
-- [ ] T4 改 `scripts/setup.sh`：软链段改目录软链 + 旧 `butler-prd.md` 软链清理 + echo/注释更新 → AC4/AC2
-- [ ] T5 更新活文档引用 `/butler-prd`→`/butler:prd`（README / HUMAN_GUIDE / capabilities / frontier）→ AC2
-- [ ] T6 写 `migrations/v2.7.0.md`（`[rename]` 个人命令层 + `[no-op]`+`[restamp]` 部署面 + 本机一次性动作）→ AC6
-- [ ] T7 切版：`VERSION` 2.7.0 + `CHANGELOG.md` 顶条 `[2.7.0]` → AC7
-- [ ] T8 实跑验证（隔离 HOME 跑 `setup.sh` 两次核幂等 + `readlink` 软链指向 + `test -e` 经软链可达 + grep 无残留 + `git diff --stat` 边界）→ AC1/AC2/AC4/AC8
 
-# Verification Plan
-- **AC1**：`test -d .claude/commands/butler && test -f .claude/commands/butler/prd.md`；命名空间结构核对（auto·可靠）。
-- **AC2**：`test ! -e .claude/commands/butler-prd.md`；隔离 HOME 跑 setup 后 `test ! -e ~/.claude/commands/butler-prd.md`；`grep -rn '/butler-prd' README.md HUMAN_GUIDE.md .ai/project` 零命中（auto·可靠）。
-- **AC3**：`git show HEAD:.claude/commands/butler-prd.md` 与新 `butler/prd.md` diff——除命令名/示例外三分支路由锚点逐一等价（auto diff + 人读）。
-- **AC4**：隔离 HOME `bash scripts/setup.sh` ×2 → `readlink ~/.claude/commands/butler` 指向仓库 `butler/`、无 `butler/butler` 嵌套、无报错；`test -e ~/.claude/commands/butler/prd.md && test -e ~/.claude/commands/butler/review.md`（auto·可靠）。
-- **AC5**：读 `butler/review.md` 核四要点齐 + 与 `prd.md` 同构；`$ARGUMENTS` 分派 default/independent 明确（auto 结构核 + 人读）。
-- **AC6**：读 `migrations/v2.7.0.md` 核 `[rename]`+`[no-op]`+`[restamp]`+本机动作齐（auto·可靠）。
-- **AC7**：`cat VERSION` == tag == `CHANGELOG.md` 顶条，三者一致（auto·可靠）。
-- **AC8**：`git diff --stat` / `git status` 确认无 `Coder/**`、`templates/**`、hook 改动（auto·可靠）。
-- **P5**：升格独立复核（fresh-context 子 agent，验证者≠实现者），逐 AC 裁决 + 边界守恒对抗探测。
+- [ ] T1 写 `butler/milestone.md`（两分支：录入 / status 看板）→ AC1/AC2
+- [ ] T2 写 `butler/upgrade.md`（侦察→执行→验证回退）→ AC1/AC3
+- [ ] T3 写 `butler/ideation.md`（脑暴流程）→ AC1/AC4
+- [ ] T4 改 `butler-upgrade.md §2` 触发词 `/butler-upgrade`→`/butler:upgrade` + grep 全仓无残留裸旧名（历史归档除外）→ AC3/AC9
+- [ ] T5 capabilities 命令表转换（3 行 → `/butler:*` + 顺清 `/review` 冗余）+ README 目录树补 3 命令 → AC7
+- [ ] T6 写 `migrations/vX.Y.Z.md`（`[no-op]`+`[restamp]`+`[global-install]`）→ AC8
+- [ ] T7 切版三载体（VERSION bump + CHANGELOG 顶条 MINOR）→ AC8
+- [ ] T8 隔离 HOME 实跑 setup.sh，验证 3 新命令经目录软链可达 + 范式一致性人读核 + `git diff --stat` 边界守恒 → AC5/AC6/AC9
 
-# Risks / Open Questions
-- **setup.sh 幂等嵌套陷阱**：`ln -sfn` 对已存在目录软链须带 `-n`（现有代码已用，沿用）；隔离 HOME 复跑两次显式验证无 `butler/butler`。
-- **命令可见性无法 headless 实敲**：用「软链存在 + 命名空间结构正确」作可靠代理（机制已查证），同 ITER-0044 验法。
-- **prd.md 内部引用遗漏**：T2 grep 兜底（已初判正文无自称，低风险）。
-- 三 P1 Open Question 已在 P2/P3 定死（MINOR / review 吃参数 / 引用只改活文档），无遗留未决。
+# Verification
+
+- 结构核：读三命令核薄壳四要点齐 + 真源 section 锚点回真源逐一核（无捏造）。
+- 隔离 HOME 实跑 `setup.sh` → `test -e ~/.claude/commands/butler/{milestone,upgrade,ideation}.md`。
+- grep `/butler-upgrade` 活文档无残留（历史归档除外）。
+- `git diff --stat` 边界守恒。
+- P5 标准复核（自评 + objective 实跑）；低风险机械迭代，独立复核非强制（如发现存疑再升格）。
+
+# Risks
+
+- 命令菜单可见性 headless 不可实敲——沿用 R1 代理验法。
+- `/butler:upgrade` 触发名迁移是唯一 Coder 触碰点——限 §2 一行、grep 兜底无遗漏。

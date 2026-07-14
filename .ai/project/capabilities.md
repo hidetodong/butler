@@ -20,16 +20,15 @@
 
 | 命令 | 干什么 | 真源 |
 |---|---|---|
-| `/ideation` | 独立脑暴、不进执行主线 | `50_Extension_Ideation/ideation-engine.md` |
+| `/butler:ideation` | 独立脑暴、不进执行主线、不冻结（贴模糊需求 / 想法，或留空进对话）；MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/ideation.md`（薄壳，真源 `50_Extension_Ideation/ideation-engine.md §3`） |
 | `/loop` | 收敛闭环，死磕式高强度纠错升档 | `55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
-| `/review` | 独立复核（干净上下文子 agent、验证者≠实现者、逐 AC 核对） | `60_Extension_CodeReview/review-engine.md` + `62_Extension_Agents/independent-review.md` |
 | `/dangerous` | 无人值守长程自治（自审门替 ACK、强制 P5 全审护栏） | `65_Extension_Dangerous/dangerous-engine.md` |
 | `/preference` | 偏好探针开关（`on`/`off`/`reback`/`distill`） | `70_Extension_Preference/preference-probe-engine.md` |
-| `/milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3） | `20_Workflow_Lifecycle/milestone-schema.md`（§6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针） |
+| `/butler:milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3）；MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/milestone.md`（薄壳，真源 `20_Workflow_Lifecycle/milestone-schema.md` §6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针 / §6.5 只读看板） |
 | `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 登记表认亲（新增·消失 + 松边改名/合并/拆分启发式提候选→确认、绝不自动认，R6）/ 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5–R6） | `40_Context_Management/prd-update.md`（§4.2 松边、首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`；非回归门见 `references-schema §9`） |
 | `/butler:prd` | **butler 第一个真实命令文件**（ITER-0044，原名 `/butler-prd`，MILE-0005 R1 迁入 `/butler:` 命名空间）——PRD 先行动作的薄壳路由器：第 0 步强制读 `references-schema` 契约 → 按参数三分支（留空/贴 PRD=首切 / `update`=改版 / `status`=只读看板），委托真源不复述算法。**全局下发（ITER-0045·v2.5.0）**：`setup.sh` 软链进 `~/.claude/commands/`，**所有项目可用**（不再限编辑 butler 仓）；正文含「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定，跨 cwd 成立 | `.claude/commands/butler/prd.md`（薄壳，真源 `references-schema.md` / `prd-split.md` / `prd-update.md`） |
 | `/butler:review` | **命名空间第二个真命令**（ITER-0047·MILE-0005 R1）——代码 / 产物复核薄壳路由器：默认（留空）当前上下文快速自检、`independent` 另起 fresh 子 agent 独立复核（验证者≠作者）；第 0 步没接 butler 优雅降级、委托真源不复述算法。作后续命令的复制范本 | `.claude/commands/butler/review.md`（薄壳，真源 `review-engine.md §5` / `independent-review.md` / `62_Extension_Agents/overview.md §3`） |
-| `/butler-upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行） | `20_Workflow_Lifecycle/butler-upgrade.md`（**注：从未真跑，见 debt**） |
+| `/butler:upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行）；原名 `/butler-upgrade`，MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/upgrade.md`（薄壳，真源 `20_Workflow_Lifecycle/butler-upgrade.md`；**注：升级协议从未真跑，见 debt**） |
 
 ## 部署与维护能力
 

@@ -35,7 +35,7 @@
 | 路线项 | 主题（方向 → 一个迭代） | 实际 ITER | 状态 |
 |---|---|---|---|
 | **R1** | **命名空间地基 + prd 迁移 + 首个新命令验证**：建 `.claude/commands/butler/` 骨架 + `/butler-prd`→`/butler:prd`（`[rename]` 迁移 + 清旧全局软链 + 正文/文档引用更新）+ 改 `setup.sh` 软链整目录 + 顺带落 `/butler:review`（纯薄壳，验证「薄壳路由器」范式在命名空间下可复制） | ITER-0047 | closed |
-| **R2** | **批量补低风险纯薄壳命令**：`/butler:milestone`（+ `status` 参数）、`/butler:upgrade`、`/butler:ideation`——三个语义清晰、无风险闸的命令，套 R1 固化的范本批量产出 + 各自「没接 butler 优雅降级」 | — | planned |
+| **R2** | **批量补低风险纯薄壳命令**：`/butler:milestone`（+ `status` 参数）、`/butler:upgrade`、`/butler:ideation`——三个语义清晰、无风险闸的命令，套 R1 固化的范本批量产出 + 各自「没接 butler 优雅降级」 | ITER-0048 | closed |
 | **R3** | **`/butler:preference`（子命令最多）**：`on`/`off`/`reback`/`distill` 四子命令全走 `$ARGUMENTS` 参数路由，委托 `70_Extension_Preference` 真源；单开一迭代因参数面最宽、要把参数分派写扎实 | — | planned |
 | **R4** | **高风险命令加闸**：`/butler:loop` + `/butler:dangerous`（含 `on`/`off`）——命令薄壳前置风险提示与确认闸，委托 `55_Extension_ConvergenceLoop` / `65_Extension_Dangerous` 真源；单独设计以确保命令化不降低「郑重显式触发」门槛 | — | planned |
 
@@ -43,3 +43,5 @@
 
 - 2026-07-14 · 开启 MILE-0005（承 MILE-0004 于 2026-07-09 收口、`current` 为 none，开题闸解除）。方向源自 2026-07-13~14 对话：用户要「一套 `/butler:xxx` 命名空间命令系统」。地基事实经 claude-code-guide 查证：子目录＝冒号命名空间、`~/.claude/commands/butler/` user 级全局同理、多级可嵌套、frontmatter（description/argument-hint/`$ARGUMENTS`）照常、command `.md` 软链已由 ITER-0045 实跑验证可用（故维持 commands 路线、不迁 skills）。已 soft 对齐的关键决策：命令清单 8 个、子命令走参数不拆多级、`loop`/`dangerous` 加风险闸、`/butler-prd` 破坏性改名一并迁入、命令仍不下发目标项目（个人工具边界沿用 ITER-0044）。
 - 2026-07-14 · **R1 收口**（ITER-0047，危险模式自治、独立复核 0 Must Fix）。地基落成：`.claude/commands/butler/` 命名空间目录建立、`/butler-prd`→`/butler:prd` 破坏性迁移（`git mv` 正文零改 + 旧软链迁移清理）、`setup.sh` 逐文件软链→命名空间目录软链、`/butler:review` 薄壳范本落地（后续 R2–R4 复制样板）。聚合切 v2.7.0（MINOR）。**里程碑仍 active**——R2（批量补 milestone/upgrade/ideation）、R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。范本已固化：新命令＝往 `butler/` 丢一个薄壳 `.md`（委托真源不复述 + 第 0 步优雅降级 + frontmatter 两行说人话），随目录软链自动全局可用。
+- 2026-07-14 · **R2 开启**（ITER-0048，标准模式）。套 R1 范本批量落 3 个低风险纯薄壳命令：`/butler:milestone`（+`status`）、`/butler:upgrade`、`/butler:ideation`。待 P2 定的 scope 点：① 切版号；② `/butler-upgrade` 连字符散文触发名是否一并迁 `/butler:upgrade`（涉及改 `butler-upgrade.md §2` 触发词，属 Coder 真源但只动触发名非算法）；③ capabilities 命令表是转换旧行还是并列新行（R1 遗留 `/review`+`/butler:review` 并列的小冗余可否顺清）。
+- 2026-07-14 · **R2 收口**（ITER-0048，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.8.0；`/butler-upgrade`→`/butler:upgrade` 全仓 6 处触发名迁移（非算法）；capabilities 三行转换为 `/butler:*` 一等入口 + 删 `/review` 冗余。3 薄壳命令（milestone/upgrade/ideation）落地，隔离 HOME 实跑坐实 **R1 目录软链自动托管新命令**（5/5 可达、`setup.sh` 未改一行）——范式可批量复制得证。计划-实际差异 1 处（DD3 字面「改 §2 一行」实迁 6 处触发名，非算法、已记 VERIFY_REPORT）。**里程碑仍 active**——R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。

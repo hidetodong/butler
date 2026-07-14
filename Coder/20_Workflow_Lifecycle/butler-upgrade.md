@@ -18,7 +18,7 @@ scope: 已部署 butler 的项目升级到当前 butler 仓库最新版的流程
 
 满足以下任一条件时启动升级：
 
-- 用户显式输入 `/butler-upgrade`
+- 用户显式输入 `/butler:upgrade`（旧名 `/butler-upgrade`，MILE-0005 R2 迁入命名空间）
 - 用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"
 
 不主动推断 —— 仅在触发信号出现时执行，避免在稳定状态下破坏已部署结构。

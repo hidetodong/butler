@@ -4,43 +4,52 @@ ACK 日期: 2026-07-14
 ---
 
 # Goal
-搭起 `/butler:xxx` 命名空间命令系统的地基：建命名空间目录、把 `/butler-prd` 干净迁成 `/butler:prd`、改 `setup.sh` 让整个命名空间目录随一条软链全局可用、落第一个新命令 `/butler:review` 证明「薄壳路由器」范式可复制。为 R2–R4 批量加命令铺好骨架与迁移范本。
+
+MILE-0005 R2：套 R1 薄壳路由器范本，批量落 3 个低风险纯薄壳命令 `/butler:milestone`（+`status`）、`/butler:upgrade`、`/butler:ideation`，各委托既有真源、不复述算法、带优雅降级；验证「范式可批量复制 + R1 目录软链自动托管新命令」。
 
 # In Scope
-- 新建 `.claude/commands/butler/` 命名空间子目录（Claude Code 里子目录＝命名空间，`butler/<name>.md`→`/butler:<name>`）。
-- `/butler-prd`（v2.4.0 发布、连字符）**破坏性迁**为 `/butler:prd`：文件移到 `butler/prd.md`、清旧全局软链、更新活规则/文档引用、出 `[rename]` 迁移配方。
-- 改 `scripts/setup.sh` 软链逻辑：从「逐个软链 `.claude/commands/*.md`」改为「软链整个 `butler/` 目录到 `~/.claude/commands/butler`」。
-- 落 `/butler:review`（纯薄壳路由器），委托 `60_Extension_CodeReview` / `62_Extension_Agents` 真源。
-- 切一版（判 MINOR，见 AC7）。
+
+- 新建 3 个薄壳命令文件：`.claude/commands/butler/milestone.md`、`upgrade.md`、`ideation.md`，结构与 `prd.md`/`review.md` 同构。
+- `/butler:milestone` 吃 `status` 参数（留空/给 brief=录入 · `status`=只读看板），委托 `milestone-schema.md`。
+- `/butler:upgrade` 委托 `butler-upgrade.md`；**一并把真源 §2 触发词 `/butler-upgrade`→`/butler:upgrade`**（默认 Q2，触发名更新非算法，与 R1 `/butler-prd` 迁移一致）+ 更新 capabilities 对应行。
+- `/butler:ideation` 委托 `ideation-engine.md`。
+- capabilities 命令表：把 `/ideation`·`/milestone`·`/butler-upgrade` 三行**转换**为 `/butler:*` 一等入口（散文触发降为语义 fallback 注明）+ 顺清 R1 遗留的 `/review`↔`/butler:review` 并列冗余（默认 Q3）；README 目录树补 3 个命令。
+- 切一版（默认判 MINOR，见 AC8）。
 
 # Out of Scope
-- **不补 R2–R4 的其余命令**（milestone / upgrade / ideation / preference / loop / dangerous 留后续迭代）。
-- **不下发目标项目**：命令不进 `templates/`、目标项目部署面零影响（沿用 ITER-0044 边界）。
-- **不改真源规则算法**：`Coder/**` 规则正文语义一律不动。
-- **不做团队协作者共享**（project 级拷贝那条路另议）。
-- **不新造命令能力**：只迁移 + 落一个已有语义的 `review` 命令。
+
+- **不动 `setup.sh`**：R1 目录软链已托管全套，新命令自动全局可用。
+- **不改真源规则算法**：三命令委托的 `Coder/**` 规则正文语义一律不动（`/butler:upgrade` 仅改 §2 触发**名**，非算法）。
+- **不补 R3/R4**：`preference`（子命令最多）、`loop`/`dangerous`（加风险闸）留后续迭代。
+- **不下发目标项目**：命令不进 `templates/`、部署面零影响。
+- **不新造命令能力**：只迁既有散文触发词、不发明新命令、不扩语义。
 
 # Acceptance Checklist
-- [ ] **AC1（命名空间成立）**：`.claude/commands/butler/` 目录建立，`butler/prd.md` 存在；命名空间语法 `butler/<name>.md`→`/butler:<name>` 结构正确（子目录名即冒号前缀）。
-- [ ] **AC2（旧命令干净移除）**：`.claude/commands/butler-prd.md` 已删；旧全局软链 `~/.claude/commands/butler-prd.md` 清除；**活规则 + 面向人文档**（`Coder/**`、`README.md`、`HUMAN_GUIDE.md`、`.ai/project/**` 等）里无残留 `/butler-prd` 引用——**历史归档冻结快照不改**（`deliveries/**`、`.ai/iterations/**`、`CHANGELOG.md` 既有版本条目、`migrations/` 既有配方）。
-- [ ] **AC3（prd 功能等价）**：`butler/prd.md` 与原 `butler-prd.md` **功能等价**——薄壳三分支路由（留空/贴 PRD → 首切、`update` → 改版、`status` → 只读看板）语义一字不改；仅命令自称与示例里的命令名从 `/butler-prd` 更新为 `/butler:prd`、`argument-hint`/`description` 保持说人话。
-- [ ] **AC4（setup.sh 目录软链）**：`setup.sh` 改为软链整个 `butler/` 目录（`~/.claude/commands/butler` → 仓库 `.claude/commands/butler/`）；**幂等**（重复跑不炸、`ln -sfn` 或等价）；**不接管** `~/.claude/commands/` 根下用户自放的其它命令；实跑一次确认软链指向正确、`/butler:prd` 与 `/butler:review` 两文件经软链在全局可达。
-- [ ] **AC5（review 薄壳范本）**：`butler/review.md` ＝纯薄壳路由器——① 委托 `review-engine.md`（+ `independent-review.md`）真源并声明「算法以真源为准、不复述」（守 DRY）；② 含「当前项目没接 butler / 无迭代产物」时的优雅降级提示（不报错）；③ `frontmatter` 两行说人话（`description` + `argument-hint`）、无内部术语；④ 按 `$ARGUMENTS` 区分默认同上下文自评 vs 独立复核（opt-in）。结构与 `prd.md` 同构，可作 R2–R4 复制范本。
-- [ ] **AC6（迁移配方）**：`migrations/vX.Y.Z.md` 产出——个人命令层 `[rename]`（`/butler-prd`→`/butler:prd`，含清旧软链 + 重跑 setup.sh 的本机一次性动作）+ 目标项目部署面 `[no-op]`+`[restamp]`（命令不下发、零结构影响）。
-- [ ] **AC7（切版三载体对齐）**：判 **MINOR**（命名空间是新增能力；`/butler-prd`→`/butler:prd` 的破坏面局限在「个人命令层」，由迁移配方 `[rename]` 承接，对目标项目部署面是 no-op）。`VERSION` bump、`CHANGELOG.md` 顶条、git tag 三者一致。
-- [ ] **AC8（边界守恒）**：`Coder/**` 任何规则算法、`templates/**`、四件套 schema、hook 体系一行未动——`git diff` 佐证改动仅落在 `.claude/commands/butler/**`、`scripts/setup.sh`、`migrations/**`、发布层与 `/butler-prd` 引用更新处。
+
+- [ ] **AC1（三命令成立·可达）**：`.claude/commands/butler/` 下 `milestone.md`+`upgrade.md`+`ideation.md` 三文件建立；命名空间映射 `butler/<name>.md`→`/butler:<name>` 结构正确。
+- [ ] **AC2（`/butler:milestone` 薄壳）**：委托 `milestone-schema.md` 真源；`$ARGUMENTS` 分派——留空/给 brief → 里程碑录入（含「brief 是大 PRD」并进 `prd-split` 的分支指向）、`status` → 只读看板；第 0 步「没接 butler / 无 `.ai/`」优雅降级不报错；薄壳只路由不复述算法；frontmatter 两行说人话；跨 cwd 路径约定段在。
+- [ ] **AC3（`/butler:upgrade` 薄壳 + 触发名迁移）**：委托 `butler-upgrade.md` 真源；升级对象是**当前项目**、第 0 步优雅降级；薄壳不复述区间配方算法；**`butler-upgrade.md §2` 触发词 `/butler-upgrade`→`/butler:upgrade`**（保留「升级 butler / 同步新版」自然语言触发），全仓无残留裸 `/butler-upgrade`（历史归档冻结快照除外）。
+- [ ] **AC4（`/butler:ideation` 薄壳）**：委托 `ideation-engine.md` 真源；第 0 步降级；薄壳不复述脑暴流程；frontmatter 两行说人话；跨 cwd 路径约定段在。
+- [ ] **AC5（范式一致性）**：三命令与 `prd.md`/`review.md` 同构——① 薄壳三件事声明 + DRY 不复述红线；② 跨 cwd 路径约定段；③ 第 0 步优雅降级；④ frontmatter 说人话无术语；⑤ `$ARGUMENTS` 路由（milestone 有 status 分支，另两个可无参数但结构一致）；⑥ 委托的真源 section 锚点真实存在（读真源核对，无捏造路径）。
+- [ ] **AC6（目录软链自动托管·实跑）**：隔离 HOME 实跑 `setup.sh`，确认 3 个新命令经 `~/.claude/commands/butler` 目录软链全部可达（`test -e`）、无需改 `setup.sh`——验证 R1 目录软链红利。
+- [ ] **AC7（文档更新）**：`.ai/project/capabilities.md` 命令表按「转换为 `/butler:*` 一等入口 + 顺清 `/review` 冗余」更新；`README.md` 目录树 `butler/` 子树补 milestone/upgrade/ideation 三命令。
+- [ ] **AC8（切版三载体对齐）**：判 **MINOR**（纯新增 3 命令、无破坏面）；`VERSION` bump、`CHANGELOG.md` 顶条、git tag 三者一致；`migrations/vX.Y.Z.md` 为目标项目部署面 `[no-op]`+`[restamp]` + `[global-install]` 机器动作（重跑 setup 拿新命令）。
+- [ ] **AC9（边界守恒）**：除 `butler-upgrade.md §2` 触发名一行外，任何 `Coder/**` 规则算法、`templates/**`、四件套 schema、hook、`setup.sh` 一行未动；`git diff` 佐证改动仅落 `.claude/commands/butler/**`、`butler-upgrade.md`(§2 触发名)、`capabilities.md`/`README.md`、发布层。
 
 # Verification Method
-- **AC1**：`test -d .claude/commands/butler` + `test -f .claude/commands/butler/prd.md`；核对目录结构符合命名空间映射规则（auto·可靠）。
-- **AC2**：`test ! -e .claude/commands/butler-prd.md`；`test ! -e ~/.claude/commands/butler-prd.md`；`grep -rn '/butler-prd' Coder README.md HUMAN_GUIDE.md .ai/project` 零命中（历史归档目录排除）（auto·可靠）。
-- **AC3**：diff 对照原 `butler-prd.md`（从 git 历史取）与新 `butler/prd.md`——除命令名/路径引用外语义无变化；三分支路由锚点逐一核对（auto·可靠 + 人读校）。
-- **AC4**：隔离 HOME 实跑 `bash scripts/setup.sh` → `readlink ~/.claude/commands/butler` 指向仓库 `butler/` 目录；重复跑一次确认幂等、无报错；`test -e ~/.claude/commands/butler/prd.md && test -e ~/.claude/commands/butler/review.md`（auto·可靠）。
-- **AC5**：读 `butler/review.md` 核四要点齐（委托真源 + 不复述声明 / 降级提示 / 两行说人话 frontmatter / `$ARGUMENTS` 分派）；结构与 `prd.md` 同构性人读比对（auto 结构核 + 人读）。
-- **AC6**：读 `migrations/vX.Y.Z.md` 核 `[rename]` + `[no-op]`+`[restamp]` + 本机动作齐备（auto·可靠）。
-- **AC7**：`cat VERSION` == tag == `CHANGELOG.md` 顶条版本号，三者一致（auto·可靠）。
-- **AC8**：`git diff --stat` / `git status` 确认无 `Coder/**`、`templates/**`、`hook` 改动（auto·可靠）。
 
-# Open Questions / Risks
-- **命令菜单「可见性」无法在 headless 环境实敲验证**：用「文件/软链存在 + 命名空间结构正确」作可靠代理（命名空间机制已经 claude-code-guide 查证），同 ITER-0044 对 `/butler-prd` 的验法。
-- **三个 P1 Open Question 在本清单已定默认**（呈交 ACK 时请一并确认）：① 切版判 **MINOR**（AC7）；② `/butler:review` **吃参数**区分默认自评 / 独立复核（AC5）；③ 引用更新只动**活规则 + 面向人文档、历史归档快照不改**（AC2）。
-- **破坏性改名残留风险**：旧逐文件软链留下的 `~/.claude/commands/butler-prd.md` 必须显式清理，否则新旧命令并存——AC2/AC4 已覆盖。
+- **AC1**：`test -f` 三命令文件 + 命名空间结构核（auto·可靠）。
+- **AC2/AC3/AC4**：读命令文件核薄壳四要点齐 + 委托真源 section 锚点逐一回真源核（auto 结构核 + 人读）。
+- **AC3 触发名**：`grep -rn '/butler-upgrade' Coder README.md .ai/project`（历史归档除外）应仅剩合法处或零（auto·可靠）。
+- **AC5**：三命令与 `prd.md`/`review.md` 结构逐要点对照（人读同构核）。
+- **AC6**：隔离 HOME `bash scripts/setup.sh` → `test -e ~/.claude/commands/butler/{milestone,upgrade,ideation}.md`（auto·可靠）。
+- **AC7**：读 capabilities/README 核更新到位、说人话（auto + 人读）。
+- **AC8**：`cat VERSION` == tag == CHANGELOG 顶条（auto·可靠）。
+- **AC9**：`git diff --stat` 确认无越界（auto·可靠）。
+
+# Open Questions / Risks（呈 ACK 时请一并确认三默认）
+
+1. **切版号**：默认 **MINOR**（纯新增命令能力，与 R1 同类）。
+2. **`/butler-upgrade` 触发名一并迁 `/butler:upgrade`**（AC3）：默认**迁**（改 `butler-upgrade.md §2` 触发词 + capabilities，触发名非算法、与 R1 一致；保留自然语言触发）。若你想保守「只加命令、不碰任何 Coder 真源」，可否掉此项、`/butler-upgrade` 散文名与 `/butler:upgrade` 命令并存。
+3. **capabilities 整理方式**（AC7）：默认**转换**旧行为 `/butler:*` 一等入口 + 顺清 R1 遗留 `/review` 冗余。若想最小改动，可只加 3 新行、不动旧行（但表会更冗余）。
+- **风险**：命令菜单「可见性」headless 不可实敲，沿用 R1 代理验法（文件/软链存在 + 结构正确 + 经软链可达）。
