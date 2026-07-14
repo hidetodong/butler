@@ -60,7 +60,7 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 
 ## 4. 冻结状态字段（`状态` / `ACK 日期`）
 
-- 语义：`draft` = AC 已写完、等待用户 ACK；`ack-frozen` = 用户（或 `/dangerous` 自审门）已 ACK、本迭代验收范围冻结。
+- 语义：`draft` = AC 已写完、等待用户 ACK；`ack-frozen` = 用户（或 `/butler:dangerous` 自审门）已 ACK、本迭代验收范围冻结。
 - 流程：AC_LIST 写完先置 `draft`；用户 ACK 后改为 `ack-frozen` 并填 `ACK 日期`，方可进入 P3。
 - hook 联动：在部署了 butler hook 的项目，AC_LIST 处于 `draft` 时源码写操作会被 `phase_gate` 拦截，直到置 `ack-frozen`。无该字段的旧 AC_LIST 按 legacy 放行，不被误杀。
 - amend 退回：迭代内小幅修订（`iteration-schema.md §5.3`）必须把 `状态` 退回 `draft`、重新等待 ACK 后再置 `ack-frozen`。

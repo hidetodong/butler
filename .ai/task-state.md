@@ -1,16 +1,16 @@
 # Task State
 
-> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**ITER-0046 已收口**，正在切版 **v2.6.0**（聚合 ITER-0046·个人沟通风格常开正本）。前一版 v2.5.0（ITER-0045·slash command 全局下发）。
+> **无活跃里程碑 · 无活跃迭代**（`MILESTONES.current: —`、`ITERATIONS.current: —`）。上一个里程碑 **MILE-0005（butler 命令命名空间系统）已于 2026-07-14 整体收官**（R1–R4 全落、8 命令齐），末迭代 **ITER-0050（R4·收官）已收口切 v2.10.0**。butler 处于版本发布后的空档，等下一个任务开题。
 
-## ITER-0046 收口小结
+## 刚收口：MILE-0005 里程碑（closed·2026-07-14）
 
-- 把散在本机 Matrix 输出风格与多个记忆文件的「怎么跟用户说话」规矩，收敛成 butler 仓根**唯一正本** `communication-style.md`（8 节：基调/详略含话砍到骨头/抓重点/说人话4条各带例/别急着抛选择菜单/格式/结尾决策块/边界；随 git 跨机器同步）。`scripts/setup.sh` 受管 heredoc 加一行 `@$BUTLER_DIR/communication-style.md`，把正本 @import 进全局 `~/.claude/CLAUDE.md` **每会话每项目常开**。README + HUMAN_GUIDE 注册。
-- Matrix 输出风格**退休**（本机一次性迁移，不进仓提交）：删 `~/.claude/output-styles/matrix.md` + 拆 fish/zsh 两处 `claudep` 的 `--settings '{"outputStyle":"Matrix"}'` 参数 + 查 settings.json 无残留；三风格记忆（style-concise/style-plain-language/discussion-mode-no-forced-menus）掏薄壳、只留来龙去脉 + 指向正本，MEMORY.md 索引同步改。
-- 8 条 AC 全过；AC1–AC6 实测（隔离 HOME 端到端实跑 setup.sh 核 @import 行恒=1 + 幂等 + 抽路径 test -f；迁移前逐节核 matrix→正本无遗漏 21 锚点、迁移后读文件核）。未触发独立复核（幂等 bash + 手写正本 + 文档，无契约面）。
-- 交付 `deliveries/ITER-0046-communication-style-voice-file.md`+`.html`，归档 `.ai/iterations/ITER-0046/`。全貌产物已折：`capabilities`（沟通风格全局常开正本 + setup @import 能力）、`frontier`（v2.6.0 + 沟通风格收敛单一正本）。
-- **切版 v2.6.0 判 MINOR**（新增常开能力）；`migrations/v2.6.0.md` 就目标项目 `.ai/` 部署面给 `[no-op]`+`[restamp]`，注明机器级动作「重跑 `setup.sh` 装 @import」+ 本机一次性清理 matrix/claudep 可选手动步。发布提交独立于迭代 feat 提交。
+把 butler 散在规则正文里的「散文触发词」收敛成一整套 `/butler:xxx` 命名空间真实 slash command、全局任意项目可用。路线图全落：**R1** 地基 + `/butler:prd` 迁移（ITER-0047·v2.7.0）→ **R2** 批量补 milestone/upgrade/ideation（ITER-0048·v2.8.0）→ **R3** 最宽参数 preference〔二级嵌套参数〕（ITER-0049·v2.9.0）→ **R4** loop/dangerous 加风险闸〔收官〕（ITER-0050·v2.10.0）。成果：命名空间目录 + **8 命令**（prd/review/milestone/upgrade/ideation/preference/loop/dangerous）+ `setup.sh` 一条目录软链自动托管全套 + 薄壳路由器范本（已证吃得下二级嵌套参数与风险闸两种复杂度）。聚合交付 `deliveries/milestones/MILE-0005-command-namespace-system.md`；里程碑产物归档 `.ai/milestones/MILE-0005/MILESTONE.md`。
 
-## 下一步入口
+## 待放行 / 待授权
 
-- **待用户给方向**：候选——① PRD 全链真实 dogfood（还「从未真跑」欠账）；② slash command 成体系化（分发链路已通、`/butler-prd` 是范本，续落 `/milestone`·`/prd`·`/review` 等真实 `butler-*` 命令文件，随 setup.sh 自动全局可用）。
-- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。
+- **本地已切 v2.10.0**（VERSION/CHANGELOG/migrations/v2.10.0.md + 本地 tag）；feat 提交 + 独立 chore(release) 提交已落、分支 `feat/mile-0005-butler-command-namespace` 已推、draft PR #3 增长。**未合并 main、未推 tag v2.10.0 到远端**——两者待用户显式授权。
+
+## 下一步入口（下一任务开题时）
+
+- 无活跃里程碑/迭代，开题闸已解除：新任务可直接开独立迭代，或按需开新里程碑。候选积压见 `.ai/project/frontier.md`「下一个瓶颈」+ `debt.md`（两笔历史欠债仍悬：hook 在 butler 侧不 live、`/butler:upgrade`·`/butler:dangerous` 端到端从未真跑；PRD 全链真实 dogfood 从未走完）。
+- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → `.ai/project/frontier.md` → 代码。

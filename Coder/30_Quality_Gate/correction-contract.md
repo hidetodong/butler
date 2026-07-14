@@ -12,7 +12,7 @@ scope: P4 执行-验证-收口的常驻底线纪律——默认对每次迭代�
 
 它不定义探测内容（探测内容由 `linting.md` / `testing-strategy.md` / `review-standard.md` 提供），只定义**如何对待探测结果、何时收口、何时交还**。平时通过即隐形，只在需要交还时冒头。
 
-当需要更高强度的连续纠错时，由用户显式 `/loop` 激活 `55_Extension_ConvergenceLoop/convergence-loop-engine.md`，在本契约之上叠加正式仪式（`[Loop #N]` 标注、定量熔断、RCA 报告）。**升档是叠加，不是替代——本契约的全部约束在升档后照常生效。**
+当需要更高强度的连续纠错时，由用户显式 `/butler:loop` 激活 `55_Extension_ConvergenceLoop/convergence-loop-engine.md`，在本契约之上叠加正式仪式（`[Loop #N]` 标注、定量熔断、RCA 报告）。**升档是叠加，不是替代——本契约的全部约束在升档后照常生效。**
 
 ## 2. 契约条款
 
@@ -45,13 +45,13 @@ scope: P4 执行-验证-收口的常驻底线纪律——默认对每次迭代�
 
 诚实停是**定性判断，不设硬计数器、不强制写 RCA 文件**。交还时须如实说明：失败现象、已尝试的修正动作、所缺的输入或决策。
 
-> 诚实停的反面不是"放弃太早"——当用户要求"别交还、死磕到底"时，应 `/loop` 升档到收敛闭环，由其定量熔断接管坚持上限。底线层负责"诚实"，升档层负责"死磕"。
+> 诚实停的反面不是"放弃太早"——当用户要求"别交还、死磕到底"时，应 `/butler:loop` 升档到收敛闭环，由其定量熔断接管坚持上限。底线层负责"诚实"，升档层负责"死磕"。
 
 ## 3. 与其他规则的关系
 
 - **探测内容**：`30_Quality_Gate/` 下 `linting.md` / `testing-strategy.md` / `review-standard.md` 定义探测什么；本契约定义如何对待探测结果。
 - **BUG_LOG 写入**：诚实停若涉及高价值逻辑暗坑，是否写入 `.ai/03_BUG_LOG.md` 遵守 `20_Workflow_Lifecycle/maintenance-boundaries.md` 的触发阈值，本契约不强制。
-- **升档**：`55_Extension_ConvergenceLoop/convergence-loop-engine.md`（`/loop`）在本契约之上叠加高强度死磕与定量熔断。
+- **升档**：`55_Extension_ConvergenceLoop/convergence-loop-engine.md`（`/butler:loop`）在本契约之上叠加高强度死磕与定量熔断。
 - **无人值守**：`65_Extension_Dangerous/dangerous-engine.md` 在自治推进中默认继承本契约，其 P4 复用收敛闭环。
 - **人测 fail 回传**：有人场次经交付自测桥回传的 `fail`（未通过）人测残余进本契约纠错闭环——人写的 `note` 当线索，修到真过再回 P5，**不得**因"人说不行"就绕过探测直接改或静默吞（承 §2.3 禁伪造、§2.4 诚实停）；起桥 / 四态路由见 `20_Workflow_Lifecycle/human-test-bridge.md`。
 - **修根因 / 最小改动定位**：本契约管"验证失败后修到真过、禁降级、诚实停"；"具体怎么改最小且不漏"的写码手法——修根因不打症状补丁、grep 全部 caller、守卫放共享函数一处——见 `implementation-discipline.md §4`，二者并列不重叠。

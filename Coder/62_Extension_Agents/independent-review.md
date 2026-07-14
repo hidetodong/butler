@@ -27,7 +27,7 @@ scope: 复核帮手（independent review）的中立定义——角色/输入/�
 
 - **手动**：用户输入 `/review`，或提到"看看写得怎么样""有没有坑""评价一下""代码审查"——一次性触发，跑完即止。
 - **配置驱动**：项目 `.ai/local-constraints.md`「Butler 功能开关」`independent_review: on` 时，每次 P5 收口自动起，无需每轮手输（默认 off）。
-- **危险模式**：`/dangerous` 下 P5 强制完整审查建议升格为独立复核（见 `65_Extension_Dangerous/dangerous-engine.md §7.3`）。
+- **危险模式**：`/butler:dangerous` 下 P5 强制完整审查建议升格为独立复核（见 `65_Extension_Dangerous/dangerous-engine.md §7.3`）。
 
 > 独立复核是叠在 P5 简评之上的 opt-in 增强、不替代简评（`60_Extension_CodeReview/review-engine.md §5` 的同上下文简评照常默认跑）。
 
@@ -41,7 +41,7 @@ scope: 复核帮手（independent review）的中立定义——角色/输入/�
 ## 5. 输出衔接
 
 - 裁决写入 `.ai/references/insight-independent-review.md`（落进 `.ai/references/` 外部参考资料目录）。
-- refute 的 AC 与 Must Fix 走 `60_Extension_CodeReview/review-engine.md §4` 闭环（阻断收口 → 退回 P4 / `/loop`）。
+- refute 的 AC 与 Must Fix 走 `60_Extension_CodeReview/review-engine.md §4` 闭环（阻断收口 → 退回 P4 / `/butler:loop`）。
 - 跑过独立复核的迭代，`.ai/VERIFY_REPORT.md` 的 `Independent Review` 字段须回填结论（见 `20_Workflow_Lifecycle/verify-schema.md`）。
 
 ## 6. 诚实兜底

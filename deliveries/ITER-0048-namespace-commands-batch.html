@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0048 交付总结 · 批量铺开 /butler: 命名空间命令</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>批量铺开 <code>/butler:</code> 命名空间命令：一次落三个薄壳，验证「范式可复制 + 目录软链自动托管」</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0048</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0005 R2</span>
+        <span class="chip date">收口 2026-07-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1（ITER-0047）已打好 <code>/butler:</code> 命名空间地基：建 <code>.claude/commands/butler/</code> 目录、<code>/butler-prd</code> 迁成 <code>/butler:prd</code>、<code>setup.sh</code> 改成软链整个目录、落 <code>/butler:review</code> 当范本。但整套 butler 能力大多仍是规则正文里的散文暗号（<code>/milestone</code>、<code>/butler-upgrade</code>、<code>/ideation</code>），补全菜单里看不见。</li>
+        <li>本次照 R1 的<strong>薄壳路由器</strong>范本，<strong>一次批量落三个低风险命令</strong>——<code>/butler:milestone</code>、<code>/butler:upgrade</code>、<code>/butler:ideation</code>，验证两件事：① 薄壳范式能否稳定批量复制（不是一次性手艺）；② R1 的「整目录软链」是否真能让新命令<strong>零分发动作</strong>自动全局可用。同时把从来只是散文触发词、没有真命令文件的旧名 <code>/butler-upgrade</code> 顺势迁成 <code>/butler:upgrade</code>（首次为它落真命令文件）。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p><strong>新落 3 个薄壳命令</strong>（结构与 R1 的 <code>prd.md</code>/<code>review.md</code> 同构：读对规则进上下文 → 按 <code>$ARGUMENTS</code> 分派 → 委托真源不复述算法〔守 DRY 红线〕→ 第 0 步优雅降级）：</p>
+      <ul>
+        <li><strong><code>/butler:milestone</code></strong> — 委托 <code>milestone-schema.md</code>：留空/贴 brief → 里程碑录入（§6.1 启动信号 → §6.4 录入，含「brief 是大 PRD」并进 <code>prd-split</code> 切片 → §7.1 开启登记）；<code>status</code> → 只读看板（§6.5，只读不改盘）。收口/废弃/演进走语义（§7.3-7.5）不进命令面，已注明。第 0 步无 <code>.ai/</code> 台账则提示先部署基地车、不硬建。</li>
+        <li><strong><code>/butler:upgrade</code></strong> — 委托 <code>butler-upgrade.md</code>：§3 侦察 → §4 首次/§5 常规区间队列（收「目标戳 &lt; vV ≤ 仓库 VERSION」的 <code>migrations/</code> 配方按序幂等执行、漂移即停）→ §6 落地 → §7 验证回退。升级对象是<strong>当前项目</strong>、保护区（<code>&lt;!-- user-managed --&gt;</code>/<code>origin/</code>）不覆盖。第 0 步没接 butler 则指向 <code>mcv-deployment</code>（首次部署≠升级）。</li>
+        <li><strong><code>/butler:ideation</code></strong> — 委托 <code>ideation-engine.md §3</code>：§3.1 意图探测 → §3.2 需求展开 → §3.3 多维压力测试 → §3.4 收敛 AC。第 0 步：没接 butler 也能脑暴，接了则收敛的 AC 顺势接进 P1→P2。不进执行主线、不冻结。</li>
+      </ul>
+      <p><strong>旧触发名 <code>/butler-upgrade</code> 全仓迁成 <code>/butler:upgrade</code></strong>：此前从来只是规则正文里的散文暗号、无对应命令文件；R2 首次为它落真命令文件，并把活文档里的旧名统一迁新（保留「升级 butler / 同步新版」自然语言触发）。</p>
+      <p><strong>文档更新</strong>：<code>capabilities.md</code> 命令表把 <code>/ideation</code>·<code>/milestone</code>·<code>/butler-upgrade</code> 三行<strong>转换</strong>为 <code>/butler:*</code> 一等入口（真源列改指命令文件），并<strong>删掉</strong> R1 遗留的 <code>/review</code> 旧行（并入既有 <code>/butler:review</code>，消并列冗余）；<code>README.md</code> 的 <code>butler/</code> 子树补三命令。</p>
+      <p><strong>迁移配方 + 切版</strong>：<code>migrations/v2.8.0.md</code>（部署面 <code>[no-op]</code>+<code>[restamp]</code>；点明新命令由 R1 目录软链自动托管、<strong>无需</strong>重跑 setup.sh）；VERSION 2.7.0→2.8.0、CHANGELOG 顶条 <code>[2.8.0]</code>（判 MINOR）。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>多了三个命令</strong>：<code>/butler:milestone</code>（开里程碑 / 看板）、<code>/butler:upgrade</code>（升级已部署项目）、<code>/butler:ideation</code>（需求脑暴）。</li>
+        <li><strong><code>/butler-upgrade</code> 改敲 <code>/butler:upgrade</code></strong>：路由行为一字未改，只是换了命名空间触发名（与 R1 <code>/butler-prd</code>→<code>/butler:prd</code> 同类）。</li>
+        <li><strong>无需任何安装动作就能用</strong>：R1 已把整个 <code>.claude/commands/butler/</code> 目录软链进全局，这三个新命令<strong>自动</strong>在所有项目可用——这正是 R1 选「整目录软链」而非「逐文件软链」的兑现点。<strong>唯一例外</strong>：若你从没跑过 R1 的 setup.sh，补跑一次即到位。</li>
+        <li><strong>对已部署项目</strong>：<code>.ai/</code> 结构零变化（命令是个人工具、不下发、不进 <code>templates/</code>）。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（命令层）：<code>.claude/commands/butler/milestone.md</code> + <code>upgrade.md</code> + <code>ideation.md</code>。</li>
+        <li>改（活文档·触发名）：<code>butler-upgrade.md</code>（§2 触发词）、<code>logic-protocol.md</code>、<code>migration-schema.md</code>、<code>HUMAN_GUIDE.md</code>、<code>architecture.md</code>、<code>debt.md</code>。</li>
+        <li>改（活文档·命令表/目录树）：<code>capabilities.md</code>（三行转换 + 删 <code>/review</code> 冗余）、<code>README.md</code>（子树补三命令）。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.7.0→2.8.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.8.0.md</code>。</li>
+        <li>没碰（守最小影响面 / AC9 边界守恒）：任何 <code>Coder/**</code> 规则<strong>算法</strong>与状态机、<code>templates/**</code>、四件套 schema、<code>templates/hooks/**</code>、<strong><code>setup.sh</code>（R1 目录软链已托管，本迭代一行未动）</strong>——<code>git diff --stat</code> 核清。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p><strong>9 项验收（AC1–AC9）全过</strong>，<code>auto·可靠</code>为主 + 结构核/人读：</p>
+      <ul>
+        <li><strong>隔离假 HOME 实跑 <code>setup.sh</code> ×2（首装 + 幂等）5/5 命令经目录软链可达</strong>：三新命令 + R1 的 prd/review 全部 <code>test -e</code> 通过、<code>~/.claude/commands/butler</code> 目录软链指向仓库命名空间目录、无 <code>butler/butler</code> 套娃、<strong><code>setup.sh</code> 未改一行</strong>——坐实 R1 目录软链红利（AC1/AC6）。</li>
+        <li>三命令薄壳四要点齐（薄壳声明 + DRY / 跨 cwd 路径约定段 / 第 0 步降级 / frontmatter 说人话），委托的真源 section 锚点回真源<strong>逐一真实存在</strong>、零捏造（AC2/AC3/AC4/AC5）。</li>
+        <li><code>/butler-upgrade</code> 全仓残留普查<strong>零裸旧名</strong>（新名带旧名注 / 文件名引用 / 本迭代规划稿讨论迁移本身 / 历史归档 均合法）（AC3）；capabilities 三行已转换 + <code>/review</code> 行已删、README 子树五命令齐（AC7）；VERSION/CHANGELOG/migration 三载体一致（AC8）；<code>git diff --stat</code> 无越界（AC9）。</li>
+        <li><strong>标准模式复核</strong>：低风险纯机械（薄壳复制 R1 已验范式 + 触发名字符串迁移 + 文档 + 幂等切版），P5 自评 + 客观隔离 HOME 实跑无 shaky 处，未升格强制独立复核（区别于 R1 危险模式）。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>计划-实际差异 1 处（已记 VERIFY_REPORT）</strong>：TECH_PLAN DD3 字面「<code>butler-upgrade.md</code> 只改 §2 一行」，实际按 AC3「全仓无残留」迁了 6 处命令名——6 处全是触发名、非算法，DD3 原则不破，差异为计划低估了触发名在活文档的分布面。</li>
+        <li><strong>命令菜单「可见性」headless 不可实敲</strong>：沿用 R1 代理验法（文件存在 + 命名空间结构正确 + 经目录软链可达）。真正菜单可见需在<strong>主检出</strong>跑过 R1 的 setup.sh。</li>
+        <li><strong><code>/butler:upgrade</code> 升级协议仍从未真跑</strong>：本迭代只给它换触发名 + 落命令文件，历史欠债（见 <code>debt.md</code>）未消。</li>
+        <li><strong>MILE-0005 仍进行中</strong>：R3（<code>preference</code> 多子命令）、R4（<code>loop</code>/<code>dangerous</code> 加风险闸）待后续迭代，设计未锁、不擅自连跑。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0048/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>命令（新）：<code>.claude/commands/butler/milestone.md</code> / <code>upgrade.md</code> / <code>ideation.md</code></li>
+        <li>触发名迁移：<code>butler-upgrade.md</code>（§2）、<code>logic-protocol.md</code>、<code>migration-schema.md</code>、<code>HUMAN_GUIDE.md</code>、<code>architecture.md</code> / <code>debt.md</code></li>
+        <li>文档：<code>.ai/project/capabilities.md</code>（命令表）、<code>README.md</code>（<code>butler/</code> 子树）</li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.8.0]</code>）、<code>migrations/v2.8.0.md</code></li>
+        <li>里程碑：<code>.ai/MILESTONE.md</code>（MILE-0005 §5.3 路线图 R2）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

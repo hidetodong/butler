@@ -1,44 +1,51 @@
-# MILESTONE — MILE-0004 · PRD 先行 + references 版本化改版同步
+# MILESTONE — MILE-0005 · butler 命令命名空间系统
 
-> 方向性产物（非冻结、不走 ACK）。给 `.ai/references/` 补上当年只给了 `.ai/project/` 的"索引 + 渐进加载"待遇，并新增 PRD 先行入口与改版同步协议。设计共识见本文件 §5.3 各路线项与 §5.4 演进记录；决策依据＝2026-07-08 grilling 十节点决议（收在 `docs/research/prd-first-design.html` + 本文件）。
+> 方向性产物（非冻结、不走 ACK）。把 butler 散落在规则正文里的「散文触发词」（`/milestone`、`/review`、`/loop` 等写在文档里当暗号、却没有真实命令文件的引用）收敛成一整套 `/butler:xxx` 命名空间下的真实 slash command——补全菜单可见、全局任意项目可用、`butler:` 前缀天然隔离撞名。设计共识见本文件 §5.3 各路线项与 §5.4 演进记录；地基事实（子目录＝冒号命名空间、user 级全局同理、frontmatter 照常、软链已实跑验证）经 2026-07-14 claude-code-guide 查证。
 
 ## 5.1 范围评估
 
 **In Scope（版本级）**
-- `references/` 子系统升级为**支持知识文件夹式索引 + 渐进读**：`references/prd/00_INDEX` 契约 + **模块登记表**（slug ↔ 当前标题/章节 ↔ 首见版本）+ digest-and-point 读纪律。硬区分：**索引可为摘要、PRD 切片必须逐字原文**。
-- **PRD 先行入口**：大 PRD 按语义/模块边界切成 `prd/<slug>.md`（无损）；小 PRD 为单模块退化态（同一套模型）。首切并进 `/milestone`（brief → 路线图 + 切片，一份输入喂两个海拔），路线图项 ↔ 模块 slug 交叉指针。
-- **AC 钉版**：AC frontmatter 加 `prd_version`，冻结时绑定、之后钉住；引用锚点＝slug + 绑定版本；接进 P2/P3/P5（External References / References Compliance 支持版本化 slug）。
-- **改版同步协议**：`/prd update` 重新派生 + 变更检测（修改项清单优先 + diff 兜底 + 对账）+ `.archive/vN/` 全量快照 + 三态影响面报告 + 接 `acceptance-schema §5.3`(amend) 重冻路径；`/prd status` 看登记表/影响面。
+- **命名空间骨架**：新建 `.claude/commands/butler/` 子目录；Claude Code 按目录自动把 `butler/<name>.md` 映射为 `/butler:<name>`（冒号是真实调用分隔符），一套命令聚成 `/butler:*` 族。
+- **8 个真实命令文件**（全部走「薄壳路由器」范式——只做三件事：把对的规则读进上下文、按 `$ARGUMENTS` 分派、委托真源规则执行，不复述算法）：`prd` / `milestone` / `review` / `upgrade` / `preference` / `ideation` / `loop` / `dangerous`。
+- **`/butler-prd` 破坏性迁入命名空间**：现有 `.claude/commands/butler-prd.md`（连字符、v2.4.0 发布）改名迁为 `butler/prd.md` → `/butler:prd`；走 `[rename]` 迁移配方 + 清旧全局软链 `~/.claude/commands/butler-prd.md` + 扫更正文/文档里对 `/butler-prd` 的引用。
+- **setup.sh 软链改造**：现逻辑「逐个软链 `.claude/commands/*.md`」是扁平的、不进子目录 → 改为**软链整个 `butler/` 目录** → `~/.claude/commands/butler`；一条目录软链管全套，butler 仓里加命令自动全局生效、无需重跑 setup。
+- **子命令走参数**：`/butler:preference on|off|reback|distill`、`/butler:milestone status`、`/butler:dangerous on|off` 一律走 `$ARGUMENTS` 路由（同现 `/butler-prd` 处理 `status`/`update` 的范式），**不拆多级命名空间**（避免文件爆炸、背离薄壳）。
+- **没接 butler 时优雅降级**：每个命令薄壳统一先判「当前项目是否已部署 butler（有 `.ai/`）」，没接就清晰提示「先部署基地车」而非报错（`/butler-prd` 已有此边界，其余照抄）。
+- **高风险命令加闸**：`loop`（死磕闭环）、`dangerous`（无人值守自治）的薄壳保留/前置风险提示与确认，**不照抄低风险命令的轻壳**——命令化不得降低其「郑重显式触发」的门槛。
 
 **Out of Scope（版本级）**
-- **不碰非 PRD 流**（非回归红线）：对话驱动 / origin brief / `/ideation` 一行不动，核心 P1–P5 不改。PRD 先行是 opt-in 加层。
-- 不为 PRD 造平行的"里程碑合成"管线——首切复用现有 `/milestone` brief→MILESTONE 合成。
-- 不做子项级变更粒度（模块/切片级即止，要精度靠切细）。
-- 不真跑端到端老项目升级（那是既有 dogfood 债、另论）。
+- **不下发到目标项目仓库**（沿用 ITER-0044 边界）：命令是个人工具，全局装在 user 级 `~/.claude/commands/`，**不进 `templates/`、不污染目标项目仓、目标项目升级零影响**。
+- **不改真源规则算法**：薄壳只路由，各命令委托的 `Coder/**` 规则正文语义一律不动（本里程碑不重写任何执行规则）。
+- **不做团队协作者共享**：把命令拷进项目自身 `.claude/commands/`（project 级、随项目仓走）那条路本版不做，另议。
+- **不新造命令能力**：只把既有散文触发词落成真实文件，不发明新命令、不扩既有命令语义。
 
 **关键交付目标**
-- 一份 PRD 从导入 → 切片 → 钉版 → 实现 → 验收 → 改版同步，全链路可走：细节逐字保真、跨改版可审计、已冻结/已收口工作不被静默破坏。
+- 8 个 `/butler:xxx` 命令在**任意项目**补全菜单可见可用（全局软链 + 命名空间保证）；`/butler-prd` 干净迁成 `/butler:prd`、无残留旧软链/旧引用；`setup.sh` 一条目录软链托管全套；薄壳路由器范本固化、可被后续命令复制。
 
 ## 5.2 理解阐释
 
-- **核心问题**：里程碑是有损路线图，扛不住组件级实现细节（精确文案、校验规则）；而 `references/` 虽是权威真源通道，却从没享受 MILE-0003 给 `.ai/project/` 的索引 + 渐进读待遇，也没有改版（V1.1→V1.2）同步协议。PRD 一改版，切片/引用/已冻结工作全无章可循。
-- **背景与价值**：真实项目多为 PRD 驱动、且 PRD 天然按"修改项"迭代改版（用户实例即 "V1.1 修改项"）。补齐后 PRD 先行成为一等入口，改版有确定性协议兜底，组件细节不被里程碑蒸发。
-- **整体影响判断**：改动集中在 `40_Context_Management`（references 索引/读纪律）+ `20_Workflow_Lifecycle`（milestone 入口分支、acceptance/tech-plan/verify 的版本化引用、新 `/prd` 命令族薄层）。**几乎全在复用既有仪式**：`/milestone` 录入、`ack-frozen` + `acceptance-schema §5.3`(amend)、closed 不可改 + 变更开新迭代、收口快照。真新增仅：切分机制、模块登记表、`prd_version` 字段、`/prd update`+`status`、变更检测 + 影响面、`.archive/vN/` 快照。无平行机器。
+- **核心问题**：butler 的命令长期停在「散文触发词」——规则正文里 `/milestone`（引用 32 次）、`/review`（32）、`/dangerous`（56）等到处当暗号，但只有 `/butler-prd` 一个真实命令文件；其余在补全菜单里零存在感、用户看不见也记不住。且没有统一命名空间，全局安装通用名（`/milestone`、`/review`、`/loop`）易与别的插件 / 用户自定义命令撞名。
+- **背景与价值**：ITER-0044 落了第一个真命令 `/butler-prd`、ITER-0045 打通全局软链分发，「薄壳路由器 + 全局安装」模式已实跑验证。现在把它**成体系推广**：整套 butler 能力都获得一等命令入口，`butler:` 前缀隔离撞名，用户在任何项目随手可敲。
+- **整体影响判断**：改动集中在**新增文件**（`.claude/commands/butler/` 下 8 个命令）+ `scripts/setup.sh`（软链逻辑）+ `migrations/`（prd 改名配方）+ 正文/文档里对 `/butler-prd` 的引用更新。**不碰 `Coder/**` 任何规则算法**——薄壳只做路由、委托既有真源规则。真新增仅：命名空间目录结构、7 个新薄壳命令、setup.sh 目录软链、prd 破坏性改名迁移。风险点两处：① 破坏性改名要清干净旧软链 + 旧引用；② `loop`/`dangerous` 命令化要加风险闸、不降触发门槛。
 
 ## 5.3 拆分路线图
 
-> 路线项扁平原子（一项 ≈ 一迭代），按依赖排序。「实际 ITER」开启时才绑号、现留空。预计跨度 ITER-0036 ~ ITER-0041（方向性，真源以台账为准）。
+> 路线项扁平原子（一项 ≈ 一迭代），按依赖排序。「实际 ITER」开启时才绑号、现留空（不预先占号）。预计跨度 ITER-0047 ~ ITER-0050（方向性，真源以「实际 ITER」列 + 台账为准）。
 
-| 路线项 | 主题（方向 → 一个迭代） | 实际 ITER |
-|---|---|---|
-| **R1** | **references 索引化基座**：新建/扩展 references-schema——`prd/00_INDEX` 契约 + 模块登记表（slug 身份）+ digest-and-point 读纪律 + "索引可摘要/切片必原文"硬区分 + live 目录 vs `.archive/vN/` 落盘契约 | ITER-0036 ✅ |
-| **R2** | **PRD 切分机制**：按语义/模块边界切 `prd/<slug>.md`（逐字保真）+ 写登记表 + 小 PRD 单模块退化态 + soft 对齐拆法（提议→确认，绝不切碎一条规则） | ITER-0037 ✅ |
-| **R3** | **首切入口并进 `/milestone` + 两海拔交叉指针**：milestone 录入认"brief 是大 PRD"分支 → 触发 R2 切分；路线图项 ↔ 模块 slug 互指（焊上里程碑→references 源指针缺口） | ITER-0038 ✅ |
-| **R4** | **AC 钉版 + P2/P3/P5 接线**：AC frontmatter `prd_version`（冻结绑定、之后钉住）+ 版本化 slug 引用锚点 + 扩展 acceptance/tech-plan/verify（External References 版本化、Compliance 对钉住版核） | ITER-0039 ✅ |
-| **R5** | **改版同步 `/prd update`**：重新派生 + 变更检测（清单优先 + diff 兜底 + 对账）+ `.archive/vN/` 全量快照 + 三态影响面报告（没开工/进行中/已收口）+ 接 amend 重冻 + `/prd status`；登记表认亲基础态（新增 / 消失） | ITER-0040 ✅ |
-| **R6** | **登记表认亲边缘 + 非回归 + 收尾**：模块合并/拆分/改名跨版本认亲对账（松边）+ 非回归门（非 PRD 流一行未动的显式验证）+ README 注册 / HUMAN_GUIDE 用法 / 说人话自检 / dogfood | ITER-0041 ✅ |
+| 路线项 | 主题（方向 → 一个迭代） | 实际 ITER | 状态 |
+|---|---|---|---|
+| **R1** | **命名空间地基 + prd 迁移 + 首个新命令验证**：建 `.claude/commands/butler/` 骨架 + `/butler-prd`→`/butler:prd`（`[rename]` 迁移 + 清旧全局软链 + 正文/文档引用更新）+ 改 `setup.sh` 软链整目录 + 顺带落 `/butler:review`（纯薄壳，验证「薄壳路由器」范式在命名空间下可复制） | ITER-0047 | closed |
+| **R2** | **批量补低风险纯薄壳命令**：`/butler:milestone`（+ `status` 参数）、`/butler:upgrade`、`/butler:ideation`——三个语义清晰、无风险闸的命令，套 R1 固化的范本批量产出 + 各自「没接 butler 优雅降级」 | ITER-0048 | closed |
+| **R3** | **`/butler:preference`（子命令最多）**：`on`/`off`/`reback`/`distill` 四子命令全走 `$ARGUMENTS` 参数路由，委托 `70_Extension_Preference` 真源；单开一迭代因参数面最宽、要把参数分派写扎实 | ITER-0049 | closed |
+| **R4** | **高风险命令加闸**：`/butler:loop` + `/butler:dangerous`（含 `on`/`off`）——命令薄壳前置风险提示与确认闸，委托 `55_Extension_ConvergenceLoop` / `65_Extension_Dangerous` 真源；单独设计以确保命令化不降低「郑重显式触发」门槛 | ITER-0050 | closed |
 
 ## 5.4 范围演进记录
 
-- 2026-07-08 · 开启 MILE-0004（承 MILE-0003 于 2026-07-08 收口、开题闸解除）。范围与路线图源自当日 PRD 先行设计 grilling 的十节点决议：真源模型 A（源为真、references 可重生投影）/ 全局版本 b（留版本、执行读最新）/ 冻结绑定 ii / 模块粒度粗 / 检测 c（清单优先+diff兜底）/ 三态 a（亮牌不自动默认）/ slug 登记表 b / 混合触发 c（首切并进 milestone、改版走 /prd update）/ 小 PRD 单模块 b / live+快照 a。松边（模块合并/拆分/改名认亲）显式归入 R6。
-- 2026-07-09 · R6（ITER-0041）收口，**MILE-0004 路线图 R1–R6 六块齐**：认亲松边落 `prd-update §4.2`（启发式提候选→确认、绝不自动认、拿不准退回基础态）、非回归门落 `references-schema §9`（不得触碰的非 PRD 流 + 判据 git diff 为空）、收尾（HUMAN_GUIDE PRD 用法节 / flip §4·§8 / 说人话自检）。范围无扩张。**收口里程碑 + 独立切版（聚合 ITER-0036~0041）为发布动作、待用户放行**（同 MILE-0003 v2.0.0 分开走的先例）。
+- 2026-07-14 · 开启 MILE-0005（承 MILE-0004 于 2026-07-09 收口、`current` 为 none，开题闸解除）。方向源自 2026-07-13~14 对话：用户要「一套 `/butler:xxx` 命名空间命令系统」。地基事实经 claude-code-guide 查证：子目录＝冒号命名空间、`~/.claude/commands/butler/` user 级全局同理、多级可嵌套、frontmatter（description/argument-hint/`$ARGUMENTS`）照常、command `.md` 软链已由 ITER-0045 实跑验证可用（故维持 commands 路线、不迁 skills）。已 soft 对齐的关键决策：命令清单 8 个、子命令走参数不拆多级、`loop`/`dangerous` 加风险闸、`/butler-prd` 破坏性改名一并迁入、命令仍不下发目标项目（个人工具边界沿用 ITER-0044）。
+- 2026-07-14 · **R1 收口**（ITER-0047，危险模式自治、独立复核 0 Must Fix）。地基落成：`.claude/commands/butler/` 命名空间目录建立、`/butler-prd`→`/butler:prd` 破坏性迁移（`git mv` 正文零改 + 旧软链迁移清理）、`setup.sh` 逐文件软链→命名空间目录软链、`/butler:review` 薄壳范本落地（后续 R2–R4 复制样板）。聚合切 v2.7.0（MINOR）。**里程碑仍 active**——R2（批量补 milestone/upgrade/ideation）、R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。范本已固化：新命令＝往 `butler/` 丢一个薄壳 `.md`（委托真源不复述 + 第 0 步优雅降级 + frontmatter 两行说人话），随目录软链自动全局可用。
+- 2026-07-14 · **R2 开启**（ITER-0048，标准模式）。套 R1 范本批量落 3 个低风险纯薄壳命令：`/butler:milestone`（+`status`）、`/butler:upgrade`、`/butler:ideation`。待 P2 定的 scope 点：① 切版号；② `/butler-upgrade` 连字符散文触发名是否一并迁 `/butler:upgrade`（涉及改 `butler-upgrade.md §2` 触发词，属 Coder 真源但只动触发名非算法）；③ capabilities 命令表是转换旧行还是并列新行（R1 遗留 `/review`+`/butler:review` 并列的小冗余可否顺清）。
+- 2026-07-14 · **R3 开启**（ITER-0049，标准模式）。落全批**参数面最宽**的命令 `/butler:preference`：4 子命令 `on`/`off`/`reback on|off`/`distill` + 空参只读回声，`reback` 是唯一二级参数。待 P2 定的 scope 点：① 切版号（倾向 MINOR）；② `/preference` 触发名是否一并迁 `/butler:preference` 及迁移面（引擎约 7–8 处、比 R2 宽）；③ 空参默认是否采纳「只读状态回声」。委托 `preference-probe-engine` 真源、不复述算法；只管全局层开关、不碰 local-constraints 本项目抑制开关。
+- 2026-07-14 · **R2 收口**（ITER-0048，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.8.0；`/butler-upgrade`→`/butler:upgrade` 全仓 6 处触发名迁移（非算法）；capabilities 三行转换为 `/butler:*` 一等入口 + 删 `/review` 冗余。3 薄壳命令（milestone/upgrade/ideation）落地，隔离 HOME 实跑坐实 **R1 目录软链自动托管新命令**（5/5 可达、`setup.sh` 未改一行）——范式可批量复制得证。计划-实际差异 1 处（DD3 字面「改 §2 一行」实迁 6 处触发名，非算法、已记 VERIFY_REPORT）。**里程碑仍 active**——R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。
+- 2026-07-14 · **R3 收口**（ITER-0049，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.9.0；`/preference`→`/butler:preference` 全仓活文档迁移（引擎 §2.x 11 处含同意披露文案 + 5 份活文档，**刻意不碰 `templates/` 部署面**——命令不下发目标项目、旧名散文兜底、故无 `[regen-claude]`）；capabilities 行转换。落全批**参数面最宽**的 `/butler:preference`——薄壳吃下**二级嵌套参数** `reback on|off`（首 token 是 `reback` 才读第二 token）+ 空参只读状态回声（薄壳新增默认，与 milestone status/review 同构），6 路径 + 裸 reback 兜底 + 未知参数全覆盖。隔离 HOME 实跑坐实 **R1 目录软链自动托管**（这次 **6/6** 可达、`setup.sh` 未改一行）——薄壳范式吃下二级嵌套参数得证。计划-实际差异 1 处（ACK 口径「引擎约 7–8 处」实测约 13 处触发名分布，已按 DD3 全集迁移 + DD5 刻意留 templates、非范围外扩张，已记 VERIFY_REPORT）。**里程碑仍 active**——仅剩 R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。
+- 2026-07-14 · **R4 开启**（ITER-0050，标准模式，里程碑收官）。落最后两个高风险命令 `/butler:loop` + `/butler:dangerous`，收口即整体收 MILE-0005。**唯一新面是风险闸**——命令化不得降低「郑重显式触发」门槛：薄壳不复述护栏（守 DRY），改用 frontmatter ⚠️ 风险标记 + 第 0 步前置风险提醒 + 把闸交回引擎（dangerous 走 §3 回声 + §3.1 announce-on-read + §7 护栏；loop 走 §6 定量熔断）。两命令结构不同：loop 一次性 P4 升档（无持久态 / 无 off），dangerous 持久 on/off 外化 `.ai/local-constraints.md`、跨会话。待 P2 定的 scope 点：① 切版号（倾向 MINOR→v2.10.0）；② `/loop`·`/dangerous` 触发名迁移策略（面最宽 71 处 + `/loop` 与 Claude Code 自带撞名、harness 引用须精确排除，全迁外科式 vs 保守只迁面向人文档）；③ 一迭代做完两命令 + dangerous 空参=开启（走引擎闸，与 preference 空参=只读回声有意不同）。
+- 2026-07-14 · **R4 收口 = MILE-0005 整体收官**（ITER-0050，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.10.0；`/loop`·`/dangerous`→`/butler:*` 全迁外科式（22 活文档，负向前瞻护 `/dangerous-engine.md` 路径、**harness 级 `/loop`〔`dangerous-engine.md:21`〕精确保留不迁并加澄清注**、`templates/` 刻意留旧名故无 `[regen-claude]`）；一迭代做完两命令 + dangerous 空参=开启。**风险闸三招坐实**（frontmatter ⚠️ + 第 0 步前置风险提醒 + 闸交回引擎不复述护栏）——命令化未降「郑重显式触发」门槛、又守 DRY。两命令结构差异如实：loop 最薄（无参 / 无持久态 / 无 off），dangerous 四路分派（空=开启 / off / status 只读 / 兜底）持久态外化跨会话。隔离 HOME 实跑坐实 **R1 目录软链自动托管**（这次 **8/8** 可达、`setup.sh` 未改一行）、两引擎 `git diff` 逐行核**仅触发名 + 1 处 harness 加注、算法零改**。计划-实际差异 1 处（ACK 口径「71 处」实测 22 文件分布，按 DD4 全集迁移 + DD7 刻意留 templates、非范围外扩张，已记 VERIFY_REPORT）。**MILE-0005 达成**：命名空间目录 + **8 命令**（prd/review/milestone/upgrade/ideation/preference/loop/dangerous）+ 目录软链自动托管 + 薄壳路由器范本（含二级嵌套参数与风险闸两种复杂度）全部落地——散文触发词收敛成一等 slash 命令、`butler:` 前缀隔离撞名的目标完成。聚合交付见 `deliveries/milestones/MILE-0005-command-namespace-system.md`。

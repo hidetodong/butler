@@ -1,43 +1,56 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-13
+ACK 日期: 2026-07-14
 ---
 
 # Goal
-- 把散在 matrix 输出风格与多个记忆文件里的「沟通风格」规矩，收敛成 butler 仓根的**唯一正本** `communication-style.md`，经 `setup.sh` 写 `@import` 进全局 CLAUDE.md **常开、跨机器同步**；matrix 输出风格退休（本机迁移，同步拆 `claudep` 参数）；记忆掏薄壳。边界与迁移动作如实记录。
+
+MILE-0005 R4（收官）：把最后两个高风险能力落成 `/butler:*` 命令——`/butler:loop`（收敛闭环死磕）+ `/butler:dangerous`（无人值守自治）。**唯一新面是风险闸**：命令化后敲一下就触发的便利**绝不能**降低它们「该被郑重、显式触发」的门槛。薄壳不复述护栏算法（守 DRY），改用 frontmatter ⚠️ 标记 + 第 0 步前置风险提醒 + 把真正的闸交回引擎。收口即整体收 MILE-0005。
 
 # In Scope
-- 新增 `communication-style.md`（仓根）：收敛 matrix 7 节 ＋ 记忆两条真增量（话砍到骨头折进「详略」、别抛选择菜单独立成节），说人话每条留一对 ❌/✅，开篇写清定位（唯一正本 / 常开 / 跨机器同步 / 只管说话方式 / 反馈往这写）。
-- 改 `scripts/setup.sh`：受管 heredoc 加一行 `@$BUTLER_DIR/communication-style.md`（绝对路径、幂等）。
-- 注册 `README.md`（结构树登记根文件，不进 Coder SOP 阅读顺序）+ `HUMAN_GUIDE.md`（安装节点明 setup 装全局常开沟通风格）。
-- 折叠 `capabilities`/`frontier`；独立发布提交切 MINOR v2.6.0（VERSION / CHANGELOG / migration）。
-- 本机迁移（不进仓提交）：删 matrix.md、拆两处 claudep 参数、查 settings.json、掏薄壳三记忆 + 改 MEMORY.md。
+
+- 新建 2 个薄壳命令 `.claude/commands/butler/loop.md` + `dangerous.md`，结构与 `prd.md`/`review.md`/`preference.md` 同构。
+- **`/butler:loop`**：一次性 P4 升档，委托 `convergence-loop-engine.md`（§3 闭环 / §6 定量熔断）；无持久状态、无 off、近乎无参数；风险提醒=高强度 / 长时 / 消耗大。
+- **`/butler:dangerous`**：持久开关，委托 `dangerous-engine.md`（§3 激活/关闭 + §3.1 跨会话 announce-on-read + §7 护栏）；空参=开启（走引擎 §3 回声闸）/ `off`=关闭 / `status`=只读回声当前 `dangerous` 开关态；状态外化 `.ai/local-constraints.md`「Butler 功能开关」`dangerous`（命令只读写开关值、不改 schema）。
+- **风险闸**（本迭代脊柱）：两命令 frontmatter `description` 带显式 ⚠️；第 0 步前置一句风险提醒（dangerous 点明「实验性 + 无人值守 + 建议可隔离/可回滚环境」、loop 点明「高强度死磕 + 长时」）+ 委托引擎自己的闸（**不复述护栏 / 熔断 / 自审门算法**）。
+- **`/loop`·`/dangerous` 触发名迁 `/butler:*`**（策略待 ACK，默认全迁外科式）：作命令引用的散文触发词迁 `/butler:*`，**精确排除** `dangerous-engine.md:21` 的 harness-`/loop`（Claude Code 自带）；logic-protocol §89/§92 加「旧名仍识别」注 + 保留自然语言触发。
+- capabilities 命令表补两行；README 扩展模式表 + `butler/` 子树补两命令 + Coder 目录 `55/65` 行迁。
+- 切一版（默认判 MINOR → v2.10.0，见 AC9）。
 
 # Out of Scope
-- 不改任何 `Coder/**` 规则正文、不动 `templates/`（不进逐项目部署面）、不改四件套 schema / hook / `.gitignore`、不碰既有「偏好探针」子系统。
-- 不把沟通风格逐项目下发（是**全局**能力，非 per-project；与基地车部署无关）。
-- 不给 matrix 留指路空壳（过渡产物直接删）；不在本轮做软链/文件自愈。
+
+- **不改引擎算法**：`convergence-loop-engine.md §1–§8`、`dangerous-engine.md §1–§10` 的闭环 / 熔断 / 自治 / 自审门 / 护栏 / checkpoint 一字不动；只动触发**名**（非算法）。
+- **不碰 `.ai/local-constraints.md` 的 `dangerous:` 字段 schema**：由 `local-constraints-schema` 管；命令只按引擎 §3 读写开关值，不改字段定义、不双写 schema。
+- **不动 `setup.sh`**：R1 目录软链已托管全套。
+- **不下发目标项目**：命令不进 `templates/`（含 rule-card 里 `/loop`·`/dangerous` 散文——同 R3，命令不下发、目标项目靠散文旧名兜底）、部署面零影响。
+- **不新造能力 / 不改风险语义**：只把散文触发词落成命名空间真命令，不发明新子命令、不降低也不加码引擎既有的风险门槛（薄壳只把闸交回引擎、不自造确认对话）。
 
 # Acceptance Checklist
-- [ ] AC1: `communication-style.md` 存在于 butler 仓根，作为**唯一正本**，含全部约定各节：基调 / 详略（含「话砍到骨头」）/ 抓重点 / 说人话（**4 条、每条一对 ❌/✅**）/ 别抛选择菜单（新增节，含一对 ❌/✅）/ 格式 / 结尾决策块 / 边界；开篇声明定位（唯一正本·常开·跨机器同步·只管说话方式·以后反馈往这写）。正文**不含**任何工程/任务/工具执行规矩（边界干净）。
-- [ ] AC2: `setup.sh` 在 `<!-- butler-global-config -->` 受管 heredoc 内写入一行 `@$BUTLER_DIR/communication-style.md`（绝对路径展开）；隔离 HOME 实跑后 `~/.claude/CLAUDE.md` 受管区内**恰好一行**该 `@import`，且**连跑两次仍恰好一行**（awk 删旧块重写、幂等无重复）。
-- [ ] AC3: @import 路径**解析得到真文件**——`setup.sh` 写入的绝对路径指向的位置确实存在 `communication-style.md`（隔离 HOME 实跑：从 `~/.claude/CLAUDE.md` 抽出 `@` 路径、`test -f` 该路径为真）。Claude Code 运行时是否真把它并入属运行时行为，验证止于「路径绝对正确 + 目标文件存在 + 受管块合法」（对齐 ITER-0045「止于文件落位」边界）。
-- [ ] AC4: 文档注册齐——`README.md` 结构树登记 `communication-style.md`（标注为个人全局配置、**不进** Coder SOP 阅读顺序）；`HUMAN_GUIDE.md` 安装节点明「重跑 `setup.sh` 即装上全局常开的沟通风格配置」。措辞守 `artifact-style §2` 说人话。
-- [ ] AC5: matrix 退休（本机迁移，验证读本机文件）——`~/.claude/output-styles/matrix.md` 已删除；`~/.config/fish/config.fish` 与 `~/.zshrc` 两处 `claudep` 均**不再含** `--settings '{"outputStyle":"Matrix"}'`（保留 `proxyon` + `claude <args>`）；`~/.claude/settings.json` 无残留 `outputStyle: Matrix`。**前置**：迁移前 matrix 全部规矩已确认并入 `communication-style.md`（内容不丢）。
-- [ ] AC6: 记忆掏薄壳（本机迁移）——`style-concise` / `style-plain-language` / `discussion-mode-no-forced-menus` 三文件的**规矩正文删除**、只留「哪天因为什么事定的」来龙去脉 + 一句「规矩正文见 `communication-style.md`」；`MEMORY.md` 索引三行同步改为薄壳描述；`style-plain-language` 里指向 butler 内部 MILE-0003 的引用**原样保留**。
-- [ ] AC7: 边界与迁移如实——`migrations/v2.6.0.md` 写清：对目标项目 `.ai/` 部署面 `[no-op]`+`[restamp]`；一个**机器级动作**「重跑 `./scripts/setup.sh` 装上 @import」；以及本机一次性手动清理（删 matrix.md / 拆 claudep 参数 / 掏薄壳记忆）如实列为可选手动步。不夸大不隐瞒。
-- [ ] AC8: 收口 + 切版一致性——四件套说人话、收口五步齐（归档 / 交付 .md+.html / 台账 closed·current:none / 折叠产物 / 6 不变量自检）；v2.6.0 三处版本载体对齐（`VERSION` == tag `v2.6.0` == `CHANGELOG` 顶条 `## [2.6.0]`）；迭代 feat 提交与 chore(release) 提交分离。
+
+- [ ] **AC1（两命令成立·可达）**：`.claude/commands/butler/loop.md` + `dangerous.md` 建立；命名空间映射 `butler/<name>.md`→`/butler:<name>` 结构正确；隔离 HOME 实跑 `setup.sh` 报 **8 个 /butler:* 命令**、两新命令经目录软链 `test -e` 可达。
+- [ ] **AC2（风险闸·本迭代脊柱）**：命令化不降低「郑重显式触发」门槛，逐条可核——
+  - 两命令 frontmatter `description` 均含显式 ⚠️ 风险标记（说人话、菜单可见）；
+  - 第 0 步前置风险提醒：`dangerous` 点明「实验性 / 无人值守自治 / 风险显著高于标准 / 建议可隔离·可回滚环境」、`loop` 点明「高强度死磕 / 长时 / 消耗大」；
+  - **闸交回引擎、不复述**：`dangerous` 委托 §3（回写 `on`+对话层回声）+ §3.1（announce-on-read）+ §7（审计 / checkpoint / P5 强制完整审查），`loop` 委托 §6（定量熔断）——薄壳**不重写**确认对话 / 护栏 / 熔断算法（守 DRY），也**不省略**风险提醒（不降门槛）。
+- [ ] **AC3（参数分派）**：`/butler:dangerous` 按 `$ARGUMENTS`——空参→开启（走引擎 §3 回声闸，**与 preference 空参=只读回声有意不同**，因引擎 §3 已定义 bare=开启）、`off`→关闭（§3）、`status`→只读回声当前 `dangerous` 开关态（不改开关）、未知参数→兜底列合法参数不瞎猜；`/butler:loop`→开启闭环（无 off、无持久态），有多余参数则一句提示 loop 无子命令、仍按开启处理或提示。
+- [ ] **AC4（触发名迁移 + harness 撞车排除）**：`/loop`·`/dangerous` 作命令引用处按 ACK 策略迁 `/butler:*`；**`dangerous-engine.md:21` 的 harness-`/loop`（Claude Code 自带）保留不迁**（专项核对）；logic-protocol §89/§92 加旧名注；全仓活文档无残留裸命令名（历史归档 + `convergence-loop-engine.md`/`dangerous-engine.md` 文件名引用 + harness-`/loop` + 刻意保留的 templates 除外）。
+- [ ] **AC5（范式一致性）**：两命令与 `prd.md`/`review.md`/`preference.md` 同构——① 薄壳声明 + DRY 红线；② 跨 cwd 路径约定段；③ 第 0 步优雅降级（没接 butler → 一句话说清、不报错不空跑）；④ frontmatter 说人话无裸术语；⑤ 委托真源 section 锚点（loop §3/§6、dangerous §3/§3.1/§7）回真源核**真实存在**、无捏造。**良性差异如实**：`loop` 无参数分派（一次性升档、无子命令），是真实结构差异非漏写。
+- [ ] **AC6（边界守恒）**：两引擎 §1–§8 / §1–§10 算法、`local-constraints-schema`、`setup.sh`、`templates/**`、四件套 schema、hook、其他命令一行未动；`git diff --stat` 佐证改动仅落两新命令 + 触发名活文档 + `capabilities.md`/`README.md` + 发布层。
+- [ ] **AC7（文档更新）**：`capabilities.md` 命令表补 `/butler:loop`·`/butler:dangerous` 两行（真源指命令文件 + 引擎、注风险闸）；`README.md` 扩展模式表两行迁 `/butler:*` + `butler/` 子树补两命令（`└──` 收尾正确）+ Coder 目录 `55/65` 行迁。
+- [ ] **AC8（目录软链自动托管·实跑）**：隔离 HOME 实跑 `setup.sh`，两新命令经 `~/.claude/commands/butler` 目录软链可达、`setup.sh` 未改一行、无 `butler/butler` 套娃——续验 R1 红利（这次 **8 命令**）。
+- [ ] **AC9（切版三载体对齐）**：判 **MINOR → v2.10.0**（纯新增 2 命令、无破坏面）；`VERSION` bump、`CHANGELOG.md` 顶条、git tag 三者一致；`migrations/v2.10.0.md` 为部署面 `[no-op]`+`[restamp]`。里程碑收官——本版收口后 MILE-0005 整体收、聚合交付 `deliveries/milestones/`。
 
 # Verification Method
-- AC1: 读 `communication-style.md` 核各节齐、说人话 4 条各带 ❌/✅、别抛菜单节带 ❌/✅、开篇定位声明在；通读确认无工程/工具规矩混入。
-- AC2/AC3: 隔离 HOME 实跑——`env HOME=<tmp> BUTLER via dirname bash scripts/setup.sh`；`awk`/`grep` 从 `<tmp>/.claude/CLAUDE.md` 受管区抽 `@…communication-style.md` 行核**计数=1**；连跑两次再核仍=1；抽出该行的绝对路径 `test -f` 为真。
-- AC4: 读 README / HUMAN_GUIDE 改动段核注册句在、措辞说人话。
-- AC5: `test ! -e ~/.claude/output-styles/matrix.md`；`grep -c 'outputStyle' ~/.config/fish/config.fish ~/.zshrc` 应为 0（在 claudep 段）；`grep outputStyle ~/.claude/settings.json` 无 Matrix。迁移前 `diff`/核对 matrix 各节均已在正本。
-- AC6: 读三记忆文件核规矩正文已删、只剩来龙去脉 + 指向正本；读 `MEMORY.md` 核三索引行已改；核 MILE-0003 引用仍在。
-- AC7: 读 `migrations/v2.6.0.md` 核 `[no-op]`+`[restamp]`+机器级重跑 setup 说明 + 本机手动清理清单。
-- AC8: 收口后跑 6 不变量自检；切版后 `git tag --points-at HEAD` + 三载体比对；`git show --stat` 核两提交分离。
 
-# Open Questions / Risks
-- Claude Code 是否真按 `@` 导入并入全局 CLAUDE.md 的绝对路径：主流机制支持绝对路径/tilde/相对且跟随软链、4 跳内（已查证），AC3 实测「路径正确 + 文件存在」即证装法成立；能否在运行时真读入属运行时行为，非本仓可断言。
-- 本机迁移动作跨机器不自动同步：matrix.md 与 claudep 都是本机配置，换机器若有旧的同样设置需同样清一遍；但新机器的沟通风格来源已是同步的正本 + setup 的 @import，本身不依赖 matrix（migration 配方写清）。
-- 全局常开会给每个会话加一点 token（正本约 matrix 量级、几百 token）：用户已拍板「带例子换规矩能落地，值」，接受这笔常驻开销。
+- **AC1/AC8**：`test -f` 两命令文件 + 隔离 HOME `bash scripts/setup.sh` → `test -e` 两新命令 + 报 8 命令（auto·可靠）。
+- **AC2/AC3/AC5**：读两命令文件，对风险闸三要点（frontmatter ⚠️ / 第0步风险提醒 / 闸交回引擎不复述）+ dangerous 参数四路径 + 委托锚点逐条核（人读 + auto 锚点核）。
+- **AC4**：`grep -rn '/loop' '/dangerous'`（历史归档 + 文件名 + harness-`/loop` + templates 除外）应零裸旧命令名；**专项核** `dangerous-engine.md:21` harness-`/loop` 仍在（auto·可靠）。
+- **AC6/AC7**：`git diff --stat` 无越界（auto）+ 读 capabilities/README 核更新到位（人读）。
+- **AC9**：`cat VERSION` == tag == CHANGELOG 顶条（auto·可靠）。
+
+# Open Questions / Risks（呈 ACK 时请一并确认三默认）
+
+1. **切版号**：默认 **MINOR → v2.10.0**（纯新增 2 命令能力，与 R1–R3 同类）。
+2. **`/loop`·`/dangerous` 触发名迁移策略**（AC4）：默认**全迁外科式**（作命令引用的 71 处迁 `/butler:*`、保命名空间统一，精确排除 harness-`/loop`）。备选保守=只迁面向人文档（README/HUMAN_GUIDE/capabilities）+ 命令文件 + 旧名注，引擎正文密集交叉引用留散文（避 71 处大改 + 撞车风险）。二者都不改算法。
+3. **一迭代做完两命令 + `/dangerous` 空参=开启**（AC1/AC3）：默认**一个迭代 ITER-0050 做完 loop+dangerous**、收口即收 MILE-0005；`/butler:dangerous` 空参=开启（走引擎 §3 闸）、`status` 只读——与 preference 空参=只读回声有意不同。若想拆两迭代分开切版、或让 dangerous 的 bare 也走「只读回声、要 `on` 才开」更保守姿态，可否掉。
+- **风险**：① 触发名迁移面 71 处最宽 + harness-`/loop` 撞车，普查最易漏，AC4 专项核对兜底；② 「命令化不降门槛」是本迭代成败点，AC2 把「frontmatter ⚠️ + 第0步风险提醒 + 闸交回引擎不复述」写成可核检查点；③ 命令菜单「可见性」headless 不可实敲，沿用 R1–R3 代理验法（文件/软链存在 + 结构正确 + 经软链可达）。
