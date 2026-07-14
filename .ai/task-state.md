@@ -1,16 +1,18 @@
 # Task State
 
-> **无活跃迭代 / 无活跃里程碑**（`ITERATIONS.current: none`、`MILESTONES.current: none`）。**ITER-0046 已收口**，正在切版 **v2.6.0**（聚合 ITER-0046·个人沟通风格常开正本）。前一版 v2.5.0（ITER-0045·slash command 全局下发）。
+> **活跃里程碑 MILE-0005**（butler 命令命名空间系统）· **活跃迭代 ITER-0047**（R1 命名空间地基 + `/butler-prd` 迁移）· 阶段 **P1 已出 `CONCEPT.md`，下一步 P2 写 `AC_LIST.md` 呈交 ACK 冻结**。分支 `feat/mile-0005-butler-command-namespace`（从 v2.6.1 = d0ae8ec）。
 
-## ITER-0046 收口小结
+## MILE-0005 里程碑（active）
 
-- 把散在本机 Matrix 输出风格与多个记忆文件的「怎么跟用户说话」规矩，收敛成 butler 仓根**唯一正本** `communication-style.md`（8 节：基调/详略含话砍到骨头/抓重点/说人话4条各带例/别急着抛选择菜单/格式/结尾决策块/边界；随 git 跨机器同步）。`scripts/setup.sh` 受管 heredoc 加一行 `@$BUTLER_DIR/communication-style.md`，把正本 @import 进全局 `~/.claude/CLAUDE.md` **每会话每项目常开**。README + HUMAN_GUIDE 注册。
-- Matrix 输出风格**退休**（本机一次性迁移，不进仓提交）：删 `~/.claude/output-styles/matrix.md` + 拆 fish/zsh 两处 `claudep` 的 `--settings '{"outputStyle":"Matrix"}'` 参数 + 查 settings.json 无残留；三风格记忆（style-concise/style-plain-language/discussion-mode-no-forced-menus）掏薄壳、只留来龙去脉 + 指向正本，MEMORY.md 索引同步改。
-- 8 条 AC 全过；AC1–AC6 实测（隔离 HOME 端到端实跑 setup.sh 核 @import 行恒=1 + 幂等 + 抽路径 test -f；迁移前逐节核 matrix→正本无遗漏 21 锚点、迁移后读文件核）。未触发独立复核（幂等 bash + 手写正本 + 文档，无契约面）。
-- 交付 `deliveries/ITER-0046-communication-style-voice-file.md`+`.html`，归档 `.ai/iterations/ITER-0046/`。全貌产物已折：`capabilities`（沟通风格全局常开正本 + setup @import 能力）、`frontier`（v2.6.0 + 沟通风格收敛单一正本）。
-- **切版 v2.6.0 判 MINOR**（新增常开能力）；`migrations/v2.6.0.md` 就目标项目 `.ai/` 部署面给 `[no-op]`+`[restamp]`，注明机器级动作「重跑 `setup.sh` 装 @import」+ 本机一次性清理 matrix/claudep 可选手动步。发布提交独立于迭代 feat 提交。
+把 butler 散在规则正文里的「散文触发词」（`/milestone`、`/review`、`/loop` 等只是文档暗号、没有真实命令文件）收敛成一整套 `/butler:xxx` 命名空间下的真实 slash command——补全菜单可见、全局任意项目可用、`butler:` 前缀隔离撞名。路线图 4 迭代：**R1** 地基（ITER-0047，进行中）→ **R2** 批量补 milestone/upgrade/ideation → **R3** preference（子命令最多）→ **R4** loop/dangerous（加风险闸）。产物真源 `.ai/MILESTONE.md`。
+
+## ITER-0047（active·R1 地基）
+
+- **范围**：① 建 `.claude/commands/butler/` 命名空间子目录；② `/butler-prd`→`/butler:prd` 破坏性迁移（移文件 + 清旧全局软链 + 更新活规则/文档引用 + `[rename]` 迁移配方）；③ 改 `setup.sh` 软链逻辑（逐个软链 `*.md` → 软链整个 `butler/` 目录，一条目录软链托管全套）；④ 落 `/butler:review`（纯薄壳、验证范式可复制）。
+- **已查证地基**：子目录＝命名空间、`butler/prd.md`→`/butler:prd`、user 级全局同理、frontmatter 照常、command `.md` 软链已实跑验证（维持 commands 路线、不迁 skills）。
+- **P1 已完成**：`CONCEPT.md` 已写（含 3 个 Open Questions：切版号 bump / `/butler:review` 参数面 / 正文引用更新边界，均待 P2 定）。
 
 ## 下一步入口
 
-- **待用户给方向**：候选——① PRD 全链真实 dogfood（还「从未真跑」欠账）；② slash command 成体系化（分发链路已通、`/butler-prd` 是范本，续落 `/milestone`·`/prd`·`/review` 等真实 `butler-*` 命令文件，随 setup.sh 自动全局可用）。
-- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → 代码。
+- **P2 写 `AC_LIST.md`** → 呈交用户 **ACK 冻结**（`状态: ack-frozen`）才进 P3/P4。这是本迭代第一个硬门。
+- 冷启动读序（butler 文件夹态）：`.ai/project/00_INDEX.md` → `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` → 本文件 → `.ai/MILESTONE.md`（里程碑范围）/ `.ai/CONCEPT.md`（迭代 P1）→ 代码。
