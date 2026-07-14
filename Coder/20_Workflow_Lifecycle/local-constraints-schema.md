@@ -63,7 +63,7 @@ scope: .ai/local-constraints.md 的字段定义、编写口径与最小模板
 - **两种改法**：① 对话 NL 触发——模式命令（`/dangerous on|off`、收回/让渡把关权语义、项目级 `/review` 常开/关）触发时，模型**回写**本段对应开关；② 用户**手改**——直接编辑本段，模型下次读取即遵循。两条路等价、同一真源。
 - **dangerous 安全（announce-on-read）**：`dangerous: on` **跨会话生效**，但 AI 每个会话起始读到 on 时**必须当回合显式声明**"危险模式当前 ON、本会话将按无人值守自治执行，要关说 `/dangerous off`"，声明后方自动进入，**绝不静默**。这是相对 `65_Extension_Dangerous/dangerous-engine.md §3` 原"会话结束不续开"的取舍：以可见性兜底替代不续开冗余，语义以该 §3 为准。
 - **independent_review 默认 off**：仅在"本项目值得长期严格复核"时设 `on`；只影响 P5 收口是否自动起独立复核，不改变 P5 默认简评，也不妨碍随时手动 `/review`。
-- **preference（per-project 抑制开关）**：`preference: on|off`（默认 on）是**本项目偏好探针采集闸**。本项目是否运行探针 = 全局未 `/preference off` **且** 外置 `$PREF` `consent: granted` **且** 本项目 `preference ≠ off`，三者全真才在本项目采集/蒸馏/反哺。`preference: off` **只抑制本项目**，不改全局 consent、不动 `$PREF` 数据、不影响其他项目；缺字段=视为 `on`（不抑制）。**真源归属**：consent/signals/profile 的真源始终在外置 `$BUTLER_PREF`（跨项目唯一真源，见 `70_Extension_Preference/preference-probe-engine.md`），本段 `preference` 仅本项目抑制闸、**不双写**外置状态、不是其镜像或第二真源。注意 `on` ≠ 强制采集：未取得全局同意时 on 也不会采集。本条为该语义 SSOT。
+- **preference（per-project 抑制开关）**：`preference: on|off`（默认 on）是**本项目偏好探针采集闸**。本项目是否运行探针 = 全局未 `/butler:preference off` **且** 外置 `$PREF` `consent: granted` **且** 本项目 `preference ≠ off`，三者全真才在本项目采集/蒸馏/反哺。`preference: off` **只抑制本项目**，不改全局 consent、不动 `$PREF` 数据、不影响其他项目；缺字段=视为 `on`（不抑制）。**真源归属**：consent/signals/profile 的真源始终在外置 `$BUTLER_PREF`（跨项目唯一真源，见 `70_Extension_Preference/preference-probe-engine.md`），本段 `preference` 仅本项目抑制闸、**不双写**外置状态、不是其镜像或第二真源。注意 `on` ≠ 强制采集：未取得全局同意时 on 也不会采集。本条为该语义 SSOT。
 - **legacy 兼容**：旧 `local-constraints.md` 无「Butler 功能开关」段时，所有开关按**默认 off** 处理；其中独立的 `Review Policy: independent_review` 字段是该开关的 legacy 形式，仍被尊重，不被误判。批量迁移走 `butler-upgrade.md`，不强制回填。
 
 ## 5. 与执行流程的关系

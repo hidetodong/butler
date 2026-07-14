@@ -1,44 +1,46 @@
-> 分流: 完整 | 命中升级信号: 多文件新增（3 命令）, 可能触碰 Coder 真源触发词, 涉及发布切版 | 2026-07-14
+> 分流: 完整 | 命中升级信号: 触碰 Coder 真源触发词（`/preference` 迁移面比 R2 宽）, 涉及发布切版, 参数分派最复杂 | 2026-07-14
 
 # 一句话
 
-套 R1 固化的「薄壳路由器」范本，一次批量落 3 个低风险纯薄壳命令 `/butler:milestone`、`/butler:upgrade`、`/butler:ideation`，把 MILE-0005 从「地基 + 1 命令」推进到「命名空间里住着一批命令」。
+给 MILE-0005 命名空间落 R3 那个**参数面最宽**的命令 `/butler:preference`：把偏好探针的 4 个子命令（`on`/`off`/`reback on|off`/`distill`）＋空参默认，用一个薄壳路由器分派清楚，委托 `70_Extension_Preference` 真源、不复述算法。
 
 # Goal
 
-MILE-0005 R2：验证 R1 范本可**批量复制**——不再一个一个精雕，而是照着 `prd.md`/`review.md` 的固定骨架（frontmatter 说人话 → 薄壳三件事声明 → 跨 cwd 路径约定 → 第 0 步优雅降级 → `$ARGUMENTS` 路由 → 一句话收尾）快速产出三个语义清晰、无风险闸的命令，各自委托既有真源规则、不复述算法。
+MILE-0005 R3：验证薄壳范本能吃下**二级嵌套参数**。R2 的三命令都是 0–1 级扁平分支（milestone 顶多一个 `status`）；`/butler:preference` 是全批唯一带二级参数的——`reback` 后面还要再收 `on`/`off`。当初特意把它从 R2 拆出单开一迭代，就为把这套参数分派写扎实、不糊弄。
 
 # Current Understanding
 
-- **三个命令的真源与路由**（都已读入口段确认）：
-  - `/butler:milestone` → `20_Workflow_Lifecycle/milestone-schema.md`：留空/给 brief → 里程碑录入（含「brief 是大 PRD」并进 `prd-split` 的分支）；`status` → 只读看板。里程碑是方向性不冻结层，命令只路由、不碰 ACK。
-  - `/butler:upgrade` → `20_Workflow_Lifecycle/butler-upgrade.md`：已部署项目按 `migrations/` 区间幂等升级；侦察 + 区间配方执行，升级对象是**当前项目**。真源 §2 现把 `/butler-upgrade`（连字符）列为显式触发词。
-  - `/butler:ideation` → `50_Extension_Ideation/ideation-engine.md`：模糊需求多维压力测试 → AC 收敛；无子参数。
-- **范本已由 R1 固化**：`prd.md`（三分支 + 第 0 步读契约）、`review.md`（两分支 + 第 0 步查有无对象、优雅降级）证明骨架可复制；R2 是范式的第一次「批量」检验。
-- **命令是个人工具、全局软链**：新命令往 `.claude/commands/butler/` 一丢，就随 R1 改好的目录软链自动全局可用——**R2 不用再动 `setup.sh`、不用再改分发**（这是 R1 目录软链的红利）。
-- **低风险**：三命令都无 `loop`/`dangerous` 那种「郑重显式触发」门槛，不需风险闸（那是 R4）。
+- **真源命令面**（`preference-probe-engine.md §2.3`，已读确认）：
+  - `on` / `off` — **隐私总开关**：`off`=停采集+蒸馏+反哺、保留已存数据；`on`=恢复默认（数据回路开、反哺关）。
+  - `reback on` / `reback off` — **影响回路开关**（默认关）；这是唯一的**二级参数**：首 token=`reback` 时再看第二 token 定 on/off。
+  - `distill` — 手动触发一次蒸馏+维护（§6）。
+- **薄壳新增的空参默认**（设计决策，见 Open Questions 3）：空参 → **只读状态回声**（读外置 `$PREF/config.md` 的 consent、reback 开关、本项目抑制态），不写任何文件。与 `/butler:milestone status`、`/butler:review` 默认自检同构；也顺 §2.3「开关变更必须当回合回声状态」的读侧延伸。
+- **必须回声状态**：§2.3 硬要求任何开关变更在当回合对话层显式回声当前状态——薄壳收尾统一做这件事。
+- **一次性同意协议**（§2.4）：`on` 首次在托管项目命中可采集决策且无 consent 记录时全局问一次——**命令不复述该协议，委托真源按 §2.4 走**。
+- **边界：命令只管全局层开关**（consent/reback/distill），**不碰**本项目级抑制开关（`.ai/local-constraints.md` 的 `preference: on|off`，那是 §2.5 持久在 local-constraints、由 local-constraints-schema 管，命令只能**读**它做状态回声、不 toggle）。
+- **范本已由 R1+R2 固化**：`prd.md` 三分支、`review.md` 两分支证明扁平骨架可复制；R3 是骨架第一次吃**二级参数**的检验。
 
 # Constraints
 
-- **不改真源规则算法**：三命令委托的 `Coder/**` 规则正文语义一律不动（沿用 MILE-0005 Out of Scope）。唯一可能的例外是 `/butler:upgrade` 是否顺带把 `butler-upgrade.md §2` 的触发词 `/butler-upgrade` 改成 `/butler:upgrade`——那是**触发名**更新、非算法，且要 P2 显式定（见 Open Questions）。
-- **不下发目标项目**：命令不进 `templates/`、目标项目部署面零影响（沿用 ITER-0044/0047 边界）。
-- **不新造命令能力**：只把既有散文触发词落成真实文件，不发明新命令、不扩既有命令语义。
-- **不动 `setup.sh` 分发逻辑**：R1 的目录软链已托管全套，R2 只往目录里加文件。
-- **薄壳纪律**：只做「读对规则进上下文 + 按参数路由 + 委托真源」，不复述算法（DRY 红线）；每个命令带第 0 步优雅降级。
+- **不改引擎算法**：`preference-probe-engine.md §1–§10` 的采集/蒸馏/反哺/安全底线/隔离纪律一字不动（沿用 MILE-0005 Out of Scope）。唯一可能动的是把 §2.3 等处的触发词 `/preference` 迁成 `/butler:preference`——**触发名非算法**，要 P2 显式定（Open Questions 2）。
+- **触发名迁移面比 R2 宽**：`/preference` 在引擎里出现约 7–8 处（§2.3 命令表 3 行、§2.2、§2.4 同意披露「怎么关」、§2.5、§10、§4.1），比 R2 `/butler-upgrade`（仅 butler-upgrade.md §2 一处触发词行）分布更广——迁移要普查到位、别漏。
+- **不下发目标项目**：命令不进 `templates/`、目标项目部署面零影响（沿用 ITER-0044/0047/0048 边界）。
+- **不动 `setup.sh`**：R1 目录软链已托管全套，R3 只往目录里加一个文件。
+- **薄壳纪律**：只做「读对规则进上下文 + 按参数分派 + 委托真源 + 回声状态」，不复述同意协议 / 采集蒸馏算法 / 安全底线（DRY 红线）；带第 0 步优雅降级。
 
 # Impact Scope
 
-- **新增**（命令层）：`.claude/commands/butler/milestone.md`、`upgrade.md`、`ideation.md`（3 个薄壳）。
-- **可能改**（待 P2 定，见 Open Questions）：`butler-upgrade.md §2` 触发词、`.ai/project/capabilities.md` 命令表（转换/并列/顺清 R1 遗留冗余）、README 目录树（补 3 个命令）。
-- **发布层**：VERSION + CHANGELOG + `migrations/vX.Y.Z.md`（切版号待定）。
-- **不碰**：`setup.sh`、`templates/**`、四件套 schema、hook、任何规则算法、`/butler:prd`·`/butler:review`。
+- **新增**（命令层）：`.claude/commands/butler/preference.md`（1 个薄壳，含二级参数分派）。
+- **可能改**（待 P2 定，见 Open Questions）：`preference-probe-engine.md` 里的 `/preference` 触发词 → `/butler:preference`（约 7–8 处）、`.ai/project/capabilities.md` 命令表 `/preference` 行转换、README 子树补 preference.md。
+- **发布层**：VERSION + CHANGELOG + `migrations/vX.Y.Z.md`（切版号待定，倾向 MINOR）。
+- **不碰**：`setup.sh`、`templates/**`（含 `templates/preference/` 存储骨架，不动）、`preference-init.sh`、四件套 schema、hook、其他命令、引擎算法、`local-constraints-schema`。
 
 # Project Type
 
-Markdown 规则仓库 dogfooding（butler 编辑自身命令层）。无代码编译，验证靠：命令文件结构核（薄壳四要点齐 + 真源锚点真实）+ 隔离 HOME 实跑 `setup.sh` 确认 3 新命令经目录软链可达 + `git diff` 边界守恒。
+Markdown 规则仓库 dogfooding（butler 编辑自身命令层）。无代码编译，验证靠：命令文件结构核（薄壳四要点齐 + 二级参数分派覆盖全 5 条路径 + 真源锚点真实）+ 隔离 HOME 实跑 `setup.sh` 确认新命令经目录软链可达（这次预期 6 命令）+ `/preference` 触发名残留普查 + `git diff` 边界守恒。
 
 # Open Questions
 
-1. **切版号**：R2 纯新增 3 个命令、无破坏面（不像 R1 有 `/butler-prd` 改名），判 **MINOR**（新增能力）还是可并入某个更小语义？倾向 MINOR（新增命令 = 新增可扩展能力，与 R1 同类）。
-2. **`/butler-upgrade` 触发名是否一并迁 `/butler:upgrade`**：R1 已把同形的 `/butler-prd`→`/butler:prd`。`butler-upgrade.md §2` 明列 `/butler-upgrade` 为触发词，若不改则命名空间里有 `/butler:upgrade` 命令、真源却仍说触发 `/butler-upgrade`，不一致。倾向**一并迁**（改 §2 触发词 + capabilities，属触发名非算法、与 R1 一致），保留「升级 butler / 同步新版」自然语言触发。
-3. **capabilities 命令表整理方式**：R1 给 `/butler:review` 加了新行、却留下 `/review` 旧行（并列小冗余）。R2 三命令是**转换**旧的 `/ideation`·`/milestone`·`/butler-upgrade` 行为 `/butler:*`，还是**并列**新增？倾向转换（命名空间命令是这些能力的一等入口，散文触发降为语义 fallback），并顺清 R1 遗留的 `/review` 冗余——但这会多动几行 capabilities，需确认是否纳入本迭代。
+1. **切版号**：R3 纯新增 1 命令、无破坏面，判 **MINOR**（新增能力，与 R1/R2 同类）。倾向 MINOR。
+2. **`/preference` 触发名是否一并迁 `/butler:preference` + 迁到什么程度**：R2 已把 `/butler-upgrade`→`/butler:upgrade`（ACK 通过）。倾向**一并迁**（触发名非算法、与 R2 一致），保留「偏好/记住这条」自然语言触发。范围默认：引擎里作**命令引用**的 `/preference` 全迁（含 §2.4 同意披露的「怎么关: /butler:preference off」这类用户可见文案），命令表主行加「旧名 `/preference`」注。这比 R2 面宽，要普查干净。
+3. **空参默认 = 只读状态回声**：引擎 §2.3 没定义 `status` 子命令或空参行为；薄壳给空参加一个「只读回声当前 consent/reback/本项目抑制态」的默认，与 milestone/review 的只读默认同构、纯读不写。倾向**采纳**（安全、符合 §2.3 回声精神）；若你觉得该严格照引擎命令面、空参就报「用法提示」，也可否掉。

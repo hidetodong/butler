@@ -78,7 +78,7 @@ flowchart TB
 | 🔁 **收敛闭环** | `/loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
 | 🔎 **Review** | `/review` | 代码审查：P5 默认简评 + opt-in 独立复核（fresh-context 子 agent，手动 / 项目配置） |
 | ⚠️ **Dangerous** | `/dangerous` | 无人值守长程自治（实验性） |
-| 🧠 **Preference** | `/preference` | 跨项目偏好蒸馏（实验性 · 采集经同意默认开 / 反哺 opt-in） |
+| 🧠 **Preference** | `/butler:preference` | 跨项目偏好蒸馏（实验性 · 采集经同意默认开 / 反哺 opt-in） |
 
 ## 🚀 快速上手
 
@@ -114,7 +114,8 @@ butler/
 │       ├── review.md               #     /butler:review · 代码/产物复核（默认自检 / independent 独立复核）
 │       ├── ideation.md             #     /butler:ideation · 需求脑暴（不进执行主线）
 │       ├── milestone.md            #     /butler:milestone · 里程碑录入 / status 看板
-│       └── upgrade.md              #     /butler:upgrade · 已部署项目升级到最新版
+│       ├── upgrade.md              #     /butler:upgrade · 已部署项目升级到最新版
+│       └── preference.md           #     /butler:preference · 偏好探针开关（on/off/reback/distill）
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template
@@ -135,7 +136,7 @@ butler/
 │   ├── 55_Extension_ConvergenceLoop/ # 收敛闭环    /loop
 │   ├── 60_Extension_CodeReview/    #   代码审查    /review
 │   ├── 65_Extension_Dangerous/     #   无人值守自治 /dangerous ⚠️
-│   ├── 70_Extension_Preference/    #   偏好探针    /preference ⚠️
+│   ├── 70_Extension_Preference/    #   偏好探针    /butler:preference ⚠️
 │   └── 99_Business_Extension/      #   业务约束（最高优先级）
 │
 ├── Learner/                        # 📚 学习事务管理

@@ -29,15 +29,17 @@ scope: 偏好探针的采集/蒸馏/反哺三段回路——数据回路（采�
 
 ### 2.2 影响回路（反哺）:opt-in
 
-**默认关**。`/preference reback on` 开启后,模型在**有监督**决策(P2/P3 提案、AskUserQuestion 选项排序)时把画像作为参考。**仅作用于有监督工作**,绝不参与 `/dangerous` 无人值守自治(见 §7、§3-3、§9)。
+**默认关**。`/butler:preference reback on` 开启后,模型在**有监督**决策(P2/P3 提案、AskUserQuestion 选项排序)时把画像作为参考。**仅作用于有监督工作**,绝不参与 `/dangerous` 无人值守自治(见 §7、§3-3、§9)。
 
 ### 2.3 命令
 
 | 命令 | 含义 |
 |---|---|
-| `/preference on` / `off` | **隐私总开关**:off = 停采集 + 蒸馏 + 反哺、保留已存数据;on = 恢复默认(数据回路开、反哺关) |
-| `/preference reback on` / `off` | **影响回路**开关,默认关 |
-| `/preference distill` | 手动触发一次蒸馏 + 维护(见 §6) |
+| `/butler:preference on` / `off` | **隐私总开关**:off = 停采集 + 蒸馏 + 反哺、保留已存数据;on = 恢复默认(数据回路开、反哺关) |
+| `/butler:preference reback on` / `off` | **影响回路**开关,默认关 |
+| `/butler:preference distill` | 手动触发一次蒸馏 + 维护(见 §6) |
+
+> 命令名 `/butler:preference`（MILE-0005 R3 迁入 `/butler:` 命名空间，命令文件 `.claude/commands/butler/preference.md`）。**旧名 `/preference` 仍作旧名触发被识别**；「记住这条偏好」等自然语言触发照常。留空(不带子命令)= 只读回声当前状态。
 
 开关变更**必须**在当回合对话层显式回声当前状态。`off` 期间本引擎全部规则不生效。
 
@@ -45,16 +47,16 @@ scope: 偏好探针的采集/蒸馏/反哺三段回路——数据回路（采�
 
 数据回路虽默认常驻,但**首次必须取得一次性全局同意**:
 
-- **触发**:在任一 butler 托管项目**首次**命中可采集决策、且 `$PREF/config.md` 无 `consent` 记录时,**全局问一次**。披露三点:记什么(**仅决策倾向的抽象,不含业务数据/密钥/代码**)、存哪(外置 `$PREF`,与仓库解耦)、怎么关(`/preference off`)。
+- **触发**:在任一 butler 托管项目**首次**命中可采集决策、且 `$PREF/config.md` 无 `consent` 记录时,**全局问一次**。披露三点:记什么(**仅决策倾向的抽象,不含业务数据/密钥/代码**)、存哪(外置 `$PREF`,与仓库解耦)、怎么关(`/butler:preference off`)。
 - **同意** → 写 `consent: granted, YYYY-MM-DD` 到 `config.md`,此后**全局常驻、不再询问**,并按 §4.1 惰性自举。
-- **拒绝** → 写 `consent: declined`,采集保持关、不再骚扰,直到用户主动 `/preference on`。
+- **拒绝** → 写 `consent: declined`,采集保持关、不再骚扰,直到用户主动 `/butler:preference on`。
 - **同意前不写任何信号**,探针完全惰性——先问,后看。
 
 ### 2.5 项目级抑制开关（per-project）
 
 全局 consent(§2.4)决定"**能不能**采集",项目级开关决定"**这个项目要不要**采集"。后者持久在本项目 `.ai/local-constraints.md`「Butler 功能开关」段的 `preference: on|off`(默认 `on`):
 
-- **生效优先级(三层全放行才在本项目运行)**:全局 `/preference off`(§2.3 隐私总开关)> 外置 `$PREF` `consent`(§2.4)> 项目 `preference` 开关。即:全局未 off **且** consent=granted **且** 本项目 `preference ≠ off`,三者全真,探针才在本项目采集/蒸馏/反哺。
+- **生效优先级(三层全放行才在本项目运行)**:全局 `/butler:preference off`(§2.3 隐私总开关)> 外置 `$PREF` `consent`(§2.4)> 项目 `preference` 开关。即:全局未 off **且** consent=granted **且** 本项目 `preference ≠ off`,三者全真,探针才在本项目采集/蒸馏/反哺。
 - `preference: off` **只抑制本项目**:不改全局 consent、不动 `$PREF` 数据、不影响其他项目;本项目 `signals/<project>.md` 不再新增条目。缺该字段 = 视为 `on`(不抑制)。
 - **非双真源**:项目开关与全局 consent 分管不同层面(全局=能不能、项目=要不要),故不构成第二真源。consent/signals/profile 的真源仍**唯一**在外置 `$PREF`(§4),项目开关**不双写**外置状态、不是其镜像。
 - **低风险、无需声明**:不同于 `/dangerous` 的 announce-on-read,preference 是只读观察者,会话起始读到 `preference` 值**直接遵循**即可,无需显式声明。
@@ -84,7 +86,7 @@ scope: 偏好探针的采集/蒸馏/反哺三段回路——数据回路（采�
 2. **默认路径**:`~/.butler/preferences/`(不存在则创建)。
 3. **用户提供**:以上不可用时,向用户询问一次存储根路径。
 
-**惰性自举**:取得 §2.4 同意后**首次采集**时,若 `$PREF` 尚不存在,**自动创建**并从 butler 仓库 `templates/preference/` 拷骨架(`config.md` / `profile.md` / `signals.example.md`)作为起点。**无需**预先运行 `preference-init.sh` 或 `/preference on`;该脚本保留为**可选的显式初始化**手段。
+**惰性自举**:取得 §2.4 同意后**首次采集**时,若 `$PREF` 尚不存在,**自动创建**并从 butler 仓库 `templates/preference/` 拷骨架(`config.md` / `profile.md` / `signals.example.md`)作为起点。**无需**预先运行 `preference-init.sh` 或 `/butler:preference on`;该脚本保留为**可选的显式初始化**手段。
 
 ### 4.2 目录布局
 
@@ -173,7 +175,7 @@ $PREF/                       (默认 ~/.butler/preferences/)
 
 ## 7. 反哺协议 Feedback（影响回路·opt-in·仅有监督）
 
-`/preference reback on` 期间,在模型做决策时把偏好作为参考读入**模型思考上下文**(不写任何产物文件):
+`/butler:preference reback on` 期间,在模型做决策时把偏好作为参考读入**模型思考上下文**(不写任何产物文件):
 
 - **唯一场景:有监督工作**——标准模式 P2/P3 提案、AskUserQuestion 选项排序:可参考**通识层**,把用户常选项前置或设默认,但**不得替用户 ACK**,用户随时否决。
 - **情境层**:仅在当前项目命中其情境条件时可选参考,**不**跨项目迁移(§3-5)。
@@ -186,7 +188,7 @@ $PREF/                       (默认 ~/.butler/preferences/)
 | 动作 | 触发时机 | 落点 |
 |---|---|---|
 | 采集 Capture | 数据回路默认开;决策发生后(事后 append,或批到收口边界 flush) | 写 `$PREF/signals/` |
-| 蒸馏+维护 Distill | 数据回路默认开;**只在安全边界**:迭代收口 / 里程碑收口 / `/preference distill` | 读 signals、写 `profile.md` |
+| 蒸馏+维护 Distill | 数据回路默认开;**只在安全边界**:迭代收口 / 里程碑收口 / `/butler:preference distill` | 读 signals、写 `profile.md` |
 | 反哺 Feedback | `reback on` 时;**仅有监督**决策点(P2/P3 提案、选项排序) | 读 `profile.md` 入思考上下文 |
 
 **绝不在 P1~P5 任何阶段中途跑蒸馏维护**:维护只发生在迭代数据流已冻结归档之后。
@@ -215,4 +217,4 @@ $PREF/                       (默认 ~/.butler/preferences/)
 | 情境误用(情境偏好套到不相干项目) | scope 分层;情境层不跨项目反哺(§3-5) |
 | Echo chamber(模型自以为懂你就不问了) | **结构性消除**:反哺只在有监督(你随时否决),且只学真人选择、不采集模型自决(§3-7)——模型的猜测无法回灌成你的偏好;另低置信必澄清(§3-4)、先验非权威不覆盖当前指令(§3-2) |
 | 侵入迭代数据流 | §8 五条隔离;探针不在产物链、不被 hook 拦截、坏了不阻塞 |
-| 默认采集的知情问题 | §2.4 一次性同意(先问后看);同意前不写任何信号;`/preference off` 随时全停 |
+| 默认采集的知情问题 | §2.4 一次性同意(先问后看);同意前不写任何信号;`/butler:preference off` 随时全停 |

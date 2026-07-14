@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0049 交付总结 · /butler:preference 落地：一个薄壳吃下全批最宽的参数面</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>/butler:preference 落地：一个薄壳吃下全批最宽的参数面（含唯一的二级嵌套参数）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0049</span>
+        <span class="chip level">迭代交付（小版本）· MILE-0005 R3</span>
+        <span class="chip date">收口 2026-07-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>R1（ITER-0047）打地基、R2（ITER-0048）批量铺开三个<strong>扁平参数</strong>命令后，命名空间里还剩一个真正难啃的：偏好探针 <code>/preference</code>——它是全批<strong>参数面最宽</strong>的能力（<code>on</code>/<code>off</code> 隐私总开关、<code>reback on|off</code> 反哺开关、<code>distill</code> 手动蒸馏），其中 <code>reback on|off</code> 是全批<strong>唯一的二级嵌套参数</strong>（先看第一个词是不是 <code>reback</code>，是才再读第二个词 <code>on</code>/<code>off</code>）。R2 的命令全是 0–1 层扁平分支，这是把它单独拆成一个迭代的原因。</li>
+        <li>本次照 R1/R2 的<strong>薄壳路由器</strong>范本落 <code>/butler:preference</code>，验证一件事：<strong>同一套薄壳范式能不能吃下二级嵌套参数</strong>——不新造能力，只把散文暗号 <code>/preference</code> 落成命名空间真命令、覆盖全路径、委托引擎真源不复述算法。同时把活规则与人读文档里作命令引用的旧名 <code>/preference</code> 统一迁成 <code>/butler:preference</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新落 1 个薄壳命令 <code>/butler:preference</code></strong>（结构与 R1/R2 同构：读对规则进上下文 → 按 <code>$ARGUMENTS</code> 分派 → 委托真源不复述算法〔守 DRY 红线〕→ 第 0 步优雅降级），委托 <code>preference-probe-engine.md</code>，<strong>六条路径</strong>全覆盖：
+          <ul>
+            <li><strong>空参</strong> → 只读状态回声（读外置 <code>$PREF/config.md</code> 的 consent + reback 态 + 本项目抑制态，<strong>纯读不写</strong>）——薄壳新增的默认档，与 <code>/butler:milestone status</code>、<code>/butler:review</code> 的只读默认同构。</li>
+            <li><strong><code>on</code> / <code>off</code></strong> → §2.3 隐私总开关（首次 <code>on</code> 触发 §2.4 一次性同意协议，委托引擎披露、不复述）。</li>
+            <li><strong><code>reback on</code> / <code>reback off</code></strong> → §2.2/§7 影响回路开关（<strong>二级嵌套参数</strong>：第一个词是 <code>reback</code> 才再读第二个词）。反哺默认关、仅作用于有监督工作。</li>
+            <li><strong><code>distill</code></strong> → §6 手动蒸馏（§8 安全边界）。</li>
+            <li><strong>裸 <code>reback</code>（缺第二个词）</strong> → 兜底回声当前反哺态 + 提示补 <code>on</code>/<code>off</code>，<strong>不误开关</strong>。</li>
+            <li><strong>未知参数</strong> → 兜底列出合法参数集、不瞎猜执行。</li>
+          </ul>
+          收尾按引擎 §2.3 硬要求当回合回声当前状态。
+        </li>
+        <li><strong>旧触发名 <code>/preference</code> 全仓活文档迁成 <code>/butler:preference</code></strong>：引擎 <code>preference-probe-engine.md</code> 作命令引用的 11 处（含 §2.4 同意披露给用户看的「怎么关」文案）+ <code>logic-protocol.md</code>、<code>local-constraints-schema.md</code>、<code>dangerous-engine.md</code>、<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code>、<code>README.md</code>、项目 digest。引擎 §2.3 命令表主行加「旧名 <code>/preference</code> 仍作触发被识别、留空=只读回声」注；保留「记住这条偏好 / 学我的取舍」等自然语言触发。</li>
+        <li><strong>刻意不碰 <code>templates/</code> 部署面</strong>：<code>templates/rule-card.md</code>、<code>templates/preference/*</code> 里的 <code>/preference</code> <strong>保留不迁</strong>——<code>/butler:preference</code> 是靠全局软链的个人命令、不下发目标项目，目标项目里保证生效的是散文旧名（迁后 logic-protocol 仍认作旧名触发）。迁 templates 会破「命令不下发目标项目」边界、触发 <code>[regen-claude]</code>、违反 ACK 的「不碰 templates」。</li>
+        <li><strong>文档更新</strong>：<code>capabilities.md</code> 命令表把 <code>/preference</code> 行<strong>转换</strong>为 <code>/butler:preference</code> 一等入口（注参数面最宽·唯一二级参数·只管全局层开关，本项目抑制开关走 <code>local-constraints</code>）；<code>README.md</code> <code>butler/</code> 子树补 <code>preference.md</code> + 扩展模式表 + Coder 目录行迁。</li>
+        <li><strong>迁移配方 + 切版</strong>：<code>migrations/v2.9.0.md</code>（部署面 <code>[no-op]</code>+<code>[restamp]</code>；点明新命令由 R1 目录软链自动托管、无需重跑 setup.sh、触发名迁移不碰 templates 故无 <code>[regen-claude]</code>）；VERSION 2.8.0→2.9.0、CHANGELOG 顶条 <code>[2.9.0]</code>（判 MINOR）。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>多了一个命令</strong>：<code>/butler:preference</code>——留空看当前状态、<code>on</code>/<code>off</code> 开关隐私总闸、<code>reback on|off</code> 开关反哺、<code>distill</code> 手动蒸馏。</li>
+        <li><strong><code>/preference</code> 改敲 <code>/butler:preference</code></strong>：路由行为一字未改（采集/蒸馏/反哺/安全底线算法引擎里没动），只是换了命名空间触发名；旧名 <code>/preference</code> 与「记住这条偏好」自然语言触发照常识别。</li>
+        <li><strong>留空不再是「没用法」而是「看状态」</strong>：敲 <code>/butler:preference</code> 不带参数，会只读回声当前同意态 / 反哺开关 / 本项目抑制态，纯读不写。</li>
+        <li><strong>无需任何安装动作就能用</strong>：R1 已把整个命令目录软链进全局，这个新命令<strong>自动</strong>在所有项目可用。<strong>唯一例外</strong>：从没跑过 R1 的 setup.sh 就补跑一次。</li>
+        <li><strong>对已部署项目</strong>：<code>.ai/</code> 结构零变化，规则卡文案里的 <code>/preference</code> 也原样不变、旧名仍工作（命令是个人工具、不下发）。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增（命令层）：<code>.claude/commands/butler/preference.md</code>。</li>
+        <li>改（活文档·触发名）：<code>Coder/70_Extension_Preference/preference-probe-engine.md</code>（§2.x·11 处，算法未动）、<code>logic-protocol.md</code>、<code>local-constraints-schema.md</code>、<code>dangerous-engine.md</code>、<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code>、<code>.ai/project/architecture.md</code>、<code>.ai/project/frontier.md</code>。</li>
+        <li>改（活文档·命令表/目录树）：<code>.ai/project/capabilities.md</code>（行转换）、<code>README.md</code>（子树补命令 + 扩展模式表 + Coder 目录）。</li>
+        <li>发布层（独立 chore(release) 提交）：<code>VERSION</code> 2.8.0→2.9.0、<code>CHANGELOG.md</code> 顶条、<code>migrations/v2.9.0.md</code>。</li>
+        <li>没碰（守最小影响面 / AC6 边界守恒）：引擎 §1、§3–§10 <strong>算法</strong>、<code>local-constraints-schema</code> 的 <code>preference:</code> 字段管辖、<code>templates/**</code>（含 <code>preference/</code>、<code>rule-card.md</code> 刻意保留 <code>/preference</code>）、<code>preference-init.sh</code>、四件套 schema、<code>templates/hooks/**</code>、<strong><code>setup.sh</code>（R1 目录软链已托管，一行未动）</strong>——<code>git diff --stat -- templates/</code> 与 <code>-- scripts/setup.sh</code> 均空。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p><strong>9 项验收（AC1–AC9）全过</strong>，<code>auto·可靠</code>为主 + 结构核/人读：</p>
+      <ul>
+        <li><strong>隔离假 HOME 实跑 <code>setup.sh</code>（exit 0）6/6 命令经目录软链可达</strong>：新命令 preference + R1/R2 的 prd/review/milestone/upgrade/ideation 全部 <code>test -e</code> 通过、目录软链指向仓库命名空间目录、无 <code>butler/butler</code> 套娃、<strong><code>setup.sh</code> 未改一行</strong>——续验 R1 目录软链红利（AC1/AC8）。</li>
+        <li>薄壳六要点齐（薄壳声明 + DRY / 跨 cwd 路径约定段 / 第 0 步降级 / frontmatter 说人话 / <code>$ARGUMENTS</code> 含二级嵌套路由 / 委托锚点），<strong>六条路径 + 裸 reback 兜底 + 未知参数</strong>逐条核「有分支 + 委托对的 §」；委托的真源 §2.2/§2.3/§2.4/§6/§7 回引擎<strong>逐一真实存在</strong>、零捏造（AC2/AC4/AC5）。</li>
+        <li><code>/preference</code> 全仓活文档残留普查<strong>零裸旧命令名</strong>（<code>templates/</code> 刻意保留 / <code>~/.butler/preferences/</code> 存储路径 / 命令表旧名注 / 本迭代规划稿 / 历史归档 均合法）（AC3）；capabilities 行已转换、README 子树 6 命令齐（AC7）；VERSION/CHANGELOG/migration 三载体一致（AC9）；<code>git diff --stat</code> 无越界（AC6）。</li>
+        <li><strong>标准模式复核</strong>：两处真实新面——<code>reback</code> 二级嵌套参数分派、比 R2 宽的迁移面——均已定向复核（AC2 路径清单逐条核 <code>reback</code> 分派、T5+P5 双轮普查清残留）。P5 自评 + 客观隔离 HOME 实跑无 shaky 处，未升格强制独立复核。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>计划-实际差异 1 处（已记 VERIFY_REPORT）</strong>：ACK 口径「引擎约 7–8 处」，实测触发名分布约 13 处（引擎 11 + 5 份活文档）；已按 TECH_PLAN DD3 上前枚举全集迁移、按 DD5 刻意不碰 templates，差异为 ACK 口径低估分布面、非范围外扩张。</li>
+        <li><strong>引擎说 <code>/butler:preference</code>、templates 保留 <code>/preference</code> 的双名并存</strong>：有意的分层——靠 logic-protocol 保留旧名识别接住，目标项目侧规则卡文案不变、旧名仍工作（DD5 决策记录 + migration 说明覆盖，非缺陷）。</li>
+        <li><strong>命令菜单「可见性」headless 不可实敲</strong>：沿用 R1/R2 代理验法（文件存在 + 命名空间结构正确 + 经目录软链可达）。真正菜单可见需在<strong>主检出</strong>跑过 R1 的 setup.sh。</li>
+        <li><strong>偏好探针反哺/蒸馏标实验性</strong>：命令只落触发入口、未改引擎算法，运行时行为由引擎 §2/§6/§7 既有实现保证（本迭代未新验其运行时行为）。</li>
+        <li><strong>MILE-0005 仍进行中</strong>：R4（<code>loop</code>/<code>dangerous</code> 加风险闸）待后续迭代，设计未锁、不擅自连跑。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>归档四件套 + 变更流：<code>.ai/iterations/ITER-0049/CONCEPT.md</code> / <code>AC_LIST.md</code> / <code>TECH_PLAN.md</code> / <code>VERIFY_REPORT.md</code> / <code>CHANGELOG.md</code></li>
+        <li>命令（新）：<code>.claude/commands/butler/preference.md</code></li>
+        <li>触发名迁移：<code>Coder/70_Extension_Preference/preference-probe-engine.md</code>（§2.x）、<code>logic-protocol.md</code>、<code>local-constraints-schema.md</code>、<code>dangerous-engine.md</code>、<code>Coder/README.md</code>、<code>HUMAN_GUIDE.md</code>、<code>.ai/project/architecture.md</code> / <code>frontier.md</code></li>
+        <li>文档：<code>.ai/project/capabilities.md</code>（命令表）、<code>README.md</code>（<code>butler/</code> 子树 + 扩展模式表）</li>
+        <li>发布元数据：<code>VERSION</code>、<code>CHANGELOG.md</code>（<code>## [2.9.0]</code>）、<code>migrations/v2.9.0.md</code></li>
+        <li>里程碑：<code>.ai/MILESTONE.md</code>（MILE-0005 §5.3 路线图 R3）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
