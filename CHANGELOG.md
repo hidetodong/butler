@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.7.0] - 2026-07-14
+
+向后兼容能力新增版。聚合 ITER-0047（自 v2.6.1 起新收口的唯一迭代，**MILE-0005「butler 命令命名空间系统」R1 地基**；里程碑余项 R2–R4 待续，故本版为里程碑进行中的一次迭代切版）。本迭代把 butler 的 slash 命令从扁平单文件升级为 **`/butler:` 命名空间体系**（Claude Code 里子目录即命名空间前缀、冒号分隔）：命令文件由 `.claude/commands/butler-prd.md` 收进 `.claude/commands/butler/prd.md`、破坏性改名 `/butler-prd`→`/butler:prd`（路由三分支一字未改）；新增 `/butler:review` 薄壳命令作命名空间第二个成员兼后续迁移范本（默认当前上下文自检 / `independent` 另起干净子 agent 独立复核）；`scripts/setup.sh` 由逐文件软链改为软链整个 `butler/` 命名空间目录、并含旧扁平软链的迁移清理。按 semver「新增 `/butler:` 命名空间这一可扩展能力」取 **MINOR**——改名的破坏面被关在**维护者个人命令别名**这一层，butler 的 semver 按目标项目部署契约定范围，那一面零变化。分发与 ITER-0045/0046 同模型（全局机器级软链、不进 `templates/`、不逐项目部署）：对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.7.0.md` 为 `[rename]`〔个人命令层〕+`[no-op]`+`[restamp]`〔部署面〕），既有安装升级需一个**机器级动作**——重跑 `./scripts/setup.sh`（自动清旧软链 + 装命名空间目录软链）。
+
+聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`。老项目升级动作见 `migrations/v2.7.0.md`（`[rename]`+`[no-op]`+`[restamp]`）。
+
+[2.7.0]: 自 v2.6.1 起聚合 ITER-0047（MILE-0005 R1）
+
 ## [2.6.1] - 2026-07-13
 
 不改变行为的修订版（PATCH）。收紧 v2.6.0 新增的沟通风格正本 `communication-style.md` 的措辞与结构——头部 5 行说明压成 1 行、各节去掉解释性铺陈只留祈使规矩、4 条「说人话」的 ❌/✅ 例子由各占两行并成一行；篇幅 77→51 行（约减三分之一）。**规矩与全部 ❌/✅ 例子逐条保留，无一条增删或语义改动**——纯排版 / 措辞打磨，故取 **PATCH**。非完整迭代、无 ITER 号（简化直改），聚合提交 `d87b0d2`（`style(voice)`）。对目标项目零影响、`migrations/v2.6.1.md` 为 `[no-op]`+`[restamp]`；正本走全局 `@import`、路径不变，本机随 git 更新内容即生效、无需重跑 `setup.sh`。
