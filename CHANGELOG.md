@@ -4,12 +4,17 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.10.1] - 2026-07-15
+
+修订版，不改变任何行为。这一版收紧了 butler 仓根的个人配置文件 `communication-style.md`，给它加了一节「把话说顺（短 ≠ 碎）」。新规矩要求叙述用连贯的中文逻辑：话可以短，但要让人顺着一条逻辑线读下去，因果、转折、递进用连词接起来，别用破折号插入、括号套括号、斜杠堆名词把话切成碎片。这一节放在「说人话」和「别抛菜单」之间，与「说人话（简短 ≠ 好懂）」做对仗的姊妹条，反例取自真实病文、正例是它顺过来的样子；开头索引行也补上了「叙述连贯」。其余规矩与全部 ❌/✅ 例子逐条保留，没有语义删改。因为这个文件走全局 `@import`、不进 `templates/`、也不下发目标项目，所以对已部署项目零结构影响；正本随 `git pull` 更新后，下一个会话就会读到新版，无需重跑 `setup.sh`。老项目升级动作见 `migrations/v2.10.1.md`（`[no-op]`+`[restamp]`）。
+
 ## [2.10.0] - 2026-07-14
 
 向后兼容能力新增版。聚合 ITER-0050（自 v2.9.0 起新收口的唯一迭代，**MILE-0005「butler 命令命名空间系统」R4·收官**）。本迭代落最后两个高风险命令——`/butler:loop`（收敛闭环死磕）+ `/butler:dangerous`（无人值守长程自治），把命名空间补齐、**MILE-0005 整体收口**。**唯一新面是风险闸**：命令化后敲一下就触发的便利**不得降低**它们「该被郑重、显式触发」的门槛——薄壳不复述护栏 / 熔断 / 自审门算法（守 DRY），改用 ① frontmatter `description` 带显式 ⚠️（菜单可见）、② 第 0 步前置风险提醒（dangerous=实验性/无人值守/建议隔离环境、loop=高强度/长时/消耗大）、③ 把真正的闸交回引擎（dangerous 走 §3 回声 + §3.1 announce-on-read + §7 护栏；loop 走 §6 定量熔断）。两命令结构不同：`/butler:loop` 一次性 P4 升档（无持久态·无 `off`·跑到全绿或熔断、近乎无参），`/butler:dangerous` 空参=开启（走引擎风险闸）/ `off` 关 / `status` 只读，持久开关外化当前项目 `.ai/local-constraints.md` `dangerous`、跨会话 announce-on-read。同时把活规则与人读文档里作命令引用的旧名 `/loop`·`/dangerous` **统一迁为 `/butler:*`**（22 文件，含全批最宽迁移面）；**`/loop` 与 Claude Code 自带 `/loop` 撞名的一处 harness 引用刻意保留不迁并加注澄清**；旧名仍作触发被识别。**触发名迁移刻意不碰 `templates/` 部署面**（`rule-card.md` / `templates/preference/profile.md` 保留 `/loop`·`/dangerous`）——命令是靠全局软链的个人工具、不下发目标项目，目标项目里保证生效的是散文旧名，故不触发 `[regen-claude]`、部署契约零变化。按 semver「新增两条命名空间命令能力」取 **MINOR**（`v2.9.0`→`v2.10.0`，十进位）。新命令仍由 R1 整目录软链自动托管、**无需**重跑 `setup.sh`。对目标项目 `.ai/` 部署面零结构影响（`migrations/v2.10.0.md` 为 `[no-op]`+`[restamp]`）。
 
 聚合迭代清单见 `.ai/ITERATIONS.md`，各迭代人类可读交付见 `deliveries/`；MILE-0005 里程碑级交付见 `deliveries/milestones/MILE-0005-command-namespace-system.md`。老项目升级动作见 `migrations/v2.10.0.md`（`[no-op]`+`[restamp]`）。
 
+[2.10.1]: 自 v2.10.0 起 style(voice) 收紧 communication-style.md（加「把话说顺（短 ≠ 碎）」一节，PATCH）
 [2.10.0]: 自 v2.9.0 起聚合 ITER-0050（MILE-0005 R4·里程碑收官）
 
 ## [2.9.0] - 2026-07-14
