@@ -25,6 +25,8 @@
 
 ## 支撑目录（仓库根）
 
+- `plugins/butler/` — Codex 可安装发布包，`skills/` 内 8 个 Butler 工作流是实体真源；`.agents/skills/` 只用相对软链提供 repo discovery。个人 marketplace 安装/刷新由 `scripts/install-codex-plugin.sh` 编排官方 helper 与 CLI。
+
 - `templates/` — 部署到目标项目的东西：`CLAUDE.md.template`、`AGENTS.md.template`（R1 只落模板，R4 才接部署）、浓缩规则卡 `rule-card.md`（强制约束 SSOT）、交付 HTML 模板 `delivery.html.template`、hook 体系（`hooks/` + `settings.hooks-snippet.json`）——**两套平行 hook**：PreToolUse 机械门禁（`butler_gate.py`，deny·fail-closed）+ PostToolUse 非阻塞提醒（`butler_advisor.py`，advisory·fail-open，当前承载 PRD 先行落盘自检 `prd_split_reminder`）。
 - `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。当前只有 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/`（升级迁移配方）、`deliveries/`（交付总结存档）。

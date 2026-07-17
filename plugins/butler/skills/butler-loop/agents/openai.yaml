@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Loop"
+  short_description: "Run the convergence loop only when invoked"
+  default_prompt: "Use $butler-loop to run the explicit high-intensity convergence loop."
+policy:
+  allow_implicit_invocation: false

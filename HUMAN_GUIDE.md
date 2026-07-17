@@ -83,15 +83,15 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.12.0 先交付 **Codex 规则发现地基**：在 Butler 仓根启动 Codex，它会从 `AGENTS.md` 读取仓库约定，并按固定顺序恢复与 Claude Code 共用的 `.ai/` 状态。目标项目的 `templates/AGENTS.md.template` 也已建立，但本版还没有接进 `setup.sh`、首次部署和既有升级流程。
+v2.13.0 已在规则发现地基上补齐 **Codex 工作流入口**：`plugins/butler/` 内含 8 个 skills，仓内 `.agents/skills/` 直接发现同一份内容。运行 `bash scripts/install-codex-plugin.sh` 可安装或刷新个人 Butler plugin；安装后新开 Codex 会话。
 
 当前不要把它理解成“Codex 已全面兼容”：
 
-- 8 个 Butler 工作流迁为 Codex skills/plugin，属于 MILE-0006 R2。
+- 8 个入口已完成：`$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop`、`$butler-dangerous`。后两个高风险入口只允许显式调用。
 - Codex `apply_patch` 的机械门禁和提醒 hooks，属于 R3；R3 完成前，Codex 侧只能靠规则纪律，不能声称 hook 已保护。
 - 新项目自动生成 `CLAUDE.md` + `AGENTS.md`、既有项目升级和双端回归，属于 R4。
 
-共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器，R1 不改变它的行为。
+共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器；R4 前，Codex plugin 使用独立的 `scripts/install-codex-plugin.sh`。
 
 ## 4. 接入新项目
 

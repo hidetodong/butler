@@ -5,7 +5,13 @@
 ## Codex 兼容地基（v2.12.0）
 
 - Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。
-- `templates/AGENTS.md.template` 已定义未来目标项目入口契约，但 v2.12.0 尚未接入部署/升级；skills/plugin、Codex hooks 也仍未交付。详细状态见 `docs/codex-compatibility.md`。
+- `templates/AGENTS.md.template` 已定义未来目标项目入口契约，但尚未接入部署/升级；v2.13.0 已补 skills/plugin，Codex hooks 仍未交付。详细状态见 `docs/codex-compatibility.md`。
+
+## Codex 工作流入口（v2.13.0）
+
+- `plugins/butler/` 可安装 8 个 skills：prd/review/milestone/upgrade/ideation/preference/loop/dangerous；`.agents/skills/` 软链让仓内直接发现同一真源。
+- `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
+- hooks 仍未 live，目标项目双入口仍未接部署；分别归 R3/R4。
 
 ## 核心：P1–P5 开发 SOP（默认主线）
 

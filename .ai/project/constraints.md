@@ -5,6 +5,7 @@
 - **写作面向 AI 执行**：措辞用"必须 / 不得 / 应"，中文说明、标识符与文件名用英文。规则之间靠文件名互相引用，不写绝对路径。真源 仓库根 `CLAUDE.md`。
 - **注册即真源、无隐式依赖**：新增规则文件必须在 `Coder/README.md` 的目录结构 + 读取顺序注册；新增知识主题必须在 `.ai/project/00_INDEX.md` 主题表登记。没注册 = 不存在。
 - **兼容状态必须诚实**：R2 skills/plugin、R3 Codex hooks、R4 部署升级与双端回归完成前，不得把 v2.12.0 写成“Codex 全面兼容”；尤其不得把尚未解析的 `apply_patch` 宣称为已受机械门禁保护。
+- **高风险 Codex skill 只许显式**：`butler-loop` 与 `butler-dangerous` 的 `allow_implicit_invocation` 必须为 false；迁宿主不能降低 Claude 命令已有的郑重触发门槛。
 - **frontmatter 必标 audience + scope**：每个规则文件头必须写清给谁读、管什么范围。
 - **版本 semver（规则仓口径）**：MAJOR 破坏性 / MINOR 兼容新增 / PATCH 澄清修订；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检。真源 `versioning-schema.md §6`。
 - **提交规约**：`type(scope): 中文描述 (ITER-NNNN)`，发布用 `chore(release): vX.Y.Z — 聚合 …`，末行 `Co-Authored-By` 署名；提交单元 = 迭代收口，"提交 ≠ 切版"（发布提交独立）。非 hook 门禁，靠纪律兜底。真源 `versioning-schema.md §5`。

@@ -1,0 +1,24 @@
+{
+  "name": "butler",
+  "version": "2.13.0",
+  "description": "Butler's eight auditable engineering workflows for Codex.",
+  "author": {
+    "name": "Butler maintainers"
+  },
+  "license": "MIT",
+  "keywords": ["workflow", "engineering", "review", "prd"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Butler",
+    "shortDescription": "Auditable engineering workflows for Codex",
+    "longDescription": "Run Butler's PRD, milestone, review, ideation, preference, convergence, dangerous, and upgrade workflows from Codex while keeping the Butler rule repository as the single source of truth.",
+    "developerName": "Butler maintainers",
+    "category": "Productivity",
+    "capabilities": ["Workflow", "Read", "Write"],
+    "defaultPrompt": [
+      "Use Butler to turn this request into an auditable iteration.",
+      "Use Butler to review the current changes.",
+      "Use Butler to structure this PRD."
+    ]
+  }
+}

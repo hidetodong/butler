@@ -28,7 +28,7 @@ Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需�
 | 🛡 | **Hook 门禁** | 阶段产物缺失或验收未冻结时机械拦截源码写操作 |
 | 🧩 | **可插拔扩展** | 脑暴 / 自纠 / 审查 / 自治 / 偏好，按指令或语义触发 |
 | 📦 | **基地车部署** | 新项目零配置接入，自动展开 `.ai/` 基础设施 |
-| 🤝 | **双宿主地基** | Claude Code 继续原生运行；Codex 可从仓根 `AGENTS.md` 发现规则并恢复同一份 `.ai/` 状态 |
+| 🤝 | **双宿主工作流** | Claude Code 继续原生运行；Codex 可从 `AGENTS.md` 发现规则，并通过 `plugins/butler/` 使用 8 个 Butler skills |
 
 ## 🔄 核心工作流
 
@@ -96,7 +96,7 @@ flowchart TB
 3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
-> **Codex 当前支持范围**：v2.12.0 起，Codex 可原生发现 Butler 仓本身的规则；目标项目模板也已建立，但 skills/plugin、机械 hooks 和自动部署/升级接线仍在 MILE-0006 后续迭代。不要把本阶段描述成“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> **Codex 当前支持范围**：v2.13.0 起，Codex 可原生发现 Butler 仓规则，并通过 `plugins/butler/` 安装 8 个工作流 skills。运行 `bash scripts/install-codex-plugin.sh` 安装或刷新；机械 hooks 仍属 R3，目标项目自动双入口部署/升级仍属 R4，因此尚不是“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## 📂 目录结构
 
@@ -111,7 +111,9 @@ butler/
 ├── scripts/
 │   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
-│   └── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
+│   ├── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
+│   ├── verify-codex-workflows.sh   # 8 skills/plugin/repo fallback 结构自检
+│   └── install-codex-plugin.sh     # 个人 marketplace 安装/刷新 Butler plugin
 │
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
 │   └── butler/                     #   /butler:* 命名空间（子目录=命名空间前缀）
@@ -134,6 +136,8 @@ butler/
 │
 ├── docs/
 │   └── codex-compatibility.md      # Claude/Codex 共同内核与适配层真源
+├── plugins/butler/                 # Codex plugin 发布包（8 skills 的实体真源）
+├── .agents/skills/                 # 仓库发现面（8 个相对软链，不复制正文）
 │
 ├── Coder/                          # 🛠 工程开发与 AI 协作（核心）
 │   ├── README.md                   #   子系统入口

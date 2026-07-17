@@ -1,6 +1,6 @@
 # 01_CHANGELOG
 
-> 当前无 active 迭代。ITER-0051 的对象级变更流已归档到 `.ai/iterations/ITER-0051/CHANGELOG.md`。
+> 当前无 active 迭代。ITER-0052 变更流已归档；危险模式下一步将开启 ITER-0053。
 
 ## ADD
 

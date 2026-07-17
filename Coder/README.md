@@ -26,8 +26,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `architecture-overview.md`：规则分层与启用关系的补充说明，不属于 Business Extension。
 - `../AGENTS.md`：Codex 编辑 Butler 仓时的自动发现入口与 `.ai/` 冷启动读序。
 - `../docs/codex-compatibility.md`：Claude Code / Codex 共同内核、适配层边界与分阶段支持状态的真源。
+- `../plugins/butler/`：Codex plugin 发布包与 8 个工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
 
-宿主入口只负责发现和路由：Claude Code 读根 `CLAUDE.md`，Codex 读根 `AGENTS.md`；规则算法仍以本目录为真源。目标项目的 Codex 模板是 `templates/AGENTS.md.template`，与 Claude 模板共同从 `templates/rule-card.md` 注入强制规则。完整兼容边界不在本文件复述，统一见 `docs/codex-compatibility.md`。
+宿主入口只负责发现和路由：Claude Code 读根 `CLAUDE.md` 和 `.claude/commands/`，Codex 读根 `AGENTS.md` 与 `plugins/butler/` skills；规则算法仍以本目录为真源。目标项目的 Codex 模板是 `templates/AGENTS.md.template`，与 Claude 模板共同从 `templates/rule-card.md` 注入强制规则。完整兼容边界不在本文件复述，统一见 `docs/codex-compatibility.md`。
 
 ## 目录结构
 

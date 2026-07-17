@@ -1,49 +1,40 @@
-> 分流: 完整 | 命中升级信号: 多文件改动、跨模块影响、宿主契约变更、设计取舍 | 2026-07-17
+# CONCEPT — ITER-0052 · Codex 工作流入口
 
-# 一句话
+> ⚠️ 危险模式：本迭代由模型自治推进；P2/P3 将在强制自审门通过后自主 ACK，未经用户逐项确认。
 
-为 Butler 增加 Codex 兼容地基：先让 Codex 原生发现规则、正确恢复 `.ai/` 状态，并定死双宿主共享真源与适配层边界，为后续 skills/plugin 和 hooks 改造铺路。
+## 一句话目标
 
-# Goal
+把 Butler 的 8 个 Claude 薄壳命令变成 Codex 可发现、可安装、仍回指共同规则真源的 8 个 skills，并用 plugin 作为最终分发包。
 
-承接 MILE-0006 R1，在不破坏现有 Claude Code 使用方式的前提下，让 Codex 打开 Butler 仓或已部署项目时能自动获得正确入口：知道 `.ai/` 是状态层、按固定顺序恢复当前任务、按需读取 `Coder/` 真源；同时把后续 command→skill、Claude hook→Codex hook 的适配边界写清，避免两套规则正文。
+## 问题
 
-# Current Understanding
+- R1 只让 Codex 认识 Butler 仓库，还没有可显式或语义触发的 Butler 工作流入口。
+- 直接复制 Claude command 正文会形成第二套算法；skills 必须只做定位、读真源、分派和优雅降级。
+- repo skills 适合开发发现，plugin 适合全局安装；两份实体内容会漂移，需要单一物理真源。
 
-- `.ai/` 本身没有 Claude Code 专属协议：它是普通 Markdown 状态目录，Codex 可以直接读写，现有四件套、迭代归档、里程碑、知识文件夹和 handoff 均可复用。
-- 当前自动注入链只覆盖 Claude Code：仓根和目标项目生成的是 `CLAUDE.md`，全局 setup 写 `~/.claude/CLAUDE.md`；Codex 默认入口是 `AGENTS.md`。
-- 直接把 `CLAUDE.md` 加进 Codex fallback 可以临时工作，但属于用户机器配置，不能保证团队或新环境开箱即用；仓库应提供原生 `AGENTS.md`。
-- `templates/rule-card.md` 是浓缩强制规则唯一真源。新增 Codex 模板时也必须从它生成/引用，不能手工复制一份规则卡长期维护。
-- Codex 工作流更适合 skills/plugin，而不是照搬 `.claude/commands/`。这属于后续 R2，本迭代只立契约和入口，不一次性吞掉分发改造。
-- Codex hooks 的事件结构与 Claude 接近，但 discovery 路径、trust 流程和写文件工具输入不同。现有 gate 对 Codex `apply_patch` 会静默放行的风险属于 R3，本迭代登记但不假装已修。
+## 已确认决策
 
-# Constraints
+1. `plugins/butler/skills/` 是 8 skills 的发布真源；`.agents/skills/` 只放指向它们的相对软链，既满足 repo discovery，也不双写。
+2. plugin 名为 `butler`，由官方 `plugin-creator` 脚手架建立，manifest 不夹带 R3 hooks、MCP 或 apps。
+3. 8 个 skill 对应 `prd`、`review`、`milestone`、`upgrade`、`ideation`、`preference`、`loop`、`dangerous`；每个都从 `BUTLER_PATH` 定位 `Coder/` 真源。
+4. 高风险的 `loop` 与 `dangerous` 禁止隐式触发；其 `agents/openai.yaml` 设 `allow_implicit_invocation: false`。其余 6 个允许语义触发。
+5. R2 按 MINOR 发布 v2.13.0；R3 hooks、R4 目标项目双入口部署不提前进入。
 
-- 保留 `CLAUDE.md` 与 `.claude/**`，不做单向迁移或破坏性改名。
-- `Coder/`、`.ai/`、`templates/rule-card.md` 继续是共同真源；Codex 入口只能路由和解释宿主差异。
-- `AGENTS.md` 保持短小，关键规则内联到高注意力入口，但完整算法通过相对路径按需读取，避免超过 Codex 默认项目指令预算。
-- 不在 R1 落公共 plugin、不发布 marketplace、不改现有 hook Python 判断算法。
-- 不声称 hooks 已兼容；在 R3 端到端验证前，文档必须明确当前机械门禁只对 Claude Code live。
-- 当前基线已从本地 v2.10.0 快进到 `github/main` v2.11.0；后续改动基于独立分支 `feat/mile-0006-codex-compatibility`。
+## 范围
 
-# Impact Scope
+- 建 plugin manifest、8 skills、UI metadata、repo fallback 软链。
+- 增加安装/刷新脚本与结构验证，真实安装到本机个人 marketplace 后用新 Codex 会话验证发现和触发。
+- 更新兼容说明、README/HUMAN_GUIDE/Coder 注册与项目知识。
 
-- **R1 预计新增**：根 `AGENTS.md`、Codex 兼容架构/维护说明，以及目标项目 `AGENTS.md` 模板或生成约定（具体文件名在 P2/P3 冻结）。
-- **R1 预计更新**：`README.md`、`Coder/README.md`、`HUMAN_GUIDE.md`、部署/升级规则中关于规则入口与双宿主边界的最小说明；`.ai/project/` 长期知识在收口时前滚。
-- **后续迭代而非 R1**：`.agents/skills` 或 plugin 目录、`.codex/hooks.json`、`apply_patch` 解析器、setup 安装逻辑、迁移配方与完整 E2E。
-- **明确不碰**：P1–P5 算法、四件套字段、PRD 版本化、危险模式算法、业务扩展和技术栈 profile。
+## 不做
 
-# Project Type / Active Profiles
+- 不增加 `.codex/hooks.json`，不改 Python gate，不宣称 `apply_patch` 已受门禁。
+- 不修改 `scripts/setup.sh`、目标项目首次部署或升级生成双入口的执行链。
+- 不改 Claude commands 和工作流算法。
+- 不发布公共 marketplace，不 push、不合并。
 
-Markdown 规则仓库 + Python hook 测试 + Shell 安装脚本。无前端技术栈 profile；采用通用 SOP、文档规则、hook 测试与跨宿主配置验证。
+## 风险
 
-# Open Questions
-
-- 无。2026-07-17 用户已确认四项默认：plugin 为最终分发面、四迭代拆分、目标项目最终双入口、一迭代一版。
-
-# Confirmed Decisions
-
-1. Codex plugin 是最终全局安装面；repo skills 是开发态源码和 fallback。
-2. MILE-0006 按 R1–R4 四迭代推进，R1 不提前实现 skills/plugin 与 hooks。
-3. R4 完成后，新部署项目同时生成 `CLAUDE.md` 与 `AGENTS.md`，两者共同引用 `rule-card.md` 真源；R1 先建立模板和契约，不提前改完整部署链。
-4. 延续一迭代一版；R1 按新增 Codex 原生发现能力发布 v2.12.0。
+- plugin 安装会写用户级 `~/.agents/plugins/` 与 Codex 插件缓存；这是用户要求的全局兼容目标内动作，必须通过官方脚本和 CLI，且保留可移除路径。
+- 本地 plugin 缓存不会自动跟随仓库更新；更新脚本必须处理同步、cachebuster 与重装。
+- skill 的隐式触发存在模型判断不确定性；以显式 `$skill` 为可靠验收，低风险 skills 再做语义触发代理验证。

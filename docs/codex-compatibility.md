@@ -14,7 +14,7 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 |---|---|---|
 | 共同内核 | `Coder/`、`.ai/`、`templates/rule-card.md`、`templates/hooks/rules/` 与 `lib/` | 规则算法和状态契约只写在这里 |
 | Claude Code 适配层 | `CLAUDE.md`、`.claude/commands/`、部署后的 `.claude/hooks/` 与 settings | 保留现有行为，不为 Codex 改写 |
-| Codex 适配层 | `AGENTS.md`、后续 `.agents/skills/` / plugin、后续 `.codex/hooks.json` 或 plugin hooks | 只负责发现、路由、输入输出转换 |
+| Codex 适配层 | `AGENTS.md`、`.agents/skills/`、`plugins/butler/`、后续 `.codex/hooks.json` 或 plugin hooks | 只负责发现、路由、输入输出转换 |
 
 `.ai/` 不属于任何单一宿主。它保存当前目标、验收、方案、验证、台账和跨会话断点；Claude Code 与 Codex 必须读写同一份状态，不能各建副本。
 
@@ -29,12 +29,12 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 
 | 路线 | 能力 | 状态 |
 |---|---|---|
-| R1 / ITER-0051 | Butler 仓根 `AGENTS.md` 自动发现、`.ai/` 冷启动读序、目标项目模板与兼容架构 | 当前版本交付 |
-| R2 | 8 个 Butler 工作流迁为 Codex skills，并打包成可安装 plugin | 计划中 |
+| R1 / ITER-0051 | Butler 仓根 `AGENTS.md` 自动发现、`.ai/` 冷启动读序、目标项目模板与兼容架构 | v2.12.0 已交付 |
+| R2 / ITER-0052 | 8 个 Butler 工作流迁为 Codex skills，并打包成可安装 plugin | v2.13.0 已交付 |
 | R3 | Codex PreToolUse/PostToolUse 配置、`apply_patch` 输入适配、拒绝与提醒端到端验证 | 计划中 |
 | R4 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | 计划中 |
 
-因此，R1 完成后可以说“Codex 能原生发现 Butler 仓库规则”，不能说“Butler 已在 Codex 中全面兼容”。目标项目自动生成 `AGENTS.md`、8 个工作流入口和机械门禁仍要等后续路线完成。
+因此，v2.13.0 可以说“Codex 能原生发现 Butler 仓库规则，并通过 plugin 使用 8 个工作流入口”，仍不能说“Butler 已在 Codex 中全面兼容”。机械门禁和目标项目自动生成 `AGENTS.md` 仍要等 R3/R4。
 
 ## 4. Codex 原生入口
 
@@ -48,11 +48,14 @@ Codex 会在开始工作前读取仓库级 `AGENTS.md`，并允许在更深目�
 
 ## 5. 工作流与分发方向
 
-Codex 官方把可重复工作流放在 skills 中；repo skill 位于 `.agents/skills/`，需要把 skills 与 hooks 一起全局分发时再包装成 plugin。MILE-0006 R2 将按这个模型映射现有 8 个 `.claude/commands/butler/*.md` 薄壳，规则算法仍回指 `Coder/`。
+Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装分发。Butler 的发布真源是 `plugins/butler/skills/`；`.agents/skills/` 的 8 个相对软链让仓内开发态也能发现同一批 skill，不产生第二份正文。
+
+8 个入口是 `$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop` 和 `$butler-dangerous`。前 6 个允许语义触发；后两个高风险入口在 `agents/openai.yaml` 禁止隐式调用，必须显式点名。所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
 
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
-- 分发决策：repo skills 是开发态源码与 fallback，plugin 是最终全局安装面。
-- R1 不创建 custom prompts；官方已把它们标为弃用路线。
+- 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。
+- 结构回归：`bash scripts/verify-codex-workflows.sh`。
+- 不创建 custom prompts；官方已把它们标为弃用路线。
 
 ## 6. Hook 当前边界
 
@@ -79,6 +82,7 @@ Butler 的流程规则不能覆盖 Codex 自身的 sandbox、审批、hook trust
 
 ```bash
 bash scripts/verify-codex-foundation.sh
+bash scripts/verify-codex-workflows.sh
 ```
 
 修改共享 hook 判断模块时，还要运行：

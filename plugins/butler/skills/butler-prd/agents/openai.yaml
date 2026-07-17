@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butler PRD"
+  short_description: "Split, update, or inspect versioned PRDs"
+  default_prompt: "Use $butler-prd to process this product requirements document."

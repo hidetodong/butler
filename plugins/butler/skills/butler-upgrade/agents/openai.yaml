@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butler Upgrade"
+  short_description: "Run the Butler upgrade workflow safely"
+  default_prompt: "Use $butler-upgrade to upgrade this deployed Butler project safely."

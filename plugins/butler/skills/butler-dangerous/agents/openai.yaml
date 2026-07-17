@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Dangerous"
+  short_description: "Control unattended Butler autonomy explicitly"
+  default_prompt: "Use $butler-dangerous to inspect or explicitly control dangerous mode."
+policy:
+  allow_implicit_invocation: false

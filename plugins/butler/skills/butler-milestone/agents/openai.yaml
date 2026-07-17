@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butler Milestone"
+  short_description: "Run the Butler milestone workflow safely"
+  default_prompt: "Use $butler-milestone to turn this brief into a milestone roadmap."

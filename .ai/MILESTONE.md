@@ -41,7 +41,7 @@
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
 | R1 | **兼容地基**：双宿主边界、`AGENTS.md` 自动注入入口、`.ai/` 共同状态层与单一真源约束 | ITER-0051 | closed |
-| R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | — | planned |
+| R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | ITER-0052 | closed |
 | R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | — | planned |
 | R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | — | planned |
 
@@ -50,3 +50,5 @@
 - 2026-07-17：用户要求从现有 Butler 台账继续，改造为 Codex 可用；确认无活跃里程碑/迭代后开启 MILE-0006，并以双宿主兼容而非替换 Claude Code 为方向。
 - 2026-07-17：用户确认四项默认——plugin 为最终分发面、按 R1–R4 四迭代推进、目标项目最终双入口、继续一迭代一版。R1 收紧为规则发现 + 模板/架构契约；完整部署升级接线仍归 R4。
 - 2026-07-17：R1 / ITER-0051 收口并发布 v2.12.0。仓库已可被 Codex 原生发现；目标项目自动部署、skills/plugin 与 hooks 仍按 R2–R4 继续，MILE-0006 保持 active。
+- 2026-07-17：用户开启危险模式并要求继续；R2 绑定 ITER-0052，按会话级自治推进 8 skills、plugin 骨架和本地安装验证，R3/R4 边界不变。
+- 2026-07-17：R2 / ITER-0052 自治收口并发布 v2.13.0；个人 `butler@personal` 已真实安装，8 skills 可用。危险模式继续推进 R3。
