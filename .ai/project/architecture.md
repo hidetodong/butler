@@ -25,12 +25,14 @@
 
 ## 支撑目录（仓库根）
 
-- `templates/` — 部署到目标项目的东西：`CLAUDE.md.template`、浓缩规则卡 `rule-card.md`（强制约束 SSOT）、交付 HTML 模板 `delivery.html.template`、hook 体系（`hooks/` + `settings.hooks-snippet.json`）——**两套平行 hook**：PreToolUse 机械门禁（`butler_gate.py`，deny·fail-closed）+ PostToolUse 非阻塞提醒（`butler_advisor.py`，advisory·fail-open，当前承载 PRD 先行落盘自检 `prd_split_reminder`）。
+- `templates/` — 部署到目标项目的东西：`CLAUDE.md.template`、`AGENTS.md.template`（R1 只落模板，R4 才接部署）、浓缩规则卡 `rule-card.md`（强制约束 SSOT）、交付 HTML 模板 `delivery.html.template`、hook 体系（`hooks/` + `settings.hooks-snippet.json`）——**两套平行 hook**：PreToolUse 机械门禁（`butler_gate.py`，deny·fail-closed）+ PostToolUse 非阻塞提醒（`butler_advisor.py`，advisory·fail-open，当前承载 PRD 先行落盘自检 `prd_split_reminder`）。
 - `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。当前只有 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/`（升级迁移配方）、`deliveries/`（交付总结存档）。
 - 其它子系统 — `Learner/`（学习事务）、`Composer/`（杂项事务），与 `Coder/` 并列、本知识文件夹不展开。
 
 ## 成熟度（真源里没有的"现状"层）
+
+- **双宿主适配（MILE-0006）**：R1 已落仓根 `AGENTS.md`、目标模板、兼容架构说明和结构自检；R2 skills/plugin、R3 Codex hooks、R4 部署升级与双端回归仍 planned。详细边界真源 `docs/codex-compatibility.md`。
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。

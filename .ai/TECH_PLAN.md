@@ -1,78 +1,107 @@
-# TECH_PLAN — ITER-0050（MILE-0005 R4 收官落 /butler:loop + /butler:dangerous）
-
-> 标准模式，P2 AC_LIST 经用户 ACK（三默认全收：MINOR→v2.10.0 / `/loop`·`/dangerous` 全迁外科式〔排除 harness-`/loop`〕/ 一迭代做完两命令 + dangerous 空参=开启）。无危险横幅。里程碑收官迭代。
-
 # Goal
 
-套薄壳范本落两个高风险命令 `/butler:loop`（收敛闭环死磕）+ `/butler:dangerous`（无人值守自治）。**唯一新面是风险闸**——命令化不得降低「郑重显式触发」门槛：薄壳不复述护栏（守 DRY），改用 frontmatter ⚠️ + 第 0 步前置风险提醒 + 把真正的闸交回引擎。收口即整体收 MILE-0005。
+按已冻结的 AC1–AC9 交付 ITER-0051：增加 Codex 原生规则发现、目标项目入口模板和双宿主架构契约，同时用自动检查守住 `.ai/` 冷启动读序、`rule-card.md` 单一真源和 Claude Code 非回归；skills/plugin、Codex hooks、完整部署升级接线不提前进入本迭代。
 
-# Files
+# Files / Modules to Change
 
-- **新增**：`.claude/commands/butler/loop.md`（近乎无参）+ `dangerous.md`（on/off/status 分派 + 风险闸委托）。
-- **改·迁触发名**（`/loop`·`/dangerous`→`/butler:*`，命令名非算法；斜杠前缀已把命令引用与 `dangerous:` 字段名 / `Dangerous` 目录名天然隔开）——见 DD4 全清单（**22 文件**）。
-- **改·文档**：`.ai/project/capabilities.md` 补两行、`README.md` 扩展模式表 + `butler/` 子树 + Coder 目录 `55/65` 行（与迁触发名合并处理）。
-- **发布层**：`VERSION`、`CHANGELOG.md`、`migrations/v2.10.0.md`。
-- **里程碑收官层**：`deliveries/milestones/MILE-0005-*.md`（聚合交付）、`.ai/milestones/MILE-0005/MILESTONE.md`（归档）、`MILESTONES.md`（active→closed）。
-- **不碰（守边界）**：`templates/**`（含 `rule-card.md`、`templates/preference/profile.md`——**部署面故意保留 `/loop`·`/dangerous` 散文**，见 DD7）、`setup.sh`、四件套 schema 结构、hook、两引擎 §algorithm、`local-constraints-schema` 的 `dangerous:` 字段定义、其他命令。
+## 新增
 
-# Interface（两命令路由设计）
+- `AGENTS.md`（AC1/AC2）——Butler 规则仓的 Codex 原生入口。只放仓库定位、编辑硬约束、`.ai/` 冷启动读序和 `Coder/README.md` 深读指针，不复制完整规则算法。
+- `templates/AGENTS.md.template`（AC3）——未来目标项目的 Codex 入口模板。与 `CLAUDE.md.template` 共用 `{{BUTLER_VERSION}}`、`{{RULE_CARD_CONTENT}}`、`{{BUTLER_PATH}}` 和 user-managed 保护区契约。
+- `docs/codex-compatibility.md`（AC4/AC5）——双宿主兼容架构单一说明：共同内核、两端适配层、R1–R4 支持矩阵、hook 当前诚实边界和维护红线。
+- `scripts/verify-codex-foundation.sh`（AC3/AC8）——零依赖结构检查，验证入口、读序、模板占位符、保护区、共同深读指针、规则卡未复制和文档注册。
+- `migrations/v2.12.0.md`（AC9）——R1 发布配方；对既有部署项目明确 `[no-op]` + `[restamp]`，不假装已自动生成 `AGENTS.md`。
 
-**`/butler:loop`** — frontmatter `description` 带 ⚠️「高强度死磕、长时、消耗大」；`argument-hint "[留空=开启收敛闭环死磕（跑到全绿或熔断）]"`。第 0 步优雅降级（没接 butler → 一句话说清 loop 是 butler P4 升档能力、需先装）。无参数分派——空参=委托 `convergence-loop-engine.md`（§3 闭环 / §6 定量熔断）开启；多余参数→一句提示 loop 无子命令。**不复述闭环 / 熔断算法**。
+## 更新
 
-**`/butler:dangerous`** — frontmatter `description` 带 ⚠️「实验性·无人值守自治·风险高于标准·建议隔离/可回滚环境」；`argument-hint "[留空=开启（走引擎风险闸）| off 关闭 | status 只读看状态]"`。第 0 步优雅降级 + 前置风险提醒。按 `$ARGUMENTS`：
+- `README.md`（AC6）——在核心能力/快速上手/目录树中短注册 Codex R1 支持和兼容说明链接，不改 Claude 安装步骤。
+- `Coder/README.md`（AC6）——在入口文档和支撑目录中登记 `AGENTS.md`、目标模板及兼容架构真源。
+- `HUMAN_GUIDE.md`（AC5/AC6）——增加短小的“Codex 支持状态”说明：R1 能做什么、暂时不能做什么、完整兼容路线指向哪里。
+- `VERSION`、`CHANGELOG.md`（AC9）——发布 v2.12.0。
+- `.ai/**`、`deliveries/**`、`.ai/project/**`（P5 收口）——按既有原子收口仪式归档、交付和前滚长期知识，不属于产品接口。
 
-| `$ARGUMENTS` | 分支 | 委托真源 |
-|---|---|---|
-| 空 | 开启（回写 `dangerous: on` + 对话层显式回声进入 + 承接 announce-on-read 语义） | §3 激活 + §3.1 + §7 护栏 |
-| `off` | 关闭（回写 `dangerous: off` + 回声退出） | §3 关闭 |
-| `status` | 只读回声当前 `dangerous` 开关态（读 `.ai/local-constraints.md`，**不改开关**） | §3 状态 + local-constraints-schema §4.1 |
-| 其它未知 | 兜底列合法参数（留空 / `off` / `status`），不瞎猜执行 | — |
+## 明确不改
 
-**风险闸交回引擎、不复述护栏**（审计日志 §7.1 / checkpoint §7.2 / P5 强制完整审查 §7.3 一律委托，不在薄壳重写）。
+- `CLAUDE.md`、`.claude/commands/butler/*.md`。
+- `templates/hooks/**`、`templates/settings.hooks-snippet.json`。
+- `scripts/setup.sh`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`butler-upgrade.md`。
+- P1–P5、四件套、PRD、危险模式、偏好探针等算法真源。
 
-# State
+# Interface / Contract
 
-无运行时状态。命令是静态 Markdown 薄壳；`$ARGUMENTS` 由 Claude Code 注入。`/butler:loop` 无持久态（一次性 P4 升档）；`/butler:dangerous` 的持久开关落**当前项目** `.ai/local-constraints.md`「Butler 功能开关」`dangerous`（命令委托引擎读写、自身不落盘、不改字段 schema），跨会话由引擎 §3.1 announce-on-read 承接。两命令随 R1 `~/.claude/commands/butler` 目录软链自动全局可达。
+## 仓根 `AGENTS.md`
+
+- Codex 自动发现的仓库级指令文件；作用域覆盖整个 Butler 仓。
+- 必须包含以下最小契约：
+  - 规则仓定位与“编辑规则，不是用规则开发业务软件”的边界。
+  - 根 `CLAUDE.md` 已有的 5 条编辑约束，不扩写为第二份规则体系。
+  - `.ai/` 冷启动顺序：地图 → 两台账 → task-state/handoff → 当前四件套 → 规则真源。
+  - `Coder/README.md` 为完整规则入口；按需读，不全量吞历史归档。
+- 不依赖用户 `project_doc_fallback_filenames`，不使用 Claude 的 `@import` 语法。
+
+## `templates/AGENTS.md.template`
+
+- 生成输入与 Claude 模板一致：
+  - `{{BUTLER_VERSION}}`：Butler 版本。
+  - `{{RULE_CARD_CONTENT}}`：从 `templates/rule-card.md` 的 `## 角色` 起注入。
+  - `{{BUTLER_PATH}}`：完整规则仓路径。
+- user-managed 区必须由 `<!-- user-managed -->` / `<!-- /user-managed -->` 包围，未来升级必须逐字保留。
+- 模板正文可以解释 Codex 的 `.ai/` 冷启动顺序，但不得内联第二份 `rule-card` 正文。
+- 本迭代只提供模板契约；R4 才把模板接进首次部署和升级执行链。
+
+## 兼容架构说明
+
+- 共同内核：`Coder/`、`.ai/`、`templates/rule-card.md`、hook 的规则判断模块。
+- Claude Code 适配层：`CLAUDE.md`、`.claude/commands/`、`.claude/hooks/`、Claude settings。
+- Codex 适配层：`AGENTS.md`、skills/plugin、`.codex/hooks.json` 或 plugin hooks、Codex config/trust。
+- 状态标记必须区分：R1 已完成；R2/R3/R4 计划中。不得用“全面兼容”描述 v2.12.0。
+
+## 自检脚本
+
+- POSIX/Bash、零第三方依赖，从仓根或任意 cwd 调用都先解析自身仓根。
+- 失败返回非零并指出具体缺项；成功输出简短汇总。
+- 不改文件、不调用网络、不启动模型，适合作为快速结构回归。
+
+# State / Boundary
+
+- `.ai/` 的结构和状态枚举完全不变；本轮只把既有恢复纪律暴露给 Codex。
+- `AGENTS.md` 与 `CLAUDE.md` 是两个宿主入口，不互相 import；它们共同回指 `Coder/`，目标模板共同从 `rule-card.md` 注入强制规则。
+- R1 不让目标项目自动获得 `AGENTS.md`：模板先落，执行接线归 R4。发布和 HUMAN_GUIDE 必须明确这一点。
+- R1 不触碰 Codex hook：现有 Python gate 对 `apply_patch` 的输入不兼容，继续作为已知未完成项留给 R3。
+- R1 不使用 plugin-creator；plugin 的目录、manifest、skills 和安装缓存流程只在 R2 开始时按对应 skill 执行。
 
 # Design Decisions
 
-- **DD1（严格套范本）**：两命令逐段对齐 `preference.md`/`review.md` 骨架——frontmatter 说人话 → 薄壳三件事声明 + DRY 红线 → 跨 cwd 路径约定段 → 第 0 步优雅降级 → 路由 → 收尾。→ AC5
-- **DD2（真源锚点真实）**：委托带具体 section 号——loop §3/§6、dangerous §3/§3.1/§7（写前已读两引擎核实这些节存在）。→ AC2/AC5
-- **DD3（风险闸设计·本迭代脊柱）**：命令化不降门槛靠三招，均可核——① 两命令 frontmatter `description` 带显式 ⚠️（菜单可见）；② 第 0 步前置风险提醒（dangerous=实验性/无人值守/建议隔离环境、loop=高强度/长时/消耗大）；③ **闸交回引擎、不复述**——薄壳不重写确认对话/护栏/熔断算法（守 DRY），也不省风险提醒（不降门槛）。这是薄壳纪律与「郑重触发」门槛的共存点。→ AC2
-- **DD4（触发名迁移面·一次列全 22 文件，杜绝漏数）**：`/loop`·`/dangerous` 作命令引用处全迁 `/butler:*`。斜杠前缀天然只命中命令引用（`dangerous:` 字段名、`65_Extension_Dangerous` 目录名无斜杠或大写 D，不误命中）。清单——
-  - **引擎/规则（Coder/）**：`00_System_Prompt/logic-protocol.md`（§89 loop / §92 dangerous 激活行 + 加旧名注）、`55_Extension_ConvergenceLoop/convergence-loop-engine.md`、`65_Extension_Dangerous/dangerous-engine.md`（**除 §21 harness-`/loop`**，DD5）、`60_Extension_CodeReview/review-engine.md`、`70_Extension_Preference/preference-probe-engine.md`、`Coder/README.md`、`30_Quality_Gate/correction-contract.md`、`30_Quality_Gate/testing-strategy.md`、`62_Extension_Agents/independent-review.md`、`20_Workflow_Lifecycle/{lifecycle,local-constraints-schema,human-test-bridge,verify-schema,iteration-schema,mcv-deployment,acceptance-schema}.md`。
-  - **面向人 + digest**：`README.md`、`HUMAN_GUIDE.md`、`.ai/project/{architecture,capabilities,frontier,constraints}.md`。
-  - 迁法同 R3 二次替换但更简：`/dangerous` 无撞名、无既存 `/butler:dangerous`，可全域 `s#/dangerous#/butler:dangerous#`（`off` 参数随后原样保留）；`/loop` 须排除 harness 行（DD5）。→ AC4
-- **DD5（harness-`/loop` 撞车排除·R4 独有）**：`dangerous-engine.md:21`「Claude Code 的 `/loop`、后台任务」指 **harness 级** loop（非 butler 收敛闭环），**保留不迁**；执行时对每处 `/loop` 核上下文是否 harness 语境（专项核对）。→ AC4
-- **DD6（区分命令名 vs 非命令·不误迁）**：`dangerous: on|off`（local-constraints **字段名**）、`preference-*.sh`/`*-engine.md`（文件名）、`65_Extension_Dangerous`（目录名）一律不动——斜杠前缀已隔开，只迁 `/loop`·`/dangerous` 斜杠命令引用。→ AC4/AC6
-- **DD7（templates 部署面故意保留·守边界）**：`templates/rule-card.md`、`templates/preference/profile.md` 的 `/loop`·`/dangerous` **不迁**。理由同 R3 DD5：命令是靠全局软链的**个人工具、不下发目标项目**；目标项目靠散文旧名兜底（logic-protocol 保留旧名识别）。迁 templates 会破边界 + 触发 `[regen-claude]`。→ AC6
-- **DD8（dangerous 空参=开启·loop 无参数）**：`/butler:dangerous` 空参=开启（走引擎 §3 回声闸），**与 preference 空参=只读回声有意不同**——引擎 §3 已定义 bare `/dangerous`=开启，薄壳擅改成 no-op 是发明语义；`status` 提供只读看态的安全入口。`/butler:loop` 无参数分派（一次性升档、无子命令、无 off）是真实结构差异（良性），非漏写。→ AC3/AC5
-- **DD9（MINOR→v2.10.0 + 迁移配方 + 里程碑收官）**：纯新增 2 命令、无破坏面 → MINOR；`v2.9.0`→`v2.10.0`（**十进位，非 2.1.0**）；配方部署面 `[no-op]`+`[restamp]`。R4 收口后整体收 MILE-0005（聚合交付 + 归档 MILESTONE + MILESTONES active→closed）。→ AC9
-- **DD10（不动 setup.sh）**：R1 目录软链托管全套，靠 AC8 隔离 HOME 实跑证明两新命令自动可达（这次 8 命令）。→ AC8
+1. **新增原生 `AGENTS.md`，不依赖 fallback。** fallback 需要每台机器改 Codex 配置，不能成为仓库共享契约；原生文件能随仓版本化。代价是多一个入口文件，靠“短入口 + 共同真源 + 自动检查”控制漂移。
+2. **目标模板单独存在，但不复制规则卡。** `AGENTS.md.template` 与 `CLAUDE.md.template` 的宿主说明不同，强行合成一个模板会充满条件分支；两个薄模板更清楚。强制规则仍只从 `rule-card.md` 注入，自动检查共同占位和深读指针。
+3. **兼容真源放 `docs/codex-compatibility.md`。** 它是跨 Coder/模板/安装层的宿主架构，不塞进 SOP Core；README/HUMAN_GUIDE/Coder 入口只登记和回指，避免三处重复。
+4. **新增长期自检脚本。** 仅靠人读无法稳定守住两个模板的占位符和指针一致性；脚本以文本契约做确定性断言。代价是新增少量维护面，但比手工回归更低。
+5. **R1 发布为真实但有限的 MINOR。** 仓库本身从 v2.12.0 起可被 Codex 原生发现，属于新增能力；目标项目自动部署、工作流和 hooks 尚未完成，发布文案必须限定范围。
 
 # Execution Steps
 
-- [ ] T1 写 `butler/loop.md`（frontmatter ⚠️ + 第0步风险提醒 + 无参委托 §3/§6 不复述）→ AC1/AC2/AC5
-- [ ] T2 写 `butler/dangerous.md`（frontmatter ⚠️ + 第0步风险提醒 + 空/off/status/未知 分派 + 闸交回 §3/§3.1/§7 不复述）→ AC1/AC2/AC3/AC5
-- [ ] T3 迁 `/dangerous`→`/butler:dangerous`（22 文件全域，除 templates）→ AC4
-- [ ] T4 迁 `/loop`→`/butler:loop`（12 文件，**排除 dangerous-engine.md:21 harness-`/loop`**，逐处核上下文）→ AC4/DD5
-- [ ] T5 logic-protocol §89/§92 加「旧名 `/loop`·`/dangerous` 仍识别」注（照 §93 preference 范本）→ AC4
-- [ ] T6 capabilities 补两行 + README 扩展模式表两行迁 + `butler/` 子树补两命令 + Coder 目录 `55/65` 行迁 → AC7
-- [ ] T7 全仓 grep `/loop`·`/dangerous` 核残留（templates + 文件名 + harness-`/loop` + 历史归档 + 本迭代规划稿 除外）+ 专项核 harness-`/loop` 仍在 → AC4
-- [ ] T8 写 `migrations/v2.10.0.md`（`[no-op]`+`[restamp]`）+ 切版三载体（VERSION→2.10.0 + CHANGELOG 顶条 MINOR）→ AC9
-- [ ] T9 隔离 HOME 实跑 setup.sh 验 8 命令经目录软链可达 + 范式一致性人读核 + `git diff --stat` 边界守恒 → AC1/AC6/AC8
+- [x] **T1** 新增仓根 `AGENTS.md`，写入仓库边界、编辑约束和 `.ai/` 冷启动读序 → AC1/AC2
+- [x] **T2** 新增 `templates/AGENTS.md.template`，复用版本/规则卡/路径占位符与保护区契约 → AC3
+- [x] **T3** 新增 `docs/codex-compatibility.md`，落共同内核、双适配层、R1–R4 状态和 hook 诚实边界 → AC4/AC5
+- [x] **T4** 新增 `scripts/verify-codex-foundation.sh`，覆盖入口、读序、模板、SSOT 和文档回指断言 → AC3/AC8
+- [x] **T5** 更新 README、Coder 入口与 HUMAN_GUIDE，只做短注册并统一回指兼容真源 → AC5/AC6
+- [x] **T6** 运行结构脚本、Markdown/路径检查、Claude 非回归 diff 和 Codex 新会话发现探测；发现问题只在冻结范围内修正 → AC1–AC8
+- [x] **T7** 更新 VERSION/CHANGELOG/migration，发布 v2.12.0，并完成 P5 四件套、交付、台账、知识前滚和一致性自检 → AC9
 
-# Verification
+# Verification Plan
 
-- 结构核：读两命令核薄壳要点齐 + 风险闸三招（frontmatter ⚠️ / 第0步风险提醒 / 闸交回引擎不复述）+ dangerous 四路径 + 真源 loop §3/§6、dangerous §3/§3.1/§7 锚点回引擎逐一核（无捏造）。
-- 隔离 HOME 实跑 `setup.sh` → `test -e` 两新命令 + 报 8 命令。
-- grep `/loop`·`/dangerous` 活文档无残留裸命令名（templates + 文件名 + **harness-`/loop`** + 历史归档 + 规划稿 除外）；专项核 dangerous-engine.md:21 harness-`/loop` 仍在。
-- `git diff --stat` 边界守恒（templates/schema结构/hook/setup.sh/两引擎算法 未动）。
-- P5 标准复核（自评 + objective 实跑）；迁移面 22 文件最宽 + harness 撞车，P5 专盯触发名残留普查 + harness 保留正确性 + 风险闸三招齐；如发现存疑再升格独立复核。
+- **AC1（auto·可靠）**：`test -f AGENTS.md`；结构脚本断言规则仓定位和编辑约束；从仓根启动新的 `codex exec`，让其列出发现的项目指令来源或复述仓库边界。
+- **AC2（auto·可靠）**：结构脚本按顺序匹配 `.ai/project/00_INDEX.md`、两台账、task-state/handoff、四件套、`Coder/README.md`；检查未要求全量读取 `.ai/iterations/`。
+- **AC3（auto·可靠）**：断言模板三个占位符、两个保护区标记和完整规则指针；比较两模板中的 `{{BUTLER_PATH}}/Coder/` 指针集合一致。
+- **AC4/AC5（auto + 人读）**：检查架构文档包含共同内核/Claude/Codex/R1–R4/support status；人工核对没有复制规则算法，明确 `apply_patch` 未兼容。
+- **AC6（auto·可靠）**：三份入口文档都链接 `docs/codex-compatibility.md`；全文搜索确保详细支持矩阵只在真源出现一次。
+- **AC7（auto·可靠）**：`git diff --exit-code -- CLAUDE.md .claude templates/hooks templates/settings.hooks-snippet.json scripts/setup.sh`；运行 `python3 -m pytest templates/hooks/tests -q` 作为既有 hook 回归。
+- **AC8（auto·可靠）**：`bash scripts/verify-codex-foundation.sh`、`git diff --check`、所有新增相对路径存在性检查。
+- **AC9（auto·可靠）**：VERSION/CHANGELOG/migration/tag 四方一致；收口 6 不变量检查通过。
 
-# Risks
+# Risks / Open Questions
 
-- 命令菜单可见性 headless 不可实敲——沿用 R1–R3 代理验法。
-- **迁移面 22 文件最宽 + harness-`/loop` 撞车是本迭代最大出错点**：DD4 清单一次列全 + DD5 撞车排除 + T4 逐处核上下文 + T7 grep 兜底 + 专项核 harness 仍在。**计划-实际提示**：ACK 口径「71 处」实测分布 22 文件（多为 SOP-core schema 交叉引用），全迁是 ACK 的「命名空间统一」意图落实、非范围外扩张——VERIFY_REPORT 显著记录实际面。
-- 「命令化不降门槛」是本迭代成败点——DD3 三招写成 AC2 可核检查点；若某招缺失即 AC2 不过。
-- dangerous 空参=开启（走引擎闸）与 preference 空参=只读回声的有意不同——VERIFY_REPORT 记录此设计分歧（引擎 §3 已定义 bare=开启）。
+- **无开放设计问题**：文件落点、R1 边界和版本策略已明确，待用户 P3 ACK。
+- `codex exec` 探测依赖本机 Codex 登录和可用模型；若外部服务不可用，结构检查仍可给确定性证据，但 VERIFY_REPORT 必须把真实 Codex 启动探测标为未执行/受阻，不能假绿。
+- 两模板的注释可能天然不同；自检只比较占位符和深读路径契约，不做整文件逐字相等，避免把宿主差异误判为漂移。
+- v2.12.0 创建本地 tag 属发布动作；不会自动 push tag、合并分支或发布 marketplace，外部状态变化仍需用户另行授权。

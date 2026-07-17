@@ -2,6 +2,11 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## Codex 兼容地基（v2.12.0）
+
+- Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。
+- `templates/AGENTS.md.template` 已定义未来目标项目入口契约，但 v2.12.0 尚未接入部署/升级；skills/plugin、Codex hooks 也仍未交付。详细状态见 `docs/codex-compatibility.md`。
+
 ## 核心：P1–P5 开发 SOP（默认主线）
 
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：

@@ -81,6 +81,18 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 > 命令是**全局**安装（机器级、一次到位），跟逐项目的「基地车部署」是两回事——它不进目标项目的 `.ai/`，也不随目标仓走。换机器用 butler，重跑一次 `setup.sh` 即可。
 
+### Codex 支持状态
+
+v2.12.0 先交付 **Codex 规则发现地基**：在 Butler 仓根启动 Codex，它会从 `AGENTS.md` 读取仓库约定，并按固定顺序恢复与 Claude Code 共用的 `.ai/` 状态。目标项目的 `templates/AGENTS.md.template` 也已建立，但本版还没有接进 `setup.sh`、首次部署和既有升级流程。
+
+当前不要把它理解成“Codex 已全面兼容”：
+
+- 8 个 Butler 工作流迁为 Codex skills/plugin，属于 MILE-0006 R2。
+- Codex `apply_patch` 的机械门禁和提醒 hooks，属于 R3；R3 完成前，Codex 侧只能靠规则纪律，不能声称 hook 已保护。
+- 新项目自动生成 `CLAUDE.md` + `AGENTS.md`、既有项目升级和双端回归，属于 R4。
+
+共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器，R1 不改变它的行为。
+
 ## 4. 接入新项目
 
 安装完成后，在任何项目中启动 AI 会话，直接给任务即可：

@@ -28,6 +28,7 @@ Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需�
 | 🛡 | **Hook 门禁** | 阶段产物缺失或验收未冻结时机械拦截源码写操作 |
 | 🧩 | **可插拔扩展** | 脑暴 / 自纠 / 审查 / 自治 / 偏好，按指令或语义触发 |
 | 📦 | **基地车部署** | 新项目零配置接入，自动展开 `.ai/` 基础设施 |
+| 🤝 | **双宿主地基** | Claude Code 继续原生运行；Codex 可从仓根 `AGENTS.md` 发现规则并恢复同一份 `.ai/` 状态 |
 
 ## 🔄 核心工作流
 
@@ -95,18 +96,22 @@ flowchart TB
 3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
+> **Codex 当前支持范围**：v2.12.0 起，Codex 可原生发现 Butler 仓本身的规则；目标项目模板也已建立，但 skills/plugin、机械 hooks 和自动部署/升级接线仍在 MILE-0006 后续迭代。不要把本阶段描述成“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+
 ## 📂 目录结构
 
 ```txt
 butler/
 ├── README.md                       # 本文件 · 总览与分流
 ├── CLAUDE.md                       # 给 AI 的仓库开发约定
+├── AGENTS.md                       # Codex 仓库规则入口 + .ai 冷启动读序
 ├── HUMAN_GUIDE.md                  # 面向人类的操作手册
 ├── communication-style.md          # 个人沟通风格正本（setup.sh @import 进全局 CLAUDE.md 常开；个人配置、非 SOP 规则、不进 Coder 阅读顺序）
 │
 ├── scripts/
 │   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
-│   └── preference-init.sh          # 偏好探针存储初始化（opt-in）
+│   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
+│   └── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
 │
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
 │   └── butler/                     #   /butler:* 命名空间（子目录=命名空间前缀）
@@ -121,10 +126,14 @@ butler/
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template
+│   ├── AGENTS.md.template          #   Codex 入口模板（R1 建契约，R4 接部署）
 │   ├── rule-card.md                #   浓缩规则卡（强约束 SSOT）
 │   ├── hooks/                      #   PreToolUse 流程门禁
 │   ├── settings.hooks-snippet.json
 │   └── preference/                 #   偏好探针外置存储骨架
+│
+├── docs/
+│   └── codex-compatibility.md      # Claude/Codex 共同内核与适配层真源
 │
 ├── Coder/                          # 🛠 工程开发与 AI 协作（核心）
 │   ├── README.md                   #   子系统入口

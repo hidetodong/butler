@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0051 · Codex 兼容地基</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f6f8fa; --card:#fff; --text:#1f2328; --muted:#656d76; --border:#d0d7de; --accent:#0969da; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --card:#161b22; --text:#e6edf3; --muted:#8b949e; --border:#30363d; --accent:#58a6ff; } }
+    * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--text); font:16px/1.65 system-ui,-apple-system,sans-serif; }
+    main { max-width:900px; margin:48px auto; padding:0 24px 48px; } article { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:36px; }
+    h1 { font-size:30px; line-height:1.25; margin-top:0; } h2 { margin-top:32px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+    .meta { color:var(--muted); } code { background:color-mix(in srgb,var(--border) 35%,transparent); padding:.15em .35em; border-radius:5px; }
+    li { margin:.45em 0; } a { color:var(--accent); }
+  </style>
+</head>
+<body><main><article>
+  <h1>Codex 兼容地基：Butler 开始原生认识第二个宿主</h1>
+  <p class="meta">ITER-0051 · MILE-0006 R1 · 2026-07-17 · v2.12.0</p>
+  <h2>交付结果</h2>
+  <p>Codex 现在能在 Butler 仓根原生发现 <code>AGENTS.md</code>，按固定顺序恢复共同 <code>.ai/</code> 状态，并继续读取 <code>Coder/</code> 规则真源。</p>
+  <ul><li>新增仓库入口与目标项目模板。</li><li>新增双宿主架构说明和零依赖结构检查。</li><li>Claude Code 现有入口、命令、hooks 与 setup 保持不变。</li></ul>
+  <h2>验证</h2>
+  <p>AC1–AC9 全过；真实 Codex 新会话自动发现成功；结构检查可从任意目录运行；既有 hook 测试 109 passed。</p>
+  <h2>边界</h2>
+  <p>v2.12.0 只交付兼容地基。8 个 skills/plugin 在 R2，Codex hooks 与 <code>apply_patch</code> 适配在 R3，目标项目双入口部署与升级在 R4。</p>
+  <h2>迁移</h2>
+  <p>既有部署项目为 <code>[no-op]</code> + <code>[restamp]</code>，本版不会自动新增 <code>AGENTS.md</code>。</p>
+</article></main></body>
+</html>

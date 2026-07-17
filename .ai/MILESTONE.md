@@ -1,51 +1,52 @@
-# MILESTONE — MILE-0005 · butler 命令命名空间系统
+# MILESTONE — MILE-0006 · Codex 双宿主兼容层
 
-> 方向性产物（非冻结、不走 ACK）。把 butler 散落在规则正文里的「散文触发词」（`/milestone`、`/review`、`/loop` 等写在文档里当暗号、却没有真实命令文件的引用）收敛成一整套 `/butler:xxx` 命名空间下的真实 slash command——补全菜单可见、全局任意项目可用、`butler:` 前缀天然隔离撞名。设计共识见本文件 §5.3 各路线项与 §5.4 演进记录；地基事实（子目录＝冒号命名空间、user 级全局同理、frontmatter 照常、软链已实跑验证）经 2026-07-14 claude-code-guide 查证。
+> 方向性产物（非冻结、不走 ACK）。目标不是把 Butler 从 Claude Code 迁走，而是在保持现有 Claude Code 能力的同时，增加一套 Codex 原生入口；`.ai/` 与 `Coder/` 继续作为两端共同的状态层和规则真源。
 
 ## 5.1 范围评估
 
 **In Scope（版本级）**
-- **命名空间骨架**：新建 `.claude/commands/butler/` 子目录；Claude Code 按目录自动把 `butler/<name>.md` 映射为 `/butler:<name>`（冒号是真实调用分隔符），一套命令聚成 `/butler:*` 族。
-- **8 个真实命令文件**（全部走「薄壳路由器」范式——只做三件事：把对的规则读进上下文、按 `$ARGUMENTS` 分派、委托真源规则执行，不复述算法）：`prd` / `milestone` / `review` / `upgrade` / `preference` / `ideation` / `loop` / `dangerous`。
-- **`/butler-prd` 破坏性迁入命名空间**：现有 `.claude/commands/butler-prd.md`（连字符、v2.4.0 发布）改名迁为 `butler/prd.md` → `/butler:prd`；走 `[rename]` 迁移配方 + 清旧全局软链 `~/.claude/commands/butler-prd.md` + 扫更正文/文档里对 `/butler-prd` 的引用。
-- **setup.sh 软链改造**：现逻辑「逐个软链 `.claude/commands/*.md`」是扁平的、不进子目录 → 改为**软链整个 `butler/` 目录** → `~/.claude/commands/butler`；一条目录软链管全套，butler 仓里加命令自动全局生效、无需重跑 setup。
-- **子命令走参数**：`/butler:preference on|off|reback|distill`、`/butler:milestone status`、`/butler:dangerous on|off` 一律走 `$ARGUMENTS` 路由（同现 `/butler-prd` 处理 `status`/`update` 的范式），**不拆多级命名空间**（避免文件爆炸、背离薄壳）。
-- **没接 butler 时优雅降级**：每个命令薄壳统一先判「当前项目是否已部署 butler（有 `.ai/`）」，没接就清晰提示「先部署基地车」而非报错（`/butler-prd` 已有此边界，其余照抄）。
-- **高风险命令加闸**：`loop`（死磕闭环）、`dangerous`（无人值守自治）的薄壳保留/前置风险提示与确认，**不照抄低风险命令的轻壳**——命令化不得降低其「郑重显式触发」的门槛。
+
+- **规则自动注入**：增加 Codex 原生 `AGENTS.md` 入口，明确冷启动读序、`.ai/` 状态恢复和深度规则指针；保留现有 `CLAUDE.md`。
+- **命令工作流迁移**：把现有 8 个 `/butler:*` 薄壳命令映射为 Codex skills，并评估以 Codex plugin 作为全局分发单位，避免使用已弃用的 custom prompts。
+- **Hook 机械门禁**：增加 `.codex/hooks.json` / plugin hook 入口；适配 Codex `apply_patch` 的工具名与 patch 输入，同时复用现有 Python 规则模块。
+- **部署与升级双宿主化**：让新项目部署、既有项目升级和全局 setup 能分别生成/维护 Claude Code 与 Codex 所需入口，不复制 `Coder/` 规则正文。
+- **兼容性验证**：建立 Claude Code / Codex 两列验证矩阵，覆盖规则发现、`.ai/` 恢复、8 个工作流、PreToolUse 拒绝、PostToolUse 提醒与子 agent 独立复核。
 
 **Out of Scope（版本级）**
-- **不下发到目标项目仓库**（沿用 ITER-0044 边界）：命令是个人工具，全局装在 user 级 `~/.claude/commands/`，**不进 `templates/`、不污染目标项目仓、目标项目升级零影响**。
-- **不改真源规则算法**：薄壳只路由，各命令委托的 `Coder/**` 规则正文语义一律不动（本里程碑不重写任何执行规则）。
-- **不做团队协作者共享**：把命令拷进项目自身 `.claude/commands/`（project 级、随项目仓走）那条路本版不做，另议。
-- **不新造命令能力**：只把既有散文触发词落成真实文件，不发明新命令、不扩既有命令语义。
+
+- 不重写 P1–P5、迭代、里程碑、PRD、危险模式等规则算法。
+- 不改 `.ai/` 目录名和既有产物 schema；`.ai/` 是宿主无关的共同状态层。
+- 不让 Butler 文本规则绕过 Codex 的 sandbox、审批、hook trust 或企业策略。
+- 不删除 Claude Code 的 `CLAUDE.md`、`.claude/commands/`、`.claude/hooks/` 支持。
+- 首版不发布公共 marketplace，不承诺 Codex Cloud、IDE、桌面端以外所有宿主的完全一致行为。
 
 **关键交付目标**
-- 8 个 `/butler:xxx` 命令在**任意项目**补全菜单可见可用（全局软链 + 命名空间保证）；`/butler-prd` 干净迁成 `/butler:prd`、无残留旧软链/旧引用；`setup.sh` 一条目录软链托管全套；薄壳路由器范本固化、可被后续命令复制。
+
+- 同一份 Butler 规则仓可在 Claude Code 与 Codex 中自动发现并恢复 `.ai/` 状态。
+- 8 个 Butler 工作流在 Codex 中可显式/语义触发，规则正文仍以 `Coder/` 为真源。
+- Codex 写文件时，阶段门禁和提醒不再因 `apply_patch` 输入差异而静默失效。
+- 双宿主安装、升级、验证步骤有机器可执行的检查和人类可读说明。
 
 ## 5.2 理解阐释
 
-- **核心问题**：butler 的命令长期停在「散文触发词」——规则正文里 `/milestone`（引用 32 次）、`/review`（32）、`/dangerous`（56）等到处当暗号，但只有 `/butler-prd` 一个真实命令文件；其余在补全菜单里零存在感、用户看不见也记不住。且没有统一命名空间，全局安装通用名（`/milestone`、`/review`、`/loop`）易与别的插件 / 用户自定义命令撞名。
-- **背景与价值**：ITER-0044 落了第一个真命令 `/butler-prd`、ITER-0045 打通全局软链分发，「薄壳路由器 + 全局安装」模式已实跑验证。现在把它**成体系推广**：整套 butler 能力都获得一等命令入口，`butler:` 前缀隔离撞名，用户在任何项目随手可敲。
-- **整体影响判断**：改动集中在**新增文件**（`.claude/commands/butler/` 下 8 个命令）+ `scripts/setup.sh`（软链逻辑）+ `migrations/`（prd 改名配方）+ 正文/文档里对 `/butler-prd` 的引用更新。**不碰 `Coder/**` 任何规则算法**——薄壳只做路由、委托既有真源规则。真新增仅：命名空间目录结构、7 个新薄壳命令、setup.sh 目录软链、prd 破坏性改名迁移。风险点两处：① 破坏性改名要清干净旧软链 + 旧引用；② `loop`/`dangerous` 命令化要加风险闸、不降触发门槛。
+- **核心问题**：Butler 的业务规则本身是 Markdown，宿主无关；真正绑定 Claude Code 的是自动发现、slash command、hook 输入协议、权限配置和安装路径。若只让 Codex“能读 Markdown”，规则看似兼容，但自动注入、机械门禁和全局命令都会缺失。
+- **兼容策略**：保留共同内核，增加宿主适配层。共同内核包括 `Coder/`、`.ai/`、`templates/rule-card.md` 与 Python 规则判断；Claude 适配层继续放 `.claude/`，Codex 适配层使用 `AGENTS.md`、skills/plugin、`.codex/`。
+- **最大风险**：出现两套规则正文并逐渐漂移。因此 Codex 文件只能做入口、路由和协议适配，不能复制规则算法；双宿主共用的逻辑应下沉到现有真源或共享 Python 模块。
+- **已确认事实**：Codex 当前支持 `AGENTS.md`、repo skills、plugins、PreToolUse/PostToolUse hooks 与多 agent；matcher 可用 `Edit|Write` 命中 `apply_patch`，但现有 gate 内部仍只接受 `Edit/Write/MultiEdit` 和 `file_path`，必须显式适配。
 
 ## 5.3 拆分路线图
 
-> 路线项扁平原子（一项 ≈ 一迭代），按依赖排序。「实际 ITER」开启时才绑号、现留空（不预先占号）。预计跨度 ITER-0047 ~ ITER-0050（方向性，真源以「实际 ITER」列 + 台账为准）。
+预计跨度：ITER-0051 ~ ITER-0054（方向性，真实编号以台账为准）
 
-| 路线项 | 主题（方向 → 一个迭代） | 实际 ITER | 状态 |
+| 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
-| **R1** | **命名空间地基 + prd 迁移 + 首个新命令验证**：建 `.claude/commands/butler/` 骨架 + `/butler-prd`→`/butler:prd`（`[rename]` 迁移 + 清旧全局软链 + 正文/文档引用更新）+ 改 `setup.sh` 软链整目录 + 顺带落 `/butler:review`（纯薄壳，验证「薄壳路由器」范式在命名空间下可复制） | ITER-0047 | closed |
-| **R2** | **批量补低风险纯薄壳命令**：`/butler:milestone`（+ `status` 参数）、`/butler:upgrade`、`/butler:ideation`——三个语义清晰、无风险闸的命令，套 R1 固化的范本批量产出 + 各自「没接 butler 优雅降级」 | ITER-0048 | closed |
-| **R3** | **`/butler:preference`（子命令最多）**：`on`/`off`/`reback`/`distill` 四子命令全走 `$ARGUMENTS` 参数路由，委托 `70_Extension_Preference` 真源；单开一迭代因参数面最宽、要把参数分派写扎实 | ITER-0049 | closed |
-| **R4** | **高风险命令加闸**：`/butler:loop` + `/butler:dangerous`（含 `on`/`off`）——命令薄壳前置风险提示与确认闸，委托 `55_Extension_ConvergenceLoop` / `65_Extension_Dangerous` 真源；单独设计以确保命令化不降低「郑重显式触发」门槛 | ITER-0050 | closed |
+| R1 | **兼容地基**：双宿主边界、`AGENTS.md` 自动注入入口、`.ai/` 共同状态层与单一真源约束 | ITER-0051 | closed |
+| R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | — | planned |
+| R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | — | planned |
+| R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | — | planned |
 
 ## 5.4 范围演进记录
 
-- 2026-07-14 · 开启 MILE-0005（承 MILE-0004 于 2026-07-09 收口、`current` 为 none，开题闸解除）。方向源自 2026-07-13~14 对话：用户要「一套 `/butler:xxx` 命名空间命令系统」。地基事实经 claude-code-guide 查证：子目录＝冒号命名空间、`~/.claude/commands/butler/` user 级全局同理、多级可嵌套、frontmatter（description/argument-hint/`$ARGUMENTS`）照常、command `.md` 软链已由 ITER-0045 实跑验证可用（故维持 commands 路线、不迁 skills）。已 soft 对齐的关键决策：命令清单 8 个、子命令走参数不拆多级、`loop`/`dangerous` 加风险闸、`/butler-prd` 破坏性改名一并迁入、命令仍不下发目标项目（个人工具边界沿用 ITER-0044）。
-- 2026-07-14 · **R1 收口**（ITER-0047，危险模式自治、独立复核 0 Must Fix）。地基落成：`.claude/commands/butler/` 命名空间目录建立、`/butler-prd`→`/butler:prd` 破坏性迁移（`git mv` 正文零改 + 旧软链迁移清理）、`setup.sh` 逐文件软链→命名空间目录软链、`/butler:review` 薄壳范本落地（后续 R2–R4 复制样板）。聚合切 v2.7.0（MINOR）。**里程碑仍 active**——R2（批量补 milestone/upgrade/ideation）、R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。范本已固化：新命令＝往 `butler/` 丢一个薄壳 `.md`（委托真源不复述 + 第 0 步优雅降级 + frontmatter 两行说人话），随目录软链自动全局可用。
-- 2026-07-14 · **R2 开启**（ITER-0048，标准模式）。套 R1 范本批量落 3 个低风险纯薄壳命令：`/butler:milestone`（+`status`）、`/butler:upgrade`、`/butler:ideation`。待 P2 定的 scope 点：① 切版号；② `/butler-upgrade` 连字符散文触发名是否一并迁 `/butler:upgrade`（涉及改 `butler-upgrade.md §2` 触发词，属 Coder 真源但只动触发名非算法）；③ capabilities 命令表是转换旧行还是并列新行（R1 遗留 `/review`+`/butler:review` 并列的小冗余可否顺清）。
-- 2026-07-14 · **R3 开启**（ITER-0049，标准模式）。落全批**参数面最宽**的命令 `/butler:preference`：4 子命令 `on`/`off`/`reback on|off`/`distill` + 空参只读回声，`reback` 是唯一二级参数。待 P2 定的 scope 点：① 切版号（倾向 MINOR）；② `/preference` 触发名是否一并迁 `/butler:preference` 及迁移面（引擎约 7–8 处、比 R2 宽）；③ 空参默认是否采纳「只读状态回声」。委托 `preference-probe-engine` 真源、不复述算法；只管全局层开关、不碰 local-constraints 本项目抑制开关。
-- 2026-07-14 · **R2 收口**（ITER-0048，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.8.0；`/butler-upgrade`→`/butler:upgrade` 全仓 6 处触发名迁移（非算法）；capabilities 三行转换为 `/butler:*` 一等入口 + 删 `/review` 冗余。3 薄壳命令（milestone/upgrade/ideation）落地，隔离 HOME 实跑坐实 **R1 目录软链自动托管新命令**（5/5 可达、`setup.sh` 未改一行）——范式可批量复制得证。计划-实际差异 1 处（DD3 字面「改 §2 一行」实迁 6 处触发名，非算法、已记 VERIFY_REPORT）。**里程碑仍 active**——R3（preference 子命令）、R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。
-- 2026-07-14 · **R3 收口**（ITER-0049，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.9.0；`/preference`→`/butler:preference` 全仓活文档迁移（引擎 §2.x 11 处含同意披露文案 + 5 份活文档，**刻意不碰 `templates/` 部署面**——命令不下发目标项目、旧名散文兜底、故无 `[regen-claude]`）；capabilities 行转换。落全批**参数面最宽**的 `/butler:preference`——薄壳吃下**二级嵌套参数** `reback on|off`（首 token 是 `reback` 才读第二 token）+ 空参只读状态回声（薄壳新增默认，与 milestone status/review 同构），6 路径 + 裸 reback 兜底 + 未知参数全覆盖。隔离 HOME 实跑坐实 **R1 目录软链自动托管**（这次 **6/6** 可达、`setup.sh` 未改一行）——薄壳范式吃下二级嵌套参数得证。计划-实际差异 1 处（ACK 口径「引擎约 7–8 处」实测约 13 处触发名分布，已按 DD3 全集迁移 + DD5 刻意留 templates、非范围外扩张，已记 VERIFY_REPORT）。**里程碑仍 active**——仅剩 R4（loop/dangerous 加风险闸）待后续迭代，设计未锁。
-- 2026-07-14 · **R4 开启**（ITER-0050，标准模式，里程碑收官）。落最后两个高风险命令 `/butler:loop` + `/butler:dangerous`，收口即整体收 MILE-0005。**唯一新面是风险闸**——命令化不得降低「郑重显式触发」门槛：薄壳不复述护栏（守 DRY），改用 frontmatter ⚠️ 风险标记 + 第 0 步前置风险提醒 + 把闸交回引擎（dangerous 走 §3 回声 + §3.1 announce-on-read + §7 护栏；loop 走 §6 定量熔断）。两命令结构不同：loop 一次性 P4 升档（无持久态 / 无 off），dangerous 持久 on/off 外化 `.ai/local-constraints.md`、跨会话。待 P2 定的 scope 点：① 切版号（倾向 MINOR→v2.10.0）；② `/loop`·`/dangerous` 触发名迁移策略（面最宽 71 处 + `/loop` 与 Claude Code 自带撞名、harness 引用须精确排除，全迁外科式 vs 保守只迁面向人文档）；③ 一迭代做完两命令 + dangerous 空参=开启（走引擎闸，与 preference 空参=只读回声有意不同）。
-- 2026-07-14 · **R4 收口 = MILE-0005 整体收官**（ITER-0050，标准模式、AC1–AC9 全过）。三默认 P2 ACK 全收并落实：判 MINOR·切 v2.10.0；`/loop`·`/dangerous`→`/butler:*` 全迁外科式（22 活文档，负向前瞻护 `/dangerous-engine.md` 路径、**harness 级 `/loop`〔`dangerous-engine.md:21`〕精确保留不迁并加澄清注**、`templates/` 刻意留旧名故无 `[regen-claude]`）；一迭代做完两命令 + dangerous 空参=开启。**风险闸三招坐实**（frontmatter ⚠️ + 第 0 步前置风险提醒 + 闸交回引擎不复述护栏）——命令化未降「郑重显式触发」门槛、又守 DRY。两命令结构差异如实：loop 最薄（无参 / 无持久态 / 无 off），dangerous 四路分派（空=开启 / off / status 只读 / 兜底）持久态外化跨会话。隔离 HOME 实跑坐实 **R1 目录软链自动托管**（这次 **8/8** 可达、`setup.sh` 未改一行）、两引擎 `git diff` 逐行核**仅触发名 + 1 处 harness 加注、算法零改**。计划-实际差异 1 处（ACK 口径「71 处」实测 22 文件分布，按 DD4 全集迁移 + DD7 刻意留 templates、非范围外扩张，已记 VERIFY_REPORT）。**MILE-0005 达成**：命名空间目录 + **8 命令**（prd/review/milestone/upgrade/ideation/preference/loop/dangerous）+ 目录软链自动托管 + 薄壳路由器范本（含二级嵌套参数与风险闸两种复杂度）全部落地——散文触发词收敛成一等 slash 命令、`butler:` 前缀隔离撞名的目标完成。聚合交付见 `deliveries/milestones/MILE-0005-command-namespace-system.md`。
+- 2026-07-17：用户要求从现有 Butler 台账继续，改造为 Codex 可用；确认无活跃里程碑/迭代后开启 MILE-0006，并以双宿主兼容而非替换 Claude Code 为方向。
+- 2026-07-17：用户确认四项默认——plugin 为最终分发面、按 R1–R4 四迭代推进、目标项目最终双入口、继续一迭代一版。R1 收紧为规则发现 + 模板/架构契约；完整部署升级接线仍归 R4。
+- 2026-07-17：R1 / ITER-0051 收口并发布 v2.12.0。仓库已可被 Codex 原生发现；目标项目自动部署、skills/plugin 与 hooks 仍按 R2–R4 继续，MILE-0006 保持 active。

@@ -1,0 +1,54 @@
+# 项目工程协作规则
+
+<!--
+  本文件是 AI 部署基地车时生成 AGENTS.md 的参考模板。
+  MILE-0006 R1 只建立模板契约；接入首次部署与升级执行链属于 R4。
+  生成时：
+  - 用 templates/rule-card.md 中 ## 角色 起的章节内容替换下方规则卡占位符
+  - 用实际路径替换深度阅读指针中的 butler 路径占位符
+  - 用 butler 仓库根 VERSION 替换规则源版本占位符
+  - 根据侦察结果填写「项目特定约束」章节
+
+  人类通常不需要手动编辑本模板。修改强制约束只更新 templates/rule-card.md。
+-->
+
+> 规则源：butler v{{BUTLER_VERSION}}　·　Codex 入口　·　升级见 butler-upgrade
+
+{{RULE_CARD_CONTENT}}
+
+## 会话起始：恢复项目状态
+
+`.ai/` 是 Butler 的宿主无关状态层。若项目已经部署 Butler，按以下顺序恢复：
+
+1. `.ai/project/00_INDEX.md`（若项目仍是旧单文件形态，则读 `.ai/PROJECT.md`）
+2. `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md`
+3. `.ai/task-state.md` 与 `.ai/02_SESSION_HANDOFF.md`
+4. 当前阶段需要的 `.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`、`.ai/VERIFY_REPORT.md`
+
+只按指针读取相关主题，不全量读取历史归档。
+
+## 完整规则参考（深度阅读）
+
+当需要查阅完整规则细节时，按以下顺序读取：
+
+1. `{{BUTLER_PATH}}/Coder/00_System_Prompt/identity.md`
+2. `{{BUTLER_PATH}}/Coder/00_System_Prompt/logic-protocol.md`
+3. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/lifecycle.md`
+4. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/iteration-schema.md`（迭代号 / 台账 / 锁定纪律）
+5. `{{BUTLER_PATH}}/Coder/30_Quality_Gate/`
+6. `{{BUTLER_PATH}}/Coder/40_Context_Management/`（长任务时）
+7. `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/mcv-deployment.md`（新项目接入时）
+
+阶段产物模板：
+- P1: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/concept-schema.md`
+- P2: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/acceptance-schema.md`
+- P3: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/tech-plan-schema.md`
+- P5: `{{BUTLER_PATH}}/Coder/20_Workflow_Lifecycle/verify-schema.md`
+
+<!-- user-managed -->
+
+## 项目特定约束
+
+<!-- 在这里补充本项目的特定约束。 -->
+
+<!-- /user-managed -->
