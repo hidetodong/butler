@@ -1,6 +1,6 @@
 {
   "name": "butler",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "Butler's eight auditable engineering workflows for Codex.",
   "author": {
     "name": "Butler maintainers"

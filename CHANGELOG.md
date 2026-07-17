@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.14.0] - 2026-07-17
+
+向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0053（MILE-0006 R3）。Butler 共享 hook dispatcher 新增 canonical `apply_patch` 输入适配：支持 add/update/delete/move、多文件和多 hunk，逐 target 复用现有 PreToolUse 门禁与 PostToolUse 提醒；ledger 的非法状态、双 active 和同 patch 关旧开新也能按 patch 增量判断。
+
+Codex plugin 默认发现 `hooks/hooks.json`，通过薄包装器从 `BUTLER_PATH` 调用共享 Python 真源，并分别保持 gate fail-closed、advisor fail-open。pytest 从 109 扩到 124 个用例；真实 Codex 已验证无四件套 phase deny、protected-path deny、冻结四件套 allow，以及 MILESTONE advisory 上下文注入。
+
+本版仍不是完整安全边界或全面兼容：hook 首次启用须用户审阅信任，PreToolUse 不替代 sandbox，也不保证覆盖 shell/MCP；setup、目标项目双入口和既有升级归 R4。升级执行 `[global-install] bash scripts/install-codex-plugin.sh` + `[restamp]`，目标项目部署结构本身 `[no-op]`。详见 `migrations/v2.14.0.md` 与 `deliveries/ITER-0053-codex-apply-patch-hooks.md`。
+
 ## [2.13.0] - 2026-07-17
 
 向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0052（MILE-0006 R2）。新增 `plugins/butler/` Codex plugin，内含 PRD、review、milestone、upgrade、ideation、preference、loop、dangerous 八个 focused skills；仓库 `.agents/skills/` 用相对软链暴露同一份实体源，避免 repo discovery 与 plugin 分发双写漂移。
