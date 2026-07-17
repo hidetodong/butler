@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.13.0] - 2026-07-17
+
+向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0052（MILE-0006 R2）。新增 `plugins/butler/` Codex plugin，内含 PRD、review、milestone、upgrade、ideation、preference、loop、dangerous 八个 focused skills；仓库 `.agents/skills/` 用相对软链暴露同一份实体源，避免 repo discovery 与 plugin 分发双写漂移。
+
+新增 `scripts/install-codex-plugin.sh`，使用官方 plugin creator、cachebuster、validator 与 `codex plugin add` 完成个人 marketplace 的幂等安装/刷新，并用安装版本后置断言防 CLI 假成功；新增 `scripts/verify-codex-workflows.sh` 做 8 skills、软链和高风险 invocation policy 回归。`butler-loop` 与 `butler-dangerous` 禁止隐式触发，保持郑重显式门槛。
+
+本版仍不是全面兼容：Codex hooks 与 `apply_patch` 机械门禁归 R3，目标项目双入口部署/升级归 R4。对既有部署项目为 `[no-op]` + `[restamp]`；需要全局 Codex 工作流的维护者另执行 `[global-install] bash scripts/install-codex-plugin.sh`。详见 `migrations/v2.13.0.md` 与 `deliveries/ITER-0052-codex-workflow-plugin.md`。
+
 ## [2.12.0] - 2026-07-17
 
 向后兼容的能力新增版，聚合 ITER-0051（MILE-0006 R1）。Butler 仓根新增 Codex 原生 `AGENTS.md`，让 Codex 能自动发现这是规则仓、按固定顺序恢复共同 `.ai/` 状态，再按指针读取 `Coder/` 真源；同时新增未来目标项目使用的 `templates/AGENTS.md.template`、双宿主架构说明和零依赖结构自检脚本。
