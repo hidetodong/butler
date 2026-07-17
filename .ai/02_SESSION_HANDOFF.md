@@ -2,7 +2,7 @@
 
 ## 任务断点
 
-ITER-0055 已原子收口，当前无 active 迭代；只剩 v2.16.0 产品/发布提交、tag 和真实 plugin 刷新。
+ITER-0055 已原子收口并发布 v2.16.0，当前无 active 迭代/里程碑。
 
 ## 已交付
 
@@ -11,8 +11,8 @@ ITER-0055 已原子收口，当前无 active 迭代；只剩 v2.16.0 产品/发�
 - Codex patch 绝对 target 跨 cwd 支持、相对子仓偷渡/跨多根拒绝。
 - `research/.ai` 误展开残留已删除；127 hook tests 与双宿主矩阵全绿。
 
-## 发布步骤
+## 发布状态
 
-- 先提交 ITER-0055 产品/台账/交付/归档。
-- 再修改 VERSION、plugin manifest、CHANGELOG 为 v2.16.0，独立 `chore(release)` 提交并打本地 tag。
-- 最后运行真实 `scripts/setup.sh`，核对 `butler@personal` 已安装/启用且版本前缀为 2.16.0。
+- 产品提交：`f541e76`。
+- 发布提交/tag 与真实 plugin 缓存版本以 git/Codex CLI 当前状态为准。
+- 未 push、未 merge。

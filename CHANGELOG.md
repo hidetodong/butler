@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.16.0] - 2026-07-17
+
+向后兼容的能力新增版，聚合 ITER-0055。基地车现在严格区分会话启动目录与施工项目根：用户点名路径优先，否则只接受最近已部署 Butler 根或 Git 根，目标不唯一时零写入退出。Claude/Codex 的 16 个工作流入口、MCV/升级协议与 Codex patch adapter 共用同一解析契约；绝对 target 可跨 cwd，相对路径不能从聚合目录偷渡选中子仓。迁移见 `migrations/v2.16.0.md`，交付见 `deliveries/ITER-0055-project-root-deployment-boundary.md`。
+
 ## [2.15.0] - 2026-07-17
 
 向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0054（MILE-0006 R4/收官）。`scripts/setup.sh` 现在统一安装两宿主：保留 Claude 全局配置、命令和沟通风格，在 Codex CLI 可用时同时安装/刷新个人 Butler plugin；无 Codex 时明确跳过，不破坏 Claude 安装。
