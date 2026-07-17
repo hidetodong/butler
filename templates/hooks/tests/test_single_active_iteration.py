@@ -55,6 +55,19 @@ def multiedit_ctx(pairs: list[tuple[str, str]], cwd: str, target: str = LEDGER) 
     )
 
 
+def patch_ctx(removed: list[str], added: list[str], cwd: str) -> Context:
+    return Context(
+        cwd=cwd,
+        tool_name="apply_patch",
+        target_path=PurePosixPath(LEDGER),
+        tool_input={
+            "file_path": LEDGER,
+            "butler_patch_removed": removed,
+            "butler_patch_added": added,
+        },
+    )
+
+
 def _seed(tmp_path: Path, content: str) -> str:
     ledger = tmp_path / ".ai" / "ITERATIONS.md"
     ledger.parent.mkdir(parents=True, exist_ok=True)
@@ -146,3 +159,17 @@ class TestMultiEdit:
         d = sai.evaluate(multiedit_ctx([(SEP, SEP + ROW_ACTIVE_2 + "\n")], cwd))
         assert d.verdict == "deny"
         assert "ITER-0002" in d.reason
+
+
+class TestApplyPatch:
+    def test_open_without_close_denies(self, tmp_path):
+        cwd = _seed(tmp_path, _table("ITER-0001", ROW_ACTIVE_1))
+        d = sai.evaluate(patch_ctx([], [ROW_ACTIVE_2], cwd))
+        assert d.verdict == "deny"
+
+    def test_close_old_and_open_new_same_patch_allows(self, tmp_path):
+        cwd = _seed(tmp_path, _table("ITER-0001", ROW_ACTIVE_1))
+        d = sai.evaluate(
+            patch_ctx([ROW_ACTIVE_1], [ROW_CLOSED_1, ROW_ACTIVE_2], cwd)
+        )
+        assert d.verdict == "allow"

@@ -4,48 +4,48 @@ ACK 日期: 2026-07-17
 ACK 方式: dangerous-self-review
 ---
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 dangerous-engine §5.1 自审门），未经用户逐项确认（ITER-0052，2026-07-17）。
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过 dangerous-engine §5.1 自审门），未经用户逐项确认（ITER-0053，2026-07-17）。
 
 # Goal
 
-交付 MILE-0006 R2：8 个 Codex skills、可验证的 Butler plugin、repo fallback 与个人安装/刷新路径，同时保持共同真源和 R3/R4 边界。
+交付 Codex `apply_patch` 的 Butler PreToolUse 门禁和 PostToolUse 提醒，同时共享既有规则算法并保持 Claude 非回归。
 
 # In Scope
 
-- `plugins/butler/` plugin 包与 8 skills。
-- `.agents/skills/` repo discovery 软链。
-- 安装/更新与结构验证脚本。
-- 当前支持状态的最小文档注册、v2.13.0 发布与迭代收口。
+- `apply_patch` patch parser / Context adapter。
+- gate/advisor dispatcher 多 target 支持。
+- ledger rules 的 patch 增量适配。
+- plugin 默认 hooks + wrapper、结构验证、单元/集成/真实 Codex E2E。
+- R3 文档、归档与 v2.14.0 发布。
 
 # Out of Scope
 
-- Codex hooks / `apply_patch` 适配（R3）。
-- `setup.sh`、MCV、目标项目双入口部署/升级（R4）。
-- Claude commands 或 `Coder/` 算法改写。
-- 公共 marketplace、远端 push/merge。
+- 拦截 Codex 所有可能写路径或把 Butler hook 说成 sandbox。
+- R4 setup、MCV、目标项目生成 `.codex`/双入口、既有部署升级全链。
+- 改 P1–P5 或规则判定语义。
+- 远端 push/merge、公共发布。
 
 # Acceptance Checklist
 
-- [x] **AC1（plugin 骨架）**：`plugins/butler/.codex-plugin/plugin.json` 由官方脚手架产生并通过官方 validator；name/version/interface/skills 路径有效，无 TODO、hooks、MCP、apps 假声明。
-- [x] **AC2（8 skills 齐全）**：plugin 内恰有 prd/review/milestone/upgrade/ideation/preference/loop/dangerous 八个 skill；每个含合法 `SKILL.md` 与 `agents/openai.yaml`，通过 `quick_validate.py`。
-- [x] **AC3（薄适配单一真源）**：8 skills 只负责触发、定位 `BUTLER_PATH`、读取对应 `Coder/` 真源、按需分派与优雅降级；不复制 P1–P5、风险护栏或工作流算法。
-- [x] **AC4（触发安全）**：6 个低风险 skill 允许隐式触发；`butler-loop`、`butler-dangerous` 明确禁隐式调用，只能显式 `$skill`，且保留风险回声与引擎闸。
-- [x] **AC5（repo fallback）**：`.agents/skills/` 恰有 8 个相对软链，全部解析到 plugin 的同名 skill；仓内启动 Codex 可发现，无第二份实体 SKILL.md。
-- [x] **AC6（安装/更新路径）**：提供幂等脚本，把当前 plugin 同步到个人 marketplace 约定位置、通过官方 helper 更新 cachebuster、用 `codex plugin add` 安装；不得手改既有 marketplace 更新流。
-- [x] **AC7（真实 Codex 验证）**：安装后 `codex plugin list` 能看到 Butler；新 `codex exec` 显式调用至少覆盖一个普通 skill 和一个高风险 skill 的只读/status 路径，并准确回指真源。
-- [x] **AC8（Claude 非回归）**：`CLAUDE.md`、`.claude/**`、`templates/hooks/**`、`scripts/setup.sh` 与 Python gate 行为不变；109 个既有 hook 测试通过。
-- [x] **AC9（文档与边界）**：兼容说明、README、Coder README、HUMAN_GUIDE 登记 R2 已完成和安装入口，同时继续明确 hooks=R3、部署升级=R4。
-- [x] **AC10（发布收口）**：P5 强制完整审查无 Must Fix；归档/交付/台账/知识前滚完成，VERSION/CHANGELOG/migration/tag 对齐 v2.13.0，工作树干净。
+- [x] **AC1（patch parser）**：解析 add/update/delete/move、多文件和多 hunk；路径越界/绝对路径走现有 OUT_OF_CWD；非空 apply_patch 无合法 target 时 gate fail-closed。
+- [x] **AC2（多 target 门禁）**：gate 接受 `apply_patch`，对每个 target 顺序运行原 RULE_MODULES，任一 deny 即整体 deny；拒绝信息包含 canonical tool 与命中 target。
+- [x] **AC3（ledger 语义）**：apply_patch 修改 `.ai/ITERATIONS.md` 时，非法状态与双 active 能被拒绝；同一 patch 先关旧 active 再开新 active 可放行。
+- [x] **AC4（advisor）**：PostToolUse apply_patch 可逐 target 运行 advisory；写 MILESTONE 且无 PRD 时输出 Codex 支持的 additionalContext JSON，坏输入仍 fail-open。
+- [x] **AC5（Claude 非回归）**：Edit/Write/MultiEdit 行为与输出不变，原 109 tests 全过；新增测试后全套通过。
+- [x] **AC6（plugin hooks）**：`plugins/butler/hooks/hooks.json` 默认发现 Pre/Post，matcher 命中 apply_patch；wrapper 在 BUTLER_PATH 缺失时 gate fail-closed、advisor fail-open；manifest 不声明 validator 拒绝的 hooks 字段且仍通过 validator。
+- [x] **AC7（真实 deny E2E）**：更新并重装 plugin 后，在无四件套的隔离 git 项目用真实 Codex apply_patch 写源码，PreToolUse 阻断且文件不存在。
+- [x] **AC8（真实 allow/advisor E2E）**：有冻结四件套时真实 apply_patch 写源码可成功；写 MILESTONE 时 PostToolUse 提醒进入 Codex 上下文或事件输出。
+- [x] **AC9（边界文档）**：README/HUMAN/兼容说明/Hook README 登记 R3 能力、trust 与不完整拦截边界，继续把部署接线标 R4。
+- [x] **AC10（发布收口）**：P5 完整强审 0 Must Fix；归档、交付、知识前滚、v2.14.0 四方一致和 6 不变量通过。
 
 # Verification Method
 
-- AC1/2/5/6：官方 validator、skill quick validator、symlink/readlink 和幂等脚本测试（auto·可靠）。
-- AC3/4：结构脚本 + 定向人读，搜索禁止复制的算法段和 invocation policy（auto + 人读）。
-- AC7：真实 CLI 安装、`codex plugin list`、全新 `codex exec` 探测（auto·可靠；语义触发只作补充）。
-- AC8：定向 git diff + `uv run --with pytest pytest templates/hooks/tests -q`（auto·可靠）。
-- AC9/10：路径/文案断言、发布四方一致与 6 不变量检查（auto·可靠）。
+- AC1–4：pytest 单元 + dispatcher subprocess 集成（可靠）。
+- AC5：全套 pytest、旧 payload 定向 diff/断言（可靠）。
+- AC6：JSON/路径/权限/validator + wrapper 缺 env 测试（可靠）。
+- AC7/8：`codex exec --dangerously-bypass-hook-trust` 隔离项目真实 tool call（可靠/事件文本弱档）。
+- AC9/10：结构脚本、文档断言、发布与台账检查（可靠 + 人读）。
 
 # Open Questions / Risks
 
-- 官方 manual 与本机 plugin validator 对 manifest `hooks` 字段存在版本差异；R2 完全不声明 hooks，R3 再按当时 CLI/validator 实测决定接线形式。
-- 本机个人 marketplace 若已有同名 Butler 条目，安装脚本必须显式覆盖自己的条目而不改其他条目顺序或 metadata。
+- 无开放范围问题。若真实 Codex 选择 Bash 而非 apply_patch，E2E prompt 必须限定“一次 apply_patch 后停止”，不能把模型选路差异误判为 hook 失败。

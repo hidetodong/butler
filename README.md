@@ -96,7 +96,7 @@ flowchart TB
 3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
-> **Codex 当前支持范围**：v2.13.0 起，Codex 可原生发现 Butler 仓规则，并通过 `plugins/butler/` 安装 8 个工作流 skills。运行 `bash scripts/install-codex-plugin.sh` 安装或刷新；机械 hooks 仍属 R3，目标项目自动双入口部署/升级仍属 R4，因此尚不是“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> **Codex 当前支持范围**：v2.14.0 起，Codex 可原生发现 Butler 仓规则、安装 8 个工作流 skills，并通过 plugin hooks 对 `apply_patch` 运行 Butler 门禁与提醒。运行 `bash scripts/install-codex-plugin.sh` 安装或刷新，并确保 `BUTLER_PATH` 指向本仓；首次启用 hook 仍须用户审阅并信任。目标项目自动双入口部署/升级属于 R4，且 PreToolUse 不是完整安全边界，因此尚不是“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## 📂 目录结构
 
@@ -113,6 +113,7 @@ butler/
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
 │   ├── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
 │   ├── verify-codex-workflows.sh   # 8 skills/plugin/repo fallback 结构自检
+│   ├── verify-codex-hooks.sh       # Codex patch 门禁/提醒 wrapper 自检
 │   └── install-codex-plugin.sh     # 个人 marketplace 安装/刷新 Butler plugin
 │
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）

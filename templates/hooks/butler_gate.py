@@ -20,7 +20,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from lib.bypass import evaluate_bypass
-from lib.io import Context, Decision, parse_stdin, resolve_target
+from lib.io import Context, Decision, contexts_from_payload, parse_stdin
 from rules import (
     artifact_chain,
     ledger_status,
@@ -29,7 +29,7 @@ from rules import (
     single_active_iteration,
 )
 
-GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit"})
+GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 
 # Registered in evaluation order. First deny wins; more specific rules first.
 # single_active_iteration 紧随 ledger_status（同为 .ai/ITERATIONS.md 台账规则）。
@@ -49,25 +49,15 @@ def main() -> int:
         if tool_name not in GATED_TOOLS:
             return 0
 
-        cwd = payload.get("cwd", ".")
-        tool_input = payload.get("tool_input", {})
-        target = resolve_target(tool_input, cwd)
-
-        ctx = Context(
-            cwd=cwd,
-            tool_name=tool_name,
-            target_path=target,
-            tool_input=tool_input,
-        )
-
-        for mod in RULE_MODULES:
-            decision = mod.evaluate(ctx)
-            if decision.verdict == "deny":
-                final = evaluate_bypass(ctx, decision)
-                if final.verdict == "allow":
-                    return 0
-                _print_denial(ctx, final)
-                return 2
+        for ctx in contexts_from_payload(payload):
+            for mod in RULE_MODULES:
+                decision = mod.evaluate(ctx)
+                if decision.verdict == "deny":
+                    final = evaluate_bypass(ctx, decision)
+                    if final.verdict == "allow":
+                        continue
+                    _print_denial(ctx, final)
+                    return 2
         return 0
     except Exception:
         print("❌ butler-gate internal error:", file=sys.stderr)

@@ -1,9 +1,10 @@
 # 迭代台账
 
-current: —
+current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0053 | Codex hooks（MILE-0006 R3·危险模式）：共享 gate/advisor 接受 canonical `apply_patch` 并逐 target 复用现有规则；plugin 默认 hooks、124 tests、真实 Codex phase/protected deny + allow + advisor 验证通过；发布 v2.14.0，不提前做 R4 部署升级 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0053-codex-apply-patch-hooks.md |
 | ITER-0052 | Codex 工作流入口（MILE-0006 R2·危险模式）：`plugins/butler/` 交付 8 skills，`.agents/skills/` 软链共享真源；个人 marketplace 安装/刷新、官方 validators、隔离 HOME 幂等和真实 Codex 触发验证通过，高风险 skill 禁隐式；发布 v2.13.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0052-codex-workflow-plugin.md |
 | ITER-0051 | Codex 兼容地基（MILE-0006 R1）：增加仓根 `AGENTS.md` 原生发现、固定 `.ai/` 冷启动读序、目标项目 `AGENTS.md` 模板、双宿主架构说明和零依赖自检；真实 Codex 探测与 109 个 Claude hook 回归通过。明确 R2 skills/plugin、R3 hooks、R4 部署升级仍待续；按 MINOR 发布 v2.12.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0051-codex-compatibility-foundation.md |
 | ITER-0050 | 命名空间收官落两个高风险命令（MILE-0005 R4·收里程碑）：把还停在散文触发词的 `/loop`（收敛闭环死磕）+ `/dangerous`（无人值守自治）落成 `/butler:*` 薄壳命令，但**命令化不得降低「郑重显式触发」门槛**——risk 命令的 frontmatter + 第 0 步前置风险标记、把真正的闸交回引擎（不复述护栏、不省风险提醒）。`/butler:loop` 近乎无参（一次性 P4 升档、无持久态、无 off、跑到全绿或熔断）；`/butler:dangerous` 空参=开启（走引擎 §3 回声闸）/`off` 关/`status` 只读，持久态外化 `.ai/local-constraints.md` `dangerous`、跨会话 announce-on-read。委托 `55/65` 引擎真源、不改算法。`/loop`·`/dangerous` 触发名迁移面最宽（71 处）且 `/loop` 与 Claude Code 自带撞名（harness 引用须精确排除）——迁移策略待 P2 定。P2 三默认 ACK 全收：判 MINOR·切 v2.10.0；`/loop`·`/dangerous` 全迁外科式（22 活文档，harness-`/loop` 精确排除）；一迭代做完两命令 + dangerous 空参=开启。风险闸三招（frontmatter ⚠️ + 第 0 步风险提醒 + 闸交回引擎不复述）逐命令核过；隔离 HOME 实跑 8/8 命令可达、两引擎算法零改。AC1–AC9 全过。**收口即整体收 MILE-0005** | closed | 2026-07-14 | 2026-07-14 | MILE-0005 | deliveries/ITER-0050-risk-gate-commands.md |

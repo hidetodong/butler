@@ -2,16 +2,17 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
-## Codex 兼容地基（v2.12.0）
+## Codex 双宿主适配（v2.12.0–v2.14.0）
 
 - Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。
-- `templates/AGENTS.md.template` 已定义未来目标项目入口契约，但尚未接入部署/升级；v2.13.0 已补 skills/plugin，Codex hooks 仍未交付。详细状态见 `docs/codex-compatibility.md`。
+- `templates/AGENTS.md.template` 已定义未来目标项目入口契约，但尚未接入部署/升级；目标项目双入口接线归 MILE-0006 R4。详细状态见 `docs/codex-compatibility.md`。
 
-## Codex 工作流入口（v2.13.0）
+## Codex 工作流与 hooks（v2.13.0–v2.14.0）
 
 - `plugins/butler/` 可安装 8 个 skills：prd/review/milestone/upgrade/ideation/preference/loop/dangerous；`.agents/skills/` 软链让仓内直接发现同一真源。
 - `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
-- hooks 仍未 live，目标项目双入口仍未接部署；分别归 R3/R4。
+- `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
+- 真实 Codex 已验证 phase deny、protected-path deny、allow 和 advisory 上下文注入。边界只覆盖送入 hook 的工具事件，不替代 sandbox，也不保证覆盖 shell/MCP；目标项目双入口仍未接部署，归 R4。
 
 ## 核心：P1–P5 开发 SOP（默认主线）
 

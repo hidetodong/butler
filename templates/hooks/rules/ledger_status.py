@@ -63,4 +63,6 @@ def _incoming_text(ctx: Context) -> str:
         return "\n".join(
             (e.get("new_string", "") or "") for e in ti.get("edits", [])
         )
+    if ctx.tool_name == "apply_patch":
+        return "\n".join(ti.get("butler_patch_added", []) or [])
     return ""

@@ -83,15 +83,16 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.13.0 已在规则发现地基上补齐 **Codex 工作流入口**：`plugins/butler/` 内含 8 个 skills，仓内 `.agents/skills/` 直接发现同一份内容。运行 `bash scripts/install-codex-plugin.sh` 可安装或刷新个人 Butler plugin；安装后新开 Codex 会话。
+v2.14.0 已补齐 **Codex 工作流入口和 `apply_patch` hooks**：`plugins/butler/` 内含 8 个 skills，仓内 `.agents/skills/` 直接发现同一份内容；plugin 默认发现 PreToolUse 门禁与 PostToolUse 提醒。确认 `BUTLER_PATH` 指向 Butler 仓后，运行 `bash scripts/install-codex-plugin.sh` 安装或刷新，并在首次启用时审阅、信任 hook；安装后新开 Codex 会话。
 
 当前不要把它理解成“Codex 已全面兼容”：
 
 - 8 个入口已完成：`$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop`、`$butler-dangerous`。后两个高风险入口只允许显式调用。
-- Codex `apply_patch` 的机械门禁和提醒 hooks，属于 R3；R3 完成前，Codex 侧只能靠规则纪律，不能声称 hook 已保护。
+- hooks 只覆盖运行时实际报告的 `apply_patch`/兼容编辑事件；PreToolUse 不是 sandbox，也不能保证拦住 shell、MCP 或未来新增的所有写路径。
+- `BUTLER_PATH` 缺失时 PreToolUse 门禁会 fail-closed；PostToolUse 提醒会 fail-open。若出现门禁不可用，先修正环境变量，不要用永久 trust/bypass 掩盖配置问题。
 - 新项目自动生成 `CLAUDE.md` + `AGENTS.md`、既有项目升级和双端回归，属于 R4。
 
-共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器；R4 前，Codex plugin 使用独立的 `scripts/install-codex-plugin.sh`。
+共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器；R4 前，Codex plugin 使用独立的 `scripts/install-codex-plugin.sh`，不会自动为目标项目完成双入口部署。
 
 ## 4. 接入新项目
 

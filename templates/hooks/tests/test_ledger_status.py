@@ -120,3 +120,16 @@ class TestLedgerStatus:
 
     def test_empty_content_allows(self):
         assert ledger_status.evaluate(make_ctx(LEDGER, "")).verdict == "allow"
+
+    def test_apply_patch_added_invalid_status_denies(self):
+        ctx = Context(
+            cwd="/tmp/proj",
+            tool_name="apply_patch",
+            target_path=PurePosixPath(LEDGER),
+            tool_input={
+                "butler_patch_added": [
+                    "| ITER-0011 | t | planned | 2026-01-01 | — | — | — |"
+                ]
+            },
+        )
+        assert ledger_status.evaluate(ctx).verdict == "deny"

@@ -26,10 +26,10 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from lib.io import Context, parse_stdin, resolve_target
+from lib.io import contexts_from_payload, parse_stdin
 from rules import prd_split_reminder
 
-GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit"})
+GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 
 # Advisory rules，按注册序执行；各自独立、互不短路（不同于 gate 的 first-deny-wins）。
 ADVISORY_MODULES = [
@@ -44,22 +44,12 @@ def main() -> int:
         if tool_name not in GATED_TOOLS:
             return 0
 
-        cwd = payload.get("cwd", ".")
-        tool_input = payload.get("tool_input", {})
-        target = resolve_target(tool_input, cwd)
-
-        ctx = Context(
-            cwd=cwd,
-            tool_name=tool_name,
-            target_path=target,
-            tool_input=tool_input,
-        )
-
         messages: list[str] = []
-        for mod in ADVISORY_MODULES:
-            advisory = mod.evaluate(ctx)
-            if advisory.message:
-                messages.append(advisory.message)
+        for ctx in contexts_from_payload(payload):
+            for mod in ADVISORY_MODULES:
+                advisory = mod.evaluate(ctx)
+                if advisory.message and advisory.message not in messages:
+                    messages.append(advisory.message)
 
         if messages:
             _emit("\n\n".join(messages))

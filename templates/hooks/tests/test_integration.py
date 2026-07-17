@@ -33,6 +33,14 @@ def edit_payload(cwd: Path, target: str) -> dict:
     }
 
 
+def patch_payload(cwd: Path, command: str) -> dict:
+    return {
+        "tool_name": "apply_patch",
+        "tool_input": {"command": command},
+        "cwd": str(cwd),
+    }
+
+
 class TestAllowPaths:
     def test_allow_when_all_artifacts_present(self, tmp_project):
         proj = tmp_project("full-artifacts")
@@ -90,6 +98,19 @@ class TestDenyPaths:
         assert "reason:" in r.stderr
         assert "bypass:" in r.stderr
 
+    def test_apply_patch_denies_when_any_target_is_protected(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        command = """*** Begin Patch
+*** Add File: src/ok.py
++ok
+*** Add File: 99_Business_Extension/policy.md
++blocked
+*** End Patch"""
+        r = run_gate(patch_payload(proj, command), proj)
+        assert r.returncode == 2
+        assert "protected_paths" in r.stderr
+        assert "99_Business_Extension/policy.md" in r.stderr
+
 
 class TestBypassFlow:
     def test_bypass_without_reason_still_denies(self, tmp_project):
@@ -145,3 +166,9 @@ class TestFailClosed:
         r = run_gate({"tool_input": {}}, proj)
         # No tool_name → not in GATED_TOOLS → exit 0
         assert r.returncode == 0
+
+    def test_malformed_apply_patch_fails_closed(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        r = run_gate(patch_payload(proj, "not a patch"), proj)
+        assert r.returncode == 2
+        assert "internal error" in r.stderr

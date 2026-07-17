@@ -34,7 +34,7 @@
 
 ## 成熟度（真源里没有的"现状"层）
 
-- **双宿主适配（MILE-0006）**：R1 已落仓根 `AGENTS.md`、目标模板、兼容架构说明和结构自检；R2 skills/plugin、R3 Codex hooks、R4 部署升级与双端回归仍 planned。详细边界真源 `docs/codex-compatibility.md`。
+- **双宿主适配（MILE-0006）**：R1 已落 `AGENTS.md`/目标模板，R2 已落 8 skills/plugin，R3 已落 canonical `apply_patch` 的 plugin hooks 与真实 Codex deny/allow/advisor E2E；R4 部署升级与双端回归仍 planned。详细边界真源 `docs/codex-compatibility.md`。
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。

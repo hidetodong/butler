@@ -1,40 +1,28 @@
-# CONCEPT — ITER-0052 · Codex 工作流入口
+# CONCEPT — ITER-0053 · Codex hooks
 
-> ⚠️ 危险模式：本迭代由模型自治推进；P2/P3 将在强制自审门通过后自主 ACK，未经用户逐项确认。
+> ⚠️ 危险模式：本迭代由模型自治推进；P2/P3 经强制自审门后自主 ACK。
 
 ## 一句话目标
 
-把 Butler 的 8 个 Claude 薄壳命令变成 Codex 可发现、可安装、仍回指共同规则真源的 8 个 skills，并用 plugin 作为最终分发包。
+让 Butler 的同一套 gate/advisor 真正识别 Codex `apply_patch`，并通过已安装 plugin 的生命周期 hooks 在写入前阻断、写入后提醒。
 
-## 问题
+## 已确认事实
 
-- R1 只让 Codex 认识 Butler 仓库，还没有可显式或语义触发的 Butler 工作流入口。
-- 直接复制 Claude command 正文会形成第二套算法；skills 必须只做定位、读真源、分派和优雅降级。
-- repo skills 适合开发发现，plugin 适合全局安装；两份实体内容会漂移，需要单一物理真源。
+- Codex `PreToolUse` / `PostToolUse` 对文件编辑报告 `tool_name: apply_patch`，patch 文本在 `tool_input.command`。
+- matcher 可写 `Edit|Write` 命中 `apply_patch`；PreToolUse 可用 exit 2 + stderr 拒绝，PostToolUse 可输出 `hookSpecificOutput.additionalContext`。
+- plugin 默认发现 `hooks/hooks.json`，无需 manifest `hooks` 字段；这绕开当前本机 validator 拒绝该字段而最新 manual 又支持它的版本差异。
+- plugin hooks 必须经 trust；自动 E2E 可用官方 `--dangerously-bypass-hook-trust` 只在测试命令中绕过交互审阅。
 
-## 已确认决策
+## 设计方向
 
-1. `plugins/butler/skills/` 是 8 skills 的发布真源；`.agents/skills/` 只放指向它们的相对软链，既满足 repo discovery，也不双写。
-2. plugin 名为 `butler`，由官方 `plugin-creator` 脚手架建立，manifest 不夹带 R3 hooks、MCP 或 apps。
-3. 8 个 skill 对应 `prd`、`review`、`milestone`、`upgrade`、`ideation`、`preference`、`loop`、`dangerous`；每个都从 `BUTLER_PATH` 定位 `Coder/` 真源。
-4. 高风险的 `loop` 与 `dangerous` 禁止隐式触发；其 `agents/openai.yaml` 设 `allow_implicit_invocation: false`。其余 6 个允许语义触发。
-5. R2 按 MINOR 发布 v2.13.0；R3 hooks、R4 目标项目双入口部署不提前进入。
-
-## 范围
-
-- 建 plugin manifest、8 skills、UI metadata、repo fallback 软链。
-- 增加安装/刷新脚本与结构验证，真实安装到本机个人 marketplace 后用新 Codex 会话验证发现和触发。
-- 更新兼容说明、README/HUMAN_GUIDE/Coder 注册与项目知识。
-
-## 不做
-
-- 不增加 `.codex/hooks.json`，不改 Python gate，不宣称 `apply_patch` 已受门禁。
-- 不修改 `scripts/setup.sh`、目标项目首次部署或升级生成双入口的执行链。
-- 不改 Claude commands 和工作流算法。
-- 不发布公共 marketplace，不 push、不合并。
+1. 新增 Codex patch parser，把一个多文件 patch 拆成多个 target Context；dispatcher 逐 target 复用现有规则，第一条 deny 胜出。
+2. parser 为每个 target 提供 added/removed 行和 operation；ledger rules 用这些增量还原/检查状态，不复制规则算法。
+3. Claude `Edit/Write/MultiEdit` 路径保持原样，旧 109 测试必须全过。
+4. plugin 只加默认 hooks 配置与薄 shell wrapper，Python 真源仍在 `BUTLER_PATH/templates/hooks/`。
+5. R3 发布 v2.14.0；R4 才做 setup/MCV/目标项目部署升级和整体双端矩阵。
 
 ## 风险
 
-- plugin 安装会写用户级 `~/.agents/plugins/` 与 Codex 插件缓存；这是用户要求的全局兼容目标内动作，必须通过官方脚本和 CLI，且保留可移除路径。
-- 本地 plugin 缓存不会自动跟随仓库更新；更新脚本必须处理同步、cachebuster 与重装。
-- skill 的隐式触发存在模型判断不确定性；以显式 `$skill` 为可靠验收，低风险 skills 再做语义触发代理验证。
+- `apply_patch` grammar 包含 add/update/delete/move 与多 hunks；漏解析 target 会让 gate 静默放行，parser 遇到非空但无合法 target 必须让 gate fail-closed。
+- PreToolUse 不是完整安全边界，官方说明 unified exec/等价工具仍可能绕过；文档必须叫“支持的 apply_patch 路径机械门禁”，不能写成不可绕过安全沙箱。
+- plugin hook trust 由 Codex 管理，安装不能替用户静默信任。

@@ -102,3 +102,13 @@
 - 2026-07-17 · P4-trigger-probe · ITER-0052 · 从 `/tmp` 新启只读 `codex exec`：`$butler-review` 由 plugin cache 自动加载并准确先读 `Coder/60_Extension_CodeReview/review-engine.md`、如实判定非独立；`$butler-dangerous` 在 CLI 非交互 catalog 未直接暴露（`allow_implicit_invocation:false`），模型经已安装 plugin cache 定向定位后准确返回 dangerous-engine + local-constraints-schema 两真源并确认禁止隐式。后者证明风险策略生效，但也暴露 `codex exec` 对禁隐式 skill 的显式 mention 注入与交互 UI 不完全同构，记 P5 风险而不放宽安全门。
 - 2026-07-17 · P5-review · ITER-0052 · dangerous-ack · 主代理完整多维强审（非独立复核）：AC1–AC10 全过、0 Must Fix；安装脚本安全审查补源=目标拒绝、根路径拒绝、CLI 最终版本 installed/enabled 后置断言。1 Should Fix/待人=非交互 exec 对禁隐式 skill 的文本 mention 不直接注入 catalog，保留安全 policy，交互 UI 待补测。
 - 2026-07-17 · close · ITER-0052 · dangerous-ack · 原子收口完成：四件套+CHANGELOG 归档 5 件、交付 md+html、ITER/R2 closed、知识文件夹前滚、v2.13.0 发布元数据就绪；6 不变量与 tag 在发布提交后终检。危险模式北极星为完成 MILE-0006，故不退出，自动进入 R3 / ITER-0053。
+
+## ITER-0053 — R3 Codex hooks（MILE-0006）
+
+- 2026-07-17 · iter-open · ITER-0053 · dangerous-ack · 危险模式自动续跑；台账 active、R3 绑号、四件套 overwrite-only。北极星延续为完成 MILE-0006，R3 收口后继续 R4。回滚锚点=v2.13.0 / `1b3a3c9`。
+- 2026-07-17 · P2-self-ack · ITER-0053 · dangerous-ack · AC1–AC10 覆盖 parser、多 target gate、ledger、advisor、Claude 非回归、plugin hooks、真实 deny/allow/advisor E2E、边界文档和发布；每条有确定验证。Out 明确不承诺完整安全边界、不做 R4。风险如实列 parser fail-open 与 tool 选路差异。通过，自主冻结。
+- 2026-07-17 · P3-self-ack · ITER-0053 · dangerous-ack · T1–T7 映射 AC1–AC10；parse once/evaluate many、ledger 增量、默认 plugin discovery、wrapper 风险对称四项边界清楚；不改 RULE_MODULES 判定语义、不复制 hooks 到目标项目，未命中扩张信号。通过，自主 ACK。
+- 2026-07-17 · rollback-anchor · ITER-0053 · P4 前锚点=v2.13.0 tag / `1b3a3c9`；后续产品改动可按该 tag 定点对比回退，不执行破坏性 reset。
+- 2026-07-17 · P4-e2e · ITER-0053 · dangerous-ack · plugin 重装后真实 Codex 0.144.5 四场景通过：无四件套源码 patch 被 phase_gate 拒且文件不存在；冻结四件套普通源码 patch 放行落盘；protected path 被拒且无产物；MILESTONE PostToolUse advisory 被模型收到并复述。测试态使用官方 `--dangerously-bypass-hook-trust`，未冒充用户日常信任已完成。
+- 2026-07-17 · P5-review · ITER-0053 · dangerous-ack · 主代理完整多维强审（非独立复核）：AC1–AC10 全过、0 Must Fix；pytest 124 passed，R1/R2/R3 verify scripts、官方 plugin validator、compile/JSON/diff 检查全绿。团队策略未授权子 agent，故如实标为主代理审查。残余仅为首次交互信任待用户动作、保护声明限 apply_patch。
+- 2026-07-17 · close · ITER-0053 · dangerous-ack · 原子收口完成：四件套+CHANGELOG 归档、交付 md+html、ITER/R3 closed、知识文件夹前滚、v2.14.0 发布材料就绪；6 不变量与 tag 在发布提交后终检。危险模式北极星仍为完成 MILE-0006，发布后自动进入 R4 / ITER-0054。

@@ -1,0 +1,27 @@
+{
+  "description": "Butler phase gate and post-write advisory for Claude-style edits and Codex apply_patch.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$PLUGIN_ROOT/hooks/butler-gate.sh\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$PLUGIN_ROOT/hooks/butler-advisor.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

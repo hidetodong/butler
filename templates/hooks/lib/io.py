@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 from typing import Literal
 
+from lib.codex_patch import parse_apply_patch
+
 GATED_BLACKLIST = frozenset({
     ".ai/",
     "deliveries/",
@@ -78,6 +80,30 @@ def resolve_target(tool_input: dict, cwd: str) -> PurePosixPath:
     except ValueError:
         return OUT_OF_CWD
     return PurePosixPath(rel.as_posix())
+
+
+def contexts_from_payload(payload: dict) -> list[Context]:
+    """Build one context for Claude edits or one per Codex patch target."""
+    tool_name = payload.get("tool_name", "")
+    cwd = payload.get("cwd", ".")
+    tool_input = payload.get("tool_input", {}) or {}
+    if tool_name != "apply_patch":
+        return [Context(cwd, tool_name, resolve_target(tool_input, cwd), tool_input)]
+
+    command = tool_input.get("command", "")
+    contexts: list[Context] = []
+    for change in parse_apply_patch(command):
+        synthetic = dict(tool_input)
+        synthetic.update({
+            "file_path": change.path,
+            "butler_patch_operation": change.operation,
+            "butler_patch_added": list(change.added_lines),
+            "butler_patch_removed": list(change.removed_lines),
+        })
+        contexts.append(
+            Context(cwd, tool_name, resolve_target(synthetic, cwd), synthetic)
+        )
+    return contexts
 
 
 def is_gated(target: PurePosixPath, blacklist: frozenset = GATED_BLACKLIST) -> bool:

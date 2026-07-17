@@ -42,7 +42,7 @@
 |---|---|---|---|
 | R1 | **兼容地基**：双宿主边界、`AGENTS.md` 自动注入入口、`.ai/` 共同状态层与单一真源约束 | ITER-0051 | closed |
 | R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | ITER-0052 | closed |
-| R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | — | planned |
+| R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | ITER-0053 | closed |
 | R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | — | planned |
 
 ## 5.4 范围演进记录
@@ -52,3 +52,5 @@
 - 2026-07-17：R1 / ITER-0051 收口并发布 v2.12.0。仓库已可被 Codex 原生发现；目标项目自动部署、skills/plugin 与 hooks 仍按 R2–R4 继续，MILE-0006 保持 active。
 - 2026-07-17：用户开启危险模式并要求继续；R2 绑定 ITER-0052，按会话级自治推进 8 skills、plugin 骨架和本地安装验证，R3/R4 边界不变。
 - 2026-07-17：R2 / ITER-0052 自治收口并发布 v2.13.0；个人 `butler@personal` 已真实安装，8 skills 可用。危险模式继续推进 R3。
+- 2026-07-17：危险模式自动开启 R3 / ITER-0053；以 plugin 默认 hooks 发现 + 共享 Python dispatcher 适配为主线，R4 边界不变。
+- 2026-07-17：R3 / ITER-0053 完整强审 0 Must Fix；124 tests 与真实 Codex phase/protected deny、allow、advisor 全通过，发布 v2.14.0。危险模式继续进入 R4。

@@ -96,6 +96,19 @@ def _effective_text(ctx: Context) -> str:
             if ok:
                 return buf
         return "\n".join((e.get("new_string", "") or "") for e in edits)
+    if ctx.tool_name == "apply_patch":
+        added = ti.get("butler_patch_added", []) or []
+        removed = ti.get("butler_patch_removed", []) or []
+        if current is not None:
+            lines = current.splitlines()
+            for old_line in removed:
+                try:
+                    lines.remove(old_line)
+                except ValueError:
+                    return "\n".join(added)
+            lines.extend(added)
+            return "\n".join(lines)
+        return "\n".join(added)
     return ""
 
 

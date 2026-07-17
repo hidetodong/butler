@@ -14,7 +14,7 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 |---|---|---|
 | 共同内核 | `Coder/`、`.ai/`、`templates/rule-card.md`、`templates/hooks/rules/` 与 `lib/` | 规则算法和状态契约只写在这里 |
 | Claude Code 适配层 | `CLAUDE.md`、`.claude/commands/`、部署后的 `.claude/hooks/` 与 settings | 保留现有行为，不为 Codex 改写 |
-| Codex 适配层 | `AGENTS.md`、`.agents/skills/`、`plugins/butler/`、后续 `.codex/hooks.json` 或 plugin hooks | 只负责发现、路由、输入输出转换 |
+| Codex 适配层 | `AGENTS.md`、`.agents/skills/`、`plugins/butler/`（含 plugin hooks） | 只负责发现、路由、输入输出转换 |
 
 `.ai/` 不属于任何单一宿主。它保存当前目标、验收、方案、验证、台账和跨会话断点；Claude Code 与 Codex 必须读写同一份状态，不能各建副本。
 
@@ -31,10 +31,10 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 |---|---|---|
 | R1 / ITER-0051 | Butler 仓根 `AGENTS.md` 自动发现、`.ai/` 冷启动读序、目标项目模板与兼容架构 | v2.12.0 已交付 |
 | R2 / ITER-0052 | 8 个 Butler 工作流迁为 Codex skills，并打包成可安装 plugin | v2.13.0 已交付 |
-| R3 | Codex PreToolUse/PostToolUse 配置、`apply_patch` 输入适配、拒绝与提醒端到端验证 | 计划中 |
+| R3 / ITER-0053 | Codex PreToolUse/PostToolUse plugin hooks、`apply_patch` 输入适配、拒绝与提醒端到端验证 | v2.14.0 已交付 |
 | R4 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | 计划中 |
 
-因此，v2.13.0 可以说“Codex 能原生发现 Butler 仓库规则，并通过 plugin 使用 8 个工作流入口”，仍不能说“Butler 已在 Codex 中全面兼容”。机械门禁和目标项目自动生成 `AGENTS.md` 仍要等 R3/R4。
+因此，v2.14.0 可以说“Codex 能原生发现 Butler 仓库规则、通过 plugin 使用 8 个工作流入口，并对 apply_patch 运行 Butler 门禁与提醒”，仍不能说“Butler 已在 Codex 中全面兼容”。目标项目自动生成双入口和既有部署升级仍要等 R4。
 
 ## 4. Codex 原生入口
 
@@ -57,20 +57,20 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 
-## 6. Hook 当前边界
+## 6. Hook 实现与边界
 
-Codex 支持 `PreToolUse`、`PostToolUse` 等生命周期事件，项目配置从受信任仓库的 `.codex/hooks.json` 或 `.codex/config.toml` 加载；非托管 hook 还需要用户检查并信任。事件名字相近不代表现有 Butler hook 已可直接使用。
+Codex 支持 `PreToolUse`、`PostToolUse` 等生命周期事件。Butler plugin 通过默认发现的 `plugins/butler/hooks/hooks.json` 注册两条 hook；首次启用时用户必须审阅来源并信任。`--dangerously-bypass-hook-trust` 只用于已审过源代码的自动化 E2E，不是日常安装步骤。
 
-当前 `templates/hooks/butler_gate.py` 和 `butler_advisor.py` 仍按 Claude Code 输入编写：
+`templates/hooks/lib/codex_patch.py` 把 Codex `tool_input.command` 中的 add/update/delete/move、多文件和多 hunk patch 转成逐目标 Context，再复用同一批 rule modules。Claude 的 `Edit`、`Write`、`MultiEdit` 输入路径保持不变。
 
-- 只接受 `Edit`、`Write`、`MultiEdit`。
-- 从 `tool_input.file_path` 找目标文件。
-- 修改内容按 `content`、`old_string/new_string` 或 `edits` 读取。
+- PreToolUse：任一目标命中 deny 即拒绝整个 apply_patch；patch 无法解析或 `BUTLER_PATH` 无效时 fail-closed。
+- PostToolUse：逐目标收集提醒并输出 `hookSpecificOutput.additionalContext`；解析或环境错误时 fail-open。
+- 安装/刷新后需新开 Codex thread；结构验证运行 `bash scripts/verify-codex-hooks.sh`。
 
-Codex 的主要写文件调用是 `apply_patch`。即使 matcher 用 `Edit|Write` 能触发该调用，当前 dispatcher 也会因内部工具名和 patch 结构不同而直接放行。所以在 R3 完成前，**Codex 写文件没有 Butler 机械阶段门禁**；只能依赖 `AGENTS.md` 规则纪律，不能把它报告成 hook 绿。
+这仍不是完整 enforcement boundary。PreToolUse 只能观察运行时送入 hook 的工具调用，不能替代 Codex sandbox、审批或仓库权限，也不保证覆盖 shell、MCP、外部进程或未来新增的所有写路径。任何“受 Butler 保护”的报告都必须限定到已观测并验证的 apply_patch 链路。
 
 - 官方说明：[Hooks](https://learn.chatgpt.com/docs/hooks.md)
-- R3 必须验证：单文件 patch、多文件 patch、创建/删除/移动、拒绝信息、PostToolUse 提醒和 hook trust。
+- R3 验证覆盖：单文件 patch、多文件 patch、创建/删除/移动、拒绝信息、PostToolUse 提醒和测试态 hook trust；日常首次信任仍由用户完成。
 
 ## 7. 安全边界
 
@@ -83,6 +83,7 @@ Butler 的流程规则不能覆盖 Codex 自身的 sandbox、审批、hook trust
 ```bash
 bash scripts/verify-codex-foundation.sh
 bash scripts/verify-codex-workflows.sh
+bash scripts/verify-codex-hooks.sh
 ```
 
 修改共享 hook 判断模块时，还要运行：
