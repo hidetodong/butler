@@ -25,7 +25,7 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 每份 `migrations/vX.Y.Z.md` 必须含：
 
 - 顶部一行：`> 区间: v<上一版> → vX.Y.Z · 聚合 ITER-NNNN[ ~ NNNN]`。
-- `## 对已部署项目的影响`：一两句白话说清本版改了什么、影响落在 `CLAUDE.md` / `.ai/` / `.claude/hooks/` 的哪一处；无影响直说"无"。
+- `## 对已部署项目的影响`：一两句白话说清本版改了什么、影响落在 `CLAUDE.md` / `AGENTS.md` / `.ai/` / `.claude/hooks/` / 机器级 plugin 的哪一处；无影响直说"无"。
 - `## 迁移步骤`：有序列表，每步以 typed 标签（§4）起头，并写明**起始态校验**与**冲突处理**；无影响时只列一条 `[no-op]`。
 - `## 不需要动作`：列出本版改了、但部署项目无需跟进的部分（如只改了 `Coder/` 规则正文——运行时实时读，不进目标项目），避免执行器误判漏迁。
 
@@ -36,9 +36,11 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 - `[rename]`：重命名 `.ai/` 下过时文件。判据=旧名存在才改；git 项目走 `git mv` 保血缘。
 - `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。**升级执行语义**——本标签在 `/butler:upgrade` 里是 **opt-in、非自动**（执行器先问"现在迁 / 继续单文件以后再迁"，选后者则跳过、两态并存继续支持），落地细则见 `butler-upgrade.md §6.5`；本条只定标签语义，执行落地不在此重述。
 - `[add-field]`：给 `.ai/` 下 schema 文件补新增的必填字段。判据=字段缺失才补；草稿值交用户 ACK。
-- `[regen-claude]`：rule-card 内容变更时，重生成目标 `CLAUDE.md` 的 `{{RULE_CARD_CONTENT}}` 内联段。判据=始终重建 butler 管理区，`<!-- user-managed -->` 保护区内容原样保留。**漏判防线**：切版时只要本版聚合的**任一**迭代改动过 `templates/rule-card.md` 或 `templates/CLAUDE.md.template`，配方就**必须**含本步——rule-card 内联进每个目标 `CLAUDE.md`，漏掉会让目标规则卡停留旧文（用 `git log -- templates/rule-card.md` 核区间内提交）。
+- `[regen-entrypoints]`：两模板、rule-card、路径或版本契约变化时，调用 `scripts/render-project-entrypoints.py` 同时生成/更新 CLAUDE.md 与 AGENTS.md。判据=两份管理区各自 user-managed 内容逐字保留，管理区外原文不动；重复/残缺 marker 冲突即停。**漏判防线**：区间内改过 `rule-card.md`、任一入口模板或 renderer 时，配方必须含本步。
+- `[regen-claude]`：历史兼容标签。消费旧配方时不再只重建 CLAUDE.md，而是按 `[regen-entrypoints]` 执行，使老项目顺带补齐 AGENTS.md；新配方一律写 `[regen-entrypoints]`。
+- `[global-install]`：刷新机器级入口。运行 `scripts/setup.sh`，幂等更新 Claude 全局配置/命令并在 Codex CLI 可用时安装/刷新个人 Butler plugin；Codex 不可用时明确跳过。不得自动绕过 hook trust。
 - `[sync-hooks]`：hook 体系变更时，按 `mcv-deployment.md §5.1` 重新拷贝 `.claude/hooks/` 副本（以 butler 版本为准覆盖）。判据=比对副本与仓库版本，不一致才覆盖。
-- `[restamp]`：把 `CLAUDE.md` 版本戳重戳为目标版本。每份配方的 `[restamp]` 目标是该配方所属版本；多版队列连续执行时，逐版重戳或仅在队列末尾一次性戳到仓库当前 `VERSION` 均可，**最终以戳到当前 `VERSION` 为准**。每次升级末尾必做。
+- `[restamp]`：通过统一 renderer 把 CLAUDE.md 与 AGENTS.md 的版本戳一起重戳为目标版本。每份配方的目标是该配方所属版本；多版队列可逐版重戳或仅在末尾一次戳到仓库当前 `VERSION`，最终两入口必须一致。每次升级末尾必做。
 - `[no-op]`：本版对部署项目无结构影响，仅需末尾 `[restamp]`。
 
 ## 5. 幂等与漂移契约

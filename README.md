@@ -84,9 +84,7 @@ flowchart TB
 ## 🚀 快速上手
 
 ```bash
-# 1. 一次性全局安装（写入全局配置 + 把 slash 命令软链进 ~/.claude/commands/
-#    + @import 个人沟通风格进全局 CLAUDE.md 常开；
-#    之后所有项目自动发现 butler 规则、能用 /butler-* 命令、按你的沟通风格说话）
+# 1. 一次性全局安装（Claude 全局配置/命令/风格 + 检测并安装 Codex plugin）
 ./scripts/setup.sh
 
 # 2. 可选 · 启用偏好探针（opt-in，数据外置）
@@ -96,7 +94,7 @@ flowchart TB
 3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
-> **Codex 当前支持范围**：v2.14.0 起，Codex 可原生发现 Butler 仓规则、安装 8 个工作流 skills，并通过 plugin hooks 对 `apply_patch` 运行 Butler 门禁与提醒。运行 `bash scripts/install-codex-plugin.sh` 安装或刷新，并确保 `BUTLER_PATH` 指向本仓；首次启用 hook 仍须用户审阅并信任。目标项目自动双入口部署/升级属于 R4，且 PreToolUse 不是完整安全边界，因此尚不是“全面兼容”。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目和升级项目会从同一规则卡生成/维护 `CLAUDE.md` + `AGENTS.md`。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## 📂 目录结构
 
@@ -109,11 +107,13 @@ butler/
 ├── communication-style.md          # 个人沟通风格正本（setup.sh @import 进全局 CLAUDE.md 常开；个人配置、非 SOP 规则、不进 Coder 阅读顺序）
 │
 ├── scripts/
-│   ├── setup.sh                    # 一次性全局安装（含 slash 命令软链到 ~/.claude/commands/）
+│   ├── setup.sh                    # Claude + Codex 一次性全局安装
+│   ├── render-project-entrypoints.py # 幂等生成/升级 CLAUDE.md + AGENTS.md
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
 │   ├── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
 │   ├── verify-codex-workflows.sh   # 8 skills/plugin/repo fallback 结构自检
 │   ├── verify-codex-hooks.sh       # Codex patch 门禁/提醒 wrapper 自检
+│   ├── verify-dual-host.sh         # 统一 setup、双入口与全套双宿主回归
 │   └── install-codex-plugin.sh     # 个人 marketplace 安装/刷新 Butler plugin
 │
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
@@ -129,7 +129,7 @@ butler/
 │
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template
-│   ├── AGENTS.md.template          #   Codex 入口模板（R1 建契约，R4 接部署）
+│   ├── AGENTS.md.template          #   Codex 目标项目入口模板
 │   ├── rule-card.md                #   浓缩规则卡（强约束 SSOT）
 │   ├── hooks/                      #   PreToolUse 流程门禁
 │   ├── settings.hooks-snippet.json

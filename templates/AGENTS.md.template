@@ -2,7 +2,7 @@
 
 <!--
   本文件是 AI 部署基地车时生成 AGENTS.md 的参考模板。
-  MILE-0006 R1 只建立模板契约；接入首次部署与升级执行链属于 R4。
+  由 scripts/render-project-entrypoints.py 在首次部署与升级时和 CLAUDE.md 一起生成/维护。
   生成时：
   - 用 templates/rule-card.md 中 ## 角色 起的章节内容替换下方规则卡占位符
   - 用实际路径替换深度阅读指针中的 butler 路径占位符

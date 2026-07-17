@@ -1,17 +1,16 @@
 # Task State
 
-> ⚠️ MILE-0006 / ITER-0053 closed · dangerous ON（会话级）· 待发布后自动开 R4。
+> MILE-0006 / ITER-0054 closed · dangerous 本轮完成后退出。
 
 ## 已完成
 
-- parser/adapter、gate/advisor、ledger、plugin hooks 与文档已完成。
-- pytest 124 passed；三 verify scripts 与官方 validator 通过。
-- 真实 Codex deny/allow/advisor E2E 通过；P5 0 Must Fix。
+- R3 发布 v2.14.0；回滚锚点 `v2.14.0` / `3907ea6`。
+- R4 产品/协议/文档完成；完整矩阵全绿，P5 0 Must Fix。
 
 ## 进行中
 
-- v2.14.0 发布提交、本地 tag 与真实 plugin 最终刷新。
+- v2.15.0 发布提交、真实 setup/plugin 最终刷新与本地 tag。
 
 ## 下一步
 
-- 发布后自动开启 MILE-0006 R4，完成部署升级与最终双端回归。
+- 发布后交还用户；不 push、不 merge。

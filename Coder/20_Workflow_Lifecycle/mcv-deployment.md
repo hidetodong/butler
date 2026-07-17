@@ -82,16 +82,25 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 3. 规则注入 (Rule Injection)
 
-在目标项目根目录生成 `CLAUDE.md`（或目标 AI 工具对应的配置文件）。流程：
+在目标项目根目录同时生成 `CLAUDE.md`（Claude Code）与 `AGENTS.md`（Codex）。两份入口共享 `templates/rule-card.md` 真源，但各自保留宿主需要的读序；不得只生成当前会话所用宿主的那一份。
 
-1. 读取模板骨架 `templates/CLAUDE.md.template`。
+统一调用：
+
+```bash
+python3 "$BUTLER/scripts/render-project-entrypoints.py" \
+  --target "$(pwd)" --butler-root "$BUTLER"
+```
+
+渲染器按以下契约处理两份文件：
+
+1. 分别读取 `templates/CLAUDE.md.template` 与 `templates/AGENTS.md.template`。
 2. 用 `templates/rule-card.md` 中 `## 角色` 起的章节内容替换 `{{RULE_CARD_CONTENT}}` 占位符（不包含 rule-card.md 的 H1 与顶部引述）；这是浓缩规则卡的内联，确保 AI 在高注意力区域读到核心约束。
 3. 用 butler 仓库的绝对路径替换 `{{BUTLER_PATH}}` 占位符，让深度阅读指针指向真实路径。
 4. 读取 `$BUTLER/VERSION`，用其内容替换 `{{BUTLER_VERSION}}` 占位符，戳上目标项目所基于的 butler 规则源版本（落在 butler 管理区，供后续升级原地重戳；见 `versioning-schema.md §7`）。
-5. 在 `<!-- user-managed -->` 保护区内的"项目特定约束"段填入侦察结果（识别到的技术栈、project 类型、特殊约束等）。保护区标记由 `CLAUDE.md.template` 骨架提供，部署时原样保留，作为后续 `butler-upgrade.md` 协议的升级契约起点。
-6. 写入目标项目根目录 `CLAUDE.md`。
+5. 两份生成内容都包在 `<!-- butler-managed:start -->` / `<!-- butler-managed:end -->` 外层管理区，并各含自己的 `<!-- user-managed -->` 保护区。首次渲染后，把侦察结果分别填入两份文件的项目特定约束；后续渲染会逐字保留各自保护区。
+6. 两文件先全部校验再写入；占位符、外层 marker 或 user-managed marker 异常时 fail-closed，两份都不改。
 
-若目标项目已存在 `CLAUDE.md`，不得覆盖，应将以上生成的内容追加到现有内容末尾，并用分隔线标记 butler 规则区块。
+若目标项目已有任一入口且没有 Butler 外层管理区，渲染器保留原文并在末尾追加管理区；已有一对合法管理区则原位更新。重复/残缺 marker 不猜测、不覆盖，停下报告冲突。Codex plugin、skills 与 hooks 是 setup 安装的机器级能力，不复制进目标项目；项目内只落两份宿主入口和宿主无关 `.ai/` 状态。
 
 ## 4. 本地化适配 (Local Adaptation)
 
@@ -148,9 +157,9 @@ echo "advisor exit=$?"
 - 提醒：`advisor exit=0`（**永远放行**）；若目标项目尚无 `.ai/references/prd/` → stdout 含 `additionalContext` 与 `references/prd`；已有则 stdout 为空。
 - 这两条验证命令写入部署报告。
 
-### 5.4 与 butler-upgrade 的联动（Follow-up）
+### 5.4 与 butler-upgrade 的联动
 
-Hook 副本与 butler 仓库版本可能漂移。`butler-upgrade.md` 协议需要扩展以检测并同步 hook 副本；本协议本身只负责**首次部署路径**，不处理升级。
+Hook 副本与 butler 仓库版本可能漂移。既有项目升级按 `butler-upgrade.md §6.4` 的 `[sync-hooks]` 同步；本协议只负责首次部署路径。
 
 ## 6. Butler 驻留工具调用（Resident Tools）
 

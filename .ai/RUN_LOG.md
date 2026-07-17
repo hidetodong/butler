@@ -112,3 +112,14 @@
 - 2026-07-17 · P4-e2e · ITER-0053 · dangerous-ack · plugin 重装后真实 Codex 0.144.5 四场景通过：无四件套源码 patch 被 phase_gate 拒且文件不存在；冻结四件套普通源码 patch 放行落盘；protected path 被拒且无产物；MILESTONE PostToolUse advisory 被模型收到并复述。测试态使用官方 `--dangerously-bypass-hook-trust`，未冒充用户日常信任已完成。
 - 2026-07-17 · P5-review · ITER-0053 · dangerous-ack · 主代理完整多维强审（非独立复核）：AC1–AC10 全过、0 Must Fix；pytest 124 passed，R1/R2/R3 verify scripts、官方 plugin validator、compile/JSON/diff 检查全绿。团队策略未授权子 agent，故如实标为主代理审查。残余仅为首次交互信任待用户动作、保护声明限 apply_patch。
 - 2026-07-17 · close · ITER-0053 · dangerous-ack · 原子收口完成：四件套+CHANGELOG 归档、交付 md+html、ITER/R3 closed、知识文件夹前滚、v2.14.0 发布材料就绪；6 不变量与 tag 在发布提交后终检。危险模式北极星仍为完成 MILE-0006，发布后自动进入 R4 / ITER-0054。
+
+## ITER-0054 — R4 双宿主部署升级收官（MILE-0006）
+
+- 2026-07-17 · iter-open · ITER-0054 · dangerous-ack · v2.14.0 已本地发布并真实刷新 plugin；危险模式自动续跑 R4。台账 active、R4 绑号、四件套 overwrite-only。回滚锚点=v2.14.0 / `3907ea6`。
+- 2026-07-17 · P2-self-ack · ITER-0054 · dangerous-ack · AC1–AC8 覆盖统一 setup、双入口渲染/内容保护、MCV/upgrade/migration 接线、隔离回归矩阵、文档和 MILE 收口；每条有可执行或结构验证。Out 明确不自动 trust、不复制 plugin、不改规则算法、不做远端动作；managed marker 旧项目边界如实暴露。通过，自主冻结。
+- 2026-07-17 · P3-self-ack · ITER-0054 · dangerous-ack · T1–T5 映射 AC1–AC8；单 renderer、先规划后原子 replace、setup 有/无 Codex 分支三项契约清楚；影响面集中在安装/部署/升级适配层，不改 P1–P5/skill/hook rule，未命中扩张信号。通过，自主 ACK。
+- 2026-07-17 · rollback-anchor · ITER-0054 · P4 前锚点=v2.14.0 tag / `3907ea6`；后续产品改动按该 tag 定点对比，不执行破坏性 reset。
+- 2026-07-17 · P5-correction-1 · ITER-0054 · dangerous-ack · 完整审查发现 legacy CLAUDE 可能是“用户原文 + 旧 Butler 模板追加”，若整文件替换会删管理区外用户内容；修为定位旧模板 H1/版本签名，只替换旧 Butler 区，前后缀 byte 保留，并加测试。
+- 2026-07-17 · P5-correction-2 · ITER-0054 · dangerous-ack · 审查发现 mkstemp 默认 0600 会让 Markdown 入口权限退化；修为新文件 0644、旧文件继承 mode，并加机械断言。两项修正后全矩阵复跑通过。
+- 2026-07-17 · P5-review · ITER-0054 · dangerous-ack · 主代理完整多维强审（非独立）：AC1–AC8 全过，0 Must Fix；renderer 7 tests、隔离 setup 双分支、R1–R3 scripts、124 pytest、官方 plugin validator、compile/diff 全绿。边界保留跨文件极端故障与人工 hook trust。
+- 2026-07-17 · close · ITER-0054 · dangerous-ack · ITER 原子收口五步与 MILE 聚合收口完成：四件套+CHANGELOG、MILESTONE 快照、迭代/里程碑 md+html、双层台账 closed/current none、项目知识前滚、v2.15.0 发布材料就绪；发布后做 6 不变量/tag/plugin 终检。MILE-0006 北极星达成，危险模式退出，未 push/merge。

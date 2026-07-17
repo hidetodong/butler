@@ -1,19 +1,19 @@
 # 01_CHANGELOG
 
-> ITER-0053 · MILE-0006 R3 · Codex apply_patch hooks。
+> ITER-0054 · MILE-0006 R4/收官 · 双宿主部署升级链。
 
 ## ADD
 
-- `templates/hooks/lib/codex_patch.py` 与测试：解析 Codex patch 并逐 target 提供增删行（AC1）。
-- `plugins/butler/hooks/`：默认 Pre/Post 配置和风险对称 wrappers（AC6）。
-- `scripts/verify-codex-hooks.sh`、`migrations/v2.14.0.md`、ITER-0053 归档与交付（AC6/AC10）。
+- `scripts/render-project-entrypoints.py` + 7 tests：双入口渲染、内容保护、legacy 迁移与原子写（AC2/3）。
+- `scripts/verify-dual-host.sh`：隔离 setup/目标项目和 R1–R3 全矩阵（AC1/6）。
+- `migrations/v2.15.0.md`、ITER/MILE 双层交付与归档（AC8）。
 
 ## EDIT
 
-- `templates/hooks/{butler_gate,butler_advisor,lib/io}.py`：接入 apply_patch 多 target dispatch（AC2/AC4/AC5）。
-- `templates/hooks/rules/{ledger_status,single_active_iteration}.py`：读取 patch 增量（AC3/AC5）。
-- README、HUMAN_GUIDE、兼容说明、hook README：登记能力、trust 和不完整安全边界（AC9）。
-- `.ai/project/*` 与台账：前滚 R3 现状及 R4 战线（AC10）。
+- `scripts/setup.sh`：统一 Claude 安装与 Codex plugin 刷新（AC1）。
+- MCV/upgrade/migration schema：双入口首次部署、升级 typed 操作和回退（AC4/5）。
+- 两入口模板、README/HUMAN/兼容说明/Coder README：登记实际链路与边界（AC7）。
+- `.ai/project/*`、台账与里程碑：前滚 MILE-0006 完成态（AC8）。
 
 ## DELETE
 

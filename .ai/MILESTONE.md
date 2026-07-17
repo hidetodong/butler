@@ -43,7 +43,7 @@
 | R1 | **兼容地基**：双宿主边界、`AGENTS.md` 自动注入入口、`.ai/` 共同状态层与单一真源约束 | ITER-0051 | closed |
 | R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | ITER-0052 | closed |
 | R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | ITER-0053 | closed |
-| R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | — | planned |
+| R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | ITER-0054 | closed |
 
 ## 5.4 范围演进记录
 
@@ -54,3 +54,5 @@
 - 2026-07-17：R2 / ITER-0052 自治收口并发布 v2.13.0；个人 `butler@personal` 已真实安装，8 skills 可用。危险模式继续推进 R3。
 - 2026-07-17：危险模式自动开启 R3 / ITER-0053；以 plugin 默认 hooks 发现 + 共享 Python dispatcher 适配为主线，R4 边界不变。
 - 2026-07-17：R3 / ITER-0053 完整强审 0 Must Fix；124 tests 与真实 Codex phase/protected deny、allow、advisor 全通过，发布 v2.14.0。危险模式继续进入 R4。
+- 2026-07-17：危险模式自动开启 R4 / ITER-0054；统一全局 setup 与目标项目双入口部署/升级，完成回归矩阵后收 MILE-0006。
+- 2026-07-17：R4 / ITER-0054 完成统一 setup、双入口 renderer、MCV/upgrade/migration 接线与完整矩阵；P5 修正两项内容安全问题后 0 Must Fix。R1–R4 全 closed，MILE-0006 收口并发布 v2.15.0。

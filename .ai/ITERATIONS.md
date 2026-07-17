@@ -4,6 +4,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0054 | 双宿主部署升级收官（MILE-0006 R4·危险模式）：统一 setup 安装 Claude 命令与 Codex plugin；首次部署/既有升级共同生成并维护 CLAUDE.md + AGENTS.md；typed migrations 与隔离双端矩阵全绿，收口 MILE-0006 并发布 v2.15.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0054-dual-host-deployment-upgrade.md |
 | ITER-0053 | Codex hooks（MILE-0006 R3·危险模式）：共享 gate/advisor 接受 canonical `apply_patch` 并逐 target 复用现有规则；plugin 默认 hooks、124 tests、真实 Codex phase/protected deny + allow + advisor 验证通过；发布 v2.14.0，不提前做 R4 部署升级 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0053-codex-apply-patch-hooks.md |
 | ITER-0052 | Codex 工作流入口（MILE-0006 R2·危险模式）：`plugins/butler/` 交付 8 skills，`.agents/skills/` 软链共享真源；个人 marketplace 安装/刷新、官方 validators、隔离 HOME 幂等和真实 Codex 触发验证通过，高风险 skill 禁隐式；发布 v2.13.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0052-codex-workflow-plugin.md |
 | ITER-0051 | Codex 兼容地基（MILE-0006 R1）：增加仓根 `AGENTS.md` 原生发现、固定 `.ai/` 冷启动读序、目标项目 `AGENTS.md` 模板、双宿主架构说明和零依赖自检；真实 Codex 探测与 109 个 Claude hook 回归通过。明确 R2 skills/plugin、R3 hooks、R4 部署升级仍待续；按 MINOR 发布 v2.12.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0051-codex-compatibility-foundation.md |

@@ -70,12 +70,13 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 ./scripts/setup.sh
 ```
 
-它会自动完成四件事：
+它会自动完成五件事：
 
 1. 在 `~/.zshrc`（或 `~/.bashrc`）中写入 `BUTLER_PATH` 环境变量
 2. 在 `~/.claude/CLAUDE.md` 中写入全局配置，让 Claude Code 在所有项目中都能自动发现 butler
 3. 把 butler 的 slash 命令（`.claude/commands/butler/` 命名空间目录，如 `/butler:prd`）整个**软链**到 `~/.claude/commands/butler`，让它们在**所有项目**里都能用——不再只有编辑 butler 仓时才能敲。用软链而非拷贝：butler 仓一加/改命令，全局立即生效、无需重装
 4. 在 `~/.claude/CLAUDE.md` 的全局配置里 `@import` 一行**沟通风格正本**（`communication-style.md`），规定 AI 该怎么跟你说话（语气、详略、说人话）。它跟着 butler 仓走、每个会话常开、跨机器同步；想调说话风格，改这个文件即可
+5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（8 个 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
 
 执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用，AI 也按你的沟通风格说话。
 
@@ -83,16 +84,15 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.14.0 已补齐 **Codex 工作流入口和 `apply_patch` hooks**：`plugins/butler/` 内含 8 个 skills，仓内 `.agents/skills/` 直接发现同一份内容；plugin 默认发现 PreToolUse 门禁与 PostToolUse 提醒。确认 `BUTLER_PATH` 指向 Butler 仓后，运行 `bash scripts/install-codex-plugin.sh` 安装或刷新，并在首次启用时审阅、信任 hook；安装后新开 Codex 会话。
+v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 包含 8 个 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
 
-当前不要把它理解成“Codex 已全面兼容”：
+兼容边界：
 
 - 8 个入口已完成：`$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop`、`$butler-dangerous`。后两个高风险入口只允许显式调用。
 - hooks 只覆盖运行时实际报告的 `apply_patch`/兼容编辑事件；PreToolUse 不是 sandbox，也不能保证拦住 shell、MCP 或未来新增的所有写路径。
 - `BUTLER_PATH` 缺失时 PreToolUse 门禁会 fail-closed；PostToolUse 提醒会 fail-open。若出现门禁不可用，先修正环境变量，不要用永久 trust/bypass 掩盖配置问题。
-- 新项目自动生成 `CLAUDE.md` + `AGENTS.md`、既有项目升级和双端回归，属于 R4。
 
-共同内核、两端适配层和实时支持矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。现有 `./scripts/setup.sh` 仍是 Claude Code 安装器；R4 前，Codex plugin 使用独立的 `scripts/install-codex-plugin.sh`，不会自动为目标项目完成双入口部署。
+共同内核、两端适配层和验证矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。需要只刷新 plugin 时仍可单独运行 `scripts/install-codex-plugin.sh`。
 
 ## 4. 接入新项目
 
@@ -109,7 +109,7 @@ AI 会自动走完整个链路：
 3. 检测到当前项目没有 `.ai/` 目录 → 识别为新项目接入 → 自动触发基地车部署
 4. 部署完成后，按 P1-P5 流程推进你的任务
 
-部署完成后，项目根目录会生成 CLAUDE.md（内联浓缩规则卡 + 完整规则指针）。后续会话 AI 直接从项目 CLAUDE.md 读取规则，**全局配置不再参与**。
+部署完成后，项目根目录会同时生成 CLAUDE.md 与 AGENTS.md（同一浓缩规则卡 + 各宿主完整指针）。后续会话从对应入口读取规则，`.ai/` 状态由两端共享，**全局配置不再参与项目规则注入**。
 
 你也可以显式说"部署基地车"来手动触发部署，效果一样。
 
@@ -117,6 +117,8 @@ AI 会自动走完整个链路：
 
 ```
 你的项目/
+├── CLAUDE.md               # Claude Code 入口（Butler 管理区 + 用户保护区）
+├── AGENTS.md               # Codex 入口（同一规则卡 + Codex 冷启动读序）
 ├── .ai/
 │   ├── CONCEPT.md          # P1 产物 = 当前迭代工作区
 │   ├── AC_LIST.md           # P2 产物 = 当前迭代工作区
@@ -149,7 +151,7 @@ Butler 规则仓库本身有**硬版本号**，遵循语义化版本 `MAJOR.MINO
 
 - **在哪看**：仓库根 `VERSION`（机器真源，单行版本号）、`CHANGELOG.md`（人读发布史，按版本聚合迭代）、git tag `vX.Y.Z`（每次发布的锚点）。
 - **三级含义**：MAJOR = 破坏性变更（文件重命名/删除、契约或命令语义不兼容，升级可能要手工迁移）；MINOR = 向后兼容的能力新增（新 schema/命令/模式）；PATCH = 措辞澄清与不改行为的修订。
-- **部署会留下版本戳**：接入项目时生成的 `CLAUDE.md` 顶部会标注"规则源：butler vX.Y.Z"，记录这个项目是基于哪一版 butler 规则生成的。
+- **部署会留下版本戳**：CLAUDE.md 与 AGENTS.md 顶部都会标注"规则源：butler vX.Y.Z"；升级会先对账两者，再共同重戳。
 - **升级会报版本差**：输 `/butler:upgrade` 时，AI 会对比项目里的版本戳与当前 butler 版本、告诉你差了几个版本，升级后把版本戳更新到最新。注意**判断要不要升级以文件内容差异为准**，版本号只是辅助路标（你的项目文件可能已被手工改过）。
 
 ## 5. 扩展模式

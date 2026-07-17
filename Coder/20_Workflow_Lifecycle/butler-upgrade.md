@@ -8,7 +8,7 @@ scope: 已部署 butler 的项目升级到当前 butler 仓库最新版的流程
 
 ## 1. 目标
 
-当 butler 仓库本身发生显著演进（模板重构、schema 新增、文件重命名等）后，已部署的目标项目需要把自己的 `CLAUDE.md` 与 `.ai/` 结构同步到最新版本，同时保护项目特有内容不被覆盖。
+当 butler 仓库本身发生显著演进（模板重构、schema 新增、文件重命名等）后，已部署的目标项目需要把自己的 `CLAUDE.md`、`AGENTS.md` 与 `.ai/` 结构同步到最新版本，同时保护项目特有内容不被覆盖。
 
 本规则定义升级的触发条件、侦察动作、执行步骤与验证口径。与 `mcv-deployment.md`（初次部署）和 `mcv-update.md`（`.ai/` 内部维护）并列，构成基地车的生命周期三阶段。
 
@@ -27,10 +27,11 @@ scope: 已部署 butler 的项目升级到当前 butler 仓库最新版的流程
 
 AI 必须依次完成以下动作并简要汇报：
 
-1. 读取目标项目根目录 `CLAUDE.md`，判断是否含 `<!-- user-managed -->` 保护区标记：
-   - **有标记**（新契约项目）：进入 § 5 常规升级。
-   - **无标记**（老项目）：进入 § 4 首次升级。
-   - **标记格式异常**（如 `<!--user-managed-->` 无空格、或标记被部分破坏）：AI 应容错识别（忽略空白 / 大小写），但若完全无法识别，退化为 § 4 首次升级。
+1. 读取目标项目根目录 `CLAUDE.md` 与 `AGENTS.md`，判断 Butler 管理区 / 保护区状态：
+   - **两份都有一对 `butler-managed` 与 `user-managed` 标记**（双入口新契约项目）：进入 §5 常规升级。
+   - **只有 CLAUDE.md 的旧 `user-managed` 标记，或缺 AGENTS.md**（老项目）：进入 §4 首次双入口升级；旧版 Butler 入口按版本签名识别并迁入新管理区，独立用户文件则保守追加。
+   - **两份都无标记**（更老项目）：进入 §4 首次升级。
+   - **标记格式异常**（空白/大小写不符、重复或部分破坏）：严格视为漂移，fail-closed，停下报告；不得模糊识别后覆盖。
 
 2. 扫描 `.ai/` 目录结构：
    - 识别命名过时的文件（例如旧 `SESSION_HANDOFF.md` 无前缀，当前规范为 `02_SESSION_HANDOFF.md`）。
@@ -38,11 +39,11 @@ AI 必须依次完成以下动作并简要汇报：
    - 识别 butler 仓当前存在但项目未有的 schema 或产物位置。
 
 3. 读取当前 butler 仓库的最新状态：
-   - `$BUTLER_PATH/templates/CLAUDE.md.template`
+   - `$BUTLER_PATH/templates/CLAUDE.md.template` 与 `AGENTS.md.template`
    - `$BUTLER_PATH/templates/rule-card.md`
    - `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/` 下相关 schema
 
-4. **计算版本 gap**：读取目标 `CLAUDE.md` 中的 `butler v…` 版本戳与 `$BUTLER_PATH/VERSION`，比较并汇报版本差（如 "v1.0.0 → v1.2.0"）。目标无版本戳=视为前版本化项目（早于版本概念引入），按 § 4 首次升级路径处理。版本 gap 仅作辅助提示，是否升级仍以文件内容差异为准绳（见 `versioning-schema.md §8`）。
+4. **计算版本 gap**：读取两入口的 `butler v…` 版本戳并先对账；二者不一致视为漂移、停下报告。再与 `$BUTLER_PATH/VERSION` 比较并汇报版本差。目标无版本戳=前版本化项目，按 §4 处理。
 
 5. **收集迁移配方**：取 `$BUTLER_PATH/migrations/` 下所有满足"目标戳 < vV ≤ 仓库 `VERSION`"的 `vV.md`，按版本号升序排成执行队列（格式见 `migration-schema.md`）。目标无版本戳=无配方链起点，转 §4 全量首次升级。
 
@@ -50,35 +51,35 @@ AI 必须依次完成以下动作并简要汇报：
 
 ## 4. 首次升级（老项目，无保护区标记）
 
-老项目的 `CLAUDE.md` 没有保护区标记。首次升级按以下流程：
+老项目缺双入口管理区契约。首次升级按以下流程：
 
 1. **备份旧文件**：
-   - `cp CLAUDE.md CLAUDE.md.backup-YYYYMMDD`
+   - CLAUDE.md 存在时 `cp CLAUDE.md CLAUDE.md.backup-YYYYMMDD`；AGENTS.md 存在时同样备份为 `AGENTS.md.backup-YYYYMMDD`
    - 备份 `.ai/` 下将被重命名的文件到 `.ai/backup-YYYYMMDD/`
-2. **生成新版草稿**：按最新 `templates/CLAUDE.md.template` + `rule-card.md` 构造新 CLAUDE.md 骨架（含 `<!-- user-managed -->` 保护区），并把 `{{BUTLER_VERSION}}` 戳为 `$BUTLER_PATH/VERSION` 当前版本（老项目原无版本戳，此为首次戳入），但不直接写入文件。
-3. **对比差异**：将旧 CLAUDE.md 与新草稿逐段对比，分类：
+2. **生成新版草稿**：调用 `scripts/render-project-entrypoints.py` 的 plan 契约，按两模板 + rule-card 构造 CLAUDE.md/AGENTS.md 草稿并戳当前版本，但不先写文件。
+3. **对比差异**：将两份旧入口（存在者）与对应新草稿逐段对比，分类：
    - 自动可迁移：旧文件中的 butler 区内容（会被新版替换，用户无需关心）。
    - 需 ACK 的段落：旧文件中 butler 不认识的内容，判定为用户加的。
 4. **交互 ACK**：对每个需 ACK 的段落，AI 向用户提问："这段内容 butler 不识别，建议移入新文件的 `<!-- user-managed -->` 保护区。接受 / 拒绝 / 修改？"
-5. **写入新文件**：用户 ACK 后写入新 `CLAUDE.md`。备份文件保留。
+5. **写入新文件**：用户 ACK 后运行统一渲染器写入两入口；已有无 marker 内容保留并追加管理区。备份文件保留。
 6. **继续处理 `.ai/`**：进入 § 6 `.ai/` 结构升级。
 
-本次升级完成后，新 `CLAUDE.md` 自带保护区标记**并戳入当前版本号**，于是有了配方链起点；下次升级自动走 §5 配方队列路径。
+本次升级完成后，两入口都有外层管理区、保护区和当前版本号，于是有了配方链起点；下次升级自动走 §5。
 
 ## 5. 常规升级（有保护区标记 + 有版本戳：执行迁移配方队列）
 
-目标 `CLAUDE.md` 含 `<!-- user-managed -->` 保护区标记、且有版本戳时，按 §3 收集的配方队列**按序逐条执行**。每步按其 typed 标签（定义见 `migration-schema.md §4`）落地，全部幂等、先校验起始态：
+目标双入口含合法管理区、保护区与一致版本戳时，按 §3 收集的配方队列**按序逐条执行**。每步按其 typed 标签（定义见 `migration-schema.md §4`）落地，全部幂等、先校验起始态：
 
 1. **逐版逐步执行**：对队列中每个 `migrations/vV.md`，按其 `## 迁移步骤` 顺序处理标签：
-   - `[regen-claude]`：提取目标 user-managed 区暂存 → 按最新 `templates/CLAUDE.md.template` + `rule-card.md` 重建 butler 管理区骨架 → 原样填回 user-managed 区。
-   - `[rename]`：见 §6.1。`[add-field]`：见 §6.2。`[sync-hooks]`：见 §6.4。`[split]`：见 §6.5。
+   - `[regen-entrypoints]`：调用统一渲染器重建两入口管理区，各自 user-managed 区原样保留。历史 `[regen-claude]` 也按同一动作执行，使升级队列顺带补齐 AGENTS.md。
+   - `[rename]`：见 §6.1。`[add-field]`：见 §6.2。`[sync-hooks]`：见 §6.4。`[split]`：见 §6.5。`[global-install]`：在 Butler 仓运行 `scripts/setup.sh` 补齐机器级 Claude/Codex 能力。
    - `[restamp]`：把 `{{BUTLER_VERSION}}` 戳重戳为该步目标版本。
    - `[no-op]`：本版无结构影响，跳到 restamp。
 
-   > 步骤性质分两类：**机械步**（`[regen-claude]` / `[rename]` / `[add-field]` / `[sync-hooks]` / `[restamp]`）起始态符合即静默自动落地；**结构迁移步 `[split]`** 是哲学级形态迁移（单文件 → 知识文件夹），**opt-in、非自动**——执行器碰到它时先问用户迁不迁，见 §6.5。两类都幂等、都先校验起始态。
+   > 步骤性质分两类：**机械步**（`[regen-entrypoints]` / 历史 `[regen-claude]` / `[global-install]` / `[rename]` / `[add-field]` / `[sync-hooks]` / `[restamp]`）起始态符合即静默自动落地；**结构迁移步 `[split]`** opt-in、非自动，见 §6.5。
 2. **起始态校验与冲突**：每步执行前校验起始态是否符合配方预期。**符合**才动；**不符合**（目标已手工漂移）则停下、报告差异、退回用户 ACK，**不**强行套用（守 `versioning-schema.md §8`"内容差异为主"）。
 3. **呈报升级清单给用户**：版本 gap（旧戳 → 仓库当前版本）、队列覆盖的配方版本、每版关键步骤；user-managed 区原样保留、无变化。
-4. **用户 ACK 后写入**：写 `CLAUDE.md` 及改动的 `.ai/` / `.claude/hooks/`；末尾 `[restamp]` 到仓库当前 `VERSION`。
+4. **用户 ACK 后写入**：写两入口及改动的 `.ai/` / `.claude/hooks/`；末尾 `[restamp]` 到仓库当前 `VERSION`。
 
 配方步骤里 `.ai/` 与 `.claude/hooks/` 的具体落地动作见 §6——`[rename]` / `[add-field]` / `[sync-hooks]` 即调用其中对应小节。
 
@@ -124,7 +125,7 @@ AI 必须依次完成以下动作并简要汇报：
 
 - **性质：opt-in、非自动**。与其它机械步不同，`[split]` 是形态迁移（薄索引 → 知识文件夹），执行器**不静默自动拆**，而是先向用户呈一个选择：
   - **现在迁**：执行下面的拆分动作。
-  - **继续单文件、以后再迁**：**跳过本步**，`.ai/PROJECT.md` 原样保留、单文件分支继续受支持（冷启动第一读 / 收口前滚 / 第 6 漂移不变量都有单文件回退，见 `context-persistence.md §6`）；其余机械步（`[regen-claude]` / `[restamp]`）照常执行。这与"两态并存、不强制立即迁"（`project-digest-schema.md §9`、`migrations/v2.0.0.md`）对齐。
+  - **继续单文件、以后再迁**：**跳过本步**，`.ai/PROJECT.md` 原样保留、单文件分支继续受支持（冷启动第一读 / 收口前滚 / 第 6 漂移不变量都有单文件回退，见 `context-persistence.md §6`）；其余机械步（`[regen-entrypoints]` / 历史 `[regen-claude]` / `[restamp]`）照常执行。这与"两态并存、不强制立即迁"（`project-digest-schema.md §9`、`migrations/v2.0.0.md`）对齐。
 - **起始态校验（符合才动）**：旧 `.ai/PROJECT.md` 存在**且** `.ai/project/00_INDEX.md` 尚未成形。二者不满足则本步无操作（已迁过则幂等跳过；无单文件可拆的更老项目走 `mcv-deployment.md §2` 空种子 + 首次收口生成路径，不在本步）。
 - **拆分动作**（用户选"现在迁"后）：按 `project-digest-schema.md §3` 主题集，把单文件内容路由进 `00_INDEX.md`（入口三块）+ 各主题文件（`identity` / `architecture` / `capabilities` / `invariants` / `constraints` / `debt` / `frontier`，项目暂无内容的主题不建）。拆出的新文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠本次 commit 说明追溯）；删除旧 `.ai/PROJECT.md`。
 - **冲突即停**：判据与冲突处理**同 `migration-schema.md §4`**（＝ §5 步骤 2 的漂移即停纪律）——目标文件夹已部分成形、或旧单文件被手工改得与预期不符（目标项目漂移），则**不覆盖**、停下报差异、退回用户 ACK，**绝不把用户手写内容拆丢**。
@@ -134,8 +135,8 @@ AI 必须依次完成以下动作并简要汇报：
 
 升级完成后，AI 应回顾并向用户报告：
 
-- `CLAUDE.md` 含 `<!-- user-managed -->` / `<!-- /user-managed -->` 保护区标记完整；用户区内容逐字保留。
-- `CLAUDE.md` 版本戳已更新到当前 butler 版本（与 `$BUTLER_PATH/VERSION` 一致）。
+- `CLAUDE.md` 与 `AGENTS.md` 各含且仅含一对 Butler 外层管理区和 user-managed 保护区；两份用户区各自逐字保留。
+- 两入口版本戳相同，均已更新到当前 butler 版本；全部模板占位符已消失。
 - `.ai/` 下无过时命名的文件。
 - `local-constraints.md` 必填字段齐全（按最新 schema）。
 - 配方队列每一版均已应用（无遗漏、无因漂移而中途搁置未报告的步骤）。
@@ -144,7 +145,7 @@ AI 必须依次完成以下动作并简要汇报：
 
 如果用户对升级结果不满意，回退路径：
 
-- **`CLAUDE.md`**：从备份恢复 `cp CLAUDE.md.backup-YYYYMMDD CLAUDE.md`。
+- **两入口**：分别从 `CLAUDE.md.backup-YYYYMMDD` / `AGENTS.md.backup-YYYYMMDD` 恢复；原先不存在的 AGENTS.md 可删除本次新文件。
 - **`.ai/` 重命名**：若已 git commit，用 `git revert` 或 `git reset` 回滚；若未 commit，从备份目录 `cp -r .ai/backup-YYYYMMDD/* .ai/` 恢复。
 - **schema 补齐**：直接删除新增字段即可（无破坏性副作用）。
 

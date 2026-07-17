@@ -32,9 +32,9 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 | R1 / ITER-0051 | Butler 仓根 `AGENTS.md` 自动发现、`.ai/` 冷启动读序、目标项目模板与兼容架构 | v2.12.0 已交付 |
 | R2 / ITER-0052 | 8 个 Butler 工作流迁为 Codex skills，并打包成可安装 plugin | v2.13.0 已交付 |
 | R3 / ITER-0053 | Codex PreToolUse/PostToolUse plugin hooks、`apply_patch` 输入适配、拒绝与提醒端到端验证 | v2.14.0 已交付 |
-| R4 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | 计划中 |
+| R4 / ITER-0054 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | v2.15.0 已交付 |
 
-因此，v2.14.0 可以说“Codex 能原生发现 Butler 仓库规则、通过 plugin 使用 8 个工作流入口，并对 apply_patch 运行 Butler 门禁与提醒”，仍不能说“Butler 已在 Codex 中全面兼容”。目标项目自动生成双入口和既有部署升级仍要等 R4。
+至 v2.15.0，MILE-0006 的安装、规则发现、8 个工作流、apply_patch hooks、目标项目双入口与升级链已经闭环。这里的“兼容”是工作流兼容，不是不可绕过的安全边界；未观测的 shell/MCP 写路径不在保护声明内。
 
 ## 4. Codex 原生入口
 
@@ -54,6 +54,8 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。
+- 统一安装：`bash scripts/setup.sh`；保留 Claude 全局配置/命令/风格，同时在 Codex CLI 可用时调用上面的 plugin 安装器。
+- 项目部署/升级：`scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md；管理区外原文与两份 user-managed 区各自保留。
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 
@@ -84,6 +86,7 @@ Butler 的流程规则不能覆盖 Codex 自身的 sandbox、审批、hook trust
 bash scripts/verify-codex-foundation.sh
 bash scripts/verify-codex-workflows.sh
 bash scripts/verify-codex-hooks.sh
+bash scripts/verify-dual-host.sh
 ```
 
 修改共享 hook 判断模块时，还要运行：

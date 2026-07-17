@@ -5,6 +5,7 @@ set -euo pipefail
 # 运行后，所有 AI 工具会话都能自动发现 butler 规则仓库
 
 BUTLER_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+export BUTLER_PATH="$BUTLER_DIR"
 
 echo "Butler 路径: $BUTLER_DIR"
 echo ""
@@ -105,6 +106,22 @@ else
   echo "[跳过] $BUTLER_CMD_NS 不存在，无 slash 命令可安装"
 fi
 
+# --- 4. Codex plugin（机器级；首次 hook trust 仍由用户审阅） ---
+
+CODEX_COMMAND="${BUTLER_CODEX_COMMAND:-codex}"
+CODEX_INSTALLER="${BUTLER_CODEX_INSTALLER:-$BUTLER_DIR/scripts/install-codex-plugin.sh}"
+if command -v "$CODEX_COMMAND" >/dev/null 2>&1; then
+  if [[ -x "$CODEX_INSTALLER" ]]; then
+    "$CODEX_INSTALLER"
+    echo "[安装] Codex Butler plugin 已安装/刷新（请新开会话；首次 hook 启用须审阅并信任）"
+  else
+    echo "[错误] Codex installer 不可执行：$CODEX_INSTALLER" >&2
+    exit 1
+  fi
+else
+  echo "[跳过] 未找到 Codex CLI；Claude Code 安装已完成。安装 Codex 后重跑 setup.sh 即可补装 plugin。"
+fi
+
 echo ""
 echo "安装完成。请重启终端（或 source ${SHELL_RC}）使环境变量生效。"
 echo ""
@@ -112,6 +129,7 @@ echo "使用方式："
 echo "  在任何项目中启动 AI 会话，直接给工程任务即可。"
 echo "  AI 会自动从入口文件读取规则，新项目会自动触发基地车部署。"
 echo "  slash 命令（如 /butler:prd）已全局安装，在所有项目里都能用。"
+echo "  检测到 Codex CLI 时，Butler plugin 也会安装/刷新；新会话首次启用 hook 请审阅并信任。"
 echo ""
 echo "可选（实验性）：偏好探针 /preference 默认关、数据外置。"
 echo "  如需启用，运行一次：./scripts/preference-init.sh"

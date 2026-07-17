@@ -2,7 +2,7 @@
 
 <!--
   本文件是 AI 部署基地车时生成 CLAUDE.md 的参考模板。
-  正常流程下由 AI 在 mcv-deployment.md § 3 规则注入步骤中自动生成：
+  正常流程下由 scripts/render-project-entrypoints.py 在 mcv-deployment.md §3 中与 AGENTS.md 一起生成：
   - 用 templates/rule-card.md 中 ## 角色 起的章节内容替换下方的规则卡占位符
   - 用实际路径替换深度阅读指针中的 butler 路径占位符
   - 用 butler 仓库根 VERSION 文件的内容替换规则源版本占位符（见 versioning-schema.md § 6）
