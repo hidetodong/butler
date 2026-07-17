@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.12.0] - 2026-07-17
+
+向后兼容的能力新增版，聚合 ITER-0051（MILE-0006 R1）。Butler 仓根新增 Codex 原生 `AGENTS.md`，让 Codex 能自动发现这是规则仓、按固定顺序恢复共同 `.ai/` 状态，再按指针读取 `Coder/` 真源；同时新增未来目标项目使用的 `templates/AGENTS.md.template`、双宿主架构说明和零依赖结构自检脚本。
+
+本版只叫“Codex 兼容地基”，不宣称全面兼容：8 个 skills/plugin 留给 R2，Codex hooks 与 `apply_patch` 输入适配留给 R3，目标项目首次部署与升级时自动生成双入口留给 R4。Claude Code 的入口、命令、hooks、setup 与 Python 规则算法没有行为变化，既有 109 个 hook 测试全部通过。
+
+对已部署项目为 `[no-op]` + `[restamp]`：不自动新增 `AGENTS.md`，只需按现有版本戳机制更新到 v2.12.0；详见 `migrations/v2.12.0.md`。交付见 `deliveries/ITER-0051-codex-compatibility-foundation.md`。
+
 ## [2.11.0] - 2026-07-16
 
 能力增量版，给「说人话」硬标准加了第四条，从三条变四条。
