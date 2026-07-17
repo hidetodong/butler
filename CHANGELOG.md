@@ -4,6 +4,14 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.15.0] - 2026-07-17
+
+向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0054（MILE-0006 R4/收官）。`scripts/setup.sh` 现在统一安装两宿主：保留 Claude 全局配置、命令和沟通风格，在 Codex CLI 可用时同时安装/刷新个人 Butler plugin；无 Codex 时明确跳过，不破坏 Claude 安装。
+
+新增标准库 `render-project-entrypoints.py`，从 CLAUDE/AGENTS 两模板和单一 rule-card 幂等生成或升级目标项目双入口。外层 Butler 管理区、各自 user-managed 内容、管理区外用户前后缀和文件权限都有确定保护；marker 异常 fail-closed。MCV 首次部署、butler-upgrade 和 migration schema 共用该工具，并新增 `[regen-entrypoints]` / `[global-install]` typed 操作，历史 `[regen-claude]` 升级为双入口兼容动作。
+
+隔离回归覆盖 renderer 7 场景、setup 有/无 Codex 两分支、R1–R3 scripts、124 hook tests 与官方 plugin validator。至此 MILE-0006 的规则发现、8 skills、apply_patch hooks、统一安装和双入口部署升级全部闭环。边界不变：hook trust 仍由用户完成，PreToolUse 不是 sandbox。升级见 `migrations/v2.15.0.md`，迭代交付见 `deliveries/ITER-0054-dual-host-deployment-upgrade.md`，里程碑交付见 `deliveries/milestones/MILE-0006-codex-dual-host-compatibility.md`。
+
 ## [2.14.0] - 2026-07-17
 
 向后兼容的能力新增版，聚合危险模式自治完成的 ITER-0053（MILE-0006 R3）。Butler 共享 hook dispatcher 新增 canonical `apply_patch` 输入适配：支持 add/update/delete/move、多文件和多 hunk，逐 target 复用现有 PreToolUse 门禁与 PostToolUse 提醒；ledger 的非法状态、双 active 和同 patch 关旧开新也能按 patch 增量判断。
