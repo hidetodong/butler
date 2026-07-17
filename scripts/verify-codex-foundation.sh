@@ -6,6 +6,7 @@ AGENTS="$ROOT/AGENTS.md"
 CODEX_TEMPLATE="$ROOT/templates/AGENTS.md.template"
 CLAUDE_TEMPLATE="$ROOT/templates/CLAUDE.md.template"
 ARCH_DOC="$ROOT/docs/codex-compatibility.md"
+ROOT_RESOLVER="$ROOT/scripts/resolve-project-root.py"
 
 fail() {
   echo "[FAIL] $1" >&2
@@ -28,6 +29,8 @@ require_file "$AGENTS"
 require_file "$CODEX_TEMPLATE"
 require_file "$CLAUDE_TEMPLATE"
 require_file "$ARCH_DOC"
+require_file "$ROOT_RESOLVER"
+[[ -x "$ROOT_RESOLVER" ]] || fail "scripts/resolve-project-root.py 不可执行"
 
 for text in \
   "这是一个 Markdown 规则仓库" \
@@ -89,5 +92,9 @@ done
 for text in '共同内核' 'Claude Code 适配层' 'Codex 适配层' 'R1 / ITER-0051' 'R2' 'R3' 'R4' 'apply_patch'; do
   require_text "$ARCH_DOC" "$text"
 done
+
+require_text "$ROOT/templates/rule-card.md" '会话启动目录不等于项目根'
+require_text "$ROOT/Coder/20_Workflow_Lifecycle/mcv-deployment.md" 'resolve-project-root.py'
+require_text "$ARCH_DOC" 'resolve-project-root.py'
 
 echo "[OK] Codex R1 地基结构检查通过"

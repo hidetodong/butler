@@ -31,7 +31,9 @@ for name in "${names[@]}"; do
   [[ "$(readlink "$link")" == "../../plugins/butler/skills/$skill" ]] || fail "fallback must be a relative canonical link: $link"
   require_text "$skill_root/SKILL.md" "name: $skill"
   require_text "$skill_root/SKILL.md" 'BUTLER_PATH'
+  require_text "$skill_root/SKILL.md" 'mcv-deployment.md §0.1'
   require_text "$skill_root/agents/openai.yaml" "\$$skill"
+  require_text "$repo_root/.claude/commands/butler/$name.md" 'mcv-deployment.md §0.1'
 done
 
 for name in loop dangerous; do

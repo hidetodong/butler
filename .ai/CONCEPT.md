@@ -1,30 +1,30 @@
-# CONCEPT — ITER-0054 · 双宿主部署升级收官
+# CONCEPT — ITER-0055 · 基地车展开边界加固
 
-> ⚠️ 危险模式：本迭代由模型自治推进；P2/P3 经强制自审门后自主 ACK。
+> 分流: 完整 | 命中升级信号: 关键路径、跨模块影响 | 2026-07-17
 
 ## 一句话目标
 
-把已经分别可用的 Claude 与 Codex 能力接进同一条安装、首次部署和既有升级链，并用隔离回归证明用户内容不会被覆盖。
+基地车只能在本次任务实际对应的项目根展开；会话从哪里启动，不能单独决定台账落点。
 
 ## 问题
 
-R1–R3 已分别交付发现入口、8 skills/plugin 和 apply_patch hooks，但用户仍要手动串两套安装步骤，目标项目首次部署只生成 CLAUDE.md，升级协议也只维护 CLAUDE.md。能力已经存在，最后的缺口是“能稳定装上、能生成双入口、以后能安全更新”。
+本次任务明确指向 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`，但会话启动目录是 `/Users/cyborgno2/Documents/research`。R1 开局时曾在 `research/.ai/iterations/ITER-0051` 展开空台账目录，之后才把正式产物写回 Butler 仓。这说明现行部署协议中的 `$(pwd)` 过度承担了“目标项目根”的语义；在包含多个仓库的聚合目录下，这个假设不成立。
 
 ## 目标
 
-- G1：`setup.sh` 保留 Claude 安装行为，同时检测 Codex CLI 并安装/刷新 Butler plugin；无 Codex 时明确跳过、不破坏 Claude 安装。
-- G2：提供单一渲染器，从同一 rule-card/template 生成或更新 CLAUDE.md 与 AGENTS.md，保留 user-managed 内容和既有非 Butler 内容。
-- G3：MCV 首次部署与 butler-upgrade 都调用同一渲染契约，migration schema 能表达双入口重生成与全局 plugin 刷新。
-- G4：隔离 HOME 与隔离目标项目覆盖首次生成、重复执行、老文件追加、用户区保真、版本重戳、Claude hooks 与 Codex plugin 结构回归。
-- G5：更新使用说明、兼容矩阵、迁移配方并收口 MILE-0006。
+- G1：在任何 `.ai/`、`deliveries/`、`origin/` 或宿主入口写入前，先解析并回声唯一的“施工项目根”。
+- G2：用户在任务中点名的仓库/路径优先于会话 `cwd`；`cwd` 只是启动位置，不是自动授权的部署目标。
+- G3：未点名路径时，只有当当前位置能通过版本库根或已有项目标记唯一证明时才允许展开；聚合目录、多候选或无证据时必须停下询问。
+- G4：把这条边界写进 MCV 真源、浓缩规则卡与必要的宿主路由说明，并用自动化场景证明“跨 cwd 施工”和“歧义即不写”。
+- G5：清理本次在 `research` 根误展开的空目录，不删除任何用户文件。
 
 ## 非目标
 
-- 不自动替用户确认 hook trust，不绕过 Codex sandbox/审批。
-- 不把 plugin 文件复制进每个目标项目；plugin 仍是机器级分发，AGENTS.md 与 `.ai/` 才随项目走。
-- 不重写 P1–P5、skills 或 hook 判定算法。
-- 不推远端、不合 main、不发布公共 marketplace。
+- 不把“必须是 Git 仓库”当成新项目的硬门槛；用户明确点名的新目录仍可部署。
+- 不搬迁或改写 `research` 下各个独立项目已有的 `.ai/`。
+- 不重写 P1–P5、台账 schema 或 hook 门禁算法。
+- 不推送、不合并、不自动发布公共 marketplace。
 
 ## 方案取舍
 
-选“标准库渲染器 + 协议共同调用”，避免让 MCV 与 upgrade 各自手工拼两份入口。代价是新增一个小型维护脚本和 managed markers；收益是双入口可幂等验证，用户区保护从文字纪律升级为确定性工具行为。
+选“显式目标优先 + 可证明根目录兜底 + 歧义 fail-closed”。代价是在无法唯一定位时多一次询问；收益是不会为了省一步，把整套台账写进用户的多仓父目录。

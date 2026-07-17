@@ -6,7 +6,8 @@ description: Review code, documents, plans, or current changes with Butler's rev
 # Butler Review
 
 1. Resolve `BUTLER_PATH`; require `Coder/README.md`, otherwise stop with setup guidance.
-2. Read `${BUTLER_PATH}/Coder/60_Extension_CodeReview/review-engine.md` and follow its scope, severity, and reporting contract.
-3. For an independent review request, also read `Coder/62_Extension_Agents/overview.md` and `independent-review.md`. Use a fresh reviewer only when the current environment and user authorization allow it; otherwise disclose that the review is not independent.
-4. Use the current project's frozen `.ai/AC_LIST.md` when present. Do not edit implementation files unless the user also asks for fixes.
-5. Return findings first, ordered by severity, with precise paths and evidence.
+2. Resolve the review `PROJECT_ROOT` through `Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1`; cwd alone is not review scope.
+3. Read `${BUTLER_PATH}/Coder/60_Extension_CodeReview/review-engine.md` and follow its scope, severity, and reporting contract.
+4. For an independent review request, also read `Coder/62_Extension_Agents/overview.md` and `independent-review.md`. Use a fresh reviewer only when the current environment and user authorization allow it; otherwise disclose that the review is not independent.
+5. Use `PROJECT_ROOT/.ai/AC_LIST.md` when present. Do not edit implementation files unless the user also asks for fixes.
+6. Return findings first, ordered by severity, with precise paths and evidence.

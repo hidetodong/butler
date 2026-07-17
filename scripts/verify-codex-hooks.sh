@@ -24,6 +24,7 @@ PY
 [ -x "$ADVISOR" ]
 
 mkdir -p "$WORK/.ai" "$WORK/src"
+git init -q "$WORK"
 printf '%s\n' concept > "$WORK/.ai/CONCEPT.md"
 printf '%s\n' plan > "$WORK/.ai/TECH_PLAN.md"
 printf '%s\n' '---' '状态: ack-frozen' '---' > "$WORK/.ai/AC_LIST.md"
@@ -46,6 +47,28 @@ MILESTONE='*** Begin Patch
 *** End Patch'
 
 payload "$ALLOW" | BUTLER_PATH="$ROOT" "$GATE"
+
+# 会话从多仓父目录启动时，绝对 target 按实际 Git 项目根校验；
+# 反过来，父目录下的相对写入不得被当成项目写入。
+SESSION_ROOT=$(dirname "$WORK")
+ABSOLUTE_ALLOW="*** Begin Patch
+*** Add File: $WORK/src/absolute-allowed.py
++allowed = True
+*** End Patch"
+python3 -c 'import json,sys; print(json.dumps({"tool_name":"apply_patch","cwd":sys.argv[1],"tool_input":{"command":sys.argv[2]}}))' \
+  "$SESSION_ROOT" "$ABSOLUTE_ALLOW" | BUTLER_PATH="$ROOT" "$GATE"
+
+RELATIVE_PARENT='*** Begin Patch
+*** Add File: .ai/ITERATIONS.md
++wrong root
+*** End Patch'
+set +e
+python3 -c 'import json,sys; print(json.dumps({"tool_name":"apply_patch","cwd":sys.argv[1],"tool_input":{"command":sys.argv[2]}}))' \
+  "$SESSION_ROOT" "$RELATIVE_PARENT" | BUTLER_PATH="$ROOT" "$GATE" >/dev/null 2>&1
+PARENT_RC=$?
+set -e
+[ "$PARENT_RC" -eq 2 ]
+[ ! -e "$SESSION_ROOT/.ai/ITERATIONS.md" ]
 
 set +e
 DENY_ERR=$(payload "$DENY" | BUTLER_PATH="$ROOT" "$GATE" 2>&1)

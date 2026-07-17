@@ -1,33 +1,43 @@
 ---
 状态: ack-frozen
 ACK 日期: 2026-07-17
-ACK 方式: dangerous-self-review
 ---
-
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 dangerous-engine §5.1 自审门），未经用户逐项确认（ITER-0054，2026-07-17）。
 
 # Goal
 
-交付 Claude/Codex 统一安装、双入口首次部署与升级链，并完成 MILE-0006 回归收官。
+让 Butler 基地车和所有迭代台账严格落在本次任务对应的项目根，不再把会话启动目录默认当成施工目标。
+
+# In Scope
+
+- 项目根解析优先级、证据与 fail-closed 约束。
+- MCV 部署真源、浓缩规则卡和相关宿主入口/工作流路由的一致接线。
+- 能检查显式目标、Git 子目录、多仓聚合目录和跨 cwd 部署的自动化验证。
+- 删除 `research/.ai/iterations/ITER-0051` 空残留链。
+
+# Out of Scope
+
+- 不处理 `research/*/.ai` 中各项目自己的台账。
+- 不强制所有新项目先创建 Git 仓库。
+- 不扩展 hook 安全边界，不处理 shell/MCP 的通用防写。
 
 # Acceptance Checklist
 
-- [x] **AC1（统一 setup）**：`setup.sh` 保持既有 Claude 全局配置/命令/风格行为，并在 Codex CLI 可用时调用 plugin 安装；不可用时明确跳过且退出 0；隔离 HOME 重跑幂等。
-- [x] **AC2（双入口渲染器）**：标准库工具从两模板+单一 rule-card 渲染 CLAUDE.md/AGENTS.md，替换全部占位符、写同版号/路径；首次运行生成，重复运行无 diff。
-- [x] **AC3（内容保护）**：已有非 Butler 文件不被覆盖而追加 managed block；更新 managed block 时两个入口各自 user-managed 内容逐字保留；异常/重复 marker fail-closed、不写半成品。
-- [x] **AC4（首次部署接线）**：mcv-deployment 明确同时生成两入口并调用渲染器；`.ai/`/local constraints/Claude hooks 原流程不退化，Codex plugin 保持机器级、不复制到项目。
-- [x] **AC5（既有升级接线）**：butler-upgrade 侦察、首次升级、常规队列、验证/回退覆盖 AGENTS.md；migration schema 新增双入口 typed 标签并规定幂等/漂移即停。
-- [x] **AC6（回归矩阵）**：新增脚本在隔离 HOME/目标项目验证 setup 有/无 Codex 分支、渲染六场景、Claude hook tests、R1–R3 scripts、plugin validator；全绿。
-- [x] **AC7（使用说明）**：README/HUMAN_GUIDE/兼容说明不再标 R4 计划中，说明一次 setup、双入口、hook trust 和未覆盖边界。
-- [x] **AC8（发布收官）**：P5 完整强审 0 Must Fix；ITER-0054 与 MILE-0006 原子收口，归档/双层交付/知识前滚、最终版本四方一致、本地 tag 与 6 不变量通过。
+- [ ] **AC1（根目录契约）**：MCV 真源明确区分“会话启动目录”与“施工项目根”；任何基地车/台账写入前必须先解析并回声唯一目标。
+- [ ] **AC2（优先级）**：用户明确点名的仓库或路径优先于 `cwd`；未点名时可以从子目录定位唯一 VCS/项目根，但不得仅凭 `pwd` 授权展开。
+- [ ] **AC3（歧义即停）**：聚合目录含多个候选项目、路径不存在/不可写、或证据冲突时 fail-closed；在用户确认前不创建 `.ai/`、`deliveries/`、`origin/`、`CLAUDE.md` 或 `AGENTS.md`。
+- [ ] **AC4（单一落点）**：一旦目标解析，本任务的台账、四件套、归档、交付和项目入口全部键控到同一根目录；目标可在 `cwd` 之外。
+- [ ] **AC5（宿主一致）**：规则卡、Claude/Codex 项目入口与 Butler 工作流共用同一根目录契约，不在两宿主各造一套判定算法。
+- [ ] **AC6（回归）**：自动化覆盖显式外部目标优先、Git 子目录定位、单项目目录、多仓父目录拒绝与重跑幂等；并复跑双宿主完整矩阵。
+- [ ] **AC7（事故清理）**：`/Users/cyborgno2/Documents/research/.ai` 误展开空目录已移除，各子项目 `.ai` 无改动；Butler 本迭代台账只存在 Butler 仓根。
 
 # Verification Method
 
-- AC1–3/6：隔离目录可执行断言（可靠）。
-- AC4/5/7：结构 grep + 协议人读对账（可靠 + 人读）。
-- AC8：完整测试、台账/归档/交付/版本/tag 机械检查（可靠）。
+- AC1–5：规则真源、宿主入口和单一路由实现的结构对账。
+- AC3–6：隔离临时目录的可执行测试，确认拒绝分支零写入。
+- AC6：`bash scripts/verify-dual-host.sh` 与 hook/plugin 现有回归。
+- AC7：绝对路径存在性检查 + Butler Git diff 作用域检查。
 
-# Risks
+# Open Questions / Risks
 
-- setup 调 plugin 安装涉及真实用户目录；回归用隔离 HOME，最终真实刷新只接管既有 `butler@personal`。
-- managed markers 是新契约；无 marker 的旧文件只追加，不猜测删除旧内容，避免误伤，升级报告需提示人工清理重复旧 Butler 段。
+- 无 Git 的新目录只能靠用户显式点名或明确确认，这是防误展开必须付出的一次性交互成本。
+- 项目标记若设得过宽，普通资料夹会被误认为项目；P3 应只采用强证据并对多候选拒绝猜测。

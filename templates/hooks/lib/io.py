@@ -8,6 +8,7 @@ from pathlib import Path, PurePosixPath
 from typing import Literal
 
 from lib.codex_patch import parse_apply_patch
+from lib.project_root import RootResolutionError, resolve_project_root
 
 GATED_BLACKLIST = frozenset({
     ".ai/",
@@ -100,10 +101,36 @@ def contexts_from_payload(payload: dict) -> list[Context]:
             "butler_patch_added": list(change.added_lines),
             "butler_patch_removed": list(change.removed_lines),
         })
-        contexts.append(
-            Context(cwd, tool_name, resolve_target(synthetic, cwd), synthetic)
-        )
+        contexts.append(_codex_patch_context(cwd, tool_name, synthetic))
+    resolved_roots = {ctx.cwd for ctx in contexts if ctx.target_path != OUT_OF_CWD}
+    if len(resolved_roots) > 1:
+        raise ValueError("apply_patch spans multiple project roots")
     return contexts
+
+
+def _codex_patch_context(cwd: str, tool_name: str, tool_input: dict) -> Context:
+    """Anchor an apply_patch target to its actual Butler/VCS project root."""
+    raw = tool_input.get("file_path", "")
+    if not raw:
+        return Context(cwd, tool_name, OUT_OF_CWD, tool_input)
+
+    path = Path(raw).expanduser()
+    try:
+        if path.is_absolute():
+            absolute = path.resolve()
+            anchor = absolute if absolute.is_dir() else absolute.parent
+            while not anchor.exists() and anchor != anchor.parent:
+                anchor = anchor.parent
+            project_root = resolve_project_root(start=anchor).root
+        else:
+            # A relative path never selects a child/sibling repository. The
+            # session location must already prove the one project root.
+            absolute = (Path(cwd).resolve() / path).resolve()
+            project_root = resolve_project_root(start=Path(cwd)).root
+        relative = absolute.relative_to(project_root)
+    except (RootResolutionError, ValueError):
+        return Context(cwd, tool_name, OUT_OF_CWD, tool_input)
+    return Context(str(project_root), tool_name, PurePosixPath(relative.as_posix()), tool_input)
 
 
 def is_gated(target: PurePosixPath, blacklist: frozenset = GATED_BLACKLIST) -> bool:

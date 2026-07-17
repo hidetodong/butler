@@ -7,6 +7,8 @@ argument-hint: "[留空=开启（走引擎风险闸）| off 关闭 | status 只�
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。危险模式开关状态落**当前项目**的 `.ai/local-constraints.md`「Butler 功能开关」`dangerous`（持久、跨会话），作用于当前项目的自治执行。
 
+> **项目根硬门**：读写开关前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。上文“当前项目”一律指该绝对路径；仅凭会话 `cwd` 不得选项目，歧义时不得硬建 `.ai/`。
+
 ## 第 0 步 先认清这是实验性、风险显著高于标准
 危险模式让模型在**无人值守**下长时间自主推进：一次发布需求 → 自动拆迭代 → 以收敛闭环跑完整条 P1–P5 → 连续推进到整体交付，**P2/P3 的用户 ACK 被模型自审门替代**。风险显著高于标准流程——**建议只在可隔离、可回滚的环境（独立 git 分支 / worktree）开启**。命令化不降低这道门槛：本命令只把你的显式意图接进引擎，引擎自己的闸（进入回声 + 跨会话 announce-on-read + 全套护栏）照常响，本命令不省略、也不代替这层郑重。
 - 读得到 `Coder/65_Extension_Dangerous/dangerous-engine.md`（butler 可达）→ 正常往下走。

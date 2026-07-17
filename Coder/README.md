@@ -140,7 +140,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 其中：
 
-- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；部署时在项目根创建 `.ai/`（含空 `.ai/project/` 知识文件夹种子，MILE-0003 R6 起——新项目采用文件夹态全貌产物）、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（`tools/` 下的工具不拷进目标项目、目标项目按 `$BUTLER` 路径传参调用；当前为交付自测桥 `tools/delivery-selftest/`）。
+- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/`（含空 `.ai/project/` 知识文件夹种子，MILE-0003 R6 起——新项目采用文件夹态全貌产物）、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（`tools/` 下的工具不拷进目标项目、目标项目按 `$BUTLER` 路径传参调用；当前为交付自测桥 `tools/delivery-selftest/`）。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）；版本感知，以 `migrations/` 下的迁移配方为主干、按版本区间收集后按序幂等执行（不再现场推导差异），并随升级同步 `.claude/hooks/` 副本。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。

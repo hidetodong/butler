@@ -7,6 +7,8 @@ argument-hint: "[independent=另起 fresh 子 agent 独立复核（验证者≠�
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析。复核**对象**是**当前项目**的迭代产物与代码改动（`.ai/AC_LIST.md`、`git diff` 等），绝不是 butler 仓。
 
+> **项目根硬门**：定复核范围前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。`.ai/AC_LIST.md` 与 `git diff` 都从该根读；会话 `cwd` 本身不是复核范围。
+
 ## 第 0 步（强制）先确认有东西可复核
 复核建立在**当前项目的迭代产物**之上。开跑前先看当前目录有没有 `.ai/AC_LIST.md`（验收尺子）与待审改动（`git diff` 或本轮变更文件）：
 - **都在** → 正常往下走。

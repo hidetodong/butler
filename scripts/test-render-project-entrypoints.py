@@ -106,10 +106,18 @@ class RendererTests(unittest.TestCase):
     def test_missing_template_fails_before_writes(self):
         bad_root = self.target / "bad-butler"
         bad_root.mkdir()
+        project = self.target / "project"
+        project.mkdir()
         (bad_root / "VERSION").write_text("9.9.9\n")
         with self.assertRaises(OSError):
-            MODULE.plan(self.target / "project", bad_root)
-        self.assertFalse((self.target / "project" / "CLAUDE.md").exists())
+            MODULE.plan(project, bad_root)
+        self.assertFalse((project / "CLAUDE.md").exists())
+
+    def test_invalid_target_fails_without_creating_it(self):
+        missing = self.target / "missing-project"
+        with self.assertRaises(MODULE.RenderError):
+            MODULE.plan(missing, self.root)
+        self.assertFalse(missing.exists())
 
 
 if __name__ == "__main__":

@@ -91,7 +91,7 @@ flowchart TB
 ./scripts/preference-init.sh
 ```
 
-3. **接入新项目**：在任何项目里直接给任务 — AI 自动读规则、检测到新项目后部署基地车，按 P1-P5 推进。
+3. **接入新项目**：直接给任务并点名项目/仓库路径；若会话已在该 Git/Butler 项目内，AI 也可安全发现其根。多仓父目录不会被自动当成项目。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
 > **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目和升级项目会从同一规则卡生成/维护 `CLAUDE.md` + `AGENTS.md`。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
@@ -108,6 +108,7 @@ butler/
 │
 ├── scripts/
 │   ├── setup.sh                    # Claude + Codex 一次性全局安装
+│   ├── resolve-project-root.py     # 无副作用解析唯一施工项目根
 │   ├── render-project-entrypoints.py # 幂等生成/升级 CLAUDE.md + AGENTS.md
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
 │   ├── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检

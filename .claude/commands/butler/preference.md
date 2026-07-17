@@ -7,6 +7,8 @@ argument-hint: "[留空=看状态 | on | off | reback on | reback off | distill]
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。偏好数据一律落**外置存储** `$PREF`（`$BUTLER_PREF` 或默认 `~/.butler/preferences/`，路径发现见引擎 §4.1），**绝不写当前项目的 `.ai/`、也绝不写 butler 仓**。
 
+> **项目根硬门**：全局 `$PREF` 操作不依赖项目根；但一旦要读项目抑制开关，必须先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。无法唯一解析时回报“项目抑制态不适用”，不从 `cwd` 猜测。
+
 ## 第 0 步 先认清这是实验性、数据在仓库之外
 偏好探针是**实验性**能力：它把你的决策取舍抽象记到**外置存储** `$PREF`、蒸馏成跨项目通识、opt-in 反哺到有监督提议。开关（`on`/`off`/`reback`）是**全局**的，任何项目里都能敲、**不强依赖当前项目 `.ai/`**；`distill` 只在有采集到的信号时才有东西可蒸。
 - 读得到 `Coder/70_Extension_Preference/preference-probe-engine.md`（butler 可达）→ 正常往下走。

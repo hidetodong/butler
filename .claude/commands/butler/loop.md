@@ -7,6 +7,8 @@ argument-hint: "[留空=开启收敛闭环死磕]"
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。收敛闭环作用在**当前项目**的 P4 执行上。
 
+> **项目根硬门**：启动闭环前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`，且只在该根的 P4 上执行。仅凭会话 `cwd` 不得选定项目。
+
 ## 第 0 步 先认清这是高强度升档、郑重触发
 收敛闭环是 P4 执行阶段的**高强度升档**：它把常驻纠错契约的定性「诚实停」换成定量「死磕到全绿或正式熔断」，**坚持上限抬高、上全套追踪仪式**——**高强度、耗时长、token 消耗大**，是要郑重、显式开启的能力，不是随手一敲的默认。命令化不降低这道门槛：本命令只把你的显式意图接进引擎，不省略这层郑重。
 - 读得到 `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md`（butler 可达）→ 正常往下走。

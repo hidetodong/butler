@@ -7,6 +7,8 @@ argument-hint: "[status=只读看板 | update=改版同步 | 贴 PRD 或路径�
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析——**不是**当前项目下的路径。若当前目录没有 `Coder/`，就去 `$BUTLER_PATH/Coder/…` 读。反过来，一切产出（`.ai/references/prd/…` 等）一律落**当前项目**，绝不落 butler 仓。
 
+> **项目根硬门**：读写 PRD 项目状态前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。所有 `.ai/` 路径都相对它，不相对会话 `cwd` 或 butler 仓。
+
 ## 第 0 步（强制）先读契约
 无论走哪条分支，先读 `Coder/40_Context_Management/references-schema.md`——PRD 切片的**契约层**：`prd/` 结构、slug 终身身份、逐字无损红线、live/`.archive` 落盘形态、§2 "是不是大 PRD"的判据。这是所有分支的公共地基，不可跳。
 

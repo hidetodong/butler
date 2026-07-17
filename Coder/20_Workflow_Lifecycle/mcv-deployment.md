@@ -16,9 +16,36 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 确定路径后，将其记为 `$BUTLER` 供后续步骤引用。若路径无效（目录不存在或缺少 `Coder/README.md`），中止部署并报错。
 
+## 0.1 施工项目根解析 (Project Root Resolution)
+
+**会话启动目录不等于施工项目根。** 在读写任何项目级 `.ai/`、`deliveries/`、`origin/`、`CLAUDE.md` 或 `AGENTS.md` 前，AI 必须先解析唯一的 `$PROJECT_ROOT`、向用户回声绝对路径与证据，后续所有项目级路径都以它为基准。`cwd` 只是发现起点，不单独构成写入授权。
+
+调用 `$BUTLER/scripts/resolve-project-root.py`，按以下优先级命中即停：
+
+1. 用户在任务中明确点名/确认的项目路径（`--user-target`）。
+2. 从会话位置向上找到的最近已部署 Butler 项目根（`.ai/` + 带 Butler 签名/管理区的宿主入口）。
+3. 会话位置所在的 Git 顶层仓库根。
+4. 都不成立则 fail-closed：停下请用户点名项目，**不扫描子目录猜测，不创建任何基地车文件**。
+
+用户已点名目标时：
+
+```bash
+PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
+  --user-target "<用户点名的项目路径>")" || exit 2
+```
+
+用户未点名、需从会话位置安全发现时：
+
+```bash
+PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
+  --start "$PWD")" || exit 2
+```
+
+严禁为了省事把 `--user-target "$PWD"` 当默认写法；只有用户确实点名/确认了该目录时它才是“用户目标”。目标不存在、不是目录、不可读写，或聚合目录本身无法证明是项目根时，解析器退出 2 且零写入。
+
 ## 1. 落地前侦察 (Scouting)
 
-在创建任何目录前，AI 必须执行以下动作并简要汇报：
+在创建任何目录前，AI 必须以 `$PROJECT_ROOT` 为边界执行以下动作并简要汇报：
 
 - 扫描根目录判断技术栈 (`package.json`, `tsconfig.json`)。
 - 识别项目结构 (`src`, `packages`, `docs`)。
@@ -27,7 +54,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 2. 基础设施展开 (Scaffold)
 
-在项目根目录强制创建 `.ai/`、`deliveries/` 与 `origin/` 三类基础目录，并分别承担不同职责：
+在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/`、`deliveries/` 与 `origin/` 三类基础目录，并分别承担不同职责：
 
 - `.ai/`：AI 工作空间，包含运行态文件与阶段产物两类内容。
 - `deliveries/`：完整交付后的人类可读交付总结归档目录。
@@ -82,13 +109,13 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 3. 规则注入 (Rule Injection)
 
-在目标项目根目录同时生成 `CLAUDE.md`（Claude Code）与 `AGENTS.md`（Codex）。两份入口共享 `templates/rule-card.md` 真源，但各自保留宿主需要的读序；不得只生成当前会话所用宿主的那一份。
+在 `$PROJECT_ROOT` 同时生成 `CLAUDE.md`（Claude Code）与 `AGENTS.md`（Codex）。两份入口共享 `templates/rule-card.md` 真源，但各自保留宿主需要的读序；不得只生成当前会话所用宿主的那一份。
 
 统一调用：
 
 ```bash
 python3 "$BUTLER/scripts/render-project-entrypoints.py" \
-  --target "$(pwd)" --butler-root "$BUTLER"
+  --target "$PROJECT_ROOT" --butler-root "$BUTLER"
 ```
 
 渲染器按以下契约处理两份文件：
@@ -139,16 +166,16 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 ### 5.3 验证
 
-部署完成后，在目标项目根执行：
+部署完成后，以 `$PROJECT_ROOT` 为当前目录执行：
 
 ```bash
 # PreToolUse 门禁：产物缺失时应拒绝
-echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$(pwd)"'"}' \
+echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$PROJECT_ROOT"'"}' \
   | python3 .claude/hooks/butler_gate.py
 echo "gate exit=$?"
 
 # PostToolUse 提醒：写 MILESTONE.md 且无 references/prd/ 时应放行(exit=0)且吐 additionalContext
-echo '{"tool_name":"Write","tool_input":{"file_path":".ai/MILESTONE.md","content":"x"},"cwd":"'"$(pwd)"'"}' \
+echo '{"tool_name":"Write","tool_input":{"file_path":".ai/MILESTONE.md","content":"x"},"cwd":"'"$PROJECT_ROOT"'"}' \
   | python3 .claude/hooks/butler_advisor.py
 echo "advisor exit=$?"
 ```

@@ -53,6 +53,7 @@ class TestAdvisorEmits:
 
     def test_apply_patch_milestone_emits_json_once(self, tmp_path):
         (tmp_path / ".ai").mkdir()
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
         payload = {
             "tool_name": "apply_patch",
             "tool_input": {"command": """*** Begin Patch

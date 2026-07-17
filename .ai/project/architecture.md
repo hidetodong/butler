@@ -27,7 +27,7 @@
 
 - `plugins/butler/` — Codex 可安装发布包，`skills/` 内 8 个 Butler 工作流是实体真源；`.agents/skills/` 只用相对软链提供 repo discovery。个人 marketplace 安装/刷新由 `scripts/install-codex-plugin.sh` 编排官方 helper 与 CLI。
 
-- `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，hook rules 由 Claude/Codex dispatcher 共用。
+- `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
 - `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。当前只有 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/`（升级迁移配方）、`deliveries/`（交付总结存档）。
 - 其它子系统 — `Learner/`（学习事务）、`Composer/`（杂项事务），与 `Coder/` 并列、本知识文件夹不展开。

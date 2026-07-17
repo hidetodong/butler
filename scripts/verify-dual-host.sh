@@ -8,6 +8,7 @@ WORK="$(mktemp -d "${TMPDIR:-/tmp}/butler-dual-host.XXXXXX")"
 trap 'rm -rf "$WORK"' EXIT HUP INT TERM
 
 python3 "$ROOT/scripts/test-render-project-entrypoints.py"
+python3 "$ROOT/scripts/test-resolve-project-root.py"
 
 run_setup() {
   local home="$1"
@@ -60,5 +61,6 @@ uv run --with pyyaml python \
   "${BUTLER_PLUGIN_CREATOR_DIR:-${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator}/scripts/validate_plugin.py" \
   "$ROOT/plugins/butler"
 python3 -m compileall -q "$ROOT/templates/hooks" "$ROOT/scripts/render-project-entrypoints.py"
+python3 -m compileall -q "$ROOT/scripts/resolve-project-root.py"
 
 echo "[OK] Claude/Codex unified setup and project entrypoint matrix passed"

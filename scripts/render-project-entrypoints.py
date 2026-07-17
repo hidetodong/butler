@@ -109,6 +109,12 @@ def merge_existing(existing: str | None, rendered: str) -> str:
 
 
 def plan(target: Path, butler_root: Path) -> list[PlannedWrite]:
+    if not target.exists():
+        raise RenderError(f"target project root does not exist: {target}")
+    if not target.is_dir():
+        raise RenderError(f"target project root is not a directory: {target}")
+    if not os.access(target, os.R_OK | os.W_OK | os.X_OK):
+        raise RenderError(f"target project root is not readable/writable: {target}")
     version = (butler_root / "VERSION").read_text(encoding="utf-8").strip()
     rule_card = rule_card_content(
         (butler_root / "templates/rule-card.md").read_text(encoding="utf-8")

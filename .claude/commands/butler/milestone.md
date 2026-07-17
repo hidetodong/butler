@@ -7,6 +7,8 @@ argument-hint: "[status=只读看板 | 贴里程碑 brief 或路径 | 留空=录
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析。产出（`.ai/MILESTONE.md`、`.ai/MILESTONES.md`、`.ai/references/prd/…` 等）一律落**当前项目**，绝不落 butler 仓。
 
+> **项目根硬门**：读台账前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。上文“当前项目”一律指该绝对路径；用户点名路径优先，歧义时零写入。
+
 ## 第 0 步（强制）先确认当前项目已接 butler
 里程碑建立在当前项目的 `.ai/` 台账之上。开跑前先看当前目录有没有 `.ai/`（尤其 `.ai/MILESTONES.md`）：
 - **有** → 正常往下走。

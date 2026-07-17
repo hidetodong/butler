@@ -18,6 +18,8 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 
 `.ai/` 不属于任何单一宿主。它保存当前目标、验收、方案、验证、台账和跨会话断点；Claude Code 与 Codex 必须读写同一份状态，不能各建副本。
 
+这份共享状态必须属于任务实际对应的项目根，不属于会话启动目录。两宿主都先按 `mcv-deployment.md §0.1` 调用 `scripts/resolve-project-root.py`：用户点名路径优先，否则只接受最近已部署 Butler 根或 Git 根；无法唯一证明时零写入退出。commands 与 skills 只指向这份真源，不各自推断 `cwd`。
+
 ## 2. 单一真源红线
 
 - 强制规则卡只改 `templates/rule-card.md`。`CLAUDE.md.template` 与 `AGENTS.md.template` 都通过 `{{RULE_CARD_CONTENT}}` 注入，不手工抄规则正文。
@@ -55,7 +57,7 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。
 - 统一安装：`bash scripts/setup.sh`；保留 Claude 全局配置/命令/风格，同时在 Codex CLI 可用时调用上面的 plugin 安装器。
-- 项目部署/升级：`scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md；管理区外原文与两份 user-managed 区各自保留。
+- 项目部署/升级：先用 `scripts/resolve-project-root.py` 确定唯一项目根，再由 `scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md；管理区外原文与两份 user-managed 区各自保留。
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 

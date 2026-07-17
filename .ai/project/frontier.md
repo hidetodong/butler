@@ -4,14 +4,14 @@
 
 ## 当前形态
 
-- **版本**：v2.15.0。MILE-0006 R1–R4 已完成：统一 setup、双入口部署/升级、8 skills 和 apply_patch hooks 组成完整双宿主工作流。
+- **版本**：v2.16.0 发布中。MILE-0006 的双宿主工作流保持；ITER-0055 已收口施工项目根硬门，修复多仓父目录误展开台账。
 - **里程碑**：MILE-0006 closed；四条路线均完成，交付与回归矩阵已归档。
 - **分发**：`scripts/install-codex-plugin.sh` 使用个人 marketplace、官方 cachebuster/validator 和 `codex plugin add`；当前本机 `butler@personal` 已安装。
 - **边界**：Claude 能力保持；Codex hooks 已实测 phase/protected deny、allow 和 advisory。PreToolUse 不是完整安全边界，首次 trust 仍需用户操作。
 
 ## 活跃战线
 
-- 当前无活跃路线；等待下一项明确需求或新里程碑。
+- 当前无 active 迭代/里程碑；只剩 v2.16.0 发布提交、tag 与真实 plugin 刷新。
 
 ## 下一个瓶颈
 

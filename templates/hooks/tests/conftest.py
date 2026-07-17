@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,7 @@ def tmp_project(tmp_path: Path):
             else:
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(item, dst)
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
         return tmp_path
 
     return _make

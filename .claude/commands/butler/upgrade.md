@@ -7,6 +7,8 @@ argument-hint: "[留空=把当前项目升级到最新 butler 版]"
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` / `templates/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。升级**对象**是**当前项目**的 `CLAUDE.md` 与 `.ai/` 结构，绝不是 butler 仓自身（butler 仓自己的版本由 `versioning-schema.md` 切版流程管，不走本命令）。
 
+> **项目根硬门**：侦察版本差前先按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析 `PROJECT_ROOT`。升级的所有读写只在该根下；用户点名路径优先，歧义时停止。
+
 ## 第 0 步（强制）先确认当前项目已部署 butler
 升级的前提是当前项目**已经**装过 butler。开跑前先看当前目录有没有 `CLAUDE.md`（butler 管理区）与 `.ai/`：
 - **有** → 正常往下走。

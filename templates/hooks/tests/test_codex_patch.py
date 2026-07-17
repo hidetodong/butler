@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import PurePosixPath
+import subprocess
 
 import pytest
 
@@ -53,6 +54,7 @@ def test_empty_or_sectionless_patch_raises(command):
 
 
 def test_contexts_fan_out_and_preserve_patch_metadata(tmp_path):
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     payload = {
         "tool_name": "apply_patch",
         "cwd": str(tmp_path),
@@ -64,6 +66,61 @@ def test_contexts_fan_out_and_preserve_patch_metadata(tmp_path):
     assert [c.target_path for c in contexts] == [PurePosixPath("a.py"), PurePosixPath("b.py")]
     assert contexts[0].tool_input["butler_patch_removed"] == ["old"]
     assert contexts[1].tool_input["butler_patch_added"] == ["x"]
+
+
+def test_absolute_target_outside_session_cwd_uses_actual_git_root(tmp_path):
+    session = tmp_path / "aggregate"
+    project = tmp_path / "actual"
+    session.mkdir()
+    project.mkdir()
+    subprocess.run(["git", "init", "-q", str(project)], check=True)
+    target = project / ".ai" / "ITERATIONS.md"
+    payload = {
+        "tool_name": "apply_patch",
+        "cwd": str(session),
+        "tool_input": {
+            "command": f"*** Begin Patch\n*** Add File: {target}\n+x\n*** End Patch"
+        },
+    }
+    context = contexts_from_payload(payload)[0]
+    assert context.cwd == str(project.resolve())
+    assert context.target_path == PurePosixPath(".ai/ITERATIONS.md")
+
+
+def test_patch_spanning_two_project_roots_fails_closed(tmp_path):
+    session = tmp_path / "aggregate"
+    one = tmp_path / "one"
+    two = tmp_path / "two"
+    session.mkdir()
+    for project in (one, two):
+        project.mkdir()
+        subprocess.run(["git", "init", "-q", str(project)], check=True)
+    command = (
+        "*** Begin Patch\n"
+        f"*** Add File: {one / 'a.py'}\n+a\n"
+        f"*** Add File: {two / 'b.py'}\n+b\n"
+        "*** End Patch"
+    )
+    with pytest.raises(ValueError, match="multiple project roots"):
+        contexts_from_payload(
+            {"tool_name": "apply_patch", "cwd": str(session), "tool_input": {"command": command}}
+        )
+
+
+def test_relative_path_from_aggregate_cannot_select_child_repo(tmp_path):
+    aggregate = tmp_path / "aggregate"
+    project = aggregate / "child"
+    aggregate.mkdir()
+    project.mkdir()
+    subprocess.run(["git", "init", "-q", str(project)], check=True)
+    payload = {
+        "tool_name": "apply_patch",
+        "cwd": str(aggregate),
+        "tool_input": {
+            "command": "*** Begin Patch\n*** Add File: child/src/x.py\n+x\n*** End Patch"
+        },
+    }
+    assert contexts_from_payload(payload)[0].target_path == OUT_OF_CWD
 
 
 @pytest.mark.parametrize("path", ["../escape.py", "/outside/absolute.py"])

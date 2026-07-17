@@ -2,16 +2,18 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
-## Claude/Codex 双宿主适配（v2.12.0–v2.15.0）
+## Claude/Codex 双宿主适配（v2.12.0–v2.16.0）
 
 - Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。
 - `scripts/render-project-entrypoints.py` 从两模板和单一 rule-card 幂等维护目标项目 CLAUDE.md + AGENTS.md，保留管理区外原文与两份 user-managed 内容；MCV 和 upgrade 共用该契约。
+- `scripts/resolve-project-root.py` 在任何项目级读写前解析唯一施工根：用户点名路径 → 最近已部署 Butler 根 → Git 根 → 拒绝。多仓父目录不再因会话从那里启动就被当成项目。
 
 ## Codex 工作流与 hooks（v2.13.0–v2.15.0）
 
 - `plugins/butler/` 可安装 8 个 skills：prd/review/milestone/upgrade/ideation/preference/loop/dangerous；`.agents/skills/` 软链让仓内直接发现同一真源。
 - `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
 - `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
+- Codex patch adapter 会按每个绝对 target 的 Butler/Git 根重建 hook Context，因此支持“会话在父目录、修改另一明确仓库”；一个 patch 跨多项目根或父目录无根证据时 fail-closed。
 - 真实 Codex 已验证 phase deny、protected-path deny、allow 和 advisory 上下文注入。边界只覆盖送入 hook 的工具事件，不替代 sandbox，也不保证覆盖 shell/MCP。
 
 ## 核心：P1–P5 开发 SOP（默认主线）
@@ -46,7 +48,7 @@
 
 - **全局安装（`scripts/setup.sh`）**：一次性、机器级——写 `BUTLER_PATH`、Claude 全局配置、命令目录软链和沟通风格；检测到 Codex CLI 时同时安装/刷新个人 Butler plugin，无 Codex 时明确跳过且不破坏 Claude 安装。
 - **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 8 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
-- **基地车部署**：建 `.ai/`（含空 `.ai/project/` 种子）/ `deliveries/` / `origin/`，用统一 renderer 注入 CLAUDE.md + AGENTS.md，再部署 Claude hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
+- **基地车部署**：先解析并回声唯一 `PROJECT_ROOT`，再只在它下建 `.ai/`（含空 `.ai/project/` 种子）/ `deliveries/` / `origin/`，用统一 renderer 注入 CLAUDE.md + AGENTS.md，最后部署 Claude hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
 - **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC 写源码 / 越界写 / 双 active 迭代 / 台账非法状态值。真源 `templates/hooks/` + `mcv-deployment §5`。
 

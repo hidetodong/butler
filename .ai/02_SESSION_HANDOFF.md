@@ -2,22 +2,17 @@
 
 ## 任务断点
 
-危险模式会话正在连续推进 MILE-0006。R2 / ITER-0052 已收口为 v2.13.0；应立即开 R3 / ITER-0053，不等待用户 ACK。
+ITER-0055 已原子收口，当前无 active 迭代；只剩 v2.16.0 产品/发布提交、tag 和真实 plugin 刷新。
 
 ## 已交付
 
-- `plugins/butler/` + `.agents/skills/` 8 skills 单一实体源。
-- `scripts/install-codex-plugin.sh` 与 `verify-codex-workflows.sh`。
-- 本机 `butler@personal` 已安装，当前缓存版本带 `2.13.0+codex.*`。
+- 单一项目根 resolver + MCV/rule-card/升级接线。
+- 8 Claude commands + 8 Codex skills 共用项目根契约。
+- Codex patch 绝对 target 跨 cwd 支持、相对子仓偷渡/跨多根拒绝。
+- `research/.ai` 误展开残留已删除；127 hook tests 与双宿主矩阵全绿。
 
-## R3 边界
+## 发布步骤
 
-- 只做 Codex PreToolUse/PostToolUse、`apply_patch` 输入适配、共享规则复用与端到端拒绝/提醒验证。
-- 不做 R4 的 setup、MCV、目标项目双入口部署/升级和里程碑收官。
-- 注意：最新 manual 支持 plugin hooks，但当前本机 plugin validator 拒绝 manifest `hooks` 字段；必须以实际 CLI 可加载配置为准并如实记录差异。
-
-## 状态指针
-
-- `.ai/MILESTONE.md`
-- `.ai/project/frontier.md`
-- `.ai/RUN_LOG.md`
+- 先提交 ITER-0055 产品/台账/交付/归档。
+- 再修改 VERSION、plugin manifest、CHANGELOG 为 v2.16.0，独立 `chore(release)` 提交并打本地 tag。
+- 最后运行真实 `scripts/setup.sh`，核对 `butler@personal` 已安装/启用且版本前缀为 2.16.0。
