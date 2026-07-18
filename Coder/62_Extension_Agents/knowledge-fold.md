@@ -34,10 +34,11 @@ scope: 更新说明帮手（knowledge-fold）的中立定义——角色/输入/
 - 是**定向路由不是重写整份文件夹**：只动被本次 delta 影响的主题；成本正比于本迭代改动量、不正比于文件夹大小（`project-digest-schema.md §6`）。
 - 新增主题时在 `00_INDEX.md` 主题登记表补一行（承"注册即真源、无隐式依赖"）。
 - 折完自查：本迭代 delta 是否都已折进、有无被取代结论残留——即冷启动一致性自检**第 6 条「知识文件夹漂移自检」**（`40_Context_Management/context-persistence.md`）。
+- 按 `project-digest-schema.md §6` 更新 `.ai/project/fold-state.json`：登记归档 changelog 与本轮实际改动 topic 的路径/SHA-256；receipt 不替代上条语义自查。
 
 ## 5. 输出衔接
 
-- 产物即更新后的 `.ai/project/`；主线收口自检第 6 不变量核对折叠无遗漏、无残留。
+- 产物即更新后的 `.ai/project/` topic + `fold-state.json` receipt；主线先由 auditor 核 hash，再以第 6 不变量核语义无遗漏、无残留。
 - 折叠属收口原子仪式步④，完成后继续步⑤收口自检；本帮手不碰台账 / 交付 / changelog 归档（那是主线收口其它步的活）。
 
 ## 6. 诚实兜底

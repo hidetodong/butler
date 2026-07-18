@@ -58,6 +58,7 @@ butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功
 - 最小实现纪律：动手前先读透问题与它触及的代码，再爬「最小实现阶梯」——需要存在吗(YAGNI)→本仓已有吗(复用)→标准库→平台原生→已装依赖→一行→才轮到最小新代码，停在第一个成立的档；有意简化用 `butler-min:` 注释标明天花板 + 升级路径；修 bug 挖根因不打症状补丁（grep 全部 caller、守卫放共享函数一处）；但信任边界校验 / 防丢数据的错误处理 / 安全 / 无障碍 / 用户明确要求不得砍，且绝不对"理解问题"偷懒（详见 `implementation-discipline.md`）
 - 不跳过探测直接交付未验证实现
 - 自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测的残余（判定见 `testing-strategy.md §3`）；能造弱自动检查（截图 diff / VLM 判图）的就造、标 `弱` 不当真绿，`待人` 残余如实记不假绿（代理验证见 §3.1）；人测残余不断在人这侧——有人场次经交付自测桥四态回传续跑（通过=收口 / 未通过=纠错 / 延后=入账不阻塞 / 跳过=N/A，见 `human-test-bridge.md`），无人值守不起桥、走 `dangerous-engine §7.4`
+- 无机器证据不打绿：完整路径自动道必须由 verification evidence runner 生成真实 argv/exit/log/hash record，VERIFY 逐 AC 引用 evidence ID；只写命令和“passed”属于 reported，不能关闭 AC。复核区分 reported/captured/reproduced，未重跑不得称复现（真源 `testing-strategy.md §3.2` / `verify-schema.md`）
 - 禁止降级修复：不用 `ts-ignore` / 跳过或删测试 / 注释绕过门禁 / 伪造结果制造假通过（每次迭代无条件生效）
 - 验证卡住（无实质进展 / 缺外部条件 / 需用户决策）时诚实停：如实说清现象与所缺输入再交还，不伪造通过、不闷头空磨
 - 不把业务规则写死在视图模板里

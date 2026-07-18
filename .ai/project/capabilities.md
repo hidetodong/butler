@@ -16,6 +16,14 @@
 - Codex patch adapter 会按每个绝对 target 的 Butler/Git 根重建 hook Context，因此支持“会话在父目录、修改另一明确仓库”；一个 patch 跨多项目根或父目录无根证据时 fail-closed。
 - 真实 Codex 已验证 phase deny、protected-path deny、allow 和 advisory 上下文注入。边界只覆盖送入 hook 的工具事件，不替代 sandbox，也不保证覆盖 shell/MCP。
 
+## 持续验证与状态自证（MILE-0007 R2–R3）
+
+- `bash scripts/verify-ci.sh` 是开发机和 GitHub Actions 的唯一完整入口：固定 Python 3.12.12、uv 0.9.28 与 `uv.lock`，运行安装、状态/证据、双宿主、hooks、Markdown 和 CI contract 全矩阵。
+- `.github/workflows/ci.yml` 在 PR、`main` 与 `v*` tag 上编排 `ubuntu-24.04` / `macos-14`，Actions 固定完整 SHA；稳定汇总 check 名为 `Butler required checks`。
+- `tools/codex-validators/` 固定 OpenAI Codex 官方 plugin/skill validators 的 commit、SHA-256 和许可证；空 HOME 也完整执行，缺失/篡改 fail-closed。
+- `scripts/check-markdown-links.py` 离线检查仓内相对目标和 GitHub 风格 fragment，不把外网波动纳入合并门禁。
+- 远端 required status checks 当前受私有仓库套餐限制；仓内能力状态为 check-provided，不能称 required-enabled。
+
 ## 核心：P1–P5 开发 SOP（默认主线）
 
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
@@ -46,7 +54,7 @@
 
 ## 部署与维护能力
 
-- **全局安装（`scripts/setup.sh`）**：一次性、机器级——写 `BUTLER_PATH`、Claude 全局配置、命令目录软链和沟通风格；检测到 Codex CLI 时同时安装/刷新个人 Butler plugin，无 Codex 时明确跳过且不破坏 Claude 安装。
+- **全局安装（`scripts/setup.sh`）**：一次性、机器级——由 `configure-global-install.py` 先全量预检 marker/export/软链所有权，再逐对象原子维护 `BUTLER_PATH`、Claude 全局配置、命令目录软链和沟通风格；冲突零破坏停机。Codex plugin 是后续独立组件，失败时明确报告部分完成，不假报总成功。
 - **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 8 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
 - **基地车部署**：先解析并回声唯一 `PROJECT_ROOT`，再只在它下建 `.ai/`（含空 `.ai/project/` 种子）/ `deliveries/` / `origin/`，用统一 renderer 注入 CLAUDE.md + AGENTS.md，最后部署 Claude hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
@@ -54,7 +62,9 @@
 
 ## 驻留工具
 
+- `tools/verification-evidence/` — P5 **自动道证据工具**（Python 标准库）：按真实 argv 执行验证，生成有界 stdout/stderr、exit、时间与 SHA-256 record；只读校验后在收口时整包从热区移入迭代归档，失败记录保留但不能覆盖绿 AC。
 - `tools/delivery-selftest/` — 交付自测**人测回传桥**（Node 零依赖）：读 manifest JSON → 生成 GitHub 风格分步流程页 → 收人工四态回传（通过 / 未通过 / 延后 / 跳过）→ 写 `results.json` + 自退。P5 人测道下游接线协议 `20_Workflow_Lifecycle/human-test-bridge.md`，契约真源 `tools/delivery-selftest/README.md`。
+- `scripts/audit-project-state.py` — 收口/切版的**只读状态审计器**：机械对账台账、路线、归档、交付、Evidence Index、fold receipt 与 Butler 发布元数据；活动规则仓可亮 `UNRELEASED`，不能冒充 published。
 
 ## 帮手（临时子 agent，不下发到项目）
 

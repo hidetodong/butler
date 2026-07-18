@@ -75,6 +75,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
   - **老项目迁移**：R6 前部署、已积累单文件 `.ai/PROJECT.md` 的老项目，其 `PROJECT.md → .ai/project/` 文件夹化由升级按 R6 迁移配方（`[rename]` + `[split]` + `[restamp]`，见 `migration-schema.md §4`）执行；实际配方实例在 butler 切版时产出（`versioning-schema.md §6.3` 步4，R8 切 v2.0.0 时落 `migrations/v2.0.0.md`）。从未产生过 `PROJECT.md` 的更老项目由升级补建：新建全貌产物并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次。
 - `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
+- `verification-evidence/`：完整路径 P5 首次捕获自动道证据时按需创建的**单迭代热区**；不在部署时预建。收口时整包移动到 `iterations/ITER-NNNN/evidence/`，不得与归档双存。
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
 - `MILESTONES.md`：里程碑台账，记录 `current` 指针与全部里程碑的号/标题/状态/含迭代/交付链接，字段参考 `milestone-schema.md`；首次开启里程碑时按需产生。
 - `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
@@ -91,6 +92,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 **迭代归档**（首次迭代收口时按需产生，只读快照）：
 
 - `iterations/ITER-NNNN/` 子目录：迭代收口时四件套的冻结快照（含本迭代 `CHANGELOG.md` 切片，若有），供复盘审计。归档机制以 `iteration-schema.md` 为准。
+- 新口径完整路径还包含 `iterations/ITER-NNNN/evidence/`：机器生成的自动道 record 与有界 stdout/stderr；是否启用以归档 VERIFY 的 `Evidence Index` 为准，不追罚历史迭代。
 - `iterations/` 目录不在部署时创建，而是在首次迭代收口时按需产生。
 - 每个 `ITER-NNNN/` 只承载该迭代内容，体量恒定；历史靠目录横向铺开，不纵向堆进单文件。
 
@@ -198,7 +200,9 @@ Hook 副本与 butler 仓库版本可能漂移。既有项目升级按 `butler-u
 
 ### 6.2 交付自测桥（delivery-selftest）
 
-当前唯一驻留工具是 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）——把"机器测不了、需人判定的残余项"渲染成分步流程页给人勾四态、回传结果。目标项目在 P5 触发人测残余时按下述形态调用：
+当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）与 **自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）。前者把机器测不了的残余交给人回传；后者对机器能测的命令生成真实 argv/exit/log/hash record。证据工具的调用、schema、退出码、敏感输出与归档契约以其 `README.md` 为真源，本协议不复制。
+
+目标项目在 P5 触发人测残余时按下述形态调用交付自测桥：
 
 - **写 manifest**：把本项目的人测残余（`human·待人` 档 AC）整理成 manifest JSON，落**本项目** `.ai/human-test/manifest.json`（与四件套隔离，建议加入 `.gitignore`）。
 - **传路径调桥**：`node $BUTLER/tools/delivery-selftest/bridge.js <本项目>/.ai/human-test/manifest.json --out <本项目>/.ai/human-test/results.json`（不在本项目存桥副本）。

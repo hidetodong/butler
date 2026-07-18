@@ -98,6 +98,23 @@ scope: .ai/project/ 知识文件夹的结构定义、00_INDEX 入口契约、主
 
 - **形态**：overwrite 当前结论（改动落在它该在的主题文件里），不堆历史层。
 - **成本可控**：delta 已在 `CHANGELOG` 记好、绑 AC，折叠是**路由**不是重推导——成本正比于**本迭代改动量**，**不**正比于文件夹大小。
+- **折叠 receipt**：完成折叠后更新 `.ai/project/fold-state.json`，按迭代记录归档 `CHANGELOG.md` 的路径/SHA-256，以及本轮实际更新 topic 在**本次折叠完成时**的路径/SHA-256。它是 state auditor 的机器收据：所有历史 receipt 都持续校验归档 changelog；只有最新 receipt 的 topic hash 与当前知识文件比较，旧 topic hash 保留为历史输出快照（后续折叠合法修改同一 topic，不构成旧 receipt 漂移）。receipt 不代替 drift review 判断语义是否正确。
+
+`fold-state.json` 最小结构：
+
+```json
+{
+  "schema_version": 1,
+  "receipts": {
+    "ITER-NNNN": {
+      "changelog": {"path": ".ai/iterations/ITER-NNNN/CHANGELOG.md", "sha256": "..."},
+      "topics": [{"path": ".ai/project/capabilities.md", "sha256": "..."}]
+    }
+  }
+}
+```
+
+有对象级 delta 的知识文件夹项目 `topics` 不得为空；单文件 `.ai/PROJECT.md` 项目不写此 receipt。更新时保留既有迭代 receipt、只追加当前迭代键；同一迭代重做收口则显式替换该键，不把旧 hash 叠成历史层。审计旧 receipt 时仍检查 topic 路径边界与 hash 格式，但不得要求历史 hash 永远等于已被后续折叠更新的当前文件。
 
 > 本 §声明折叠模型（该怎么维护）；其**强制接线已由 MILE-0003 R3 落地**：收口步④已泛化为"文件夹态按主题**必做**折叠 / 单文件暂态按需前滚"（`20_Workflow_Lifecycle/iteration-schema.md §5.5` / `20_Workflow_Lifecycle/milestone-schema.md §7.4`），冷启动一致性自检已加**第 6 条"知识文件夹漂移自检"**（`context-persistence.md §冷启动一致性自检`，条件不变量、单文件项目 N/A）。故采用知识文件夹的项目每次收口**必**折叠 delta 并自检漂移——不再是"要求了却没人强制"。
 

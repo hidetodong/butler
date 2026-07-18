@@ -1,9 +1,21 @@
 # 迭代台账
 
-current: none
+> ⚠️ 危险模式北极星：完成 MILE-0007“工程化加固”剩余 R4/R5——交付可执行、可自证的安全升级器，再以单一注册源收敛 Claude/Codex 八工作流及分发治理；逐迭代强审、证据化收口，最终整体关闭里程碑。
+
+## 危险模式自治路线图
+
+1. ITER-0059 / R4：机器可读迁移台账、dry-run、事务 apply、历史 E2E。
+2. ITER-0060 / R5：双宿主工作流注册源、入口/文档一致性、兼容与分发边界。
+3. 两迭代均 closed 后：汇总交付、归档并关闭 MILE-0007。
+
+current: ITER-0059
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0059 | 可执行升级器（MILE-0007 R4）：以机器可读迁移台账驱动 dry-run 与事务化 apply，明确项目动作、人工决策和机器级动作边界，并用历史 fixture 验证跨版本、幂等、冲突停机与失败恢复 | active | 2026-07-18 | — | MILE-0007 | — |
+| ITER-0058 | CI 与可复现验证（MILE-0007 R3）：单一本地/CI 验证入口，macOS/Linux 矩阵，Markdown 链接门禁，固定测试依赖与 validator 来源，并诚实区分 check 已提供和远端 required 已启用 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0058-ci-reproducible-verification.md |
+| ITER-0057 | 验证证据链与状态审计（MILE-0007 R2）：测试/复核结论必须引用机器采集的命令、退出码、日志与摘要校验，禁止只口头宣称通过；并机械对账版本、台账、归档、交付与项目知识状态 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0057-verification-evidence-state-audit.md |
+| ITER-0056 | 安装器事务安全（MILE-0007 R1）：修复全局配置残缺 marker 导致内容丢失、shell 配置伪命中和命令目录所有权冲突；用户文件逐对象 fail-closed、原子更新、结果不假报，并补隔离 HOME 回归 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0056-global-installer-transaction-safety.md |
 | ITER-0055 | 基地车展开边界加固：区分会话启动目录与实际施工项目根，用户点名路径优先；目标不唯一时 fail-closed，严禁仅凭 `pwd` 在多仓聚合目录展开 `.ai`/台账 | closed | 2026-07-17 | 2026-07-17 | — | deliveries/ITER-0055-project-root-deployment-boundary.md |
 | ITER-0054 | 双宿主部署升级收官（MILE-0006 R4·危险模式）：统一 setup 安装 Claude 命令与 Codex plugin；首次部署/既有升级共同生成并维护 CLAUDE.md + AGENTS.md；typed migrations 与隔离双端矩阵全绿，收口 MILE-0006 并发布 v2.15.0 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0054-dual-host-deployment-upgrade.md |
 | ITER-0053 | Codex hooks（MILE-0006 R3·危险模式）：共享 gate/advisor 接受 canonical `apply_patch` 并逐 target 复用现有规则；plugin 默认 hooks、124 tests、真实 Codex phase/protected deny + allow + advisor 验证通过；发布 v2.14.0，不提前做 R4 部署升级 | closed | 2026-07-17 | 2026-07-17 | MILE-0006 | deliveries/ITER-0053-codex-apply-patch-hooks.md |

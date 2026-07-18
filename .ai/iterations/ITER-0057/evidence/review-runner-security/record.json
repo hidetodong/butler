@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-runner-security",
+  "iteration": "ITER-0057",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/verification-evidence/test_evidence.py",
+      "EvidenceCliTests.test_invalid_or_duplicate_id_and_cwd_escape_are_rejected",
+      "EvidenceCliTests.test_symlinked_hot_root_and_extra_record_file_are_rejected",
+      "EvidenceCliTests.test_boolean_exit_code_tampering_is_rejected"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T07:26:28.077Z",
+  "finished_at": "2026-07-18T07:26:28.587Z",
+  "duration_ms": 510,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 101,
+    "captured_bytes": 101,
+    "sha256": "408814561e7735fa2c6a9daa7e51e737db3666adf2085a1d0a2ed262835a9615",
+    "truncated": false
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-ci-fail-closed",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC2",
+    "AC3",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "scripts/test-ci-contract.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:08:15.836Z",
+  "finished_at": "2026-07-18T08:08:16.479Z",
+  "duration_ms": 643,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 103,
+    "captured_bytes": 103,
+    "sha256": "a2b1c2540ffa097c964a25506e32c996fbe13458a591295b866592dcc482426d",
+    "truncated": false
+  }
+}

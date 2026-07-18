@@ -13,7 +13,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 2. 交付约定
 
 - 必须产出：`.ai/VERIFY_REPORT.md`
-- 必填字段：`Verification Summary`、`AC Status`、`Verification Results`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
+- 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
 - 条件字段：`人测道小结`（仅当存在人测道 AC 时必填，见 §3 模板与 §4 分道回填要求）
 
 ## 3. 标准模板
@@ -30,6 +30,11 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 # 人测道小结（仅当存在 human·待人 档 AC 时；无则整段省略）
 - AC3：<归入类目：主观审美 / 物理设备 / 真人感知 / 外部人工闸> — 状态：待人测 / 结论摘要
+
+# Evidence Index
+| Evidence ID | AC | 强度 | Outcome | Record |
+|---|---|---|---|---|
+| unit-tests | AC1, AC2 | captured | passed | `.ai/iterations/ITER-NNNN/evidence/unit-tests/record.json` |
 
 # Verification Results
 - AC1: 使用了什么验证方式，结果如何
@@ -58,6 +63,9 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 4. 编写规则
 
 - 必须按 AC 回填，不得只给笼统结论。
+- **Evidence Index 硬门**：完整路径迭代每条已通过的自动道 AC 必须引用机器生成的 evidence ID，record 最终路径固定在 `.ai/iterations/ITER-NNNN/evidence/<id>/record.json`；只有命令文本、测试数量、截图描述或“passed”措辞一律只是 `reported`，不得勾选。record schema 与校验命令以 `tools/verification-evidence/README.md` 为真源。
+- 失败/超时/截断记录同样保留并列入 Evidence Index，作为纠错轨迹；它们不能覆盖绿色 AC。修复后用新 evidence ID 重跑，只有 outcome=`passed` 的记录可为已勾选自动道 AC 提供覆盖。
+- **证据强度诚实**：`reported`=仅声称、不能关 AC；`captured`=证据包已校验但未重跑；`reproduced`=复核者重新执行并产生独立 evidence ID。未重跑不得写成“复现”。
 - **分道回填**：每条 AC 必须标所属道 + 置信档，合并记为 `(auto·可靠)` / `(auto·弱)` / `(human·待人)`（道口径见 `30_Quality_Gate/testing-strategy.md §3`，置信档见下条）。自动道 AC 须给可复现的自动验证证据（命令 / 断言 / 脚本 / 代理验证）；人测道 AC 须在「人测道小结」说明归入哪个类目、为何机器不可测，并记其待测 / 结论状态。默认归自动道，说不出人测类目即应回自动道。
 - **分级置信**：道标记内叠三档置信，如实记录、不虚高——
   - `可靠`：确定性、可复现的机器断言（单测 / 类型检查 / 构建 / 精确视觉断言等），自动道默认档。
@@ -65,7 +73,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
   - `待人`：机器（含代理验证）都测不了、只能人判定的残余，即人测道；须在「人测道小结」记类目与状态。
   - 红线：`弱` 不标 `可靠`、`待人` 不标已验——`/butler:dangerous` 无人值守下尤须如实（残余处置见 `65_Extension_Dangerous/dangerous-engine.md §7.4`）。
 - **人测道回传闭环**：`(human·待人)` 档残余不止于"标记待人"——有人场次须经**交付自测桥**回传结论并按四态路由回填（触发 / 后台起桥 / 阻塞等待 / 读回 / 四态路由流程见 `human-test-bridge.md`）：`pass` 计入收口 / `fail` 进纠错（`correction-contract.md`）/ `defer` 记 `Remaining Risks` 不阻塞 / `skip` 记 N/A；无人值守（`/butler:dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。
-- 验证方式应尽量具体到命令、检查动作或人工确认口径。
+- 验证方式应具体到 evidence ID、检查动作或人工确认口径；命令 argv/退出码/日志摘要由 record 承载，VERIFY 不手抄伪造第二份。
 - `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。**PRD 切片专项**：对着 `AC_LIST.md` frontmatter 钉住的 `prd_version` 核、**非对 live 最新核**——同一迭代内 live 即钉住版（读 live 即可），仅回溯复核历史迭代（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/<slug>.md`（钉住版语义见 `acceptance-schema.md §4`、读侧纪律回指 `40_Context_Management/references-schema.md §5 步骤 2`）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
 - `Remaining Risks` 也是 Review / P5 自评产出的 **Should Fix（不阻断项）** 的落点（不得写入 `01_CHANGELOG.md`）；见 `60_Extension_CodeReview/review-engine.md §71`。
@@ -75,6 +83,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 5. 与执行流程的关系
 
 - P5 阶段必须产出 `.ai/VERIFY_REPORT.md`，按 `.ai/AC_LIST.md` 逐项回填验证结果。
+- 完整路径 P5 在最终回填前必须校验并归档 evidence 热区；归档/重开协议见 `iteration-schema.md §5.5` 与工具 README。
 - 若任务已闭合，可作为最终交付摘要的一部分。
 - 若任务未闭合，可继续衔接 checkpoint 或 `02_SESSION_HANDOFF.md`。
 - 简化路径下可简要验证，不强制产出此文件。

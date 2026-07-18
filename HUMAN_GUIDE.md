@@ -82,6 +82,14 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 > 命令是**全局**安装（机器级、一次到位），跟逐项目的「基地车部署」是两回事——它不进目标项目的 `.ai/`，也不随目标仓走。换机器用 butler，重跑一次 `setup.sh` 即可。
 
+安装器会先检查全部用户配置，再开始写入。遇到下面三类情况会停止并保留原文件，不会猜测或强行覆盖：
+
+- `~/.claude/CLAUDE.md` 的 `<!-- butler-global-config -->` 不是完整一对：先修复或删除残缺的 Butler 管理区，再重跑。
+- shell 配置里有多条生效的 `export BUTLER_PATH=...`：手工合并为一条，再重跑；注释里提到 `BUTLER_PATH` 不算配置。
+- `~/.claude/commands/butler` 是真实文件/目录、无关软链或来源已经无法确认的断链：先确认所有权并改名/清理，Butler 不会替你删除。
+
+每个用户文件都在同目录写完临时内容后再原子替换，并保留原权限。Codex plugin 是随后执行的独立组件；如果它失败，脚本会明确写“部分完成”，保留已经安全完成的 Claude/shell 配置，修复 Codex 错误后重跑即可。
+
 ### Codex 支持状态
 
 v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 包含 8 个 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
@@ -93,6 +101,20 @@ v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能
 - `BUTLER_PATH` 缺失时 PreToolUse 门禁会 fail-closed；PostToolUse 提醒会 fail-open。若出现门禁不可用，先修正环境变量，不要用永久 trust/bypass 掩盖配置问题。
 
 共同内核、两端适配层和验证矩阵见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。需要只刷新 plugin 时仍可单独运行 `scripts/install-codex-plugin.sh`。
+
+### 本地验证与 GitHub required check
+
+开发 Butler 规则仓时，本地和 CI 都只跑这一条完整入口：
+
+```bash
+bash scripts/verify-ci.sh
+```
+
+入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 8 个 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
+
+GitHub Actions 在 Linux 与 macOS 上运行同一入口，最终汇总 check 名固定为 **`Butler required checks`**。仓库管理员应先让 workflow 至少运行一次，再到 `main` 的 Ruleset/Branch protection 中把这个精确名称设为 required，并从设置页或只读 GitHub API 复核。
+
+注意状态口径：workflow 入仓只代表 `check-provided`；保护设置尚未查询或尚未配置时必须写 `pending external configuration`。只有远端设置证据明确包含 `Butler required checks`，才能写 `required-enabled`。
 
 ## 4. 接入新项目
 
@@ -250,6 +272,16 @@ butler 的持久模式开关，统一记在 `.ai/local-constraints.md` 的「**B
 - **数据存在 butler 仓库之外**（默认 `~/.butler/preferences/`，可用 `BUTLER_PREF` 指定），跨项目共用、与规则仓库解耦。只记决策倾向的抽象，**不记业务数据或敏感内容**。
 - **不碰你的迭代**。探针是旁路观察者，从不写 `.ai/`、不卡流程，坏了也不影响迭代。
 - 想看它学到了什么，让 AI 读 `~/.butler/preferences/profile.md` 的"通识层"即可。（首次采集会自动初始化外置存储；也可手动跑 `./scripts/preference-init.sh`。）
+
+### 自动测试证据（无证据不算通过）
+
+P5 里写“测试跑过了”“127 tests passed”只是结论，不再单独算证据。完整迭代的自动测试会由 Butler 驻留工具实际执行，并在项目 `.ai/verification-evidence/` 留下机器 record：准确 argv、工作目录、起止时间、子进程退出码、stdout/stderr、字节数和 SHA-256。`VERIFY_REPORT.md` 必须逐 AC 引用 evidence ID；收口后证据整包进入 `.ai/iterations/ITER-NNNN/evidence/`。
+
+复核时会明确标出三种强度：`reported`（只听到声称，不能打绿）、`captured`（证据文件和摘要已校验）、`reproduced`（复核者真的重跑并生成新证据）。只有第三种能说“复核者复现”。
+
+证据日志会进入项目历史，所以**不要捕获可能输出 token、密钥或用户数据的命令**；应把测试改成只输出安全的机器摘要。日志超出上限会标 `incomplete`，不会假装通过。具体 schema 与命令见 `tools/verification-evidence/README.md`。
+
+收口还会运行只读状态审计器，对账台账、归档、交付、证据、知识折叠和 Butler 发布元数据。Butler 自身在提交前可用 `--allow-unreleased`，但输出会明确标 `UNRELEASED`；切版前仍要在干净工作树无此参数再审一次，二者不能混称。
 
 ### 人测回环（交付自测桥）
 

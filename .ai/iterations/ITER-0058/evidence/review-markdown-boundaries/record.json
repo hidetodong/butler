@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-markdown-boundaries",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "scripts/test-check-markdown-links.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:08:15.836Z",
+  "finished_at": "2026-07-18T08:08:15.971Z",
+  "duration_ms": 136,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 101,
+    "captured_bytes": 101,
+    "sha256": "edb4e2159c923ea45a32656078835cdf531c3d7b414c670dd786978875cb0678",
+    "truncated": false
+  }
+}

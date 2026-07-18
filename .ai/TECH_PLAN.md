@@ -1,63 +1,123 @@
-# TECH_PLAN — ITER-0055 · 基地车展开边界加固
+# TECH_PLAN — ITER-0059 · 可执行升级器
 
-## 方案摘要
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过 `dangerous-engine.md §5.2` 自审门），未经用户逐项确认（ITER-0059，2026-07-18）。
 
-新增一个标准库项目根解析器，把“施工到哪里”从散文猜测收敛成一个可测试的决策。规则真源定义优先级，Claude/Codex 入口和工作流只回指该契约；所有展开命令都使用解析后的绝对路径，不再直接使用 `$(pwd)`。
+## Goal
 
-## 根目录决策
+- 用结构化、可校验、无第三方运行时依赖的升级链兑现 AC1–AC9。
+- 保留现有 renderer 和 MCV 项目根解析为底层真源，不复制入口渲染或项目根算法。
+- 将项目内事务、人工决定和机器级外部动作拆成三个明确执行域。
 
-`scripts/resolve-project-root.py` 按以下顺序决定，命中即停：
+## Files / Modules to Change
 
-1. **用户点名目标**：`--user-target <path>`。解析软链后必须是已存在、可写的目录；不要求已初始化 Git。
-2. **最近的已部署 Butler 根**：从 `--start` 向上查找，候选必须同时有 `.ai/` 和含 Butler 签名/管理区的 `CLAUDE.md` 或 `AGENTS.md`。
-3. **VCS 根**：若不在已部署 Butler 项目中，用 `git -C <start> rev-parse --show-toplevel` 确定当前仓库根。
-4. **拒绝**：上述都不成立时退出码 2，提示用户点名项目；不扫描子目录猜候选，不创建任何文件。
+- **ADD `migrations/manifest.json`**：中心机器台账；登记 schema 版本、支持基线、每个发布区间和有限 action 列表。
+- **ADD `tools/butler-upgrade/upgrade.py`**：标准库 CLI 与执行内核，提供 `inspect`、`plan`、`apply`、`global-install` 子命令和 JSON/human 输出。
+- **ADD `tools/butler-upgrade/README.md`**：命令、状态码、运行区、恢复和动作域真源。
+- **ADD `scripts/test-butler-upgrade.py`**：manifest 负向校验、历史 fixture、事务/锁/越界/故障注入 E2E。
+- **EDIT `scripts/render-project-entrypoints.py`**：只补可复用的纯 plan/字节接口和自目标拒绝所需边界；现有 CLI 行为保持兼容。
+- **EDIT `scripts/verify-dual-host.sh`**：把升级器专项纳入单一 CI/local 矩阵。
+- **EDIT `Coder/20_Workflow_Lifecycle/butler-upgrade.md`、`migration-schema.md`、`mcv-deployment.md`**：切换到程序执行真源，保留人工决策语义和人读配方责任。
+- **EDIT `.claude/commands/butler/upgrade.md`、`plugins/butler/skills/butler-upgrade/SKILL.md`**：两宿主薄壳只调用同一 CLI。
+- **EDIT `README.md`、`HUMAN_GUIDE.md`、`docs/codex-compatibility.md`**：登记操作者用法和边界。
+- **EDIT `migrations/v2.13.0.md`、`v2.14.0.md`、`v2.6.0.md`**：补齐人读 schema 章节/标准标签；只校正结构，不改变历史动作意图。
 
-解析成功时 stdout 只输出可供 shell 捕获的绝对路径，stderr 回声证据类型和根目录。调用方在任何写入前向用户显示该结果。
+## Interface / Contract
 
-## 实现落点
+### 1. 机器台账
 
-- **单一真源**：在 `mcv-deployment.md` 新增“施工项目根解析”前置门，定义上述决策、回声与零写入约束。
-- **可执行真源**：新增 `scripts/resolve-project-root.py`；只用 Python 标准库与本机 Git，实现无副作用解析。
-- **部署接线**：MCV 例子先得到 `PROJECT_ROOT`，后续侦察、展开、双入口渲染、hook 验证全部显式使用该路径。
-- **渲染防误用**：`render-project-entrypoints.py` 保持 `--target` 显式参数，拒绝不存在/非目录/不可写目标；文档只传 `PROJECT_ROOT`。
-- **全局规则注入**：`templates/rule-card.md` 的基地车段压缩为“先解根、再写入”的硬规则；两入口模板继续内联同一 rule-card，不双写算法。
-- **工作流路由**：8 个 Claude 命令与 8 个 Codex skills 中涉及项目读写的“当前项目”描述，统一改为“先按 MCV 项目根契约解析，然后以该根为基准”；只加路由指针，不复制判定算法。
-- **文档与迁移**：README/HUMAN_GUIDE/兼容说明登记聚合目录边界；如版本判定为 MINOR，产出迁移说明，既有项目结构不需搬迁。
+`manifest.json` 顶层：
 
-## 验证设计
+- `schema_version: 1`
+- `baseline_version: "1.0.0"`
+- `migrations: []`，按 target semver 严格升序。
 
-`scripts/test-resolve-project-root.py` 覆盖：
+每个 migration：`source`、`target`、`recipe`、`actions`。相邻记录必须 `previous.target == next.source`，recipe 必须存在且文件名等于 target。
 
-1. 显式目标在 cwd 之外，仍返回显式目标。
-2. 显式无 Git 目录可用。
-3. 显式目标不存在/非目录时拒绝。
-4. Git 仓子目录定位到顶层。
-5. 非 Git 的已部署 Butler 项目从子目录定位到最近根。
-6. 包含多仓子目录的聚合父目录拒绝，整棵临时树零新增。
-7. 软链路径解析为真实绝对路径。
-8. 渲染器对非法目标零写入，对解析后外部目标只写双入口。
+每个 action：
 
-交付前复跑 `bash scripts/verify-dual-host.sh`、`python3 -m pytest templates/hooks/tests -q`、plugin validator、`git diff --check`，并绝对路径确认 `research/.ai` 不存在。
+- `id`：全台账唯一、稳定，格式 `<target>/<ordinal>-<slug>`。
+- `type`：`regen_entrypoints | sync_hooks | rename | add_field | restamp | no_op | split | global_install`。
+- `domain`：`project | decision | machine`，由 action schema 固定，不允许随记录伪装。
+- 类型参数：rename 的 `from/to`、add_field 的 `path/section/key/value`；其余只接受白名单字段。
 
-## 变更顺序
+历史 `[regen-claude]`、`[global-install-rerun]` 只在 Markdown 兼容说明出现，manifest 统一归一为现代类型。
 
-1. 先写 resolver 失败/成功场景测试，再实现最小解析逻辑。
-2. 把 MCV 真源从 `pwd` 切到 `PROJECT_ROOT`，同步规则卡。
-3. 更新 Claude/Codex 薄路由指针，保持两宿主语义一致。
-4. 更新渲染器边界、文档和统一验证脚本。
-5. 跑完整回归，P5 强审后再收口。
+### 2. CLI
 
-## 风险与回退
+```text
+python3 tools/butler-upgrade/upgrade.py inspect --project-root PATH [--json]
+python3 tools/butler-upgrade/upgrade.py plan --project-root PATH [--split defer|now] [--json]
+python3 tools/butler-upgrade/upgrade.py apply --project-root PATH --split defer|now [--json]
+python3 tools/butler-upgrade/upgrade.py global-install --project-root PATH --confirm [--json]
+```
 
-- **取舍**：无 Git/无 Butler 标记且用户未点名的目录会多一次确认；这是拒绝误展开的有意代价。
-- **误认风险**：既有 Butler 根必须验证入口签名，不只看 `.ai/` 目录名。
-- **回退**：resolver 是无副作用前置层；若发现兼容性问题，可回退调用接线，不需搬迁任何已部署 `.ai` 数据。
+- `inspect`/`plan` 永远零写入；未提供 split 决定时计划仍完整输出，但退出 `needs-decision`。
+- `apply` 必须显式给 split 决定；`defer` 继续机械动作，`now` 在检测到真实单文件待拆时返回人工交接，不写项目。
+- `global-install` 是独立命令，要求 `--confirm`，只运行 installer 并报告自身结果，不改变项目 journal 的 fully-complete 结论。
+- 稳定退出码：0 success/already-current；2 invalid/conflict；3 needs-decision/manual；4 locked；5 apply-failed-restored；6 external-action-failed。
+- JSON 固定包含 `status`、`project_root`、`from_version`、`to_version`、`actions`、`changes`、`conflicts`、`external_pending`、`run_id`（适用时）。
+
+### 3. 计划与项目事务
+
+- 项目根先 `resolve()`，拒绝等于/位于 Butler 根、非目录、不可写和软链越界。
+- 从 CLAUDE.md/AGENTS.md 管理区读取唯一且一致版本戳；单入口旧项目允许从 CLAUDE 戳建立队列，renderer 在最终动作补 AGENTS。
+- 收集 `from < target <= VERSION` 的记录，展开 actions；重复最终态写合并为一个目标文件 PlannedWrite，但每个 action ID 都在 journal 留状态。
+- 全量 preflight 生成内存中的最终文件映射并检查所有冲突，成功前不创建运行目录或 lock。
+- apply 使用目标 `.ai/butler-upgrade/runs/<run-id>/`：`journal.json`、`restore.json`、`backup/`。恢复 manifest 记录相对路径、存在性、mode、before/after SHA-256。
+- lock 为 `.ai/butler-upgrade/apply.lock` 的排他创建；旧锁不自动删除，只报告 owner/run 信息。
+- 备份和目标临时文件全部落同一文件系统；逐文件 `os.replace`。故障时按 restore manifest 逆序恢复，恢复成功才返回 5；恢复失败同时保留 journal 并报最高风险诊断。
+- 不调用 git reset/checkout，不碰未登记文件；运行区自身不纳入恢复文件集合。
+
+### 4. 动作实现
+
+- `regen_entrypoints/restamp`：复用 renderer 的 `plan()`，一次生成当前 VERSION 的双入口最终态；保护管理区外和各自 user-managed 内容。
+- `sync_hooks`：以当前 `templates/hooks/`（除 tests/cache）为真源，目标存在时只接受 manifest 登记的历史受管 tree digest 或当前 digest；额外/漂移受管文件冲突。settings 用纯函数按 matcher+入口名幂等合并，只追加 Butler 自己的两条，不改其他条目。
+- `rename`：只允许 project-relative、白名单前缀路径；旧存在且新不存在才计划 rename，二者都不存在视已完成，二者同时存在冲突。
+- `add_field`：只对 manifest 指定 Markdown 段落/key/default 做窄编辑；已有同 key 同值跳过，异值视用户选择并保留，不覆盖。
+- `split`：decision 域；无 PROJECT.md 或已有完整 project/00_INDEX 视已决定/已迁；部分成形冲突；真实待拆按 defer/now 路由。
+- `global_install`：machine 域，仅登记 pending；项目 apply 永不执行。
+
+## State / Boundary
+
+- manifest 是执行数据真源；Markdown migration 是人读发布说明，CI 只校验一一覆盖和结构，不从正文派生 action。
+- journal 是单次执行事实，不是版本台账；历史 run 不自动删除，用户可审计后自行清理。
+- 项目事务只承诺 manifest 登记路径；HOME/global install、语义 split 和用户仓库 git 状态不在原子边界。
+- 无戳项目返回 manual-bootstrap；本轮不自动猜旧内容归属。
+- 当前工作树含 R1–R3 未提交改动；进入 P4 前建隔离分支 checkpoint，R4 修改继续在同分支追加，不改写历史 commit。
+- Active Profiles：无；`.ai/local-constraints.md` 只启用 dangerous，自审/审计/强审和 checkpoint 护栏必须完整执行。
+
+## Design Decisions
+
+- **中心 JSON 而非逐 Markdown 解析或 YAML**：标准库可严格读写，单文件能机械检查全链连续性和唯一 ID；代价是发布时需同时维护人读 recipe，CI 覆盖检查负责防漏。
+- **有限 action 联合而非通用脚本语言**：每类动作有确定 schema、路径和冲突语义，未来新增类型必须改代码与测试；牺牲任意性换审计性。
+- **最终态合并写，不逐版本落中间态**：历史队列仍逐 action 记录，但入口/hook 只写当前仓最终态，避免 renderer 使用当前 VERSION 却伪造中间版本；最终结果与连续逐版的幂等语义等价。
+- **preflight 在运行区创建前完成**：满足冲突零写入；只有真正 apply 才生成 lock/backup/journal。
+- **global install 独立子命令**：HOME 无法与目标项目原子回滚，强行合并会产生虚假事务承诺。
+- **split 的 now 诚实交接**：任意知识文本无法可靠机械路由；程序负责阻塞、记录、续跑边界，不用粗暴按标题切分冒充语义迁移。
 
 ## Execution Steps
 
-- [ ] T1：新增 resolver 及单元/隔离测试（AC1–4/6）。
-- [ ] T2：接线 MCV、rule-card 与 renderer 目标验证（AC1–5）。
-- [ ] T3：更新 8 Claude 命令 + 8 Codex skills 的单一根契约指针（AC4/5）。
-- [ ] T4：更新文档、回归入口和迁移/版本面（AC5/6）。
-- [ ] T5：完整回归、事故路径检查与 P5 强审（AC6/7）。
+- [ ] **T1** 写 manifest schema/覆盖负向测试与历史动作清单，再落 `migrations/manifest.json` → AC1
+- [ ] **T2** 实现 inspect/plan、版本/marker/root/symlink 检查和稳定 JSON/exit contract → AC2、AC3
+- [ ] **T3** 实现纯动作计划器、renderer 复用、hook/settings/rename/add-field/split/global 域 → AC5、AC6
+- [ ] **T4** 实现 lock、backup/journal、原子 apply、故障注入恢复和 rerun → AC4、AC5
+- [ ] **T5** 建 v1.x/v2.0/v2.14/v2.15/current fixture 与冲突/并发/恢复 E2E → AC2–AC7
+- [ ] **T6** 修正历史 recipe 结构，接线 Claude/Codex 薄壳、规则与人类文档 → AC1、AC8
+- [ ] **T7** 接入完整 CI，捕获 evidence、执行危险模式全维审查并修到 0 Must Fix → AC9
+
+## Verification Plan
+
+- manifest：正常全链；删除/重复/断链/坏 domain/未知字段/未知 action/缺 recipe 均失败。
+- plan：每个历史基线输出黄金 JSON 关键字段；前后递归摘要相同；无戳/前向/双戳不一/marker 异常诊断稳定。
+- security：self-target、path traversal、绝对路径、外指 symlink、extra hook、部分 split、目标冲突全部首写前拒绝。
+- transaction：逐写点故障注入，文件集合/bytes/mode 恢复；双进程锁仅一方成功；旧锁不偷删。
+- idempotence：fixture 首次 apply 后第二次零内容 diff；入口区外和 user-managed 逐字节一致。
+- host/docs：官方 Codex validator、Claude/Codex workflow checks、Markdown link checker、完整 `verify-ci.sh`。
+- evidence：专项、负向风险复现、完整矩阵、diff-check、state audit 全由 evidence runner 捕获，VERIFY 逐 AC 引用。
+
+## Risks / Open Questions
+
+- 历史 hook 的合法旧 digest 需要从已发布 tag 机械提取并固化到 manifest 或测试数据；若某 tag 不含完整 hook 树，计划器应按版本明确“无已知受管副本”，不能宽放任意内容。
+- settings.json 是用户共享配置；只允许纯函数追加缺失 Butler 条目，JSON 非对象/字段类型异常必须冲突，格式变化要保持最小。
+- apply 进程被 `SIGKILL` 无法在当下自动恢复；下次 inspect 必须识别 incomplete journal 并阻止新 apply，给出显式恢复指引。本轮若实现自动 resume/restore 会扩大接口，优先保证检测与 fail-closed。
+- 当前无设计阻塞；影响面均在 AC 已冻结范围内。

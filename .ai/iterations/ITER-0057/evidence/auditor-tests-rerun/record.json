@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "auditor-tests-rerun",
+  "iteration": "ITER-0057",
+  "ac_ids": [
+    "AC3",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-audit-project-state.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T07:26:00.258Z",
+  "finished_at": "2026-07-18T07:26:01.027Z",
+  "duration_ms": 769,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 110,
+    "captured_bytes": 110,
+    "sha256": "503632e99d8d709a56e95ca012affe0e8280a129c75e5c1f329837f33ef661e6",
+    "truncated": false
+  }
+}

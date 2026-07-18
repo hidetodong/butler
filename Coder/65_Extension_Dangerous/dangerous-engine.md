@@ -117,6 +117,7 @@ P4 执行阶段**直接复用 `55_Extension_ConvergenceLoop/convergence-loop-eng
 标准流程 P5 默认只做简要自评。危险模式因缺少全程人工把关，**必须升级为完整审查**，作为每个迭代收口前的最后一道质量门：
 
 - 强制激活 `60_Extension_CodeReview/review-engine.md` 的**完整多维评审**（逻辑健壮性 / 可读性命名 / 性能 / 安全 / 已激活 profile 专项），而非精简自评；危险模式下**不允许**"跳过审查"。因全程无人把关，**建议**进一步升格为**独立复核**（fresh-context 子 agent，验证者≠模型自身，完整定义见 `62_Extension_Agents/independent-review.md`）；环境不支持子 agent 时按 `62_Extension_Agents/overview.md §3` 通用规矩 **G2** 如实标注、不得冒称已独立。
+- **机器证据不可省**：所有自动道绿结论先经 verification evidence runner 捕获并归档，Evidence Index 逐 AC 引用；无人值守更不得用模型自述“已运行/已通过”替代 record。审查按 `reported/captured/reproduced` 标强度，风险项未重跑不得称复现。
 - **Must Fix 阻断收口**：存在 Must Fix 即不得收口、不得交付，必须先修复并对 Must Fix 定点复查通过；修复直接走 §6 的收敛闭环。
 - **Should Fix 必须留痕**：记入 `.ai/VERIFY_REPORT.md` 的 `Remaining Risks` 并在交付披露，不得静默丢弃；不写入 `01_CHANGELOG.md`（对象级变更流，见 `20_Workflow_Lifecycle/changelog-schema.md`）。
 - 审查结论按 §7.1 记入审计轨迹并在交付总结披露。

@@ -3,8 +3,9 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 plugin="$repo_root/plugins/butler"
-creator_root="${BUTLER_PLUGIN_CREATOR_DIR:-${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator}"
-skill_creator_root="${BUTLER_SKILL_CREATOR_DIR:-${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator}"
+validator_root="$repo_root/tools/codex-validators"
+plugin_validator="$validator_root/plugin-creator/validate_plugin.py"
+skill_validator="$validator_root/skill-creator/quick_validate.py"
 names=(prd review milestone upgrade ideation preference loop dangerous)
 
 fail() { echo "[FAIL] $*" >&2; exit 1; }
@@ -49,15 +50,13 @@ if rg -q '\[TODO:|TODO:' "$plugin"; then
   fail "plugin contains TODO placeholders"
 fi
 
-if [[ -f "$creator_root/scripts/validate_plugin.py" ]]; then
-  command -v uv >/dev/null 2>&1 || fail "uv is required to run official validators without modifying repo dependencies"
-  uv run --with pyyaml python "$creator_root/scripts/validate_plugin.py" "$plugin" >/dev/null
-fi
-if [[ -f "$skill_creator_root/scripts/quick_validate.py" ]]; then
-  for skill_root in "$plugin"/skills/*; do
-    uv run --with pyyaml python "$skill_creator_root/scripts/quick_validate.py" "$skill_root" >/dev/null
-  done
-fi
+[[ -f "$plugin_validator" ]] || fail "missing pinned plugin validator: $plugin_validator"
+[[ -f "$skill_validator" ]] || fail "missing pinned skill validator: $skill_validator"
+python3 "$validator_root/test_vendored_validators.py" >/dev/null
+python3 "$plugin_validator" "$plugin" >/dev/null
+for skill_root in "$plugin"/skills/*; do
+  python3 "$skill_validator" "$skill_root" >/dev/null
+done
 
 for doc in "$repo_root/README.md" "$repo_root/Coder/README.md" "$repo_root/HUMAN_GUIDE.md" "$repo_root/docs/codex-compatibility.md"; do
   require_text "$doc" 'plugins/butler'

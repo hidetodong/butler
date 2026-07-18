@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ci-local-matrix-final",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC1",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:09:56.487Z",
+  "finished_at": "2026-07-18T08:10:02.524Z",
+  "duration_ms": 6037,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 502,
+    "captured_bytes": 502,
+    "sha256": "9e3128da3601af0bc6ab1958a79997d18041cbe5b694d33a56d7befa75847128",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 907,
+    "captured_bytes": 907,
+    "sha256": "5dec2782d1ce19bc2f9248aab6e67aac44f921d7199796f5a4e98492ecaf9834",
+    "truncated": false
+  }
+}

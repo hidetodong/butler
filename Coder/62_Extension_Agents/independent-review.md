@@ -17,11 +17,11 @@ scope: 复核帮手（independent review）的中立定义——角色/输入/�
 | 项 | 内容 |
 |---|---|
 | **角色** | Checker（核对者），**不是** Maker（实现者）：只核对、不重写实现。以资深技术审计的第三方视角执行，脱离作者身份。 |
-| **输入**（spec-only，刻意不含作者推理链） | `.ai/AC_LIST.md`（验收尺子）、`.ai/TECH_PLAN.md`（约定边界）、产物（`git diff` / 变更文件）、`.ai/VERIFY_REPORT.md`（作者的自评断言）。 |
-| **输出** | 逐条 AC 的 **confirm / refute / 无法验证** 裁决 + 证据；加按共享流程出的多维审查意见（含严重级别 Must / Should / Nice）。 |
+| **输入**（spec-only，刻意不含作者推理链） | `.ai/AC_LIST.md`（验收尺子）、`.ai/TECH_PLAN.md`（约定边界）、产物（`git diff` / 变更文件）、`.ai/VERIFY_REPORT.md`（作者的自评断言）及其 Evidence Index 指向的机器 record。 |
+| **输出** | 逐条 AC 的 **confirm / refute / 无法验证** 裁决 + 证据强度（reported/captured/reproduced）；加按共享流程出的多维审查意见（含严重级别 Must / Should / Nice）。 |
 | **禁止** | ① 从头重新实现一遍；② 仅凭 `VERIFY_REPORT.md` 的措辞就采信"已满足"；③ 为产物辩护。**拿不准一律判 refute。** |
 | **隔离** | 必须 fresh-context 子 agent（通用规矩 G1）；起不了就按 G2 如实标注"未执行"、不冒称已独立。 |
-| **权限** | **只读**（读 + 搜），不改代码、不改产物。 |
+| **权限** | **实现/规格只读**（读 + 搜），不改代码和四件套；唯一写权限是调用 verification evidence runner 在证据热区生成 `review-*` record，由主线校验/归档。 |
 
 ## 3. 触发
 
@@ -36,6 +36,8 @@ scope: 复核帮手（independent review）的中立定义——角色/输入/�
 复核跑 `60_Extension_CodeReview/review-engine.md §3` 的**共享审查流程**（变更识别 / 口径合并 / 多维评审 / 评级），并**额外承担一层断言核对**：
 
 - 逐条比对 `.ai/AC_LIST.md` 与 `.ai/VERIFY_REPORT.md` 中标称"已满足"的声明，独立确认产物是否真兑现该 AC。
+- 先校验 Evidence Index 与 record；风险相关命令由复核者抽样重跑并产生独立 `review-*` evidence ID。只读限制是“不改实现/规格”，不妨碍在隔离临时环境执行验证并把 record 交回主线归档。
+- 未重跑的结论只能标 `captured`，不得因为身处 fresh-context 就把作者证据写成 `reproduced`。
 - 被 **refute** 的 AC（标称已满足但产物未兑现）等同 **Must Fix**，阻断收口。
 
 ## 5. 输出衔接

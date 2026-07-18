@@ -63,6 +63,16 @@ scope: 代码审查的激活条件、评级标准与闭环控制（共享审查�
 
 独立复核中，被 **refute** 的 AC（标称已满足但产物未兑现）等同 **Must Fix**，阻断收口。
 
+### 3.5 证据强度裁决
+
+审查不能只重复作者的测试结论。对每条验证/复核断言标明强度：
+
+- `reported`：只有作者/模型声称或命令文本，无机器 record；不得用来关闭自动道 AC。
+- `captured`：已用 verification evidence verifier 核对 record、日志字节与 SHA-256，但 reviewer 未重跑。
+- `reproduced`：reviewer 重新执行风险相关命令并生成独立 `review-*` evidence ID；只有此档可写“复核者复现”。
+
+Must Fix / Should Fix 应给文件/行或 evidence ID。P5 至少对风险相关验证做抽样 `reproduced`；受环境限制未重跑时如实落 `Remaining Risks`，不得把 `captured` 冒充 `reproduced`。
+
 ## 4. 闭环控制
 
 - 若存在 **Must Fix** 条目（含独立复核 refute 的 AC），AI 必须建议启动修复。若当前处于收敛闭环模式，直接进入下一轮迭代修复；否则询问用户是否激活 `/butler:loop`。修复退回 P4，受 `30_Quality_Gate/correction-contract.md` 约束（修到真过、禁止降级修复）。
@@ -75,6 +85,7 @@ scope: 代码审查的激活条件、评级标准与闭环控制（共享审查�
 
 - 只输出 Must Fix 和 Should Fix 条目
 - 不进行全量多维打分
+- 先校验 Evidence Index；自动道只有 `reported` 时直接列 Must Fix，不接受口头绿
 - 目标是快速拦截交付前的明显问题，不是完整审计
 
 **它是同上下文自检，不是独立复核**。需要结构性独立时，手动 `/review` 或为项目开 `independent_review: on`（触发与契约见 `62_Extension_Agents/independent-review.md`）。

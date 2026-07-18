@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "remote-required-state",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "gh",
+      "api",
+      "repos/hidetodong/butler/branches/main/protection/required_status_checks",
+      "--jq",
+      "{strict,contexts,checks}"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:06:03.991Z",
+  "finished_at": "2026-07-18T08:06:05.233Z",
+  "duration_ms": 1242,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 212,
+    "captured_bytes": 212,
+    "sha256": "33caaeded79c1befdacdb0286de634562b03f35e24e916741880e45f4c2d2f7d",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 92,
+    "captured_bytes": 92,
+    "sha256": "dbf87ea4a345f4e73a9582fd3cefce7cc3f1871e16dba5e56523eff7fdf6cca4",
+    "truncated": false
+  }
+}

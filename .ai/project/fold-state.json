@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "receipts": {
+    "ITER-0057": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0057/CHANGELOG.md",
+        "sha256": "d65c1a15d4be2f95c0b52794344fa00fa0c38dc5b9ffd107a1b4fd7811038412"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "1739b3ec2657f15bd7dcce7dad1bb0a88b071f36f36419570fc68e3507158da1"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "4143d5494bd33da8c5e13052f9fa2591538bc24ccdacaa26ac657f98188de681"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "0238cb74594a1f02576332737447eaed33f0b0afc7b0aa85450a6e4b21d97d52"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "6198ebf6f1628963a23b18ed6e5a93bba241d34a5476a5cd6b129ba12907f40b"
+        }
+      ]
+    },
+    "ITER-0058": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0058/CHANGELOG.md",
+        "sha256": "9da59a353097f0f5e1e9ab927261ec1ea9cc015e65160f8c182becb2d2634b10"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "e33f9532b3b530ecc3fce4ff4aeceed5e0175c916b5cb338f8078d3eca72e575"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "0206b622570437c2d5f687d5252d2b2b131d93e0a3d875bdabc26edf694eac2c"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "628b3c6ca5055a523f1d048cd0e1f99b4b24dbd1d6a2c8ff3b53ccfec6307cbe"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "0e5d4e2bab9e2afea9765263cc238aaa09d0e7a9ee7428a26a6dce61dc6b3d7b"
+        }
+      ]
+    }
+  }
+}

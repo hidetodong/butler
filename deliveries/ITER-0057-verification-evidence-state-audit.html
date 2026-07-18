@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0057 交付总结 · 自动验证证据链与只读状态审计</title>
+  <style>
+    :root { --fg:#1f2328; --muted:#59636e; --bg:#f6f8fa; --card:#fff; --border:#d1d9e0; --accent:#0969da; --soft:#ddf4ff; --warn:#fff8c5; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    * { box-sizing:border-box; } body { margin:0; padding:2rem 1rem 4rem; background:var(--bg); color:var(--fg); font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+    .sheet { max-width:820px; margin:auto; } header,section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.75rem 1.25rem; margin-bottom:1rem; }
+    header { padding:1.5rem 1.75rem; } h1 { margin:0 0 .75rem; font-size:1.5rem; } h2 { margin:0 0 .6rem; font-size:1.05rem; padding-bottom:.4rem; border-bottom:1px solid var(--border); }
+    .meta { display:flex; gap:.5rem; flex-wrap:wrap; } .chip { padding:.15rem .6rem; border-radius:999px; font: .8rem var(--mono); color:var(--accent); background:var(--soft); } .chip.muted { color:var(--muted); background:#eef1f5; }
+    p,ul { margin:.5rem 0; } ul { padding-left:1.3rem; } li { margin:.25rem 0; } code { font: .88em var(--mono); background:#eef1f5; padding:.05rem .35rem; border-radius:5px; }
+    .risks { background:var(--warn); border-color:#eed888; } footer { margin-top:1.5rem; text-align:center; color:var(--muted); font-size:.8rem; }
+    @media print { body { background:#fff; padding:0; } header,section { break-inside:avoid; } }
+  </style>
+</head>
+<body><main class="sheet">
+  <header><h1>自动验证证据链与只读状态审计</h1><div class="meta"><span class="chip">ITER-0057</span><span class="chip muted">MILE-0007 R2</span><span class="chip muted">收口 2026-07-18</span></div></header>
+  <section><h2>本次交付目标</h2><p>把“测试/复核通过”从模型口头结论升级为能打开、校验和重跑的机器记录，并让收口状态由只读审计器机械对账。</p></section>
+  <section><h2>已完成内容</h2><ul><li>新增真实 argv/exit/log/hash evidence runner、只读 verifier 和 hot/archive/reopen 单真源流程。</li><li>VERIFY 强制 Evidence Index；复核分 reported/captured/reproduced，风险抽样产生 <code>review-*</code> record。</li><li>新增 state auditor，对账台账、交付、归档、证据、fold receipt、runtime 指针与发布元数据。</li><li>标准/危险模式、收口、交接、知识折叠和人读入口全部接线。</li></ul></section>
+  <section><h2>关键变更 / 用户可感知变化</h2><p>完整路径只写“全部通过”不再关闭自动道 AC；失败证据会保留，修复后以新 ID 重跑。收口漂移给对象级报告，活动规则仓明确亮 <code>UNRELEASED</code>。</p></section>
+  <section><h2>高层影响范围</h2><p>涉及 <code>tools/verification-evidence/</code>、状态审计脚本、P5/复核/收口/context 规则和 README/HUMAN_GUIDE；CI required checks 与跨 OS 持续矩阵留给 R3。</p></section>
+  <section><h2>验证方式与结果摘要</h2><p>runner 11 项、auditor 11 项和三类 P5 风险抽样通过。完整矩阵首跑失败记录保留，修复后新 ID 重跑通过：renderer 8、resolver 7、installer 16、runner 11、auditor 11、127 pytest、Codex 检查与 plugin validator 全绿。12 份 record 均通过归档校验。</p></section>
+  <section class="risks"><h2>已知剩余风险 / 延后事项</h2><ul><li>SHA-256 是漂移检查，不是签名或远程证明。</li><li>非 POSIX 跨平台验证留给 R3；fold receipt 不替代项目知识语义抽查。</li></ul></section>
+  <section><h2>引用（只引用路径，不嵌全文）</h2><ul><li><code>.ai/iterations/ITER-0057/AC_LIST.md</code></li><li><code>.ai/iterations/ITER-0057/TECH_PLAN.md</code></li><li><code>.ai/iterations/ITER-0057/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0057/CHANGELOG.md</code></li><li><code>.ai/iterations/ITER-0057/evidence/</code></li></ul></section>
+  <footer>固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9</footer>
+</main></body></html>

@@ -233,6 +233,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
      - **已采用 `.ai/project/` 知识文件夹**：确认本里程碑沉淀的版本级长期事实已折进对应 topic 文件、被取代结论已删；缺则补折。判据与格式见 `40_Context_Management/project-digest-schema.md §6`。
      - **仍单文件 `.ai/PROJECT.md`**（未迁移暂态）：里程碑级若沉淀了新的长期事实（架构 / 不变量 / 现行约束 / 长期欠债）才更新对应字段，否则不动。
 - 版本级整体验收：收口前必须确认拆分路线图各路线项均 `closed`/`abandoned`、其下迭代验收闭环；存在 `planned`/`active` 路线项时不得收口（除非显式废弃该路线项）。
+- 完成归档、交付、台账与项目全貌补漏后，运行 `$BUTLER/scripts/audit-project-state.py --project-root "$PROJECT_ROOT"`；Butler 规则仓处于提交/发布前时可加 `--allow-unreleased`，但必须保留 `UNRELEASED` 亮牌；后续切版仍按 `versioning-schema.md` 在干净工作树无豁免复核。确定性漂移未清零不得宣告里程碑收口。
 - **收口后归属边界**：`current` 置 `none` 后，再开启的迭代**不再自动归属本（已收口）里程碑**、不回写其「含迭代」与路线图，按独立迭代处理；已收口里程碑不接收新迭代、不被回挂。若新迭代属于另一个大版本，按 §7.1 另开里程碑或 §6.3 回挂到另一个 `active` 里程碑。
 
 ### 7.5 废弃 (Abandon)

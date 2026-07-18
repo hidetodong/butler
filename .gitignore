@@ -1,6 +1,10 @@
 .worktrees/
 .claude/worktrees/
 
+# R3 pinned local verification environment
+.venv/
+.uv-cache/
+
 # Python 字节码缓存（hook 体系 pytest 运行时产生）
 __pycache__/
 *.py[cod]

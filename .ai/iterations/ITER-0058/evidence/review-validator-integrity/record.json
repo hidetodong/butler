@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-validator-integrity",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "tools/codex-validators/test_vendored_validators.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:08:15.836Z",
+  "finished_at": "2026-07-18T08:08:16.299Z",
+  "duration_ms": 464,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 101,
+    "captured_bytes": 101,
+    "sha256": "bbd285541aaa549ac04727955d82ca7a7808d3ff6a7d53e49c28597aff84af30",
+    "truncated": false
+  }
+}

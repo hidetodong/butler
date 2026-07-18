@@ -36,6 +36,7 @@
 
 ## 验证
 
+- 交付前完整验证统一运行：`bash scripts/verify-ci.sh`。
 - 修改 Codex 入口或模板后运行：`bash scripts/verify-codex-foundation.sh`。
 - 修改 hook 共享逻辑后运行：`python3 -m pytest templates/hooks/tests -q`。
 - 交付前运行：`git diff --check`，并确认没有混入无关变更。

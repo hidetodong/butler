@@ -99,7 +99,7 @@ commit message 格式**不进 hook 机械门禁**——PreToolUse hook 拦截的
 切版前先确认状态一致、无悬挂：
 
 1. **定区间**：`git tag` 取最近发布 tag，对照 `.ai/ITERATIONS.md` 列出自那以来 `closed` 的迭代——这是本次聚合区间。
-2. **跑一致性自检**：执行 `context-persistence.md` 冷启动一致性自检 6 不变量（current↔状态 / 至多一个 active / closed 有交付且文件存在 / closed 有归档 / 里程碑路线项对账 / 知识文件夹漂移[第 6 条条件不变量，采用 `.ai/project/` 的项目适用、单文件项目 N/A]）；**有漂移先修，不带病切版**。
+2. **跑一致性自检**：先执行 `scripts/audit-project-state.py --project-root .`（切版前工作树应干净，不用 `--allow-unreleased`）机械核对发布元数据/台账/归档/证据，再执行 `context-persistence.md` 6 不变量的知识语义检查；**有漂移先修，不带病切版**。
 3. **无悬挂 active**：区间内不得有未收口的 `active` 迭代（要么收口、要么按 `iteration-schema.md §5.6` 废弃）；迭代内容应已随各自收口提交，工作区无未提交的迭代产物遗留。
 
 ### 6.3 切版步骤（语义 + git 操作）

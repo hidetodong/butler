@@ -163,9 +163,9 @@ AI 必须回答：
 
 ### P5 Verify
 
-**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
+**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`；完整路径自动道还必须先由 verification evidence runner 生成机器 record，VERIFY 的 Evidence Index 逐 AC 引用，口头/手写“passed”不能替代。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
 
-**迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行以下收口步（收口原子仪式：前三步缺一不可、第四步前滚项目全貌产物[文件夹态必做 / 单文件态按需]、第五步自检；详见 `iteration-schema.md` §5.5）：① 把工作区四件套（及完整路径必产的 `01_CHANGELOG.md` 切片，严格 ADD/EDIT/DELETE，格式见 `changelog-schema.md`）快照归档到 `.ai/iterations/ITER-NNNN/`；② 生成 `deliveries/ITER-NNNN-<slug>.md` 交付总结，**只引用产物路径、不得全文嵌入四件套内容**，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图（仍是三步、step ② 双产出）；③ 在 `.ai/ITERATIONS.md` 把该迭代置 `closed`、填收口日期与交付链接、`current` 置 `none`，全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据；④（前滚项目全貌产物，两态）项目已采用 `.ai/project/` 知识文件夹则把本迭代 CHANGELOG delta 按主题折进对应 topic 文件（必做）、仍单文件 `.ai/PROJECT.md` 则按需前滚长期事实字段（详见 §5.5 与 `40_Context_Management/project-digest-schema.md §6`）；⑤（收口自检）跑 `40_Context_Management/context-persistence.md` §冷启动一致性自检的 6 条不变量（第 6 条知识文件夹漂移为条件不变量、单文件项目 N/A），确认台账↔产物↔交付↔知识文件夹无漂移、有漂移当场修正。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
+**迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行以下收口步（收口原子仪式：前三步缺一不可、第四步前滚项目全貌产物[文件夹态必做 / 单文件态按需]、第五步自检；详见 `iteration-schema.md` §5.5）：① 校验证据热区并整包归档到 `.ai/iterations/ITER-NNNN/evidence/`，再把工作区四件套与 `01_CHANGELOG.md` 切片快照归档；② 生成 `deliveries/ITER-NNNN-<slug>.md` + 同名 `.html`，只引用产物/证据路径、不嵌全文或日志；③ 台账置 `closed`、填日期/交付、`current` 置 `none`，全局 changelog 收敛；④文件夹态把 delta 折进 topic 并写 fold receipt，单文件态按需前滚；⑤先跑 `audit-project-state.py` 机械检查，再跑一致性自检第 6 条语义漂移检查。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
 
 **输入来源**：从 `.ai/AC_LIST.md` 逐项回填验证结果。
 

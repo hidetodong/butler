@@ -96,6 +96,26 @@ flowchart TB
 
 > **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目和升级项目会从同一规则卡生成/维护 `CLAUDE.md` + `AGENTS.md`。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
+## ✅ 持续验证
+
+本地与 GitHub Actions 共用一条完整验证命令：
+
+```bash
+bash scripts/verify-ci.sh
+```
+
+它按 `.python-version`、`pyproject.toml` 和 `uv.lock` 使用固定 Python/依赖，随后运行双宿主、安装器、状态/证据、Codex plugin/skills/hooks、Markdown 链接及 CI 契约测试。第一次运行需要已安装精确版本的 uv；脚本发现版本不符会直接失败并报告期望值，不会临时改用最新版。
+
+`.github/workflows/ci.yml` 在 pull request、`main` push 和 `v*` tag 上用 `ubuntu-24.04`、`macos-14` 执行同一入口。所有 matrix leg 通过后才会产生稳定汇总 check：**`Butler required checks`**。
+
+“workflow 已提供 check”和“GitHub 已把它设为 required”是两件事：
+
+1. 先把 workflow 推到 GitHub，并让它至少成功运行一次，产生 `Butler required checks`。
+2. 仓库管理员在 `main` 的 Ruleset 或 Branch protection 中启用 required status checks，选择精确名称 `Butler required checks`。
+3. 回到对应保护设置复核该名称；也可用只读 `gh api repos/{owner}/{repo}/rulesets` 或 branch protection API 留下远端证据。
+
+在第 3 步得到远端证据前，状态只能写 `check-provided / pending external configuration`，不能声称 required check 已启用。
+
 ## 📂 目录结构
 
 ```txt
@@ -105,9 +125,13 @@ butler/
 ├── AGENTS.md                       # Codex 仓库规则入口 + .ai 冷启动读序
 ├── HUMAN_GUIDE.md                  # 面向人类的操作手册
 ├── communication-style.md          # 个人沟通风格正本（setup.sh @import 进全局 CLAUDE.md 常开；个人配置、非 SOP 规则、不进 Coder 阅读顺序）
+├── pyproject.toml / uv.lock         # CI/local 固定 Python 验证依赖与跨平台锁文件
+├── .github/workflows/ci.yml         # macOS/Linux 同入口 CI + 稳定 required 汇总 check
 │
 ├── scripts/
 │   ├── setup.sh                    # Claude + Codex 一次性全局安装
+│   ├── configure-global-install.py #   安全预检并原子维护 shell/Claude/命令软链用户配置
+│   ├── audit-project-state.py     # 只读审计台账/归档/交付/证据/发布元数据漂移
 │   ├── resolve-project-root.py     # 无副作用解析唯一施工项目根
 │   ├── render-project-entrypoints.py # 幂等生成/升级 CLAUDE.md + AGENTS.md
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
@@ -115,7 +139,13 @@ butler/
 │   ├── verify-codex-workflows.sh   # 8 skills/plugin/repo fallback 结构自检
 │   ├── verify-codex-hooks.sh       # Codex patch 门禁/提醒 wrapper 自检
 │   ├── verify-dual-host.sh         # 统一 setup、双入口与全套双宿主回归
+│   ├── verify-ci.sh                # 本地/CI 唯一完整验证入口（固定工具链）
+│   ├── check-markdown-links.py     # 零网络检查仓内 Markdown 路径与锚点
 │   └── install-codex-plugin.sh     # 个人 marketplace 安装/刷新 Butler plugin
+│
+├── tools/codex-validators/         # 固定 commit/hash/license 的 OpenAI 官方 validators 快照
+├── tools/verification-evidence/   # P5 自动道驻留工具：真实命令/exit/log/hash 证据与归档
+├── tools/delivery-selftest/        # P5 人测道驻留工具：浏览器四态回传桥
 │
 ├── .claude/commands/               # butler slash 命令（setup.sh 软链整个 butler/ 命名空间到全局，所有项目可用）
 │   └── butler/                     #   /butler:* 命名空间（子目录=命名空间前缀）

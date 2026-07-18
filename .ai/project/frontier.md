@@ -4,16 +4,17 @@
 
 ## 当前形态
 
-- **版本**：v2.16.0。MILE-0006 的双宿主工作流保持；ITER-0055 已发布施工项目根硬门，修复多仓父目录误展开台账。
-- **里程碑**：MILE-0006 closed；四条路线均完成，交付与回归矩阵已归档。
-- **分发**：`scripts/install-codex-plugin.sh` 使用个人 marketplace、官方 cachebuster/validator 和 `codex plugin add`；当前本机 `butler@personal` 已安装。
-- **边界**：Claude 能力保持；Codex hooks 已实测 phase/protected deny、allow 和 advisory。PreToolUse 不是完整安全边界，首次 trust 仍需用户操作。
+- **版本**：发布真相仍为 v2.16.0；MILE-0007 的 ITER-0056/R1、ITER-0057/R2、ITER-0058/R3 均已收口但尚未提交/发布。
+- **里程碑**：MILE-0007 active；安装器事务安全、机器证据/状态审计、固定工具链/双 OS CI 合同已交付，R4–R5 planned。
+- **持续验证**：本地唯一入口与 workflow 合同已成型；Darwin/arm64 固定工具链完整矩阵有机器证据。workflow 尚未推送，真实 GitHub Linux/macOS run 缺失。
+- **远端保护**：required API 返回 403；当前私有仓库需升级 GitHub Pro 或改公开，状态为 `pending external capability`。
 
 ## 活跃战线
 
-- 当前无 active 迭代/里程碑；v2.16.0 已发布并安装到本机个人 Codex marketplace。
+- 当前无 active 迭代；MILE-0007 等待开启 R4“可执行升级器”。
 
 ## 下一个瓶颈
 
-- hook trust 需要用户首次审阅；自动 E2E 只能用测试态 trust bypass 证明行为，不能代替日常信任动作。
-- shell/MCP 写路径不在当前机械保护声明内；若 Codex canonical 工具协议变化，须重跑真实 E2E 并更新 adapter。
+- `/butler:upgrade` 仍由模型解释 Markdown 迁移配方；R4 要提供机器可读动作、dry-run、冲突停机、幂等执行和历史版本 fixture。
+- R5 再统一 8 个工作流的宿主名称、触发策略、入口生成/校验与团队分发边界。
+- 若要让 `Butler required checks` 真正成为远端合并门禁，需用户另行授权升级 GitHub 套餐或改变仓库可见性，并在 workflow 推送后配置/核验保护规则。

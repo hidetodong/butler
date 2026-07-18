@@ -1,17 +1,20 @@
 # Task State
 
-> ITER-0055 closed · v2.16.0 已发布。
+> ITER-0059 active · MILE-0007 R4 · 危险模式 ON · P2/P3 已自主 ACK，准备 P4 checkpoint。
 
 ## 已完成
 
-- AC1–AC7 全部达成，8 renderer + 7 resolver + 127 hook tests 与完整双宿主矩阵全绿。
-- P5 主 agent 审查修正 1 个 Must Fix，复审 0 Must Fix；未宣称独立复核。
-- 四件套 + CHANGELOG 已归档，MD/HTML 交付已产出，台账已置 closed/current none，知识文件夹已前滚。
+- 解析并回声施工根 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`，未在外层 research 展开台账。
+- 盘点现有 upgrade 协议、renderer、hook/settings 部署契约和全部历史 migration 步骤。
+- 识别 Markdown 配方不可直接执行的事实：章节缺失、非标准标签、散文中标签混用，以及 split/global-install 的跨域边界。
+- 已落 P1 CONCEPT；P2 AC1–AC9 通过危险模式自审门并自主冻结，ITER-0059/R4 台账置 active。
+- `.ai/local-constraints.md` 已持久写入 `dangerous: on`；RUN_LOG 已记录激活与 P2 自决。
 
 ## 进行中
 
-- 无。
+- P3 已锁定中心 JSON 台账、标准库 CLI、项目内事务、三执行域与历史 fixture 方案。
 
 ## 下一步
 
-- 交还用户；后续新需求从 ITER-0056 起。
+- 建立隔离分支和进入 P4 前的 git 回滚锚点。
+- 从 T1 开始按收敛闭环实现 R4，强审/证据化收口后自动开启 R5。

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "dual-host-matrix-rerun",
+  "iteration": "ITER-0057",
+  "ac_ids": [
+    "AC4",
+    "AC5",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-dual-host.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T07:25:41.857Z",
+  "finished_at": "2026-07-18T07:25:51.703Z",
+  "duration_ms": 9846,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 473,
+    "captured_bytes": 473,
+    "sha256": "bd7beca1a196917dbaabd2a8ae46167b07cb10675a23345270da4cca5bf40d62",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 546,
+    "captured_bytes": 546,
+    "sha256": "ca824bd41ca7765d9e0bcd48e4aa450d13c09aa2f5bf0ec28358b350c6a95bd3",
+    "truncated": false
+  }
+}

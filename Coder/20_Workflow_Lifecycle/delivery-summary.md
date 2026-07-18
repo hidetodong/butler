@@ -65,6 +65,7 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 - 使用了哪些验证动作
 - 每类验证的结论是什么
 - 结论应能映射回已确认 AC 或验证报告
+- 完整路径自动道结论须引用 `VERIFY_REPORT.md` 的 Evidence Index / 证据目录路径；只写“测试全绿”不构成证据，不把原始日志嵌入交付
 
 ### 4.6 已知剩余风险 / 延后事项
 - 当前仍未关闭的风险
@@ -77,6 +78,7 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 - `AC_LIST.md`
 - `TECH_PLAN.md`
 - `VERIFY_REPORT.md`
+- `.ai/iterations/ITER-NNNN/evidence/`（只引用目录或 record 路径，不嵌日志）
 - 相关 PR / commit
 - 其他最终交付所需链接
 

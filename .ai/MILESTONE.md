@@ -1,58 +1,58 @@
-# MILESTONE — MILE-0006 · Codex 双宿主兼容层
+# MILESTONE — MILE-0007 · Butler 规则仓工程化加固
 
-> 方向性产物（非冻结、不走 ACK）。目标不是把 Butler 从 Claude Code 迁走，而是在保持现有 Claude Code 能力的同时，增加一套 Codex 原生入口；`.ai/` 与 `Coder/` 继续作为两端共同的状态层和规则真源。
+> 方向性产物（非冻结、不走 ACK）。本里程碑不继续堆叠规则功能，而是把已经成形的规则、安装、状态、验证和升级链变成更安全、更可执行、更能自证的工程系统。
 
 ## 5.1 范围评估
 
 **In Scope（版本级）**
 
-- **规则自动注入**：增加 Codex 原生 `AGENTS.md` 入口，明确冷启动读序、`.ai/` 状态恢复和深度规则指针；保留现有 `CLAUDE.md`。
-- **命令工作流迁移**：把现有 8 个 `/butler:*` 薄壳命令映射为 Codex skills，并评估以 Codex plugin 作为全局分发单位，避免使用已弃用的 custom prompts。
-- **Hook 机械门禁**：增加 `.codex/hooks.json` / plugin hook 入口；适配 Codex `apply_patch` 的工具名与 patch 输入，同时复用现有 Python 规则模块。
-- **部署与升级双宿主化**：让新项目部署、既有项目升级和全局 setup 能分别生成/维护 Claude Code 与 Codex 所需入口，不复制 `Coder/` 规则正文。
-- **兼容性验证**：建立 Claude Code / Codex 两列验证矩阵，覆盖规则发现、`.ai/` 恢复、8 个工作流、PreToolUse 拒绝、PostToolUse 提醒与子 agent 独立复核。
+- **安装器事务安全**：修复 `setup.sh` 对残缺 marker、伪 `BUTLER_PATH` 命中和用户自有命令目录冲突的处理；涉及用户配置的修改必须先校验、失败不破坏原文、结果可验证。
+- **状态与验证自证**：测试/复核结论必须引用机器采集的命令、退出码和日志证据，不能只写“已通过”；同时建立仓库状态审计器，机械核对版本、tag、plugin manifest、CHANGELOG、迭代/里程碑台账、归档、交付、task-state、handoff 与项目知识文件夹，消除“实际已发布、状态仍写未推送”一类漂移。
+- **持续验证**：把现有双宿主矩阵接入 CI，补 Markdown 链接和跨平台检查，固定测试依赖与 validator 来源，使合并和发布不再依赖操作者记得手跑。
+- **可执行升级**：把 `/butler:upgrade` 从模型解释 Markdown 配方推进为确定性迁移执行链；用历史项目 fixture 验证跨版本、幂等、冲突停机、用户区保护与失败恢复。
+- **双宿主治理收敛**：以单一工作流注册表管理 Claude `/butler:*`、Codex `$butler-*`、自然语言触发与旧名兼容；生成或校验各入口和人读能力表，并让 plugin hooks/分发声明更显式。
 
 **Out of Scope（版本级）**
 
-- 不重写 P1–P5、迭代、里程碑、PRD、危险模式等规则算法。
-- 不改 `.ai/` 目录名和既有产物 schema；`.ai/` 是宿主无关的共同状态层。
-- 不让 Butler 文本规则绕过 Codex 的 sandbox、审批、hook trust 或企业策略。
-- 不删除 Claude Code 的 `CLAUDE.md`、`.claude/commands/`、`.claude/hooks/` 支持。
-- 首版不发布公共 marketplace，不承诺 Codex Cloud、IDE、桌面端以外所有宿主的完全一致行为。
+- 不新增 PRD、里程碑、复核、危险模式、偏好等业务工作流。
+- 不重写 P1–P5、迭代/里程碑或 `.ai/` 产物 schema 的核心语义。
+- 不承诺对 shell、MCP、外部进程的所有写入做完整 PreToolUse 阻断；本轮只补跨写路径可复用的事后一致性审计。
+- 不发布公共插件 marketplace，不引入企业 `requirements.toml` 管理策略。
+- 不立即删除全部旧命令别名；先建立注册表、兼容期和可检测的弃用路径。
 
 **关键交付目标**
 
-- 同一份 Butler 规则仓可在 Claude Code 与 Codex 中自动发现并恢复 `.ai/` 状态。
-- 8 个 Butler 工作流在 Codex 中可显式/语义触发，规则正文仍以 `Coder/` 为真源。
-- Codex 写文件时，阶段门禁和提醒不再因 `apply_patch` 输入差异而静默失效。
-- 双宿主安装、升级、验证步骤有机器可执行的检查和人类可读说明。
+- `setup.sh` 在异常 marker、shell 配置噪声和目标路径冲突下不丢用户数据、不假报成功。
+- 一条本地命令和 CI 都能证明当前版本、台账、交付、归档与双宿主包状态一致。
+- 每条自动测试/复核结论都能追到机器生成的证据记录；没有证据指针时不得标成已验证。
+- 从受支持的历史版本升级到当前版本有可执行、可重复、可回归的自动化路径。
+- 8 个工作流的宿主名称、触发策略和分发元数据从同一注册源产生或受其校验，不再靠多份文档人工同步。
 
 ## 5.2 理解阐释
 
-- **核心问题**：Butler 的业务规则本身是 Markdown，宿主无关；真正绑定 Claude Code 的是自动发现、slash command、hook 输入协议、权限配置和安装路径。若只让 Codex“能读 Markdown”，规则看似兼容，但自动注入、机械门禁和全局命令都会缺失。
-- **兼容策略**：保留共同内核，增加宿主适配层。共同内核包括 `Coder/`、`.ai/`、`templates/rule-card.md` 与 Python 规则判断；Claude 适配层继续放 `.claude/`，Codex 适配层使用 `AGENTS.md`、skills/plugin、`.codex/`。
-- **最大风险**：出现两套规则正文并逐渐漂移。因此 Codex 文件只能做入口、路由和协议适配，不能复制规则算法；双宿主共用的逻辑应下沉到现有真源或共享 Python 模块。
-- **已确认事实**：Codex 当前支持 `AGENTS.md`、repo skills、plugins、PreToolUse/PostToolUse hooks 与多 agent；matcher 可用 `Edit|Write` 命中 `apply_patch`，但现有 gate 内部仍只接受 `Edit/Write/MultiEdit` 和 `file_path`，必须显式适配。
+- **核心问题**：Butler 的规则设计与双宿主兼容已经闭环，但关键保障仍有一部分停在“操作者按文档执行”。安装器存在可复现的数据损失和假成功边界；全量测试没有 CI；迁移配方还要模型解释；版本化知识里混有会话态和机器态事实，导致发布后仍可能残留错误状态。
+- **版本价值**：把“规范要求应该安全/一致”提升为“程序会拒绝危险输入、CI 会拦漂移、升级器会按确定步骤执行”。这会降低后续每次新增规则或宿主适配的维护成本。
+- **整体影响**：主要涉及 `scripts/`、`.ai/` 一致性契约、`migrations/`、测试/CI、Claude commands、Codex skills/plugin 与 README/HUMAN_GUIDE；共同规则算法仍留在 `Coder/`，宿主层继续保持薄适配。
+- **主要风险**：自动生成和迁移器若一次做得过宽，可能反而覆盖用户内容。因此所有写路径必须有所有权标记、起始态校验、dry-run/差异回声、冲突停机和隔离 fixture，不能用“自动化”降低 fail-closed 标准。
 
 ## 5.3 拆分路线图
 
-预计跨度：ITER-0051 ~ ITER-0054（方向性，真实编号以台账为准）
+预计跨度：ITER-0056 ~ ITER-0060（5 个迭代承接；真实编号以开启时台账为准）
 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
-| R1 | **兼容地基**：双宿主边界、`AGENTS.md` 自动注入入口、`.ai/` 共同状态层与单一真源约束 | ITER-0051 | closed |
-| R2 | **Codex 工作流入口**：把 8 个薄壳命令迁为 skills，落本地 plugin 骨架与全局安装路径 | ITER-0052 | closed |
-| R3 | **Codex hooks**：`.codex`/plugin hook 配置、`apply_patch` 输入适配、拒绝与提醒端到端测试 | ITER-0053 | closed |
-| R4 | **部署升级与收官**：setup / MCV / migrations / HUMAN_GUIDE 双宿主化，跑 Claude+Codex 回归矩阵并收里程碑 | ITER-0054 | closed |
+| R1 | **安装器事务安全**：marker 完整性、精确环境变量更新、命令目录所有权/冲突处理、原子写与隔离回归 | ITER-0056 | closed |
+| R2 | **验证证据链 + 状态审计与收口一致性**：机器采集命令/退出码/日志并由 VERIFY 逐 AC 引用；版本/台账/归档/交付/handoff/project 知识对账，补发布后最终事实与跨写路径事后检查 | ITER-0057 | closed |
+| R3 | **CI 与可复现验证**：PR/发布 required checks、Markdown 链接、macOS/Linux 矩阵、测试依赖和 validator 固定 | ITER-0058 | closed |
+| R4 | **可执行升级器**：机器可读迁移动作、dry-run/冲突停机/幂等执行、历史版本 fixture 和跨版本 E2E | ITER-0059 | active |
+| R5 | **双宿主工作流注册与分发收敛**：8 工作流统一注册源、命令/skill/文档一致性、旧名兼容策略、plugin hooks 显式声明与团队分发边界 | — | planned |
 
 ## 5.4 范围演进记录
 
-- 2026-07-17：用户要求从现有 Butler 台账继续，改造为 Codex 可用；确认无活跃里程碑/迭代后开启 MILE-0006，并以双宿主兼容而非替换 Claude Code 为方向。
-- 2026-07-17：用户确认四项默认——plugin 为最终分发面、按 R1–R4 四迭代推进、目标项目最终双入口、继续一迭代一版。R1 收紧为规则发现 + 模板/架构契约；完整部署升级接线仍归 R4。
-- 2026-07-17：R1 / ITER-0051 收口并发布 v2.12.0。仓库已可被 Codex 原生发现；目标项目自动部署、skills/plugin 与 hooks 仍按 R2–R4 继续，MILE-0006 保持 active。
-- 2026-07-17：用户开启危险模式并要求继续；R2 绑定 ITER-0052，按会话级自治推进 8 skills、plugin 骨架和本地安装验证，R3/R4 边界不变。
-- 2026-07-17：R2 / ITER-0052 自治收口并发布 v2.13.0；个人 `butler@personal` 已真实安装，8 skills 可用。危险模式继续推进 R3。
-- 2026-07-17：危险模式自动开启 R3 / ITER-0053；以 plugin 默认 hooks 发现 + 共享 Python dispatcher 适配为主线，R4 边界不变。
-- 2026-07-17：R3 / ITER-0053 完整强审 0 Must Fix；124 tests 与真实 Codex phase/protected deny、allow、advisor 全通过，发布 v2.14.0。危险模式继续进入 R4。
-- 2026-07-17：危险模式自动开启 R4 / ITER-0054；统一全局 setup 与目标项目双入口部署/升级，完成回归矩阵后收 MILE-0006。
-- 2026-07-17：R4 / ITER-0054 完成统一 setup、双入口 renderer、MCV/upgrade/migration 接线与完整矩阵；P5 修正两项内容安全问题后 0 Must Fix。R1–R4 全 closed，MILE-0006 收口并发布 v2.15.0。
+- 2026-07-18：完成 v2.16.0 规则仓审查后，用户要求把审查建议组织为新里程碑；开启 MILE-0007，按安装安全→状态自证→持续验证→可执行升级→双宿主治理五条路线推进，不预占实际迭代号。
+- 2026-07-18：用户要求先做 R1；绑定 ITER-0056，进入安装器事务安全的完整 P1/P2，对用户配置坚持逐对象 fail-closed，不把整套 setup 误包装成跨组件全局事务。
+- 2026-07-18：R1 由 ITER-0056 收口；新增先全量预检、后逐对象原子应用的安装 helper，16 个隔离 HOME 专项测试与完整双宿主矩阵全绿。下一路线保持 R2 planned，尚未开启新迭代。
+- 2026-07-18：用户指出测试复核不能只口头宣称通过，必须给证据；该要求不回写已冻结的 ITER-0056，扩入 R2 并开启 ITER-0057，承接机器证据链与原定状态审计。
+- 2026-07-18：用户要求继续 R3；开启 ITER-0058，承接单一 CI/local 入口、macOS/Linux、Markdown 链接和依赖/validator 固定。required check 的 workflow 供给与 GitHub 远端启用状态分开验收，禁止只凭 YAML 宣称已开启保护。
+- 2026-07-18：R3 由 ITER-0058 收口；固定 Python/uv/lock、OpenAI 官方 validator commit/hash/license、离线 Markdown 检查和 Ubuntu/macOS workflow 合同。Darwin 完整矩阵有机器证据；workflow 未推送，且 GitHub API 证明当前私有仓库套餐不支持 required status checks，因此远端保持 `pending external capability`，不冒称双系统/required 已启用。
+- 2026-07-18：用户要求继续 R4；开启 ITER-0059。盘点发现现有升级仍由模型解释 Markdown，历史配方存在缺步骤章节与非标准标签，故本轮以独立机器台账为执行真源，把项目内事务、人工 `[split]` 决策与机器级安装明确分域，先冻结 dry-run、冲突停机、幂等与恢复证据再实现。

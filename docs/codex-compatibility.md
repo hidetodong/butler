@@ -59,6 +59,7 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 - 统一安装：`bash scripts/setup.sh`；保留 Claude 全局配置/命令/风格，同时在 Codex CLI 可用时调用上面的 plugin 安装器。
 - 项目部署/升级：先用 `scripts/resolve-project-root.py` 确定唯一项目根，再由 `scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md；管理区外原文与两份 user-managed 区各自保留。
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
+- 固定校验来源：CI/local 使用 `tools/codex-validators/` 中按 OpenAI Codex commit 与 SHA-256 固定的官方 validator 快照；来源和许可证见同目录 `PROVENANCE.json` / `LICENSE`。验证不得依赖用户 `$HOME/.codex/skills/.system` 是否存在。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 
 ## 6. Hook 实现与边界
@@ -82,7 +83,13 @@ Butler 的流程规则不能覆盖 Codex 自身的 sandbox、审批、hook trust
 
 ## 8. 维护检查
 
-修改 Codex 入口、目标模板或本文后运行：
+修改 Codex 入口、目标模板或本文后，交付前统一运行：
+
+```bash
+bash scripts/verify-ci.sh
+```
+
+这是开发机和 GitHub Actions 的唯一完整入口：它用固定 Python/uv lock 依赖，覆盖 macOS/Linux workflow 契约、离线 Markdown 链接、官方 validator 快照完整性和下列所有组件检查。排查具体失败时才单独运行：
 
 ```bash
 bash scripts/verify-codex-foundation.sh
@@ -96,5 +103,9 @@ bash scripts/verify-dual-host.sh
 ```bash
 python3 -m pytest templates/hooks/tests -q
 ```
+
+`.github/workflows/ci.yml` 的稳定汇总 check 名是 `Butler required checks`。workflow 入仓只能证明 check 已提供；只有仓库的 Ruleset/Branch protection 远端状态明确要求该名称，才能声称 required 已启用。未查询或未配置时统一写 `pending external configuration`。
+
+更新 `tools/codex-validators/` 时必须选定新的 OpenAI Codex 完整 commit，审查 validator diff，同时更新两个快照、`PROVENANCE.json` 摘要和上游 LICENSE；禁止在验证期间从浮动 `main` 下载代码。
 
 两个宿主出现差异时，先判断它属于“规则算法”还是“宿主协议”。前者回共同内核，后者留在对应适配层；不要用复制正文解决协议差异。

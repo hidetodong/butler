@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-state-drift",
+  "iteration": "ITER-0057",
+  "ac_ids": [
+    "AC4",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-audit-project-state.py",
+      "StateAuditTests.test_evidence_index_requires_valid_archive_and_fold_receipt",
+      "StateAuditTests.test_evidence_pointer_outside_index_does_not_count",
+      "StateAuditTests.test_valid_evidence_index_and_fold_receipt_pass"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T07:26:28.077Z",
+  "finished_at": "2026-07-18T07:26:28.313Z",
+  "duration_ms": 236,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 101,
+    "captured_bytes": 101,
+    "sha256": "524c5f55425852d1aa599b07b942d3cee7282a7e33086e80f5d68b9f35d424bf",
+    "truncated": false
+  }
+}

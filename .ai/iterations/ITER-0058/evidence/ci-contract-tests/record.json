@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ci-contract-tests",
+  "iteration": "ITER-0058",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "scripts/test-ci-contract.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T08:05:25.078Z",
+  "finished_at": "2026-07-18T08:05:25.507Z",
+  "duration_ms": 429,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 103,
+    "captured_bytes": 103,
+    "sha256": "fe683f655e18ebc4ac1c1b2d62be15134e57342db5c271b7959da0b0da726208",
+    "truncated": false
+  }
+}

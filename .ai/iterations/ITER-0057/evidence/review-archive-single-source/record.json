@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-archive-single-source",
+  "iteration": "ITER-0057",
+  "ac_ids": [
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/verification-evidence/test_evidence.py",
+      "EvidenceCliTests.test_archive_and_reopen_keep_exactly_one_source"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T07:26:28.077Z",
+  "finished_at": "2026-07-18T07:26:28.370Z",
+  "duration_ms": 293,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "6468378e6100359f274ecdcde4e999b96c35563fc13ff1ea9eb9dc2a2dcd15ec",
+    "truncated": false
+  }
+}

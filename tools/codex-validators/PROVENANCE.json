@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repository": "https://github.com/openai/codex",
+    "commit": "5c0e582c59892dbec89af78ae62c784d3da6c9cb",
+    "license": "Apache-2.0"
+  },
+  "files": [
+    {
+      "path": "plugin-creator/validate_plugin.py",
+      "upstream_path": "codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py",
+      "sha256": "ebda00d55d7518b127f675f062fb5c6e7a1ffdc0a99df1a55ac594400d7d3228"
+    },
+    {
+      "path": "skill-creator/quick_validate.py",
+      "upstream_path": "codex-rs/skills/src/assets/samples/skill-creator/scripts/quick_validate.py",
+      "sha256": "6cc9dc3199c935916cf6f73fcbbbb0e3bb1b58c8f5109fefa499978908164f51"
+    }
+  ],
+  "update_policy": "Update the commit, snapshots, hashes, and tests together; review the upstream diff before accepting it."
+}
