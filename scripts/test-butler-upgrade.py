@@ -250,8 +250,9 @@ class UpgradeTests(unittest.TestCase):
         old.write_text("history\n")
         manifest = self.manifest()
         migration = manifest["migrations"][-1]
+        target = migration["target"]
         migration["actions"].insert(0, {
-            "id": "2.16.0/00-rename-handoff", "type": "rename", "domain": "project",
+            "id": f"{target}/00-rename-handoff", "type": "rename", "domain": "project",
             "preconditions": ["source-destination-shape-valid", "target-path-owned"],
             "from": ".ai/SESSION_HANDOFF.md", "to": ".ai/02_SESSION_HANDOFF.md",
         })

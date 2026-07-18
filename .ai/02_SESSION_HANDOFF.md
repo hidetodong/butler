@@ -4,7 +4,7 @@
 
 - MILE-0007 已关闭，包含 ITER-0056–ITER-0060，五条路线全部 closed。
 - 当前无 active 迭代/里程碑；分支为 `feat/mile-0007-engineering-hardening`。
-- 发布真相仍是 v2.16.0，MILE-0007 改动尚未切版、tag 或 push。
+- 发布真相为 v2.17.0；MILE-0007 已聚合切版并合入/push `main`，tag 为 `v2.17.0`。
 - 危险模式仍为 ON；只有用户显式要求才关闭。
 
 ## 已交付
@@ -23,5 +23,5 @@
 
 ## 下一步边界
 
-- 若用户要求发布：按 MINOR 评估执行 VERSION/CHANGELOG/migration/release commit/tag/push，不能把本次里程碑收口误写为已发布。
+- 后续普通改动从 v2.17.0 继续；未形成新发布前，状态审计会因 VERSION tag 不指向 HEAD 明确亮 `UNRELEASED`。
 - 若用户要求远端保护：需先解决私有仓库套餐/可见性，再推 workflow 并核验 required check。

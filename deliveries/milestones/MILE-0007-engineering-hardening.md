@@ -1,6 +1,6 @@
 # MILE-0007 · Butler 规则仓工程化加固
 
-> 里程碑交付（大版本） · 2026-07-18 · ITER-0056–ITER-0060 · UNRELEASED
+> 里程碑交付（大版本） · 2026-07-18 · ITER-0056–ITER-0060 · v2.17.0
 
 ## 本次交付目标
 
@@ -26,7 +26,7 @@
 
 - 新增/增强 `scripts/`、`tools/verification-evidence/`、`tools/butler-upgrade/`、`migrations/manifest.json`、`.github/workflows/`、`workflows/`、plugin 元数据与生成文档。
 - P1–P5、迭代/里程碑核心语义和业务工作流算法没有重写。
-- 当前全部改动位于隔离分支；VERSION 仍为 v2.16.0，尚未执行发布/tag/push。
+- MILE-0007 已按 MINOR 聚合发布为 v2.17.0，并合入/push `main`。
 
 ## 拆分路线图回填
 
@@ -49,7 +49,7 @@
 - GitHub workflow 尚未推送，真实 Linux/macOS run 缺失；私有仓库当前套餐的 required API 为 403。
 - team/public marketplace 未配置；个人 plugin 已装不等于团队可用。
 - 可执行升级器尚缺真实外部老项目 dogfood，首次使用应保留 backup/journal 并人工审阅 diff。
-- 本里程碑已收口但未发布；若切版，应按 MINOR 独立走 VERSION/CHANGELOG/migration/release commit/tag/push。
+- v2.17.0 发布后若继续演进，须新开迭代并重新走证据/审计/发布仪式。
 
 ## 引用（只引用，不嵌入）
 

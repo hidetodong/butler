@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.17.0] - 2026-07-18
+
+向后兼容的工程化能力新增版，聚合 MILE-0007 的 ITER-0056–ITER-0060。版本级交付见 `deliveries/milestones/MILE-0007-engineering-hardening.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v2.17.0.md`。
+
 ## [2.16.0] - 2026-07-17
 
 向后兼容的能力新增版，聚合 ITER-0055。基地车现在严格区分会话启动目录与施工项目根：用户点名路径优先，否则只接受最近已部署 Butler 根或 Git 根，目标不唯一时零写入退出。Claude/Codex 的 16 个工作流入口、MCV/升级协议与 Codex patch adapter 共用同一解析契约；绝对 target 可跨 cwd，相对路径不能从聚合目录偷渡选中子仓。迁移见 `migrations/v2.16.0.md`，交付见 `deliveries/ITER-0055-project-root-deployment-boundary.md`。
