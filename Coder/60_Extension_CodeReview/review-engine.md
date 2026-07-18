@@ -76,6 +76,7 @@ Must Fix / Should Fix 应给文件/行或 evidence ID。P5 至少对风险相关
 ## 4. 闭环控制
 
 - 若存在 **Must Fix** 条目（含独立复核 refute 的 AC），AI 必须建议启动修复。若当前处于收敛闭环模式，直接进入下一轮迭代修复；否则询问用户是否激活 `/butler:loop`。修复退回 P4，受 `30_Quality_Gate/correction-contract.md` 约束（修到真过、禁止降级修复）。
+- finding 同时按 `20_Workflow_Lifecycle/goal-calibration.md` 分类：实现缺陷回 P4，目标/AC/方案/proof 问题回对应阶段；Must Fix/refute 在 task-state 保持 open、Goal at-risk，定点复查有新依据后才 resolved。
 - 修复完成后，应对 Must Fix 条目进行定点复查，不需要重跑全量审查。
 - 所有 Should Fix 条目应记入 `.ai/VERIFY_REPORT.md` 的 `Remaining Risks`（并按需反馈用户），不得静默丢弃；不写入 `01_CHANGELOG.md`（那是对象级变更流，见 `20_Workflow_Lifecycle/changelog-schema.md`）。
 

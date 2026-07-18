@@ -1,4 +1,4 @@
-> 执行校准与问题回流 · active · 2026-07-18
+> 执行校准与问题回流 · closed · 2026-07-18
 
 ## ADD
 - `Coder/20_Workflow_Lifecycle/goal-calibration.md` — 六类运行时信号、task-state 投影与分层回流合同 → AC1–AC5

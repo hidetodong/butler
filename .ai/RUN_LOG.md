@@ -33,3 +33,6 @@
 - 2026-07-18 · route · ITER-0064 · `dangerous-ack`：自动开启 R4；选择 task-state 活跃校准投影 + 既有阶段真源回写，不新增问题台账。
 - 2026-07-18 · P2 · ITER-0064 · `dangerous-ack`：AC1–AC7 自审通过并冻结；六类信号、投影、P1–P5 路由、Goal 影响、重审纪律与证据均可验证，R5–R6 边界明确。
 - 2026-07-18 · P3 · ITER-0064 · `dangerous-ack`：Plan Admission verdict=`pass`；否决独立 issue ledger 和“一律回 P4”，按事实性质路由，未发现 Must Fix。
+- 2026-07-18 · P5-review · ITER-0064 · `dangerous-ack`：首轮强审发现 1 Must Fix——task-state 用自然语言占位行冒充封闭 Signal/Status 数据；另有 1 Should Fix——VERIFY 的 review 引用误写不存在的 §71。已改为空表 + 表外 N/A、增加 dogfood 断言，并把引用修正到 §4。
+- 2026-07-18 · P5-review · ITER-0064 · `dangerous-ack`：修复后结构合同 8/8、完整固定矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0。未执行 fresh-context 独立复核并如实披露。
+- 2026-07-18 · close · ITER-0064 · `dangerous-ack`：6 个 evidence 整包归档、四件套/CHANGELOG、双格式交付与知识折叠完成；R4 closed，继续 R5。

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "goal-calibration-tests",
+  "iteration": "ITER-0064",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-goal-calibration.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T12:07:53.760Z",
+  "finished_at": "2026-07-18T12:07:53.834Z",
+  "duration_ms": 74,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 105,
+    "captured_bytes": 105,
+    "sha256": "74c03fc16fde9a2dfeff03db0ec8f472a5a8dfed04e9e982a912b4b7f64faee3",
+    "truncated": false
+  }
+}

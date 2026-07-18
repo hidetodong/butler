@@ -47,7 +47,7 @@
 | R1 | **现状审计与失败模型**：盘点目标概念、状态载体和双宿主能力；构造“任务做完但方案未通过仍宣布完成”等可复现反例，明确 Goal 与 milestone / iteration / AC / task-state 的层级边界 | ITER-0061 | closed |
 | R2 | **Goal Contract 与状态机**：定义最小目标契约、结果/证据义务、状态转移和单一真源；建立 active / at-risk / blocked / completion-candidate / complete 等语义而不复制阶段产物 | ITER-0062 | closed |
 | R3 | **方案准入与反证门**：为 P3 增加可审计的方案挑战、失败模式、替代方案与 `pass / revise / blocked` 判定；未通过则回修或停机 | ITER-0063 | closed |
-| R4 | **执行校准与问题回流**：把实现偏差、假设失效、测试失败和审查发现映射回 Goal / AC / Plan，建立重规划、回退、重开与熔断纪律 | ITER-0064 | active |
+| R4 | **执行校准与问题回流**：把实现偏差、假设失效、测试失败和审查发现映射回 Goal / AC / Plan，建立重规划、回退、重开与熔断纪律 | ITER-0064 | closed |
 | R5 | **Goal 完成裁决器**：以 AC 覆盖、verification evidence、review verdict、剩余风险和台账状态共同裁决完成资格；负向测试证明假完成会被拒绝 | — | planned |
 | R6 | **双宿主接线与端到端验证**：Codex goal、Claude task/会话载体、危险模式、跨会话恢复和无原生能力降级统一接入共同协议，补模板、文档、审计与回归矩阵 | — | planned |
 
@@ -61,3 +61,4 @@
 - 2026-07-18：危险模式自动推进 R3 / ITER-0063；以 TECH_PLAN 自身 frontmatter 作为方案 verdict 真源，增加结构化反证清单与共享源码写门禁；旧版无状态方案保留兼容放行，不创建独立方案审批台账。
 - 2026-07-18：R3 / ITER-0063 收口；TECH_PLAN 四态与七项 Plan Admission 落地，共享 phase gate 拒绝显式非 pass。强审修复 Codex wrapper 只走 legacy allow 的 1 Must Fix，最终结构合同 7/7、共享 hooks 135 项和完整矩阵 reproduced 通过；下一步 R4 执行校准与问题回流。
 - 2026-07-18：危险模式自动推进 R4 / ITER-0064；把运行时新事实记录为 task-state 的可重算校准投影，再按事实性质回写既有 Goal / AC / Plan / implementation / proof 真源，避免新增问题台账。
+- 2026-07-18：R4 / ITER-0064 收口；六类信号、六字段投影、P1–P5/诚实停路由和 resolved 证据纪律落地。强审修复 1 Must Fix + 1 Should Fix，最终结构 8/8、完整矩阵 reproduced 通过；下一步 R5 完成裁决器。

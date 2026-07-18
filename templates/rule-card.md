@@ -66,6 +66,7 @@ butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功
 - 不把业务规则写死在视图模板里
 - 不用 `any` 回避核心领域类型
 - 长任务必须外化关键状态到 `.ai/task-state.md`，不依赖对话记忆
+- 执行中发现实现偏差、假设失效、范围漂移、验证失败、审查问题或外部阻塞，按 `goal-calibration.md` 记 task-state 活投影并回正确的 P1–P5 / 诚实停；open/blocked 信号不能被 tasks done、风险备注或危险模式覆盖
 - 会话结束前若任务未完成，必须生成 `.ai/02_SESSION_HANDOFF.md`
 
 ## 偏好采集（实验性·默认开·经同意）

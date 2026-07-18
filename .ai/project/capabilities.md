@@ -42,6 +42,8 @@
 
 非极小任务同时具备**派生 Goal Contract**：从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/evidence、review 与收口事实组合 objective/obligations/plan/progress/proof/verdict，不新增 GOAL 台账。六状态含 `completion-candidate`，tasks done 或宿主 complete 均不能直跳项目 complete。真源 `20_Workflow_Lifecycle/goal-contract.md`。
 
+P4/P5 同时启用**Goal 运行时校准**：实现偏差、假设失效、范围漂移、验证失败、review finding、外部阻塞六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号使 Goal at-risk/blocked。真源 `20_Workflow_Lifecycle/goal-calibration.md`。
+
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
 
 | 阶段 | 干什么 | 产物 |

@@ -47,7 +47,7 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 
 1. **终态优先**：台账为 `abandoned` → `abandoned`；台账为 `closed` 且收口产物/证据/交付一致 → `complete`。终态出现确定性漂移时不是降回 active，而是由状态审计报错并修复事实。
 2. **真正阻塞**：任务尚未终态，且缺外部条件、权限或用户决策，当前无法安全取得任何有意义进展 → `blocked`。只是困难、测试失败或仍可修复，不算 blocked。
-3. **已知风险**：任务尚可推进，但 TECH_PLAN 为 `draft/revise`、范围漂移、失败验证、Must Fix、未覆盖 outcome 或会阻止完成的剩余问题 → `at-risk`。TECH_PLAN 为 `blocked` 且当前无法安全推进时按上一条派生 `blocked`。
+3. **已知风险**：任务尚可推进，但 TECH_PLAN 为 `draft/revise`、`goal-calibration.md` 存在 completion-blocking open signal、范围漂移、失败验证、Must Fix、未覆盖 outcome 或会阻止完成的剩余问题 → `at-risk`。校准投影为 blocked 且当前无法安全推进时按上一条派生 `blocked`。
 4. **完成候选**：计划内执行任务已完成，没有已知 blocked/at-risk 条件，但 P5 proof/verdict 或收口仪式尚未完成 → `completion-candidate`。
 5. **其余进行态**：已开启且仍在正常分析、设计、实现或验证 → `active`。
 
@@ -91,6 +91,6 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 ## 8. 与后续路线的边界
 
 - R3：已由 `tech-plan-schema.md` 与共享 phase gate 把“方案未获准”变成结构化 verdict 和 P4 写门。
-- R4：把 at-risk/blocked 原因路由到 P1–P5、修订或新迭代。
+- R4：已由 `goal-calibration.md` 把 at-risk/blocked 原因投影并路由到 P1–P5、修订或新迭代。
 - R5：实现只读 Goal 视图与完成裁决，机械消费 R1 fixture。
 - R6：把派生视图投影到 Claude/Codex，并验证降级路径。

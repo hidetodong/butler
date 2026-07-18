@@ -22,6 +22,8 @@ scope: P4 执行-验证-收口的常驻底线纪律——默认对每次迭代�
 
 此为**轻量纪律**：底线层不带 `[Loop #N]` 标注、不强制 RCA 文件，只要求"老实修、老实验"。
 
+失败若只是仍有效方案下的实现缺陷，留 P4 修根因；若反证了 objective、AC、方案假设或 proof 定义，必须按 `20_Workflow_Lifecycle/goal-calibration.md` 回 P1/P2/P3/P5。禁止把所有坏消息都当普通 bug 留在 P4 修症状。
+
 ### 2.2 探测绑定 AC
 
 每个探测动作**必须**可回溯到 `.ai/AC_LIST.md` 中的具体验收项。收口的判断标准是：
@@ -52,6 +54,7 @@ scope: P4 执行-验证-收口的常驻底线纪律——默认对每次迭代�
 - **探测内容**：`30_Quality_Gate/` 下 `linting.md` / `testing-strategy.md` / `review-standard.md` 定义探测什么；本契约定义如何对待探测结果。
 - **BUG_LOG 写入**：诚实停若涉及高价值逻辑暗坑，是否写入 `.ai/03_BUG_LOG.md` 遵守 `20_Workflow_Lifecycle/maintenance-boundaries.md` 的触发阈值，本契约不强制。
 - **升档**：`55_Extension_ConvergenceLoop/convergence-loop-engine.md`（`/butler:loop`）在本契约之上叠加高强度死磕与定量熔断。
+- **Goal 校准**：`20_Workflow_Lifecycle/goal-calibration.md` 决定新事实应回哪一层、何时使 Goal at-risk/blocked；本契约只承接其中 P4 实现纠错。
 - **无人值守**：`65_Extension_Dangerous/dangerous-engine.md` 在自治推进中默认继承本契约，其 P4 复用收敛闭环。
 - **人测 fail 回传**：有人场次经交付自测桥回传的 `fail`（未通过）人测残余进本契约纠错闭环——人写的 `note` 当线索，修到真过再回 P5，**不得**因"人说不行"就绕过探测直接改或静默吞（承 §2.3 禁伪造、§2.4 诚实停）；起桥 / 四态路由见 `20_Workflow_Lifecycle/human-test-bridge.md`。
 - **修根因 / 最小改动定位**：本契约管"验证失败后修到真过、禁降级、诚实停"；"具体怎么改最小且不漏"的写码手法——修根因不打症状补丁、grep 全部 caller、守卫放共享函数一处——见 `implementation-discipline.md §4`，二者并列不重叠。

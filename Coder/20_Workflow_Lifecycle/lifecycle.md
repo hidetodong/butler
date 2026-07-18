@@ -154,6 +154,7 @@ AI 必须回答：
 - 改动落点必须与 `.ai/TECH_PLAN.md` 中约定的文件范围、接口契约与状态边界一致。
 - 探测动作必须能回溯到具体 AC。
 - 若出现新增接口、状态边界变化或影响面扩大，应回到 P3 更新方案。
+- 若出现实现偏差、假设失效、范围漂移、验证失败、审查发现或外部阻塞，立即按 `goal-calibration.md` 登记 task-state 投影并按事实性质回 P1–P5 / 诚实停；禁止只记风险后沿旧计划继续。
 
 执行原则：
 
@@ -182,6 +183,8 @@ AI 必须回答：
 - 当前验证依据中，哪些来自通用质量门禁，哪些来自已激活的 profile？
 
 P5 阶段默认触发 `60_Extension_CodeReview/review-engine.md` 简要自评（用户明确要求跳过时除外）。在 `/butler:dangerous` 危险模式下，该简评升级为**不可跳过的完整多维审查门**，Must Fix 阻断迭代收口，详见 `65_Extension_Dangerous/dangerous-engine.md` §7.3。
+
+P5 的失败 evidence、refuted AC 或 review finding 同样触发 `goal-calibration.md`；按根因可能回 P1/P2/P3/P4，不得因“已经到验证阶段”就只写 Remaining Risk。所有 completion-blocking signal resolved 前不得收口。
 
 长任务在 P5 结束后，应补充 checkpoint 或 handoff summary，确保验证结论可直接被下一阶段继承。
 若生成 `02_SESSION_HANDOFF.md`，其内容结构应符合 `40_Context_Management/handoff-spec.md`。

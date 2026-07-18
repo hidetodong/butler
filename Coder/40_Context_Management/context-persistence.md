@@ -50,6 +50,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 - 当前已确认的接口契约、关键变量或结构边界
 - 当前剩余风险与阻塞项
 - 下一步应从哪里继续
+- 出现运行时坏消息时，按 `20_Workflow_Lifecycle/goal-calibration.md` 维护 `# Goal Calibration` 表的 ID/Signal/Fact Source/Goal Impact/Route/Status；只存 open/blocked 与必要的最近 resolved 投影
 - 若 `.ai/TECH_PLAN.md` 的 `Execution Steps` 是可勾选任务清单，则按任务粒度镜像完成态（已完成 / 进行中 / 下一条任务），作为 P4 的活进度板
 
 ### 记录原则
@@ -60,6 +61,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 - 若代码或文档已成为权威来源，状态文件只补充"当前推进状态"，不重复复制实现细节
 - 任务清单镜像服务运行态续接，**不取代**验收脊柱：AC 的勾选（§5 阶段结晶）与 P5 的 AC 回填仍以 AC 为单位，task-state 的任务进度只是其执行侧投影
 - 可按 `20_Workflow_Lifecycle/goal-contract.md` 回声当前派生 Goal 状态与原因，但它仍是可重算缓存：真源冲突时重算并改正 task-state，不反向覆盖 AC、evidence、review 或台账。
+- Goal Calibration 表同样是可重算投影：不能靠删行或手改 resolved 清风险，处置依据留在对应阶段产物/evidence/review。
 
 ## 5. 阶段结晶 (Crystallize)
 
