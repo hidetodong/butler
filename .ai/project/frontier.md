@@ -4,7 +4,7 @@
 
 ## 当前形态
 
-- **版本**：发布真相仍为 v2.16.0；MILE-0007 的 R1–R5 已在隔离分支实现、验证并收口，尚未切版或推送。
+- **版本**：v2.17.0；MILE-0007 的 R1–R5 已实现、验证、收口并聚合发布。
 - **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与八工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
 - **双宿主治理**：33 个入口元数据投影由 registry 生成/校验；个人 Butler plugin 已刷新，team/public distribution 明确未配置。
 - **远端保护**：workflow 尚未推送；required API 返回 403，当前私有仓库需升级 GitHub Pro 或改公开，状态为 `pending external capability`。
@@ -15,6 +15,6 @@
 
 ## 下一个瓶颈
 
-- 把已收口的 MILE-0007 按 MINOR 聚合发布，需要单独执行 VERSION/CHANGELOG/migration/release commit/tag/push 仪式；本次未把“完成里程碑”扩大解释为发布。
+- MILE-0007 发布战线已关闭；后续工程化变化从 v2.17.0 新开迭代承接。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。

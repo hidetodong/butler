@@ -643,6 +643,37 @@
           ]
         }
       ]
+    },
+    {
+      "source": "2.16.0",
+      "target": "2.17.0",
+      "recipe": "v2.17.0.md",
+      "actions": [
+        {
+          "id": "2.17.0/01-global-install",
+          "type": "global_install",
+          "domain": "machine",
+          "preconditions": [
+            "explicit-machine-confirmation"
+          ]
+        },
+        {
+          "id": "2.17.0/02-regen-entrypoints",
+          "type": "regen_entrypoints",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        },
+        {
+          "id": "2.17.0/03-restamp",
+          "type": "restamp",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        }
+      ]
     }
   ]
 }
