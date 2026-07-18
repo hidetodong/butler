@@ -167,7 +167,7 @@
       "topics": [
         {"path": ".ai/project/capabilities.md", "sha256": "6857d38f36252c1d10468365d7c25a6b7dfe5247b56b21607c9d4bfd0cea1349"},
         {"path": ".ai/project/invariants.md", "sha256": "19c0cb2aed53d3463a4b64b78670663242f29ac5887300d21408acd1e2dd3d9b"},
-        {"path": ".ai/project/frontier.md", "sha256": "000447810e6bc004c8c1cf202068d0278c8738dec3f2c745e25fdd0b304a496c"}
+        {"path": ".ai/project/frontier.md", "sha256": "ce3066d9b43ecf6e25ccc4cd7c812a96347fa3bfa8016233d01183b32743ac2c"}
       ]
     }
   }
