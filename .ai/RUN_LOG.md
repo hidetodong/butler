@@ -24,3 +24,6 @@
 - 2026-07-18 · P5-review · ITER-0062 · `dangerous-ack`：强审发现 1 个 Must Fix（新规则漏登 Coder 目录树）和 1 个 Should Fix（milestone completion-candidate 未单独消歧）；已补目录登记、里程碑候选语义与结构回归。
 - 2026-07-18 · P5-review · ITER-0062 · `dangerous-ack`：修复后专项 7/7 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核并如实披露。
 - 2026-07-18 · close · ITER-0062 · `dangerous-ack`：8 个 evidence 归档、四件套/CHANGELOG、双格式交付完成；R2 closed，继续 R3。
+- 2026-07-18 · route · ITER-0063 · `dangerous-ack`：自动开启 R3；选择 TECH_PLAN frontmatter 为 verdict 单一真源，共享 phase gate 机械拒绝显式非 pass，同时保留旧版无字段兼容。
+- 2026-07-18 · P2 · ITER-0063 · `dangerous-ack`：AC1–AC7 通过自审并自主冻结；状态机、反证维度、标准/危险 ACK、hook 正负态、Goal 映射、接线与机器证据均可验证，R4–R6 边界明确。
+- 2026-07-18 · P3 · ITER-0063 · `dangerous-ack`：结构化 Plan Admission verdict=`pass`；AC 全覆盖，替代方案、失败模式、影响面与验证盲区已挑战，未发现 Must Fix，准许进入 P4。

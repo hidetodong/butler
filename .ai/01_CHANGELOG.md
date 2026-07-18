@@ -1,12 +1,12 @@
-> Goal Contract 与派生状态机 · closed · 2026-07-18
+> 方案准入与反证门 · active · 2026-07-18
 
 ## ADD
-- `Coder/20_Workflow_Lifecycle/goal-contract.md` — 新增两层派生 Goal 视图、六状态优先级、完成候选与宿主投影共同合同 → AC1–AC4
-- `scripts/test-goal-contract.py` — 新增合同章节、状态集合、真源、禁止捷径和六处接线结构测试 → AC6
+- `scripts/test-plan-admission.py` — 方案状态、反证维度与规则接线结构合同测试 → AC1–AC6
 
 ## EDIT
-- `Coder/README.md`、`lifecycle.md`、`concept-schema.md`、`acceptance-schema.md`、`milestone-schema.md`、`context-persistence.md` — 以窄指针接入 Goal Contract，不复制状态算法 → AC5
-- `scripts/verify-ci.sh` — 把 Goal Contract 结构测试接入固定工具链完整入口 → AC6
+- `tech-plan-schema.md`、`lifecycle.md`、`goal-contract.md`、`dangerous-engine.md`、`rule-card.md`、`mcv-deployment.md` — 方案准入状态机、反证清单与共同接线 → AC1–AC3、AC5–AC6
+- `templates/hooks/rules/phase_gate.py` 与测试 — 显式非 pass 方案拒绝源码写、legacy 兼容 → AC4
+- `scripts/verify-ci.sh` — 接入方案准入结构测试 → AC7
 
 ## DELETE
 - 无

@@ -2,29 +2,28 @@
 
 # 一句话
 
-- R2 把 R1 发现的散落目标事实组合成一份逻辑合同和派生状态机。目标状态不另存第二份，而从既有阶段产物推导，避免 Goal 与 AC、验证、台账各说各话。
+- R3 把“方案看起来写完了”与“方案真的获准执行”分开：TECH_PLAN 必须主动反证并得出可机读 verdict，未通过就不能进入 P4。
 
 # Goal
 
-- 定义 Butler 通用 Goal Contract、状态优先级和完成候选语义，并把它接入生命周期与状态持久化规则。
+- 为 Butler 的 P3 建立结构化方案准入合同、状态机与双宿主共享源码写门禁。
 
 # Current Understanding
 
-- 新增 `.ai/GOAL.md` 虽直观，却会复制 objective、scope、AC、plan 和 evidence；R1 已证明这些各有真源，故选择派生视图。
-- Goal Contract 是“既有真源如何共同回答目标状态”的组合协议，不是新文件格式。
-- R2 只定义状态与读取/写入纪律；P3 方案 verdict、执行问题回流、完成裁决器和宿主同步仍属 R3–R6。
+- 现有 P3 只要求 TECH_PLAN 存在并等待 ACK；危险模式也只有散文式自审，没有可供 Goal 或 hook 消费的判定。
+- verdict 应住在 TECH_PLAN 自身，避免新增审批文件；`Plan Admission` 记录覆盖、假设、替代方案、失败路径、影响面和验证盲区。
+- 用户 ACK 或危险模式自审都不能覆盖已知缺陷：只有没有 Must Fix 的方案才可置 `pass`。
 
 # Constraints
 
-- 状态必须确定性优先：abandoned/blocked/at-risk/completion-candidate/active/complete 不得由模型凭语气挑选。
-- `complete` 只能由迭代/里程碑收口事实派生；task-state 或宿主 complete 不能反向写项目真相。
-- 极小任务不增加文件税；无持久产物时只做对话级目标/验证说明。
-- 不在 R2 实现机械完成裁决器。
+- `draft / pass / revise / blocked` 是封闭状态；`revise` 回 P3，`blocked` 诚实停机。
+- 已通过方案发生实质修改后必须退回 `draft` 重审。
+- 旧版 TECH_PLAN 无状态字段时暂时放行，避免模板升级前误杀既有项目；新 schema 不允许省略。
+- R3 不实现执行中问题回流、最终完成裁决或宿主 Goal 同步。
 
 # Impact Scope
 
-- 新增共同规则 `Coder/20_Workflow_Lifecycle/goal-contract.md`，接入 Coder 读序、lifecycle、schema 与 context persistence，并增加结构合同测试。
-- 不修改 hook、plugin、宿主 API 或目标项目模板。
+- 修改 P3 schema/lifecycle/危险模式/Goal 合同/规则卡与部署说明；增强 Claude/Codex 共用 `phase_gate`；增加专项结构测试与 hook 回归。
 
 # Project Type / Active Profiles
 
@@ -32,4 +31,4 @@
 
 # Open Questions
 
-- `at-risk` 的问题分类与 phase 回流 action 由 R4 细化；R2 只定状态语义。
+- 无阻塞问题。兼容窗口何时移除留给后续升级里程碑，不在 R3 强拆旧项目。
