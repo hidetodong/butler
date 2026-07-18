@@ -17,6 +17,6 @@
 
 ## 下一个瓶颈
 
-- 外部旧项目自动获得 ITER-0067 hook/规则仍需后续正式版本 migration；本轮未切版、未合并、未推送。review/blocker 输入仍依赖审查真实执行。
+- MILE-0007 发布战线已关闭；ITER-0067 随主线推进但未切版，外部旧项目自动获得新 hook/规则仍需后续正式版本 migration。review/blocker 输入仍依赖审查真实执行。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。

@@ -26,7 +26,7 @@
 
 - 新增/增强 `scripts/`、`tools/verification-evidence/`、`tools/butler-upgrade/`、`migrations/manifest.json`、`.github/workflows/`、`workflows/`、plugin 元数据与生成文档。
 - P1–P5、迭代/里程碑核心语义和业务工作流算法没有重写。
-- MILE-0007 已按 MINOR 聚合发布为 v2.17.0，release commit/tag 与本地 `main` 对齐；远端同步状态以 remote refs 实时核验。
+- MILE-0007 已按 MINOR 聚合发布为 v2.17.0，并合入/push `main`。
 
 ## 拆分路线图回填
 
