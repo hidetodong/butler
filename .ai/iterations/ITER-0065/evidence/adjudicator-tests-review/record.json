@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "adjudicator-tests-review",
+  "iteration": "ITER-0065",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/goal-assurance/test_goal.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T12:20:08.312Z",
+  "finished_at": "2026-07-18T12:20:08.442Z",
+  "duration_ms": 130,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 112,
+    "captured_bytes": 112,
+    "sha256": "fb33a9e41757112851f0481f3a0e36adb8fd286e00b488d80bd4496b92fd3f8d",
+    "truncated": false
+  }
+}

@@ -13,7 +13,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 2. 交付约定
 
 - 必须产出：`.ai/VERIFY_REPORT.md`
-- 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`Goal Calibration`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
+- 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`Goal Calibration`、`Completion Inputs`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
 - 条件字段：`人测道小结`（仅当存在人测道 AC 时必填，见 §3 模板与 §4 分道回填要求）
 
 ## 3. 标准模板
@@ -44,6 +44,10 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 # Goal Calibration
 - CAL-001：<signal> → <route> → resolved（依据：<新 evidence / 重审 verdict>）
 - 本轮无 calibration signal 时写 N/A
+
+# Completion Inputs
+- Review Verdict: pass
+- Completion Blockers: none
 
 # Gate Coverage
 - 通用质量门禁：已验证项
@@ -81,6 +85,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。**PRD 切片专项**：对着 `AC_LIST.md` frontmatter 钉住的 `prd_version` 核、**非对 live 最新核**——同一迭代内 live 即钉住版（读 live 即可），仅回溯复核历史迭代（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/<slug>.md`（钉住版语义见 `acceptance-schema.md §4`、读侧纪律回指 `40_Context_Management/references-schema.md §5 步骤 2`）。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
 - `Goal Calibration` 按 `goal-calibration.md` 回填本轮 completion-blocking signal、route 与 resolved 依据；仍 open/blocked 时不得勾绿受影响 AC 或收口。Remaining Risks 不能作为绕过该门的垃圾桶。
+- `Completion Inputs` 是完成裁决器的机读输入：`Review Verdict` 只允许 `pass / must-fix / not-run`，`Completion Blockers` 只允许 `none / present`；未知/缺失 fail-closed。完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`，只有 exit 0 / `eligible` 可进入收口仪式。
 - `Remaining Risks` 也是 Review / P5 自评产出的 **Should Fix（不阻断项）** 的落点（不得写入 `01_CHANGELOG.md`）；见 `60_Extension_CodeReview/review-engine.md §4`。
 - 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）；AC 回填用紧凑式 `[x] ACn ✓ 一句话证据`，不重抄 AC 原文。
 - `Independent Review` 为可选字段：仅当本迭代跑过独立复核（手动 `/review` 或项目 `Review Policy: independent_review: on`）时回填；未跑则可整段省略。环境不支持 fresh-context 子 agent 而未能独立复核时，须按 `62_Extension_Agents/overview.md §3` 通用规矩 **G2** 如实标注"未执行"并落到 `Remaining Risks`，不得冒称已独立复核。
@@ -89,6 +94,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 - P5 阶段必须产出 `.ai/VERIFY_REPORT.md`，按 `.ai/AC_LIST.md` 逐项回填验证结果。
 - 完整路径 P5 在最终回填前必须校验并归档 evidence 热区；归档/重开协议见 `iteration-schema.md §5.5` 与工具 README。
+- completion adjudicator 在 evidence 尚处热区时运行；它只判 active iteration 的 close eligibility，不替代归档后的 state audit。
 - 若任务已闭合，可作为最终交付摘要的一部分。
 - 若任务未闭合，可继续衔接 checkpoint 或 `02_SESSION_HANDOFF.md`。
 - 简化路径下可简要验证，不强制产出此文件。

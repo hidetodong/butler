@@ -11,11 +11,11 @@
 
 ## 活跃战线
 
-- MILE-0008“目标可信闭环”active；R1–R4 closed。派生 Goal、方案准入、六类运行时信号、task-state 活投影和 P1–P5 回流均已进入共同规则。
-- 危险模式仍为 ON；R5 下一步实现 Goal completion adjudicator，机械拒绝方案/信号/evidence/review/台账不一致的 complete。
+- MILE-0008“目标可信闭环”active；R1–R5 closed。派生 Goal、方案准入、运行回流和只读 completion adjudicator 已落地；GFC-001–008 全拒绝。
+- 危险模式仍为 ON；R6 下一步接入 Codex/Claude 工作流、模板/升级面和端到端降级，随后收口里程碑。
 
 ## 下一个瓶颈
 
-- Goal 闭环仍缺机械完成裁决器和宿主投影；由 R5–R6 补齐。当前 calibration 是 fail-honest 规则而非自动自然语言分类器。
+- Goal 闭环只剩宿主投影与部署升级接线；R6 完成。当前 review/blocker 结构输入仍依赖审查真实执行。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。

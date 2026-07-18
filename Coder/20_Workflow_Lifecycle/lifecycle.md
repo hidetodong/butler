@@ -186,6 +186,8 @@ P5 阶段默认触发 `60_Extension_CodeReview/review-engine.md` 简要自评（
 
 P5 的失败 evidence、refuted AC 或 review finding 同样触发 `goal-calibration.md`；按根因可能回 P1/P2/P3/P4，不得因“已经到验证阶段”就只写 Remaining Risk。所有 completion-blocking signal resolved 前不得收口。
 
+完整路径进入收口仪式前必须运行只读 `tools/goal-assurance/goal.py evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` / exit 0 可继续。它聚合 AC、plan verdict、calibration、evidence、review/blocker 与 active ledger；tasks done 或宿主 complete 不参与裁决。eligible 不是 complete，后者仍由收口事实派生。
+
 长任务在 P5 结束后，应补充 checkpoint 或 handoff summary，确保验证结论可直接被下一阶段继承。
 若生成 `02_SESSION_HANDOFF.md`，其内容结构应符合 `40_Context_Management/handoff-spec.md`。
 若任务只是中途暂停、等待用户 ACK、等待外部结果或尚未闭环，则继续使用 checkpoint / handoff，不生成 Delivery Summary。

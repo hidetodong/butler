@@ -39,3 +39,6 @@
 - 2026-07-18 · route · ITER-0065 · `dangerous-ack`：自动开启 R5；选择只读标准库 CLI 聚合完成资格，不自动 close。
 - 2026-07-18 · P2 · ITER-0065 · `dangerous-ack`：AC1–AC7 自审通过并冻结；覆盖 AC/plan/calibration/evidence/review/blocker/ledger 与八类负向 oracle。
 - 2026-07-18 · P3 · ITER-0065 · `dangerous-ack`：Plan Admission pass；稳定 JSON + 0/1/2 退出码，全量 checks 汇总，不信 host/tasks，不抢跑 R6。
+- 2026-07-18 · P5-review · ITER-0065 · `dangerous-ack`：首轮强审发现 1 Must Fix——测试 fixture 自造 `streams` 包装层，与真实 evidence v1 顶层 stdout/stderr 漂移，导致工具会误拒真实 record；已对齐真实 schema 并增加 shape/schema/id 回归。
+- 2026-07-18 · P5-review · ITER-0065 · `dangerous-ack`：修复后 13/13 adjudicator tests 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
+- 2026-07-18 · close · ITER-0065 · `dangerous-ack`：completion adjudicator 对本仓 active 状态十项 checks 全绿、verdict=eligible；6 evidence 归档、双格式交付和知识折叠完成，R5 closed，继续 R6。

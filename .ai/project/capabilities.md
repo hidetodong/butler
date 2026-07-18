@@ -44,6 +44,8 @@
 
 P4/P5 同时启用**Goal 运行时校准**：实现偏差、假设失效、范围漂移、验证失败、review finding、外部阻塞六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号使 Goal at-risk/blocked。真源 `20_Workflow_Lifecycle/goal-calibration.md`。
 
+P5 收口前可运行 `tools/goal-assurance/goal.py evaluate`：只读聚合 active ledger、AC、plan、calibration、hot evidence、review 和 completion blockers，JSON 输出 eligible/ineligible；GFC-001–008 全部负向拒绝。eligible 只准进入收口，不等于 complete。
+
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
 
 | 阶段 | 干什么 | 产物 |

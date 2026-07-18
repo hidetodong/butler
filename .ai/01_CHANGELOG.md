@@ -1,4 +1,4 @@
-> Goal 完成裁决器 · active · 2026-07-18
+> Goal 完成裁决器 · closed · 2026-07-18
 
 ## ADD
 - `tools/goal-assurance/` — 只读 completion eligibility CLI、测试与使用说明 → AC1–AC6

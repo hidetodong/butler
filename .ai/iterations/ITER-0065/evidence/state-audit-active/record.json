@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "state-audit-active",
+  "iteration": "ITER-0065",
+  "ac_ids": [
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/audit-project-state.py",
+      "--project-root",
+      ".",
+      "--allow-unreleased"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T12:20:36.584Z",
+  "finished_at": "2026-07-18T12:20:37.086Z",
+  "duration_ms": 502,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 28696,
+    "captured_bytes": 28696,
+    "sha256": "39dcee4e3f8153162cbe8892af723cd2be98e1d1cf6b5aec8c3dbd668d6ad34e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
