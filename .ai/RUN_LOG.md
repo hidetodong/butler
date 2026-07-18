@@ -15,3 +15,6 @@
 - 2026-07-18 · route · ITER-0061 · `dangerous-ack`：用户 ACK MILE-0008 方向并确认危险模式；开启 R1，限定只做目标载体盘点、层级边界和假完成失败模型，不提前实现 Goal Contract。
 - 2026-07-18 · P2 · ITER-0061 · `dangerous-ack`：AC1–AC6 通过验收自审并自主冻结；每项均有表格、严格 JSON、真源对照或完整验证动作，覆盖功能/结构/质量，Out of Scope 明确隔离 R2–R6，无不可验证项或隐藏范围扩张。
 - 2026-07-18 · P3 · ITER-0061 · `dangerous-ack`：设计自审通过；采用人读基线 + 负向 JSON oracle，不新增运行 schema/脚本，不修改共同规则算法；AC1–AC6 均有落点和验证，宿主未知能力保持 unknown，未把当前会话观察误升为长期合同。
+- 2026-07-18 · P5-review · ITER-0061 · `dangerous-ack`：完整强审发现 1 个 Should Fix——基线把危险模式北极星合并进普通 ITERATIONS 索引行，角色边界不够清楚；已拆为独立载体项，明确它只指导跨迭代自治、不能裁决完成。其余宿主来源等级、R1/R2 边界和 8 个负向 oracle 未发现 Must Fix。
+- 2026-07-18 · P5-review · ITER-0061 · `dangerous-ack`：强审修复后合同与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0。未执行 fresh-context 独立复核并已如实披露；R1 只证明问题模型，未宣称 Goal 已受新门禁保护。
+- 2026-07-18 · close · ITER-0061 · `dangerous-ack`：9 个 evidence 整包归档、四件套/CHANGELOG 快照、MD/HTML 交付和 frontier 折叠完成；R1 closed，危险模式按 MILE-0008 路线推进 R2。

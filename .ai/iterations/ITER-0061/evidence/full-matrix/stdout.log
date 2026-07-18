@@ -1,0 +1,14 @@
+[INFO] pinned toolchain: platform=Darwin/arm64 python=3.12.12 uv=0.9.28
+[OK] synchronized workflow registry: workflows=8 projections=33 changed=0
+[OK] synchronized workflow registry: workflows=8 projections=33 changed=1
+[OK] synchronized workflow registry: workflows=8 projections=33 changed=0
+[OK] workflow registry projections: workflows=8 projections=33
+[OK] workflow registry projections: workflows=8 projections=33
+[OK] Markdown links passed: files=955, links=43
+[OK] Codex R1 地基结构检查通过
+[OK] Codex R2 workflow/plugin checks passed (8 skills)
+Codex hook wrapper verification passed
+........................................................................ [ 56%]
+.......................................................                  [100%]
+127 passed in 1.18s
+[OK] Claude/Codex unified setup and project entrypoint matrix passed

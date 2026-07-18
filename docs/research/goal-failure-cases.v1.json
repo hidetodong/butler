@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "purpose": "Negative oracle for Butler Goal completion: every case must be rejected from complete until its expected disposition is resolved.",
+  "cases": [
+    {
+      "id": "GFC-001",
+      "category": "plan-verdict-not-passed",
+      "facts": {
+        "plan_verdict": "revise",
+        "execution_tasks": "done",
+        "acceptance_status": "unknown"
+      },
+      "invalid_claim": "Goal is complete because every implementation task finished.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "The plan has not passed its own admission review.",
+        "Task completion cannot override a revise verdict."
+      ],
+      "future_route": "R3: return to P3, revise the plan, and re-run plan admission."
+    },
+    {
+      "id": "GFC-002",
+      "category": "goal-outcome-not-covered-by-ac",
+      "facts": {
+        "goal_outcomes": 3,
+        "outcomes_mapped_to_ac": 2,
+        "ac_state": "ack-frozen"
+      },
+      "invalid_claim": "Goal is complete because every existing AC passed.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "At least one Goal outcome has no acceptance definition.",
+        "Passing an incomplete checklist does not prove the Goal."
+      ],
+      "future_route": "R2: return to P2 and repair the Goal-to-AC contract before execution continues."
+    },
+    {
+      "id": "GFC-003",
+      "category": "passed-ac-without-evidence",
+      "facts": {
+        "ac_result": "passed",
+        "evidence_record": "missing",
+        "reported_command": "present"
+      },
+      "invalid_claim": "Goal is complete because the assistant says the tests passed.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "A reported command is not captured evidence.",
+        "The passed AC has no verifiable record."
+      ],
+      "future_route": "R5: remain in P5, capture a valid evidence record, then re-run completion adjudication."
+    },
+    {
+      "id": "GFC-004",
+      "category": "review-must-fix-open",
+      "facts": {
+        "automated_checks": "passed",
+        "review_verdict": "must-fix",
+        "must_fix_count": 1
+      },
+      "invalid_claim": "Goal is complete because the test matrix is green.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "A known Must Fix finding remains open.",
+        "Green tests do not override an unresolved review blocker."
+      ],
+      "future_route": "R5: return to P4, fix the finding, and perform targeted re-review."
+    },
+    {
+      "id": "GFC-005",
+      "category": "blocking-risk-unresolved",
+      "facts": {
+        "remaining_risk": "blocks-downstream",
+        "proxy_verification": "unavailable",
+        "dependency_isolation": "unavailable"
+      },
+      "invalid_claim": "Goal is complete with a note that the critical risk can be checked later.",
+      "expected_disposition": "blocked",
+      "blocking_reasons": [
+        "The unresolved risk is a prerequisite for downstream correctness.",
+        "There is no weak verification or isolated path that permits safe continuation."
+      ],
+      "future_route": "R4: stop honestly, write a handoff, and wait for the missing external condition or human decision."
+    },
+    {
+      "id": "GFC-006",
+      "category": "scope-drift-without-replan",
+      "facts": {
+        "frozen_scope": "module-a",
+        "implemented_scope": "module-a-and-contract-b",
+        "plan_revision": "missing"
+      },
+      "invalid_claim": "Goal is complete because the expanded implementation also works.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "A contract-level impact was added outside the frozen scope.",
+        "The acceptance and plan artifacts no longer describe the implementation."
+      ],
+      "future_route": "R4: route to P2/P3 amendment or open a new iteration when the impact is an expansion."
+    },
+    {
+      "id": "GFC-007",
+      "category": "host-projection-drift",
+      "facts": {
+        "host_goal_state": "complete",
+        "project_iteration_state": "active",
+        "failed_ac_count": 1
+      },
+      "invalid_claim": "Goal is complete because the host Goal UI says complete.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "The host projection conflicts with project-owned acceptance truth.",
+        "A failed AC prevents completion."
+      ],
+      "future_route": "R6: correct the host projection from shared project state; never overwrite project truth from the host UI."
+    },
+    {
+      "id": "GFC-008",
+      "category": "task-list-done-outcome-not-achieved",
+      "facts": {
+        "execution_tasks": "done",
+        "passed_ac_count": 4,
+        "pending_or_failed_ac_count": 1
+      },
+      "invalid_claim": "Goal is complete because the plan has no remaining tasks.",
+      "expected_disposition": "revise",
+      "blocking_reasons": [
+        "The task list is an execution projection, not the acceptance spine.",
+        "At least one required outcome remains pending or failed."
+      ],
+      "future_route": "R4/R5: route from the failed AC to the responsible phase, add or revise tasks, and adjudicate again."
+    }
+  ]
+}

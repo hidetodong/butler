@@ -100,6 +100,18 @@
           "sha256": "022a83ce2b1e85cb86dee95799f4ec2b0d1e574204a90aee871cff2faba17ea4"
         }
       ]
+    },
+    "ITER-0061": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0061/CHANGELOG.md",
+        "sha256": "d1eb9226eda936939a8199f6fc32716fc92c5247017d7abec8b1f1aa750341af"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "88b60c74f1a8c18673d312ca324dcf7e76e5cb4a67504a2f437e5dc58c6f56e2"
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ITER-0061 交付总结 · 目标体系现状审计与失败模型</title>
+<style>:root{--fg:#1f2328;--muted:#59636e;--bg:#f6f8fa;--card:#fff;--border:#d1d9e0;--accent:#0969da;--soft:#ddf4ff;--warn:#fff8c5;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}*{box-sizing:border-box}body{margin:0;padding:2rem 1rem 4rem;background:var(--bg);color:var(--fg);font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.sheet{max-width:820px;margin:auto}header,section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.75rem 1.25rem;margin-bottom:1rem}header{padding:1.5rem 1.75rem}h1{margin:0 0 .75rem;font-size:1.5rem}h2{margin:0 0 .6rem;font-size:1.05rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}.meta{display:flex;gap:.5rem;flex-wrap:wrap}.chip{padding:.15rem .6rem;border-radius:999px;font:.8rem var(--mono);color:var(--accent);background:var(--soft)}.chip.muted{color:var(--muted);background:#eef1f5}p,ul{margin:.5rem 0}ul{padding-left:1.3rem}li{margin:.25rem 0}code{font:.88em var(--mono);background:#eef1f5;padding:.05rem .35rem;border-radius:5px}.risks{background:var(--warn);border-color:#eed888}footer{margin-top:1.5rem;text-align:center;color:var(--muted);font-size:.8rem}@media print{body{background:#fff;padding:0}header,section{break-inside:avoid}}</style></head>
+<body><main class="sheet">
+<header><h1>目标体系现状审计与失败模型</h1><div class="meta"><span class="chip">ITER-0061</span><span class="chip muted">迭代交付（小版本）</span><span class="chip muted">收口 2026-07-18</span></div></header>
+<section><h2>本次交付目标</h2><p>画清 Butler 现有目标、计划、进度和完成载体，并固定“任务做完但 Goal 不能完成”的负向样本，为 MILE-0008 后续机制提供事实基线。</p></section>
+<section><h2>已完成内容</h2><ul><li>盘点 12 类目标相关载体及其权威边界。</li><li>固化各层唯一回答位置和不可替代关系。</li><li>新增 8 个严格 JSON 假完成 case。</li><li>列明已有保障、缺失保障与 R2–R6 输入。</li><li>把最终存储、状态机、verdict、回流、裁决器和宿主 API 选型明确延期。</li></ul></section>
+<section><h2>关键变更 / 用户可感知变化</h2><ul><li>可以精确解释 tasks done 为什么不等于 Goal achieved。</li><li>Codex 能力限为当前会话观察，Claude 映射保持 unknown。</li><li>危险模式北极星只指导跨迭代自治，不裁决完成。</li><li>后续规则可直接复用稳定 case ID 做反证。</li></ul></section>
+<section><h2>高层影响范围</h2><p>只新增研究基线、JSON fixture 与 ITER-0061 状态/交付；没有修改共同运行规则、hook、plugin、宿主入口或版本号。</p></section>
+<section><h2>验证方式与结果摘要</h2><p>9 个 evidence record 全部通过；强审前后两次完整矩阵均绿，最终覆盖 955 个 Markdown 文件/43 个链接、8 skills/plugin、127 hook tests 和双宿主矩阵。修复 1 个 Should Fix 后最终 Must Fix 0、Should Fix 0。</p></section>
+<section class="risks"><h2>已知剩余风险 / 延后事项</h2><ul><li>R1 只冻结问题模型，尚未增加 Goal 门禁。</li><li>未执行 fresh-context 独立复核。</li><li>Codex/Claude 宿主合同仍需 R6 当场核验。</li></ul></section>
+<section><h2>引用（只引用路径，不嵌全文）</h2><ul><li><code>.ai/iterations/ITER-0061/</code></li><li><code>docs/research/2026-07-18-goal-system-baseline.md</code></li><li><code>docs/research/goal-failure-cases.v1.json</code></li><li><code>checkpoint ab075fe</code></li></ul></section>
+<footer>固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9</footer>
+</main></body></html>

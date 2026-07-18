@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "goal-baseline-contract-review",
+  "iteration": "ITER-0061",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "import json,pathlib; root=pathlib.Path(\".\"); data=json.loads((root/\"docs/research/goal-failure-cases.v1.json\").read_text()); keys={\"id\",\"category\",\"facts\",\"invalid_claim\",\"expected_disposition\",\"blocking_reasons\",\"future_route\"}; cases=data[\"cases\"]; ids=[x[\"id\"] for x in cases]; assert set(data)=={\"schema_version\",\"purpose\",\"cases\"} and data[\"schema_version\"]==1; assert len(cases)==8 and len(ids)==len(set(ids)); assert all(set(x)==keys and x[\"expected_disposition\"] in {\"revise\",\"blocked\"} for x in cases); report=(root/\"docs/research/2026-07-18-goal-system-baseline.md\").read_text(); assert all(i in report for i in ids); assert \"`.ai/ITERATIONS.md` 危险模式北极星\" in report; assert \"自治方向真源，不是完成裁决\" in report; assert all(s in report for s in (\"documented-butler\",\"observed-current-session\",\"unknown\",\"deferred to R2\",\"R1 的完成只代表问题模型已冻结\")); print(f\"reviewed goal baseline contract passed: cases={len(cases)}\")"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T10:53:30.353Z",
+  "finished_at": "2026-07-18T10:53:30.378Z",
+  "duration_ms": 24,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 48,
+    "captured_bytes": 48,
+    "sha256": "f4b5612035f8a9054f6ba72b092125503cdc63ccdb290b8da25802197363ace7",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
