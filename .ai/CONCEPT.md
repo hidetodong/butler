@@ -1,34 +1,27 @@
 > 分流: 完整 | 命中升级信号: 多文件改动、契约变更、跨模块影响、设计取舍 | 2026-07-18
 
 # 一句话
-
-- R5 用只读程序裁决“现在有没有资格收口”，任一方案、校准、AC、证据、审查或阻断事实不一致都拒绝。
+- R6 让 Claude/Codex 从同一 `.ai/` Goal 真相投影状态；宿主 UI 只是显示层，缺能力也不影响闭环。
 
 # Goal
-
-- 交付确定性 Goal completion adjudicator 和覆盖 R1 八类假完成的负向回归。
+- 完成双宿主投影协议、模板/部署接线、跨会话恢复与端到端矩阵，并收口 MILE-0008。
 
 # Current Understanding
-
-- 裁决器不替代真源，只组合读取；输出 eligible 只是允许执行收口仪式，complete 仍由 closed + 收口事实派生。
-- Evidence Index 的路径在 active 阶段指向未来 archive，工具需从 hot record 验证并对账 AC 覆盖。
-- review 与 blocker 需要 VERIFY 提供最小机读输入，不能从乐观散文猜。
+- 不应新增宿主专属同步服务；共同规则卡和驻留 adjudicator 已是稳定接线点。
+- 原生 Goal/Task 能力会变化，规则必须 capability-detect，不能假设 API 永远存在。
+- 当前未发布变更不能冒称已自动升级所有外部项目；新部署/重渲染可得能力，正式迁移随下次版本发布。
 
 # Constraints
-
-- 默认只读、JSON 稳定输出；ineligible 为业务结论 exit 1，格式/环境错误 exit 2。
-- 必须 fail-closed，未知/缺字段不得默认为绿。
-- 不写台账、不自动 close、不信宿主 complete、不以 task done 为输入。
-- R6 才做宿主接线与模板升级。
+- 项目 `.ai/` 永远赢；host complete 不反写 closed。
+- 投影仅 objective、derived state、reason、next step，不复制 AC/plan/evidence。
+- 无原生工具时只用 task-state/handoff，功能语义不降级。
+- 不新增第九个高风险 workflow，不切版、不推送。
 
 # Impact Scope
-
-- 新增 `tools/goal-assurance/` CLI/测试，增强 VERIFY schema、Goal Contract/lifecycle/rule-card/README，接入固定 CI。
+- Goal Contract/compatibility/deployment/update/rule-card/入口说明与 host wiring 测试。
 
 # Project Type / Active Profiles
-
-- Python 标准库 CLI + Markdown 规则；危险模式 ON。
+- 双宿主规则/模板/测试；危险模式 ON。
 
 # Open Questions
-
-- 无阻塞问题。
+- 无。

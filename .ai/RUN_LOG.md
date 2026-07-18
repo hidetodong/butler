@@ -42,3 +42,5 @@
 - 2026-07-18 · P5-review · ITER-0065 · `dangerous-ack`：首轮强审发现 1 Must Fix——测试 fixture 自造 `streams` 包装层，与真实 evidence v1 顶层 stdout/stderr 漂移，导致工具会误拒真实 record；已对齐真实 schema 并增加 shape/schema/id 回归。
 - 2026-07-18 · P5-review · ITER-0065 · `dangerous-ack`：修复后 13/13 adjudicator tests 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
 - 2026-07-18 · close · ITER-0065 · `dangerous-ack`：completion adjudicator 对本仓 active 状态十项 checks 全绿、verdict=eligible；6 evidence 归档、双格式交付和知识折叠完成，R5 closed，继续 R6。
+- 2026-07-18 · route · ITER-0066 · `dangerous-ack`：自动开启 R6；共同 rule-card + 驻留 CLI 薄接线，host 只投影，缺能力 `.ai/` 降级。
+- 2026-07-18 · P2/P3 · ITER-0066 · `dangerous-ack`：AC1–AC7 冻结、Plan Admission pass；不新增 workflow/daemon，不切版，不假报外部旧项目已升级。

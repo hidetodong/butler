@@ -1,11 +1,11 @@
-> Goal 完成裁决器 · closed · 2026-07-18
+> Goal 双宿主接线与里程碑收官 · active · 2026-07-18
 
 ## ADD
-- `tools/goal-assurance/` — 只读 completion eligibility CLI、测试与使用说明 → AC1–AC6
+- `scripts/test-goal-host-wiring.py` — 双入口投影、降级、CLI 可达与分发边界测试 → AC5
 
 ## EDIT
-- `verify-schema.md`、`lifecycle.md`、`goal-contract.md`、`rule-card.md`、`Coder/README.md` — completion inputs 与收口资格接线 → AC2–AC5、AC7
-- `scripts/verify-ci.sh` — 接入 adjudicator 测试 → AC6–AC7
+- Goal/context/deployment/update/compatibility/rule-card/入口说明 — 双宿主投影与诚实部署态 → AC1–AC4、AC6
+- `scripts/verify-ci.sh` — 接入 host wiring 测试 → AC7
 
 ## DELETE
 - 无

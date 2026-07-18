@@ -4,12 +4,13 @@
 
 ## 危险模式自治路线图
 
-路线图真源：`.ai/MILESTONE.md`。R1–R5 已 closed；当前无 active 迭代，R6 不预分配迭代号。
+路线图真源：`.ai/MILESTONE.md`。R1–R5 已 closed；当前由 ITER-0066 承接 R6。
 
-current: none
+current: ITER-0066
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0066 | Goal 双宿主接线与端到端验证（MILE-0008 R6·危险模式）：共同投影协议、模板/部署/升级边界、跨会话/无原生能力降级与双入口回归 | active | 2026-07-18 | — | MILE-0008 | — |
 | ITER-0065 | Goal 完成裁决器（MILE-0008 R5·危险模式）：只读聚合七类事实，正向 eligible + GFC-001–008 全拒绝；强审修复 evidence fixture 漂移，13 tests/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0065-goal-completion-adjudicator.md |
 | ITER-0064 | 执行校准与问题回流（MILE-0008 R4·危险模式）：六类信号、task-state 活投影与 P1–P5/诚实停路由；强审修复伪枚举行和错误引用，结构 8/8、完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0064-goal-runtime-calibration.md |
 | ITER-0063 | 方案准入与反证门（MILE-0008 R3·危险模式）：TECH_PLAN 四态 verdict 与七项反证清单；共享 hook 拒绝显式非 pass，Codex 真链路 draft deny→pass allow，最终 7 项结构测试/135 hooks/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0063-plan-admission-gate.md |
