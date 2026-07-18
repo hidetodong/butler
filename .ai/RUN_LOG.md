@@ -12,3 +12,6 @@
 2026-07-18 | ITER-0060 | P5 strong review | Should Fix: hook command validation matched suffix only; tightened to exact type/command object and added regression. Final Must Fix 0 / Should Fix 0; no independent fresh-context review.
 2026-07-18 | ITER-0060 | Evidence | 11 records archived; direct system-Python validator failure retained (missing PyYAML), pinned uv full matrix reproduced passed. Registry closure tests 8/8.
 2026-07-18 | ITER-0060 / MILE-0007 | Close | R5 closed, project knowledge folded, milestone routes R1–R5 all closed. Dangerous remains ON; release/push not inferred.
+- 2026-07-18 · route · ITER-0061 · `dangerous-ack`：用户 ACK MILE-0008 方向并确认危险模式；开启 R1，限定只做目标载体盘点、层级边界和假完成失败模型，不提前实现 Goal Contract。
+- 2026-07-18 · P2 · ITER-0061 · `dangerous-ack`：AC1–AC6 通过验收自审并自主冻结；每项均有表格、严格 JSON、真源对照或完整验证动作，覆盖功能/结构/质量，Out of Scope 明确隔离 R2–R6，无不可验证项或隐藏范围扩张。
+- 2026-07-18 · P3 · ITER-0061 · `dangerous-ack`：设计自审通过；采用人读基线 + 负向 JSON oracle，不新增运行 schema/脚本，不修改共同规则算法；AC1–AC6 均有落点和验证，宿主未知能力保持 unknown，未把当前会话观察误升为长期合同。

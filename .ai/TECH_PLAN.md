@@ -1,72 +1,52 @@
-# TECH_PLAN — ITER-0060 · 双宿主工作流注册与分发收敛
+> ⚠️ 危险模式：本产物由模型自主 ACK（已过设计自审门），未经用户确认（ITER-0061，2026-07-18）。
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过 `dangerous-engine.md §5.2` 自审门），未经用户逐项确认（ITER-0060，2026-07-18）。
+# Goal
 
-## Goal
+- 为 AC1–AC6 交付现状基线和可复用失败 fixture，不在 R1 修改目标控制算法。
 
-- 用一个 JSON registry + 一个标准库 renderer/checker 覆盖 AC1–AC8。
-- 生成窄元数据与人读表，正文算法继续留在各 command/SKILL/Coder 真源。
+# Files / Modules to Change
 
-## Files / Modules to Change
+- `docs/research/2026-07-18-goal-system-baseline.md`：人读现状审计、层级边界、宿主能力来源等级、缺口和路线输入。
+- `docs/research/goal-failure-cases.v1.json`：后续 Goal 裁决器可直接消费的失败 oracle。
+- `.ai/*`：ITER-0061 阶段产物、危险模式审计、证据、归档、交付和台账。
+- 不修改 `Coder/**`、`templates/**`、`plugins/**`、`.claude/commands/**` 或 `scripts/**` 的产品行为。
 
-- **ADD `workflows/registry.json`**：8 workflow 与 plugin/distribution/hook 声明。
-- **ADD `scripts/sync-workflow-registry.py`**：schema/结构校验、全量 plan、`--write` 原子更新、`--check` 零写入。
-- **ADD `scripts/test-workflow-registry.py`**：临时 fixture 与真实仓合同测试。
-- **ADD `docs/workflows.md`**：由 registry 生成的唯一八项能力表与分发边界。
-- **EDIT 8 command + 8 SKILL frontmatter、8 `agents/openai.yaml`、8 `.agents/skills`**：受管投影；正文不重写。
-- **EDIT `scripts/verify-dual-host.sh`**：接入 registry `--check` 与专项。
-- **EDIT README/HUMAN_GUIDE/Codex compatibility/Coder README、项目知识**：改为链接生成表。
-- **EDIT plugin/install 文档**：只补显式声明与校验，不改 plugin schema/hook 算法。
+# Interface / Contract
 
-## Interface / Contract
+- fixture 根对象严格为 `schema_version`、`purpose`、`cases`。
+- 每个 case 严格包含 `id`、`category`、`facts`、`invalid_claim`、`expected_disposition`、`blocking_reasons`、`future_route`。
+- `expected_disposition` 本轮仅允许 `revise` 或 `blocked`，因为 fixture 专门描述不得完成的负向样本；最终状态机由 R2 决定，本轮不把该枚举提升为公共规则。
+- 报告中的 case ID 与 JSON 一一对应；来源等级只用 `documented-butler`、`observed-current-session`、`unknown`。
 
-```text
-python3 scripts/sync-workflow-registry.py --check [--root PATH]
-python3 scripts/sync-workflow-registry.py --write [--root PATH]
-```
+# State / Boundary
 
-- registry 顶层只允许 `schema_version`、`plugin`、`workflows`。
-- plugin 声明 name/root/manifest/hooks/personal installer/marketplace mode/team status；路径均仓内相对。
-- workflow 固定字段：id、rule_source、risk、allow_implicit、semantic_triggers、legacy_aliases；`claude`/`codex` 子对象各含 name/path/description/default_prompt。
-- write 先校验全部输入并在内存生成所有 bytes/symlink target；任何错误零写入。普通文件同目录 temp + `os.replace`，symlink 只接受/生成 `../../plugins/butler/skills/<name>` 相对 target。
-- command frontmatter 只替换 `description`；保留 argument-hint 与正文。SKILL 只替换 name/description；openai.yaml 与 docs/workflows.md 全文件生成。
-- check 比较预计 bytes、mode/软链 target 和实际集合；不调用 write，不生成 cache。
+- milestone 仍是版本方向真源、iteration 仍是单轮范围真源、AC 仍是完成定义真源、TECH_PLAN 仍是方案真源、task-state 仍是执行投影、VERIFY/review 仍是证据与裁决真源。
+- R1 只记录“目前缺统一 Goal 完成聚合规则”，不决定未来新增文件还是派生视图。
+- 宿主 goal/task 只能被记录为适配载体，不能在本轮晋升为项目状态真源。
 
-## State / Boundary
+# Design Decisions
 
-- registry 是工作流元数据真源；command/SKILL 正文仍是宿主薄路由，`Coder/` 是算法真源。
-- docs/workflows.md 是八项人读表真源；其余文档只留概述/链接。
-- plugin.json 保持官方 schema，hooks 自动发现文件独立存在；registry 只声明并校验两者关系。
-- HOME marketplace 不写；team/public 状态是 `not-configured`，后续获得真实分发方案才能改。
-- dangerous ON，自审、RUN_LOG、checkpoint、evidence 和完整审查必做。
+- 采用“一份人读报告 + 一份严格 JSON fixture”，让 R1 的审计结论既可讨论又能被 R5 复用，不写一次性散文后丢失测试价值。
+- fixture 只列负向 oracle，不伪造尚未设计的完整 Goal 状态机；正向完成样本由 R2/R5 在合同确定后补。
+- 不新增验证脚本：用内联标准库校验捕获 evidence，避免 R1 为临时 schema 建永久执行器；R5 再把 fixture 接入正式裁决器测试。
+- 不改 `Coder/README.md` 注册报告，因为它是研究基线、不是运行规则入口；后续被吸收的规则只注册共同内核真源。
 
-## Design Decisions
+# Execution Steps
 
-- JSON + 标准库：无新依赖，CI/安装环境都能 check。
-- 窄 frontmatter 投影：集中名称/触发描述但不生成算法正文，避免 registry 变成第二套规则引擎。
-- 所有普通 workflow 也显式生成 `allow_implicit_invocation: true`：安全策略不依赖宿主缺省值。
-- alias 只进 registry/docs，不生成实体入口：保留识别历史，又不复活 `/loop` harness 冲突。
-- 分发状态三态化：repo discovery、personal installer、team/public not-configured；不从本机已安装推断团队能力。
+- [ ] T1 形成目标载体与权威度盘点矩阵 → AC1、AC4
+- [ ] T2 固化层级边界、不替代关系和现有/缺失保障 → AC2
+- [ ] T3 编写至少 8 个稳定失败 case，并生成严格 JSON fixture → AC3、AC6
+- [ ] T4 映射 R2–R6 输入、依赖和 deferred 决策 → AC5
+- [ ] T5 运行结构校验、完整矩阵、状态审计和强制审查，修复发现 → AC1–AC6
 
-## Execution Steps
+# Verification Plan
 
-- [x] T1 写 registry schema/data 与真实仓校验 → AC1、AC3、AC5
-- [x] T2 实现全量 plan、frontmatter/YAML/docs/symlink 投影和原子 write/check → AC2、AC4、AC6
-- [x] T3 补 fixture 漂移矩阵与幂等/零写入测试 → AC1–AC7
-- [x] T4 运行 write，收敛 8 组元数据和四份人读文档 → AC2–AC6
-- [x] T5 接入唯一 CI、官方 validator、plugin cachebuster/reinstall → AC5、AC7
-- [x] T6 捕获 evidence、完整强审、修复并收口 ITER-0060/MILE-0007 → AC8
+- 用 Python 标准库加载 JSON，严格检查根/条目 keys、ID 唯一、类别集合、数量、 disposition 和报告 ID 对账。
+- 用 `rg` 对照 Butler 真源中的 Goal/AC/plan/task-state/verify/dangerous 语义，人工检查矩阵没有把运行投影写成权威真源。
+- 用 verification evidence runner 捕获 fixture contract、`git diff --check`、`bash scripts/verify-ci.sh` 和 active state audit。
+- P5 以主 agent 完整多维审查逐 AC 反证；当前协作规则未授权子 agent，因此不冒称 fresh-context 独立复核。
 
-## Verification Plan
+# Risks / Open Questions
 
-- schema/paths/sets：table-driven mutation fixtures。
-- projections：frontmatter body preserved、YAML explicit policy、docs golden、symlink exact relative target、write twice no diff、check no writes。
-- security：high-risk true/missing、alias entity、path escape、absolute symlink、partial write 注入。
-- distribution：plugin manifest/hook matcher/wrapper/mode/setup installer/team state。
-- non-regression：registry tests + `verify-ci.sh` + fixed official validators + Markdown + audit/diff evidence。
-
-## Risks / Open Questions
-
-- Python stdlib 无 YAML round-trip；openai.yaml 是完全受管小文件，采用确定模板输出，不解析任意 YAML。
-- command/SKILL frontmatter 只支持当前简单单行字段；遇重复/缺 marker/多行 description fail-closed，不猜格式。
-- 当前无设计阻塞，影响面与 AC 一致。
+- 报告可能把当前实现偶然行为误写成长期合同；来源等级和 unknown 栏用于限制外推。
+- R1 不实现拦截，故只能证明问题、不能宣称 Goal 已受保护；交付和 handoff 要明确这一残余。

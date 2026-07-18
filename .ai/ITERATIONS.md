@@ -1,17 +1,16 @@
 # 迭代台账
 
-> ⚠️ 危险模式北极星：完成 MILE-0007“工程化加固”剩余 R4/R5——交付可执行、可自证的安全升级器，再以单一注册源收敛 Claude/Codex 八工作流及分发治理；逐迭代强审、证据化收口，最终整体关闭里程碑。
+> ⚠️ 危险模式北极星：推进 MILE-0008“目标可信闭环”——让 Goal 只有在方案准入、执行校准、证据与反证审查均通过后才可完成；任务做完但目标未达成时必须回流修正，不得假完成。
 
 ## 危险模式自治路线图
 
-1. ITER-0059 / R4：机器可读迁移台账、dry-run、事务 apply、历史 E2E。
-2. ITER-0060 / R5：双宿主工作流注册源、入口/文档一致性、兼容与分发边界。
-3. 两迭代均 closed 后：汇总交付、归档并关闭 MILE-0007。
+路线图真源：`.ai/MILESTONE.md`。当前由 ITER-0061 承接 R1；R2–R6 保持 planned，不预分配迭代号。
 
-current: none
+current: ITER-0061
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0061 | 目标体系现状审计与失败模型（MILE-0008 R1·危险模式）：盘点 Goal / milestone / iteration / AC / plan / task-state / verify 与双宿主载体，冻结假完成反例和层级边界，不抢跑定义新契约 | active | 2026-07-18 | — | MILE-0008 | — |
 | ITER-0060 | 双宿主工作流注册与分发收敛（MILE-0007 R5·危险模式）：单一 registry 管理 8 工作流和 33 个双宿主投影；高风险显式门、旧名、软链、plugin/hooks/个人与团队分发边界机械对账，8 项专项与完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0060-workflow-registry-distribution.md |
 | ITER-0059 | 可执行升级器（MILE-0007 R4·危险模式）：机器 manifest 驱动零写入 plan 与事务 apply，项目/人工/机器动作分域；16 项历史跨版、漂移、幂等和故障恢复专项及完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0059-executable-upgrader.md |
 | ITER-0058 | CI 与可复现验证（MILE-0007 R3）：单一本地/CI 验证入口，macOS/Linux 矩阵，Markdown 链接门禁，固定测试依赖与 validator 来源，并诚实区分 check 已提供和远端 required 已启用 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0058-ci-reproducible-verification.md |

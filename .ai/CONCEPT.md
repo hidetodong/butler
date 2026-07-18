@@ -1,48 +1,41 @@
-# CONCEPT — ITER-0060 · 双宿主工作流注册与分发收敛
+> 分流: 完整 | 命中升级信号: 需求有歧义、多文件改动、契约变更、跨模块影响、设计取舍 | 2026-07-18
 
-> 分流: 完整 | 命中升级信号: 跨宿主元数据、生成器、兼容与分发契约 | 2026-07-18
+# 一句话
 
-## 一句话
+- Butler 已经能定义验收、方案和验证，却没有把它们串成统一的 Goal 完成资格。R1 先画清现状和失败样本，证明问题落在哪一层，再由后续迭代设计契约，避免边审计边发明答案。
 
-把 Butler 八个工作流在 Claude、Codex、repo discovery、plugin 和文档里的“叫什么、能否语义触发、旧名是什么、怎么分发”收成一份登记表。以后加改工作流只改注册源并重生成，CI 会拦住任何一处漏同步，尤其不能让 loop/dangerous 的高风险显式门槛漂移。
+# Goal
 
-## Goal
+- 产出一份可审计的目标体系基线：说明 Butler 与当前宿主各自把“目标、计划、进度、完成”放在哪里，哪些状态只是推进投影，哪些事实才有资格参与最终完成判断。
+- 把“任务做完但 Goal 不该完成”的典型情形固化为结构化反例，供 R2–R6 设计和回归测试复用。
 
-- G1：建立八工作流单一注册源，覆盖宿主名称、路径、描述、触发策略、风险级别、旧名和规则真源。
-- G2：确定性生成或校验 Claude/Codex 入口元数据、Codex `openai.yaml`、`.agents/skills` 软链与人读能力表。
-- G3：机械锁死 loop/dangerous 禁隐式、高风险旧名不降门槛；普通六项显式登记允许语义触发。
-- G4：把 plugin hooks、个人 marketplace 安装和团队分发边界写成可校验声明，避免“个人已装”被误写为团队可用。
-- G5：接入唯一 CI/local 矩阵并用 evidence 证明正常生成、零写入 check 和多类漂移拒绝。
+# Current Understanding
 
-## Current Understanding
+- Butler 当前以 milestone 承载版本方向，以 iteration 承载单轮范围，以 `CONCEPT/AC_LIST/TECH_PLAN/VERIFY_REPORT` 承载目标理解、完成定义、方案和证据，以 `task-state` 承载运行进度；这些载体各自有纪律，但没有一份规则明确规定 Goal 完成状态必须由哪些下游事实共同裁决。
+- `AC_LIST.md §6` 已给出任务完成最低口径，P5 也要求 evidence 和 review；然而宿主原生 goal/task 工具可以单独显示 complete，Butler 尚未明确它只是状态投影、不得覆盖 AC / evidence / review 的真相。
+- 当前会话可观察到的 Codex Goal 能力提供 objective 与 active/complete/blocked 生命周期，并要求只有目标真正达成且无剩余必做工作时才能 complete；但它不替 Butler 自动审查方案、AC 或证据，也不能假定所有 Codex 版本或 Claude Code 有相同 API。
+- 用户说的“方案没有百分之百通过”应落成离散可审计判定，而不是虚构置信百分比：方案要么通过、要么需修订、要么被阻塞；未通过就不能用任务完成状态掩盖。
 
-- 仓库已有 8 个 `.claude/commands/butler/*.md`、8 个 `plugins/butler/skills/*/SKILL.md`、8 个 `agents/openai.yaml` 和 8 个 `.agents/skills` 相对软链，但没有共同登记表。
-- 名称/描述/默认 prompt/隐式策略散落：只有 loop/dangerous 的 YAML 写 `allow_implicit_invocation: false`，其余靠字段缺省表达 true；安全意图不够显式。
-- README、HUMAN_GUIDE、Codex compatibility 和项目知识分别手写“8 个入口”及名称，改名时容易漏一处。
-- plugin manifest 不能写不受支持的 `hooks` 字段；hooks 的合法显式声明应指向自动发现的 `plugins/butler/hooks/hooks.json`，并由 registry contract 校验，而不是破坏官方 manifest schema。
-- 当前 marketplace 是个人 `~/.agents/plugins/marketplace.json`，source 指 `~/plugins/butler`；`scripts/install-codex-plugin.sh` 负责复制、cachebuster、官方校验和 reinstall。团队分发尚无发布 marketplace，不应冒称团队已配置。
+# Constraints
 
-## Constraints
+- R1 只审计并冻结问题模型，不修改 P1–P5、Goal 状态机、宿主适配或完成门算法；这些属于 R2–R6。
+- 不新增第二份运行台账，不把 Goal 与 milestone、AC、plan、task-state 重复记账。
+- 宿主能力结论必须区分“当前会话可观察合同”和“Butler 可长期依赖合同”；未知处如实标注，不推断 Claude/Codex 对称。
+- 失败样本必须包含输入事实、错误完成声明、预期处置和未来责任路线，能被后续机械裁决器转成 fixture。
+- 危险模式自主 P2/P3 仍须留下横幅、RUN_LOG、checkpoint 和回滚锚点；没有 fresh-context 复核时不得冒称独立。
 
-- 注册表只管元数据和分发治理，不复制 `Coder/` 工作流算法或把八份正文模板化成难维护的大生成文件。
-- 生成器必须标准库可运行；`--check` 零写入、给出具体漂移路径，`--write` 只改登记产物/受管 frontmatter/软链。
-- loop/dangerous 的 `allow_implicit_invocation: false` 是安全不变量；任何缺失/true 都必须失败。
-- 旧名只做可检测兼容/弃用说明，不重新创建与 Claude harness 冲突的 `/loop` 实体命令。
-- plugin manifest 保持官方 schema；hooks/distribution 通过 registry + 现有文件校验显式化。
-- 不发布公共 marketplace、不写团队机器配置、不修改业务算法、不切版/推送，直到里程碑收口判断。
+# Impact Scope
 
-## Impact Scope
+- 本迭代新增 `docs/research/` 下的目标体系基线与机器可读失败样本，更新本迭代 `.ai/` 运行态、归档与交付。
+- 只读盘点 `Coder/00`、`20`、`30`、`40`、`60`、`65`、Claude commands、Codex skills/plugin、模板与状态审计器。
+- 不修改共同内核规则正文、hook、plugin manifest、工作流 registry、目标项目部署模板或版本号。
 
-- 新增：工作流 registry、render/check 工具、生成的人读能力表和专项 fixture 测试。
-- 修改：8 command/skill frontmatter、8 openai.yaml、统一验证入口、README/HUMAN/Codex/Coder 指针和 plugin 分发说明。
-- 校验：8 symlink 集合、plugin manifest、hooks.json、installer/setup 接线、legacy alias 与风险策略。
-- 不影响：命令/skill 正文算法、P1–P5、升级器项目事务、目标项目文件和远端 marketplace/ruleset。
+# Project Type / Active Profiles
 
-## Project Type / Active Profiles
+- Markdown 规则仓 + Python/Bash 工具 + Claude/Codex 双宿主适配。
+- 未命中领域 profile，仅按通用 SOP；危险模式 ON。
 
-- 项目类型：Markdown 规则仓 + JSON registry + Python 生成/校验 + Codex plugin。
-- Active Profiles：无，仅按通用 SOP；危险模式护栏持续生效。
+# Open Questions
 
-## Open Questions
-
-- 无阻塞。采用“registry 生成窄元数据与能力表、校验正文/分发结构”的边界，避免生成整份命令正文。
+- “Goal”最终应是独立持久对象，还是从现有 milestone/iteration/AC 状态推导出的逻辑视图，留给 R2 依据本轮边界矩阵裁决。
+- Codex Goal 与 Claude task 的具体接线和降级策略留给 R6；R1 只记录当前可观察能力与依赖禁区。
