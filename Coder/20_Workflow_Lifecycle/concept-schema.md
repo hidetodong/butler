@@ -61,5 +61,6 @@ scope: P1 Analysis 阶段的问题理解说明模板、字段约束与编写口�
 
 - P1 阶段必须产出 `.ai/CONCEPT.md`，讨论结束后结晶为文件，不依赖对话记忆。
 - P2 阶段从 `.ai/CONCEPT.md` 读取，AC 必须建立在这里已确认的目标与范围之上。
+- `# Goal` 只承载 iteration objective；它与 scope/AC/plan/proof 共同组成 `goal-contract.md` 的派生 Goal 视图，不在本文件复制完整合同或状态。
 - 若目标理解变化，应回退到 P1 更新此文件。
 - 简化路径下，P1 与 P2 合并，不单独产出 `CONCEPT.md`，结论直接折叠进 `AC_LIST.md`。

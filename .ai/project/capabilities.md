@@ -40,6 +40,8 @@
 
 ## 核心：P1–P5 开发 SOP（默认主线）
 
+非极小任务同时具备**派生 Goal Contract**：从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/evidence、review 与收口事实组合 objective/obligations/plan/progress/proof/verdict，不新增 GOAL 台账。六状态含 `completion-candidate`，tasks done 或宿主 complete 均不能直跳项目 complete。真源 `20_Workflow_Lifecycle/goal-contract.md`。
+
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
 
 | 阶段 | 干什么 | 产物 |

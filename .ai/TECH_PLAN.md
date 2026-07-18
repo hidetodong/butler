@@ -12,7 +12,7 @@
 
 # Interface / Contract
 
-- 状态集合固定六项；派生优先级固定 `abandoned > blocked > at-risk > completion-candidate > active > complete`，但 closed/complete 作为终态先由 ledger 识别，具体算法正文必须消歧。
+- 状态集合固定六项；先判 `abandoned/complete` 两个 ledger 终态，再对非终态按 `blocked > at-risk > completion-candidate > active` 命中即停。
 - Goal view 不落独立持久文件；字段来自既有真源。
 
 # State / Boundary

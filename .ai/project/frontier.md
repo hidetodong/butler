@@ -11,12 +11,11 @@
 
 ## 活跃战线
 
-- MILE-0008“目标可信闭环”active；R1 已冻结目标载体/权威边界和 8 个假完成负向 oracle，尚未新增 Goal 运行门禁。
-- 危险模式仍为 ON；R2 下一步要裁决 Goal 是独立持久对象还是现有产物的派生视图，并定义不覆盖 AC/evidence/review 的最小合同。
+- MILE-0008“目标可信闭环”active；R1 基线和 R2 派生 Goal Contract 已 closed。Goal 不新增第二台账，六状态与完成候选已进入共同规则并有结构回归。
+- 危险模式仍为 ON；R3 下一步把 TECH_PLAN 方案自审变成结构化 `pass / revise / blocked` 准入门。
 
 ## 下一个瓶颈
 
-- Goal 相关事实目前分散在 milestone、iteration、CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与宿主投影；缺少统一完成裁决链。
-- R2 必须先解决 Goal 存储/派生形态和状态语义，避免为强化目标再造一份与现有 `.ai/` 产物漂移的台账。
+- Goal 合同目前仍是规范，缺少结构化方案 verdict、问题回流 action、机械完成裁决器和宿主同步；由 R3–R6 依序补齐。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。

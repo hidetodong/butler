@@ -21,3 +21,6 @@
 - 2026-07-18 · route · ITER-0062 · `dangerous-ack`：自动开启 R2；依据 R1 边界选择派生 Goal 视图，不新增 `.ai/GOAL.md` 第二台账。
 - 2026-07-18 · P2 · ITER-0062 · `dangerous-ack`：AC1–AC6 自审通过并冻结；状态、真源、宿主投影和结构测试均可验证，后续路线边界明确。
 - 2026-07-18 · P3 · ITER-0062 · `dangerous-ack`：设计自审通过；单一 `goal-contract.md` + 窄指针 + unittest，complete 只由收口事实派生，不提前实现 R3–R6。
+- 2026-07-18 · P5-review · ITER-0062 · `dangerous-ack`：强审发现 1 个 Must Fix（新规则漏登 Coder 目录树）和 1 个 Should Fix（milestone completion-candidate 未单独消歧）；已补目录登记、里程碑候选语义与结构回归。
+- 2026-07-18 · P5-review · ITER-0062 · `dangerous-ack`：修复后专项 7/7 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核并如实披露。
+- 2026-07-18 · close · ITER-0062 · `dangerous-ack`：8 个 evidence 归档、四件套/CHANGELOG、双格式交付完成；R2 closed，继续 R3。

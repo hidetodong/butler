@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "full-matrix-review",
+  "iteration": "ITER-0062",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T11:04:35.257Z",
+  "finished_at": "2026-07-18T11:04:45.047Z",
+  "duration_ms": 9791,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 850,
+    "captured_bytes": 850,
+    "sha256": "0df7e16ada776004b2e42590c987f347ba887f78e1a57e19087065ec8f022452",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2562,
+    "captured_bytes": 2562,
+    "sha256": "369a15d30be9dd3ab58e2fdaa8e4ae5686cd4991b34640022bb4ab19451e481f",
+    "truncated": false
+  }
+}

@@ -88,6 +88,8 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 - 每个 AC 都有对应验证结果。
 - 剩余风险已显式说明。
 
+这些条目是 Goal 的 outcome obligations，不是 Goal 状态本身。即使 AC 表面全勾，也仍须按 `goal-contract.md` 核 proof、review 与收口事实；tasks done 或宿主 complete 都不能替代本清单。
+
 ## 7. 与执行流程的关系
 
 - P2 阶段必须产出 `.ai/AC_LIST.md`，作为后续所有阶段的共同依据。
