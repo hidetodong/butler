@@ -13,7 +13,7 @@
 - `plugins/butler/` 可安装 8 个 skills：prd/review/milestone/upgrade/ideation/preference/loop/dangerous；`.agents/skills/` 软链让仓内直接发现同一真源。
 - `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
 - `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
-- Codex patch adapter 会按每个绝对 target 的 Butler/Git 根重建 hook Context，因此支持“会话在父目录、修改另一明确仓库”；一个 patch 跨多项目根或父目录无根证据时 fail-closed。
+- Claude/Codex 写入适配器按每个目标的真实 Butler/Git 根重建 Context：项目内继续跑该项目门禁，无法归属项目的真实路径退出 Butler 判定并交宿主权限，缺失/坏输入仍 fail-closed；一个 Codex patch 可跨多个项目根逐根校验，任一拒绝即整次拒绝。
 - 真实 Codex 已验证 phase deny、protected-path deny、allow 和 advisory 上下文注入。边界只覆盖送入 hook 的工具事件，不替代 sandbox，也不保证覆盖 shell/MCP。
 
 ## 工作流注册与分发治理（MILE-0007 R5）
@@ -66,7 +66,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 |---|---|---|
 | `/butler:ideation` | 独立脑暴、不进执行主线、不冻结（贴模糊需求 / 想法，或留空进对话）；MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/ideation.md`（薄壳，真源 `50_Extension_Ideation/ideation-engine.md §3`） |
 | `/butler:loop` | 收敛闭环、死磕式高强度纠错升档（**高强度·长时·消耗大、郑重触发**）；原名 `/loop`，MILE-0005 R4 迁入命名空间。一次性 P4 升档（无持久态·无 `off`·跑到全绿或定量熔断）；薄壳近乎无参、frontmatter ⚠️ + 第 0 步风险提醒、委托真源**不复述**闭环/熔断算法 | `.claude/commands/butler/loop.md`（薄壳，真源 `55_Extension_ConvergenceLoop/convergence-loop-engine.md` §3/§6） |
-| `/butler:dangerous` | 无人值守长程自治（**实验性**·自审门替 ACK·强制 P5 全审护栏）；原名 `/dangerous`，MILE-0005 R4 迁入命名空间。空参=开启（走引擎 §3 风险闸）/ `off` 关 / `status` 只读；持久开关外化 `.ai/local-constraints.md` `dangerous`、跨会话 announce-on-read。薄壳 frontmatter ⚠️ + 第 0 步风险提醒 + **闸交回引擎不复述护栏** | `.claude/commands/butler/dangerous.md`（薄壳，真源 `65_Extension_Dangerous/dangerous-engine.md` §3/§3.1/§7） |
+| `/butler:dangerous` | 无人值守长程自治（**实验性**·自审门替 ACK·强制 P5 全审护栏）；每次任务启动冻结宿主预授权上限，上限内可动态追加施工项目、范围外隔离或诚实交还。空参=开启 / `off` 关 / `status` 只读；持久开关外化 `.ai/local-constraints.md` `dangerous`、跨会话 announce-on-read | `.claude/commands/butler/dangerous.md`（薄壳，真源 `65_Extension_Dangerous/dangerous-engine.md` §3/§3.2/§7） |
 | `/butler:preference` | 偏好探针开关（`on`/`off` 隐私总开关 / `reback on\|off` 反哺 / `distill` 手动蒸馏；**留空=只读状态回声**）；原名 `/preference`，MILE-0005 R3 迁入命名空间。参数面最宽（唯一二级参数 `reback`）；只管全局层开关，本项目抑制开关走 `local-constraints` | `.claude/commands/butler/preference.md`（薄壳，真源 `70_Extension_Preference/preference-probe-engine.md` §2.2/§2.3/§2.4/§6/§7） |
 | `/butler:milestone` | 里程碑录入 / `status` 只读看板；**brief 是大 PRD 时并进触发 `prd-split` 切成 `references/prd/`**（一份输入喂方向层路线图 + 细节层切片，MILE-0004 R3）；MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/milestone.md`（薄壳，真源 `20_Workflow_Lifecycle/milestone-schema.md` §6.4 步 6 并进分支 / §5.3 路线项↔slug 交叉指针 / §6.5 只读看板） |
 | `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 登记表认亲（新增·消失 + 松边改名/合并/拆分启发式提候选→确认、绝不自动认，R6）/ 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5–R6） | `40_Context_Management/prd-update.md`（§4.2 松边、首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`；非回归门见 `references-schema §9`） |
@@ -80,7 +80,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 - **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 8 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
 - **基地车部署**：先解析并回声唯一 `PROJECT_ROOT`，再只在它下建 `.ai/`（含空 `.ai/project/` 种子）/ `deliveries/` / `origin/`，用统一 renderer 注入 CLAUDE.md + AGENTS.md，最后部署 Claude hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
-- **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC / 显式非 pass TECH_PLAN 写源码 / 越界写 / 双 active 迭代 / 台账非法状态值。方案四态与七项 Plan Admission 真源 `tech-plan-schema.md`；Claude/Codex 共用 `phase_gate`，旧版无字段暂按 legacy 放行。
+- **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC / 显式非 pass TECH_PLAN 写源码 / 业务扩展保护 / 双 active 迭代 / 台账非法状态值；真实项目外路径由宿主权限处理，坏输入仍拒绝。方案四态与七项 Plan Admission 真源 `tech-plan-schema.md`；Claude/Codex 共用 `phase_gate`，旧版无字段暂按 legacy 放行。
 
 ## 驻留工具
 

@@ -10,6 +10,8 @@ scope: templates/hooks/ 的结构、运行机制、测试与应急流程
 
 Codex v2.14.0 适配也复用这里的 dispatcher 和规则：plugin 入口是 `plugins/butler/hooks/hooks.json`，`apply_patch` 由 `lib/codex_patch.py` 转成逐目标 Context。首次启用 plugin hook 须由用户审阅并信任，且 `BUTLER_PATH` 必须指向 Butler checkout；缺路径时门禁 fail-closed、提醒 fail-open。PreToolUse 只覆盖实际进入 hook 的事件，不是 sandbox，也不承诺拦截 shell、MCP 等所有写路径。
 
+Butler 门禁管**项目流程**，不重复实现宿主的文件系统权限：目标能解析到 Butler / Git 项目根时，按该项目逐条执行门禁；真实路径无法归属项目时，Butler 退出判定，由宿主决定是否授权。缺失、空白或解析异常的目标不是“项目外授权”，仍 fail-closed。同一 Codex patch 可覆盖多个项目根，但任一目标 `deny` 都会拒绝整次工具调用。
+
 两套为何分开：**风险方向相反**。门禁宁可错拦（fail-closed，任何异常都 `exit 2`）；提醒宁可漏提（fail-open，任何异常都静默 `exit 0`）。advisory 若混进门禁的 deny 链，会误伤正常写操作——例如非 PRD 里程碑写 `.ai/MILESTONE.md` 本该放行，却因提醒逻辑被拦。
 
 ## 目录结构
@@ -25,7 +27,7 @@ rules/
   artifact_chain.py      # [门禁] 占位，未来承载 AC-ID linkage 等规则
   prd_split_reminder.py  # [提醒] 写 .ai/MILESTONE.md 且无 .ai/references/prd/ 时，注入 PRD 先行自检
 lib/
-  io.py                  # Context/Decision/Advisory、Claude/Codex payload → Context
+  io.py                  # Context/Decision/Advisory、目标分类、Claude/Codex payload → Context
   codex_patch.py         # apply_patch add/update/delete/move、多文件/多 hunk 解析
   bypass.py              # BUTLER_BYPASS 评估 + RUN_LOG 追加（仅门禁用）
 tests/                   # 本目录的测试（不分发到目标项目）
@@ -36,6 +38,9 @@ tests/                   # 本目录的测试（不分发到目标项目）
 ### PreToolUse 门禁（butler_gate.py）
 
 1. Claude Code 在 `Edit` / `Write` / `MultiEdit` 前调用门禁；Codex plugin 在 canonical `apply_patch` 前调用同一 dispatcher。stdin 都传 JSON，宿主适配层将其归一为一个或多个 Context。
+   - 能归属项目：切到实际项目根，继续执行 Butler 规则。
+   - 真实项目外路径：Butler abstain，交宿主权限处理。
+   - 缺失 / 空白 / 无法解析：按坏输入 fail-closed。
 2. Dispatcher 顺序执行 `RULE_MODULES`（`protected_paths → phase_gate → ledger_status → single_active_iteration → artifact_chain`），任一 `deny` 即终止。`ledger_status` 与 `single_active_iteration` 仅在目标为 `.ai/ITERATIONS.md` 时生效：前者校验「状态」列只取封闭枚举 active/closed/abandoned（见 `iteration-schema.md §4.2`）；后者还原写入后全表，拦截 ≥2 个 active 行（等价于 iteration-schema §5.1「上一迭代未收口不得开新」，Edit/MultiEdit 无法可靠还原时按 allow-on-uncertainty 放行）。
 3. `deny` 后走 `lib/bypass.py`：若 `BUTLER_BYPASS=1` 且 `.ai/bypass-reason.md` 非空，追加 `.ai/RUN_LOG.md` 后放行；否则 `exit 2` + stderr 给 AI 可读的违规摘要。
 4. 任何未捕获异常由 dispatcher 顶层 catch，`exit 2`（**fail-closed**）。

@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from lib.io import Context, Decision, OUT_OF_CWD, is_gated
+from lib.io import Context, Decision, UNKNOWN_TARGET, is_gated
 
 RULE_ID = "phase_gate"
 
@@ -26,17 +26,16 @@ _PLAN_STATUS_RE = re.compile(
 
 
 def evaluate(ctx: Context) -> Decision:
-    if not is_gated(ctx.target_path):
-        return Decision(verdict="allow", rule_id=RULE_ID)
-
-    # Conservative: OUT_OF_CWD writes can never satisfy the artifact check.
-    if ctx.target_path == OUT_OF_CWD:
+    if ctx.target_path == UNKNOWN_TARGET:
         return Decision(
             verdict="deny",
             rule_id=RULE_ID,
-            reason="目标路径超出项目 cwd，无法校验阶段产物",
-            remediation="请将写操作指向项目内路径",
+            reason="写入目标无法解析，不能判断 Butler 项目边界",
+            remediation="请提供非空、可解析的目标文件路径",
         )
+
+    if not is_gated(ctx.target_path):
+        return Decision(verdict="allow", rule_id=RULE_ID)
 
     for rel_path, phase, hint in REQUIRED_ARTIFACTS:
         artifact = Path(ctx.cwd) / rel_path

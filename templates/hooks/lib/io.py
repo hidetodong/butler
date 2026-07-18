@@ -20,7 +20,12 @@ GATED_BLACKLIST = frozenset({
     ".idea/",
 })
 
-OUT_OF_CWD = PurePosixPath("__OUT_OF_CWD__")
+# Butler has two materially different non-project cases:
+# - UNKNOWN_TARGET: malformed/missing tool input; fail closed.
+# - OUTSIDE_PROJECT: a real path Butler cannot anchor to a managed/VCS project;
+#   Butler abstains and leaves filesystem authorization to the host.
+UNKNOWN_TARGET = PurePosixPath("__UNKNOWN_TARGET__")
+OUTSIDE_PROJECT = PurePosixPath("__OUTSIDE_PROJECT__")
 
 
 @dataclass(frozen=True)
@@ -58,11 +63,13 @@ def parse_stdin() -> dict:
 def resolve_target(tool_input: dict, cwd: str) -> PurePosixPath:
     """Normalize file_path into a path relative to cwd.
 
-    Returns OUT_OF_CWD sentinel for missing, empty, or escaped paths.
+    Missing/empty input returns UNKNOWN_TARGET. A real path outside cwd returns
+    OUTSIDE_PROJECT so Butler rules can abstain without treating bad input as an
+    authorized external write.
     """
     raw = tool_input.get("file_path", "")
     if not raw:
-        return OUT_OF_CWD
+        return UNKNOWN_TARGET
 
     p = Path(raw).expanduser()
     cwd_resolved = Path(cwd).resolve()
@@ -71,7 +78,7 @@ def resolve_target(tool_input: dict, cwd: str) -> PurePosixPath:
         try:
             rel = p.resolve().relative_to(cwd_resolved)
         except ValueError:
-            return OUT_OF_CWD
+            return OUTSIDE_PROJECT
         return PurePosixPath(rel.as_posix())
 
     # Relative path: resolve against cwd, check it stays inside.
@@ -79,7 +86,7 @@ def resolve_target(tool_input: dict, cwd: str) -> PurePosixPath:
         resolved = (cwd_resolved / p).resolve()
         rel = resolved.relative_to(cwd_resolved)
     except ValueError:
-        return OUT_OF_CWD
+        return OUTSIDE_PROJECT
     return PurePosixPath(rel.as_posix())
 
 
@@ -89,7 +96,7 @@ def contexts_from_payload(payload: dict) -> list[Context]:
     cwd = payload.get("cwd", ".")
     tool_input = payload.get("tool_input", {}) or {}
     if tool_name != "apply_patch":
-        return [Context(cwd, tool_name, resolve_target(tool_input, cwd), tool_input)]
+        return [_project_context(cwd, tool_name, tool_input)]
 
     command = tool_input.get("command", "")
     contexts: list[Context] = []
@@ -101,42 +108,53 @@ def contexts_from_payload(payload: dict) -> list[Context]:
             "butler_patch_added": list(change.added_lines),
             "butler_patch_removed": list(change.removed_lines),
         })
-        contexts.append(_codex_patch_context(cwd, tool_name, synthetic))
-    resolved_roots = {ctx.cwd for ctx in contexts if ctx.target_path != OUT_OF_CWD}
-    if len(resolved_roots) > 1:
-        raise ValueError("apply_patch spans multiple project roots")
+        contexts.append(_project_context(cwd, tool_name, synthetic))
     return contexts
 
 
-def _codex_patch_context(cwd: str, tool_name: str, tool_input: dict) -> Context:
-    """Anchor an apply_patch target to its actual Butler/VCS project root."""
+def _project_context(cwd: str, tool_name: str, tool_input: dict) -> Context:
+    """Anchor a write target to its actual Butler/VCS project root."""
     raw = tool_input.get("file_path", "")
     if not raw:
-        return Context(cwd, tool_name, OUT_OF_CWD, tool_input)
+        return Context(cwd, tool_name, UNKNOWN_TARGET, tool_input)
 
     path = Path(raw).expanduser()
     try:
-        if path.is_absolute():
-            absolute = path.resolve()
-            anchor = absolute if absolute.is_dir() else absolute.parent
-            while not anchor.exists() and anchor != anchor.parent:
-                anchor = anchor.parent
-            project_root = resolve_project_root(start=anchor).root
-        else:
-            # A relative path never selects a child/sibling repository. The
-            # session location must already prove the one project root.
-            absolute = (Path(cwd).resolve() / path).resolve()
-            project_root = resolve_project_root(start=Path(cwd)).root
+        cwd_resolved = Path(cwd).resolve()
+        absolute = (
+            path.resolve()
+            if path.is_absolute()
+            else (cwd_resolved / path).resolve()
+        )
+        anchor = absolute if absolute.is_dir() else absolute.parent
+        while not anchor.exists() and anchor != anchor.parent:
+            anchor = anchor.parent
+    except OSError:
+        return Context(cwd, tool_name, UNKNOWN_TARGET, tool_input)
+
+    try:
+        project_root = resolve_project_root(start=anchor).root
+    except RootResolutionError:
+        # Legacy/unmanaged projects may have neither a Butler marker nor Git.
+        # Only an existing .ai directory proves that the host-provided cwd is
+        # still a Butler project boundary; a plain aggregate directory is not.
+        if not (cwd_resolved / ".ai").is_dir():
+            return Context(cwd, tool_name, OUTSIDE_PROJECT, tool_input)
+        project_root = cwd_resolved
+
+    try:
         relative = absolute.relative_to(project_root)
-    except (RootResolutionError, ValueError):
-        return Context(cwd, tool_name, OUT_OF_CWD, tool_input)
+    except ValueError:
+        return Context(cwd, tool_name, OUTSIDE_PROJECT, tool_input)
     return Context(str(project_root), tool_name, PurePosixPath(relative.as_posix()), tool_input)
 
 
 def is_gated(target: PurePosixPath, blacklist: frozenset = GATED_BLACKLIST) -> bool:
     """True when the target path is subject to gating (i.e. NOT in the exempt blacklist)."""
-    if target == OUT_OF_CWD:
+    if target == UNKNOWN_TARGET:
         return True
+    if target == OUTSIDE_PROJECT:
+        return False
     target_str = target.as_posix()
     for prefix in blacklist:
         p = prefix.rstrip("/")

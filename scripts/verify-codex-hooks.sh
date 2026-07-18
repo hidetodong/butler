@@ -57,7 +57,7 @@ printf '%s\n' '---' '方案状态: pass' '---' '# Plan Admission' '- Verdict: pa
 payload "$ALLOW" | BUTLER_PATH="$ROOT" "$GATE"
 
 # 会话从多仓父目录启动时，绝对 target 按实际 Git 项目根校验；
-# 反过来，父目录下的相对写入不得被当成项目写入。
+# 父目录自身无法证明是项目根时 Butler 退出判定，由宿主权限接管。
 SESSION_ROOT=$(dirname "$WORK")
 ABSOLUTE_ALLOW="*** Begin Patch
 *** Add File: $WORK/src/absolute-allowed.py
@@ -70,12 +70,8 @@ RELATIVE_PARENT='*** Begin Patch
 *** Add File: .ai/ITERATIONS.md
 +wrong root
 *** End Patch'
-set +e
 python3 -c 'import json,sys; print(json.dumps({"tool_name":"apply_patch","cwd":sys.argv[1],"tool_input":{"command":sys.argv[2]}}))' \
-  "$SESSION_ROOT" "$RELATIVE_PARENT" | BUTLER_PATH="$ROOT" "$GATE" >/dev/null 2>&1
-PARENT_RC=$?
-set -e
-[ "$PARENT_RC" -eq 2 ]
+  "$SESSION_ROOT" "$RELATIVE_PARENT" | BUTLER_PATH="$ROOT" "$GATE"
 [ ! -e "$SESSION_ROOT/.ai/ITERATIONS.md" ]
 
 set +e

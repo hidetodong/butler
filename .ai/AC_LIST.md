@@ -1,23 +1,26 @@
 ---
+迭代: ITER-0067
 状态: ack-frozen
 ACK 日期: 2026-07-18
+ACK 方式: dangerous-ack
 ---
-> ⚠️ 危险模式自主 ACK（ITER-0066）。
 
 # Goal
-- 完成共享 Goal 闭环的双宿主投影与部署验证。
 
-# Acceptance Checklist
-- [ ] AC1：定义 Claude/Codex 共用 host projection：objective/state/reason/next，项目 `.ai/` 优先，host complete 不反写。
-- [ ] AC2：capability-detect：有原生 Goal/Task 则投影，无则只用 task-state/handoff，功能语义一致。
-- [ ] AC3：共同 rule-card、AGENTS/CLAUDE 渲染、compatibility、deployment/update 文档接入 plan/calibration/adjudicator。
-- [ ] AC4：跨会话读序恢复 plan verdict、calibration 与 adjudication next step，不依赖宿主会话记忆。
-- [ ] AC5：host wiring 测试证明双入口含同一规则卡、无宿主专属真源/第九 workflow，CLI 对 target project 可达。
-- [ ] AC6：诚实披露部署态：新部署/重渲染可用；外部旧项目自动迁移需后续版本发布，不冒称已升级。
-- [ ] AC7：专项、完整矩阵、diff、state audit、强审及 milestone 聚合交付均有证据。
+让 Butler 的写入门禁只约束可归属项目的流程写入，不再阻断宿主已经或即将授权的项目外写入，同时保住坏输入和项目内违规的机械拒绝能力。
 
-# Verification Method
-- 结构/隔离渲染测试、完整 CI、状态审计与 milestone 对账。
+# Acceptance Criteria
 
-# Open Questions / Risks
-- 宿主原生 API 非稳定合同，采用 capability-detect 与 `.ai/` 降级。
+- [ ] AC1：`Edit` / `Write` 的绝对路径或 `..` 路径无法归属任何 Butler / Git 项目时，Butler 退出流程判定并返回 allow，由宿主权限接管。
+- [ ] AC2：缺失、空白或不可解析的目标路径仍 fail-closed，不能借“项目外”语义放行。
+- [ ] AC3：Codex `apply_patch` 能把绝对或相对的兄弟 Git/Butler 项目锚定到实际项目根，并分别执行该项目的 Butler 门禁。
+- [ ] AC4：同一 patch 可覆盖多个项目根；任一目标触发项目内门禁时整次 patch 拒绝，全部允许时才放行。
+- [ ] AC5：当前项目内的 P1–P3、业务扩展目录、台账状态和单 active 迭代门禁行为不回归。
+- [ ] AC6：危险模式规则明确授权上限启动时冻结、范围内可动态追加施工项目、范围外继续可独立工作并记录阻塞，且不得自动扩权或 bypass。
+- [ ] AC7：README、部署协议和规则卡一致说明 Butler 与宿主的权限边界，并由专项测试和完整 CI 提供机器证据。
+
+# Constraints
+
+- 自动道：全部 AC 均以单元、集成、结构检查或完整 CI 验证。
+- 无人值守：本轮不产生需要人工判断的验收残余。
+- 兼容：项目内既有门禁返回码和 bypass 契约保持不变。

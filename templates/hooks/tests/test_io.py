@@ -12,7 +12,8 @@ from lib.io import (
     Context,
     Decision,
     GATED_BLACKLIST,
-    OUT_OF_CWD,
+    OUTSIDE_PROJECT,
+    UNKNOWN_TARGET,
     is_gated,
     parse_stdin,
     resolve_target,
@@ -24,13 +25,13 @@ class TestResolveTarget:
         result = resolve_target({"file_path": "src/auth.ts"}, cwd="/tmp/proj")
         assert result == PurePosixPath("src/auth.ts")
 
-    def test_missing_file_path_returns_out_of_cwd(self):
+    def test_missing_file_path_returns_unknown_target(self):
         result = resolve_target({}, cwd="/tmp/proj")
-        assert result == OUT_OF_CWD
+        assert result == UNKNOWN_TARGET
 
-    def test_empty_file_path_returns_out_of_cwd(self):
+    def test_empty_file_path_returns_unknown_target(self):
         result = resolve_target({"file_path": ""}, cwd="/tmp/proj")
-        assert result == OUT_OF_CWD
+        assert result == UNKNOWN_TARGET
 
     def test_parent_reference_resolves_within_cwd(self, tmp_path):
         (tmp_path / "src").mkdir()
@@ -44,7 +45,7 @@ class TestResolveTarget:
         result = resolve_target(
             {"file_path": "../escape.ts"}, cwd=str(tmp_path)
         )
-        assert result == OUT_OF_CWD
+        assert result == OUTSIDE_PROJECT
 
     def test_absolute_path_inside_cwd_resolved_to_relative(self, tmp_path):
         target = tmp_path / "src" / "a.ts"
@@ -56,7 +57,7 @@ class TestResolveTarget:
     def test_absolute_path_outside_cwd_returns_sentinel(self, tmp_path):
         other = tmp_path.parent / "other_dir"
         result = resolve_target({"file_path": str(other / "x.ts")}, cwd=str(tmp_path))
-        assert result == OUT_OF_CWD
+        assert result == OUTSIDE_PROJECT
 
     def test_symlink_cwd_and_target_normalized_consistently(self, tmp_path):
         """cwd and file_path may arrive with different symlink forms (e.g. macOS /tmp)."""
@@ -92,8 +93,11 @@ class TestIsGated:
     def test_node_modules_exempt(self):
         assert is_gated(PurePosixPath("node_modules/foo/index.js")) is False
 
-    def test_out_of_cwd_is_gated_conservative(self):
-        assert is_gated(OUT_OF_CWD) is True
+    def test_unknown_target_is_gated_conservative(self):
+        assert is_gated(UNKNOWN_TARGET) is True
+
+    def test_outside_project_is_not_a_butler_flow_target(self):
+        assert is_gated(OUTSIDE_PROJECT) is False
 
     def test_root_of_blacklisted_dir_exempt(self):
         assert is_gated(PurePosixPath(".ai")) is False

@@ -161,6 +161,14 @@
         {"path": ".ai/project/invariants.md", "sha256": "20fbd83b1ee81e444cb03a7c53db266356aa6a9994682d7e108228f2089994a3"},
         {"path": ".ai/project/frontier.md", "sha256": "2f1fad62da9503b0d35a56da2099417e836e23154c4b9e56814063c8e497b4e7"}
       ]
+    },
+    "ITER-0067": {
+      "changelog": {"path": ".ai/iterations/ITER-0067/CHANGELOG.md", "sha256": "f1512d0fe287827ca8ed49390ab47e24701832f6b0e64bf33e16b4f879e77f63"},
+      "topics": [
+        {"path": ".ai/project/capabilities.md", "sha256": "6857d38f36252c1d10468365d7c25a6b7dfe5247b56b21607c9d4bfd0cea1349"},
+        {"path": ".ai/project/invariants.md", "sha256": "19c0cb2aed53d3463a4b64b78670663242f29ac5887300d21408acd1e2dd3d9b"},
+        {"path": ".ai/project/frontier.md", "sha256": "000447810e6bc004c8c1cf202068d0278c8738dec3f2c745e25fdd0b304a496c"}
+      ]
     }
   }
 }

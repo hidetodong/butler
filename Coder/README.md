@@ -179,7 +179,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - 默认按通用需求开发 SOP 执行。
 - 若 `99_Business_Extension/` 下存在业务文档，则将其视为最高优先级业务约束。
 - 所有非极小任务默认遵循 `P1 Analysis -> P2 Acceptance -> P3 Design -> P4 Execute -> P5 Verify` 流程。
-- P1-P3 产物存在性（`.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`）在部署后由 Claude/Codex 共享 PreToolUse hook 机械拦截；此外 `AC_LIST.md` 须为 `状态: ack-frozen`，TECH_PLAN 显式状态须为 `方案状态: pass`，否则拦截源码写（两字段缺失的旧产物按 legacy 放行，新产物不得省略）。迭代台账非法状态值由 `ledger_status` 拦截，≥2 个 `active` 行由 `single_active_iteration` 拦截。详见 `20_Workflow_Lifecycle/mcv-deployment.md §5 Hook 注入`；绕过需 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。此外另有一套 **PostToolUse 提醒 hook**（`butler_advisor.py`，advisory-only、fail-open、**绝不拦截**）：写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，经 `additionalContext` 注入"PRD 先行自检"提醒（兜 PRD 切分软触发被绕过的漏切，`prd_split_reminder` 规则）。
+- P1-P3 产物存在性（`.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`）在部署后由 Claude/Codex 共享 PreToolUse hook 机械拦截；此外 `AC_LIST.md` 须为 `状态: ack-frozen`，TECH_PLAN 显式状态须为 `方案状态: pass`，否则拦截源码写（两字段缺失的旧产物按 legacy 放行，新产物不得省略）。这套 hook 是**项目流程门禁，不是第二套文件权限**：能归属 Butler / Git 项目的目标按实际项目根校验，真实项目外路径退出判定并交宿主授权；坏输入仍 fail-closed；跨项目 patch 逐根校验且任一拒绝即整次拒绝。迭代台账非法状态值由 `ledger_status` 拦截，≥2 个 `active` 行由 `single_active_iteration` 拦截。详见 `20_Workflow_Lifecycle/mcv-deployment.md §5 Hook 注入`；流程绕过需 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空），正常项目外授权不走 bypass。此外另有一套 **PostToolUse 提醒 hook**（`butler_advisor.py`，advisory-only、fail-open、**绝不拦截**）：写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，经 `additionalContext` 注入"PRD 先行自检"提醒（兜 PRD 切分软触发被绕过的漏切，`prd_split_reminder` 规则）。
 - `20_Workflow_Lifecycle/` 负责流程推进、交付节奏、基地车部署约束，以及完整交付后的人类可读总结规则。
 - `40_Context_Management/` 负责长上下文、状态同步、阶段快照、交接规范与模式切换治理。
 - `10_Domain_Stack_Profiles/` 中的规则仅在当前项目类型命中后作为执行 profile 生效。

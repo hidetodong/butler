@@ -47,3 +47,9 @@
 - 2026-07-18 · P5-review · ITER-0066 · `dangerous-ack`：首轮强审发现 1 Must Fix——渲染进目标项目的规则卡使用相对 `tools/goal-assurance`，外部项目实际不可达；已改为 `$BUTLER_PATH` 驻留路径，并升级双入口端到端断言。
 - 2026-07-18 · P5-review · ITER-0066 · `dangerous-ack`：修复后 host wiring 7/7 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
 - 2026-07-18 · close · ITER-0066 / MILE-0008 · `dangerous-ack`：adjudicator 十项 checks 全绿、6 evidence 归档、双格式迭代/里程碑交付与知识折叠完成；R1–R6 全 closed，危险模式自治正常终止。
+- 2026-07-18 · route · ITER-0067 · `dangerous-ack`：用户确认项目外授权交宿主；本次危险任务授权上限冻结为 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`，范围内动态施工；开启独立完整迭代，不切版。
+- 2026-07-18 · P2 · ITER-0067 · `dangerous-ack`：AC1–AC7 自审通过并冻结；外部目标退出判定、坏输入 fail-closed、多项目逐根门禁和危险模式授权上限均可机器验证。
+- 2026-07-18 · P3 · ITER-0067 · `dangerous-ack`：Plan Admission=`pass`；否决 AI 自签授权文件与正常路径 bypass，采用 Butler 流程门禁和宿主文件权限分层。
+- 2026-07-18 · P5-review · ITER-0067 · `dangerous-ack`：完整强审发现 2 个 Must Fix——项目子目录写兄弟目录会被误判项目外、无 Git 的既有 Butler 项目会失去阶段门/advisor；已统一目标项目根并增加仅 `.ai/` 项目的有界 cwd fallback。
+- 2026-07-18 · P5-review · ITER-0067 · `dangerous-ack`：修复后最终 hook 147 项、Codex wrapper 与完整 CI captured 通过；最终 Must Fix 0、Should Fix 0，未触发 opt-in 独立复核。
+- 2026-07-18 · close · ITER-0067 · `dangerous-ack`：Goal adjudicator 十项全绿、6 evidence 整包归档、四件套/CHANGELOG 快照与双格式交付完成；项目知识折叠后关闭迭代，危险模式保持 ON。

@@ -141,7 +141,7 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 把 butler 的 hook 体系部署到目标项目的 `.claude/`。分两类：
 
-- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的流程约束：源码路径写操作在 P1/P2/P3 产物缺失时被拦截；AC_LIST 未冻结（`状态` 非 `ack-frozen`）或 TECH_PLAN 显式未通过（`方案状态` / `plan_status` 非 `pass`）时被拦截；两字段缺失的旧产物按 legacy 放行，但新产物不得省略。另会拦截 `99_Business_Extension/` 写操作、迭代台账非法状态值与 ≥2 个 `active` 行。绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的**项目流程约束**：目标能归属 Butler / Git 项目根时，源码写操作在 P1/P2/P3 产物缺失时被拦截；AC_LIST 未冻结（`状态` 非 `ack-frozen`）或 TECH_PLAN 显式未通过（`方案状态` / `plan_status` 非 `pass`）时被拦截；两字段缺失的旧产物按 legacy 放行，但新产物不得省略。另会拦截 `99_Business_Extension/` 写操作、迭代台账非法状态值与 ≥2 个 `active` 行。真实路径无法归属项目时 Butler 退出判定、由宿主权限接管；缺失 / 空白 / 解析异常目标仍 fail-closed。同一 Codex patch 可逐根校验多个项目，任一目标拒绝则整次拒绝。流程绕过仍需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空），正常项目外授权不走 bypass。
 - **PostToolUse 提醒**（`butler_advisor.py`，advisory-only、fail-open）——非阻塞自检：工具执行**之后**跑，只经 `hookSpecificOutput.additionalContext` 向模型注入提醒、**绝不 deny、绝不改写操作结果**。当前承载一条——写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，提醒"brief 若源自外部权威规格先经 prd-split 落盘再推进"（`prd_split_reminder`，兜 PRD 先行软触发被绕过的漏切）。为什么与门禁分两套：风险方向相反——门禁宁可错拦（fail-closed），提醒宁可漏提（fail-open），advisory 混进 deny 链会误伤正常的非 PRD 里程碑写。
 
 ### 5.1 文件拷贝

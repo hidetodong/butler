@@ -19,7 +19,7 @@
 - **项目根先于任何台账写入**：会话 cwd 只是发现起点，用户点名路径优先；否则只接受最近已部署 Butler 根或 Git 根。无法唯一证明时不创建 `.ai/`、不扫子目录猜测。*为什么*：多仓聚合目录是会话容器，不是其中每个项目的共享台账根。
 - **全局用户配置先验安全**：安装器必须先完整校验 marker、有效 export 与命令软链所有权，再逐对象同目录暂存并原子替换；证据不足时 fail-closed，跨组件部分成功必须如实回声。*为什么*：全局配置属于用户资产，幂等便利不能凌驾于不丢数据和不误接管。
 - **文档有界、历史横向归档**：单份产物只装当前迭代的真相，历史靠 `iterations/ITER-NNNN/` 横向铺开，禁止在一份文件里纵向堆历史。
-- **hook 规则算法单源、输入薄适配**：PreToolUse 拦跳阶段 / 未冻结 AC / 显式非 pass 方案写源码 / 越界写 / 双 active 迭代 / 台账非法状态值；Claude `Edit/Write/MultiEdit` 与 Codex `apply_patch` 只在 dispatcher/input adapter 分叉，rule modules 共用。*注*：PreToolUse 不是完整安全边界；butler 仓自身不 live 跑自己的门禁，见 `debt.md`。
+- **hook 管项目流程，宿主管文件权限**：PreToolUse 对能归属 Butler/Git 项目的目标拦跳阶段 / 未冻结 AC / 显式非 pass / 业务扩展保护 / 双 active / 台账非法状态；真实项目外路径退出 Butler 判定，坏输入仍 fail-closed，多项目 patch 逐根 first-deny-wins。Claude/Codex 共用规则模块。*为什么*：hook 看不到可信的用户授权，不能复制宿主权限系统；正常跨目录写入也不该伪装成 bypass。
 - **冷启动读序固定 + 第一读两态**：项目全貌产物 → `ITERATIONS.md`（变更流）→ handoff / task-state（断点）→ 代码。第一读**两态**（MILE-0003 R5 起）——采用 `.ai/project/` 的项目先读 `00_INDEX` + 按需主题（读地图→定向钻取，不 slurp），仍单文件的老项目读 `.ai/PROJECT.md`。**butler 自身现已是文件夹态**（本轮 R8 迁毕）。真源 `context-persistence.md §6`。
 - **自动道无证据不打绿**：完整路径的自动验证先由 `tools/verification-evidence/` 生成真实 argv/exit/log/hash record，VERIFY 按 AC 引用；失败记录保留为纠错轨迹，只有 passed record 能覆盖绿 AC。*为什么*：对话或 Markdown 中手写“已通过”仍只是模型自述。
 - **本地/CI 单入口且验证依赖固定**：完整矩阵只由 `scripts/verify-ci.sh` 进入，workflow 不复制命令；Python/uv lock、Actions 完整 SHA 与 OpenAI Codex validator commit/hash/license 都必须显式固定，缺失或漂移 fail-closed。workflow 提供 check 不等于远端 required 已启用。*为什么*：否则同一提交会因时间、HOME 或操作者不同得到不同覆盖，还可能把未配置的远端保护口头打绿。

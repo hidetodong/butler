@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "codex-hook-wrapper",
+  "iteration": "ITER-0067",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-codex-hooks.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T15:12:02.033Z",
+  "finished_at": "2026-07-18T15:12:02.486Z",
+  "duration_ms": 453,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 39,
+    "captured_bytes": 39,
+    "sha256": "8ef6105dbf05c4d49dc5dc561be56f959c3b33f6e6f616189ce327e7b3a9d4e6",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

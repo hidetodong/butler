@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path, PurePosixPath
 
-from lib.io import Context, OUT_OF_CWD
+from lib.io import Context, OUTSIDE_PROJECT, UNKNOWN_TARGET
 from rules import phase_gate
 
 
@@ -16,11 +16,11 @@ def make_ctx(cwd: Path, target: str) -> Context:
     )
 
 
-def make_ctx_oocwd(cwd: Path) -> Context:
+def make_special_ctx(cwd: Path, target: PurePosixPath) -> Context:
     return Context(
         cwd=str(cwd),
         tool_name="Edit",
-        target_path=OUT_OF_CWD,
+        target_path=target,
         tool_input={},
     )
 
@@ -69,10 +69,16 @@ class TestPhaseGate:
         d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
         assert d.verdict == "deny"
 
-    def test_out_of_cwd_denies(self, tmp_project):
+    def test_outside_project_allows_host_permission_to_decide(self, tmp_project):
         proj = tmp_project("full-artifacts")
-        d = phase_gate.evaluate(make_ctx_oocwd(proj))
+        d = phase_gate.evaluate(make_special_ctx(proj, OUTSIDE_PROJECT))
+        assert d.verdict == "allow"
+
+    def test_unknown_target_denies(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        d = phase_gate.evaluate(make_special_ctx(proj, UNKNOWN_TARGET))
         assert d.verdict == "deny"
+        assert "无法解析" in d.reason
 
     def test_reason_includes_remediation(self, tmp_project):
         proj = tmp_project("empty-project")

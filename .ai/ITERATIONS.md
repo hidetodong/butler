@@ -1,15 +1,16 @@
 # 迭代台账
 
-> ⚠️ 危险模式北极星：推进 MILE-0008“目标可信闭环”——让 Goal 只有在方案准入、执行校准、证据与反证审查均通过后才可完成；任务做完但目标未达成时必须回流修正，不得假完成。
+> ⚠️ 危险模式北极星：修正 Butler 项目外写入门禁——Butler 只约束能归属到项目的流程写入，项目外授权交给宿主；危险模式以启动时冻结的宿主授权上限自治，不能自行扩权。
 
 ## 危险模式自治路线图
 
-路线图真源：`.ai/MILESTONE.md`。R1–R6 已 closed；当前无 active 迭代。
+当前为独立迭代 ITER-0067，不归属里程碑。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0067 | 项目外写入授权边界：外部目标交宿主、坏输入 fail-closed、多项目逐根门禁；危险模式冻结授权上限，强审修复 2 Must Fix，147 hooks/完整 CI 通过 | closed | 2026-07-18 | 2026-07-18 | — | deliveries/ITER-0067-external-write-authorization-boundary.md |
 | ITER-0066 | Goal 双宿主接线与端到端验证（MILE-0008 R6·危险模式）：共同单向投影、capability 降级、冷启动与驻留 CLI；强审修复外部路径，7 tests/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0066-goal-dual-host-wiring.md |
 | ITER-0065 | Goal 完成裁决器（MILE-0008 R5·危险模式）：只读聚合七类事实，正向 eligible + GFC-001–008 全拒绝；强审修复 evidence fixture 漂移，13 tests/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0065-goal-completion-adjudicator.md |
 | ITER-0064 | 执行校准与问题回流（MILE-0008 R4·危险模式）：六类信号、task-state 活投影与 P1–P5/诚实停路由；强审修复伪枚举行和错误引用，结构 8/8、完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0064-goal-runtime-calibration.md |

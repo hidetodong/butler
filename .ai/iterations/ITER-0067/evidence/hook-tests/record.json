@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "hook-tests",
+  "iteration": "ITER-0067",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "templates/hooks/tests",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T15:11:59.473Z",
+  "finished_at": "2026-07-18T15:12:01.901Z",
+  "duration_ms": 2428,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 260,
+    "captured_bytes": 260,
+    "sha256": "a6529dab58f54dc81f63d18c70522fdfd97ad20242780b14f19fc2e71ed1d47d",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

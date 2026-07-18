@@ -7,7 +7,7 @@ import subprocess
 import pytest
 
 from lib.codex_patch import parse_apply_patch
-from lib.io import OUT_OF_CWD, contexts_from_payload
+from lib.io import OUTSIDE_PROJECT, contexts_from_payload
 
 
 def test_multi_file_multi_hunk_is_aggregated_in_order():
@@ -87,7 +87,7 @@ def test_absolute_target_outside_session_cwd_uses_actual_git_root(tmp_path):
     assert context.target_path == PurePosixPath(".ai/ITERATIONS.md")
 
 
-def test_patch_spanning_two_project_roots_fails_closed(tmp_path):
+def test_patch_spanning_two_project_roots_returns_one_context_per_root(tmp_path):
     session = tmp_path / "aggregate"
     one = tmp_path / "one"
     two = tmp_path / "two"
@@ -101,13 +101,17 @@ def test_patch_spanning_two_project_roots_fails_closed(tmp_path):
         f"*** Add File: {two / 'b.py'}\n+b\n"
         "*** End Patch"
     )
-    with pytest.raises(ValueError, match="multiple project roots"):
-        contexts_from_payload(
-            {"tool_name": "apply_patch", "cwd": str(session), "tool_input": {"command": command}}
-        )
+    contexts = contexts_from_payload(
+        {"tool_name": "apply_patch", "cwd": str(session), "tool_input": {"command": command}}
+    )
+    assert [context.cwd for context in contexts] == [str(one.resolve()), str(two.resolve())]
+    assert [context.target_path for context in contexts] == [
+        PurePosixPath("a.py"),
+        PurePosixPath("b.py"),
+    ]
 
 
-def test_relative_path_from_aggregate_cannot_select_child_repo(tmp_path):
+def test_relative_path_from_aggregate_selects_actual_child_repo(tmp_path):
     aggregate = tmp_path / "aggregate"
     project = aggregate / "child"
     aggregate.mkdir()
@@ -120,11 +124,13 @@ def test_relative_path_from_aggregate_cannot_select_child_repo(tmp_path):
             "command": "*** Begin Patch\n*** Add File: child/src/x.py\n+x\n*** End Patch"
         },
     }
-    assert contexts_from_payload(payload)[0].target_path == OUT_OF_CWD
+    context = contexts_from_payload(payload)[0]
+    assert context.cwd == str(project.resolve())
+    assert context.target_path == PurePosixPath("src/x.py")
 
 
 @pytest.mark.parametrize("path", ["../escape.py", "/outside/absolute.py"])
-def test_patch_target_outside_cwd_uses_sentinel(tmp_path, path):
+def test_patch_target_without_a_project_uses_outside_sentinel(tmp_path, path):
     payload = {
         "tool_name": "apply_patch",
         "cwd": str(tmp_path),
@@ -132,4 +138,4 @@ def test_patch_target_outside_cwd_uses_sentinel(tmp_path, path):
             "command": f"*** Begin Patch\n*** Add File: {path}\n+x\n*** End Patch"
         },
     }
-    assert contexts_from_payload(payload)[0].target_path == OUT_OF_CWD
+    assert contexts_from_payload(payload)[0].target_path == OUTSIDE_PROJECT

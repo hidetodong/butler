@@ -62,13 +62,79 @@ class TestAllowPaths:
         r = run_gate(edit_payload(proj, ".ai/CONCEPT.md"), proj)
         assert r.returncode == 0
 
+    def test_absolute_path_outside_project_is_left_to_host_permissions(self, tmp_project, tmp_path):
+        proj = tmp_project("empty-project")
+        external = tmp_path.parent / "user-config" / "config.toml"
+        r = run_gate(edit_payload(proj, str(external)), proj)
+        assert r.returncode == 0, r.stderr
+
+    def test_edit_from_project_subdir_still_uses_project_root_gate(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        subdir = proj / "packages" / "app"
+        subdir.mkdir(parents=True)
+        target = proj / "shared" / "config.py"
+        r = run_gate(edit_payload(subdir, str(target)), subdir)
+        assert r.returncode == 0, r.stderr
+
+    def test_patch_across_two_valid_projects_allows_when_each_gate_passes(self, tmp_path):
+        session = tmp_path / "aggregate"
+        session.mkdir()
+        roots = []
+        for name in ("one", "two"):
+            root = tmp_path / name
+            root.mkdir()
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            ai = root / ".ai"
+            ai.mkdir()
+            (ai / "CONCEPT.md").write_text("c")
+            (ai / "AC_LIST.md").write_text("状态: ack-frozen\n")
+            (ai / "TECH_PLAN.md").write_text("方案状态: pass\n")
+            roots.append(root)
+        command = (
+            "*** Begin Patch\n"
+            f"*** Add File: {roots[0] / 'a.py'}\n+a\n"
+            f"*** Add File: {roots[1] / 'b.py'}\n+b\n"
+            "*** End Patch"
+        )
+        r = run_gate(patch_payload(session, command), session)
+        assert r.returncode == 0, r.stderr
+
 
 class TestDenyPaths:
+    def test_missing_file_path_fails_closed(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        payload = {"tool_name": "Edit", "tool_input": {}, "cwd": str(proj)}
+        r = run_gate(payload, proj)
+        assert r.returncode == 2
+        assert "无法解析" in r.stderr
+
     def test_phase_gate_denies_when_concept_missing(self, tmp_project):
         proj = tmp_project("empty-project")
         r = run_gate(edit_payload(proj, "src/auth.ts"), proj)
         assert r.returncode == 2
         assert "phase_gate" in r.stderr
+        assert "CONCEPT.md" in r.stderr
+
+    def test_absolute_target_in_another_project_uses_that_projects_gate(self, tmp_path):
+        session = tmp_path / "session"
+        target_project = tmp_path / "target"
+        session.mkdir()
+        target_project.mkdir()
+        subprocess.run(["git", "init", "-q", str(target_project)], check=True)
+        r = run_gate(
+            edit_payload(session, str(target_project / "src" / "x.py")),
+            session,
+        )
+        assert r.returncode == 2
+        assert "CONCEPT.md" in r.stderr
+
+    def test_edit_from_subdir_cannot_bypass_project_phase_gate(self, tmp_project):
+        proj = tmp_project("empty-project")
+        subdir = proj / "packages" / "app"
+        subdir.mkdir(parents=True)
+        target = proj / "shared" / "config.py"
+        r = run_gate(edit_payload(subdir, str(target)), subdir)
+        assert r.returncode == 2
         assert "CONCEPT.md" in r.stderr
 
     def test_phase_gate_denies_when_ac_not_frozen(self, tmp_path):
@@ -121,6 +187,29 @@ class TestDenyPaths:
         assert r.returncode == 2
         assert "protected_paths" in r.stderr
         assert "99_Business_Extension/policy.md" in r.stderr
+
+    def test_patch_across_projects_denies_when_one_project_gate_fails(self, tmp_path):
+        session = tmp_path / "aggregate"
+        allowed = tmp_path / "allowed"
+        denied = tmp_path / "denied"
+        for root in (session, allowed, denied):
+            root.mkdir()
+        for root in (allowed, denied):
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+        ai = allowed / ".ai"
+        ai.mkdir()
+        (ai / "CONCEPT.md").write_text("c")
+        (ai / "AC_LIST.md").write_text("状态: ack-frozen\n")
+        (ai / "TECH_PLAN.md").write_text("方案状态: pass\n")
+        command = (
+            "*** Begin Patch\n"
+            f"*** Add File: {allowed / 'a.py'}\n+a\n"
+            f"*** Add File: {denied / 'b.py'}\n+b\n"
+            "*** End Patch"
+        )
+        r = run_gate(patch_payload(session, command), session)
+        assert r.returncode == 2
+        assert "CONCEPT.md" in r.stderr
 
 
 class TestBypassFlow:
