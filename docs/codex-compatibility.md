@@ -52,7 +52,7 @@ Codex 会在开始工作前读取仓库级 `AGENTS.md`，并允许在更深目�
 
 Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装分发。Butler 的发布真源是 `plugins/butler/skills/`；`.agents/skills/` 的 8 个相对软链让仓内开发态也能发现同一批 skill，不产生第二份正文。
 
-8 个入口是 `$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop` 和 `$butler-dangerous`。前 6 个允许语义触发；后两个高风险入口在 `agents/openai.yaml` 禁止隐式调用，必须显式点名。所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
+入口、双宿主名称、风险、语义触发和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。高风险入口在 `agents/openai.yaml` 禁止隐式调用，必须显式点名；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
 
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。

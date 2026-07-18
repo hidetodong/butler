@@ -94,7 +94,7 @@ flowchart TB
 3. **接入新项目**：直接给任务并点名项目/仓库路径；若会话已在该 Git/Butler 项目内，AI 也可安全发现其根。多仓父目录不会被自动当成项目。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
-> **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目从同一规则卡生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/upgrade.py` 读取机器 manifest，先 dry-run、再事务 apply。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目从同一规则卡生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/upgrade.py` 读取机器 manifest，先 dry-run、再事务 apply。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。入口、风险与兼容旧名以自动生成的 [`docs/workflows.md`](docs/workflows.md) 为准；兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## ✅ 持续验证
 

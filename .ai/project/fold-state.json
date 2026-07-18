@@ -76,6 +76,30 @@
           "sha256": "72a796ba962a23a597d74aad4994038f9ddc4a95e1728401406c2da654f62e01"
         }
       ]
+    },
+    "ITER-0060": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0060/CHANGELOG.md",
+        "sha256": "3407172c13ac661981b95b07ea54c61d927072a823a4122c92c2a0b08ef4a201"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "924b21bee2fddf67ea6e5a06e04f996ff3735c0765ffef215d04674fedbc1a90"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "dec3929a7854c4de0184341c79f63aa0a4fa59b54457956cdded684022e137cd"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "c33fa825a1b4dff2638469780341a2c969f020b9593955c492cb146e54e2cecb"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "5b4c4695852cf807fea65ac81976e2acf0dcd9ef9aa5994ad58959a8ebc40df0"
+        }
+      ]
     }
   }
 }

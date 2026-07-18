@@ -26,6 +26,7 @@
 ## 支撑目录（仓库根）
 
 - `plugins/butler/` — Codex 可安装发布包，`skills/` 内 8 个 Butler 工作流是实体真源；`.agents/skills/` 只用相对软链提供 repo discovery。个人 marketplace 安装/刷新由 `scripts/install-codex-plugin.sh` 编排官方 helper 与 CLI。
+- `workflows/registry.json` + `scripts/sync-workflow-registry.py` — 八工作流的双宿主名称、路径、风险、隐式策略、触发、旧名和 plugin/distribution 元数据真源；生成/校验 command/skill frontmatter、openai.yaml、repo 软链与唯一人读表，正文算法仍留在 `Coder/`。
 - `.github/workflows/ci.yml` + `scripts/verify-ci.sh` — PR/main/release tag 的 Ubuntu/macOS 编排层与唯一 local/CI 执行入口；Python/依赖由 `.python-version`、`pyproject.toml`、`uv.lock` 固定，workflow 不复制测试清单。
 
 - `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
@@ -37,7 +38,7 @@
 ## 成熟度（真源里没有的"现状"层）
 
 - **双宿主适配（MILE-0006）**：R1–R4 全部交付——AGENTS 发现、8 skills/plugin、apply_patch hooks、统一 setup、目标双入口部署/升级和隔离回归矩阵。详细边界真源 `docs/codex-compatibility.md`。
-- **工程化加固（MILE-0007）**：R1 安装器事务安全、R2 机器证据/状态审计、R3 固定工具链与双 OS CI 合同、R4 可执行升级器已交付；仅 R5 工作流注册/分发待推进。远端 required check 受当前私有仓库套餐限制，未冒称启用。
+- **工程化加固（MILE-0007）**：R1–R5 全部交付——安装器事务安全、机器证据/状态审计、固定工具链与双 OS CI 合同、可执行升级器、工作流注册/分发收敛。远端 required check 与团队/公共 marketplace 仍是明确外部边界，未冒称启用。
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。

@@ -1,0 +1,287 @@
+[OK] iterations.status: 状态均合法
+[OK] iterations.single_active: active=['ITER-0060']
+[OK] iterations.current: current=ITER-0060, expected=ITER-0060
+[OK] ITER-0059.closed_date: 2026-07-18
+[OK] ITER-0059.delivery: deliveries/ITER-0059-executable-upgrader.md
+[OK] ITER-0059.delivery_html: deliveries/ITER-0059-executable-upgrader.html
+[OK] ITER-0059.archive: complete
+[OK] ITER-0059.evidence_index: ids=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final']
+[OK] ITER-0059.evidence_iteration: 引用迭代一致
+[OK] ITER-0059.evidence_set: index=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final'], actual=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final']
+[OK] ITER-0059.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0059.evidence_diagnostics: 保留非通过记录=['state-audit-active']
+[OK] ITER-0059.evidence_hashes: [OK] diff-check; [OK] diff-check-after-review; [OK] diff-check-final; [OK] review-manifest-current-drift; [OK] review-upgrade-safety; [OK] state-audit-active; [OK] state-audit-after-review; [OK] state-audit-final; [OK] state-audit-plugin-fix; [OK] upgrade-full-matrix; [OK] upgrade-full-matrix-after-review; [OK] upgrade-full-matrix-final; [OK] upgrade-tests; [OK] upgrade-tests-after-review; [OK] upgrade-tests-final
+[OK] ITER-0059.fold_receipt: topics=5, mode=current
+[OK] ITER-0058.closed_date: 2026-07-18
+[OK] ITER-0058.delivery: deliveries/ITER-0058-ci-reproducible-verification.md
+[OK] ITER-0058.delivery_html: deliveries/ITER-0058-ci-reproducible-verification.html
+[OK] ITER-0058.archive: complete
+[OK] ITER-0058.evidence_index: ids=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests']
+[OK] ITER-0058.evidence_iteration: 引用迭代一致
+[OK] ITER-0058.evidence_set: index=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests'], actual=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests']
+[OK] ITER-0058.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0058.evidence_diagnostics: 保留非通过记录=['remote-required-state']
+[OK] ITER-0058.evidence_hashes: [OK] auditor-tests-fold-fix; [OK] ci-contract-tests; [OK] ci-local-matrix; [OK] ci-local-matrix-after-fold-fix; [OK] ci-local-matrix-final; [OK] ci-local-matrix-platform; [OK] diff-check; [OK] diff-check-after-fold-fix; [OK] diff-check-final; [OK] markdown-scan; [OK] markdown-tests; [OK] remote-required-state; [OK] remote-workflow-state; [OK] review-ci-fail-closed; [OK] review-fold-history; [OK] review-markdown-boundaries; [OK] review-validator-integrity; [OK] state-audit-active; [OK] state-audit-active-final; [OK] state-audit-fold-fix; [OK] validator-tests
+[OK] ITER-0058.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0057.closed_date: 2026-07-18
+[OK] ITER-0057.delivery: deliveries/ITER-0057-verification-evidence-state-audit.md
+[OK] ITER-0057.delivery_html: deliveries/ITER-0057-verification-evidence-state-audit.html
+[OK] ITER-0057.archive: complete
+[OK] ITER-0057.evidence_index: ids=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun']
+[OK] ITER-0057.evidence_iteration: 引用迭代一致
+[OK] ITER-0057.evidence_set: index=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun'], actual=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun']
+[OK] ITER-0057.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0057.evidence_diagnostics: 保留非通过记录=['dual-host-matrix']
+[OK] ITER-0057.evidence_hashes: [OK] auditor-tests; [OK] auditor-tests-rerun; [OK] diff-check; [OK] diff-check-rerun; [OK] dual-host-matrix; [OK] dual-host-matrix-rerun; [OK] review-archive-single-source; [OK] review-runner-security; [OK] review-state-drift; [OK] runner-tests; [OK] state-audit-active; [OK] state-audit-active-rerun
+[OK] ITER-0057.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0056.closed_date: 2026-07-18
+[OK] ITER-0056.delivery: deliveries/ITER-0056-global-installer-transaction-safety.md
+[OK] ITER-0056.delivery_html: deliveries/ITER-0056-global-installer-transaction-safety.html
+[OK] ITER-0056.archive: complete
+[OK] ITER-0055.closed_date: 2026-07-17
+[OK] ITER-0055.delivery: deliveries/ITER-0055-project-root-deployment-boundary.md
+[OK] ITER-0055.delivery_html: deliveries/ITER-0055-project-root-deployment-boundary.html
+[OK] ITER-0055.archive: complete
+[OK] ITER-0054.closed_date: 2026-07-17
+[OK] ITER-0054.delivery: deliveries/ITER-0054-dual-host-deployment-upgrade.md
+[OK] ITER-0054.delivery_html: deliveries/ITER-0054-dual-host-deployment-upgrade.html
+[OK] ITER-0054.archive: complete
+[OK] ITER-0053.closed_date: 2026-07-17
+[OK] ITER-0053.delivery: deliveries/ITER-0053-codex-apply-patch-hooks.md
+[OK] ITER-0053.delivery_html: deliveries/ITER-0053-codex-apply-patch-hooks.html
+[OK] ITER-0053.archive: complete
+[OK] ITER-0052.closed_date: 2026-07-17
+[OK] ITER-0052.delivery: deliveries/ITER-0052-codex-workflow-plugin.md
+[OK] ITER-0052.delivery_html: deliveries/ITER-0052-codex-workflow-plugin.html
+[OK] ITER-0052.archive: complete
+[OK] ITER-0051.closed_date: 2026-07-17
+[OK] ITER-0051.delivery: deliveries/ITER-0051-codex-compatibility-foundation.md
+[OK] ITER-0051.delivery_html: deliveries/ITER-0051-codex-compatibility-foundation.html
+[OK] ITER-0051.archive: complete
+[OK] ITER-0050.closed_date: 2026-07-14
+[OK] ITER-0050.delivery: deliveries/ITER-0050-risk-gate-commands.md
+[OK] ITER-0050.delivery_html: deliveries/ITER-0050-risk-gate-commands.html
+[OK] ITER-0050.archive: complete
+[OK] ITER-0049.closed_date: 2026-07-14
+[OK] ITER-0049.delivery: deliveries/ITER-0049-preference-namespace-command.md
+[OK] ITER-0049.delivery_html: deliveries/ITER-0049-preference-namespace-command.html
+[OK] ITER-0049.archive: complete
+[OK] ITER-0048.closed_date: 2026-07-14
+[OK] ITER-0048.delivery: deliveries/ITER-0048-namespace-commands-batch.md
+[OK] ITER-0048.delivery_html: deliveries/ITER-0048-namespace-commands-batch.html
+[OK] ITER-0048.archive: complete
+[OK] ITER-0047.closed_date: 2026-07-14
+[OK] ITER-0047.delivery: deliveries/ITER-0047-command-namespace-foundation.md
+[OK] ITER-0047.delivery_html: deliveries/ITER-0047-command-namespace-foundation.html
+[OK] ITER-0047.archive: complete
+[OK] ITER-0046.closed_date: 2026-07-13
+[OK] ITER-0046.delivery: deliveries/ITER-0046-communication-style-voice-file.md
+[OK] ITER-0046.delivery_html: deliveries/ITER-0046-communication-style-voice-file.html
+[OK] ITER-0046.archive: complete
+[OK] ITER-0045.closed_date: 2026-07-13
+[OK] ITER-0045.delivery: deliveries/ITER-0045-slash-command-global-distribution.md
+[OK] ITER-0045.delivery_html: deliveries/ITER-0045-slash-command-global-distribution.html
+[OK] ITER-0045.archive: complete
+[OK] ITER-0044.closed_date: 2026-07-13
+[OK] ITER-0044.delivery: deliveries/ITER-0044-butler-prd-slash-command.md
+[OK] ITER-0044.delivery_html: deliveries/ITER-0044-butler-prd-slash-command.html
+[OK] ITER-0044.archive: complete
+[OK] ITER-0043.closed_date: 2026-07-12
+[OK] ITER-0043.delivery: deliveries/ITER-0043-engineering-principles-absorption.md
+[OK] ITER-0043.delivery_html: deliveries/ITER-0043-engineering-principles-absorption.html
+[OK] ITER-0043.archive: complete
+[OK] ITER-0042.closed_date: 2026-07-12
+[OK] ITER-0042.delivery: deliveries/ITER-0042-prd-trigger-hardening.md
+[OK] ITER-0042.delivery_html: deliveries/ITER-0042-prd-trigger-hardening.html
+[OK] ITER-0042.archive: complete
+[OK] ITER-0041.closed_date: 2026-07-09
+[OK] ITER-0041.delivery: deliveries/ITER-0041-recognition-edge-and-nonregression-gate.md
+[OK] ITER-0041.delivery_html: deliveries/ITER-0041-recognition-edge-and-nonregression-gate.html
+[OK] ITER-0041.archive: complete
+[OK] ITER-0040.closed_date: 2026-07-09
+[OK] ITER-0040.delivery: deliveries/ITER-0040-prd-update-revision-sync.md
+[OK] ITER-0040.delivery_html: deliveries/ITER-0040-prd-update-revision-sync.html
+[OK] ITER-0040.archive: complete
+[OK] ITER-0039.closed_date: 2026-07-09
+[OK] ITER-0039.delivery: deliveries/ITER-0039-ac-prd-version-pinning.md
+[OK] ITER-0039.delivery_html: deliveries/ITER-0039-ac-prd-version-pinning.html
+[OK] ITER-0039.archive: complete
+[OK] ITER-0038.closed_date: 2026-07-09
+[OK] ITER-0038.delivery: deliveries/ITER-0038-milestone-prd-entry.md
+[OK] ITER-0038.delivery_html: deliveries/ITER-0038-milestone-prd-entry.html
+[OK] ITER-0038.archive: complete
+[OK] ITER-0037.closed_date: 2026-07-09
+[OK] ITER-0037.delivery: deliveries/ITER-0037-prd-split-mechanism.md
+[OK] ITER-0037.delivery_html: deliveries/ITER-0037-prd-split-mechanism.html
+[OK] ITER-0037.archive: complete
+[OK] ITER-0036.closed_date: 2026-07-09
+[OK] ITER-0036.delivery: deliveries/ITER-0036-references-index-schema.md
+[OK] ITER-0036.delivery_html: deliveries/ITER-0036-references-index-schema.html
+[OK] ITER-0036.archive: complete
+[OK] ITER-0035.closed_date: 2026-07-08
+[OK] ITER-0035.delivery: deliveries/ITER-0035-split-upgrade-wiring.md
+[OK] ITER-0035.delivery_html: deliveries/ITER-0035-split-upgrade-wiring.html
+[OK] ITER-0035.archive: complete
+[OK] ITER-0034.closed_date: 2026-07-08
+[OK] ITER-0034.delivery: deliveries/ITER-0034-dogfood-knowledge-folder-migration.md
+[OK] ITER-0034.delivery_html: deliveries/ITER-0034-dogfood-knowledge-folder-migration.html
+[OK] ITER-0034.archive: complete
+[OK] ITER-0033.closed_date: 2026-07-07
+[OK] ITER-0033.delivery: deliveries/ITER-0033-plain-language-standards.md
+[OK] ITER-0033.delivery_html: deliveries/ITER-0033-plain-language-standards.html
+[OK] ITER-0033.archive: complete
+[OK] ITER-0032.closed_date: 2026-07-07
+[OK] ITER-0032.delivery: deliveries/ITER-0032-deploy-seed-and-folder-migration.md
+[OK] ITER-0032.delivery_html: deliveries/ITER-0032-deploy-seed-and-folder-migration.html
+[OK] ITER-0032.archive: complete
+[OK] ITER-0031.closed_date: 2026-07-07
+[OK] ITER-0031.delivery: deliveries/ITER-0031-coldstart-read-order-switch.md
+[OK] ITER-0031.delivery_html: deliveries/ITER-0031-coldstart-read-order-switch.html
+[OK] ITER-0031.archive: complete
+[OK] ITER-0030.closed_date: 2026-07-07
+[OK] ITER-0030.delivery: deliveries/ITER-0030-fold-drift-helpers.md
+[OK] ITER-0030.delivery_html: deliveries/ITER-0030-fold-drift-helpers.html
+[OK] ITER-0030.archive: complete
+[OK] ITER-0029.closed_date: 2026-07-07
+[OK] ITER-0029.delivery: deliveries/ITER-0029-maintenance-loop-wiring.md
+[OK] ITER-0029.delivery_html: deliveries/ITER-0029-maintenance-loop-wiring.html
+[OK] ITER-0029.archive: complete
+[OK] ITER-0028.closed_date: 2026-07-07
+[OK] ITER-0028.delivery: deliveries/ITER-0028-knowledge-folder-schema.md
+[OK] ITER-0028.delivery_html: deliveries/ITER-0028-knowledge-folder-schema.html
+[OK] ITER-0028.archive: complete
+[OK] ITER-0027.closed_date: 2026-07-06
+[OK] ITER-0027.delivery: deliveries/ITER-0027-implementation-discipline.md
+[OK] ITER-0027.delivery_html: deliveries/ITER-0027-implementation-discipline.html
+[OK] ITER-0027.archive: complete
+[OK] ITER-0026.closed_date: 2026-07-05
+[OK] ITER-0026.delivery: deliveries/ITER-0026-agent-roster-review-split.md
+[OK] ITER-0026.delivery_html: deliveries/ITER-0026-agent-roster-review-split.html
+[OK] ITER-0026.archive: complete
+[OK] ITER-0025.closed_date: 2026-07-02
+[OK] ITER-0025.delivery: deliveries/ITER-0025-bridge-usage-docs.md
+[OK] ITER-0025.delivery_html: deliveries/ITER-0025-bridge-usage-docs.html
+[OK] ITER-0025.archive: complete
+[OK] ITER-0024.closed_date: 2026-07-02
+[OK] ITER-0024.delivery: deliveries/ITER-0024-human-test-bridge-wiring.md
+[OK] ITER-0024.delivery_html: deliveries/ITER-0024-human-test-bridge-wiring.html
+[OK] ITER-0024.archive: complete
+[OK] ITER-0023.closed_date: 2026-07-02
+[OK] ITER-0023.delivery: deliveries/ITER-0023-delivery-selftest-bridge.md
+[OK] ITER-0023.delivery_html: deliveries/ITER-0023-delivery-selftest-bridge.html
+[OK] ITER-0023.archive: complete
+[OK] ITER-0022.closed_date: 2026-07-02
+[OK] ITER-0022.delivery: deliveries/ITER-0022-graded-confidence-proxy-and-admission.md
+[OK] ITER-0022.delivery_html: deliveries/ITER-0022-graded-confidence-proxy-and-admission.html
+[OK] ITER-0022.archive: complete
+[OK] ITER-0021.closed_date: 2026-07-02
+[OK] ITER-0021.delivery: deliveries/ITER-0021-automation-first-testing-lanes.md
+[OK] ITER-0021.delivery_html: deliveries/ITER-0021-automation-first-testing-lanes.html
+[OK] ITER-0021.archive: complete
+[OK] ITER-0020.closed_date: 2026-07-02
+[OK] ITER-0020.delivery: deliveries/ITER-0020-commit-release-sop.md
+[OK] ITER-0020.delivery_html: deliveries/ITER-0020-commit-release-sop.html
+[OK] ITER-0020.archive: complete
+[OK] ITER-0019.closed_date: 2026-06-30
+[OK] ITER-0019.delivery: deliveries/ITER-0019-close-gate.md
+[OK] ITER-0019.delivery_html: deliveries/ITER-0019-close-gate.html
+[OK] ITER-0019.archive: complete
+[OK] ITER-0018.closed_date: 2026-06-30
+[OK] ITER-0018.delivery: deliveries/ITER-0018-changelog-formalization.md
+[OK] ITER-0018.delivery_html: deliveries/ITER-0018-changelog-formalization.html
+[OK] ITER-0018.archive: complete
+[OK] ITER-0017.closed_date: 2026-06-30
+[OK] ITER-0017.delivery: deliveries/ITER-0017-project-digest.md
+[OK] ITER-0017.delivery_html: deliveries/ITER-0017-project-digest.html
+[OK] ITER-0017.archive: complete
+[OK] ITER-0016.closed_date: 2026-06-30
+[OK] ITER-0016.delivery: deliveries/ITER-0016-tasks-step-lite.md
+[OK] ITER-0016.delivery_html: deliveries/ITER-0016-tasks-step-lite.html
+[OK] ITER-0016.archive: complete
+[OK] ITER-0015.closed_date: 2026-06-30
+[OK] ITER-0015.delivery: deliveries/ITER-0015-handoff-template-and-flow.md
+[OK] ITER-0015.delivery_html: deliveries/ITER-0015-handoff-template-and-flow.html
+[OK] ITER-0015.archive: complete
+[OK] ITER-0014.closed_date: 2026-06-30
+[OK] ITER-0014.delivery: deliveries/ITER-0014-migration-ledger.md
+[OK] ITER-0014.delivery_html: deliveries/ITER-0014-migration-ledger.html
+[OK] ITER-0014.archive: complete
+[OK] ITER-0013.closed_date: 2026-06-30
+[OK] ITER-0013.delivery: deliveries/ITER-0013-concept-layering.md
+[OK] ITER-0013.delivery_html: deliveries/ITER-0013-concept-layering.html
+[OK] ITER-0013.archive: complete
+[OK] ITER-0012.closed_date: 2026-06-30
+[OK] ITER-0012.delivery: deliveries/ITER-0012-artifact-plain-language.md
+[OK] ITER-0012.delivery_html: deliveries/ITER-0012-artifact-plain-language.html
+[OK] ITER-0012.archive: complete
+[OK] ITER-0011.closed_date: 2026-06-22
+[OK] ITER-0011.delivery: deliveries/ITER-0011-presentation-protocol.md
+[OK] ITER-0011.delivery_html: deliveries/ITER-0011-presentation-protocol.html
+[OK] ITER-0011.archive: complete
+[OK] ITER-0010.closed_date: 2026-06-20
+[OK] ITER-0010.delivery: deliveries/ITER-0010-delivery-html-view.md
+[OK] ITER-0010.delivery_html: deliveries/ITER-0010-delivery-html-view.html
+[OK] ITER-0010.archive: complete
+[OK] ITER-0009.closed_date: 2026-06-19
+[OK] ITER-0009.delivery: deliveries/ITER-0009-preference-per-project-toggle.md
+[OK] ITER-0009.archive: complete
+[OK] ITER-0008.closed_date: 2026-06-19
+[OK] ITER-0008.delivery: deliveries/ITER-0008-iteration-status-enum-lockdown.md
+[OK] ITER-0008.archive: complete
+[OK] ITER-0007.closed_date: 2026-06-19
+[OK] ITER-0007.delivery: deliveries/ITER-0007-versioning-baseline-v1.0.0.md
+[OK] ITER-0007.archive: complete
+[OK] ITER-0006.closed_date: 2026-06-19
+[OK] ITER-0006.delivery: deliveries/ITER-0006-feature-toggles-and-milestone-auto-attach.md
+[OK] ITER-0006.archive: complete
+[OK] ITER-0005.closed_date: 2026-06-19
+[OK] ITER-0005.delivery: deliveries/ITER-0005-milestone-intake-origin-command.md
+[OK] ITER-0005.archive: complete
+[OK] ITER-0004.closed_date: 2026-06-15
+[OK] ITER-0004.delivery: deliveries/ITER-0004-ack-freeze-and-triage.md
+[OK] ITER-0004.archive: complete
+[OK] ITER-0003.closed_date: 2026-06-03
+[OK] ITER-0003.delivery: deliveries/ITER-0003-doc-scoping-hardening.md
+[OK] ITER-0003.archive: complete
+[OK] ITER-0002.closed_date: 2026-06-03
+[OK] ITER-0002.delivery: deliveries/ITER-0002-iteration-requirement-mgmt.md
+[OK] ITER-0002.archive: complete
+[OK] ITER-0001.closed_date: 2026-04-20
+[OK] ITER-0001.delivery: deliveries/2026-04-20-chat-recap-style.md
+[OK] ITER-0001.archive: complete
+[OK] milestones.status: 状态均合法
+[OK] milestones.single_active: active=['MILE-0007']
+[OK] milestones.current: current=MILE-0007, expected=MILE-0007
+[OK] MILE-0007.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0006.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0006.delivery: deliveries/milestones/MILE-0006-codex-dual-host-compatibility.md
+[OK] MILE-0006.archive: .ai/milestones/MILE-0006/MILESTONE.md
+[OK] MILE-0005.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0005.delivery: deliveries/milestones/MILE-0005-command-namespace-system.md
+[OK] MILE-0005.archive: .ai/milestones/MILE-0005/MILESTONE.md
+[OK] MILE-0004.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0004.delivery: deliveries/milestones/MILE-0004-prd-first-versioned-references.md
+[OK] MILE-0004.archive: .ai/milestones/MILE-0004/MILESTONE.md
+[OK] MILE-0003.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0003.delivery: deliveries/milestones/MILE-0003-knowledge-folder-agents-plainlang.md
+[OK] MILE-0003.archive: .ai/milestones/MILE-0003/MILESTONE.md
+[OK] MILE-0002.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0002.delivery: deliveries/milestones/MILE-0002-automation-and-human-test-loop.md
+[OK] MILE-0002.archive: .ai/milestones/MILE-0002/MILESTONE.md
+[OK] MILE-0001.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0001.delivery: deliveries/milestones/MILE-0001-coldstart-recoverability.md
+[OK] MILE-0001.archive: .ai/milestones/MILE-0001/MILESTONE.md
+[OK] milestones.workspace: .ai/MILESTONE.md
+[OK] route.R1: ITER-0056: route=closed, ledger=closed
+[OK] route.R2: ITER-0057: route=closed, ledger=closed
+[OK] route.R3: ITER-0058: route=closed, ledger=closed
+[OK] route.R4: ITER-0059: route=closed, ledger=closed
+[OK] route.R5: ITER-0060: route=active, ledger=active
+[OK] .ai/task-state.md: 应包含当前状态指针：ITER-0060
+[OK] .ai/02_SESSION_HANDOFF.md: 应包含当前状态指针：ITER-0060
+[OK] release.version: 2.16.0
+[OK] release.plugin: VERSION=2.16.0, plugin=2.16.0
+[OK] release.changelog: 2.16.0
+[OK] release.migration: migrations/v2.16.0.md
+[UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+[OK] release.tag: v2.16.0

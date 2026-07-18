@@ -96,7 +96,7 @@ v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能
 
 兼容边界：
 
-- 8 个入口已完成：`$butler-prd`、`$butler-review`、`$butler-milestone`、`$butler-upgrade`、`$butler-ideation`、`$butler-preference`、`$butler-loop`、`$butler-dangerous`。后两个高风险入口只允许显式调用。
+- 入口、双宿主名称、风险、语义触发和旧名兼容由机器注册表统一生成，见 [`docs/workflows.md`](docs/workflows.md)。其中高风险入口禁止隐式调用。
 - hooks 只覆盖运行时实际报告的 `apply_patch`/兼容编辑事件；PreToolUse 不是 sandbox，也不能保证拦住 shell、MCP 或未来新增的所有写路径。
 - `BUTLER_PATH` 缺失时 PreToolUse 门禁会 fail-closed；PostToolUse 提醒会 fail-open。若出现门禁不可用，先修正环境变量，不要用永久 trust/bypass 掩盖配置问题。
 

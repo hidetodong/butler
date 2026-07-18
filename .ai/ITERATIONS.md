@@ -12,6 +12,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0060 | 双宿主工作流注册与分发收敛（MILE-0007 R5·危险模式）：单一 registry 管理 8 工作流和 33 个双宿主投影；高风险显式门、旧名、软链、plugin/hooks/个人与团队分发边界机械对账，8 项专项与完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0060-workflow-registry-distribution.md |
 | ITER-0059 | 可执行升级器（MILE-0007 R4·危险模式）：机器 manifest 驱动零写入 plan 与事务 apply，项目/人工/机器动作分域；16 项历史跨版、漂移、幂等和故障恢复专项及完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0059-executable-upgrader.md |
 | ITER-0058 | CI 与可复现验证（MILE-0007 R3）：单一本地/CI 验证入口，macOS/Linux 矩阵，Markdown 链接门禁，固定测试依赖与 validator 来源，并诚实区分 check 已提供和远端 required 已启用 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0058-ci-reproducible-verification.md |
 | ITER-0057 | 验证证据链与状态审计（MILE-0007 R2）：测试/复核结论必须引用机器采集的命令、退出码、日志与摘要校验，禁止只口头宣称通过；并机械对账版本、台账、归档、交付与项目知识状态 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0057-verification-evidence-state-audit.md |

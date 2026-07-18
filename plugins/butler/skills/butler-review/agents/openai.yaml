@@ -2,3 +2,5 @@ interface:
   display_name: "Butler Review"
   short_description: "Run the Butler review workflow safely"
   default_prompt: "Use $butler-review to review the current changes against Butler criteria."
+policy:
+  allow_implicit_invocation: true

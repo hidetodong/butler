@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "workflow-registry-tests-final",
+  "iteration": "ITER-0060",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T09:24:35.546Z",
+  "finished_at": "2026-07-18T09:24:35.806Z",
+  "duration_ms": 259,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 285,
+    "captured_bytes": 285,
+    "sha256": "6042ef74adf99ab1a6569015f5cb86abccce85f3a359c1dbe6950c8b62fd0a4a",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1322,
+    "captured_bytes": 1322,
+    "sha256": "2e943540c6e759fe8073a080f3cc4996be80803a8683dd0eae8771e2c0e96e52",
+    "truncated": false
+  }
+}

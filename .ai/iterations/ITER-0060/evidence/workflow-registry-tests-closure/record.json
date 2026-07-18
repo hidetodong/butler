@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "workflow-registry-tests-closure",
+  "iteration": "ITER-0060",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T09:26:54.587Z",
+  "finished_at": "2026-07-18T09:26:54.830Z",
+  "duration_ms": 243,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 285,
+    "captured_bytes": 285,
+    "sha256": "6042ef74adf99ab1a6569015f5cb86abccce85f3a359c1dbe6950c8b62fd0a4a",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1436,
+    "captured_bytes": 1436,
+    "sha256": "3ae03a239218e2e241684e7b9a6dc7d51641ca198eed8d8760daac70e20dd2fe",
+    "truncated": false
+  }
+}

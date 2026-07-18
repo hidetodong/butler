@@ -277,13 +277,20 @@ class Audit:
             else:
                 self.add(False, "release.worktree", "工作树有未发布改动；需要 --allow-unreleased 亮牌")
         tag = subprocess.run(
-            ["git", "tag", "--list", f"v{version}"],
+            ["git", "tag", "--points-at", "HEAD"],
             cwd=self.root,
             text=True,
             capture_output=True,
             check=False,
         )
-        self.add(tag.returncode == 0 and tag.stdout.strip() == f"v{version}", "release.tag", f"v{version}")
+        current_tag = f"v{version}"
+        points_at_head = tag.returncode == 0 and current_tag in tag.stdout.splitlines()
+        if points_at_head:
+            self.add(True, "release.tag", f"{current_tag} points at HEAD")
+        elif self.allow_unreleased:
+            self.note("release.tag", f"UNRELEASED：{current_tag} 不指向 HEAD", "UNRELEASED")
+        else:
+            self.add(False, "release.tag", f"{current_tag} 不指向 HEAD；需要 --allow-unreleased 亮牌")
 
     def run(self) -> int:
         current, iteration_rows = self.audit_iterations()

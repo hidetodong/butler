@@ -6,3 +6,9 @@
 - 2026-07-18 · P5-review · ITER-0059 · `dangerous-ack`：首次状态 evidence 发现 1 项 Must Fix——通用 plugin cachebuster helper 改了仓内源 manifest，违反 VERSION 精确对账；已保留失败 record，恢复源版本，cachebuster 只留安装副本，待定点复查。
 - 2026-07-18 · P5-review · ITER-0059 · `dangerous-ack`：完整多维审查又发现 manifest preconditions/protected path、current drift 与事务准备失败三处合同缺口；修复后最终升级专项 16/16、完整唯一入口、两组 reproduced 风险复核和状态审计通过。最终 Must Fix 0、Should Fix 0；未执行 fresh-context 独立复核且已如实披露。
 - 2026-07-18 · close · ITER-0059 · `dangerous-ack`：证据整包归档、四件套/CHANGELOG 快照、MD/HTML 交付和项目知识折叠完成；R4/ITER-0059 置 closed，自治路线推进 R5。
+- 2026-07-18 · route · ITER-0060 · `dangerous-ack`：按北极星自动开启 R5，锁定单一 workflow registry、窄投影生成/校验、风险门与分发三态边界。
+- 2026-07-18 · P2 · ITER-0060 · `dangerous-ack`：AC1–AC8 通过自审并自主冻结；每项可由 registry fixture/投影/分发/完整矩阵验证，范围不包含业务算法或远端团队配置。
+- 2026-07-18 · P3 · ITER-0060 · `dangerous-ack`：设计自审通过；JSON + 标准库、全量 plan 后原子 write、零写入 check、窄 frontmatter/YAML/docs/symlink 投影逐 AC 映射，无影响面扩张。
+2026-07-18 | ITER-0060 | P5 strong review | Should Fix: hook command validation matched suffix only; tightened to exact type/command object and added regression. Final Must Fix 0 / Should Fix 0; no independent fresh-context review.
+2026-07-18 | ITER-0060 | Evidence | 11 records archived; direct system-Python validator failure retained (missing PyYAML), pinned uv full matrix reproduced passed. Registry closure tests 8/8.
+2026-07-18 | ITER-0060 / MILE-0007 | Close | R5 closed, project knowledge folded, milestone routes R1–R5 all closed. Dangerous remains ON; release/push not inferred.

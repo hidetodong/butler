@@ -11,6 +11,11 @@ python3 "$BUTLER/tools/verification-evidence/evidence.py" run \
 
 python3 "$BUTLER/tools/verification-evidence/evidence.py" verify \
   --project-root "$PROJECT_ROOT" --iteration ITER-0001
+
+# 迭代置 closed、current 已为 none 后补捕获最终状态审计时，必须显式亮牌：
+python3 "$BUTLER/tools/verification-evidence/evidence.py" run \
+  --project-root "$PROJECT_ROOT" --iteration ITER-0001 --allow-closed \
+  --id state-audit-closed --ac AC8 -- python3 scripts/audit-project-state.py --project-root .
 ```
 
 `run` 后的命令按 argv 直接执行，不经过 shell。默认 timeout 900 秒、stdout/stderr 各最多持久化 1 MiB；任一输出截断会记 `incomplete`，不得作为通过证据。
@@ -25,6 +30,8 @@ python3 "$BUTLER/tools/verification-evidence/evidence.py" verify \
 - stdout/stderr 的原始字节数、保存字节数、SHA-256 和截断状态。
 
 ID append-only，重复调用不会覆盖。工具不记录环境变量值，也不做可能漏秘密的启发式脱敏；只运行输出适合入仓的验证命令。可能包含 token、密钥或用户数据时，改用安全的机器摘要，不能直接捕获原始输出。
+
+默认只允许给 `current` 迭代写/移动 evidence。`--allow-closed` 只在台账 `current: none` 且指定迭代行确为 `closed` 时放行，用于收口后的最终状态审计；它不会放宽任意历史或 active 指针不一致。
 
 ## Outcome / 退出码
 

@@ -1,29 +1,27 @@
 # Session Handoff
 
-## 任务断点
+## 当前状态
 
-危险模式 ON。ITER-0059 / R4 已收口，当前无 active 迭代；自治目标要求立即开启 R5 / ITER-0060，最终关闭 MILE-0007。
+- MILE-0007 已关闭，包含 ITER-0056–ITER-0060，五条路线全部 closed。
+- 当前无 active 迭代/里程碑；分支为 `feat/mile-0007-engineering-hardening`。
+- 发布真相仍是 v2.16.0，MILE-0007 改动尚未切版、tag 或 push。
+- 危险模式仍为 ON；只有用户显式要求才关闭。
 
-## 关键决策摘要
+## 已交付
 
-- 可执行升级真源是 `migrations/manifest.json` + `tools/butler-upgrade/upgrade.py`，Markdown 只人读。
-- 项目 action、split decision、global machine action 分域；plan 零写入，apply 带 hash/lock/backup/journal/恢复。
-- R4 checkpoint 为 `c061209`，隔离分支 `feat/mile-0007-engineering-hardening`。
+- R1：全局安装器先验校验、原子配置与隔离回归。
+- R2：机器 verification evidence 与 state auditor。
+- R3：固定 Python/uv/lock/validator 的单一 CI/local 入口和双 OS workflow 合同。
+- R4：机器 manifest 驱动的零写入 plan 与项目事务升级器。
+- R5：八工作流 registry、33 个生成/校验投影、唯一人读表和 plugin/distribution 边界。
 
-## 环境脏点
+## 验证与证据
 
-- R4 工作树尚未提交新的迭代 checkpoint；R1–R3 + R4 P1/P2 已在 `c061209`，R4 实现/收口待提交。
-- 发布真相仍为 v2.16.0；MILE-0007 未整体发布。
+- ITER-0060 最终专项 8/8；完整固定工具链矩阵通过，含官方 plugin/8 skill validators 与 127 hook tests。
+- ITER-0060 evidence 已归档；一次裸系统 Python 缺 PyYAML 的失败记录保留，固定 uv 入口随后 reproduced 通过。
+- 未执行 fresh-context 独立复核；主 agent 危险模式强审最终 Must Fix 0、Should Fix 0。
 
-## 已知风险
+## 下一步边界
 
-- 真实外部老项目仍未 dogfood；fixture E2E 已覆盖。
-- GitHub workflow/required 状态仍受 R3 已记录的未推送与私有仓库套餐限制。
-
-## 唤醒指令
-
-- 先 announce `.ai/local-constraints.md` dangerous ON，再读 RUN_LOG、MILESTONE 和本文件；开启 ITER-0060，不等待用户 ACK。
-
-## 状态指针
-
-- `.ai/task-state.md`
+- 若用户要求发布：按 MINOR 评估执行 VERSION/CHANGELOG/migration/release commit/tag/push，不能把本次里程碑收口误写为已发布。
+- 若用户要求远端保护：需先解决私有仓库套餐/可见性，再推 workflow 并核验 required check。

@@ -2,3 +2,5 @@ interface:
   display_name: "Butler Preference"
   short_description: "Run the Butler preference workflow safely"
   default_prompt: "Use $butler-preference to inspect Butler preference-learning status."
+policy:
+  allow_implicit_invocation: true

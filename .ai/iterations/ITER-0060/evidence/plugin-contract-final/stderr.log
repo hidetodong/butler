@@ -1,0 +1,18 @@
+.F.
+======================================================================
+FAIL: test_integrity_and_empty_home_validation (__main__.VendoredValidatorTests.test_integrity_and_empty_home_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/cyborgno2/Documents/WorkCode.nosync/butler/tools/codex-validators/test_vendored_validators.py", line 77, in test_integrity_and_empty_home_validation
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/Users/cyborgno2/Documents/WorkCode.nosync/butler/tools/codex-validators/plugin-creator/validate_plugin.py", line 13, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.099s
+
+FAILED (failures=1)

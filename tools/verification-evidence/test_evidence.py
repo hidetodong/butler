@@ -219,6 +219,28 @@ class EvidenceCliTests(unittest.TestCase):
         self.assertTrue((self.hot / "archive" / "record.json").is_file())
         self.assertFalse(archive_root.exists())
 
+    def test_closed_iteration_requires_explicit_allow_closed(self) -> None:
+        ledger = self.root / ".ai/ITERATIONS.md"
+        ledger.write_text(
+            "# iterations\n\ncurrent: none\n\n"
+            "| id | title | status |\n|---|---|---|\n| ITER-0099 | test | closed |\n",
+            encoding="utf-8",
+        )
+        rejected = self.run_evidence("closed-denied", [sys.executable, "-c", "pass"])
+        self.assertEqual(2, rejected.returncode)
+        allowed = self.run_evidence(
+            "closed-allowed", [sys.executable, "-c", "print('closed')"], "--allow-closed"
+        )
+        self.assertEqual(0, allowed.returncode, allowed.stdout + allowed.stderr)
+        archived = self.invoke(
+            "archive", "--project-root", str(self.root), "--iteration", "ITER-0099", "--allow-closed"
+        )
+        self.assertEqual(0, archived.returncode, archived.stdout + archived.stderr)
+        reopened = self.invoke(
+            "reopen", "--project-root", str(self.root), "--iteration", "ITER-0099", "--allow-closed"
+        )
+        self.assertEqual(0, reopened.returncode, reopened.stdout + reopened.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

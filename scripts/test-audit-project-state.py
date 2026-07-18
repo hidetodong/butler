@@ -135,6 +135,14 @@ class StateAuditTests(unittest.TestCase):
         allowed = self.invoke("--allow-unreleased")
         self.assertEqual(0, allowed.returncode, allowed.stdout + allowed.stderr)
         self.assertIn("UNRELEASED", allowed.stdout)
+        subprocess.run(["git", "add", "unreleased.txt"], cwd=self.root, check=True)
+        subprocess.run(["git", "commit", "-qm", "after release"], cwd=self.root, check=True)
+        clean_but_ahead = self.invoke()
+        self.assertEqual(1, clean_but_ahead.returncode)
+        self.assertIn("不指向 HEAD", clean_but_ahead.stdout)
+        allowed_ahead = self.invoke("--allow-unreleased")
+        self.assertEqual(0, allowed_ahead.returncode, allowed_ahead.stdout + allowed_ahead.stderr)
+        self.assertIn("UNRELEASED", allowed_ahead.stdout)
 
     def test_evidence_index_requires_valid_archive_and_fold_receipt(self) -> None:
         archive = self.root / ".ai" / "iterations" / "ITER-0001"

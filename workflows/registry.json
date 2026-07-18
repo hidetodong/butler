@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "plugin": {
+    "name": "butler",
+    "root": "plugins/butler",
+    "manifest": "plugins/butler/.codex-plugin/plugin.json",
+    "hooks": "plugins/butler/hooks/hooks.json",
+    "personal_installer": "scripts/install-codex-plugin.sh",
+    "setup_entrypoint": "scripts/setup.sh",
+    "marketplace_mode": "personal",
+    "team_distribution": "not-configured"
+  },
+  "workflows": [
+    {
+      "id": "prd",
+      "rule_source": "Coder/40_Context_Management/references-schema.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "PRD",
+        "产品需求文档",
+        "split PRD",
+        "update PRD",
+        "PRD status"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/butler-prd",
+          "status": "deprecated"
+        },
+        {
+          "name": "/prd",
+          "status": "natural-language-compat"
+        }
+      ],
+      "claude": {
+        "name": "/butler:prd",
+        "path": ".claude/commands/butler/prd.md",
+        "description": "把权威 PRD 拆进项目知识库，并随改版保持同步——首次拆分 / 改版对齐 / 只读看板",
+        "default_prompt": "Use /butler:prd for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-prd",
+        "path": "plugins/butler/skills/butler-prd/SKILL.md",
+        "description": "Run Butler's PRD-first workflow for a supplied product document, PRD update, or PRD status request. Use when the user gives a PRD or asks to split, import, update, reconcile, or inspect versioned PRD references.",
+        "display_name": "Butler PRD",
+        "short_description": "Split, update, or inspect versioned PRDs",
+        "default_prompt": "Use $butler-prd to process this product requirements document."
+      }
+    },
+    {
+      "id": "review",
+      "rule_source": "Coder/60_Extension_CodeReview/review-engine.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "review",
+        "代码复核",
+        "产物复核",
+        "independent review"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/review",
+          "status": "natural-language-compat"
+        }
+      ],
+      "claude": {
+        "name": "/butler:review",
+        "path": ".claude/commands/butler/review.md",
+        "description": "给当前迭代的改动做代码 / 产物复核——默认当前上下文快速自检，或另起干净上下文做更狠的独立复核",
+        "default_prompt": "Use /butler:review for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-review",
+        "path": "plugins/butler/skills/butler-review/SKILL.md",
+        "description": "Review code, documents, plans, or current changes with Butler's review protocol. Use for quick self-review, acceptance-criteria verification, full review, or an explicitly requested independent review.",
+        "display_name": "Butler Review",
+        "short_description": "Run the Butler review workflow safely",
+        "default_prompt": "Use $butler-review to review the current changes against Butler criteria."
+      }
+    },
+    {
+      "id": "milestone",
+      "rule_source": "Coder/20_Workflow_Lifecycle/milestone-schema.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "milestone",
+        "里程碑",
+        "roadmap",
+        "multi-iteration"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/milestone",
+          "status": "natural-language-compat"
+        }
+      ],
+      "claude": {
+        "name": "/butler:milestone",
+        "path": ".claude/commands/butler/milestone.md",
+        "description": "开一个里程碑（大版本范围单元，聚合多个迭代），或只读看板看当前里程碑进度——留空/贴一段方向说明=录入开题，status=只读看板",
+        "default_prompt": "Use /butler:milestone for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-milestone",
+        "path": "plugins/butler/skills/butler-milestone/SKILL.md",
+        "description": "Create or inspect a Butler milestone from a product brief, roadmap, or large requirement. Use when the user asks to open, plan, split, route, or show status for a multi-iteration milestone.",
+        "display_name": "Butler Milestone",
+        "short_description": "Run the Butler milestone workflow safely",
+        "default_prompt": "Use $butler-milestone to turn this brief into a milestone roadmap."
+      }
+    },
+    {
+      "id": "upgrade",
+      "rule_source": "Coder/20_Workflow_Lifecycle/butler-upgrade.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "upgrade Butler",
+        "升级 Butler",
+        "同步 Butler",
+        "version gap"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/butler-upgrade",
+          "status": "deprecated"
+        }
+      ],
+      "claude": {
+        "name": "/butler:upgrade",
+        "path": ".claude/commands/butler/upgrade.md",
+        "description": "安全升级已部署 Butler 项目——先由仓库升级器 dry-run，再经显式决定事务 apply；不解析 Markdown 散文写项目",
+        "default_prompt": "Use /butler:upgrade for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-upgrade",
+        "path": "plugins/butler/skills/butler-upgrade/SKILL.md",
+        "description": "Upgrade or inspect an existing Butler-enabled project through Butler's deterministic migration executor. Use when the user asks to update, migrate, restamp, or check the Butler version gap.",
+        "display_name": "Butler Upgrade",
+        "short_description": "Run the Butler upgrade workflow safely",
+        "default_prompt": "Use $butler-upgrade to upgrade this deployed Butler project safely."
+      }
+    },
+    {
+      "id": "ideation",
+      "rule_source": "Coder/50_Extension_Ideation/ideation-engine.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "brainstorm",
+        "脑暴",
+        "需求还没想清",
+        "refine idea"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/ideation",
+          "status": "natural-language-compat"
+        }
+      ],
+      "claude": {
+        "name": "/butler:ideation",
+        "path": ".claude/commands/butler/ideation.md",
+        "description": "需求还没想清时的脑暴——把模糊意图逼成可执行的验收清单：意图探测 → 隐性需求展开 → 多维压力测试 → 收敛 AC",
+        "default_prompt": "Use /butler:ideation for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-ideation",
+        "path": "plugins/butler/skills/butler-ideation/SKILL.md",
+        "description": "Explore and refine an unclear product or engineering idea with Butler without entering the execution lifecycle. Use for brainstorming, requirement discovery, trade-off analysis, MVP reduction, or shaping a vague request before implementation.",
+        "display_name": "Butler Ideation",
+        "short_description": "Run the Butler ideation workflow safely",
+        "default_prompt": "Use $butler-ideation to refine this idea before execution."
+      }
+    },
+    {
+      "id": "preference",
+      "rule_source": "Coder/70_Extension_Preference/preference-probe-engine.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "preference",
+        "偏好探针",
+        "reback",
+        "distill preference"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/preference",
+          "status": "natural-language-compat"
+        }
+      ],
+      "claude": {
+        "name": "/butler:preference",
+        "path": ".claude/commands/butler/preference.md",
+        "description": "偏好探针开关——留空看当前状态；on/off 隐私总开关；reback on/off 开关反哺；distill 手动蒸馏（实验性，数据存 butler 仓库之外）",
+        "default_prompt": "Use /butler:preference for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-preference",
+        "path": "plugins/butler/skills/butler-preference/SKILL.md",
+        "description": "Inspect or change Butler's preference-learning controls. Use when the user asks about preference consent, collection, reback, distillation, project suppression, or the status of Butler preference learning.",
+        "display_name": "Butler Preference",
+        "short_description": "Run the Butler preference workflow safely",
+        "default_prompt": "Use $butler-preference to inspect Butler preference-learning status."
+      }
+    },
+    {
+      "id": "loop",
+      "rule_source": "Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md",
+      "risk": "high",
+      "allow_implicit_invocation": false,
+      "semantic_triggers": [
+        "$butler-loop",
+        "/butler:loop",
+        "死磕",
+        "explicit convergence loop"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/loop",
+          "status": "harness-collision-do-not-generate"
+        }
+      ],
+      "claude": {
+        "name": "/butler:loop",
+        "path": ".claude/commands/butler/loop.md",
+        "description": "⚠️ 收敛闭环死磕——把 P4 执行升到高强度「执行→探测→反思→修正」死磕到验证全绿或定量熔断（高强度·长时·消耗大，郑重触发）",
+        "default_prompt": "Use /butler:loop for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-loop",
+        "path": "plugins/butler/skills/butler-loop/SKILL.md",
+        "description": "Explicitly run Butler's high-intensity convergence loop for a current P4 implementation. Invoke only when the user names $butler-loop or explicitly asks for Butler's convergence loop; never infer this high-cost mode from a routine request.",
+        "display_name": "Butler Loop",
+        "short_description": "Run the convergence loop only when invoked",
+        "default_prompt": "Use $butler-loop to run the explicit high-intensity convergence loop."
+      }
+    },
+    {
+      "id": "dangerous",
+      "rule_source": "Coder/65_Extension_Dangerous/dangerous-engine.md",
+      "risk": "high",
+      "allow_implicit_invocation": false,
+      "semantic_triggers": [
+        "$butler-dangerous",
+        "/butler:dangerous",
+        "危险模式",
+        "explicit unattended autonomy"
+      ],
+      "legacy_aliases": [
+        {
+          "name": "/dangerous",
+          "status": "deprecated-do-not-generate"
+        }
+      ],
+      "claude": {
+        "name": "/butler:dangerous",
+        "path": ".claude/commands/butler/dangerous.md",
+        "description": "⚠️ 无人值守长程自治（实验性）——留空开启（模型自审替 ACK、自动拆迭代跑完整生命周期）；off 关闭；status 只看状态。风险显著高于标准，建议只在可隔离/可回滚环境开",
+        "default_prompt": "Use /butler:dangerous for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-dangerous",
+        "path": "plugins/butler/skills/butler-dangerous/SKILL.md",
+        "description": "Explicitly control Butler's experimental unattended autonomy mode. Invoke only when the user names $butler-dangerous or clearly requests Butler dangerous mode; never infer autonomous authority from an ordinary request.",
+        "display_name": "Butler Dangerous",
+        "short_description": "Control unattended Butler autonomy explicitly",
+        "default_prompt": "Use $butler-dangerous to inspect or explicitly control dangerous mode."
+      }
+    }
+  ]
+}
+

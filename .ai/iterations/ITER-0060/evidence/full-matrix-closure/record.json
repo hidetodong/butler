@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "full-matrix-closure",
+  "iteration": "ITER-0060",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T09:27:02.925Z",
+  "finished_at": "2026-07-18T09:27:09.248Z",
+  "duration_ms": 6323,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 850,
+    "captured_bytes": 850,
+    "sha256": "8c4a85f6e8b12146e505555ce7ae9b82b78c4f78fd56f62a47e5f71e32731518",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2459,
+    "captured_bytes": 2459,
+    "sha256": "556604835ddbcab1c54981d7a87eedf79654409b854f9fb875985fc381a70b39",
+    "truncated": false
+  }
+}

@@ -45,7 +45,7 @@
 | R2 | **验证证据链 + 状态审计与收口一致性**：机器采集命令/退出码/日志并由 VERIFY 逐 AC 引用；版本/台账/归档/交付/handoff/project 知识对账，补发布后最终事实与跨写路径事后检查 | ITER-0057 | closed |
 | R3 | **CI 与可复现验证**：PR/发布 required checks、Markdown 链接、macOS/Linux 矩阵、测试依赖和 validator 固定 | ITER-0058 | closed |
 | R4 | **可执行升级器**：机器可读迁移动作、dry-run/冲突停机/幂等执行、历史版本 fixture 和跨版本 E2E | ITER-0059 | closed |
-| R5 | **双宿主工作流注册与分发收敛**：8 工作流统一注册源、命令/skill/文档一致性、旧名兼容策略、plugin hooks 显式声明与团队分发边界 | — | planned |
+| R5 | **双宿主工作流注册与分发收敛**：8 工作流统一注册源、命令/skill/文档一致性、旧名兼容策略、plugin hooks 显式声明与团队分发边界 | ITER-0060 | closed |
 
 ## 5.4 范围演进记录
 
@@ -57,3 +57,5 @@
 - 2026-07-18：R3 由 ITER-0058 收口；固定 Python/uv/lock、OpenAI 官方 validator commit/hash/license、离线 Markdown 检查和 Ubuntu/macOS workflow 合同。Darwin 完整矩阵有机器证据；workflow 未推送，且 GitHub API 证明当前私有仓库套餐不支持 required status checks，因此远端保持 `pending external capability`，不冒称双系统/required 已启用。
 - 2026-07-18：用户要求继续 R4；开启 ITER-0059。盘点发现现有升级仍由模型解释 Markdown，历史配方存在缺步骤章节与非标准标签，故本轮以独立机器台账为执行真源，把项目内事务、人工 `[split]` 决策与机器级安装明确分域，先冻结 dry-run、冲突停机、幂等与恢复证据再实现。
 - 2026-07-18：用户开启危险模式并要求完成整个里程碑；ITER-0059 经自主 P2/P3 ACK、pre-P4 checkpoint、完整 evidence 与强审收口。R4 交付连续 manifest、零写入 plan、事务 apply、三执行域和 16 项历史/负向/恢复专项；首次失败状态审计保留并修复，下一步自动开启 R5。
+- 2026-07-18：危险模式按北极星自动开启 R5 / ITER-0060。盘点确认 8 组 command/skill/openai.yaml、8 个 repo symlink 和三份人读清单均靠人工同步；本轮以注册表 + 确定性 render/check 收敛元数据，不复制工作流算法正文。
+- 2026-07-18：R5 由 ITER-0060 收口；机器 registry 管理 8 workflow/33 投影，普通与高风险隐式策略显式化，旧名、软链、hooks、个人/团队分发和唯一人读表均受 check。8 项专项、固定工具链完整矩阵与个人 plugin 刷新有证据，MILE-0007 五条路线全部闭环。

@@ -94,8 +94,19 @@ def current_iteration(root: Path) -> str:
     raise EvidenceError("ITERATIONS.md 缺少合法 current 指针")
 
 
-def require_current(root: Path, iteration: str) -> None:
+def iteration_is_closed(root: Path, iteration: str) -> bool:
+    for line in (root / ".ai" / "ITERATIONS.md").read_text(encoding="utf-8").splitlines():
+        if not line.startswith(f"| {iteration} |"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        return len(cells) >= 3 and cells[2] == "closed"
+    return False
+
+
+def require_current(root: Path, iteration: str, allow_closed: bool = False) -> None:
     current = current_iteration(root)
+    if allow_closed and current == "none" and iteration_is_closed(root, iteration):
+        return
     if current != iteration:
         raise EvidenceError(f"证据迭代 {iteration} 与 current {current} 不一致")
 
@@ -150,7 +161,7 @@ def write_record(path: Path, record: dict[str, object]) -> None:
 def capture_run(args: argparse.Namespace) -> int:
     root = resolve_project_root(args.project_root)
     iteration = require_iteration(args.iteration)
-    require_current(root, iteration)
+    require_current(root, iteration, args.allow_closed)
     if not ID_RE.fullmatch(args.evidence_id):
         raise EvidenceError(f"非法 evidence ID：{args.evidence_id}")
     ac_ids = parse_ac_ids(args.ac)
@@ -409,7 +420,7 @@ def verify_command(args: argparse.Namespace) -> int:
 def archive_command(args: argparse.Namespace, reopen: bool = False) -> int:
     root = resolve_project_root(args.project_root)
     iteration = require_iteration(args.iteration)
-    require_current(root, iteration)
+    require_current(root, iteration, args.allow_closed)
     hot = evidence_root(root, iteration, "hot")
     archived = evidence_root(root, iteration, "archive")
     if (root / ".ai" / "iterations").is_symlink():
@@ -441,6 +452,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--cwd", default=".")
     run.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT)
     run.add_argument("--max-output-bytes", type=int, default=DEFAULT_MAX_OUTPUT_BYTES)
+    run.add_argument("--allow-closed", action="store_true", help="Allow a closed iteration when current is none")
     run.add_argument("command", nargs=argparse.REMAINDER)
 
     verify = subparsers.add_parser("verify", help="Verify captured evidence without writing")
@@ -452,6 +464,7 @@ def build_parser() -> argparse.ArgumentParser:
         move = subparsers.add_parser(name, help=f"{name.title()} the evidence tree")
         move.add_argument("--project-root", required=True, type=Path)
         move.add_argument("--iteration", required=True)
+        move.add_argument("--allow-closed", action="store_true", help="Allow a closed iteration when current is none")
     return parser
 
 
