@@ -3,34 +3,28 @@
 ACK 日期: 2026-07-18
 ---
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过验收自审门），未经用户逐项确认（ITER-0064，2026-07-18）。
+> ⚠️ 危险模式：模型自主 ACK（ITER-0065，2026-07-18）。
 
 # Goal
-
-- 交付不会吞掉运行时坏消息的 Goal 校准与问题回流合同。
+- 交付机械拒绝假完成的 Goal completion adjudicator。
 
 # In Scope
-
-- 信号分类、task-state 活跃投影、Goal 状态影响、P1–P5 路由、修订/扩张/已关闭分流、验证/审查接线与结构测试。
+- active iteration 完成资格、AC/plan/calibration/evidence/review/blocker 聚合、JSON/退出码、八类负向 oracle、规则接线和证据。
 
 # Out of Scope
-
-- 不实现 R5 完成裁决程序或 R6 宿主同步；不长期保存所有已解决尝试；不改变既有 ACK/方案准入算法。
+- 不自动写台账/收口，不做宿主同步，不裁决 milestone complete。
 
 # Acceptance Checklist
-
-- [ ] AC1：定义实现偏差、假设失效、范围漂移、验证失败、审查发现、外部阻塞六类运行时信号及触发判据。
-- [ ] AC2：`.ai/task-state.md # Goal Calibration` 以 ID/信号/事实来源/影响/路由/状态保存当前未闭合项；它是可重算投影，不复制日志或取代真源。
-- [ ] AC3：确定路由到 P1 objective、P2 AC、P3 plan、P4 implementation、P5 proof/review 或 honest stop；禁止只记风险后沿旧计划继续。
-- [ ] AC4：任何会阻止目标完成的 open 信号派生 Goal `at-risk`，真正无法安全推进为 `blocked`；tasks done 不得覆盖。
-- [ ] AC5：AC 变化退 draft 重 ACK，方案变化退 draft 重准入；范围扩张/closed 历史开新迭代，修复后重跑对应 evidence/review 才可 resolved。
-- [ ] AC6：lifecycle、correction、context persistence、verify、review、dangerous 与 rule-card 指向单一校准合同，并明确 P5 回填未闭合项。
-- [ ] AC7：结构测试检查分类、投影字段、路由、状态影响、禁止捷径与接线；完整矩阵、diff、状态审计和强审有机器 evidence。
+- [ ] AC1：CLI 只读解析 current active iteration，输出 schema/version/iteration/verdict/reasons/checks；eligible=0、ineligible=1、输入错误=2。
+- [ ] AC2：要求 AC `ack-frozen` 且 VERIFY `[x]` 覆盖 AC_LIST 全部 AC，缺失/失败不得绿。
+- [ ] AC3：要求 TECH_PLAN `pass`、task-state 无 open/blocked calibration、VERIFY `Review Verdict: pass` 与 `Completion Blockers: none`。
+- [ ] AC4：校验 hot evidence record hash/outcome、Evidence Index ID 集和 passed AC 覆盖，不接受 reported 命令。
+- [ ] AC5：eligible 仅代表可执行收口；complete 仍由 closed + 归档/交付/审计派生，host/tasks 不参与。
+- [ ] AC6：R1 GFC-001–008 全部负向拒绝，并有一条全绿正向 fixture；工具项目树保持零写入。
+- [ ] AC7：VERIFY schema、lifecycle、Goal Contract、rule-card、README 接线；完整矩阵和强审证据通过。
 
 # Verification Method
-
-- 结构测试机械检查合同与消费者指针；完整固定矩阵验证规则/双宿主非回归；evidence runner 捕获所有绿结论。
+- unittest fixture、只读前后 hash、真实本仓 ineligible/eligible 路径、完整 CI 与状态审计经 evidence 捕获。
 
 # Open Questions / Risks
-
-- task-state 是人/AI 更新的运行投影，R4 只能规范 fail-honest；R5 再提供机械 complete 拒绝器。
+- review/blocker 是规范化人工输入，无法自动证明审查者绝对正确；但未知值 fail-closed。
