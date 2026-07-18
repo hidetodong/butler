@@ -4,12 +4,13 @@
 
 ## 危险模式自治路线图
 
-路线图真源：`.ai/MILESTONE.md`。当前由 ITER-0061 承接 R1；R2–R6 保持 planned，不预分配迭代号。
+路线图真源：`.ai/MILESTONE.md`。R1 已 closed；当前由 ITER-0062 承接 R2，R3–R6 不预分配迭代号。
 
-current: none
+current: ITER-0062
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0062 | Goal Contract 与派生状态机（MILE-0008 R2·危险模式）：复用 milestone/CONCEPT/AC/plan/task-state/VERIFY/review 真源组合目标视图，明确状态优先级与完成候选，不新增 GOAL 台账 | active | 2026-07-18 | — | MILE-0008 | — |
 | ITER-0061 | 目标体系现状审计与失败模型（MILE-0008 R1·危险模式）：盘点 12 类目标载体与权威边界，冻结 8 个机器可读假完成 oracle；9 个 evidence 全绿，强审修复 1 个 Should Fix，未抢跑 Goal Contract | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0061-goal-system-baseline.md |
 | ITER-0060 | 双宿主工作流注册与分发收敛（MILE-0007 R5·危险模式）：单一 registry 管理 8 工作流和 33 个双宿主投影；高风险显式门、旧名、软链、plugin/hooks/个人与团队分发边界机械对账，8 项专项与完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0060-workflow-registry-distribution.md |
 | ITER-0059 | 可执行升级器（MILE-0007 R4·危险模式）：机器 manifest 驱动零写入 plan 与事务 apply，项目/人工/机器动作分域；16 项历史跨版、漂移、幂等和故障恢复专项及完整证据矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0007 | deliveries/ITER-0059-executable-upgrader.md |

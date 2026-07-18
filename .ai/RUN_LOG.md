@@ -18,3 +18,6 @@
 - 2026-07-18 · P5-review · ITER-0061 · `dangerous-ack`：完整强审发现 1 个 Should Fix——基线把危险模式北极星合并进普通 ITERATIONS 索引行，角色边界不够清楚；已拆为独立载体项，明确它只指导跨迭代自治、不能裁决完成。其余宿主来源等级、R1/R2 边界和 8 个负向 oracle 未发现 Must Fix。
 - 2026-07-18 · P5-review · ITER-0061 · `dangerous-ack`：强审修复后合同与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0。未执行 fresh-context 独立复核并已如实披露；R1 只证明问题模型，未宣称 Goal 已受新门禁保护。
 - 2026-07-18 · close · ITER-0061 · `dangerous-ack`：9 个 evidence 整包归档、四件套/CHANGELOG 快照、MD/HTML 交付和 frontier 折叠完成；R1 closed，危险模式按 MILE-0008 路线推进 R2。
+- 2026-07-18 · route · ITER-0062 · `dangerous-ack`：自动开启 R2；依据 R1 边界选择派生 Goal 视图，不新增 `.ai/GOAL.md` 第二台账。
+- 2026-07-18 · P2 · ITER-0062 · `dangerous-ack`：AC1–AC6 自审通过并冻结；状态、真源、宿主投影和结构测试均可验证，后续路线边界明确。
+- 2026-07-18 · P3 · ITER-0062 · `dangerous-ack`：设计自审通过；单一 `goal-contract.md` + 窄指针 + unittest，complete 只由收口事实派生，不提前实现 R3–R6。
