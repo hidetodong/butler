@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-- ITER-0066 active，R1–R5 closed；R6 完成后收口 MILE-0008。
+- 当前无 active 迭代/里程碑；MILE-0008 R1–R6 全部 closed 并聚合交付。
 - R4 已归档并双格式交付；强审修复 1 Must Fix + 1 Should Fix，最终结构 8/8、完整矩阵 135 hooks passed，当前无 open/blocked calibration signal。
 - R3 已归档并双格式交付：TECH_PLAN verdict=`pass`；强审修复 Codex 真链路覆盖缺口，最终 Must Fix 0、Should Fix 0。
 - ITER-0061 已交付 12 类载体盘点与 8 个假完成 oracle；9 个 evidence 全绿，最终 Must Fix 0、Should Fix 0。

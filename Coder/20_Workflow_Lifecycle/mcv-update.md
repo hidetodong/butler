@@ -57,6 +57,8 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 
 本规则只定义协议，不要求在当前规则仓中预置这些运行态文件。
 
+目标项目重渲染 CLAUDE.md/AGENTS.md 时，两入口必须一起由 `scripts/render-project-entrypoints.py` 更新，才能获得最新 Goal plan/calibration/adjudicator 规则卡；不得只手改一端。未形成新 Butler 版本与 migration 前，只能称“源模板/重渲染路径已提供”，不能声称所有外部旧项目已自动升级。
+
 ## 4. 迁移步骤：Compress & Shard
 
 升级时，不应简单剪切粘贴，而应执行“先压缩，再分片”的迁移范式。

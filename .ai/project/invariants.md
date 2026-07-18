@@ -10,6 +10,7 @@
 - **P3 方案必须显式准入**：TECH_PLAN 自身保存 `draft / pass / revise / blocked` 单一 verdict，并用 Plan Admission 反证 AC 覆盖、假设、替代/取舍、失败路径、影响面和验证盲区；只有 `pass` 可进入 P4，实质改方案必须退 `draft` 重审。*为什么*：文件存在或任务全勾不能证明方案获准，独立审批台账又会双写漂移。
 - **运行时坏消息必须回流**：六类 calibration signal 只在 task-state 做活跃投影，事实仍守既有阶段真源；按事实性质回 P1–P5 或诚实停，open/blocked 不得被任务进度或风险备注覆盖。*为什么*：发现方案/验收已错却沿旧计划做完，是 Goal 假完成的核心路径；另建 issue 台账又会漂移。
 - **完成资格由只读裁决器聚合**：active iteration 只有在 AC、plan、calibration、evidence、review、blocker 与台账全部一致时才 eligible；host/tasks 不作绿依据，eligible 不等于 complete。*为什么*：任何单一信号都可能制造假完成，程序必须 fail-closed 汇总事实。
+- **宿主 Goal/Task 只单向薄投影**：两端只显示 objective/state/reason/next，方向 project→host；能力缺失就 `.ai/` 降级，host complete 永不反写。*为什么*：宿主能力可变且会话态可丢，项目真相必须跨宿主稳定。
 - **模板单一来源（SSOT）**：强制约束只改 `templates/rule-card.md` 一处，`CLAUDE.md.template` 与 `AGENTS.md.template` 都用占位符注入、不手工双写。同理各规则的定义只放一处、别处只引用回指。
 - **共同内核 + 宿主薄适配**：`Coder/`、`.ai/`、规则卡和共享判断算法属于共同内核；Claude Code 与 Codex 的入口、命令/skills、hook 配置只做协议适配，不复制规则正文。*为什么*：双写会让两个宿主的规则逐渐漂移。
 - **Codex skill 单一实体源**：8 个 skill 的实体只在 `plugins/butler/skills/`；`.agents/skills/` 必须保持相对软链，不能复制 SKILL.md。*为什么*：repo discovery 与 plugin 分发若各存一份会漂移。

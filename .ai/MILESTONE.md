@@ -49,7 +49,7 @@
 | R3 | **方案准入与反证门**：为 P3 增加可审计的方案挑战、失败模式、替代方案与 `pass / revise / blocked` 判定；未通过则回修或停机 | ITER-0063 | closed |
 | R4 | **执行校准与问题回流**：把实现偏差、假设失效、测试失败和审查发现映射回 Goal / AC / Plan，建立重规划、回退、重开与熔断纪律 | ITER-0064 | closed |
 | R5 | **Goal 完成裁决器**：以 AC 覆盖、verification evidence、review verdict、剩余风险和台账状态共同裁决完成资格；负向测试证明假完成会被拒绝 | ITER-0065 | closed |
-| R6 | **双宿主接线与端到端验证**：Codex goal、Claude task/会话载体、危险模式、跨会话恢复和无原生能力降级统一接入共同协议，补模板、文档、审计与回归矩阵 | ITER-0066 | active |
+| R6 | **双宿主接线与端到端验证**：Codex goal、Claude task/会话载体、危险模式、跨会话恢复和无原生能力降级统一接入共同协议，补模板、文档、审计与回归矩阵 | ITER-0066 | closed |
 
 ## 5.4 范围演进记录
 
@@ -65,3 +65,4 @@
 - 2026-07-18：危险模式自动推进 R5 / ITER-0065；实现只读 Goal completion adjudicator，组合 AC、方案、校准、evidence、review/blocker 与台账事实，JSON 输出 eligible/ineligible 和原因。
 - 2026-07-18：R5 / ITER-0065 收口；13 项 adjudicator tests 含 GFC-001–008 全拒绝与正向 eligible，本仓真实 active 状态十项 checks 全绿。强审修复 1 Must Fix，最终完整矩阵通过；下一步 R6 双宿主接线。
 - 2026-07-18：危险模式自动推进 R6 / ITER-0066；以共同 rule-card + 驻留 CLI 为双宿主接线面，原生 Goal/Task 只投影 objective/state/reason/next，缺能力时 `.ai/` 诚实降级。
+- 2026-07-18：R6 / ITER-0066 与 MILE-0008 收口；双入口同卡、单向投影、capability 降级、冷启动恢复和 `$BUTLER_PATH` 驻留工具路径落地。强审修复 1 Must Fix，最终 7 项专项与完整矩阵通过；六条路线全部 closed。

@@ -46,6 +46,8 @@ P4/P5 同时启用**Goal 运行时校准**：实现偏差、假设失效、范�
 
 P5 收口前可运行 `tools/goal-assurance/goal.py evaluate`：只读聚合 active ledger、AC、plan、calibration、hot evidence、review 和 completion blockers，JSON 输出 eligible/ineligible；GFC-001–008 全部负向拒绝。eligible 只准进入收口，不等于 complete。
 
+Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；原生能力缺失或失败时靠 task-state/handoff 诚实降级。目标项目从共同 rule-card 获得 `$BUTLER_PATH/tools/goal-assurance/goal.py` 驻留调用，不存工具副本。
+
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
 
 | 阶段 | 干什么 | 产物 |

@@ -30,3 +30,4 @@ UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/t
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-plan-admission.py"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-goal-calibration.py"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/tools/goal-assurance/test_goal.py"
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-goal-host-wiring.py"

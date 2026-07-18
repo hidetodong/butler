@@ -1,4 +1,4 @@
-> Goal 双宿主接线与里程碑收官 · active · 2026-07-18
+> Goal 双宿主接线与里程碑收官 · closed · 2026-07-18
 
 ## ADD
 - `scripts/test-goal-host-wiring.py` — 双入口投影、降级、CLI 可达与分发边界测试 → AC5

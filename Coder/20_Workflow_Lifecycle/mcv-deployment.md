@@ -200,7 +200,7 @@ Hook 副本与 butler 仓库版本可能漂移。既有项目由 `tools/butler-u
 
 ### 6.2 交付自测桥（delivery-selftest）
 
-当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）与 **自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）。前者把机器测不了的残余交给人回传；后者对机器能测的命令生成真实 argv/exit/log/hash record。证据工具的调用、schema、退出码、敏感输出与归档契约以其 `README.md` 为真源，本协议不复制。
+当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）与 **Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）。裁决器由 Claude/Codex 对同一目标项目传 `--project-root` 调用，只读输出 eligible/ineligible；宿主只负责调用与薄投影，不复制算法。各工具调用/schema/退出码以各自 README 为真源。
 
 目标项目在 P5 触发人测残余时按下述形态调用交付自测桥：
 

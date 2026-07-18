@@ -44,3 +44,6 @@
 - 2026-07-18 · close · ITER-0065 · `dangerous-ack`：completion adjudicator 对本仓 active 状态十项 checks 全绿、verdict=eligible；6 evidence 归档、双格式交付和知识折叠完成，R5 closed，继续 R6。
 - 2026-07-18 · route · ITER-0066 · `dangerous-ack`：自动开启 R6；共同 rule-card + 驻留 CLI 薄接线，host 只投影，缺能力 `.ai/` 降级。
 - 2026-07-18 · P2/P3 · ITER-0066 · `dangerous-ack`：AC1–AC7 冻结、Plan Admission pass；不新增 workflow/daemon，不切版，不假报外部旧项目已升级。
+- 2026-07-18 · P5-review · ITER-0066 · `dangerous-ack`：首轮强审发现 1 Must Fix——渲染进目标项目的规则卡使用相对 `tools/goal-assurance`，外部项目实际不可达；已改为 `$BUTLER_PATH` 驻留路径，并升级双入口端到端断言。
+- 2026-07-18 · P5-review · ITER-0066 · `dangerous-ack`：修复后 host wiring 7/7 与完整矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
+- 2026-07-18 · close · ITER-0066 / MILE-0008 · `dangerous-ack`：adjudicator 十项 checks 全绿、6 evidence 归档、双格式迭代/里程碑交付与知识折叠完成；R1–R6 全 closed，危险模式自治正常终止。

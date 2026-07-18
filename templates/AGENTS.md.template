@@ -25,6 +25,8 @@
 3. `.ai/task-state.md` 与 `.ai/02_SESSION_HANDOFF.md`
 4. 当前阶段需要的 `.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`、`.ai/VERIFY_REPORT.md`
 
+恢复时先重算 Goal 的 plan verdict、Goal Calibration 与 completion eligibility，再按宿主当场能力决定是否更新原生 Goal 投影；原生能力不是项目真源。
+
 只按指针读取相关主题，不全量读取历史归档。
 
 ## 完整规则参考（深度阅读）

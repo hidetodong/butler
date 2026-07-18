@@ -85,6 +85,12 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 - 两端能力不对称时保持诚实降级：有原生 Goal 就投影，没有就只靠 `.ai/` 运行，不维护第二套替代文件。
 - 当前 Codex Goal 合同仅是 R1 的 `observed-current-session`；具体适配必须由 R6 当场核验，未知 Claude 能力不得猜测。
 
+### 6.1 双宿主投影协议
+
+Claude/Codex 均只投影四项：iteration/milestone objective、派生 state、blocking reason、next step。写入方向永远是 project `.ai/` → host；宿主 UI 的 done/complete 不得反写台账、AC、plan 或 VERIFY。
+
+每次会话按 capability-detect 执行：宿主提供原生 Goal/Task 工具时更新上述薄投影；未提供、调用失败或能力未知时，不伪造成功、不建宿主替代文件，只用 `.ai/task-state.md` 与 `02_SESSION_HANDOFF.md` 继续。两条路径的完成资格都由 `tools/goal-assurance/goal.py` 裁决，语义完全一致。
+
 ## 7. 极小任务降级
 
 极小任务没有持久阶段产物时，不强制构造 Goal 文件或状态缓存；对话中仍须说明 objective、完成条件和验证结果。若任务升级为简化/完整路径，再按 lifecycle 补产物并启用本合同。

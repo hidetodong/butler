@@ -30,6 +30,8 @@ P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 
 P3 方案准入以 `tech-plan-schema.md` 为唯一真源：TECH_PLAN 必须检查 AC 覆盖、假设、替代方案/取舍、失败路径、影响面与验证盲区，并判 `pass / revise / blocked`；`revise` 回 P3，`blocked` 停机，实质改方案须退回 `draft` 重审。用户 ACK 或危险模式自审都不能覆盖已知 Must Fix。
 
+Claude/Codex 原生 Goal/Task 只做可重建薄投影（objective/state/reason/next），项目 `.ai/` 永远优先，宿主 complete 不反写。能力不存在/失败/未知时只靠 task-state/handoff 继续，不建第二 Goal 文件、不假报同步。
+
 ## 迭代化需求
 
 每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md`（并按 `delivery-summary.md §9` 固定模板填槽产同名 `.html` 阅读视图）+ 台账置 closed。迭代状态是**封闭枚举**，仅 `active`/`closed`/`abandoned` 三态（`planned` 属里程碑路线项、不入迭代台账；部署项目由 hook 机械拦截越界值）。
@@ -61,7 +63,7 @@ butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功
 - 不跳过探测直接交付未验证实现
 - 自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测的残余（判定见 `testing-strategy.md §3`）；能造弱自动检查（截图 diff / VLM 判图）的就造、标 `弱` 不当真绿，`待人` 残余如实记不假绿（代理验证见 §3.1）；人测残余不断在人这侧——有人场次经交付自测桥四态回传续跑（通过=收口 / 未通过=纠错 / 延后=入账不阻塞 / 跳过=N/A，见 `human-test-bridge.md`），无人值守不起桥、走 `dangerous-engine §7.4`
 - 无机器证据不打绿：完整路径自动道必须由 verification evidence runner 生成真实 argv/exit/log/hash record，VERIFY 逐 AC 引用 evidence ID；只写命令和“passed”属于 reported，不能关闭 AC。复核区分 reported/captured/reproduced，未重跑不得称复现（真源 `testing-strategy.md §3.2` / `verify-schema.md`）
-- 完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`；只有 `eligible` 可进入收口仪式。它要求 AC、plan pass、calibration clear、evidence 覆盖、review pass 和零 completion blockers；eligible 不等于 complete
+- 完整路径收口前运行 `python3 "$BUTLER_PATH/tools/goal-assurance/goal.py" evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` 可进入收口仪式。工具驻留 Butler 仓、不在目标项目找相对 `tools/`；它要求 AC、plan pass、calibration clear、evidence 覆盖、review pass 和零 completion blockers；eligible 不等于 complete
 - 禁止降级修复：不用 `ts-ignore` / 跳过或删测试 / 注释绕过门禁 / 伪造结果制造假通过（每次迭代无条件生效）
 - 验证卡住（无实质进展 / 缺外部条件 / 需用户决策）时诚实停：如实说清现象与所缺输入再交还，不伪造通过、不闷头空磨
 - 不把业务规则写死在视图模板里

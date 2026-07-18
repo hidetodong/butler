@@ -128,7 +128,8 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
    - **仍单文件 `.ai/PROJECT.md` 的项目**（R6 前部署、尚未迁移的老项目；butler 仓自身已于 ITER-0034 迁为文件夹态，走上一分支）：第一读 `.ai/PROJECT.md`。
 2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 变更流时间线，怎么一步步走到今天。
 3. `.ai/02_SESSION_HANDOFF.md` —— 当前任务断点（在做什么、卡在哪）。
-4. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
+4. 当前 TECH_PLAN 的方案 verdict、task-state `Goal Calibration` 与 VERIFY `Completion Inputs` —— 恢复 Goal state/reason/next；宿主 Goal/Task 只是随后可重建的投影。
+5. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
 
 项目全貌产物与 handoff 互补：前者给"系统整体状态"（`.ai/project/` 知识文件夹或单文件 `.ai/PROJECT.md`）、后者给"此刻断点"；缺全貌产物时（无 `.ai/PROJECT.md`、或仅有部署即建的**空 `.ai/project/` 种子**而 `00_INDEX` 未生）新会话只能从一堆迭代 delta 倒推全貌（管中窥豹）。
 

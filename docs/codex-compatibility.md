@@ -82,6 +82,13 @@ Codex 支持 `PreToolUse`、`PostToolUse` 等生命周期事件。Butler plugin 
 
 Butler 的流程规则不能覆盖 Codex 自身的 sandbox、审批、hook trust、项目 trust 或企业管理策略。`/butler:dangerous` 的“无人值守”只改变 Butler 的 P2/P3 决策方式，不等于绕过宿主权限；权限不足时必须如实停下。
 
+## 7.1 Goal 投影与降级
+
+- Goal 真相只在共同 `.ai/`：objective/AC/plan/calibration/evidence/review/ledger 由 `goal-contract.md` 组合，完成资格由 `tools/goal-assurance/goal.py` 只读裁决。
+- Claude/Codex 原生 Goal/Task 若当场可用，只投影 objective、derived state、blocking reason、next step；宿主 complete 永不反写项目 closed。
+- 原生能力不存在、失败或未知时，只使用 task-state/handoff 恢复和续跑，不建 `.ai/GOAL.md` 或宿主专属副本，也不冒称已同步。
+- 新部署或显式重渲染会从共同 rule-card 得到此协议；外部旧项目的自动迁移要等包含本变更的后续版本配方，当前未发布状态不得称已普遍升级。
+
 ## 8. 维护检查
 
 修改 Codex 入口、目标模板或本文后，交付前统一运行：
