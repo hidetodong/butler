@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "phase-gate-tests",
+  "iteration": "ITER-0063",
+  "ac_ids": [
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "templates/hooks/tests/test_phase_gate.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T11:56:34.496Z",
+  "finished_at": "2026-07-18T11:56:34.897Z",
+  "duration_ms": 402,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "7610c788b785f7d340233d740fc00b53dd1c4bade1054bdae1b98a39ef43bb01",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

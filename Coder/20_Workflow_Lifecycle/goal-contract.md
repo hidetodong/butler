@@ -10,7 +10,7 @@ scope: 非极小任务的目标组成、状态推导、完成候选、层级关�
 
 Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺。Butler 不新增 `.ai/GOAL.md`：Goal 是从既有阶段产物派生的逻辑视图，避免 objective、AC、方案、进度和证据在第二台账重复后漂移。
 
-本规范只定义共同合同与状态语义。方案准入、问题回流、完成裁决器和 Claude/Codex 同步分别由 MILE-0008 R3–R6 承接；在它们落地前，不得把本规则表述成已有机械门禁。
+本规范定义共同合同与状态语义；方案准入由 `tech-plan-schema.md` 提供结构化 verdict，问题回流、完成裁决器和 Claude/Codex 投影分别由 MILE-0008 R4–R6 承接。当前机械门只保护“显式非 pass 不进入源码执行”，不得表述成已能判断方案内容正确或 Goal 已有最终裁决器。
 
 ## 2. 两层 Goal 视图
 
@@ -47,7 +47,7 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 
 1. **终态优先**：台账为 `abandoned` → `abandoned`；台账为 `closed` 且收口产物/证据/交付一致 → `complete`。终态出现确定性漂移时不是降回 active，而是由状态审计报错并修复事实。
 2. **真正阻塞**：任务尚未终态，且缺外部条件、权限或用户决策，当前无法安全取得任何有意义进展 → `blocked`。只是困难、测试失败或仍可修复，不算 blocked。
-3. **已知风险**：任务尚可推进，但存在方案未获准、范围漂移、失败验证、Must Fix、未覆盖 outcome 或会阻止完成的剩余问题 → `at-risk`。
+3. **已知风险**：任务尚可推进，但 TECH_PLAN 为 `draft/revise`、范围漂移、失败验证、Must Fix、未覆盖 outcome 或会阻止完成的剩余问题 → `at-risk`。TECH_PLAN 为 `blocked` 且当前无法安全推进时按上一条派生 `blocked`。
 4. **完成候选**：计划内执行任务已完成，没有已知 blocked/at-risk 条件，但 P5 proof/verdict 或收口仪式尚未完成 → `completion-candidate`。
 5. **其余进行态**：已开启且仍在正常分析、设计、实现或验证 → `active`。
 
@@ -63,7 +63,7 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 
 - TECH_PLAN 的 Execution Steps 全勾，只能说明计划动作完成。
 - 至少还要逐 AC 生成 proof、完成 review verdict、处置阻断风险并执行收口仪式。
-- 任一 AC 无覆盖、evidence 缺失/失败、review 有 Must Fix、方案尚未通过或范围已漂移，状态回到 `at-risk`，不能停在完成候选。
+- 任一 AC 无覆盖、evidence 缺失/失败、review 有 Must Fix、TECH_PLAN verdict 非 `pass` 或范围已漂移，状态回到 `at-risk` / `blocked`，不能停在完成候选；用户 ACK 与任务全勾都不能覆盖该 verdict。
 - R1 fixture `GFC-002/003/004/008` 是本边界的负向 oracle；R5 应把它们接入机械裁决器。
 - 里程碑对应语义：全部路线项和归属迭代均已 closed、关键交付目标无已知风险，但里程碑归档/版本级交付/台账收口尚未完成时，才是 `completion-candidate`；不能因最后一个迭代 closed 直接把里程碑写成 complete。
 
@@ -90,7 +90,7 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 
 ## 8. 与后续路线的边界
 
-- R3：把“方案未获准”变成结构化 verdict。
+- R3：已由 `tech-plan-schema.md` 与共享 phase gate 把“方案未获准”变成结构化 verdict 和 P4 写门。
 - R4：把 at-risk/blocked 原因路由到 P1–P5、修订或新迭代。
 - R5：实现只读 Goal 视图与完成裁决，机械消费 R1 fixture。
 - R6：把派生视图投影到 Claude/Codex，并验证降级路径。

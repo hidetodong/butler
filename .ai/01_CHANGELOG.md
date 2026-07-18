@@ -1,4 +1,4 @@
-> 方案准入与反证门 · active · 2026-07-18
+> 方案准入与反证门 · closed · 2026-07-18
 
 ## ADD
 - `scripts/test-plan-admission.py` — 方案状态、反证维度与规则接线结构合同测试 → AC1–AC6

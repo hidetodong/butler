@@ -26,7 +26,7 @@ PY
 mkdir -p "$WORK/.ai" "$WORK/src"
 git init -q "$WORK"
 printf '%s\n' concept > "$WORK/.ai/CONCEPT.md"
-printf '%s\n' plan > "$WORK/.ai/TECH_PLAN.md"
+printf '%s\n' '---' '方案状态: draft' '---' '# Plan Admission' '- Verdict: revise' > "$WORK/.ai/TECH_PLAN.md"
 printf '%s\n' '---' '状态: ack-frozen' '---' > "$WORK/.ai/AC_LIST.md"
 
 payload() {
@@ -46,6 +46,14 @@ MILESTONE='*** Begin Patch
 +brief
 *** End Patch'
 
+# Codex apply_patch 真链路必须拒绝未通过方案；重审置 pass 后才放行。
+set +e
+PLAN_ERR=$(payload "$ALLOW" | BUTLER_PATH="$ROOT" "$GATE" 2>&1)
+PLAN_RC=$?
+set -e
+[ "$PLAN_RC" -eq 2 ]
+printf '%s' "$PLAN_ERR" | grep -q 'P3 方案未通过'
+printf '%s\n' '---' '方案状态: pass' '---' '# Plan Admission' '- Verdict: pass' > "$WORK/.ai/TECH_PLAN.md"
 payload "$ALLOW" | BUTLER_PATH="$ROOT" "$GATE"
 
 # 会话从多仓父目录启动时，绝对 target 按实际 Git 项目根校验；

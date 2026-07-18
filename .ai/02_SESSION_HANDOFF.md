@@ -2,8 +2,8 @@
 
 ## 当前状态
 
-- ITER-0063 active，承接 MILE-0008 R3；R1–R2 closed，R4–R6 未预占编号。
-- R3 已完成危险模式 P1–P3，AC ack-frozen，TECH_PLAN 结构化准入 verdict=`pass`，下一步进入 P4。
+- 当前无 active 迭代；R1–R3 closed，R4–R6 未预占编号。
+- R3 已归档并双格式交付：TECH_PLAN verdict=`pass`；强审修复 Codex 真链路覆盖缺口，最终 Must Fix 0、Should Fix 0。
 - ITER-0061 已交付 12 类载体盘点与 8 个假完成 oracle；9 个 evidence 全绿，最终 Must Fix 0、Should Fix 0。
 - 工作分支为 `feat/mile-0008-goal-assurance`，从本地 `main` / v2.17.0 建立；远端同步须以 remote refs 实时核验。
 - 危险模式仍为 ON；只有用户显式要求才关闭。
@@ -21,6 +21,7 @@
 - ITER-0060 最终专项 8/8；完整固定工具链矩阵通过，含官方 plugin/8 skill validators 与 127 hook tests。
 - ITER-0060 evidence 已归档；一次裸系统 Python 缺 PyYAML 的失败记录保留，固定 uv 入口随后 reproduced 通过。
 - 未执行 fresh-context 独立复核；主 agent 危险模式强审最终 Must Fix 0、Should Fix 0。
+- ITER-0063 结构合同 7/7、phase gate 21/21、最终完整矩阵 135 hooks passed；7 个机器 evidence 已整包归档并校验。
 
 ## 下一步边界
 

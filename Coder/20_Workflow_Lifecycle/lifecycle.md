@@ -128,10 +128,13 @@ AI 必须回答：
 - 接口契约、状态边界、扩展点分别是什么？
 - 我会如何验证这些改动？
 - 当前方案受哪些已激活 profile 约束？
+- 方案是否已逐项挑战 AC 覆盖、关键假设、替代方案、失败路径、影响面与验证盲区？
 
 强制规则：
 
-- **必须等待用户 ACK，才能进入 P4。**（例外：仅在 `/butler:dangerous` 危险模式下，该 ACK 由 `65_Extension_Dangerous/dangerous-engine.md` §5.2 的强制设计自审门替代，由模型自主 ACK，并照其 §7 留审计与回滚痕迹。）
+- TECH_PLAN 先置 `方案状态: draft`，按 `tech-plan-schema.md # Plan Admission` 完成结构化反证并给出 verdict。只有没有已知 Must Fix 的方案才能置 `pass`；`revise` 回 P3 修订，`blocked` 诚实停机，两者均不得进入 P4。
+- **必须等待用户 ACK，才能把已通过结构审查的方案置 `pass` 并进入 P4。** ACK 不能覆盖已知 Must Fix。（例外：仅在 `/butler:dangerous` 危险模式下，该 ACK 由 `65_Extension_Dangerous/dangerous-engine.md` §5.2 的强制设计自审门替代，由模型自主判定并照其 §7 留审计与回滚痕迹。）
+- 方案 `pass` 后若发生实质修改，必须退回 `draft`，重新执行 Plan Admission 与对应 ACK；部署 hook 的项目会拒绝显式非 `pass` TECH_PLAN 下的源码写。
 - 若任务链路较长，应在 P3 结束时明确子任务拆分、handoff 方式与状态同步策略，具体接力规则参考 `progressive-handoff.md` 与 `40_Context_Management/context-persistence.md`。
 - 若未命中任何 profile，则仅按通用 SOP 与质量门禁设计方案。
 

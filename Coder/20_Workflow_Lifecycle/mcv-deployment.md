@@ -141,7 +141,7 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 把 butler 的 hook 体系部署到目标项目的 `.claude/`。分两类：
 
-- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的流程约束：源码路径写操作在 P1/P2/P3 产物缺失时被拦截、AC_LIST 未冻结（`状态` 非 `ack-frozen`；无该字段的旧产物按 legacy 放行）时被拦截、`99_Business_Extension/` 写操作被拦截、迭代台账 `.ai/ITERATIONS.md` 状态列出现封闭枚举（active/closed/abandoned）外的值（如 `planned`）时被拦截、写入台账后出现 ≥2 个 `active` 迭代行（上一迭代未收口就开新）时被拦截，绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
+- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的流程约束：源码路径写操作在 P1/P2/P3 产物缺失时被拦截；AC_LIST 未冻结（`状态` 非 `ack-frozen`）或 TECH_PLAN 显式未通过（`方案状态` / `plan_status` 非 `pass`）时被拦截；两字段缺失的旧产物按 legacy 放行，但新产物不得省略。另会拦截 `99_Business_Extension/` 写操作、迭代台账非法状态值与 ≥2 个 `active` 行。绕过需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空）。
 - **PostToolUse 提醒**（`butler_advisor.py`，advisory-only、fail-open）——非阻塞自检：工具执行**之后**跑，只经 `hookSpecificOutput.additionalContext` 向模型注入提醒、**绝不 deny、绝不改写操作结果**。当前承载一条——写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，提醒"brief 若源自外部权威规格先经 prd-split 落盘再推进"（`prd_split_reminder`，兜 PRD 先行软触发被绕过的漏切）。为什么与门禁分两套：风险方向相反——门禁宁可错拦（fail-closed），提醒宁可漏提（fail-open），advisory 混进 deny 链会误伤正常的非 PRD 里程碑写。
 
 ### 5.1 文件拷贝

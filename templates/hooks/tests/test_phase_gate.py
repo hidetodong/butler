@@ -118,3 +118,46 @@ class TestAcFreezeGate:
         self._seed_full_ai(tmp_path, "---\nstatus: ack-frozen\n---\n# Goal\nx")
         d = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
         assert d.verdict == "allow"
+
+
+class TestPlanAdmissionGate:
+    """P3: 显式 TECH_PLAN 状态只有 pass 可进入源码执行。"""
+
+    def _seed_full_ai(self, root: Path, plan_body: str) -> None:
+        ai = root / ".ai"
+        ai.mkdir(parents=True, exist_ok=True)
+        (ai / "CONCEPT.md").write_text("c", encoding="utf-8")
+        (ai / "AC_LIST.md").write_text("---\n状态: ack-frozen\n---\n", encoding="utf-8")
+        (ai / "TECH_PLAN.md").write_text(plan_body, encoding="utf-8")
+
+    def test_pass_allows(self, tmp_path):
+        self._seed_full_ai(tmp_path, "---\n方案状态: pass\n---\n# Goal\nx")
+        assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "allow"
+
+    def test_draft_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "---\n方案状态: draft\n---\n# Goal\nx")
+        decision = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert decision.verdict == "deny"
+        assert "只有 pass" in decision.reason
+
+    def test_revise_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "方案状态: revise\n# Goal\nx")
+        assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "deny"
+
+    def test_blocked_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "方案状态: blocked\n# Goal\nx")
+        decision = phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts"))
+        assert decision.verdict == "deny"
+        assert "解除阻塞" in decision.remediation
+
+    def test_unknown_status_denies(self, tmp_path):
+        self._seed_full_ai(tmp_path, "方案状态: approved\n# Goal\nx")
+        assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "deny"
+
+    def test_english_key_and_case_allows(self, tmp_path):
+        self._seed_full_ai(tmp_path, "plan_status: PASS\n# Goal\nx")
+        assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "allow"
+
+    def test_legacy_no_status_field_allows(self, tmp_path):
+        self._seed_full_ai(tmp_path, "# Goal\n旧版方案，无准入字段")
+        assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "allow"

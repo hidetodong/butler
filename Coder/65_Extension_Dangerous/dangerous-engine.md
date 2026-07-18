@@ -71,7 +71,12 @@ P2 / P3 不再等待用户 ACK，改由模型先过强制自审门、通过后�
 
 ### 5.2 P3 设计自审门
 
-自主 ACK `TECH_PLAN.md` 前，对照 `tech-plan-schema.md` 与 `AC_LIST.md` 自审：是否逐项映射 AC、契约/状态边界/影响面是否清晰、是否命中 `lifecycle.md` §5 影响面扩大信号（命中则按回退规则在路线图中开新迭代承接，不在本迭代硬塞）、是否违背已激活 profile、是否忽略了更小影响面的可行方案。命中"未映射 AC / 影响面失控 / 违背 profile"即不通过。
+自主 ACK `TECH_PLAN.md` 前，先置 `方案状态: draft`，按 `tech-plan-schema.md # Plan Admission` 逐项记录 AC 覆盖、关键假设、替代方案与取舍、失败路径、影响面/范围挑战和验证盲区，再给出 `pass / revise / blocked` verdict。还须检查是否命中 `lifecycle.md` §5 影响面扩大信号（命中则按回退规则在路线图中开新迭代承接，不在本迭代硬塞）及是否违背已激活 profile。
+
+- 没有已知 Must Fix 才能写 `方案状态: pass` 并自主 ACK；不能用“用户要求继续”或措辞乐观覆盖问题。
+- 可在 P3 修的缺陷写 `revise`，退回 `draft` 修订并重新执行全部 Plan Admission。
+- 真正缺外部条件、权限或关键决策写 `blocked` 并诚实停机；条件恢复后退回 `draft` 重审。
+- `pass` 后发生实质方案变化，旧 verdict 立即失效，必须退回 `draft` 重审；§7 的审计轨迹记录每次判定，不得事后补写。
 
 ### 5.3 自主 ACK 动作清单
 

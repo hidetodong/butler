@@ -37,8 +37,8 @@ echo "[smoke] case 1 OK"
 # --- Case 2: artifacts present + gated path → expect exit 0 ---
 echo "[smoke] case 2: gated path, artifacts present"
 printf "# CONCEPT\nstub\n" > .ai/CONCEPT.md
-printf "# AC_LIST\nstub\n" > .ai/AC_LIST.md
-printf "# TECH_PLAN\nstub\n" > .ai/TECH_PLAN.md
+printf '%s\n' '---' '状态: ack-frozen' '---' '# AC_LIST' 'stub' > .ai/AC_LIST.md
+printf '%s\n' '---' '方案状态: pass' '---' '# TECH_PLAN' 'stub' > .ai/TECH_PLAN.md
 set +e
 echo '{"tool_name":"Edit","tool_input":{"file_path":"src/x.ts"},"cwd":"'"$TMP"'"}' \
   | python3 "$GATE"

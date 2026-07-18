@@ -19,7 +19,7 @@ butler_gate.py           # PreToolUse 门禁入口（deny-based, fail-closed）
 butler_advisor.py        # PostToolUse 提醒入口（advisory-only, fail-open）
 rules/
   protected_paths.py     # [门禁] 拦 99_Business_Extension/
-  phase_gate.py          # [门禁] 拦源码路径在 P1/P2/P3 产物缺失 / AC_LIST 未冻结时
+  phase_gate.py          # [门禁] 拦 P1/P2/P3 缺失、AC 未冻结或 TECH_PLAN 显式非 pass 的源码写
   ledger_status.py       # [门禁] 拦 .ai/ITERATIONS.md 状态列越界（封闭枚举 active/closed/abandoned）
   single_active_iteration.py  # [门禁] 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
   artifact_chain.py      # [门禁] 占位，未来承载 AC-ID linkage 等规则

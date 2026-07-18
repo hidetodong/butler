@@ -21,12 +21,14 @@
 ```
 P1 Analysis   → 产出 .ai/CONCEPT.md   → 理解问题、约束、影响范围
 P2 Acceptance → 产出 .ai/AC_LIST.md   → 定义验收项 → ⚠️ 用户 ACK 后置 `状态: ack-frozen` 冻结（hook 拦 draft）
-P3 Design     → 产出 .ai/TECH_PLAN.md → 技术方案   → ⚠️ 必须等用户 ACK
+P3 Design     → 产出 .ai/TECH_PLAN.md → 结构化反证 → ⚠️ 仅 `方案状态: pass` 可在用户 ACK 后进入 P4
 P4 Execute    → 代码/配置/文档         → 按方案实现，不扩张范围
 P5 Verify     → 产出 .ai/VERIFY_REPORT.md → 逐项回填验证结果
 ```
 
 每个阶段必须从上一阶段的产物文件读取输入，禁止仅凭对话记忆衔接。
+
+P3 方案准入以 `tech-plan-schema.md` 为唯一真源：TECH_PLAN 必须检查 AC 覆盖、假设、替代方案/取舍、失败路径、影响面与验证盲区，并判 `pass / revise / blocked`；`revise` 回 P3，`blocked` 停机，实质改方案须退回 `draft` 重审。用户 ACK 或危险模式自审都不能覆盖已知 Must Fix。
 
 ## 迭代化需求
 

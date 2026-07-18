@@ -18,6 +18,12 @@ REQUIRED_ARTIFACTS = [
 FROZEN_STATE = "ack-frozen"
 _STATUS_RE = re.compile(r"^\s*(?:状态|status)\s*[:：]\s*(\S+)", re.IGNORECASE)
 
+# P3 方案准入门。显式状态只有 pass 放行；无字段是旧部署兼容态。
+PASSED_PLAN_STATE = "pass"
+_PLAN_STATUS_RE = re.compile(
+    r"^\s*(?:方案状态|plan_status)\s*[:：]\s*(\S+)", re.IGNORECASE
+)
+
 
 def evaluate(ctx: Context) -> Decision:
     if not is_gated(ctx.target_path):
@@ -52,6 +58,20 @@ def evaluate(ctx: Context) -> Decision:
             reason=f"P2 未冻结：AC_LIST 状态={ac_state}，需用户 ACK 后置 ack-frozen",
             remediation="用户 ACK 后把 .ai/AC_LIST.md 顶部 `状态` 改为 ack-frozen 再继续",
         )
+
+    # P3: 新版 TECH_PLAN 只有明确 pass 才可进入源码执行。
+    # 无字段保持 legacy allow，避免模板升级前误杀既有部署；新 schema 禁止省略。
+    plan_state = _plan_admission_state(Path(ctx.cwd) / ".ai" / "TECH_PLAN.md")
+    if plan_state is not None and plan_state != PASSED_PLAN_STATE:
+        return Decision(
+            verdict="deny",
+            rule_id=RULE_ID,
+            reason=f"P3 方案未通过：TECH_PLAN 方案状态={plan_state}，只有 pass 可进入 P4",
+            remediation=(
+                "按 tech-plan-schema.md 完成 Plan Admission；revise 回 P3 修订，"
+                "blocked 先解除阻塞，重审通过后再置 pass"
+            ),
+        )
     return Decision(verdict="allow", rule_id=RULE_ID)
 
 
@@ -78,4 +98,17 @@ def _ac_freeze_state(path: Path) -> str | None:
         m = _STATUS_RE.match(line)
         if m:
             return m.group(1).strip().lower()
+    return None
+
+
+def _plan_admission_state(path: Path) -> str | None:
+    """返回 TECH_PLAN 的显式准入状态；无字段返回 None（legacy）。"""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    for line in text.splitlines():
+        match = _PLAN_STATUS_RE.match(line)
+        if match:
+            return match.group(1).strip().lower()
     return None

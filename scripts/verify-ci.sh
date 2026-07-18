@@ -27,3 +27,4 @@ actual_python="$(UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python
 echo "[INFO] pinned toolchain: platform=$(uname -s)/$(uname -m) python=$actual_python uv=$actual_uv"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" bash "$ROOT/scripts/verify-dual-host.sh"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-goal-contract.py"
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-plan-admission.py"

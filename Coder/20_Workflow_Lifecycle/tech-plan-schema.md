@@ -1,7 +1,7 @@
 ---
 title: 技术方案模板
 audience: AI / 开发者
-scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
+scope: P3 Design 阶段的技术方案模板、方案准入状态、反证门、边界字段与验证规划口径
 ---
 
 # Tech Plan Schema
@@ -13,12 +13,19 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 ## 2. 交付约定
 
 - 必须产出：`.ai/TECH_PLAN.md`
-- 必填字段：`Goal`、`Files / Modules to Change`、`Interface / Contract`、`State / Boundary`、`Design Decisions`、`Execution Steps`、`Verification Plan`、`Risks / Open Questions`
+- 必填 frontmatter：`方案状态`、`方案审查日期`、`方案审查方式`
+- 必填字段：`Goal`、`Files / Modules to Change`、`Interface / Contract`、`State / Boundary`、`Design Decisions`、`Plan Admission`、`Execution Steps`、`Verification Plan`、`Risks / Open Questions`
 - 可选字段：`External References`（当 `.ai/references/` 下存在参考资料时必填）
 
 ## 3. 标准模板
 
 ```md
+---
+方案状态: draft
+方案审查日期: —
+方案审查方式: —
+---
+
 # Goal
 - 本阶段要支撑哪些 AC
 
@@ -46,6 +53,15 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 - 取舍与原因
 - 受哪些 active profiles 约束
 
+# Plan Admission
+- AC Coverage：逐项说明 AC 是否有设计和验证映射
+- Assumptions：列关键假设及其验证方式
+- Alternatives / Trade-offs：至少说明采用方案与被放弃方案的取舍；只有唯一合理方案时说明原因
+- Failure Modes：主动寻找失败路径、边界输入与恢复策略
+- Impact / Scope Challenge：检查影响面遗漏、范围膨胀和更小可行方案
+- Verification Blind Spots：说明机器验证仍看不到什么，不把未知写成已覆盖
+- Verdict：`pass / revise / blocked` + 一句话理由
+
 # Execution Steps
 - 按执行顺序列为可勾选任务项；每项绑定所服务的 AC，可标依赖与可并行（编号 T<n> 可选，小迭代可省）
 - [ ] T1 <动词开头的可执行任务> → AC1
@@ -63,6 +79,23 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 
 ## 4. 编写规则
 
+### 4.1 方案状态与准入
+
+`方案状态` 是封闭枚举：`draft` / `pass` / `revise` / `blocked`。
+
+- `draft`：方案已起草但尚未完成准入审查；不得进入 P4。
+- `pass`：`Plan Admission` 已完成且没有已知 Must Fix；这是进入 P4 的唯一合法状态。
+- `revise`：发现可在 P3 修复的设计缺陷；修订时先退回 `draft`，完成全项重审后再判定。
+- `blocked`：缺外部条件、权限或必须由用户决定的关键取舍，当前无法安全完成方案；诚实停机，条件恢复后退回 `draft` 重审。
+
+`方案审查日期` 记录 verdict 当日日期；`方案审查方式` 记录 `user-ack`、`dangerous-self-review` 或项目定义的等价可审计方式。标准模式的用户 ACK 只确认一份已通过结构审查的方案，不能覆盖已知 Must Fix；危险模式按 `dangerous-engine.md §5.2` 自审。
+
+TECH_PLAN 任何实质修改（AC 映射、接口、边界、关键决策、步骤或验证方法变化）都使旧 verdict 失效，必须先置回 `draft` 并重新执行全部 Plan Admission。只修错字或链接不触发重审。
+
+新产物不得省略上述 frontmatter。共享 hook 对已存在但非 `pass` 的状态 fail-closed；无 `方案状态` / `plan_status` 字段仅作为旧版部署兼容而放行，**不是**新方案的合法省略方式。
+
+### 4.2 内容与边界
+
 - 必须能映射回已确认的 AC，禁止脱离验收标准独立扩张。
 - 文件范围、接口契约、边界与验证方式必须明确。
 - 若存在 active profiles，应写明其约束点；未命中时只按通用 SOP 与质量门禁设计。
@@ -76,8 +109,8 @@ scope: P3 Design 阶段的技术方案模板、边界字段与验证规划口径
 
 ## 5. 与执行流程的关系
 
-- P3 阶段必须产出 `.ai/TECH_PLAN.md`，作为 P4 执行的唯一边界依据。
+- P3 阶段必须产出 `.ai/TECH_PLAN.md`，完成 Plan Admission 并得到 `pass`，才可作为 P4 执行的唯一边界依据。
 - P3 从 `.ai/AC_LIST.md` 读取输入，逐项映射验收项。
 - P4 阶段实现必须逐项遵循这里的边界与执行顺序。
-- 若设计影响面扩大，应回退到 P3 更新此文件。
+- 若设计影响面扩大，应回退到 P3、把状态退回 `draft`、更新此文件并重新准入。
 - 简化路径下可口头确认方案，不强制产出此文件。
