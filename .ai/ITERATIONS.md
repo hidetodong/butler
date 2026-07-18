@@ -4,12 +4,13 @@
 
 ## 危险模式自治路线图
 
-路线图真源：`.ai/MILESTONE.md`。R1–R3 已 closed；当前无 active 迭代，R4–R6 不预分配迭代号。
+路线图真源：`.ai/MILESTONE.md`。R1–R3 已 closed；当前由 ITER-0064 承接 R4，R5–R6 不预分配迭代号。
 
-current: none
+current: ITER-0064
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0064 | 执行校准与问题回流（MILE-0008 R4·危险模式）：运行时信号结构化投影、分层路由、重规划/重冻/重审/重验与诚实停机纪律 | active | 2026-07-18 | — | MILE-0008 | — |
 | ITER-0063 | 方案准入与反证门（MILE-0008 R3·危险模式）：TECH_PLAN 四态 verdict 与七项反证清单；共享 hook 拒绝显式非 pass，Codex 真链路 draft deny→pass allow，最终 7 项结构测试/135 hooks/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0063-plan-admission-gate.md |
 | ITER-0062 | Goal Contract 与派生状态机（MILE-0008 R2·危险模式）：既有真源组合两层 Goal 视图，六状态与完成候选；7 项结构测试和完整矩阵通过，强审修复目录注册与 milestone 消歧 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0062-goal-contract.md |
 | ITER-0061 | 目标体系现状审计与失败模型（MILE-0008 R1·危险模式）：盘点 12 类目标载体与权威边界，冻结 8 个机器可读假完成 oracle；9 个 evidence 全绿，强审修复 1 个 Should Fix，未抢跑 Goal Contract | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0061-goal-system-baseline.md |

@@ -30,3 +30,6 @@
 - 2026-07-18 · P5-review · ITER-0063 · `dangerous-ack`：首轮强审发现 1 个 Must Fix——单元测试覆盖状态门，但 Codex wrapper 真链路仍只走 legacy 无字段 allow，无法证明新 P3 门在真实适配器生效；已改为先以 draft 断言 deny、再置 pass 断言 allow，并补 subprocess integration 与 smoke 新合同 fixture。
 - 2026-07-18 · P5-review · ITER-0063 · `dangerous-ack`：修复后结构合同 7/7、共享 hooks 135 项与完整固定矩阵 reproduced 通过；最终 Must Fix 0、Should Fix 0。未执行 fresh-context 独立复核并如实披露。
 - 2026-07-18 · close · ITER-0063 · `dangerous-ack`：7 个 evidence 整包归档、四件套/CHANGELOG、双格式交付和项目知识折叠完成；R3 closed，继续 R4。
+- 2026-07-18 · route · ITER-0064 · `dangerous-ack`：自动开启 R4；选择 task-state 活跃校准投影 + 既有阶段真源回写，不新增问题台账。
+- 2026-07-18 · P2 · ITER-0064 · `dangerous-ack`：AC1–AC7 自审通过并冻结；六类信号、投影、P1–P5 路由、Goal 影响、重审纪律与证据均可验证，R5–R6 边界明确。
+- 2026-07-18 · P3 · ITER-0064 · `dangerous-ack`：Plan Admission verdict=`pass`；否决独立 issue ledger 和“一律回 P4”，按事实性质路由，未发现 Must Fix。
