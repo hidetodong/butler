@@ -30,14 +30,14 @@
 
 - `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
 - `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置和命令软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声。
-- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（按 OpenAI Codex commit/hash/license 固定的官方 plugin/skill validators）。
-- 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/`（升级迁移配方）、`deliveries/`（交付总结存档）。
+- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（按 OpenAI Codex commit/hash/license 固定的官方 plugin/skill validators）。
+- 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/manifest.json`（可执行版本/action 链）+ `migrations/v*.md`（人读配方）、`deliveries/`（交付总结存档）。
 - 其它子系统 — `Learner/`（学习事务）、`Composer/`（杂项事务），与 `Coder/` 并列、本知识文件夹不展开。
 
 ## 成熟度（真源里没有的"现状"层）
 
 - **双宿主适配（MILE-0006）**：R1–R4 全部交付——AGENTS 发现、8 skills/plugin、apply_patch hooks、统一 setup、目标双入口部署/升级和隔离回归矩阵。详细边界真源 `docs/codex-compatibility.md`。
-- **工程化加固（MILE-0007）**：R1 安装器事务安全、R2 机器证据/状态审计、R3 固定工具链与双 OS CI 合同已交付；R4 可执行升级器与 R5 工作流注册/分发仍待推进。远端 required check 受当前私有仓库套餐限制，未冒称启用。
+- **工程化加固（MILE-0007）**：R1 安装器事务安全、R2 机器证据/状态审计、R3 固定工具链与双 OS CI 合同、R4 可执行升级器已交付；仅 R5 工作流注册/分发待推进。远端 required check 受当前私有仓库套餐限制，未冒称启用。
 
 - **成熟稳定**：三层分层、P1–P5 产物链、四件套 schema、迭代 / 里程碑双层台账、版本 / 迁移 / 交付规则——体系骨架，已跑满两个里程碑。
 - **较新、已落地**：知识文件夹契约（MILE-0003，已由 R8/v2.0.0 首次真实 dogfood 落地——butler 自身即文件夹态）、帮手名册（MILE-0003 R1/R4）、说人话三条硬标准（MILE-0003 R7）。

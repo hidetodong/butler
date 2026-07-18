@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "upgrade-full-matrix-final",
+  "iteration": "ITER-0059",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC7",
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T09:01:22.530Z",
+  "finished_at": "2026-07-18T09:01:28.976Z",
+  "duration_ms": 6446,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 502,
+    "captured_bytes": 502,
+    "sha256": "7226bd044f5553a9ced4dd80c1d04948c1d1a5c19fdc55283ae6e22af19b44b6",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1023,
+    "captured_bytes": 1023,
+    "sha256": "b768e303a7f3686b11fd95c3cd9a4c6e06a06e76d9b39bee5240798702e2ff24",
+    "truncated": false
+  }
+}

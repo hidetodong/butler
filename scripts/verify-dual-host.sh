@@ -10,6 +10,7 @@ trap 'rm -rf "$WORK"' EXIT HUP INT TERM
 python3 "$ROOT/scripts/test-render-project-entrypoints.py"
 python3 "$ROOT/scripts/test-resolve-project-root.py"
 python3 "$ROOT/scripts/test-configure-global-install.py"
+python3 "$ROOT/scripts/test-butler-upgrade.py"
 python3 "$ROOT/tools/verification-evidence/test_evidence.py"
 python3 "$ROOT/scripts/test-audit-project-state.py"
 python3 "$ROOT/scripts/test-check-markdown-links.py"
@@ -87,6 +88,7 @@ after="$(shasum "$TARGET/CLAUDE.md" "$TARGET/AGENTS.md")"
 
 grep -Fq 'render-project-entrypoints.py' "$ROOT/Coder/20_Workflow_Lifecycle/mcv-deployment.md"
 grep -Fq 'AGENTS.md' "$ROOT/Coder/20_Workflow_Lifecycle/butler-upgrade.md"
+grep -Fq 'migrations/manifest.json' "$ROOT/Coder/20_Workflow_Lifecycle/butler-upgrade.md"
 grep -Fq '[regen-entrypoints]' "$ROOT/Coder/20_Workflow_Lifecycle/migration-schema.md"
 grep -Fq '[global-install]' "$ROOT/Coder/20_Workflow_Lifecycle/migration-schema.md"
 grep -Fq 'scripts/setup.sh' "$ROOT/docs/codex-compatibility.md"
@@ -105,6 +107,7 @@ python3 -m compileall -q "$ROOT/templates/hooks" "$ROOT/scripts/render-project-e
 python3 -m compileall -q "$ROOT/scripts/resolve-project-root.py"
 python3 -m compileall -q "$ROOT/scripts/configure-global-install.py"
 python3 -m compileall -q "$ROOT/tools/verification-evidence/evidence.py"
+python3 -m compileall -q "$ROOT/tools/butler-upgrade/upgrade.py"
 python3 -m compileall -q "$ROOT/scripts/audit-project-state.py"
 
 echo "[OK] Claude/Codex unified setup and project entrypoint matrix passed"

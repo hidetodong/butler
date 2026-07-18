@@ -97,13 +97,13 @@ python3 tools/butler-upgrade/upgrade.py global-install --project-root PATH --con
 
 ## Execution Steps
 
-- [ ] **T1** 写 manifest schema/覆盖负向测试与历史动作清单，再落 `migrations/manifest.json` → AC1
-- [ ] **T2** 实现 inspect/plan、版本/marker/root/symlink 检查和稳定 JSON/exit contract → AC2、AC3
-- [ ] **T3** 实现纯动作计划器、renderer 复用、hook/settings/rename/add-field/split/global 域 → AC5、AC6
-- [ ] **T4** 实现 lock、backup/journal、原子 apply、故障注入恢复和 rerun → AC4、AC5
-- [ ] **T5** 建 v1.x/v2.0/v2.14/v2.15/current fixture 与冲突/并发/恢复 E2E → AC2–AC7
-- [ ] **T6** 修正历史 recipe 结构，接线 Claude/Codex 薄壳、规则与人类文档 → AC1、AC8
-- [ ] **T7** 接入完整 CI，捕获 evidence、执行危险模式全维审查并修到 0 Must Fix → AC9
+- [x] **T1** 写 manifest schema/覆盖负向测试与历史动作清单，再落 `migrations/manifest.json` → AC1
+- [x] **T2** 实现 inspect/plan、版本/marker/root/symlink 检查和稳定 JSON/exit contract → AC2、AC3
+- [x] **T3** 实现纯动作计划器、renderer 复用、hook/settings/rename/add-field/split/global 域 → AC5、AC6
+- [x] **T4** 实现 lock、backup/journal、原子 apply、故障注入恢复和 rerun → AC4、AC5
+- [x] **T5** 建 v1.x/v2.0/v2.14/v2.15/current fixture 与冲突/并发/恢复 E2E → AC2–AC7
+- [x] **T6** 修正历史 recipe 结构，接线 Claude/Codex 薄壳、规则与人类文档 → AC1、AC8
+- [x] **T7** 接入完整 CI，捕获 evidence、执行危险模式全维审查并修到 0 Must Fix → AC9
 
 ## Verification Plan
 

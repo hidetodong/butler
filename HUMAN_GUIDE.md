@@ -177,7 +177,8 @@ Butler 规则仓库本身有**硬版本号**，遵循语义化版本 `MAJOR.MINO
 - **在哪看**：仓库根 `VERSION`（机器真源，单行版本号）、`CHANGELOG.md`（人读发布史，按版本聚合迭代）、git tag `vX.Y.Z`（每次发布的锚点）。
 - **三级含义**：MAJOR = 破坏性变更（文件重命名/删除、契约或命令语义不兼容，升级可能要手工迁移）；MINOR = 向后兼容的能力新增（新 schema/命令/模式）；PATCH = 措辞澄清与不改行为的修订。
 - **部署会留下版本戳**：CLAUDE.md 与 AGENTS.md 顶部都会标注"规则源：butler vX.Y.Z"；升级会先对账两者，再共同重戳。
-- **升级会报版本差**：输 `/butler:upgrade` 时，AI 会对比项目里的版本戳与当前 butler 版本、告诉你差了几个版本，升级后把版本戳更新到最新。注意**判断要不要升级以文件内容差异为准**，版本号只是辅助路标（你的项目文件可能已被手工改过）。
+- **升级先计划再写**：输 `/butler:upgrade` 或使用 `$butler-upgrade` 时，两宿主都会调用同一 `tools/butler-upgrade/upgrade.py`。它从 `migrations/manifest.json` 算版本队列，dry-run 回报逐文件变化、冲突、`[split]` 决定和机器级待办；显式放行后才事务 apply。失败会从项目内 backup 恢复，不靠模型解释 Markdown 或 `git reset`。
+- **人工/机器边界不假绿**：`[split]` 可明确暂缓；选择现在迁时仍由有人做语义路由。`[global-install]` 会改 HOME，必须单独确认，项目升级不会暗中执行。版本 gap 只决定队列，marker/hash/所有权检查决定能否安全写。
 
 ## 5. 扩展模式
 

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-manifest-current-drift",
+  "iteration": "ITER-0059",
+  "ac_ids": [
+    "AC1",
+    "AC3"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "scripts/test-butler-upgrade.py",
+      "UpgradeTests.test_manifest_rejects_protected_action_paths_and_bad_preconditions",
+      "UpgradeTests.test_current_stamp_does_not_hide_content_drift",
+      "UpgradeTests.test_transaction_preparation_failure_changes_no_target_and_releases_lock"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-18T09:00:06.398Z",
+  "finished_at": "2026-07-18T09:00:06.521Z",
+  "duration_ms": 123,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 101,
+    "captured_bytes": 101,
+    "sha256": "239573c1665ba0d20880d981ec7058ee3d44a42932e841724fdcee3ca672055d",
+    "truncated": false
+  }
+}

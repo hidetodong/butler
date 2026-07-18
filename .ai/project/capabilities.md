@@ -24,6 +24,13 @@
 - `scripts/check-markdown-links.py` 离线检查仓内相对目标和 GitHub 风格 fragment，不把外网波动纳入合并门禁。
 - 远端 required status checks 当前受私有仓库套餐限制；仓内能力状态为 check-provided，不能称 required-enabled。
 
+## 可执行项目升级（MILE-0007 R4）
+
+- `migrations/manifest.json` 是可执行迁移数据真源：从 v1.0.0 连续登记到当前版本，每个 action 有稳定 ID、有限类型、固定 domain、参数和前置条件；全部人读 recipe 一一覆盖。
+- `tools/butler-upgrade/upgrade.py` 提供 inspect/plan/apply/global-install。plan 输出机器 JSON 且项目/HOME 零写入；apply 做 before-hash、排他锁、backup/restore/journal、原子替换和故障恢复。
+- 双入口重生成、hook/settings、rename/add-field、restamp/no-op 是有限项目 action；split 是人工 decision，global install 是独立 machine action。未知类型、protected path、marker/hook/current drift、symlink/TOCTOU 都 fail-closed。
+- Claude `/butler:upgrade` 与 Codex `$butler-upgrade` 只路由同一 CLI，不再由模型解释 Markdown 后手工迁移；16 项历史/负向/事务专项已纳入 `verify-ci.sh`。
+
 ## 核心：P1–P5 开发 SOP（默认主线）
 
 任何非极小任务默认走五阶段状态机，每阶段产一份"产物"、下一阶段只从上一阶段的**文件**读（不靠对话记忆）：
@@ -50,7 +57,7 @@
 | `/prd update` / `/prd status` | PRD **改版同步**（出新版 V→V+1：变更检测清单优先+diff兜底 / 重新派生 / 先冻旧版快照再更 live / 登记表认亲（新增·消失 + 松边改名/合并/拆分启发式提候选→确认、绝不自动认，R6）/ 三态影响面亮牌不自动 / 受影响活路由重冻·扩张）；`status` 只读看板（MILE-0004 R5–R6） | `40_Context_Management/prd-update.md`（§4.2 松边、首切见 `prd-split.md`、钉版见 `acceptance-schema` 的 `prd_version`；非回归门见 `references-schema §9`） |
 | `/butler:prd` | **butler 第一个真实命令文件**（ITER-0044，原名 `/butler-prd`，MILE-0005 R1 迁入 `/butler:` 命名空间）——PRD 先行动作的薄壳路由器：第 0 步强制读 `references-schema` 契约 → 按参数三分支（留空/贴 PRD=首切 / `update`=改版 / `status`=只读看板），委托真源不复述算法。**全局下发（ITER-0045·v2.5.0）**：`setup.sh` 软链进 `~/.claude/commands/`，**所有项目可用**（不再限编辑 butler 仓）；正文含「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定，跨 cwd 成立 | `.claude/commands/butler/prd.md`（薄壳，真源 `references-schema.md` / `prd-split.md` / `prd-update.md`） |
 | `/butler:review` | **命名空间第二个真命令**（ITER-0047·MILE-0005 R1）——代码 / 产物复核薄壳路由器：默认（留空）当前上下文快速自检、`independent` 另起 fresh 子 agent 独立复核（验证者≠作者）；第 0 步没接 butler 优雅降级、委托真源不复述算法。作后续命令的复制范本 | `.claude/commands/butler/review.md`（薄壳，真源 `review-engine.md §5` / `independent-review.md` / `62_Extension_Agents/overview.md §3`） |
-| `/butler:upgrade` | 已部署项目升级到最新 butler 版（按 `migrations/` 区间幂等执行）；原名 `/butler-upgrade`，MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/upgrade.md`（薄壳，真源 `20_Workflow_Lifecycle/butler-upgrade.md`；**注：升级协议从未真跑，见 debt**） |
+| `/butler:upgrade` | 已部署项目升级到最新 Butler：机器 manifest 先 dry-run，再事务 apply；split/global 分域，不解析 Markdown 散文执行 | `.claude/commands/butler/upgrade.md`（薄壳，执行真源 `tools/butler-upgrade/upgrade.py`，交互真源 `20_Workflow_Lifecycle/butler-upgrade.md`） |
 
 ## 部署与维护能力
 
@@ -62,6 +69,7 @@
 
 ## 驻留工具
 
+- `tools/butler-upgrade/` — 已部署项目的确定性升级器：机器迁移链、JSON plan、项目事务、历史 fixture 与失败恢复；HOME 安装始终独立确认。
 - `tools/verification-evidence/` — P5 **自动道证据工具**（Python 标准库）：按真实 argv 执行验证，生成有界 stdout/stderr、exit、时间与 SHA-256 record；只读校验后在收口时整包从热区移入迭代归档，失败记录保留但不能覆盖绿 AC。
 - `tools/delivery-selftest/` — 交付自测**人测回传桥**（Node 零依赖）：读 manifest JSON → 生成 GitHub 风格分步流程页 → 收人工四态回传（通过 / 未通过 / 延后 / 跳过）→ 写 `results.json` + 自退。P5 人测道下游接线协议 `20_Workflow_Lifecycle/human-test-bridge.md`，契约真源 `tools/delivery-selftest/README.md`。
 - `scripts/audit-project-state.py` — 收口/切版的**只读状态审计器**：机械对账台账、路线、归档、交付、Evidence Index、fold receipt 与 Butler 发布元数据；活动规则仓可亮 `UNRELEASED`，不能冒充 published。

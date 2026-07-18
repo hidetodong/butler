@@ -188,7 +188,7 @@ echo "advisor exit=$?"
 
 ### 5.4 与 butler-upgrade 的联动
 
-Hook 副本与 butler 仓库版本可能漂移。既有项目升级按 `butler-upgrade.md §6.4` 的 `[sync-hooks]` 同步；本协议只负责首次部署路径。
+Hook 副本与 butler 仓库版本可能漂移。既有项目由 `tools/butler-upgrade/upgrade.py` 的 `[sync-hooks]` 项目 action 同步：只接受当前或 manifest 登记的历史受管 tree digest，未知/手工漂移停机，不强行覆盖；本协议只负责首次部署路径。
 
 ## 6. Butler 驻留工具调用（Resident Tools）
 

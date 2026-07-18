@@ -10,7 +10,7 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 
 一份**迁移配方**回答一个问题：从上一发布版升级到本版，已部署的目标项目要做哪几步。
 
-- 它是 `butler-upgrade.md` 升级执行器的**输入单一来源**——升级时不再现场推导差异，而是照配方执行。
+- 人读配方记录发布迁移意图；可执行数据的单一来源是仓根 `migrations/manifest.json`，升级器不解析本文档散文。
 - 与 `CHANGELOG.md` 分工：CHANGELOG 记"butler 自己改了什么"（给人读的发布史），配方记"已部署项目要做什么才能跟上"（给执行器照做）。二者不复述。
 - 与 `versioning-schema.md` 分工：后者管版本号 / semver / 切版流程；本规范管切版时顺带产出的那份迁移步骤长什么样。
 
@@ -19,6 +19,14 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 - 配方落在仓库根 `migrations/` 目录——它是 butler 发布元数据（与 `deliveries/`、`CHANGELOG.md`、`VERSION` 同级），**不**放 `templates/`（那是给目标项目的模板）。
 - 每个**对部署项目有结构影响**的发布版一份，命名 `migrations/vX.Y.Z.md`，版本号与该发布的 `VERSION` 一致。
 - 对部署项目**无影响**的版本也必须建文件，内容为单条 `[no-op]`（见 §4）——"无影响"是显式结论，不是漏记。
+
+### 2.1 机器台账
+
+- `migrations/manifest.json` 必须为 `schema_version: 1`，从基线版本开始按 semver 严格连续登记每份 `vX.Y.Z.md`。
+- 每条 migration 必含 `source`、`target`、`recipe`、`actions`；recipe 与全部 `v*.md` 一一对应。
+- 每个 action 必含全局唯一稳定 ID、有限 `type`、由类型固定的 `domain` 和该类型的显式参数；未知字段也视为错误。
+- action schema、退出状态和事务语义以 `tools/butler-upgrade/README.md` / `upgrade.py` 为真源。CI 必须运行 manifest 覆盖/断链/未知类型负向测试。
+- Markdown 继续给人解释影响、起始态和边界；程序不得正则提取标签或散文生成写操作。
 
 ## 3. 配方文件必含字段
 
@@ -31,7 +39,7 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 
 ## 4. typed 操作标签
 
-每个迁移步骤必须以下列标签之一起头。所有标签**必须幂等**：先校验起始态，满足才动，重复执行不重复改。
+每个迁移步骤必须以下列标签之一起头，并在 manifest 登记对应现代 action。所有标签**必须幂等**：先校验起始态，满足才动，重复执行不重复改。
 
 - `[rename]`：重命名 `.ai/` 下过时文件。判据=旧名存在才改；git 项目走 `git mv` 保血缘。
 - `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。**升级执行语义**——本标签在 `/butler:upgrade` 里是 **opt-in、非自动**（执行器先问"现在迁 / 继续单文件以后再迁"，选后者则跳过、两态并存继续支持），落地细则见 `butler-upgrade.md §6.5`；本条只定标签语义，执行落地不在此重述。
@@ -52,5 +60,5 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 ## 6. 与切版 / 升级流程的关系
 
 - **产出端**：配方在切版时产出，是 `versioning-schema.md §6` 的必做步（定 bump → 改 `VERSION` → 加 `CHANGELOG` → **写 `migrations/vX.Y.Z.md`** → 打 tag）。
-- **消费端**：升级时由 `butler-upgrade.md` 收集"目标版本戳 < vV ≤ 仓库 `VERSION`"的全部配方、按版本号升序逐条应用。
+- **消费端**：升级器从 `manifest.json` 收集"目标版本戳 < target ≤ 仓库 `VERSION`"的全部记录、按版本升序计划；Markdown 只用于人读呈报与审计。
 - **文件夹化配方形态（MILE-0003 R6 备、R8 产实例）**：把单文件全貌产物 `PROJECT.md` 迁成 `.ai/project/` 知识文件夹的配方，标准形态 = `[rename]`（若旧文件名需先规整）+ `[split]`（按主题拆进文件夹，§4）+ `[restamp]`（末尾重戳版本）。R6 只备**标签与形态**、不预先落实例；实例 `migrations/v2.0.0.md` 由 R8 切 **v2.0.0**（MILE-0003 收口、`.ai/project/` 契约属 MAJOR）时按上述"产出端"流程产出——**此刻写实例＝引用一个未打的 tag、悬空**，故 R6 不建该文件。

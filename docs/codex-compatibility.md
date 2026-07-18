@@ -57,7 +57,8 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。
 - 统一安装：`bash scripts/setup.sh`；保留 Claude 全局配置/命令/风格，同时在 Codex CLI 可用时调用上面的 plugin 安装器。
-- 项目部署/升级：先用 `scripts/resolve-project-root.py` 确定唯一项目根，再由 `scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md；管理区外原文与两份 user-managed 区各自保留。
+- 项目部署：先用 `scripts/resolve-project-root.py` 确定唯一项目根，再由 `scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md。
+- 项目升级：Claude `/butler:upgrade` 与 Codex `$butler-upgrade` 都只路由 `tools/butler-upgrade/upgrade.py`；执行器从 `migrations/manifest.json` 生成零写入计划，再做带 lock/backup/journal/失败恢复的项目事务。管理区外原文与两份 user-managed 区各自保留；split 人工语义和 global HOME 安装不会伪装成项目内自动动作。
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
 - 固定校验来源：CI/local 使用 `tools/codex-validators/` 中按 OpenAI Codex commit 与 SHA-256 固定的官方 validator 快照；来源和许可证见同目录 `PROVENANCE.json` / `LICENSE`。验证不得依赖用户 `$HOME/.codex/skills/.system` 是否存在。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
