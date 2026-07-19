@@ -142,6 +142,51 @@ class StateAuditTests(unittest.TestCase):
         result = self.invoke()
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
 
+    def test_multiple_backlog_directions_use_separate_rows_and_files(self) -> None:
+        ledger = self.root / ".ai" / "MILESTONES.md"
+        ledger.write_text(
+            ledger.read_text()
+            + "\n## 待办区（未编号）\n\n"
+            + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
+            + "|---|---|---|---|---|\n"
+            + "| search-redesign | search | 2026-01-02 | .ai/milestone-backlog/search-redesign.md | defer |\n"
+            + "| billing-cleanup | billing | 2026-01-02 | .ai/milestone-backlog/billing-cleanup.md | defer |\n",
+            encoding="utf-8",
+        )
+        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog.mkdir()
+        for slug in ("search-redesign", "billing-cleanup"):
+            (backlog / f"{slug}.md").write_text(
+                f"---\n候办键: {slug}\n候办状态: deferred\n---\n# {slug}\n", encoding="utf-8"
+            )
+        result = self.invoke()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
+    def test_backlog_draft_identity_must_be_unique_and_match_filename(self) -> None:
+        ledger = self.root / ".ai" / "MILESTONES.md"
+        ledger.write_text(
+            ledger.read_text()
+            + "\n## 待办区（未编号）\n\n"
+            + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
+            + "|---|---|---|---|---|\n"
+            + "| search-redesign | search | 2026-01-02 | .ai/milestone-backlog/search-redesign.md | defer |\n",
+            encoding="utf-8",
+        )
+        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog.mkdir()
+        draft = backlog / "search-redesign.md"
+        invalid_bodies = (
+            "---\n候办键: search-redesign\n候办键: billing-cleanup\n候办状态: deferred\n---\n",
+            "---\n候办键: billing-cleanup\n候办状态: deferred\n---\n",
+            "---\n候办键: search-redesign\n候办状态: deferred\n候办状态: deferred\n---\n",
+        )
+        for body in invalid_bodies:
+            with self.subTest(body=body):
+                draft.write_text(body, encoding="utf-8")
+                result = self.invoke()
+                self.assertEqual(1, result.returncode)
+                self.assertIn("backlog.search-redesign.markers", result.stdout)
+
     def test_milestone_backlog_missing_and_orphan_drafts_are_reported(self) -> None:
         ledger = self.root / ".ai" / "MILESTONES.md"
         ledger.write_text(
@@ -187,6 +232,9 @@ class StateAuditTests(unittest.TestCase):
         for text in (schema, command, skill):
             self.assertIn(".ai/milestone-backlog/", text)
             self.assertIn("start <候办键>", text)
+        self.assertIn("一方向一文件", schema)
+        self.assertIn("一方向一个候办键", command)
+        self.assertIn("exactly one direction", skill)
         self.assertIn("开启前退回", schema)
         self.assertIn("no linked iteration, archive, or delivery", skill)
 

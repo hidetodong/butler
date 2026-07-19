@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|---|---|
 | prd | `/butler:prd` | `$butler-prd` | normal | 允许 | `PRD`、`产品需求文档`、`split PRD`、`update PRD`、`PRD status` | `/butler-prd` (deprecated)<br>`/prd` (natural-language-compat) | `Coder/40_Context_Management/references-schema.md` |
 | review | `/butler:review` | `$butler-review` | normal | 允许 | `review`、`代码复核`、`产物复核`、`independent review` | `/review` (natural-language-compat) | `Coder/60_Extension_CodeReview/review-engine.md` |
-| milestone | `/butler:milestone` | `$butler-milestone` | normal | 允许 | `milestone`、`里程碑`、`roadmap`、`multi-iteration`、`milestone backlog`、`里程碑候办` | `/milestone` (natural-language-compat) | `Coder/20_Workflow_Lifecycle/milestone-schema.md` |
+| milestone | `/butler:milestone` | `$butler-milestone` | normal | 允许 | `milestone`、`里程碑`、`roadmap`、`multi-iteration`、`milestone backlog`、`里程碑候办`、`多方向候办`、`one direction per draft` | `/milestone` (natural-language-compat) | `Coder/20_Workflow_Lifecycle/milestone-schema.md` |
 | upgrade | `/butler:upgrade` | `$butler-upgrade` | normal | 允许 | `upgrade Butler`、`升级 Butler`、`同步 Butler`、`version gap` | `/butler-upgrade` (deprecated) | `Coder/20_Workflow_Lifecycle/butler-upgrade.md` |
 | ideation | `/butler:ideation` | `$butler-ideation` | normal | 允许 | `brainstorm`、`脑暴`、`需求还没想清`、`refine idea` | `/ideation` (natural-language-compat) | `Coder/50_Extension_Ideation/ideation-engine.md` |
 | preference | `/butler:preference` | `$butler-preference` | normal | 允许 | `preference`、`偏好探针`、`reback`、`distill preference` | `/preference` (natural-language-compat) | `Coder/70_Extension_Preference/preference-probe-engine.md` |

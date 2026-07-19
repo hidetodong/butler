@@ -276,8 +276,11 @@ class Audit:
             self.add(valid_draft, f"backlog.{slug}.draft", row[3])
             if valid_draft:
                 draft_text = draft.read_text(encoding="utf-8")
-                markers_ok = f"候办键: {slug}" in draft_text and "候办状态: deferred" in draft_text
-                self.add(markers_ok, f"backlog.{slug}.markers", "complete" if markers_ok else "缺候办键或 deferred 状态")
+                key_markers = [value.strip() for value in re.findall(r"(?m)^候办键:\s*([^\r\n]+?)\s*$", draft_text)]
+                state_markers = [value.strip() for value in re.findall(r"(?m)^候办状态:\s*([^\r\n]+?)\s*$", draft_text)]
+                markers_ok = key_markers == [slug] and state_markers == ["deferred"]
+                detail = "unique identity" if markers_ok else f"keys={key_markers}, states={state_markers}"
+                self.add(markers_ok, f"backlog.{slug}.markers", detail)
 
         actual_drafts = {
             str(path.relative_to(self.root))

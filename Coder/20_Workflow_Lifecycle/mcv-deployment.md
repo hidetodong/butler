@@ -79,7 +79,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
 - `MILESTONES.md`：里程碑看板，正式表记录 `current` 与已开启里程碑的号/状态/归属/交付，文件末可带未编号待办索引，字段参考 `milestone-schema.md`；首次开启或暂缓里程碑草稿时按需产生。
 - `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
-- `milestone-backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。它与 `MILESTONES.md` 待办区必须一一对账，不参与 `current`、Goal 或迭代自动归属。
+- `milestone-backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。多个可独立启动方向必须一方向一文件，并与 `MILESTONES.md` 待办区逐块一一对账；候办不参与 `current`、Goal 或迭代自动归属。
 
 **阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：
 

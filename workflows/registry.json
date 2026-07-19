@@ -91,7 +91,9 @@
         "roadmap",
         "multi-iteration",
         "milestone backlog",
-        "里程碑候办"
+        "里程碑候办",
+        "多方向候办",
+        "one direction per draft"
       ],
       "legacy_aliases": [
         {
@@ -102,16 +104,16 @@
       "claude": {
         "name": "/butler:milestone",
         "path": ".claude/commands/butler/milestone.md",
-        "description": "录入或开一个里程碑，暂不做时进未编号待办区；start 提升候办，status 只读看进度",
+        "description": "录入或开一个里程碑；多个暂缓方向一方向一文件，start 分别提升，status 只读看进度",
         "default_prompt": "Use /butler:milestone for this Butler workflow."
       },
       "codex": {
         "name": "$butler-milestone",
         "path": "plugins/butler/skills/butler-milestone/SKILL.md",
-        "description": "Create, defer, promote, or inspect a Butler milestone from a product brief or roadmap. Use for multi-iteration milestone planning, unnumbered milestone backlog, start, withdrawal-before-work, or status requests.",
+        "description": "Create, split, defer, promote, or inspect Butler milestones from a product brief or roadmap. Use for multi-iteration planning, multiple unnumbered backlog directions, one-direction-per-file storage, start, withdrawal-before-work, or status requests.",
         "display_name": "Butler Milestone",
         "short_description": "Plan milestones without reserving numbers early",
-        "default_prompt": "Use $butler-milestone to plan this roadmap; keep deferred drafts unnumbered until work starts."
+        "default_prompt": "Use $butler-milestone to plan this roadmap; split independent deferred directions into separate unnumbered draft files until each starts."
       }
     },
     {

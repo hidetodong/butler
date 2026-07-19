@@ -59,3 +59,8 @@
 - 2026-07-19 · P5-review · ITER-0068 · `dangerous-ack`：完整强审发现 2 个 Must Fix——brief 章节仍把 `.ai/MILESTONE.md` 写成候办期真源，以及审计器遇畸形正式号可能抛异常；已切换为随阶段唯一真源，并增加稳定 ID 漂移报告与回归。
 - 2026-07-19 · P5-review · ITER-0068 · `dangerous-ack`：修复后状态审计 18/18、workflow registry、Markdown 链接、147 hooks 与完整 CI 均通过；最终 Must Fix 0、Should Fix 0，未触发 opt-in 独立复核。
 - 2026-07-19 · P3-reentry · ITER-0068 · `dangerous-ack`：Goal adjudicator 暴露与 verify-schema 的存量契约冲突，错把已被后续通过证据覆盖的失败诊断当成当前失败；方案退回并重审为“全记录校验完整性，只 passed 记录覆盖 AC”，Plan Admission 再次 pass。
+# ITER-0069
+
+- 2026-07-19：用户补充多个候办方向必须拆块并分文件；按已关闭需求扩张规则开启独立 ITER-0069。
+- 2026-07-19：危险模式自审 P2/P3，冻结 AC1–AC5，方案 verdict=pass。
+- 2026-07-19：同上下文强审完成，Must Fix 0、Should Fix 0；20 项状态审计与完整 CI 通过。
