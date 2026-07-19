@@ -78,8 +78,11 @@ def verify_evidence(root: Path, iteration: str, verify: str) -> tuple[bool, str,
             record = json.loads((directory / "record.json").read_text(encoding="utf-8"))
             if record.get("schema_version") != 1 or record.get("evidence_id") != evidence_id:
                 return False, f"{evidence_id} schema/id 非法", covered
-            if record.get("iteration") != iteration or record.get("outcome") != "passed":
-                return False, f"{evidence_id} iteration/outcome 非通过", covered
+            if record.get("iteration") != iteration:
+                return False, f"{evidence_id} iteration 不一致", covered
+            outcome = record.get("outcome")
+            if outcome not in {"passed", "failed", "launch_error", "incomplete", "timeout"}:
+                return False, f"{evidence_id} outcome 非法", covered
             for stream_name in ("stdout", "stderr"):
                 stream = record[stream_name]
                 data = (directory / stream["path"]).read_bytes()
@@ -87,10 +90,11 @@ def verify_evidence(root: Path, iteration: str, verify: str) -> tuple[bool, str,
                     return False, f"{evidence_id}/{stream_name} 不完整", covered
                 if hashlib.sha256(data).hexdigest() != stream.get("sha256"):
                     return False, f"{evidence_id}/{stream_name} hash 不符", covered
-            covered.update(record.get("ac_ids", []))
+            if outcome == "passed":
+                covered.update(record.get("ac_ids", []))
         except (OSError, KeyError, TypeError, json.JSONDecodeError) as error:
             return False, f"{evidence_id} record 非法: {error}", covered
-    return True, f"records={sorted(ids)}", covered
+    return True, f"records={sorted(ids)}; passing_coverage={sorted(covered)}", covered
 
 
 def evaluate(root: Path) -> dict[str, object]:

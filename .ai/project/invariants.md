@@ -5,6 +5,7 @@
 - **三层分层不混**：SOP Core / Domain / Business 职责不互窜。*为什么*：分层一乱，通用规则就会被某个栈 / 某桩业务污染，失去可复用性。
 - **产物链不依赖对话记忆**：P1 CONCEPT → P2 AC_LIST → P3 TECH_PLAN → P5 VERIFY，每阶段只从上一阶段的**文件**读。*为什么*：换会话就断片，只有落盘产物能跨会话恢复。
 - **迭代 / 里程碑双层**：迭代（ITER-NNNN）是固定需求的 P1–P5 闭环单元；里程碑（MILE-NNNN）是套在其上的版本范围单元，松耦合可选。台账 `.ai/ITERATIONS.md` / `.ai/MILESTONES.md` 是号与状态的真源。
+- **里程碑开工才领号**：只讨论或暂缓的方向进 `.ai/MILESTONES.md` 未编号待办区，并以稳定候办键指向 `.ai/milestone-backlog/` 草稿；正式开工才按最大已用号 +1 提升。只有最新且零迭代、零归档、零交付的误开项可退回，任何历史引用存在时编号永久保留。*为什么*：编号应表达真实开工顺序，同时不能为整理队列改写历史身份。
 - **AC 是验收脊柱**：贯穿 P2→P4→P5；tasks（执行步骤 + task-state）只是执行侧的投影，不取代 AC。*为什么*：验收标准若被执行清单顶替，就会"做完了"却没人对着标准验。
 - **Goal 是派生视图，不是第二台账**：objective/scope/AC/plan/progress/proof/verdict 各守既有真源；tasks done 最多进入 `completion-candidate`，只有证据、审查和收口事实闭合才能派生 complete。宿主 Goal/Task 只投影 `.ai/`，冲突时项目真相优先。*为什么*：再建 GOAL 文件会复制阶段事实并产生新的漂移源。
 - **P3 方案必须显式准入**：TECH_PLAN 自身保存 `draft / pass / revise / blocked` 单一 verdict，并用 Plan Admission 反证 AC 覆盖、假设、替代/取舍、失败路径、影响面和验证盲区；只有 `pass` 可进入 P4，实质改方案必须退 `draft` 重审。*为什么*：文件存在或任务全勾不能证明方案获准，独立审批台账又会双写漂移。

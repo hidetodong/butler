@@ -66,8 +66,55 @@ class GoalAdjudicatorTests(unittest.TestCase):
         self.assertEqual("ineligible", result["verdict"])
         self.assertTrue(any(reason.startswith(check + ":") for reason in result["reasons"]))
 
+    def add_evidence(self, evidence_id: str, outcome: str, ac_ids: list[str]) -> None:
+        directory = self.root / ".ai" / "verification-evidence" / evidence_id
+        out, err = b"diagnostic\n", b""
+        write(directory / "stdout.log", out.decode())
+        write(directory / "stderr.log", "")
+        record = {
+            "schema_version": 1, "evidence_id": evidence_id, "iteration": "ITER-0001",
+            "outcome": outcome, "ac_ids": ac_ids,
+            "stdout": {"path": "stdout.log", "bytes": len(out), "captured_bytes": len(out), "sha256": hashlib.sha256(out).hexdigest(), "truncated": False},
+            "stderr": {"path": "stderr.log", "bytes": len(err), "captured_bytes": len(err), "sha256": hashlib.sha256(err).hexdigest(), "truncated": False},
+        }
+        write(directory / "record.json", json.dumps(record))
+        verify = self.root / ".ai" / "VERIFY_REPORT.md"
+        write(
+            verify,
+            verify.read_text().replace(
+                "# Completion Inputs",
+                f"| `{evidence_id}` | diagnostic | captured | {outcome} | `.ai/iterations/ITER-0001/evidence/{evidence_id}/record.json` |\n# Completion Inputs",
+            ),
+        )
+
     def test_positive_eligible(self) -> None:
         self.assertEqual("eligible", goal.evaluate(self.root)["verdict"])
+
+    def test_failed_diagnostic_is_retained_but_later_passed_proof_still_closes(self) -> None:
+        self.add_evidence("failed-first", "failed", ["AC1", "AC2"])
+        result = goal.evaluate(self.root)
+        self.assertEqual("eligible", result["verdict"], result)
+        evidence = next(item for item in result["checks"] if item["id"] == "evidence_valid")
+        self.assertIn("failed-first", evidence["detail"])
+
+    def test_failed_diagnostic_never_contributes_ac_coverage(self) -> None:
+        record = self.root / ".ai" / "verification-evidence" / "proof" / "record.json"
+        data = json.loads(record.read_text())
+        data["outcome"] = "failed"
+        write(record, json.dumps(data))
+        result = goal.evaluate(self.root)
+        self.assertEqual("ineligible", result["verdict"])
+        evidence_valid = next(item for item in result["checks"] if item["id"] == "evidence_valid")
+        coverage = next(item for item in result["checks"] if item["id"] == "evidence_covers_ac")
+        self.assertTrue(evidence_valid["passed"])
+        self.assertFalse(coverage["passed"])
+
+    def test_unknown_evidence_outcome_fails_closed(self) -> None:
+        record = self.root / ".ai" / "verification-evidence" / "proof" / "record.json"
+        data = json.loads(record.read_text())
+        data["outcome"] = "maybe"
+        write(record, json.dumps(data))
+        self.assert_ineligible("evidence_valid")
 
     def test_gfc_001_plan_revise(self) -> None:
         write(self.root / ".ai/TECH_PLAN.md", "方案状态: revise\n")

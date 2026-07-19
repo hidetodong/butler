@@ -1,6 +1,6 @@
 interface:
   display_name: "Butler Milestone"
-  short_description: "Run the Butler milestone workflow safely"
-  default_prompt: "Use $butler-milestone to turn this brief into a milestone roadmap."
+  short_description: "Plan milestones without reserving numbers early"
+  default_prompt: "Use $butler-milestone to plan this roadmap; keep deferred drafts unnumbered until work starts."
 policy:
   allow_implicit_invocation: true

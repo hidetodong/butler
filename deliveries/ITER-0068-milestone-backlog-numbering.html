@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0068 交付总结 · 里程碑候办区与延迟编号</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>里程碑候办区与延迟编号</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0068</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-19</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <ul>
+        <li>让只讨论、暂时不做的方向可保存为候办，但不提前占用 <code>MILE-NNNN</code>。</li>
+        <li>保证正式里程碑编号按实际开工顺序连续递增，且历史引用不因暂停或取消被改写。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增未编号待办区与独立候办草稿契约。</li>
+        <li>新增 <code>/butler:milestone start &lt;候办键&gt;</code> 提升流程，开工时才领号。</li>
+        <li>只允许零历史引用的最新误开里程碑退回，历史编号永久保留。</li>
+        <li>状态审计与 Goal 裁决补齐对应机械检查和回归测试。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>讨论中的旧方向可以先放进待办区，之后开始的新方向拿到下一个连续正式号。</li>
+        <li>候办恢复使用稳定候办键，不需要提前知道未来编号。</li>
+        <li>已经进入项目历史的正式编号不会被回收或顶号。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>里程碑、生命周期、Goal、部署和规则卡真源。</li>
+        <li>Claude 命令、Codex skill、workflow registry 与人读能力表。</li>
+        <li>项目状态审计、Goal 完成裁决及其回归测试。</li>
+      </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>状态审计专项 18 项、Goal 裁决专项 16 项通过。</li>
+        <li><code>final-full-ci</code> 通过，含 registry、Markdown、双宿主、147 项 hooks 与统一入口矩阵。</li>
+        <li>Goal adjudicator 十项检查全部通过，裁决为 <code>eligible</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>本轮无未关闭实现风险。</li>
+        <li>候办操作仍是文档契约，不是独立事务 CLI；审计能发现漂移，但不替代宿主多文件写原子性。</li>
+        <li>本轮不切版本、不发布、不推送，也不自动升级外部项目。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0068/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0068/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0068/VERIFY_REPORT.md</code></li>
+        <li><code>.ai/iterations/ITER-0068/CHANGELOG.md</code></li>
+        <li><code>.ai/iterations/ITER-0068/evidence/</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -107,6 +107,89 @@ class StateAuditTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertIn("milestones.workspace", result.stdout)
 
+    def test_milestone_numbers_must_be_contiguous(self) -> None:
+        path = self.root / ".ai" / "MILESTONES.md"
+        path.write_text(path.read_text().replace("MILE-0001", "MILE-0002"), encoding="utf-8")
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("milestones.sequence", result.stdout)
+
+    def test_malformed_formal_milestone_id_is_reported_without_crashing(self) -> None:
+        milestone = self.root / ".ai" / "MILESTONES.md"
+        milestone.write_text(milestone.read_text().replace("MILE-0001", "MILE-draft"), encoding="utf-8")
+        iterations = self.root / ".ai" / "ITERATIONS.md"
+        iterations.write_text(iterations.read_text().replace("MILE-0001", "MILE-draft"), encoding="utf-8")
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("milestones.ids", result.stdout)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_valid_unnumbered_milestone_backlog_passes(self) -> None:
+        ledger = self.root / ".ai" / "MILESTONES.md"
+        ledger.write_text(
+            ledger.read_text()
+            + "\n## 待办区（未编号）\n\n"
+            + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
+            + "|---|---|---|---|---|\n"
+            + "| future-goal | later | 2026-01-02 | .ai/milestone-backlog/future-goal.md | defer |\n",
+            encoding="utf-8",
+        )
+        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog.mkdir()
+        (backlog / "future-goal.md").write_text(
+            "---\n候办键: future-goal\n候办状态: deferred\n---\n", encoding="utf-8"
+        )
+        result = self.invoke()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
+    def test_milestone_backlog_missing_and_orphan_drafts_are_reported(self) -> None:
+        ledger = self.root / ".ai" / "MILESTONES.md"
+        ledger.write_text(
+            ledger.read_text()
+            + "\n## 待办区（未编号）\n\n"
+            + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
+            + "|---|---|---|---|---|\n"
+            + "| missing | later | 2026-01-02 | .ai/milestone-backlog/missing.md | defer |\n",
+            encoding="utf-8",
+        )
+        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog.mkdir()
+        (backlog / "orphan.md").write_text("---\n候办键: orphan\n候办状态: deferred\n---\n", encoding="utf-8")
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("backlog.missing.draft", result.stdout)
+        self.assertIn("milestones.backlog_set", result.stdout)
+
+    def test_milestone_backlog_cannot_masquerade_as_formal_number(self) -> None:
+        ledger = self.root / ".ai" / "MILESTONES.md"
+        ledger.write_text(
+            ledger.read_text()
+            + "\n## 待办区（未编号）\n\n"
+            + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
+            + "|---|---|---|---|---|\n"
+            + "| mile-0002 | later | 2026-01-02 | .ai/milestone-backlog/mile-0002.md | defer |\n",
+            encoding="utf-8",
+        )
+        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog.mkdir()
+        (backlog / "mile-0002.md").write_text(
+            "---\n候办键: mile-0002\n候办状态: deferred\n---\n", encoding="utf-8"
+        )
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("backlog.mile-0002.slug", result.stdout)
+
+    def test_milestone_backlog_contract_is_wired_to_both_hosts(self) -> None:
+        repo = Path(__file__).resolve().parents[1]
+        schema = (repo / "Coder/20_Workflow_Lifecycle/milestone-schema.md").read_text(encoding="utf-8")
+        command = (repo / ".claude/commands/butler/milestone.md").read_text(encoding="utf-8")
+        skill = (repo / "plugins/butler/skills/butler-milestone/SKILL.md").read_text(encoding="utf-8")
+        for text in (schema, command, skill):
+            self.assertIn(".ai/milestone-backlog/", text)
+            self.assertIn("start <候办键>", text)
+        self.assertIn("开启前退回", schema)
+        self.assertIn("no linked iteration, archive, or delivery", skill)
+
     def test_runtime_pointer_drift_is_reported(self) -> None:
         (self.root / ".ai" / "task-state.md").write_text("ITER-9999 active\n")
         result = self.invoke()

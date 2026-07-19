@@ -36,7 +36,7 @@ Claude/Codex 原生 Goal/Task 只做可重建薄投影（objective/state/reason/
 
 每个迭代有单调递增迭代号 `ITER-NNNN`（取自 `.ai/ITERATIONS.md` 台账），工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md`（并按 `delivery-summary.md §9` 固定模板填槽产同名 `.html` 阅读视图）+ 台账置 closed。迭代状态是**封闭枚举**，仅 `active`/`closed`/`abandoned` 三态（`planned` 属里程碑路线项、不入迭代台账；部署项目由 hook 机械拦截越界值）。
 
-迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号（跨 ≥2 迭代 / 版本主题 / 先评估后拆分 / 显式里程碑）时，在第一个迭代 P1 前开里程碑：写 `.ai/MILESTONE.md`（范围评估 + 理解阐释 + 拆分路线图）并 soft 对齐；期间开启的迭代自动归属之。**录入两通道**：对话直接讲清，或把原始概念文件投到项目根 `origin/` 收件箱让模型读取合成（brief 非权威，`.ai/MILESTONE.md` 为唯一真源）；**显式命令** `/milestone` 开启录入、`/milestone status` 只读看进度（与语义触发等价，open/status 之外仍走语义）。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（聚合链接各迭代交付，并产同名 `.html` 阅读视图）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
+迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号时，先合成范围与路线图并 soft 对齐。**讨论不等于开工**：暂不做的内容放 `.ai/MILESTONES.md` 未编号待办区，详情落 `.ai/milestone-backlog/<slug>.md`，不改 `current`、不占 `MILE-NNNN`；用户明确推进时才领取正式表最大号 +1，再写 `.ai/MILESTONE.md`。只有最新、零迭代/归档/交付的误开里程碑可退回候办；已有历史引用的号永不回收。期间开启的迭代自动归属之。录入可用对话或项目根 `origin/`；`/milestone start <候办键>` 提升候办，`/milestone status` 只读汇报正式进度与待办区。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（并产同名 `.html`）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
 
 ## 回退规则
 

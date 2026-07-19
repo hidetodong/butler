@@ -1,42 +1,46 @@
 # Verification Summary
 
-- ITER-0067 已完成项目外写入边界、跨项目门禁和危险模式授权上限实现。
-- 最终 hook 回归 147 项通过，Codex wrapper 真链路通过，完整固定 CI 通过。
-- 强审发现的 2 个 Must Fix 已修复并由最终证据重新验证；当前无完成阻塞。
+- ITER-0068 已把里程碑讨论稿与正式编号拆层：暂缓内容可恢复但不占号，开工才领号。
+- 状态审计 18 项、workflow registry 对账、Markdown 链接、147 hooks 与完整 CI 通过。
+- 强审与收口裁决共发现 3 个 Must Fix，均已修复并重跑证据；当前无完成阻塞。
 
 # AC Status
 
-- [x] AC1 (auto·可靠): 无法归属项目的真实外部路径由 Butler 退出判定，宿主接管 ✓
-- [x] AC2 (auto·可靠): 缺失、空白和解析异常目标继续 fail-closed ✓
-- [x] AC3 (auto·可靠): Claude/Codex 均按目标真实 Butler/Git 根归属，兄弟项目逐根校验 ✓
-- [x] AC4 (auto·可靠): 多项目 patch 全允许才放行，任一项目拒绝则整次拒绝 ✓
-- [x] AC5 (auto·可靠): 项目内阶段、业务扩展、台账与单 active 门禁回归通过 ✓
-- [x] AC6 (auto·可靠): 危险模式授权上限、动态施工和范围外路由已成文并有结构断言 ✓
-- [x] AC7 (auto·可靠): 规则卡、部署协议、README、Codex wrapper 与完整 CI 一致通过 ✓
+- [x] AC1 (auto·可靠): 录入/讨论与正式开启已拆开 ✓
+- [x] AC2 (auto·可靠): 台账待办索引与独立草稿一一对账 ✓
+- [x] AC3 (auto·可靠): `start <候办键>` 提升后才按正式表领号 ✓
+- [x] AC4 (auto·可靠): 只有最新且零历史引用的误开项可退回 ✓
+- [x] AC5 (auto·可靠): 已绑迭代/归档/交付的号永不回收 ✓
+- [x] AC6 (auto·可靠): 候办不参与 current、Goal、迭代归属或收口 ✓
+- [x] AC7 (auto·可靠): 审计器拒绝缺号、畸形 ID、缺失/孤立草稿和伪装键 ✓
+- [x] AC8 (auto·可靠): 真源、双宿主投影、registry、规则卡与完整 CI 对账 ✓
 
 # Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| hook-tests | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/hook-tests/record.json` |
-| codex-hook-wrapper | AC1–AC5, AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/codex-hook-wrapper/record.json` |
-| full-ci | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/full-ci/record.json` |
-| final-hook-tests | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/final-hook-tests/record.json` |
-| final-codex-wrapper | AC1–AC5, AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/final-codex-wrapper/record.json` |
-| final-full-ci | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0067/evidence/final-full-ci/record.json` |
+| auditor-tests | AC3–AC8 | captured | passed | `.ai/iterations/ITER-0068/evidence/auditor-tests/record.json` |
+| registry-check | AC1–AC3, AC6, AC8 | captured | passed | `.ai/iterations/ITER-0068/evidence/registry-check/record.json` |
+| diff-check | AC8 | captured | passed | `.ai/iterations/ITER-0068/evidence/diff-check/record.json` |
+| full-ci | AC1–AC8 | captured | failed (sandbox diagnostic) | `.ai/iterations/ITER-0068/evidence/full-ci/record.json` |
+| full-ci-retry | AC1–AC8 | captured | passed | `.ai/iterations/ITER-0068/evidence/full-ci-retry/record.json` |
+| final-full-ci | AC1–AC8 | captured | passed | `.ai/iterations/ITER-0068/evidence/final-full-ci/record.json` |
 
 # Verification Results
 
-- AC1–AC2：外部目标与未知目标使用不同标记；集成测试证明前者 allow、后者 deny。
-- AC3–AC4：绝对路径、相对兄弟项目、项目子目录和双项目 patch 正反路径均有断言。
-- AC5：完整 147 项 hook 测试覆盖全部既有规则；固定 CI 同时验证双宿主投影。
-- AC6：`dangerous-engine.md` 明确启动冻结、宿主权限、范围内动态追加、范围外继续/阻塞和禁止扩权；结构测试锁定关键句。
-- AC7：Codex wrapper E2E 和 `verify-ci.sh` 均由最终 evidence record 捕获为 passed。
+- AC1–AC3：`milestone-schema.md` 定义候办入库/正式提升，Claude 命令和 Codex skill 均由 registry 对账。
+- AC4–AC5：退回必须同时满足最新号、零迭代、零归档、零交付；否则只能 closed/abandoned。
+- AC6：`goal-contract.md`、`lifecycle.md`、规则卡和双宿主入口一致声明候办不是正式里程碑。
+- AC7：18 项状态审计回归全过，且畸形正式 ID 稳定报漂移而非抛堆栈。
+- AC8：Goal 判定已允许保留失败诊断、但只用 passed record 覆盖 AC；修复后的最终完整 CI 通过。首次失败 record 仅保留为 uv 缓存权限诊断，不作绿色依据。
 
 # Goal Calibration
 
-- CAL-001：项目子目录被误判为项目外 → P4 根因修复为按目标真实项目根归属 → resolved（final-hook-tests）。
-- CAL-002：无 Git 但已有 `.ai/` 的 Butler 项目失去阶段门和 advisor → P4 增加有界 cwd fallback → resolved（final-hook-tests）。
+- CAL-001：workflow registry 拒绝手改 Claude 受管投影 → 回 P4 修改 `workflows/registry.json` 并重生成 → resolved（registry-check）。
+- CAL-002：旧 brief 文案会让候办期真源身份冲突 → P4 改为随阶段切换唯一真源 → resolved（full-ci-retry）。
+- CAL-003：畸形正式号可能让审计器抛异常 → P4 先验证 ID 再计算序列 → resolved（auditor-tests）。
+- CAL-004：完整 CI 证据首跑被沙箱禁止访问 uv 缓存 → 按宿主授权在沙箱外重跑 → resolved（full-ci-retry）。
+- CAL-005：Goal adjudicator 与“失败证据必须保留”契约冲突 → 回 P3/P4 拆分 record 完整性与 passed AC 覆盖 → resolved（final-full-ci）。
 
 # Completion Inputs
 
@@ -45,21 +49,21 @@
 
 # Gate Coverage
 
-- 通用质量门禁：专项 hook 回归、Codex wrapper、完整 CI、Markdown/双宿主/Goal 结构检查均通过。
-- Tech Plan Alignment：双标记、逐目标项目根、跨根 first-deny-wins、宿主权限分层均按方案兑现。
+- 通用质量门禁：状态审计、registry 投影、Markdown 链接、双宿主地基、147 hooks 与完整 CI 均通过。
+- Tech Plan Alignment：台账待办索引 + 独立草稿、开工才领号、四条退回预检和状态审计均按方案落地。
 - References Compliance：N/A，本轮无外部规格资料。
 
 # Review
 
 - 方式：危险模式同上下文完整强审；未触发 opt-in 独立复核。
-- 首轮 Must Fix：2 项；均已修复并重跑最终证据。
+- 首轮 Must Fix：2 项；收口裁决追加发现 1 项；3 项均已修复并重跑专项与完整证据。
 - 最终结论：Must Fix 0，Should Fix 0，pass。
 
 # Remaining Risks
 
 - 本轮无未关闭实现风险。
-- 宿主若被用户预授权过宽，实际可写范围也会相应扩大；这是明确的宿主权限边界，不由 Butler 另建第二套权限兜底。
+- 候办入库/提升仍由 AI 按文档契约执行，不是独立事务 CLI；状态审计能发现集合漂移，但不替代宿主对单次多文件写的原子性。
 
 # Handoff / Next Step
 
-- 可进入 Goal adjudicator 和 ITER-0067 原子收口；本轮不发布、不推送、不升级外部项目。
+- 可进入 Goal adjudicator 和 ITER-0068 原子收口；本轮不发布、不推送、不升级外部项目。

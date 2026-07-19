@@ -37,6 +37,8 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 
 里程碑 Goal 不覆盖迭代 Goal；它聚合各迭代结果。迭代 closed 也不自动等于里程碑 complete，必须等全部版本义务和里程碑收口仪式完成。
 
+`.ai/MILESTONES.md` 待办区与 `.ai/milestone-backlog/` 里的未编号草稿尚未正式开启，**不派生 Milestone Goal**。只有候办草稿按 `milestone-schema.md` §7.1 提升、领取 `MILE-NNNN` 并成为 `current` 后，上表的合同槽才生效。
+
 ## 3. 派生状态机
 
 封闭状态集合：`active`、`at-risk`、`blocked`、`completion-candidate`、`complete`、`abandoned`。

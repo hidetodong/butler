@@ -1,66 +1,73 @@
 ---
-迭代: ITER-0067
+迭代: ITER-0068
 方案状态: pass
 准入方式: dangerous-ack
 ---
 
 # Plan Summary
 
-把“坏输入”和“项目外目标”拆成两个显式标记：坏输入继续 fail-closed，项目外目标让所有 Butler 项目规则退出判定；能解析出兄弟项目根的 patch 则切换到该根逐目标执行现有规则。
+在正式里程碑生命周期之前增加一个轻量候办层：台账末尾索引未编号候办项，独立草稿文件保留已合成内容；提升到 active 时才领号。
 
 # Design Decisions
 
-- 在 `lib/io.py` 增加独立的未知目标标记，不复用项目外标记。
-- `is_gated` 对未知目标保持保守门禁，对项目外目标返回不适用。
-- Codex patch 的绝对、相对目标统一尝试从真实目标位置解析项目根；没有项目根时标为项目外。
-- 删除“多项目根直接报错”，保留 dispatcher 的逐 target、first-deny-wins 语义。
-- 不新增 Butler 授权文件。宿主权限是机械授权真源；危险模式文档只定义预授权上限、冻结与阻塞路由。
+- 候办索引仍放在 `.ai/MILESTONES.md`，让用户要的“待办区”在同一看板可见；详细内容放 `.ai/milestone-backlog/<slug>.md`，避免台账膨胀。
+- 候办键直接用稳定 slug，不新增另一套数字号码；索引行包含标题、暂缓日期、草稿路径和原因。
+- 正式编号只从正式表分配；候办键、草稿文件名与对话里曾经称呼的临时号都不参与计算。
+- 退回候办是“开启前撤销”，不是新的 paused 状态；必须同时通过最新号、零迭代、零归档、零交付四个检查。
+- 扩展既有只读状态审计，同时核对正式号连续性与候办索引/草稿集合。
+- 收口裁决严格区分“证据包完整”和“证据能打绿”：失败诊断记录必须保留且校验完整，但只有 `passed` 记录能提供 AC 覆盖。
 
 # Alternatives and Trade-offs
 
-- 让 AI 写 `.ai/write-scope`：可机械比较路径，但 AI 能给自己改授权，不能作为可信权限真源，否决。
-- 保留 `BUTLER_BYPASS`：实现最省，但把正常跨目录写入伪装成违规，交互重且会污染审计，否决。
-- 所有项目外路径直接 allow：会连缺失路径等坏输入一起放掉；本方案用双标记避免该漏洞。
+- 给正式里程碑加 `paused`：它仍占号，没解决问题，而且会扩大 active 归属语义，否决。
+- 把候办详情全塞进 `MILESTONES.md`：文件会随讨论内容无界增长，否决。
+- 只留一行候办标题：简单，但丢失已讨论的范围和路线图，无法跨会话恢复，否决。
 
 # Failure Paths
 
-- 目标路径缺失、补丁无文件段、项目根解析内部异常：hook fail-closed。
-- 外部路径未获宿主权限：由宿主拒绝或请求授权，Butler 不伪造成功。
-- 危险模式遇到授权上限外依赖：继续不依赖它的工作；关键链路受阻则记 Goal calibration 并诚实停。
-- 多项目 patch 任一根的规则拒绝：整个工具调用拒绝。
+- 候办 slug 重复、路径越界或草稿缺失：停止写入/提升，先修复台账。
+- 误开里程碑已有任何迭代引用：禁止退回，改走 closed 或 abandoned。
+- 删除中间正式号造成缺口：状态审计拒绝。
+- 候办草稿和索引只更了一边：状态审计拒绝。
+- 自动验证先失败、后续重试通过：两份 record 都保留；裁决器验证全部记录完整性，只聚合通过记录的 AC 覆盖。
 
 # Impact Surface
 
-- `templates/hooks/lib/io.py`
-- `templates/hooks/rules/phase_gate.py`
-- `templates/hooks/tests/test_io.py`
-- `templates/hooks/tests/test_codex_patch.py`
-- `templates/hooks/tests/test_phase_gate.py`
-- `templates/hooks/tests/test_integration.py`
-- `Coder/65_Extension_Dangerous/dangerous-engine.md`
+- `Coder/20_Workflow_Lifecycle/milestone-schema.md`
+- `Coder/20_Workflow_Lifecycle/lifecycle.md`
 - `Coder/20_Workflow_Lifecycle/mcv-deployment.md`
-- `templates/hooks/README.md`
+- `Coder/20_Workflow_Lifecycle/goal-contract.md`
+- `.claude/commands/butler/milestone.md`
+- `plugins/butler/skills/butler-milestone/SKILL.md`
 - `templates/rule-card.md`
 - `Coder/README.md`
+- `.ai/project/capabilities.md`
+- `scripts/audit-project-state.py`
+- `scripts/test-audit-project-state.py`
+- `tools/goal-assurance/goal.py`
+- `tools/goal-assurance/test_goal.py`
 
 # Verification Plan
 
-- 专项 pytest：路径解析、phase gate、Codex patch、dispatcher integration。
-- 结构检查：危险模式和三处对外说明包含授权上限、宿主权限与范围外路由。
-- 完整验证：`bash scripts/verify-ci.sh`、`bash scripts/verify-codex-foundation.sh`、`git diff --check`。
-- 完整路径证据由 verification evidence runner 生成，最终交给 Goal adjudicator 裁决。
+- 状态审计单测：正常候办通过；缺草稿、孤立草稿、编号缺口、候办偷用 `MILE-NNNN` 均失败。
+- 结构检查：真源、双宿主入口、规则卡和能力摘要同时包含候办/开工领号边界。
+- 完整验证：`bash scripts/verify-ci.sh` 和 `git diff --check`。
+- 完整路径证据由 verification evidence runner 生成，最终由 Goal adjudicator 裁决收口资格。
 
 # Execution Steps
 
-- [ ] T1：先补失败测试，覆盖外部 allow、坏输入 deny、相对兄弟项目和多根 patch → AC1–AC5
-- [ ] T2：最小修改路径分类与 patch 锚定逻辑 → AC1–AC5
-- [ ] T3：更新危险模式与双宿主说明 → AC6–AC7
-- [ ] T4：运行专项和完整验证，强审后修复问题并收口 → AC1–AC7
+- [x] T1：修改里程碑真源和寿命周期接线 → AC1–AC6
+- [x] T2：同步 Claude/Codex 入口、规则卡、部署说明与能力摘要 → AC6, AC8
+- [x] T3：扩展状态审计和回归 fixture → AC3–AC7
+- [x] T4：运行专项/完整验证、强审、归档和交付 → AC1–AC8
 
 # Plan Admission
 
-- AC 覆盖：7/7。
-- 假设：宿主权限系统负责真实文件系统授权；Butler 只做项目流程门禁。
-- 反证：未发现必须由 Butler 再维护第二套权限真源的证据。
+- AC 覆盖：8/8。
+- 关键假设：正式里程碑号的价值是表达开工/交付顺序，候办顺序不需另一套数字时间线。
+- 替代方案：`paused` 不能解决占号；单行候办不能保真；候办详情全进台账会无界增长。
+- 影响面：已列出规则真源、双宿主入口、审计器与项目投影；不涉及 hook 或外部项目升级。
+- 验证盲区：AI 的语义路由无法只靠 Python 单测证明，因此用真源+双宿主投影结构检查和状态 fixture 共同约束。
 - Must Fix：0。
 - Verdict：pass。
+- P5 修订：收口裁决器与 `verify-schema.md` 的失败证据保留契约冲突，方案短暂退回 `draft`；补上“全记录校验、只通过记录覆盖”及三类回归后重审，Must Fix 0，再次 pass。

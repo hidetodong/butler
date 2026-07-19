@@ -53,3 +53,9 @@
 - 2026-07-18 · P5-review · ITER-0067 · `dangerous-ack`：完整强审发现 2 个 Must Fix——项目子目录写兄弟目录会被误判项目外、无 Git 的既有 Butler 项目会失去阶段门/advisor；已统一目标项目根并增加仅 `.ai/` 项目的有界 cwd fallback。
 - 2026-07-18 · P5-review · ITER-0067 · `dangerous-ack`：修复后最终 hook 147 项、Codex wrapper 与完整 CI captured 通过；最终 Must Fix 0、Should Fix 0，未触发 opt-in 独立复核。
 - 2026-07-18 · close · ITER-0067 · `dangerous-ack`：Goal adjudicator 十项全绿、6 evidence 整包归档、四件套/CHANGELOG 快照与双格式交付完成；项目知识折叠后关闭迭代，危险模式保持 ON。
+- 2026-07-19 · route · ITER-0068 · `dangerous-ack`：用户要求讨论后暂缓的里程碑不占正式号；开启独立完整迭代，将候办草稿与正式里程碑拆层。
+- 2026-07-19 · P2 · ITER-0068 · `dangerous-ack`：AC1–AC8 自审通过并冻结；候办落盘、提升领号、安全退回、历史不回收和状态审计均有可验证判据。
+- 2026-07-19 · P3 · ITER-0068 · `dangerous-ack`：Plan Admission=`pass`；采用台账候办索引 + 独立草稿，否决 `paused` 占号与台账内堆详情，退回条件限定为最新号且零历史引用。
+- 2026-07-19 · P5-review · ITER-0068 · `dangerous-ack`：完整强审发现 2 个 Must Fix——brief 章节仍把 `.ai/MILESTONE.md` 写成候办期真源，以及审计器遇畸形正式号可能抛异常；已切换为随阶段唯一真源，并增加稳定 ID 漂移报告与回归。
+- 2026-07-19 · P5-review · ITER-0068 · `dangerous-ack`：修复后状态审计 18/18、workflow registry、Markdown 链接、147 hooks 与完整 CI 均通过；最终 Must Fix 0、Should Fix 0，未触发 opt-in 独立复核。
+- 2026-07-19 · P3-reentry · ITER-0068 · `dangerous-ack`：Goal adjudicator 暴露与 verify-schema 的存量契约冲突，错把已被后续通过证据覆盖的失败诊断当成当前失败；方案退回并重审为“全记录校验完整性，只 passed 记录覆盖 AC”，Plan Admission 再次 pass。

@@ -13,6 +13,7 @@ from pathlib import Path
 
 ITERATION_RE = re.compile(r"^ITER-[0-9]{4,}$", re.ASCII)
 MILESTONE_RE = re.compile(r"^MILE-[0-9]{4,}$", re.ASCII)
+MILESTONE_BACKLOG_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$", re.ASCII)
 EVIDENCE_PATH_RE = re.compile(
     r"\.ai/iterations/(ITER-[0-9]{4,})/evidence/([a-z0-9][a-z0-9._-]{0,63})/record\.json"
 )
@@ -68,6 +69,28 @@ class Audit:
                 raise AuditError(f"{values[0] if values else prefix} 台账列数应为 {columns}")
             if values[0] in rows:
                 raise AuditError(f"台账存在重复 ID：{values[0]}")
+            rows[values[0]] = values
+        return rows
+
+    @staticmethod
+    def milestone_backlog_rows(text: str) -> dict[str, list[str]]:
+        rows: dict[str, list[str]] = {}
+        in_backlog = False
+        for line in text.splitlines():
+            if line == "## 待办区（未编号）":
+                in_backlog = True
+                continue
+            if in_backlog and line.startswith("## "):
+                break
+            if not in_backlog or not line.startswith("| ") or line.startswith("|---") or line.startswith("| 候办键 "):
+                continue
+            values = [value.strip() for value in line.strip().strip("|").split("|")]
+            if len(values) > 5:
+                values = [values[0], "|".join(values[1:-3]).strip(), *values[-3:]]
+            if len(values) != 5:
+                raise AuditError(f"候办项 {values[0] if values else '?'} 列数应为 5")
+            if values[0] in rows:
+                raise AuditError(f"待办区存在重复候办键：{values[0]}")
             rows[values[0]] = values
         return rows
 
@@ -198,6 +221,11 @@ class Audit:
         text = path.read_text(encoding="utf-8")
         current = self.current_pointer(text, "MILESTONES.md")
         rows = self.table_rows(text, "MILE-", 7)
+        invalid_ids = sorted(milestone for milestone in rows if MILESTONE_RE.fullmatch(milestone) is None)
+        self.add(not invalid_ids, "milestones.ids", f"invalid={invalid_ids}" if invalid_ids else "格式均合法")
+        numbers = sorted(int(milestone.partition("-")[2]) for milestone in rows if MILESTONE_RE.fullmatch(milestone))
+        expected_numbers = list(range(1, numbers[-1] + 1)) if numbers else []
+        self.add(numbers == expected_numbers, "milestones.sequence", f"actual={numbers}, expected={expected_numbers}")
         active = [milestone for milestone, row in rows.items() if row[2] == "active"]
         valid_status = all(row[2] in {"active", "closed", "abandoned"} for row in rows.values())
         self.add(valid_status, "milestones.status", "状态均合法" if valid_status else "存在非法状态")
@@ -230,6 +258,32 @@ class Audit:
                 iteration, route_status = values[2], values[3]
                 actual = iteration_rows.get(iteration, ["", "", "missing"])[2]
                 self.add(route_status == actual, f"route.{values[0]}", f"{iteration}: route={route_status}, ledger={actual}")
+
+        backlog_rows = self.milestone_backlog_rows(text)
+        backlog_root = self.root / ".ai" / "milestone-backlog"
+        indexed_paths: set[str] = set()
+        for slug, row in backlog_rows.items():
+            valid_slug = MILESTONE_BACKLOG_SLUG_RE.fullmatch(slug) is not None and not slug.startswith("mile-")
+            self.add(valid_slug, f"backlog.{slug}.slug", "kebab-case" if valid_slug else "候办键非法或伪装成正式里程碑号")
+            expected_path = f".ai/milestone-backlog/{slug}.md"
+            valid_path = row[3] == expected_path
+            self.add(valid_path, f"backlog.{slug}.path", f"actual={row[3]}, expected={expected_path}")
+            if not valid_path:
+                continue
+            indexed_paths.add(row[3])
+            draft = self.root / row[3]
+            valid_draft = draft.is_file() and not draft.is_symlink()
+            self.add(valid_draft, f"backlog.{slug}.draft", row[3])
+            if valid_draft:
+                draft_text = draft.read_text(encoding="utf-8")
+                markers_ok = f"候办键: {slug}" in draft_text and "候办状态: deferred" in draft_text
+                self.add(markers_ok, f"backlog.{slug}.markers", "complete" if markers_ok else "缺候办键或 deferred 状态")
+
+        actual_drafts = {
+            str(path.relative_to(self.root))
+            for path in backlog_root.rglob("*.md")
+        } if backlog_root.is_dir() else set()
+        self.add(actual_drafts == indexed_paths, "milestones.backlog_set", f"index={sorted(indexed_paths)}, actual={sorted(actual_drafts)}")
 
     def audit_runtime_pointers(self, current: str) -> None:
         for relative in (".ai/task-state.md", ".ai/02_SESSION_HANDOFF.md"):

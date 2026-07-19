@@ -2,28 +2,25 @@
 
 ## 当前状态
 
-- 当前无 active 迭代/里程碑；ITER-0067 已归档并双格式交付。
-- ITER-0067 从 `feat/mile-0008-goal-assurance` 收口；用户已授权合并并推送到 `github/main`，实际同步状态以 Git refs 实时核验。
-- 发布真相为 v2.17.0；MILE-0007 已聚合切版并合入/push `main`，tag 为 `v2.17.0`。
+- 当前无 active 迭代/里程碑；ITER-0068 已归档并双格式交付。
+- 讨论或暂缓方向现在进入未编号候办区，真正开工时才领取连续 `MILE-NNNN`。
 - 危险模式仍为 ON；只有用户显式要求才关闭。
 
-## 已交付
+## 已冻结边界
 
-- Butler 对无法归属项目的真实外部路径退出流程判定，由宿主权限接管；坏输入继续 fail-closed。
-- Claude/Codex 按目标真实 Butler/Git 根校验；Codex patch 支持多个项目根逐根门禁。
-- 危险模式每次任务启动冻结宿主已预授权的范围上限，上限内可动态施工，上限外隔离或诚实交还。
+- 候办草稿不进正式里程碑表，不参与 `current`、Goal 或迭代自动归属。
+- 从候办区推进时，才按最大已用正式号 +1 领号。
+- 只有最新、尚未绑定任何迭代且没有归档/交付的误开 active 里程碑可退回候办并释放号码。
+- 已绑迭代的里程碑暂停或取消时不回收号码，必须走收口或 abandoned，以保留历史归属。
 
 ## 验证与证据
 
-- `final-hook-tests`：147 passed。
-- `final-codex-wrapper` 与 `final-full-ci`：passed。
-- 强审修复 2 个 Must Fix，最终 Must Fix 0、Should Fix 0；Goal adjudicator 十项全绿、verdict=`eligible`。
-- 六份 evidence 已整包归档到 `.ai/iterations/ITER-0067/evidence/`。
+- 状态审计 18 项、Goal 裁决 16 项和 147 项 hooks 全部通过。
+- `final-full-ci` 通过；Goal adjudicator 十项全绿，verdict=`eligible`。
+- 六份 evidence 已整包归档到 `.ai/iterations/ITER-0068/evidence/`。
 
-## 下一步边界
+## 下一步
 
-- 外部旧项目要获得新 hook 行为，仍需后续切版并走 migration/upgrade；本轮不假报已分发。
-- 宿主权限范围是真实授权上限，Butler 不维护第二套权限文件，也不把正常跨目录写入变成 bypass。
-- 本次只合并迭代提交，不切新版本；外部项目获得新行为仍需后续切版与升级。
-- 后续普通改动从 v2.17.0 继续；未形成新发布前，状态审计会因 VERSION tag 不指向 HEAD 明确亮 `UNRELEASED`。
-- 若用户要求远端保护：需先解决私有仓库套餐/可见性，再推 workflow 并核验 required check。
+- 本轮不切版本、不发布、不推送；v2.17.0 之后仍有未发布变更，审计应如实提示 `UNRELEASED`。
+- 外部旧项目要获得本轮规则，仍需后续正式切版并走 migration/upgrade。
+- 新方向可以直接开独立迭代；若只是讨论里程碑，则先写入未编号候办区。
