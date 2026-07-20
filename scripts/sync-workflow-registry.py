@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-EXPECTED_IDS = {"prd", "review", "milestone", "upgrade", "ideation", "preference", "loop", "dangerous"}
+EXPECTED_IDS = {"prd", "review", "milestone", "upgrade", "init", "ideation", "preference", "loop", "dangerous"}
 HIGH_RISK = {"loop", "dangerous"}
 TOP_KEYS = {"schema_version", "plugin", "workflows"}
 PLUGIN_KEYS = {"name", "root", "manifest", "hooks", "personal_installer", "setup_entrypoint", "marketplace_mode", "team_distribution"}
@@ -91,8 +91,8 @@ def validate_registry(data: Any, root: Path) -> None:
             raise RegistryError(f"registered plugin path does not exist: {plugin[field]}")
 
     workflows = data["workflows"]
-    if not isinstance(workflows, list) or len(workflows) != 8:
-        raise RegistryError("registry must contain exactly 8 workflows")
+    if not isinstance(workflows, list) or len(workflows) != 9:
+        raise RegistryError("registry must contain exactly 9 workflows")
     ids: set[str] = set()
     names: set[str] = set()
     aliases: set[str] = set()
@@ -118,8 +118,8 @@ def validate_registry(data: Any, root: Path) -> None:
         if not isinstance(triggers, list) or not triggers or any(not isinstance(x, str) or not x for x in triggers):
             raise RegistryError(f"semantic_triggers must be non-empty strings: {workflow_id}")
         alias_items = item["legacy_aliases"]
-        if not isinstance(alias_items, list) or not alias_items:
-            raise RegistryError(f"legacy_aliases must be non-empty: {workflow_id}")
+        if not isinstance(alias_items, list):
+            raise RegistryError(f"legacy_aliases must be a list: {workflow_id}")
         for alias in alias_items:
             alias = exact_keys(alias, ALIAS_KEYS, f"{workflow_id}.alias")
             name = nonempty(alias["name"], f"{workflow_id}.alias.name")
@@ -387,13 +387,13 @@ def main(argv: list[str] | None = None) -> int:
                 for item, reason in drift:
                     print(f"[DRIFT] {item.path.relative_to(root)}: {reason}", file=sys.stderr)
                 return 1
-            print(f"[OK] workflow registry projections: workflows=8 projections={len(projections)}")
+            print(f"[OK] workflow registry projections: workflows=9 projections={len(projections)}")
             return 0
         apply_projections(projections)
         remaining = [(item, projection_drift(item)) for item in projections if projection_drift(item)]
         if remaining:
             raise RegistryError("write completed with projection drift")
-        print(f"[OK] synchronized workflow registry: workflows=8 projections={len(projections)} changed={len(drift)}")
+        print(f"[OK] synchronized workflow registry: workflows=9 projections={len(projections)} changed={len(drift)}")
         return 0
     except (OSError, RegistryError) as error:
         print(f"workflow-registry: {error}", file=sys.stderr)

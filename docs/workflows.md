@@ -8,6 +8,7 @@
 | review | `/butler:review` | `$butler-review` | normal | 允许 | `review`、`代码复核`、`产物复核`、`independent review` | `/review` (natural-language-compat) | `Coder/60_Extension_CodeReview/review-engine.md` |
 | milestone | `/butler:milestone` | `$butler-milestone` | normal | 允许 | `milestone`、`里程碑`、`roadmap`、`multi-iteration`、`milestone backlog`、`里程碑候办`、`多方向候办`、`one direction per draft` | `/milestone` (natural-language-compat) | `Coder/20_Workflow_Lifecycle/milestone-schema.md` |
 | upgrade | `/butler:upgrade` | `$butler-upgrade` | normal | 允许 | `upgrade Butler`、`升级 Butler`、`同步 Butler`、`version gap` | `/butler-upgrade` (deprecated) | `Coder/20_Workflow_Lifecycle/butler-upgrade.md` |
+| init | `/butler:init` | `$butler-init` | normal | 允许 | `init`、`initialize`、`初始化`、`部署基地车`、`deploy Butler`、`setup Butler`、`bootstrap` |  | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` |
 | ideation | `/butler:ideation` | `$butler-ideation` | normal | 允许 | `brainstorm`、`脑暴`、`需求还没想清`、`refine idea` | `/ideation` (natural-language-compat) | `Coder/50_Extension_Ideation/ideation-engine.md` |
 | preference | `/butler:preference` | `$butler-preference` | normal | 允许 | `preference`、`偏好探针`、`reback`、`distill preference` | `/preference` (natural-language-compat) | `Coder/70_Extension_Preference/preference-probe-engine.md` |
 | loop | `/butler:loop` | `$butler-loop` | high | 禁止（必须显式） | `$butler-loop`、`/butler:loop`、`死磕`、`explicit convergence loop` | `/loop` (harness-collision-do-not-generate) | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |

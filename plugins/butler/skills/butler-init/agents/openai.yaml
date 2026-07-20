@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Init"
+  short_description: "Deploy Butler into a new project"
+  default_prompt: "Use $butler-init to deploy Butler base infrastructure into this project."
+policy:
+  allow_implicit_invocation: true

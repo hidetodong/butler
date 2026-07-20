@@ -3,7 +3,7 @@
 - 当前迭代：无 active
 - 当前里程碑：none
 - 阶段：—
-- 状态：ITER-0070 已收口。全部 12 条 AC 验证通过（7 自动 + 5 人测）。
+- 状态：ITER-0072 已收口。/butler:init 已交付推送。
 - 下一动作：无活跃迭代。
 
 # Goal Calibration

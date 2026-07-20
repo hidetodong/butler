@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "registry-check",
+  "iteration": "ITER-0072",
+  "ac_ids": [
+    "AC3",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/sync-workflow-registry.py",
+      "--check"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-20T14:18:08.463Z",
+  "finished_at": "2026-07-20T14:18:08.544Z",
+  "duration_ms": 80,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 63,
+    "captured_bytes": 63,
+    "sha256": "76fa919151c6a05078edbba80adb216833cf70823c6390212787960d4d563c1e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

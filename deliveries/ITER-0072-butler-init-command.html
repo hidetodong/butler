@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8"><title>ITER-0072 · /butler:init 命令</title>
+<style>body{font-family:system-ui;max-width:800px;margin:2em auto;padding:0 1em;line-height:1.6}pre{background:#f5f5f5;padding:1em}</style>
+</head><body>
+<h1>ITER-0072 · /butler:init 命令</h1>
+<h2>本次交付目标</h2>
+<p>新增 /butler:init 命令，新项目一键部署 Butler 基地车。</p>
+<h2>已完成内容</h2>
+<p>- Claude 命令 + Codex skill + registry + sync 脚本适配</p>
+<p>- sync --check: 9 workflows 37 projections 零漂移</p>
+<h2>关键变更</h2>
+<p>- 新项目 /butler:init → 自动侦察、展开 .ai/、生成双入口、拷贝 hooks、提示 setup.sh</p>
+<p>- 已部署项目 → 提示终止</p>
+<p>- 已有 8 工作流无回归</p>
+<h2>引用</h2>
+<p>- .ai/iterations/ITER-0072/</p>
+<p>- .claude/commands/butler/init.md</p>
+<p>- plugins/butler/skills/butler-init/SKILL.md</p>
+<p>- workflows/registry.json</p>
+</body></html>

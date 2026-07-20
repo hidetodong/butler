@@ -149,6 +149,36 @@
       }
     },
     {
+      "id": "init",
+      "rule_source": "Coder/20_Workflow_Lifecycle/mcv-deployment.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "init",
+        "initialize",
+        "初始化",
+        "部署基地车",
+        "deploy Butler",
+        "setup Butler",
+        "bootstrap"
+      ],
+      "legacy_aliases": [],
+      "claude": {
+        "name": "/butler:init",
+        "path": ".claude/commands/butler/init.md",
+        "description": "在新项目部署 Butler 基地车——侦察技术栈、展开 .ai/ 基础设施、注入规则入口与 hooks、安装全局命令",
+        "default_prompt": "Use /butler:init for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-init",
+        "path": "plugins/butler/skills/butler-init/SKILL.md",
+        "description": "Deploy Butler base infrastructure into a new project. Use when the user asks to initialize Butler, set up Butler in a project, deploy the base car, or bootstrap a project with Butler.",
+        "display_name": "Butler Init",
+        "short_description": "Deploy Butler into a new project",
+        "default_prompt": "Use $butler-init to deploy Butler base infrastructure into this project."
+      }
+    },
+    {
       "id": "ideation",
       "rule_source": "Coder/50_Extension_Ideation/ideation-engine.md",
       "risk": "normal",
