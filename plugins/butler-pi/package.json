@@ -1,0 +1,8 @@
+{
+  "name": "butler-pi",
+  "version": "1.0.0",
+  "description": "Butler flow-gate extension for Pi coding agent — intercepts write/edit and enforces P1–P5 phase discipline via Butler's Python rule modules.",
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}

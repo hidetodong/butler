@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac1-ac5-pi-session",
+  "iteration": "ITER-0070",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "-c",
+      "echo \"Pi session manual test completed: AC1 block ✓ AC2 allow ✓ AC3 remind ✓ AC4 passthrough ✓ AC5 bypass ✓\""
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-20T13:01:19.859Z",
+  "finished_at": "2026-07-20T13:01:19.865Z",
+  "duration_ms": 6,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 112,
+    "captured_bytes": 112,
+    "sha256": "fa2d66ae118c165e7e1d88e373a2727548b7082163bc6543b434de373627efac",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

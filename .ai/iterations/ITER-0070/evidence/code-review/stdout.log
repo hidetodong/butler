@@ -1,0 +1,12 @@
+ .ai/02_SESSION_HANDOFF.md   |  18 ++---
+ .ai/AC_LIST.md              |  56 ++++++++++----
+ .ai/CONCEPT.md              |  92 ++++++++++++++---------
+ .ai/ITERATIONS.md           |   3 +-
+ .ai/TECH_PLAN.md            | 178 ++++++++++++++++++++++++++++++++++----------
+ .ai/VERIFY_REPORT.md        |  87 ++++++++++++----------
+ .ai/task-state.md           |   9 +--
+ Coder/README.md             |   3 +-
+ docs/codex-compatibility.md |  31 +++++---
+ scripts/setup.sh            |  19 +++++
+ scripts/verify-ci.sh        |   1 +
+ 11 files changed, 344 insertions(+), 153 deletions(-)

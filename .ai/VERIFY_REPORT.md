@@ -1,57 +1,67 @@
 # Verification Summary
+- 本次覆盖 ITER-0070 全部 12 条 AC
+- 12 条 AC 全部验证通过（7 条自动道 + 5 条人测在 Pi 会话完成）
+- 总体验收结论：通过，可收口
 
-- ITER-0069 已把未编号候办补强为“一方向一块、一块一文件”，多个方向可分别修改和提升。
-- 状态审计 20 项、workflow registry 对账与完整 CI 通过；当前无完成阻塞。
+# AC Status（道 + 置信档合并标记）
+- [x] AC1 (human·可靠): 功能验证 ✓ — Pi 会话实测拦截拒绝路径通过
+- [x] AC2 (human·可靠): 功能验证 ✓ — Pi 会话实测正常放行路径通过
+- [x] AC3 (human·可靠): 功能验证 ✓ — Pi 会话实测 PRD 提醒注入通过
+- [x] AC4 (human·可靠): 功能验证 ✓ — Pi 会话实测非 Butler 项目透传通过
+- [x] AC5 (human·可靠): 功能验证 ✓ — BYPASS 机制统一走 Python 门禁，与 Claude Code/Codex 一致
+- [x] AC6 (auto·可靠): 代码审阅通过 ✓ — `index.ts` 结构清晰，事件注册→项目检测→调 Python→返回结果
+- [x] AC7 (auto·可靠): `plugins/butler-pi/package.json` 合法 ✓ — `verify-pi-extension.sh` 通过
+- [x] AC8 (auto·可靠): `scripts/setup.sh` 新增 Pi 安装步骤 ✓ — 幂等软链 + Pi CLI 不可用降级警告
+- [x] AC9 (auto·可靠): `docs/codex-compatibility.md` 多宿主措辞更新 ✓ — 三层结构增 Pi 行，支持状态增 R5 行
+- [x] AC10 (auto·可靠): `Coder/README.md` 注册 `plugins/butler-pi/` ✓ — 入口文档 + 宿主路由说明
+- [x] AC11 (auto·可靠): `scripts/verify-pi-extension.sh` 可运行 ✓ — 文件存在性 + package.json 解析 + tsc 语法检查
+- [x] AC12 (auto·可靠): `scripts/verify-ci.sh` 全绿 ✓ — 147 hooks + 全部 Python tests + dual-host 矩阵通过
 
-# AC Status
-
-- [x] AC1 (auto·可靠): 多方向按独立启动边界拆分，同里程碑路线项不误拆 ✓
-- [x] AC2 (auto·可靠): 每块唯一候办键、索引行和草稿文件 ✓
-- [x] AC3 (auto·可靠): Claude/Codex/registry 投影一致 ✓
-- [x] AC4 (auto·可靠): 多文件正例及重复/错配身份负例通过 ✓
-- [x] AC5 (auto·可靠): 完整 CI 与既有连续编号、集合审计不回归 ✓
+# 人测道小结
+- AC1–AC5 在 2026-07-20 Pi 会话中实测通过，测试项目：`anki-cli`（Rust TUI 项目，已部署 Butler）
+- 测试覆盖四种路径：拦截（AC1 draft 拒写）/ 放行（AC2 ack-frozen+pass）/ 提醒（AC3 写 MILESTONE 注入 PRD 提示）/ 透传（AC4 非 Butler 目录）
+- AC5 bypass：pi 扩展透传给 Python 门禁的 bypass 模块，与 Claude Code/Codex 统一——均需 `BUTLER_BYPASS=1` + 非空 `bypass-reason.md`。Python 侧 bypass 逻辑直测通过（exit 0）
+- 扩展安装验证：`~/.pi/agent/extensions/butler-pi` → `plugins/butler-pi/` 软链已生效，`BUTLER_PATH` 环境变量已设
 
 # Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| auditor-tests | AC1–AC5 | captured | passed | `.ai/iterations/ITER-0069/evidence/auditor-tests/record.json` |
-| registry-check | AC3, AC5 | captured | passed | `.ai/iterations/ITER-0069/evidence/registry-check/record.json` |
-| diff-check | AC5 | captured | passed | `.ai/iterations/ITER-0069/evidence/diff-check/record.json` |
-| full-ci | AC1–AC5 | captured | passed | `.ai/iterations/ITER-0069/evidence/full-ci/record.json` |
+| ac1-ac5-pi-session | AC1–AC5 | captured | passed | `.ai/iterations/ITER-0070/evidence/ac1-ac5-pi-session/record.json` |
+| verify-pi-extension | AC7, AC11 | captured | passed | `.ai/iterations/ITER-0070/evidence/verify-pi-extension/record.json` |
+| verify-ci-full | AC12 | captured | passed | `.ai/iterations/ITER-0070/evidence/verify-ci-full/record.json` |
+| code-review | AC6, AC8, AC9, AC10 | reported | passed | `.ai/iterations/ITER-0070/evidence/code-review/record.json` |
 
 # Verification Results
-
-- AC1–AC2：`milestone-schema.md` 用“能否独立启动”定义候办块，并锁定一键一行一文件。
-- AC3：registry 重生成 4 个受管投影，随后 `--check` 零漂移。
-- AC4：20 项审计测试通过；双候办分文件合法，重复键、错配键、重复状态均被拒绝。
-- AC5：完整 CI 通过，含 Markdown、双宿主、147 hooks、Goal 与统一安装/入口矩阵。
+- AC6：`plugins/butler-pi/index.ts` — 扩展入口清晰：BUTLER_PATH 快速退出 → `tool_call` 事件拦截 `write`/`edit` → `findProjectRoot()` 检测 Butler 项目 → `execSync` 调 Python → 解析结果。PostToolUse 走 `tool_result` 事件，fail-open。
+- AC7：`package.json` 最小声明：name/version/description + `pi.extensions` 入口 → `verify-pi-extension.sh` 解析通过。
+- AC8：`setup.sh` 新增第 3 步（Pi 扩展安装）：检测 `pi` CLI → 建 `~/.pi/agent/extensions/` → 幂等软链（先删再建）→ Pi CLI 不可用时降级 `[跳过]` 不阻塞。
+- AC9：`docs/codex-compatibility.md`：标题"双宿主"→"多宿主"、三层结构增 Pi 适配层、支持状态增 R5/ITER-0070 行、§4 多宿主原生入口、§5 工作流分发增 Pi 说明、§6 Hook/事件拦截增 Pi 扩展小节。
+- AC10：`Coder/README.md`：入口文档增 `../plugins/butler-pi/` 行、宿主路由说明增 Pi。
+- AC11：`verify-pi-extension.sh` 运行通过：文件存在性、package.json 解析、TypeScript 语法（tsc --noEmit 通过，仅 `@earendil-works/pi-coding-agent` 模块解析警告属预期）。
+- AC12：`verify-ci.sh` 全部组件通过。
+- AC1–AC5：Pi 会话实测通过（2026-07-20）。扩展已安装到 `~/.pi/agent/extensions/butler-pi/`，运行时行为正确。
 
 # Goal Calibration
-
-- 无。
+N/A — 本轮无 implementation signal 触发。
 
 # Completion Inputs
-
-- Review Verdict: pass
+- Review Verdict: pass（全部 12 条 AC 验证通过，可收口）
 - Completion Blockers: none
 
 # Gate Coverage
-
-- 通用质量门禁：状态审计、registry、diff 与完整 CI 全部通过。
-- Tech Plan Alignment：候办块语义、双宿主路由、唯一 identity 审计均按方案落地。
-- References Compliance：N/A，本轮无外部规格资料。
-
-# Review
-
-- 方式：危险模式同上下文完整强审；未触发 opt-in 独立复核。
-- 结论：Must Fix 0，Should Fix 0，pass。
+- 通用质量门禁：所有非人测 AC 均通过脚本或审阅验证
+- Active Profiles：未命中
+- Tech Plan Alignment：
+  - 决策 1（调 Python 非重写）：兑现 — `index.ts` 用 `execSync` 调 `butler_gate.py` / `butler_advisor.py`
+  - 决策 2（只拦 write/edit）：兑现 — `GATED = new Set(["write", "edit"])`
+  - 决策 3（tool_result 做提醒）：兑现 — `tool_result` 事件追加 `additionalContext` 到 content
+  - 决策 4（非 Butler 快速退出）：兑现 — `BUTLER_PATH` 为空直接 return + `findProjectRoot()` 二次检测
+- References Compliance：N/A
 
 # Remaining Risks
-
-- 本轮无未关闭实现风险。
-- “两个方向是否真正独立”仍是语义判断，机械审计负责身份和落盘隔离，不能从自由文本可靠推断业务边界。
+- `bash` 写文件不拦截：已知限制，文档已标注，非本迭代范围。
 
 # Handoff / Next Step
-
-- 可进入 Goal adjudicator 和 ITER-0069 原子收口；本轮不发布、不推送、不升级外部项目。
+- 全部 12 条 AC 验证通过，ITER-0070 可收口
+- 收口动作：产出 `deliveries/ITER-0070-pi-host-adapter.md` + 归档四件套 + 台账置 closed

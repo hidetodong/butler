@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "code-review",
+  "iteration": "ITER-0070",
+  "ac_ids": [
+    "AC6",
+    "AC8",
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "git",
+      "diff",
+      "--stat",
+      "HEAD"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-20T13:01:19.858Z",
+  "finished_at": "2026-07-20T13:01:19.899Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 580,
+    "captured_bytes": 580,
+    "sha256": "8f242f96e3f5bc94322a7cb7059fee11ac29ea5f9460b70d8bb2b1ff144f9d3e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

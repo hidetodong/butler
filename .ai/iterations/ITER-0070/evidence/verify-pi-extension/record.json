@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "verify-pi-extension",
+  "iteration": "ITER-0070",
+  "ac_ids": [
+    "AC7",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-pi-extension.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-20T13:00:50.207Z",
+  "finished_at": "2026-07-20T13:00:58.706Z",
+  "duration_ms": 8499,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1636,
+    "captured_bytes": 1636,
+    "sha256": "b5788598559637c52df0ac24e527bf430e6b6d353226703ae23e79b599132667",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

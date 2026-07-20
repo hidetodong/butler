@@ -4,17 +4,18 @@ audience: AI / 开发者
 scope: Butler 共同内核、Claude Code/Codex 适配层、分阶段支持状态与维护边界
 ---
 
-# Codex 双宿主兼容架构
+# 多宿主兼容架构
 
-Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核，再为 Claude Code 和 Codex 分别提供薄入口与运行协议适配。
+Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个共同内核，再为 Claude Code、Codex 和 Pi 分别提供薄入口与运行协议适配。
 
 ## 1. 三层结构
 
 | 层 | 内容 | 维护规则 |
 |---|---|---|
 | 共同内核 | `Coder/`、`.ai/`、`templates/rule-card.md`、`templates/hooks/rules/` 与 `lib/` | 规则算法和状态契约只写在这里 |
-| Claude Code 适配层 | `CLAUDE.md`、`.claude/commands/`、部署后的 `.claude/hooks/` 与 settings | 保留现有行为，不为 Codex 改写 |
+| Claude Code 适配层 | `CLAUDE.md`、`.claude/commands/`、部署后的 `.claude/hooks/` 与 settings | 保留现有行为，不为其他宿主改写 |
 | Codex 适配层 | `AGENTS.md`、`.agents/skills/`、`plugins/butler/`（含 plugin hooks） | 只负责发现、路由、输入输出转换 |
+| Pi 适配层 | `AGENTS.md`（共用）、`.agents/skills/`（共用）、`plugins/butler-pi/`（TypeScript 扩展） | 只负责事件拦截与 Python 门禁调用 |
 
 `.ai/` 不属于任何单一宿主。它保存当前目标、验收、方案、验证、台账和跨会话断点；Claude Code 与 Codex 必须读写同一份状态，不能各建副本。
 
@@ -35,24 +36,28 @@ Butler 不为 Codex 重写一套规则。兼容方式是保留一个共同内核
 | R2 / ITER-0052 | 8 个 Butler 工作流迁为 Codex skills，并打包成可安装 plugin | v2.13.0 已交付 |
 | R3 / ITER-0053 | Codex PreToolUse/PostToolUse plugin hooks、`apply_patch` 输入适配、拒绝与提醒端到端验证 | v2.14.0 已交付 |
 | R4 / ITER-0054 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | v2.15.0 已交付 |
+| R5 / ITER-0070 | Pi 宿主适配器：TypeScript 扩展拦截 write/edit 调 Python 判断模块做流程门禁，setup.sh 安装，文档多宿主化 | 进行中 |
 
 至 v2.15.0，MILE-0006 的安装、规则发现、8 个工作流、apply_patch hooks、目标项目双入口与升级链已经闭环。这里的“兼容”是工作流兼容，不是不可绕过的安全边界；未观测的 shell/MCP 写路径不在保护声明内。
 
-## 4. Codex 原生入口
+## 4. 多宿主原生入口
 
-Codex 会在开始工作前读取仓库级 `AGENTS.md`，并允许在更深目录放置更具体的覆盖文件。Butler 的根入口保持短小：只放常驻约束、验证命令和读序，复杂规则继续按指针读取。这也避免撞上 Codex 项目指令的默认大小预算。
+Claude Code 读取仓库级 `CLAUDE.md`；Codex 和 Pi 都读取仓库级 `AGENTS.md`，并允许在更深目录放置更具体的覆盖文件。Butler 的根入口保持短小：只放常驻约束、验证命令和读序，复杂规则继续按指针读取。
 
-- 官方说明：[Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md.md)
+- Codex 官方说明：[Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agreements-md.md)
+- Pi 官方说明：Pi 自动发现项目根和祖先目录的 `AGENTS.md`
 - Butler 仓入口：`AGENTS.md`
 - 目标项目模板：`templates/AGENTS.md.template`
 
-不把 `CLAUDE.md` 配成 Codex fallback 作为正式方案：fallback 是个人机器设置，不能随仓保证。原生 `AGENTS.md` 才是团队可版本化的契约。
+不把 `CLAUDE.md` 配成其他宿主的 fallback 作为正式方案：fallback 是个人机器设置，不能随仓保证。原生 `AGENTS.md` 才是团队可版本化的契约。
 
 ## 5. 工作流与分发方向
 
-Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装分发。Butler 的发布真源是 `plugins/butler/skills/`；`.agents/skills/` 的 8 个相对软链让仓内开发态也能发现同一批 skill，不产生第二份正文。
+Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装分发；Pi 同样遵循 Agent Skills 标准，通过 `.agents/skills/` 发现。Butler 的 skills 发布真源是 `plugins/butler/skills/`；`.agents/skills/` 的相对软链让 Codex 和 Pi 都能发现同一批 skill。
 
-入口、双宿主名称、风险、语义触发和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。高风险入口在 `agents/openai.yaml` 禁止隐式调用，必须显式点名；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
+Pi 的门禁层用 TypeScript 扩展（`plugins/butler-pi/`）实现 `tool_call` / `tool_result` 事件拦截，复用 Python 判断模块。安装通过 `scripts/setup.sh` 幂等软链到 `~/.pi/agent/extensions/`。
+
+入口、双宿主名称、风险、语义触发和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。高风险入口在各宿主分别禁止隐式调用；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
 
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。
@@ -63,9 +68,15 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 - 固定校验来源：CI/local 使用 `tools/codex-validators/` 中按 OpenAI Codex commit 与 SHA-256 固定的官方 validator 快照；来源和许可证见同目录 `PROVENANCE.json` / `LICENSE`。验证不得依赖用户 `$HOME/.codex/skills/.system` 是否存在。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 
-## 6. Hook 实现与边界
+## 6. Hook / 事件拦截实现与边界
+
+### Codex hooks
 
 Codex 支持 `PreToolUse`、`PostToolUse` 等生命周期事件。Butler plugin 通过默认发现的 `plugins/butler/hooks/hooks.json` 注册两条 hook；首次启用时用户必须审阅来源并信任。`--dangerously-bypass-hook-trust` 只用于已审过源代码的自动化 E2E，不是日常安装步骤。
+
+### Pi 扩展
+
+Pi 不支持 hooks.json，但提供等价的 TypeScript 扩展 API：`tool_call` 事件（PreToolUse 等价，可 block）和 `tool_result` 事件（PostToolUse 等价，可修改结果）。`plugins/butler-pi/index.ts` 在这两个事件中构造与 Claude Code hook 相同的 JSON 输入，通过 `execSync` 调 `butler_gate.py` / `butler_advisor.py`——零逻辑双写。
 
 `templates/hooks/lib/codex_patch.py` 把 Codex `tool_input.command` 中的 add/update/delete/move、多文件和多 hunk patch 转成逐目标 Context，再复用同一批 rule modules。Claude 的 `Edit`、`Write`、`MultiEdit` 输入路径保持不变。
 

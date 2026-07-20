@@ -48,6 +48,24 @@ else
   echo "[跳过] 未找到 Codex CLI；Claude Code 安装已完成。安装 Codex 后重跑 setup.sh 即可补装 plugin。"
 fi
 
+# --- 3. Pi extension（幂等软链；Pi CLI 不可用时降级跳过） ---
+
+PI_COMMAND="${BUTLER_PI_COMMAND:-pi}"
+PI_EXTENSIONS_DIR="$HOME/.pi/agent/extensions"
+PI_EXTENSION_SRC="$BUTLER_DIR/plugins/butler-pi"
+PI_EXTENSION_LINK="$PI_EXTENSIONS_DIR/butler-pi"
+if command -v "$PI_COMMAND" >/dev/null 2>&1; then
+  mkdir -p "$PI_EXTENSIONS_DIR"
+  # Idempotent: remove old symlink or directory before creating new one.
+  if [[ -L "$PI_EXTENSION_LINK" ]] || [[ -d "$PI_EXTENSION_LINK" ]]; then
+    rm -rf "$PI_EXTENSION_LINK"
+  fi
+  ln -sfn "$PI_EXTENSION_SRC" "$PI_EXTENSION_LINK"
+  echo "[安装] Pi Butler 扩展已安装到 $PI_EXTENSION_LINK（请新开 Pi 会话生效）"
+else
+  echo "[跳过] 未找到 Pi CLI；Claude Code 与 Codex 安装已完成。安装 Pi 后重跑 setup.sh 即可补装扩展。"
+fi
+
 echo ""
 echo "安装完成。请重启终端，或 source 你当前使用的 shell 配置文件，使环境变量生效。"
 echo ""
@@ -56,6 +74,7 @@ echo "  在任何项目中启动 AI 会话，直接给工程任务即可。"
 echo "  AI 会自动从入口文件读取规则，新项目会自动触发基地车部署。"
 echo "  slash 命令（如 /butler:prd）已全局安装，在所有项目里都能用。"
 echo "  检测到 Codex CLI 时，Butler plugin 也会安装/刷新；新会话首次启用 hook 请审阅并信任。"
+echo "  检测到 Pi CLI 时，Butler 扩展也会安装/刷新；新会话自动生效。"
 echo ""
 echo "可选（实验性）：偏好探针 /preference 默认关、数据外置。"
 echo "  如需启用，运行一次：./scripts/preference-init.sh"

@@ -1,37 +1,59 @@
----
-迭代: ITER-0069
-分流: 完整路径
-模式: dangerous
----
+> 分流: 完整 | 命中升级信号: 多文件改动, 跨模块影响, 设计取舍 | 2026-07-19
 
-# 一句话意图
+# 一句话
+Butler 已经有 Claude Code 和 Codex 两个宿主适配器，现在 Pi 也能发现 and 加载 Butler 的 skills 和 AGENTS.md，唯独缺一个写操作流程门禁。本迭代给 Pi 写一个 TypeScript 扩展，用 Pi 的 `tool_call` 事件拦截 `write`/`edit`，调 Butler 现有的 Python 判断模块做阶段产物检查，让 Pi 成为第三个完整支持的宿主。
 
-把多方向里程碑待办拆成真正独立的候办单元：一方向一个键、一行索引、一份文件，能够分别修改、暂缓和提升。
+# Goal
+- 给 Butler 新增 Pi 宿主适配器，使 Pi 用户部署 Butler 后享有与 Claude Code / Codex 同等的流程门禁保护
+- 不能复制规则、不双写判断逻辑：Pi 扩展只做薄薄的路由层，复用 `templates/hooks/rules/` 下已有的 Python rule modules
 
-# Problem
+# Current Understanding
 
-- ITER-0068 已规定候办索引与独立草稿，但没有明确要求“一份输入里出现多个方向时必须先拆分”。
-- 若 AI 把多个相互独立的方向合成一份草稿，后续只能整体提升或整体修改，候办边界仍然耦合。
-- 现有审计只核对索引与文件集合，不能发现单文件声明了多个候办身份。
+## Pi 已经能做什么
+- Skills：Pi 遵循 Agent Skills 标准，`.agents/skills/` 下的 8 个 Butler skill 已自动发现
+- AGENTS.md：Pi 启动时读取项目根 `AGENTS.md`，Butler 的冷启动读序、规则卡等已经生效
+- `.ai/` 状态层：Pi 有 `read`/`write`/`edit`/`bash` 工具，跟 Claude Code/Codex 一样读写同一份 `.ai/`
+- Butler 驻留工具：goal-assurance、verification-evidence 等 Python 工具通过 `bash` 调用
 
-# Scope
+## Pi 缺什么
+Pi 没有 Codex 的 `hooks.json` 机制，所以 Butler 的 PreToolUse（写前查阶段产物）和 PostToolUse（写后追加提醒）在 Pi 上不存在。Pi 的等价机制是 **TypeScript 扩展** 的 `tool_call` 事件——可以拦截工具调用并返回 `{ block: true }`。
 
-- 在里程碑真源中定义候办块和多方向拆分判据。
-- 同步 Claude/Codex 工作流入口与 registry 投影。
-- 审计每份草稿只能有一个且与文件名一致的候办键、一个 deferred 状态声明。
-- 补多候办正向和混装负向回归。
+## 方案概要
+1. 新建 `plugins/butler-pi/`，放一个 TypeScript 扩展
+2. 扩展在 `tool_call` 事件中拦截 `write`/`edit`，判断目标路径是否属于已部署 Butler 项目
+3. 命中则 `exec` 调 Python 判断模块（`butler_gate.py`），拒绝时返回 `{ block: true }`
+4. PostToolUse 提醒同样复用 `butler_advisor.py`
+5. `scripts/setup.sh` 新增安装步骤，把扩展软链到 `~/.pi/agent/extensions/`
+6. 更新相关文档（双宿主 → 多宿主措辞）
 
-# Out of Scope
+# Constraints
+- 不改 Butler 规则内核：`Coder/` 和 `templates/hooks/rules/` 一字不动
+- 不复制判断逻辑：Pi 扩展调 Python，不把 phase_gate 等逻辑用 TypeScript 重写
+- 安装方式跟 Codex plugin 一致：软链到 Pi 的 extensions 目录，`setup.sh` 统一管理
+- Pi 扩展在非 Butler 项目零开销：没检测到 `.ai/` + `BUTLER_PATH` 就直接透传
 
-- 不开发事务 CLI，不改变正式里程碑编号与回收规则。
-- 不要求把一个里程碑内部的路线项拆成多个候办；只拆可独立推进的版本方向。
-- 不切版本、不发布、不升级外部项目。
+# Impact Scope
 
-# Risks
+## 会影响
+- `plugins/butler-pi/`：新增目录，含 `index.ts` + `package.json`
+- `scripts/setup.sh`：新增 Pi 扩展安装步骤（检测 Pi CLI 是否存在、幂等软链）
+- `docs/codex-compatibility.md`：措辞从"双宿主"升级为"多宿主"，增加 Pi 适配层说明
+- `Coder/README.md`：目录结构里增加 `plugins/butler-pi/` 条目
+- `templates/AGENTS.md.template`：可能需要微调（Pi 的 AGENTS.md 目前跟 Codex 共用同一模板）
+- 可能新增 CI 验证脚本：`scripts/verify-pi-extension.sh`
 
-- 不能把同一里程碑的路线项误判成多个方向；拆分判据必须看能否独立启动、独立提升。
-- 只靠自由文本无法可靠判断语义混装，机械审计只锁身份声明，语义拆分由工作流契约负责。
+## 不影响
+- `Coder/` 全部规则文件
+- `templates/hooks/rules/` Python 判断模块
+- `.ai/` 状态层契约
+- 已有的 Claude Code / Codex 适配器
+- `templates/rule-card.md`
+
+# Project Type / Active Profiles
+- 本仓是 Butler 规则仓库自身，编辑的是规则基础设施
+- 未命中特定 Domain/Stack Profile，按通用 SOP 推进
 
 # Open Questions
-
-- 无。用户已明确要求多个方向切成不同块并分文件存放。
+- Pi 的 `tool_call` 事件是否覆盖所有写路径？Pi 目前四个内置工具是 `read`/`write`/`edit`/`bash`，`bash` 理论上也能写文件（`echo >`、`mv` 等）。是否也要拦截 `bash`？——倾向首版只拦 `write`/`edit`，`bash` 透传（跟 Codex hook 的 matcher `apply_patch|Edit|Write` 对齐，Codex 也不拦 shell）
+- Pi 扩展是否需要 `BUTLER_BYPASS` 等价机制？——需要，读 `.ai/bypass-reason.md` 非空则放行，跟现有逻辑一致
+- 安装时 Pi CLI 不可用要不要报错？——跟 Codex 一样降级警告、不阻塞 setup.sh
