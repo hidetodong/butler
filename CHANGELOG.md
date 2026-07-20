@@ -4,6 +4,17 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [2.18.0] - 2026-07-20
+
+向后兼容的能力新增版，聚合 ITER-0068–ITER-0071。
+
+- **ITER-0068**：里程碑候办区与延迟编号——讨论稿不占号，开工才领号，未绑迭代可退回候办。
+- **ITER-0069**：多方向候办拆分——一方向一候办键、一索引块、一草稿文件，禁止混装。
+- **ITER-0070**：Pi 宿主适配器——TypeScript 扩展拦截 write/edit 调 Python 门禁，setup.sh 安装，文档多宿主化。
+- **ITER-0071**：说人话补「自造缩写」标准——artifact-style 收编掐短词/自造缩写，产物范例常驻。
+
+升级见 `migrations/v2.18.0.md`，迭代交付见 `.ai/ITERATIONS.md`。
+
 ## [2.17.0] - 2026-07-18
 
 向后兼容的工程化能力新增版，聚合 MILE-0007 的 ITER-0056–ITER-0060。版本级交付见 `deliveries/milestones/MILE-0007-engineering-hardening.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v2.17.0.md`。
