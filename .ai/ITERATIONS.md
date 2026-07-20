@@ -4,12 +4,13 @@
 
 ## 危险模式自治路线图
 
-当前无 active 迭代；ITER-0069 已完成独立收口。
+当前无 active 迭代；ITER-0071 已完成独立收口（ITER-0070 属并行里程碑分支，合并后补齐）。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0071 | 说人话补「自造缩写」标准并让产物范例常驻：artifact-style §2 标准一收编掐短词/自造缩写、§6 加对照，rule-card 产物书写段加 3 组现场 ❌→✅ 范例，说准四条 SSOT 作用域 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0071-tone-plainlang-coinage.md |
 | ITER-0069 | 多方向候办拆分：一方向一候办键、一索引块、一草稿文件，禁止多个方向混装；状态审计 20 项与完整 CI 通过 | closed | 2026-07-19 | 2026-07-19 | — | deliveries/ITER-0069-multi-direction-backlog-splitting.md |
 | ITER-0068 | 里程碑候办区与延迟编号：讨论稿不占号，开工才领号，未绑迭代的误开项可退回候办；状态审计 18 项、Goal 16 项与完整 CI 通过 | closed | 2026-07-19 | 2026-07-19 | — | deliveries/ITER-0068-milestone-backlog-numbering.md |
 | ITER-0067 | 项目外写入授权边界：外部目标交宿主、坏输入 fail-closed、多项目逐根门禁；危险模式冻结授权上限，强审修复 2 Must Fix，147 hooks/完整 CI 通过 | closed | 2026-07-18 | 2026-07-18 | — | deliveries/ITER-0067-external-write-authorization-boundary.md |

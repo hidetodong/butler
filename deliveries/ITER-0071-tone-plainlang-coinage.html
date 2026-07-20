@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图 · 由 templates/delivery.html.template 填槽生成
+  引用真源以同名 .md 为准（deliveries/ITER-0071-tone-plainlang-coinage.md）
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0071 交付总结 · 说人话补「自造缩写」标准并让产物范例常驻</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>说人话补「自造缩写」标准并让产物范例常驻</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0071</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>这一轮核对了 butler 全部语气治理文件和几份真实产物，结论是：产物层的中文发僵是真问题，但病根不是规则打架，而是加载不对称——管产物语气的正本 <code>artifact-style.md</code> 在真正动笔写产物那一刻不在场，而一起被读进来的一堆规格腔 schema（必须 / 不得条款）声音最大，于是产物被带成了规格腔。抽检里最扎眼的祸首是自造缩写（像「候办」「折叠回执」「边界守恒逐轮核」这种），而说人话四条原本根本没写这一条。本次交付要补上它：</p>
+      <ul>
+        <li>把「掐短常用词、自造只有本仓看得懂的压缩名」这类写法，正式收进说人话标准。</li>
+        <li>让写产物时看得到具体的「改坏了长这样、改对了长这样」范例，而不是只有一句「口径以某文件为准」的指针。</li>
+      </ul>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>artifact-style §2</code> 标准一收编「掐短词 / 自造缩写」：必须用平常说话的完整词；真要用一个新造的简称，第一次出现必须跟一句大白话说清它指什么。</li>
+        <li><code>artifact-style §6</code> 补一组对照范例，把「边界守恒逐轮核」这类压缩写法还原成正常句子。</li>
+        <li>说清四条的单一真源作用域：体系内别处（<code>presentation-protocol.md</code>、<code>rule-card.md</code>）只引用、不另写一份；仓根 <code>communication-style.md</code> 是体系外个人副本，自造缩写归标准一、翻译腔归标准四，内容对齐即可，不算双正本冲突。</li>
+        <li><code>rule-card.md</code> 同步：产物书写段加了 3 组现场 ❌→✅ 范例，因为这张卡每会话常驻，等于把「改对了长什么样」直接摆到高注意力区。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>以后写交付总结、commit 正文、知识文件夹时，规则明确不许再把常用词砍一半或者生造压缩名；真要用简称，第一次出现得就地解释。</li>
+        <li>规则卡里能直接看到三组「反例 → 正例」，写产物时照着改，不用再翻别的文件。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>产物语气治理的两处正本：<code>artifact-style.md</code>（完整版真源）和 <code>templates/rule-card.md</code>（常驻压缩版）。</li>
+        <li>不动 <code>communication-style.md</code>——它自己的边界禁止引用 butler 内部文件，且内容本就不缺这一条。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>纯规则 / 文档修订，无可运行代码，验证＝人工复核引用结构 + 改动边界，不打自动绿。</li>
+        <li>全仓「说人话四条」引用结构复核干净，没有残留的不一致。</li>
+        <li>改动限定在两个文件，未触碰产物链阶段、hook 契约、schema 必填字段。</li>
+        <li>项目状态审计（<code>audit-project-state.py --allow-unreleased</code>）本迭代归档四件套齐全、交付 <code>.md</code> / <code>.html</code> 齐全，无漂移。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>修法 B（把给人读的交付内容隔离到不泡 schema 条款的步骤或子代理去写）本轮未做，留后续——它要动生成流程，比改文案重。</li>
+        <li>本轮不切版本、不写 CHANGELOG / migration，也不推送、不升级外部项目；版本级动作按 <code>versioning-schema §6.1</code> 归发布路径，按需另提。</li>
+        <li>部署到目标项目的 rule-card 需要下次升级 re-stamp 才能拿到新范例。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>规则改动：<code>Coder/20_Workflow_Lifecycle/artifact-style.md</code>、<code>templates/rule-card.md</code></li>
+        <li>迭代归档四件套：<code>.ai/iterations/ITER-0071/</code></li>
+        <li>台账：<code>.ai/ITERATIONS.md</code>（ITER-0071 行）</li>
+        <li>交付真源：<code>deliveries/ITER-0071-tone-plainlang-coinage.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
