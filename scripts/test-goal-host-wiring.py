@@ -44,9 +44,9 @@ class GoalHostWiringTests(unittest.TestCase):
         self.assertTrue((ROOT / "tools/goal-assurance/goal.py").is_file())
         self.assertIn("不得从目标项目 cwd", (ROOT / "Coder/20_Workflow_Lifecycle/lifecycle.md").read_text(encoding="utf-8"))
 
-    def test_no_ninth_workflow_or_parallel_goal_file(self) -> None:
+    def test_registry_workflow_count_and_no_parallel_goal_file(self) -> None:
         registry = json.loads((ROOT / "workflows/registry.json").read_text(encoding="utf-8"))
-        self.assertEqual(8, len(registry["workflows"]))
+        self.assertEqual(10, len(registry["workflows"]))
         self.assertFalse((ROOT / ".ai/GOAL.md").exists())
         self.assertFalse((ROOT / ".ai/GOALS.md").exists())
 

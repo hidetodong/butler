@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图
+  ===========================================================================
+  本文件由 templates/delivery.html.template 填槽生成。
+  引用真源以同名 .md 为准。
+  语义规则见 Coder/20_Workflow_Lifecycle/delivery-summary.md §9。
+  ===========================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0073 交付总结 · /butler:progress 命令</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>/butler:progress 命令</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0073</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-21</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>新增 <code>/butler:progress</code> 只读聚合命令，给使用 butler 的项目提供一个稳定的结构化进度查看入口——用户在任意已部署 butler 的项目里敲 <code>/butler:progress</code>，就能拿到固定格式的 9 段进度报告，不需要自己逐个翻 <code>.ai/</code> 下的状态文件。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新建 Claude Code 命令文件 <code>.claude/commands/butler/progress.md</code>：只读聚合器，读 <code>.ai/</code> 下 8+ 状态文件，输出固定 9 段结构化报告（项目概况 → 里程碑 → 迭代 → Goal → 验收 → 执行 → 验证 → 风险 → 最近变更）；支持 <code>brief</code> 参数输出一行摘要</li>
+        <li>新建 Codex skill <code>plugins/butler/skills/butler-progress/SKILL.md</code> + <code>.agents/skills/butler-progress</code> 软链</li>
+        <li>注册进 <code>workflows/registry.json</code> 成为第 10 个工作流</li>
+        <li>更新 <code>scripts/sync-workflow-registry.py</code> 的 EXPECTED_IDS 与计数（9→10）</li>
+        <li>运行 <code>sync-workflow-registry.py --write</code> 同步 41 个投影到 <code>docs/workflows.md</code></li>
+        <li>更新 4 份文档中的工作流/skill 计数（8→10）：<code>capabilities.md</code> / <code>HUMAN_GUIDE.md</code> / <code>README.md</code> / <code>codex-compatibility.md</code></li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>任意已部署 butler 的项目里，用户可以敲 <code>/butler:progress</code> 获取完整 9 段进度报告，或 <code>/butler:progress brief</code> 获取一行摘要</li>
+        <li>Codex 用户可用 <code>$butler-progress</code> 获得同样能力</li>
+        <li>命令经 setup.sh 目录软链机制自动全局可用，无需重跑安装</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <table>
+        <tr><th>层</th><th>影响</th></tr>
+        <tr><td>命令文件</td><td>新增 <code>.claude/commands/butler/progress.md</code></td></tr>
+        <tr><td>Codex skill</td><td>新增 <code>plugins/butler/skills/butler-progress/</code></td></tr>
+        <tr><td>Registry</td><td>新增 progress 条目（10 个工作流）</td></tr>
+        <tr><td>投影</td><td><code>docs/workflows.md</code> 自动更新</td></tr>
+        <tr><td>文档</td><td>4 处计数 8→10</td></tr>
+        <tr><td><code>Coder/**</code></td><td>无变更</td></tr>
+        <tr><td>Hook</td><td>无变更</td></tr>
+        <tr><td>目标项目 <code>.ai/</code></td><td>无变更</td></tr>
+      </table>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>6 条 AC 全部由机器命令验证通过：</p>
+      <ul>
+        <li>AC1：命令文件存在且 frontmatter 正确</li>
+        <li>AC2：Codex skill 存在且软链正确</li>
+        <li>AC3：registry 含 progress 工作流（10 个总计），<code>--check</code> exit 0</li>
+        <li>AC4：投影同步，10 workflows / 41 projections</li>
+        <li>AC5：4 份文档计数已更新</li>
+        <li>AC6：命令文件在命名空间目录下，经目录软链自动全局可用</li>
+      </ul>
+      <p>置信档：<strong>可靠</strong>。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>无已知风险</li>
+        <li>命令是纯只读聚合器，不修改任何文件，不影响执行流程</li>
+        <li>后续可考虑：是否需要 <code>--json</code> 参数输出机器可读格式（不在本迭代范围）</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0073/</code></li>
+        <li><code>.claude/commands/butler/progress.md</code></li>
+        <li><code>plugins/butler/skills/butler-progress/SKILL.md</code></li>
+        <li><code>workflows/registry.json</code></li>
+        <li><code>.ai/AC_LIST.md</code></li>
+        <li><code>.ai/TECH_PLAN.md</code></li>
+        <li><code>.ai/VERIFY_REPORT.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

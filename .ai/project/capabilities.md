@@ -10,7 +10,7 @@
 
 ## Codex 工作流与 hooks（v2.13.0–v2.15.0）
 
-- `plugins/butler/` 可安装 8 个 skills：prd/review/milestone/upgrade/ideation/preference/loop/dangerous；`.agents/skills/` 软链让仓内直接发现同一真源。
+- `plugins/butler/` 可安装 10 个 skills：prd/review/milestone/upgrade/init/ideation/preference/loop/dangerous/progress；`.agents/skills/` 软链让仓内直接发现同一真源。
 - `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
 - `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
 - Claude/Codex 写入适配器按每个目标的真实 Butler/Git 根重建 Context：项目内继续跑该项目门禁，无法归属项目的真实路径退出 Butler 判定并交宿主权限，缺失/坏输入仍 fail-closed；一个 Codex patch 可跨多个项目根逐根校验，任一拒绝即整次拒绝。
@@ -18,10 +18,10 @@
 
 ## 工作流注册与分发治理（MILE-0007 R5）
 
-- `workflows/registry.json` 恰好登记 8 个 workflow 的 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、legacy aliases 和 plugin/distribution 边界。
-- `scripts/sync-workflow-registry.py --write` 原子生成/校正 33 个窄元数据投影并在失败时回滚；`--check` 零写入报告 command/SKILL/openai/doc/软链/plugin/hooks/installer 漂移。
-- `docs/workflows.md` 是唯一八项人读能力表；loop/dangerous 显式禁隐式，旧 `/loop` 只登记 harness collision、不生成实体。repo discovery 和个人 plugin 可用，team/public 明确未配置。
-- 8 组专项与完整矩阵已接入 `verify-ci.sh`；源码 plugin 保持精确 VERSION，个人安装副本单独加 cachebuster。
+- `workflows/registry.json` 恰好登记 10 个 workflow 的 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、legacy aliases 和 plugin/distribution 边界。
+- `scripts/sync-workflow-registry.py --write` 原子生成/校正窄元数据投影并在失败时回滚；`--check` 零写入报告 command/SKILL/openai/doc/软链/plugin/hooks/installer 漂移。
+- `docs/workflows.md` 是唯一十项人读能力表；loop/dangerous 显式禁隐式，旧 `/loop` 只登记 harness collision、不生成实体。repo discovery 和个人 plugin 可用，team/public 明确未配置。
+- 专项与完整矩阵已接入 `verify-ci.sh`；源码 plugin 保持精确 VERSION，个人安装副本单独加 cachebuster。
 
 ## 持续验证与状态自证（MILE-0007 R2–R3）
 
@@ -73,6 +73,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 | `/butler:prd` | **butler 第一个真实命令文件**（ITER-0044，原名 `/butler-prd`，MILE-0005 R1 迁入 `/butler:` 命名空间）——PRD 先行动作的薄壳路由器：第 0 步强制读 `references-schema` 契约 → 按参数三分支（留空/贴 PRD=首切 / `update`=改版 / `status`=只读看板），委托真源不复述算法。**全局下发（ITER-0045·v2.5.0）**：`setup.sh` 软链进 `~/.claude/commands/`，**所有项目可用**（不再限编辑 butler 仓）；正文含「`Coder/…` 相对 `$BUTLER_PATH` 解析、`.ai/…` 落当前项目」路径约定，跨 cwd 成立 | `.claude/commands/butler/prd.md`（薄壳，真源 `references-schema.md` / `prd-split.md` / `prd-update.md`） |
 | `/butler:review` | **命名空间第二个真命令**（ITER-0047·MILE-0005 R1）——代码 / 产物复核薄壳路由器：默认（留空）当前上下文快速自检、`independent` 另起 fresh 子 agent 独立复核（验证者≠作者）；第 0 步没接 butler 优雅降级、委托真源不复述算法。作后续命令的复制范本 | `.claude/commands/butler/review.md`（薄壳，真源 `review-engine.md §5` / `independent-review.md` / `62_Extension_Agents/overview.md §3`） |
 | `/butler:upgrade` | 已部署项目升级到最新 Butler：机器 manifest 先 dry-run，再事务 apply；split/global 分域，不解析 Markdown 散文执行 | `.claude/commands/butler/upgrade.md`（薄壳，执行真源 `tools/butler-upgrade/upgrade.py`，交互真源 `20_Workflow_Lifecycle/butler-upgrade.md`） |
+| `/butler:progress` | 只读聚合当前项目进度——里程碑、迭代、Goal、验收、执行、验证、风险一页看完；`brief` 一行摘要，留空完整 9 段报告。纯只读不改文件 | `.claude/commands/butler/progress.md`（只读聚合器，数据源 `.ai/task-state.md` / `MILESTONES.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` / `01_CHANGELOG.md`） |
 
 ## 部署与维护能力
 

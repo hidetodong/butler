@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-EXPECTED_IDS = {"prd", "review", "milestone", "upgrade", "init", "ideation", "preference", "loop", "dangerous"}
+EXPECTED_IDS = {"prd", "review", "milestone", "upgrade", "init", "ideation", "preference", "loop", "dangerous", "progress"}
 HIGH_RISK = {"loop", "dangerous"}
 TOP_KEYS = {"schema_version", "plugin", "workflows"}
 PLUGIN_KEYS = {"name", "root", "manifest", "hooks", "personal_installer", "setup_entrypoint", "marketplace_mode", "team_distribution"}
@@ -91,8 +91,8 @@ def validate_registry(data: Any, root: Path) -> None:
             raise RegistryError(f"registered plugin path does not exist: {plugin[field]}")
 
     workflows = data["workflows"]
-    if not isinstance(workflows, list) or len(workflows) != 9:
-        raise RegistryError("registry must contain exactly 9 workflows")
+    if not isinstance(workflows, list) or len(workflows) != 10:
+        raise RegistryError("registry must contain exactly 10 workflows")
     ids: set[str] = set()
     names: set[str] = set()
     aliases: set[str] = set()
@@ -287,7 +287,7 @@ def docs_table(data: dict[str, Any]) -> bytes:
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
 | Claude 全局命令 | available via setup symlink | `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 8 个相对软链，实体在 `plugins/butler/skills/` |
+| Codex repo discovery | available | `.agents/skills/` 的 10 个相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |
@@ -387,13 +387,13 @@ def main(argv: list[str] | None = None) -> int:
                 for item, reason in drift:
                     print(f"[DRIFT] {item.path.relative_to(root)}: {reason}", file=sys.stderr)
                 return 1
-            print(f"[OK] workflow registry projections: workflows=9 projections={len(projections)}")
+            print(f"[OK] workflow registry projections: workflows=10 projections={len(projections)}")
             return 0
         apply_projections(projections)
         remaining = [(item, projection_drift(item)) for item in projections if projection_drift(item)]
         if remaining:
             raise RegistryError("write completed with projection drift")
-        print(f"[OK] synchronized workflow registry: workflows=9 projections={len(projections)} changed={len(drift)}")
+        print(f"[OK] synchronized workflow registry: workflows=10 projections={len(projections)} changed={len(drift)}")
         return 0
     except (OSError, RegistryError) as error:
         print(f"workflow-registry: {error}", file=sys.stderr)

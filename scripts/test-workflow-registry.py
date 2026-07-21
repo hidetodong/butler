@@ -132,16 +132,21 @@ class WorkflowRegistryTests(unittest.TestCase):
         self.assertIsNotNone(registry.projection_drift(expected))
 
     def test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift(self) -> None:
-        cases = []
-        missing = self.read(); missing["workflows"].pop(); cases.append(missing)
-        extra = self.read(); extra["workflows"].append(extra["workflows"][0].copy()); cases.append(extra)
-        duplicate = self.read(); duplicate["workflows"][1]["id"] = "prd"; cases.append(duplicate)
-        unsafe = self.read(); unsafe["workflows"][0]["rule_source"] = "../escape.md"; cases.append(unsafe)
-        high = self.read(); high["workflows"][-1]["allow_implicit_invocation"] = True; cases.append(high)
-        normal = self.read(); normal["workflows"][0]["allow_implicit_invocation"] = False; cases.append(normal)
-        unknown = self.read(); unknown["unexpected"] = True; cases.append(unknown)
-        for case in cases:
-            with self.subTest(case=len(case["workflows"])):
+        labelled_cases: list[tuple[str, dict]] = []
+        missing = self.read(); missing["workflows"].pop(); labelled_cases.append(("missing", missing))
+        extra = self.read(); extra["workflows"].append(extra["workflows"][0].copy()); labelled_cases.append(("extra", extra))
+        duplicate = self.read(); duplicate["workflows"][1]["id"] = "prd"; labelled_cases.append(("duplicate", duplicate))
+        unsafe = self.read(); unsafe["workflows"][0]["rule_source"] = "../escape.md"; labelled_cases.append(("unsafe", unsafe))
+        high = self.read()
+        for w in high["workflows"]:
+            if w["id"] == "dangerous":
+                w["allow_implicit_invocation"] = True
+                break
+        labelled_cases.append(("high_risk_implicit", high))
+        normal = self.read(); normal["workflows"][0]["allow_implicit_invocation"] = False; labelled_cases.append(("normal_explicit_false", normal))
+        unknown = self.read(); unknown["unexpected"] = True; labelled_cases.append(("unknown_key", unknown))
+        for label, case in labelled_cases:
+            with self.subTest(case=label):
                 with self.assertRaises(registry.RegistryError):
                     registry.validate_registry(case, self.root)
 

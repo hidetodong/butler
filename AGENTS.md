@@ -32,7 +32,7 @@
 
 - `CLAUDE.md` / `.claude/**` 服务 Claude Code；`AGENTS.md` 服务 Codex。
 - 两端共同回指 `Coder/`、`.ai/` 与 `templates/rule-card.md`，不得维护两套规则算法。
-- Codex 的 8 skills/plugin、`apply_patch` hooks 与双入口部署已完成；项目级读写前两宿主都必须按 `mcv-deployment.md §0.1` 解析唯一 `PROJECT_ROOT`，不能仅凭会话 cwd。完整边界见 `docs/codex-compatibility.md`。
+- Codex 的 10 skills/plugin、`apply_patch` hooks 与双入口部署已完成；项目级读写前两宿主都必须按 `mcv-deployment.md §0.1` 解析唯一 `PROJECT_ROOT`，不能仅凭会话 cwd。完整边界见 `docs/codex-compatibility.md`。
 
 ## 验证
 

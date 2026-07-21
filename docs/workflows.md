@@ -13,6 +13,7 @@
 | preference | `/butler:preference` | `$butler-preference` | normal | 允许 | `preference`、`偏好探针`、`reback`、`distill preference` | `/preference` (natural-language-compat) | `Coder/70_Extension_Preference/preference-probe-engine.md` |
 | loop | `/butler:loop` | `$butler-loop` | high | 禁止（必须显式） | `$butler-loop`、`/butler:loop`、`死磕`、`explicit convergence loop` | `/loop` (harness-collision-do-not-generate) | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
 | dangerous | `/butler:dangerous` | `$butler-dangerous` | high | 禁止（必须显式） | `$butler-dangerous`、`/butler:dangerous`、`危险模式`、`explicit unattended autonomy` | `/dangerous` (deprecated-do-not-generate) | `Coder/65_Extension_Dangerous/dangerous-engine.md` |
+| progress | `/butler:progress` | `$butler-progress` | normal | 允许 | `progress`、`进度`、`项目进度`、`current status`、`当前状态`、`how is it going` |  | `.claude/commands/butler/progress.md` |
 
 ## 安全与兼容
 
@@ -25,7 +26,7 @@
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
 | Claude 全局命令 | available via setup symlink | `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 8 个相对软链，实体在 `plugins/butler/skills/` |
+| Codex repo discovery | available | `.agents/skills/` 的 10 个相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |

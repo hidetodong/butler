@@ -23,12 +23,13 @@ Butler 是一个 **Markdown 规则仓库**，定义了一套验收导向的需�
 |---|---|---|
 | ✅ | **验收导向 SOP** | `P1→P5` 五阶段状态机，P2/P3 双 ACK 门控质量 |
 | 🔁 | **迭代化** | `ITER-NNNN` 单调递增，需求 ACK 后冻结，文档归档可回溯 |
-| 🏔 | **里程碑** | 大版本范围单元，聚合多个迭代、产出版本级交付 |
+| 🏔 | **里程碑** | 大版本范围单元，聚合多个迭代、产出版本级交付；候办区延迟编号，开工才领号 |
+| 🎯 | **Goal 体系** | 从里程碑/迭代产物自动派生 Goal 合同，运行时信号回注校准，完成资格裁决 |
 | 🧠 | **偏好蒸馏** | 采集你的设计取舍，蒸馏跨项目通识，在**有监督**工作里改进提议 |
 | 🛡 | **Hook 门禁** | 阶段产物缺失或验收未冻结时机械拦截源码写操作 |
-| 🧩 | **可插拔扩展** | 脑暴 / 自纠 / 审查 / 自治 / 偏好，按指令或语义触发 |
-| 📦 | **基地车部署** | 新项目零配置接入，自动展开 `.ai/` 基础设施 |
-| 🤝 | **双宿主工作流** | Claude Code 继续原生运行；Codex 可从 `AGENTS.md` 发现规则，并通过 `plugins/butler/` 使用 8 个 Butler skills |
+| 🧩 | **可插拔扩展** | 脑暴 / 自纠 / 审查 / 自治 / 偏好 / 初始化 / 进度，按指令或语义触发 |
+| 📦 | **基地车部署** | 新项目零配置接入，自动展开 `.ai/` 基础设施；`/butler:init` 一键触发 |
+| 🤝 | **三宿主工作流** | Claude Code / Codex / Pi 均可发现规则并协作；Codex 通过 `plugins/butler/` 使用 10 个 Butler skills |
 
 ## 🔄 核心工作流
 
@@ -76,6 +77,8 @@ flowchart TB
 | 模式 | 触发 | 用途 |
 |---|---|---|
 | 💡 **Ideation** | `/ideation` | 需求脑暴与完善 |
+| 🚀 **Init** | `/butler:init` | 新项目基地车一键部署 |
+| 📊 **Progress** | `/butler:progress` | 结构化进度总览（里程碑 / 迭代 / 验收 / 风险） |
 | 🔁 **收敛闭环** | `/butler:loop` | 高强度纠错升档（死磕到绿 + 定量熔断） |
 | 🔎 **Review** | `/review` | 代码审查：P5 默认简评 + opt-in 独立复核（fresh-context 子 agent，手动 / 项目配置） |
 | ⚠️ **Dangerous** | `/butler:dangerous` | 无人值守长程自治（实验性） |
@@ -94,7 +97,7 @@ flowchart TB
 3. **接入新项目**：直接给任务并点名项目/仓库路径；若会话已在该 Git/Butler 项目内，AI 也可安全发现其根。多仓父目录不会被自动当成项目。
 4. **详细说明**：阅读 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)。
 
-> **Codex 支持范围**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；新项目从同一规则卡生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/upgrade.py` 读取机器 manifest，先 dry-run、再事务 apply。Codex 具备 8 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。入口、风险与兼容旧名以自动生成的 [`docs/workflows.md`](docs/workflows.md) 为准；兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> **多宿主支持**：v2.15.0 起，一次运行 `./scripts/setup.sh` 即统一安装 Claude 能力与 Codex plugin；v2.18.0 起新增 Pi 宿主适配器（`plugins/butler-pi/`，TypeScript 扩展拦截写操作调 Python 门禁）。新项目从同一规则卡生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/upgrade.py` 读取机器 manifest，先 dry-run、再事务 apply。Codex 具备 10 个 skills 和已验证的 `apply_patch` 门禁/提醒；首次启用 hook 仍须用户审阅并信任。PreToolUse 不是 sandbox，未承诺覆盖 shell/MCP 等其他写路径。入口、风险与兼容旧名以自动生成的 [`docs/workflows.md`](docs/workflows.md) 为准；兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## ✅ 持续验证
 
@@ -136,7 +139,9 @@ butler/
 │   ├── render-project-entrypoints.py # 幂等生成/升级 CLAUDE.md + AGENTS.md
 │   ├── preference-init.sh          # 偏好探针存储初始化（opt-in）
 │   ├── verify-codex-foundation.sh  # Codex 入口/模板/兼容契约结构自检
-│   ├── verify-codex-workflows.sh   # 8 skills/plugin/repo fallback 结构自检
+│   ├── verify-codex-workflows.sh   # 10 skills/plugin/repo fallback 结构自检
+│   ├── verify-pi-extension.sh      # Pi 宿主适配器结构自检
+│   ├── sync-workflow-registry.py   # 工作流注册表同步（manifest.json 生成）
 │   ├── verify-codex-hooks.sh       # Codex patch 门禁/提醒 wrapper 自检
 │   ├── verify-dual-host.sh         # 统一 setup、双入口与全套双宿主回归
 │   ├── verify-ci.sh                # 本地/CI 唯一完整验证入口（固定工具链）
@@ -144,6 +149,7 @@ butler/
 │   └── install-codex-plugin.sh     # 个人 marketplace 安装/刷新 Butler plugin
 │
 ├── tools/butler-upgrade/           # 机器 manifest 驱动的 dry-run / 事务升级器
+├── tools/goal-assurance/           # Goal 完成资格只读裁决器（证据 + blocker 检查）
 ├── tools/codex-validators/         # 固定 commit/hash/license 的 OpenAI 官方 validators 快照
 ├── tools/verification-evidence/   # P5 自动道驻留工具：真实命令/exit/log/hash 证据与归档
 ├── tools/delivery-selftest/        # P5 人测道驻留工具：浏览器四态回传桥
@@ -153,24 +159,32 @@ butler/
 │       ├── prd.md                  #     /butler:prd · PRD 先行薄壳路由
 │       ├── review.md               #     /butler:review · 代码/产物复核（默认自检 / independent 独立复核）
 │       ├── ideation.md             #     /butler:ideation · 需求脑暴（不进执行主线）
-│       ├── milestone.md            #     /butler:milestone · 里程碑录入 / status 看板
+│       ├── init.md                 #     /butler:init · 新项目基地车一键部署
+│       ├── progress.md             #     /butler:progress · 结构化进度总览
+│       ├── milestone.md            #     /butler:milestone · 里程碑录入 / 候办区 / status 看板
 │       ├── upgrade.md              #     /butler:upgrade · 已部署项目升级到最新版
 │       ├── preference.md           #     /butler:preference · 偏好探针开关（on/off/reback/distill）
 │       ├── loop.md                 #     /butler:loop · 收敛闭环死磕 ⚠️（高强度·长时·郑重触发）
 │       └── dangerous.md            #     /butler:dangerous · 无人值守长程自治 ⚠️（实验性·空/off/status）
 │
+├── migrations/                     # 迁移配方（每版一份，升级器按版本区间收集执行）
+├── workflows/                      # 工作流注册表（manifest.json 机器真源）
+│
 ├── templates/                      # 目标项目落地物
 │   ├── CLAUDE.md.template
 │   ├── AGENTS.md.template          #   Codex 目标项目入口模板
 │   ├── rule-card.md                #   浓缩规则卡（强约束 SSOT）
+│   ├── delivery.html.template      #   交付总结固定格式 HTML 阅读视图模板
 │   ├── hooks/                      #   PreToolUse 流程门禁
 │   ├── settings.hooks-snippet.json
 │   └── preference/                 #   偏好探针外置存储骨架
 │
 ├── docs/
-│   └── codex-compatibility.md      # Claude/Codex 共同内核与适配层真源
-├── plugins/butler/                 # Codex plugin 发布包（8 skills 的实体真源）
-├── .agents/skills/                 # 仓库发现面（8 个相对软链，不复制正文）
+│   ├── codex-compatibility.md      # Claude/Codex 共同内核与适配层真源
+│   └── workflows.md                # 双宿主入口/风险/触发/旧名兼容表（机器注册表生成）
+├── plugins/butler/                 # Codex plugin 发布包（10 skills 的实体真源）
+├── plugins/butler-pi/              # Pi 宿主适配器（TypeScript 扩展 · tool_call 拦截 + Python 门禁）
+├── .agents/skills/                 # 仓库发现面（10 个相对软链，不复制正文）
 │
 ├── Coder/                          # 🛠 工程开发与 AI 协作（核心）
 │   ├── README.md                   #   子系统入口
@@ -183,6 +197,7 @@ butler/
 │   ├── 50_Extension_Ideation/      #   脑暴        /ideation
 │   ├── 55_Extension_ConvergenceLoop/ # 收敛闭环    /butler:loop
 │   ├── 60_Extension_CodeReview/    #   代码审查    /review
+│   ├── 62_Extension_Agents/        #   帮手名册（复核 / 更新说明 / 查过时）
 │   ├── 65_Extension_Dangerous/     #   无人值守自治 /butler:dangerous ⚠️
 │   ├── 70_Extension_Preference/    #   偏好探针    /butler:preference ⚠️
 │   └── 99_Business_Extension/      #   业务约束（最高优先级）

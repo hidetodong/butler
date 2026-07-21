@@ -305,6 +305,35 @@
         "short_description": "Control unattended Butler autonomy explicitly",
         "default_prompt": "Use $butler-dangerous to inspect or explicitly control dangerous mode."
       }
+    },
+    {
+      "id": "progress",
+      "rule_source": ".claude/commands/butler/progress.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "progress",
+        "进度",
+        "项目进度",
+        "current status",
+        "当前状态",
+        "how is it going"
+      ],
+      "legacy_aliases": [],
+      "claude": {
+        "name": "/butler:progress",
+        "path": ".claude/commands/butler/progress.md",
+        "description": "只读聚合当前项目的 Butler 进度——里程碑、迭代、Goal、验收、执行、验证、风险一页看完",
+        "default_prompt": "Use /butler:progress for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-progress",
+        "path": "plugins/butler/skills/butler-progress/SKILL.md",
+        "description": "Show structured progress for the current Butler-enabled project — milestone, iteration, goal, acceptance, execution, verification, risks. Use when the user asks for project progress, status overview, current state, or how things are going in a Butler project.",
+        "display_name": "Butler Progress",
+        "short_description": "Show structured project progress at a glance",
+        "default_prompt": "Use $butler-progress to see the current project progress."
+      }
     }
   ]
 }

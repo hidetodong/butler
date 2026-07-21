@@ -1,21 +1,171 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head><meta charset="UTF-8"><title>ITER-0072 · /butler:init 命令</title>
-<style>body{font-family:system-ui;max-width:800px;margin:2em auto;padding:0 1em;line-height:1.6}pre{background:#f5f5f5;padding:1em}</style>
-</head><body>
-<h1>ITER-0072 · /butler:init 命令</h1>
-<h2>本次交付目标</h2>
-<p>新增 /butler:init 命令，新项目一键部署 Butler 基地车。</p>
-<h2>已完成内容</h2>
-<p>- Claude 命令 + Codex skill + registry + sync 脚本适配</p>
-<p>- sync --check: 9 workflows 37 projections 零漂移</p>
-<h2>关键变更</h2>
-<p>- 新项目 /butler:init → 自动侦察、展开 .ai/、生成双入口、拷贝 hooks、提示 setup.sh</p>
-<p>- 已部署项目 → 提示终止</p>
-<p>- 已有 8 工作流无回归</p>
-<h2>引用</h2>
-<p>- .ai/iterations/ITER-0072/</p>
-<p>- .claude/commands/butler/init.md</p>
-<p>- plugins/butler/skills/butler-init/SKILL.md</p>
-<p>- workflows/registry.json</p>
-</body></html>
+<!--
+  固定格式交付总结 · HTML 阅读视图
+  ===========================================================================
+  本文件由 templates/delivery.html.template 填槽生成。
+  引用真源以同名 .md 为准。
+  语义规则见 Coder/20_Workflow_Lifecycle/delivery-summary.md §9。
+  ===========================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0072 交付总结 · /butler:init 命令</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>/butler:init 命令</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0072</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>新增 <code>/butler:init</code> 命令，新项目一键部署 Butler 基地车。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>Claude 命令 + Codex skill + registry + sync 脚本适配</li>
+        <li><code>sync --check</code>: 9 workflows 37 projections 零漂移</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>新项目 <code>/butler:init</code> → 自动侦察、展开 <code>.ai/</code>、生成双入口、拷贝 hooks、提示 <code>setup.sh</code></li>
+        <li>已部署项目 → 提示终止</li>
+        <li>已有 8 工作流无回归</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <table>
+        <tr><th>层</th><th>影响</th></tr>
+        <tr><td>命令文件</td><td>新增 <code>.claude/commands/butler/init.md</code></td></tr>
+        <tr><td>Codex skill</td><td>新增 <code>plugins/butler/skills/butler-init/</code></td></tr>
+        <tr><td>Registry</td><td>新增 init 条目（9 个工作流）</td></tr>
+        <tr><td><code>Coder/**</code></td><td>无变更</td></tr>
+        <tr><td>目标项目 <code>.ai/</code></td><td>无变更（命令不下发）</td></tr>
+      </table>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>机器命令验证 registry 投影零漂移；命令文件结构与软链正确。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <p>无已知风险。</p>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0072/</code></li>
+        <li><code>.claude/commands/butler/init.md</code></li>
+        <li><code>plugins/butler/skills/butler-init/SKILL.md</code></li>
+        <li><code>workflows/registry.json</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
