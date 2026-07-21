@@ -111,10 +111,11 @@ commit message 格式**不进 hook 机械门禁**——PreToolUse hook 拦截的
 3. **加 CHANGELOG 条目**：`CHANGELOG.md` 顶部加 `## [X.Y.Z] - YYYY-MM-DD`，聚合区间迭代、只引用不复述（§3）。
 4. **写迁移配方**：产出 `migrations/vX.Y.Z.md`（格式与 typed 标签见 `migration-schema.md`）；对部署项目无结构影响也**必须**写一条 `[no-op]` 配方——"无影响"是显式结论，不是漏记。这是 `butler-upgrade.md` 升级执行器的输入。
 5. **（若发布里程碑）收口里程碑**：本次发布聚合的是一个里程碑时，按 `milestone-schema.md` 的里程碑收口机制处理其台账 / 归档 / 版本级交付，不在此重写。
-6. **git 序列**（按序执行）：
+6. **更新 README 版本 badge**：`README.md` 顶部 shields.io badge 行包含 `![version](https://img.shields.io/badge/version-X.Y.Z-blue)`，其版本号必须与 `VERSION` 一致。切版时同步更新。
+7. **git 序列**（按序执行）：
 
    ```
-   git add VERSION CHANGELOG.md migrations/vX.Y.Z.md   # + 里程碑收口产物（如有）
+   git add VERSION CHANGELOG.md migrations/vX.Y.Z.md README.md   # + 里程碑收口产物（如有）
    git commit -m "chore(release): vX.Y.Z — 聚合 ITER-A~B (级别)" -m "<body>"
    git tag vX.Y.Z                                       # 打在发布提交上，数字须 == VERSION
    git push && git push --tags                          # 或 git push origin <branch> vX.Y.Z
@@ -122,9 +123,9 @@ commit message 格式**不进 hook 机械门禁**——PreToolUse hook 拦截的
 
 ### 6.4 切版后自检
 
-发布提交后核对三处版本载体对齐（§1 SSOT 要求）：
+发布提交后核对四处版本载体对齐（§1 SSOT 要求）：
 
-- `VERSION` 的数字 == tag `vX.Y.Z` 的数字 == `CHANGELOG.md` 顶条 `## [X.Y.Z]`，三者一致。
+- `VERSION` 的数字 == tag `vX.Y.Z` 的数字 == `CHANGELOG.md` 顶条 `## [X.Y.Z]` == `README.md` badge `version-X.Y.Z`，四处一致。
 - `git tag --points-at HEAD` 含 `vX.Y.Z`（tag 确在发布提交上）。
 - 任一不齐即就地修正，不留待下次发现。
 
