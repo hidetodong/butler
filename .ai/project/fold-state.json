@@ -312,6 +312,26 @@
           "sha256": "b6f04b131076a8c234ef8b3797acaa387b0593be26b2b7ae3b0363b5a50aa075"
         }
       ]
+    },
+    "ITER-0074": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0074/CHANGELOG.md",
+        "sha256": "aef845d75d9e2c17d39868da130f468919b21ea5f590f295893ac0170b18e078"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "5b9f97e37df2785de20bcb202ce969dd85d93c0eb54b9631f8a7a640527973a4"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "b59cd6c457bb9e24b0d50a0d673538bda226f5abfdda4157c5517f1f97d8adbb"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "b1d77302421f4d6bfa9f13de292361aca77558ed0812a8d7f851a4dccc269437"
+        }
+      ]
     }
   }
 }

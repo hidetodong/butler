@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图模板 (SSOT)
+  ===========================================================================
+  本文件是 butler 交付总结的固定 HTML 模板，是「固定格式」的唯一来源。
+  语义规则见 Coder/20_Workflow_Lifecycle/delivery-summary.md §9。
+
+  填槽协议（迭代/里程碑收口 step ②，在写完同名 .md 之后执行）：
+  1. 读本模板，把每个 {{占位符}} 替换为对应 .md 章节的 HTML 渲染。
+  2. {{占位符}} 与 delivery-summary.md §4 的对应关系：
+       {{DELIVERY_TITLE}}  交付标题（同 .md 首行）
+       {{DELIVERY_ID}}     ITER-NNNN 或 MILE-NNNN
+       {{DELIVERY_LEVEL}}  迭代交付（小版本） / 里程碑交付（大版本）
+       {{DELIVERY_DATE}}   收口日期 YYYY-MM-DD
+       {{DELIVERY_GOAL}}   §4.1 本次交付目标
+       {{COMPLETED}}       §4.2 已完成内容
+       {{KEY_CHANGES}}     §4.3 关键变更 / 用户可感知变化
+       {{IMPACT_SCOPE}}    §4.4 高层影响范围
+       {{VERIFICATION}}    §4.5 验证方式与结果摘要
+       {{RISKS}}           §4.6 已知剩余风险 / 延后事项
+       {{REFERENCES}}      §4.7 引用 —— 只放路径指针（<a>/<code>），不得嵌四件套全文
+       {{ROADMAP}}         §4.8 拆分路线图回填 —— 仅里程碑级填写
+  3. 正文槽位填 block 级 HTML（<p> / <ul><li> / <table>）。
+  4. ROADMAP 块：里程碑级填 {{ROADMAP}}；迭代级把 ROADMAP:START~END 之间整段删除。
+  5. 硬约束：HTML 与 .md 同源、.md 为引用真源；{{REFERENCES}} 只引用路径、不嵌全文，
+     保证 HTML 体量恒定、不随迭代膨胀（同 delivery-summary.md §4.7）。
+  6. 单文件自包含：禁止引入外部 CSS / JS / 字体 / 图片链接，保持双击可离线打开。
+  ===========================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0074 交付总结 · 仓库卫生清理</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>仓库卫生清理</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0074</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-21</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>清理过期 worktree 残留、堆积分支和空壳目录，让 butler 仓库回到干净状态。同时修复审计发现的 P0 问题（CI 测试失败 + frontier 版本过期）。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <table>
+        <tr><th>清理项</th><th>操作</th><th>释放</th></tr>
+        <tr><td><code>.claude/worktrees/iter-0045/</code></td><td><code>git worktree remove --force</code></td><td>4.2 MB</td></tr>
+        <tr><td>16 个已合并本地分支</td><td><code>git branch -d/-D</code>（含 3 个 worktree-agent-*）</td><td>—</td></tr>
+        <tr><td>10 个已合并 github 远程分支</td><td><code>git push github :xxx</code></td><td>—</td></tr>
+        <tr><td><code>Learner/</code> + <code>Composer/</code></td><td><code>rm -rf</code>（WIP 空壳，6 月至今无实质内容）</td><td>~1 KB</td></tr>
+      </table>
+      <p>附带 P0 修复（审计发现）：test/verify 硬编码计数 8→10、frontier 版本 v2.17.0→v2.18.0、Goal Calibration 空投影段补齐。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>仓库从 18 个本地分支 + 13 个远程分支 → 只剩 <code>main</code>（本地 + 两个 remote 各 1 个）</li>
+        <li>过期 worktree 副本（4.2 MB）已清除</li>
+        <li>空壳子系统 <code>Learner/</code> 和 <code>Composer/</code> 已删除，相关文档引用同步移除</li>
+        <li>CI 全绿（此前有 1 个测试失败 + 1 个计数不匹配）</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li><strong>规则算法</strong>：无变更</li>
+        <li><strong>脚本/测试</strong>：4 个测试文件计数 8→10 同步</li>
+        <li><strong>文档</strong>：README.md / CLAUDE.md / architecture.md / invariants.md / AGENTS.md / frontier.md 计数或版本同步</li>
+        <li><strong>目标项目</strong>：无影响（纯 butler 仓内部清理）</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><code>verify-ci.sh</code> 全绿：147 hook tests + 10 workflows/41 projections + 全量回归通过</li>
+        <li><code>git branch</code> 只输出 <code>* main</code></li>
+        <li><code>git branch -r</code> 只输出 <code>github/main</code> + <code>origin/main</code></li>
+        <li><code>git status</code> 干净</li>
+      </ul>
+      <p>置信档：<strong>可靠</strong>（全部 5 条 AC 由机器命令验证通过）</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>origin 远程（gl.ge.cn）连接不可达，远程分支清理只在 github 侧完成；origin tracking ref 已本地清除</li>
+        <li>origin 远程分支 <code>feat/iteration-requirement-mgmt</code> 未实际删除（SSL 连接失败），待下次网络可达时手动清理</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>交付总结：<code>deliveries/ITER-0074-repo-cleanup.md</code></li>
+        <li>迭代产物：<code>.ai/iterations/ITER-0074/</code>（CONCEPT / AC_LIST / TECH_PLAN / CHANGELOG / VERIFY_REPORT）</li>
+        <li>台账：<code>.ai/ITERATIONS.md</code> ITER-0074 行</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
