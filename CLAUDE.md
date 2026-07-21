@@ -7,8 +7,6 @@
 ## 目录结构与职责
 
 - `Coder/` — 工程开发与 AI 协作规则体系（核心）
-- `Learner/` — 学习事务管理
-- `Composer/` — 杂项事务
 - `HUMAN_GUIDE.md` — 面向人类用户的操作手册
 - `templates/` — 目标项目使用的 CLAUDE.md 模板、浓缩规则卡、交付总结固定格式 HTML 模板（`delivery.html.template`，SSOT，见 `Coder/20_Workflow_Lifecycle/delivery-summary.md` §9）与 hook 体系（`hooks/`、`settings.hooks-snippet.json`）
 - `tools/` — butler 驻留可执行工具（非规则、非部署模板；目标项目通过传参调用，不拷副本）。当前含 `delivery-selftest/`（交付自测人测回传桥，Node 零依赖：JSON 清单 → GitHub 风格分步流程页 → 四态回传 → 写 results.json + 自退；MILE-0002 R3）
