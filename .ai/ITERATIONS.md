@@ -4,13 +4,13 @@
 
 ## 危险模式自治路线图
 
-ITER-0074 仓库卫生清理 active。
+当前无 active 迭代；ITER-0074 仓库卫生清理已收口。
 
-current: ITER-0074
+current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
-| ITER-0074 | 仓库卫生清理：清过期 worktree 残留 + 堆积分支 + 空壳目录，让仓库回干净状态 | active | 2026-07-21 | — | — | — |
+| ITER-0074 | 仓库卫生清理：清过期 worktree 残留 + 堆积分支 + 空壳目录 + P0 审计修复（test 计数 8→10 / frontier 版本同步） | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0074-repo-cleanup.md |
 | ITER-0073 | /butler:progress 命令：只读聚合当前项目的结构化进度报告——里程碑、迭代、Goal、验收、执行、验证、风险一页看完 | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0073-butler-progress-command.md |
 | ITER-0072 | /butler:init 命令：新项目基地车一键部署 + Codex skill + registry + 同步脚本适配 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0072-butler-init-command.md |
 | ITER-0071 | 说人话补「自造缩写」标准并让产物范例常驻：artifact-style §2 标准一收编掐短词/自造缩写、§6 加对照，rule-card 产物书写段加 3 组现场 ❌→✅ 范例，说准四条 SSOT 作用域 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0071-tone-plainlang-coinage.md |
