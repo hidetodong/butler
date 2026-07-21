@@ -67,8 +67,6 @@ flowchart TB
 | 子系统 | 入口 | 用途 |
 |---|---|---|
 | 🛠 **Coder** | [`Coder/README.md`](Coder/README.md) | 工程开发与 AI 协作（核心） |
-| 📚 **Learner** | [`Learner/README.md`](Learner/README.md) | 学习事务管理 &nbsp;`🚧 WIP` |
-| 🗂 **Composer** | [`Composer/README.md`](Composer/README.md) | 其他生活 / 事务性杂项 &nbsp;`🚧 WIP` |
 
 ## 🧩 扩展模式
 
@@ -202,8 +200,6 @@ butler/
 │   ├── 70_Extension_Preference/    #   偏好探针    /butler:preference ⚠️
 │   └── 99_Business_Extension/      #   业务约束（最高优先级）
 │
-├── Learner/                        # 📚 学习事务管理
-├── Composer/                       # 🗂 其他杂项事务
 └── deliveries/                     # butler 自身的交付总结归档（dogfooding）
 ```
 

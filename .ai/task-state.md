@@ -1,10 +1,10 @@
 # Task State
 
-- 当前迭代：无 active
+- 当前迭代：ITER-0074（仓库卫生清理）
 - 当前里程碑：none
-- 阶段：—
-- 状态：ITER-0073 已收口。/butler:progress 命令已交付。
-- 下一动作：无活跃迭代。
+- 阶段：P4 Execute
+- 状态：ITER-0074 已开迭代，P0 修复已提交。开始执行 P1 清理。
+- 下一动作：清理 .claude/worktrees/、本地/远程分支、Learner/Composer。
 
 # Goal Calibration
 

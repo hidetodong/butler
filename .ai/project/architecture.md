@@ -33,7 +33,6 @@
 - `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置和命令软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声。
 - `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（按 OpenAI Codex commit/hash/license 固定的官方 plugin/skill validators）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/manifest.json`（可执行版本/action 链）+ `migrations/v*.md`（人读配方）、`deliveries/`（交付总结存档）。
-- 其它子系统 — `Learner/`（学习事务）、`Composer/`（杂项事务），与 `Coder/` 并列、本知识文件夹不展开。
 
 ## 成熟度（真源里没有的"现状"层）
 
