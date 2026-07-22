@@ -705,6 +705,38 @@
           ]
         }
       ]
+    },
+    {
+      "source": "2.18.0",
+      "target": "3.0.0",
+      "recipe": "v3.0.0.md",
+      "actions": [
+        {
+          "id": "3.0.0/01-global-install",
+          "type": "global_install",
+          "domain": "machine",
+          "preconditions": [
+            "explicit-machine-confirmation"
+          ]
+        },
+        {
+          "id": "3.0.0/02-sync-hooks",
+          "type": "sync_hooks",
+          "domain": "project",
+          "preconditions": [
+            "hook-tree-recognized-or-absent",
+            "settings-shape-valid"
+          ]
+        },
+        {
+          "id": "3.0.0/03-restamp",
+          "type": "restamp",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -124,3 +124,4 @@
 - 2026-07-22 · P5-verify · ITER-0082 · `dangerous-ack`：六份 evidence 校验归档；workspace 10/10、hook/合同 13/13、组合 e2e、真实 apps dogfood、完整 CI 与 diff check 通过，Goal adjudicator 十项全绿、verdict=eligible。
 - 2026-07-22 · close · ITER-0082 / MILE-0009 · `dangerous-ack`：R8 置 closed，迭代/里程碑四件套与双格式交付完成，项目知识折叠；MILE-0009 八条路线全部 closed。未提交、未切版、未推送，等待 closed 状态审计后 compact。
 - 2026-07-22 · close-audit · ITER-0082 / MILE-0009 · `dangerous-ack`：evidence 重新归档后 closed 状态审计 exit 0，ITER/MILE 台账、路线、交付、归档、evidence 与 fold receipt 全部一致，仅保留 `UNRELEASED` 亮牌；收口态完整 CI 与 diff check 再次通过。当前无 active，进入 compact 边界。
+- 2026-07-22 · release · MILE-0009 · `user-requested`：按 MAJOR 级别切版 v3.0.0，聚合 ITER-0075–ITER-0082；迭代内容与发布元数据保持独立提交，升级配方登记 global-install、sync-hooks、restamp，旧 PRD 内容继续要求显式迁移。

@@ -4,6 +4,7 @@
 
 - 无 active milestone / iteration；MILE-0009 R1–R8 与 ITER-0075–ITER-0082 全部 closed。
 - ITER-0082 evidence、四件套/CHANGELOG、迭代/里程碑双格式交付和知识折叠已完成。
+- MILE-0009 已聚合切版为 v3.0.0；旧项目仍需显式 upgrade/migration，发布不等于目标项目已部署。
 - 危险模式仍为 ON，但当前无自治路线；不会自动提升未编号候办。
 
 ## 已交付

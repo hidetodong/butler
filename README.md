@@ -6,7 +6,7 @@
 
 把 AI 从「自由发挥的编码助手」变成「按流程交付的工程协作者」
 
-![version](https://img.shields.io/badge/version-2.18.0-blue)
+![version](https://img.shields.io/badge/version-3.0.0-blue)
 ![type](https://img.shields.io/badge/type-rules--SOP-blue)
 ![format](https://img.shields.io/badge/format-Markdown-lightgrey)
 ![workflow](https://img.shields.io/badge/workflow-P1→P5-orange)

@@ -4,6 +4,12 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [3.0.0] - 2026-07-22
+
+不兼容的需求治理契约升级版，聚合 MILE-0009 的 ITER-0075–ITER-0082。Butler 从单份 PRD 持续改版升级为需求收件箱、独立多 PRD 版本、钉版引用、事务化更新与 Monorepo 工作区范围门禁的完整链路；既有项目需要显式迁移旧 PRD 结构并刷新 hook，不能直接把新结构视为已部署。
+
+升级步骤见 `migrations/v3.0.0.md`，迁移指南见 `docs/prd-migration-guide.md`，版本级交付见 `deliveries/milestones/MILE-0009-prd-inbox-monorepo-governance.md`。
+
 ## [2.18.0] - 2026-07-20
 
 向后兼容的能力新增版，聚合 ITER-0068–ITER-0071。

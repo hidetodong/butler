@@ -4,7 +4,7 @@
 
 ## 当前形态
 
-- **版本**：v2.18.0；MILE-0009 R1–R8 已交付并收口，尚未切版。
+- **版本**：v3.0.0；MILE-0009 R1–R8 已交付、收口并发布。
 - **三宿主**：Claude Code / Codex / Pi 三宿主适配全部落地——Pi 由 TypeScript 扩展（`plugins/butler-pi/`）拦截 write/edit 调 Python 门禁，setup.sh 一键安装。
 - **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与 11 工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
 - **双宿主治理**：45 个入口元数据投影由 registry 生成/校验；个人 Butler plugin 的仓内真源已刷新，team/public distribution 明确未配置。
@@ -18,7 +18,7 @@
 - 危险模式仍为 ON；下一方向须由用户启动现有未编号候办或提出新任务。
 
 ## 下一个瓶颈
-- MILE-0009 能力尚未切版/发布；外部旧项目获得新结构仍需显式 upgrade/migration，不能把仓内交付写成已部署。
+- MILE-0009 已随 v3.0.0 发布；外部旧项目获得新结构仍需显式 upgrade/migration，不能把发布写成目标项目已部署。
 - 未编号候办 `long-horizon-scale-governance` 可按用户决定提升；当前不预占正式号。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。
