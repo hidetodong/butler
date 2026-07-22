@@ -12,6 +12,34 @@
   },
   "workflows": [
     {
+      "id": "inbox",
+      "rule_source": "Coder/40_Context_Management/inbox-workflow.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "requirement inbox",
+        "需求收件箱",
+        "scan origin",
+        "处理 origin",
+        "classify requirements"
+      ],
+      "legacy_aliases": [],
+      "claude": {
+        "name": "/butler:inbox",
+        "path": ".claude/commands/butler/inbox.md",
+        "description": "扫描需求收件箱，逐项分类并安全路由到 PRD、ideation、milestone backlog 或仅记录",
+        "default_prompt": "Use /butler:inbox for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-inbox",
+        "path": "plugins/butler/skills/butler-inbox/SKILL.md",
+        "description": "Scan Butler requirement sources, classify pending items, and safely route them to PRD, ideation, milestone backlog, references, or record-only outcomes. Use when the user asks to inspect, import, classify, or process an origin/ requirement inbox.",
+        "display_name": "Butler Inbox",
+        "short_description": "Classify and route requirement sources safely",
+        "default_prompt": "Use $butler-inbox to scan and process this requirement inbox safely."
+      }
+    },
+    {
       "id": "prd",
       "rule_source": "Coder/40_Context_Management/references-schema.md",
       "risk": "normal",
@@ -36,16 +64,16 @@
       "claude": {
         "name": "/butler:prd",
         "path": ".claude/commands/butler/prd.md",
-        "description": "把权威 PRD 拆进项目知识库，并随改版保持同步——首次拆分 / 改版对齐 / 只读看板",
+        "description": "按独立需求身份拆分、更新或查询 PRD——日期化 prd_id / 工作区筛选 / 版本同步",
         "default_prompt": "Use /butler:prd for this Butler workflow."
       },
       "codex": {
         "name": "$butler-prd",
         "path": "plugins/butler/skills/butler-prd/SKILL.md",
-        "description": "Run Butler's PRD-first workflow for a supplied product document, PRD update, or PRD status request. Use when the user gives a PRD or asks to split, import, update, reconcile, or inspect versioned PRD references.",
+        "description": "Run Butler's multi-PRD workflow for a supplied product document, targeted PRD update, or read-only status request. Use when the user gives a PRD or asks to split, import, update, reconcile, list, or filter independently versioned PRDs by prd_id or workspace.",
         "display_name": "Butler PRD",
-        "short_description": "Split, update, or inspect versioned PRDs",
-        "default_prompt": "Use $butler-prd to process this product requirements document."
+        "short_description": "Split, update, or filter independent PRDs",
+        "default_prompt": "Use $butler-prd to process or inspect this independently identified product requirement."
       }
     },
     {

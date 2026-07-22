@@ -16,7 +16,7 @@ scope: P2 阶段验收清单的模板、编写规则与完成判定口径
 - 顶部冻结状态（frontmatter）：`状态`（取值 `draft` | `ack-frozen`）与 `ACK 日期`。完整路径必填；简化路径可选（省略即按 legacy 处理，详见 §4 与 §7）。
 - 必填字段：`Goal`、`In Scope`、`Out of Scope`、`Acceptance Checklist`、`Verification Method`、`Open Questions / Risks`
 - 可选字段：`External References`（当存在外部参考资料时必填）
-- 可选 frontmatter：`prd_version`（当本迭代引用 `references/prd/` 切片时必填）——记 ACK 冻结那一刻 PRD 的**全局版本号**（一份 PRD 一个版本号、非逐片编版），冻结绑定、之后**钉住**（详见 §4）。非 PRD / 对话驱动迭代**不写此行**、frontmatter 逐字不变。
+- 可选 frontmatter：`prd_refs`（需求集合的新写法）——列表中每项固定 `prd_id`、ACK 时的 `prd_version` 与本迭代引用的 `module_slugs`，详见 §4/§5。legacy 单 PRD 只读兼容仍认单值 `prd_version`；两字段禁止并存。非 PRD / 对话驱动迭代两者都不写。
 
 ## 3. 标准模板
 
@@ -24,7 +24,13 @@ scope: P2 阶段验收清单的模板、编写规则与完成判定口径
 ---
 状态: draft        # draft=写完待 ACK；用户 ACK 后改 ack-frozen
 ACK 日期: —        # 置 ack-frozen 时填写
-prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1），冻结绑定、之后钉住，见 §4；非 PRD 迭代省略此行
+prd_refs:          # 可选；需求集合引用时整块填写；非 PRD 迭代省略
+  - prd_id: 2026-07-22-user-login
+    prd_version: v1.1
+    module_slugs: [login-flow, validation-copy]
+  - prd_id: 2026-07-23-batch-import
+    prd_version: v2.0
+    module_slugs: [import-rules]
 ---
 
 > 分流: 简化 | 命中升级信号: 均未命中 | YYYY-MM-DD   （仅简化路径写在此；完整路径的分流记录写进 CONCEPT.md）
@@ -51,7 +57,7 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 # External References
 - .ai/references/api-xxx.md — API 接口契约来源
 - .ai/references/design-xxx.md — UI 设计规格来源
-- .ai/references/prd/save-validation.md — PRD 切片来源（版本＝frontmatter prd_version，正文不重复版本号）；支撑 AC2
+- .ai/references/prd/2026-07-22-user-login/login-flow.md — PRD 切片来源（版本与模块均取 frontmatter prd_refs）；支撑 AC2
 
 # Open Questions / Risks
 - 当前未决问题
@@ -64,7 +70,8 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 - 流程：AC_LIST 写完先置 `draft`；用户 ACK 后改为 `ack-frozen` 并填 `ACK 日期`，方可进入 P3。
 - hook 联动：在部署了 butler hook 的项目，AC_LIST 处于 `draft` 时源码写操作会被 `phase_gate` 拦截，直到置 `ack-frozen`。无该字段的旧 AC_LIST 按 legacy 放行，不被误杀。
 - amend 退回：迭代内小幅修订（`iteration-schema.md §5.3`）必须把 `状态` 退回 `draft`、重新等待 ACK 后再置 `ack-frozen`。
-- `prd_version` 绑定（仅引用 `references/prd/` 切片的迭代适用）：置 `ack-frozen` 时把 `prd_version` **绑定到当刻 PRD 的全局版本号**（如 `v1.1`），之后**钉住**——即锁死不随 PRD 后续改版漂移；本迭代 P3 设计、P5 核对全对着这一版（引用锚点与解析见 §5）。amend 重冻（上一条退回 `draft` 重新 ACK）时，若 PRD 期间已改版，`prd_version` **可随重冻重绑到新的当前版**。改版的完整同步协议（重新派生 + 影响面 + 主动重冻）属 `/prd update`（见 `40_Context_Management/prd-update.md`），不在本字段展开。
+- `prd_refs` 绑定（需求集合引用适用）：置 `ack-frozen` 时逐项把 `prd_id + prd_version + module_slugs` **绑定到当刻事实**，之后钉住；需求 A 改版不能带动需求 B 的版本，也不能把模块从一项串到另一项。本迭代 P3/P5 对每项各自解析。amend 重冻时可显式增删项或重绑受影响项，未受影响项保持不变；完整改版仍走 `prd-update.md`。
+- legacy `prd_version`：仅给迁移前单 PRD 旧产物继续读；它与 `prd_refs` 互斥。新集合产物不得因为只引用一份需求就继续写 legacy 字段。
 - 简化路径：`状态` 字段可选；省略即按 legacy 放行。简化路径的一行分流记录写在 AC_LIST 顶部（格式见 §3）。
 
 ## 5. 编写规则
@@ -75,7 +82,9 @@ prd_version: —     # 可选；引用 references/prd/ 切片时填（如 v1.1�
 - AC 不得混入未来愿景、长期规划或下一阶段任务。
 - 超出范围但相关的事项，应放进 `Out of Scope` 或 `Open Questions / Risks`。
 - 若存在已处理的外部参考资料（`.ai/references/`），必须在 `External References` 中列出，并标注哪些 AC 项源自该参考资料。
-- 引用 `references/prd/` 切片时，**版本化锚点 = slug + frontmatter 的全局 `prd_version`**：版本号只存 frontmatter 一处，`External References` 与各 AC 正文引用 `prd/<slug>.md` **不逐条重复版本号**（解析时用 frontmatter 补齐）。解析规则——PRD 仍在该版则 live `prd/<slug>.md` 即钉住版；PRD 已改版超过则读 `.archive/v<prd_version>/<slug>.md`（读侧「执行读最新」纪律见 `40_Context_Management/references-schema.md §5 步骤 2`、`.archive/vN/` 落盘契约见其 §7，此处不复述）。须标注哪些 AC 源自哪个 slug。
+- 需求集合的完整锚点是 `prd_id + prd_version + module_slug`。`prd_refs` 是唯一钉版表：每个 `prd_id` 最多一项，`module_slugs` 非空且项内不重复；正文路径不再重复版本。live 版本吻合时读 `prd/<prd_id>/<module_slug>.md`，否则读 `prd/<prd_id>/.archive/<prd_version>/<module_slug>.md`。
+- `External References` 与 AC 正文必须使用带 `prd_id` 的集合路径，并能在 `prd_refs` 找到同项 module；未登记、跨项借同名模块或版本缺失均 fail-closed。P3/P5 使用同一列表，禁止另立版本。
+- legacy 旧产物仍按 `prd_version + prd/<module_slug>.md` 解析；迁移后由 migration receipt 把隐式单 PRD 身份映射到唯一 `prd_id`，再按该需求 live/archive 取文件。解析真源与 CLI 见 `40_Context_Management/references-schema.md §8`。
 - 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）。
 
 ## 6. 判定口径

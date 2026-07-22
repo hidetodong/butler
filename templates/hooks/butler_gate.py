@@ -27,6 +27,7 @@ from rules import (
     phase_gate,
     protected_paths,
     single_active_iteration,
+    workspace_scope,
 )
 
 GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
@@ -36,6 +37,7 @@ GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 RULE_MODULES = [
     protected_paths,
     phase_gate,
+    workspace_scope,
     ledger_status,
     single_active_iteration,
     artifact_chain,

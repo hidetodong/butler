@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_id": "multi-prd-contract",
+  "iteration": "ITER-0079",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC7",
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "pytest",
+      "templates/hooks/tests/test_multi_prd_migration_contract.py",
+      "templates/hooks/tests/test_prd_collection_contract.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T14:10:02.372Z",
+  "finished_at": "2026-07-22T14:10:02.616Z",
+  "duration_ms": 244,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "20a17b7b59e53c75deb5ae3aca0e721262eb9b9ee63592cb04a1c382c58c8d49",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

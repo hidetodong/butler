@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Inbox"
+  short_description: "Classify and route requirement sources safely"
+  default_prompt: "Use $butler-inbox to scan and process this requirement inbox safely."
+policy:
+  allow_implicit_invocation: true

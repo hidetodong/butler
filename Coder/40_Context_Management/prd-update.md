@@ -1,108 +1,101 @@
 ---
-title: PRD 改版同步机制
+title: PRD 确定性改版与回执
 audience: AI / 开发者
-scope: 一份已切进 references/prd/ 的 PRD 出新版（V→V+1）时的同步动作——变更检测（清单优先+diff兜底+对账）、重新派生、先冻旧版快照再更 live、登记表认亲（基础态新增/消失 + 松边改名/合并/拆分）、三态影响面报告（亮牌不自动）、受影响工作路由、/prd status 只读看板。只管"改版"，首切见 prd-split。
+scope: 指定 prd_id 的新版 PRD 经变更对账、模块认亲和三态处置确认后，生成 update spec，由标准库工具零写 plan、先冻后更事务 apply、持久 receipt、verify/rollback；不做首切或代码范围门禁
 ---
 
-# prd-update（PRD 改版同步机制）
+# prd-update（PRD 确定性改版与回执）
 
-本文件是**变更动作层**：定义"一份已经切进 `.ai/references/prd/` 的 PRD 出了新版本（如 V1.1→V1.2），怎么把切片、版本、受影响的工作同步过来"。它与 `prd-split.md` 同族——都**履行** `references-schema.md` 的契约、都是该文件 §8 前向指针里的动作，只是分工不同。
+本文件是已有需求的改版动作真源。结构/身份以 `references-schema.md` 为准，首切走 `prd-split.md`，查询走 `prd-status.md`。机械执行唯一入口是 `$BUTLER_PATH/tools/prd-update/prd_update.py`；宿主命令不得手工模拟事务。
 
-## 1. 定位：契约 vs 动作，split vs update
+## 1. 身份闸与变更对账（先不写盘）
 
-`references-schema.md` 是**契约**（`prd/` 该长什么样、slug 是终身身份、切片必逐字、怎么落盘）；本文件是**动作**（改版时怎么一步步把契约维持住）。分工一句话：
+调用必须显式给出已登记 `prd_id`，并按 `references-schema §5` 证明输入是该需求的 `new-version`。省略、duplicate、ambiguous、指向 legacy 或来源关系冲突都停止；改版不领取新 ID。
 
-- **`prd-split` 管"首切"**——一份 PRD **第一次**进来怎么切成知识文件夹。
-- **`prd-update` 管"改版"**——切进来**之后**，每次 V→V+1 怎么同步（本文件）。
+语义层先完成：
 
-因此本文件对以下几点一律**回指 `references-schema`、不复述不改写**（契约改了，动作不必两头同步）：
+1. 用户修改清单优先，旧 live 与新版原文逐字 diff 兜底；两者不一致必须亮出。
+2. 按 `prd-split` 的自然边界重新派生最终 active 模块原文，不让 CLI 猜章节。
+3. 认亲先判保留/新增/消失，再提改名/拆分/合并候选。改名保留 slug；新 slug 的 origins 必须指向旧 active slug；拿不准退回独立新增+移除。
+4. 扫描 changed slug 对 `.ai/MILESTONE.md#R<n>`、当前 AC 和 ledger=closed 的 archived AC 的 future/active/closed 影响；同一 milestone 文件按每条路线实际状态分别分类，不改这些文件。
+5. 一次 soft 对齐 old/new version、最终模块/source、origins/removed、三态影响和每项处置。标准模式用户确认；危险模式完整自审可代 ACK。
 
-| 本机制用到的规矩 | 真源 |
-|---|---|
-| `prd/` 结构 + `00_INDEX` + 登记表字段（slug / 首见版本 / 当前版本 / 状态） | `references-schema §3` |
-| slug（模块的终身英文代号）身份：一次分配、只增不改、不回收 | `references-schema §4` |
-| 切片必须逐字原文、无损（命门红线） | `references-schema §6` |
-| live 目录（最新）/ `.archive/vN/`（旧版全量快照）落盘形态 | `references-schema §7` |
-| 按 PRD 自身边界切、绝不切碎一条规则（重新派生时同样守） | `prd-split §2`（边界识别）/ `§4`（逐字保真） |
+## 2. Update Spec v1
 
-**改版走本机制、不是重新注入**：一份 PRD 已经在 `prd/` 里了，出新版时**不**当成一份陌生资料重新从头切（那会丢掉 slug 身份与历史），而是走本文件的同步流程。
+确认结果写成 JSON spec；字段精确、未知字段拒绝：
 
-## 2. 变更检测：清单优先 + diff 兜底 + 对账
+```json
+{
+  "schema_version": 1,
+  "prd_id": "2026-07-22-login",
+  "expected_old_version": "v1.0",
+  "new_version": "v1.1",
+  "confirmed": true,
+  "confirmation": {"mode": "user-ack", "at": "2026-07-22T10:00:00+08:00"},
+  "active_modules": [
+    {"module_slug": "login-flow", "title": "登录流程", "source": "sources/login-flow.md", "origins": ["login-flow"]}
+  ],
+  "removed_slugs": [],
+  "dispositions": [
+    {"path": ".ai/iterations/ITER-0001/AC_LIST.md", "decision": "keep-pinned-history", "note": "历史继续按 v1.0"}
+  ]
+}
+```
 
-**先搞清楚"到底改了哪些模块"，再动手——别整份重切。** 检测走三步（对应 grilling 决议 c）：
+- `source` 相对 spec 文件解析，必须是非 symlink 的 UTF-8 普通文件；bytes 原样写 live 并记 hash。两个模块不得复用同一 source 文件。
+- retained slug 的 `origins=[自身]`；纯新增为空；split/merge 显式列旧 origins。removed slug 不得复活；一对一改名换 slug 拒绝。
+- `new_version` 必须严格大于现场 old version；现有 archive 冲突拒绝。
+- plan 阶段可用 `confirmed:false + pending`，但 apply 必须 `user-ack` 或 `dangerous-self-review` 的 ISO 时间。
 
-1. **清单优先**：以用户给的**修改项清单**为主（"V1.2 改了信号机保存校验、新增了批量导入"）——人最清楚自己改了什么，这是最准的信号。
-2. **diff 兜底**：同时把**旧版 live 切片**与**新版 PRD 对应段**做一遍 diff（机器逐字比对），作为**防漏安全网**——防人漏报某处顺手改的文案。
-3. **对账**：把清单与 diff 的结果**并起来核**。清单没提、但 diff 检出有变的地方，**必须亮出来问用户**（"你清单没提 `login-validation`，但 diff 显示它的提示语变了，算改动吗？"）——**不静默采信任何一方**：不因清单没提就当没改，也不因 diff 有噪声就自作主张。
+## 3. 三态 disposition
 
-产出：一份**受影响模块清单**（哪些 slug 的切片内容变了 / 哪些是新增 / 哪些消失了），进入 §3/§4。
+plan 对每个影响 path 要求且只允许一项处置：
 
-## 3. 重新派生 + 落盘（先冻旧版，再更 live）
-
-对受影响的模块**重新派生切片**——按 `prd-split §2/§4` 的边界与逐字规矩切（复用、不复述算法），只是这次切的是新版原文。落盘**硬顺序**：
-
-1. **先冻旧版**：把**当前 live 的整份 `prd/`**（改动前的全部切片 + `00_INDEX`）复制冻进 `.archive/v<旧版号>/`（如 `.archive/v1.1/`）——**全量快照、自包含**，打开就是当年那版完整规格（守 `references-schema §7`）。
-2. **再更 live**：然后才把受影响模块的 live 切片 `prd/<slug>.md` 覆盖成新版原文，未变的模块切片不动。
-3. **bump 全局版本**：`00_INDEX` 里 PRD 的当前版本号进到新版（如 v1.1→v1.2）；变动模块的登记表"当前版本"随之更新。
-
-> **硬顺序红线**：`.archive/v<旧版>/` 快照**必须在 live 被覆盖之前**冻好。live 切片一旦覆盖成新版，旧版原文就没了、再也冻不出来——那 R4 钉版说的"回溯读 `.archive/vN/`"就落空。**先冻后更，不可颠倒。**
-
-## 4. 登记表认亲：基础态（新增 / 消失）+ 松边（改名 / 合并 / 拆分）
-
-改版常伴随模块增减，`00_INDEX` 登记表要同步认亲（"新版的这些模块，对回旧版是谁"）。认亲分两层，都只用 `references-schema §3` 登记表的**现有字段**（不加列）：先判**基础态**（多了谁、少了谁），基础态套不上时再走**松边**（改名/合并/拆分）。
-
-### 4.1 基础态（先判这两种）
-
-- **新增模块**（新版才有）：发一个**新 slug**（守 `references-schema §4` 只增不改）、`首见版本` = 新版号、`状态: active`。
-- **消失模块**（旧版有、新版删了）：`状态` 置 `removed`——切片**留档**（供旧版审计）但不再是当前规格，slug **不回收、不复用**。
-
-纯新增（旧版没有对应模块消失）、纯消失（新版没有对应模块顶上）→ 到此为止，就是基础态，不必往下猜。
-
-### 4.2 松边：改名 / 合并 / 拆分（"松边" = 拿不准就不硬认）
-
-**只有当"某些 slug 消失"与"某些 slug 新增"在同一次改版里同时出现，才可能不是单纯增减，而是一个模块换了标题、或裂成几片、或几片并成一个。** 这类跨版本认亲边缘（本文件称**松边**——边界模糊、宁松勿错）按"启发式提候选 → 用户确认"处理，**绝不自动认**：
-
-- **启发式提候选**（只是猜、只提不改）：把消失集与新增集配对，按标题/章节/内容相近度提名——
-  - 一个消失 ↔ 一个新增、内容高度重合 → **改名**候选（同一模块换了门牌）；
-  - 一个消失 ↔ 多个新增 → **拆分**候选（一片裂成几片）；
-  - 多个消失 ↔ 一个新增 → **合并**候选（几片并成一片）。
-- **认亲落法**（经用户确认后才落，守 `references-schema §4` slug 终身）：
-  - **改名** = **保留旧 slug 不动**，只更新登记表的标题/章节字段（换门牌、不换身份证——引用永远指 slug，改名后旧引用照样命中）。
-  - **合并 / 拆分** = 按用户确认的对应关系落 slug 关系 + 状态：新裂出/新并出的模块发**新 slug**（`首见版本` = 本次新版号），被取代的旧 slug 置 `removed`（切片留档、不回收）。谁承继旧 slug、谁发新的，由用户拍板，本文件不强加某种映射。
-- **松边红线·宁可不认也不误并**：启发式**拿不准**（内容改动大、配对不唯一、用户没确认）时，**退回 §4.1 基础态**——把它们记成各自独立的"新增"与"消失"两条，**不硬认亲**。认错身份（把两个不同模块并成一个、把引用悄悄接到错模块上）比"没认出这是改名"坏得多：前者污染真源、误导后续所有引用，后者只是多一个 slug、可事后补认。
-
-## 5. 三态影响面报告（亮牌不自动默认）
-
-改版最危险的不是切片本身，是**已经按旧版干过的活可能被悄悄架空**。所以改版后必须扫一遍"哪些工作引用了这次变更的切片"，按三态分类**亮牌**（对应 grilling 决议 a）：
-
-| 态 | 是什么 | 判定 |
+| state | 允许 decision | 边界 |
 |---|---|---|
-| **没开工** | 未来才做的（路线项 / 尚无迭代引用该 slug） | 无 `active`/`closed` 迭代引用变更 slug |
-| **进行中** | 当前 `active` 迭代已引用了变更切片 | `ITERATIONS.current` 迭代的 AC 引用了变更 slug |
-| **已收口** | 已 `closed` 的迭代当年按旧版验收过 | 某 `closed` 迭代引用了变更 slug |
+| `future` | `use-new-on-start` / `defer` / `not-applicable` | 不自动改 milestone |
+| `active` | `amend-and-refreeze` / `keep-pinned` / `defer` | 不自动改/重冻当前 AC |
+| `closed` | `keep-pinned-history` / `open-follow-up` / `defer` | closed 绝不回写 |
 
-> **硬约束·亮牌不自动**：影响面报告**只把三态摆到台面让用户定夺，绝不静默替用户改任何已冻结 / 已收口的工作**。"亮牌"＝亮出来给人看、等人拍板，不是"检测到就自动重冻/自动改 AC"。静默动已冻结的东西 = 废掉钉版与冻结的全部意义。
+缺项、重复 path、越出当前 impact 或 state/decision 不匹配时 apply 拒绝。receipt 只记录决定；真正 amend/新迭代仍走既有生命周期。
 
-## 6. 受影响工作路由（接既有仪式，只回指不改写）
+## 4. 零写 plan
 
-三态亮牌后，用户决定处置；每态**接既有仪式、本文件只回指路由**，不改写那些流程：
+```bash
+python3 "$BUTLER_PATH/tools/prd-update/prd_update.py" plan --project-root "$PROJECT_ROOT" --spec "$SPEC"
+```
 
-- **进行中（active 迭代）** → 走 **amend 重冻**：`AC_LIST` 退回 `draft` 重新 ACK、`prd_version` 重绑新版（真源 `iteration-schema §5.3` + `acceptance-schema §4`）。
-- **已收口（closed 迭代）** → closed **不可改**（`iteration-schema` 铁律）：不能回去改已收口的 AC，只能**开新迭代承接**新版带来的活（`iteration-schema §5.4` 扩张转迭代）。报告给出建议、由用户决定是否开。
-- **没开工** → **无需动作**：将来那个迭代真开工时，自然引用的就是新版 live 切片、钉的就是新版号。
+plan 复用 `prd-status` parser 对账项目总索引、目标索引/模块和 workspace map，读取 source bytes/hash，返回 module changes、三态 impact、dispositions、missing 与 `apply_ready`。它不建 lock/cache/stage/receipt。0=有更新且 ready，1=合法但未确认/缺处置/无实质变化，2=输入或现场错误。
 
-## 7. `/prd status`（只读看板）
+## 5. 事务 apply：stage 中先冻，整 collection 切换
 
-`/prd status` **不改盘、只读汇总**当前态，供随时查看：
+```bash
+python3 "$BUTLER_PATH/tools/prd-update/prd_update.py" apply --project-root "$PROJECT_ROOT" --spec "$SPEC"
+```
 
-- PRD 当前全局版本号 + `00_INDEX` 入口叙述一句话。
-- 模块登记表现状：各 slug 的当前标题/章节、状态（`active` / `removed`）。
-- 最近一次 `/prd update` 的三态影响面快照（谁受影响、处置到哪了）。
+apply 获取 `.ai/references/.prd-update.lock` 后重算 plan/source/现场 hash：
 
-定位与 `/milestone status` 同类——**只读看板，不是改版入口**。真要改版走 `/prd update`（§2 起）。
+1. 同父 stage 完整复制当前 `references/prd/`。
+2. 在 stage 的目标 `<prd_id>/.archive/<old_version>/` 复制旧 `00_INDEX` + 全部登记模块，形成自包含快照；不得含其他 PRD 或嵌套 archive。
+3. 才把确认过的 source bytes 写目标 live，removed 模块保留文件并置表状态；更新单需求 identity/模块表和项目总索引目标行，其他需求不动。
+4. 用共享 status parser 验证 stage，写 `<prd_id>/.butler-updates/<update_id>.json`，再对 receipt 之外的 post tree hash 复核。
+5. 将旧 PRD root rename 到 `.ai/references/.prd-update-backups/<update_id>`，再将 stage rename 为 live；live verify 失败立即反切换。
 
-## 8. soft 对齐：改版同样"提议 → 确认 → 落盘"
+stage/backup 与 live 同文件系统；任一预检或 stage 点失败只清本次临时物。两次 rename 任一点失败必须恢复 exact pre tree、移除 lock/stage。成功 backup 保留到用户明确 rollback/清理。
 
-**改版和首切一样，不是全自动黑箱。** 变更检测（§2）结果、重新派生方案（§3）、认亲判定（§4）、三态影响面（§5）——都**先提议、经用户确认、再落盘**（同 `prd-split §6` 的信任模型）。
+## 6. Receipt、幂等、verify 与 rollback
 
-> **硬约束**：未经用户确认，**不得**直接覆盖 live 切片、不得静默冻快照改版本号、更不得自动重冻任何 AC。改版牵一发动全身（旧版会被冻、已冻结工作会被牵连），比首切更需要在落盘前让最懂这份 PRD 的人过目一遍。宁可停下来问，也不擅自改版。
+receipt 是持久更新回执，含 `update_id/prd_id/applied_at`、old/new version、spec/source/pre/post/archive hashes、backup/archive 安全路径、module changes/origins、impact、dispositions、confirmation 与排除自身 hash 字段后的 `receipt_payload_sha256`。它不是 PRD 内容真源。
+
+- 同一已确认 spec + source bytes 重复 apply：找到唯一 matching receipt、verify 通过后返回 `changed:false`，不再建 archive/bump。
+- `verify --prd-id ID [--update-id UPD-…]`：零写，对账 current post、archive、backup、目标版本和 receipt path/schema。
+- `rollback`：只允许 receipt 指向的当前 collection 仍等于 post hash、backup 等于 pre hash。任何后续 PRD 更新、人工漂移或路径篡改都拒绝，避免整树恢复覆盖新工作。
+- receipt/backup/archive/update ID 绝对路径、`..`、symlink、错根或身份漂移全部 fail-closed。
+
+## 7. status 与非回归
+
+`prd-status` 只读投影每份需求的 `latest_update`（版本、module changes、impact、dispositions）；没有 receipt 为 `null`，畸形 receipt 拒绝。status 不因此获得写能力。
+
+- update 工具只写 PRD collection、managed backup 和短命 lock/stage；MILESTONE、AC、iteration archive、origin 零写。
+- 不使用 PRD 的项目、扁平 references、其他 `prd_id` 内容保持不变。
+- workspace 自动发现、实际 git diff 与 hook 写范围门禁由 `workspace-scope-schema.md` 与 `tools/workspace-scope/` 消费更新后的钉版范围；本动作不复制其算法。

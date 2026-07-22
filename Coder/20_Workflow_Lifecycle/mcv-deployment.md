@@ -58,7 +58,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 
 - `.ai/`：AI 工作空间，包含运行态文件与阶段产物两类内容。
 - `deliveries/`：完整交付后的人类可读交付总结归档目录。
-- `origin/`：**人类原始概念输入收件箱**——用户自管，存放自由格式的原始想法/概念文件（任意命名、任意数量）；AI **只读、不写不改不重塑不归档**，是 `/milestone` 等录入流的文件通道源（见 `milestone-schema.md` §6.4）。它与 `.ai/references/` 角色互斥：`references/` 是外部第三方资料（API 文档、设计稿），由 AI 处理改名注入；`origin/` 是用户自己的原始概念，始终归用户管。
+- `origin/`：**用户原始需求材料的可选收件箱**——用户自管，存放自由格式材料；AI **只读、不写不改不重命名不移动不归档不删除**。它可供 `/milestone`、后续 `/butler:inbox` 等入口读取，但不是快速路径的必经站。处理回执写 `.ai/INBOX.md`，不写回原稿；完整数据合同见 `40_Context_Management/inbox-schema.md`。
 
 部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放）。`.ai/` 下另建一个**空知识文件夹种子** `.ai/project/`（MILE-0003 R6 起）——它是**唯一在部署时即建的 `.ai/` 子目录例外**（`references/`、`iterations/`、`milestones/` 等仍按需产生），例外理由=它是项目**全貌产物之家**、空目录**标记该项目采用文件夹态**（供收口步④判"折进文件夹还是前滚单文件"），同 `origin/` 先建后投的形态。守本节"仅创建目录、不预置内容"：**只建空目录、不写 `00_INDEX` 占位**——`00_INDEX.md` + 主题文件在**首次收口前滚**时才由更新说明帮手按 `project-digest-schema.md §8` 折叠生成（部署到首收口之间无全貌可读，属与单文件项目首收口前同类暂态，冷启动键控**入口文件是否存在**而非目录存在，不误触"读不存在的 `00_INDEX`"，见 `40_Context_Management/context-persistence.md §6` 缺全貌产物倒推兜底）。
 
@@ -79,6 +79,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
 - `MILESTONES.md`：里程碑看板，正式表记录 `current` 与已开启里程碑的号/状态/归属/交付，文件末可带未编号待办索引，字段参考 `milestone-schema.md`；首次开启或暂缓里程碑草稿时按需产生。
 - `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
+- `INBOX.md`：需求材料的来源、双指纹、处理状态与派生关系回执；首次运行收件箱动作时按需产生，不复制原文，格式见 `40_Context_Management/inbox-schema.md`。
 - `milestone-backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。多个可独立启动方向必须一方向一文件，并与 `MILESTONES.md` 待办区逐块一一对账；候办不参与 `current`、Goal 或迭代自动归属。
 
 **阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：
@@ -142,7 +143,7 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 把 butler 的 hook 体系部署到目标项目的 `.claude/`。分两类：
 
-- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的**项目流程约束**：目标能归属 Butler / Git 项目根时，源码写操作在 P1/P2/P3 产物缺失时被拦截；AC_LIST 未冻结（`状态` 非 `ack-frozen`）或 TECH_PLAN 显式未通过（`方案状态` / `plan_status` 非 `pass`）时被拦截；两字段缺失的旧产物按 legacy 放行，但新产物不得省略。另会拦截 `99_Business_Extension/` 写操作、迭代台账非法状态值与 ≥2 个 `active` 行。真实路径无法归属项目时 Butler 退出判定、由宿主权限接管；缺失 / 空白 / 解析异常目标仍 fail-closed。同一 Codex patch 可逐根校验多个项目，任一目标拒绝则整次拒绝。流程绕过仍需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空），正常项目外授权不走 bypass。
+- **PreToolUse 门禁**（`butler_gate.py`，deny-based、fail-closed）——机制化的**项目流程约束**：目标能归属 Butler / Git 项目根时，源码写操作在 P1/P2/P3 产物缺失时被拦截；AC_LIST 未冻结（`状态` 非 `ack-frozen`）或 TECH_PLAN 显式未通过（`方案状态` / `plan_status` 非 `pass`）时被拦截；两字段缺失的旧产物按 legacy 放行，但新产物不得省略。另会拦截 `99_Business_Extension/` 写操作、迭代台账非法状态值与 ≥2 个 `active` 行。AC 含 `prd_refs` 时还逐目标校验钉版 Workspace Scope 与 `# Workspace Write Plan`；read-only/excluded/未声明/计划外路径拒绝，只有 legacy `prd_version` 则要求先迁移，无引用明确 N/A。真实路径无法归属项目时 Butler 退出判定、由宿主权限接管；缺失 / 空白 / 解析异常目标仍 fail-closed。同一 Codex patch 可逐根校验多个项目，任一目标拒绝则整次拒绝。流程绕过仍需显式 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空），正常项目外授权不走 bypass。
 - **PostToolUse 提醒**（`butler_advisor.py`，advisory-only、fail-open）——非阻塞自检：工具执行**之后**跑，只经 `hookSpecificOutput.additionalContext` 向模型注入提醒、**绝不 deny、绝不改写操作结果**。当前承载一条——写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，提醒"brief 若源自外部权威规格先经 prd-split 落盘再推进"（`prd_split_reminder`，兜 PRD 先行软触发被绕过的漏切）。为什么与门禁分两套：风险方向相反——门禁宁可错拦（fail-closed），提醒宁可漏提（fail-open），advisory 混进 deny 链会误伤正常的非 PRD 里程碑写。
 
 ### 5.1 文件拷贝
@@ -163,7 +164,7 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 1. 若目标 `settings.json` 不存在 → 直接写入整份 snippet 内容。
 2. 若存在但无该键的数组 → 添加 `hooks.<键> = [snippet 中该键的条目]`。
-3. 若已有该键的数组 → 检查是否已有 `matcher == “Edit|Write|MultiEdit”` 且 `command` 以对应入口（`butler_gate.py` / `butler_advisor.py`）结尾的条目；已有则跳过，否则追加。
+3. 若已有该键的数组 → 检查是否已有 `matcher == “apply_patch|Edit|Write|MultiEdit”` 且 `command` 以对应入口（`butler_gate.py` / `butler_advisor.py`）结尾的条目；已有则跳过，否则追加。
 
 合并规则的去重键：`hooks.<键>[*].matcher` + `command` 入口文件名字面比较；AI 执行此步骤时必须幂等，重复部署不重复插入。**升级既有部署时**：只有 PreToolUse 的旧项目，本步会为其补上 PostToolUse 键（幂等，不动已有 PreToolUse 条目）。
 
@@ -201,7 +202,7 @@ Hook 副本与 butler 仓库版本可能漂移。既有项目由 `tools/butler-u
 
 ### 6.2 交付自测桥（delivery-selftest）
 
-当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）与 **Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）。裁决器由 Claude/Codex 对同一目标项目传 `--project-root` 调用，只读输出 eligible/ineligible；宿主只负责调用与薄投影，不复制算法。各工具调用/schema/退出码以各自 README 为真源。
+当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）、**Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）与 **工作区范围工具**（`$BUTLER/tools/workspace-scope/workspace_scope.py`）。范围工具与已部署 hook 共享解析内核，提供只读 `discover/validate/check-plan/check-paths/check-diff`；宿主只负责传唯一 `PROJECT_ROOT` 调用，不复制算法。各工具调用/schema/退出码以各自 README 为真源。
 
 目标项目在 P5 触发人测残余时按下述形态调用交付自测桥：
 

@@ -62,6 +62,8 @@ flowchart TB
 
 > 每个 **迭代 `ITER-NNNN`** 跑一遍 `P1→P5`、独立交付；若干迭代组成一个 **里程碑 `MILE-NNNN`** 大版本。里程碑松耦合可选；每个阶段从上一阶段产物文件读取，不依赖对话记忆。
 
+Butler 命令入口、双宿主名称、风险级别与旧名兼容以机器注册表生成的 [`docs/workflows.md`](docs/workflows.md) 为准。
+
 ## 🚀 快速上手
 
 ```bash
@@ -83,7 +85,7 @@ Butler 规则算法以 `Coder/` 为单一真源，各宿主通过薄适配层接
 | 宿主 | 发现入口 | 适配层 | 门禁 |
 |---|---|---|---|
 | **Claude Code** | `CLAUDE.md` + `.claude/commands/` | 原生 | Python PreToolUse hook |
-| **Codex** | `AGENTS.md` | `plugins/butler/`（10 skills） | Python hook（`apply_patch` 适配） |
+| **Codex** | `AGENTS.md` | `plugins/butler/`（11 skills） | Python hook（`apply_patch` 适配） |
 | **Pi** | `AGENTS.md` | `plugins/butler-pi/`（TypeScript 扩展） | TS 拦截 `tool_call` → Python 门禁 |
 
 > 一次 `setup.sh` 统一安装三宿主。新项目从同一 `rule-card.md` 生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/` 处理。首次启用 hook 须用户审阅信任；PreToolUse 不是 sandbox。兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
@@ -94,6 +96,7 @@ Butler 规则算法以 `Coder/` 为单一真源，各宿主通过薄适配层接
 
 | 命令 | 用途 |
 |---|---|
+| `/butler:inbox` | 扫描、分类并安全路由需求收件箱 |
 | `/butler:prd` | PRD 切分 / 版本管理 / 改版同步 |
 | `/butler:milestone` | 里程碑录入 / 候办区 / 只读看板 |
 | `/butler:review` | 代码审查（P5 简评 + 可选独立复核） |
@@ -162,10 +165,10 @@ butler/
 │   ├── delivery-selftest/          #   人测回传桥：浏览器四态路由
 │   └── codex-validators/           #   OpenAI Codex 官方 validator 快照
 │
-├── .claude/commands/butler/        # /butler:* 命令（10 个，全局软链分发）
-├── plugins/butler/                 # Codex plugin（10 skills 实体真源）
+├── .claude/commands/butler/        # /butler:* 命令（11 个，全局软链分发）
+├── plugins/butler/                 # Codex plugin（11 skills 实体真源）
 ├── plugins/butler-pi/              # Pi 宿主适配器（TypeScript）
-├── .agents/skills/                 # 仓库发现面（10 个相对软链）
+├── .agents/skills/                 # 仓库发现面（11 个相对软链）
 │
 ├── Coder/                          # 🛠 规则真源（核心）
 │   ├── README.md                   #   子系统入口 + 读取顺序

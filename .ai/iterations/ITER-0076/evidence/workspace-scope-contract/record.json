@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_id": "workspace-scope-contract",
+  "iteration": "ITER-0076",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "templates.hooks.tests.test_workspace_scope_contract",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T13:28:49.902Z",
+  "finished_at": "2026-07-22T13:28:49.976Z",
+  "duration_ms": 74,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1213,
+    "captured_bytes": 1213,
+    "sha256": "ca7f51a071c789d91923c0833b551a1b2c652b04a2fcbbfd125f7fb113e9f232",
+    "truncated": false
+  }
+}

@@ -1,15 +1,23 @@
 # 迭代台账
 
-> ⚠️ 危险模式北极星：多个候办方向必须一方向一文件，分别索引、分别提升，不能混装成一个候办块。
+> ⚠️ 危险模式北极星：完成 MILE-0009，把项目从“单份 PRD 持续改版”升级为“独立需求持续进入、每份需求独立改版”，并让收件箱、日期化身份、多 PRD 引用、monorepo 写范围、迁移与验证形成可审计闭环。
 
 ## 危险模式自治路线图
 
-当前无 active 迭代；ITER-0074 仓库卫生清理已收口。
+MILE-0009 R1–R8 已全部收口；当前无 active iteration。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0082 | 工作区范围发现、计划/改动门禁与端到端验证（MILE-0009 R8·危险模式）：稳定地图发现、TECH_PLAN 对账、实际改动/hook 拦截、真实 apps 只读样本迁移回归 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0082-workspace-scope-gate-e2e.md |
+| ITER-0081 | 确定性 PRD 改版执行与回执（MILE-0009 R7·危险模式）：显式 prd_id/spec、先冻后更事务、模块认亲、三态影响与处置、verify/rollback/幂等 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0081-prd-update-transaction.md |
+| ITER-0080 | 首切、状态与命令适配（MILE-0009 R6·危险模式）：身份四态先于写盘、按 prd_id/date 目录首切、只读 status 与 workspace 下钻、双宿主薄路由 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0080-prd-split-status.md |
+| ITER-0079 | 多 PRD 引用、兼容迁移与人类指南（MILE-0009 R5·危险模式）：多需求钉版、legacy 显式迁移/回滚、历史引用解析与独立操作指南 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0079-multi-prd-migration.md |
+| ITER-0078 | /butler:inbox 命令与分类路由（MILE-0009 R4·危险模式）：确定性扫描、幂等 INBOX 写入、双宿主入口、确认路由与活工作区保护 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0078-butler-inbox-workflow.md |
+| ITER-0077 | 收件箱数据契约（MILE-0009 R3·危险模式）：origin 只读边界、INBOX 来源身份/指纹/状态、派生关系与幂等变更检测 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0077-inbox-data-contract.md |
+| ITER-0076 | Monorepo 工作区地图与需求级范围契约（MILE-0009 R2·危险模式）：稳定工作区键、路径映射、四类范围与越界扩张纪律 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0076-workspace-scope-contract.md |
+| ITER-0075 | 需求集合与日期化身份契约（MILE-0009 R1·危险模式）：项目级 PRD 总索引、稳定 prd_id、单需求内部结构与新需求/新版身份边界 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0075-prd-collection-identity-contract.md |
 | ITER-0074 | 仓库卫生清理：清过期 worktree 残留 + 堆积分支 + 空壳目录 + P0 审计修复（test 计数 8→10 / frontier 版本同步） | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0074-repo-cleanup.md |
 | ITER-0073 | /butler:progress 命令：只读聚合当前项目的结构化进度报告——里程碑、迭代、Goal、验收、执行、验证、风险一页看完 | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0073-butler-progress-command.md |
 | ITER-0072 | /butler:init 命令：新项目基地车一键部署 + Codex skill + registry + 同步脚本适配 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0072-butler-init-command.md |

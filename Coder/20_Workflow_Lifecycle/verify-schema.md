@@ -51,9 +51,10 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 # Gate Coverage
 - 通用质量门禁：已验证项
+- Workspace Scope：`check-plan` 与 `check-diff` 的 evidence ID（无 `prd_refs` 时标 N/A）
 - Active Profiles：已验证项（仅命中时填，未命中可省略）
 - Tech Plan Alignment：TECH_PLAN 中 Design Decisions 的兑现情况
-- References Compliance：.ai/references/ 下已处理参考资料的规格遵守情况（PRD 切片对 AC 钉住的 prd_version 核；无参考资料时标注 N/A）
+- References Compliance：.ai/references/ 下已处理参考资料的规格遵守情况（需求集合逐项对 AC 钉住的 prd_refs 核；legacy 旧迭代按 prd_version + migration receipt 解析；无参考资料时标注 N/A）
 
 # Independent Review（可选，仅当本迭代跑过独立复核时填）
 - 复核方式：fresh-context 子 agent / 手动 /review / 未执行（环境不支持）
@@ -82,7 +83,8 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
   - 红线：`弱` 不标 `可靠`、`待人` 不标已验——`/butler:dangerous` 无人值守下尤须如实（残余处置见 `65_Extension_Dangerous/dangerous-engine.md §7.4`）。
 - **人测道回传闭环**：`(human·待人)` 档残余不止于"标记待人"——有人场次须经**交付自测桥**回传结论并按四态路由回填（触发 / 后台起桥 / 阻塞等待 / 读回 / 四态路由流程见 `human-test-bridge.md`）：`pass` 计入收口 / `fail` 进纠错（`correction-contract.md`）/ `defer` 记 `Remaining Risks` 不阻塞 / `skip` 记 N/A；无人值守（`/butler:dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。
 - 验证方式应具体到 evidence ID、检查动作或人工确认口径；命令 argv/退出码/日志摘要由 record 承载，VERIFY 不手抄伪造第二份。
-- `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。**PRD 切片专项**：对着 `AC_LIST.md` frontmatter 钉住的 `prd_version` 核、**非对 live 最新核**——同一迭代内 live 即钉住版（读 live 即可），仅回溯复核历史迭代（PRD 此后已改版）才按 `prd_version` 读 `.archive/vN/<slug>.md`（钉住版语义见 `acceptance-schema.md §4`、读侧纪律回指 `40_Context_Management/references-schema.md §5 步骤 2`）。
+- `Gate Coverage` 分四类回填：通用质量门禁（始终）、Active Profiles（仅命中时）、Tech Plan Alignment（逐项对照 `TECH_PLAN.md` 中的 Design Decisions 说明是否兑现）、References Compliance（逐项对照 `.ai/references/` 下的参考资料说明规格是否被遵守；本轮无参考资料时标注 N/A）。**需求集合专项**：遍历 `AC_LIST.md` 的每个 `prd_refs` 项，逐个 `prd_id / prd_version / module_slug` 核钉住版而非 live 最新；live 版本不符即读该需求自己的 `.archive/<prd_version>/`，不得跨需求借同名模块。legacy 旧迭代用 `prd_version` 加 migration receipt 解析隐式身份。语义见 `acceptance-schema.md §4/§5`，确定性解析见 `references-schema.md §8`。
+- AC 含 `prd_refs` 时，P5 必须把 `check-plan` 和 `check-diff` 作为 Workspace Scope 证据归档；`check-diff` 覆盖删除、重命名、复制与未跟踪路径，任一越界均阻断完成。无 `prd_refs` 时明确记 N/A；legacy `prd_version` 未迁移时不得把范围检查写成通过。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
 - `Goal Calibration` 按 `goal-calibration.md` 回填本轮 completion-blocking signal、route 与 resolved 依据；仍 open/blocked 时不得勾绿受影响 AC 或收口。Remaining Risks 不能作为绕过该门的垃圾桶。
 - `Completion Inputs` 是完成裁决器的机读输入：`Review Verdict` 只允许 `pass / must-fix / not-run`，`Completion Blockers` 只允许 `none / present`；未知/缺失 fail-closed。完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`，只有 exit 0 / `eligible` 可进入收口仪式。

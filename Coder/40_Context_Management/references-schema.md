@@ -1,126 +1,215 @@
 ---
 title: 参考资料子系统格式契约
 audience: AI / 开发者
-scope: .ai/references/ 子系统的结构定义——扁平态（api-/design-/insight- 单文件）与知识文件夹态（prd/ 索引 + 模块登记表 + 无损切片 + 版本落盘）；读纪律、slug 身份、live/.archive 落盘契约、非回归门（PRD 子系统不得触碰的非 PRD 流）。只定契约与结构，产生/变更动作（切分/入口/钉版/同步/认亲）见 MILE-0004 路线图 R2–R6。
+scope: .ai/references/ 子系统的结构定义——扁平参考资料与 PRD 需求集合；项目级需求索引、日期化稳定 prd_id、单需求模块索引、无损切片、独立版本历史及 legacy 单 PRD 兼容边界
 ---
 
 # references-schema（.ai/references/ 子系统格式契约）
 
-本文件是 `.ai/references/` 的结构契约。参考资料**怎么注入**（Confluence / MasterGo / 其他文档 → 落盘）由 `00_System_Prompt/logic-protocol.md` 负责；**哪些 AC / 决策源自参考资料**由 `20_Workflow_Lifecycle/acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 的 `External References` 字段负责。本文件只定"落盘之后，references/ 内部长什么样、怎么读"。
+本文件是 `.ai/references/` 的结构与身份契约。参考资料**怎么注入**由 `00_System_Prompt/logic-protocol.md` 负责；哪些 AC / 方案 / 验证结论引用了资料，由对应阶段 schema 负责。本文件只回答：资料落盘后长什么样、PRD 集合中的“这份需求是谁”如何保持稳定、该怎么读。
 
-> 本轮（MILE-0004 R1）只建**契约层**：结构、读纪律、身份、落盘形态。把一份 PRD **切成**切片、从 `/milestone` **触发**首切、给 AC **钉版**、`/prd update` **同步改版**——这些**产生 / 变更动作**属 R2–R5，本文件用前向指针标出、不预先落实现（见 §8）。
+> MILE-0009 已把需求集合、多 PRD 钉版、legacy 显式迁移、首切/status、确定性改版与工作区范围门禁接成完整执行链；各动作仍只以本文件及其指向的专项 schema 为真源。
 
 ## 1. 定位
 
-`.ai/references/` 是**外部真源的落盘区**——把项目之外的权威资料（接口文档、设计稿、PRD、独立分析报告）经处理后存进来，供后续阶段按指针引用、不必让用户反复贴。它是 P2/P3/P5 引用的**权威来源**（验收对着它核）。
+`.ai/references/` 是**外部真源的落盘区**：把项目之外的权威资料经处理后存进来，供后续阶段按指针引用。
 
-与 `.ai/project/`（`project-digest-schema.md`）**分工分明、职责不重叠**：
+它与 `.ai/project/` 分工如下：
 
 | 子系统 | 存什么 | 保真度 | 谁是真源 |
 |---|---|---|---|
-| `.ai/project/` | 项目**自身**全貌（现在整体是什么） | **有损摘要**（overwrite 当前真相、禁历史层） | 它自己就是真源（摘代码/规则） |
-| `.ai/references/` | 项目**之外**的权威资料 | **含无损切片**（PRD 切片逐字原文） | 源在别处（Confluence/设计工具/PRD 文档），这里是投影 |
+| `.ai/project/` | 项目自身全貌 | 有损摘要 | 项目代码、规则与当前状态 |
+| `.ai/references/` | 项目之外的权威资料 | PRD 模块逐字无损 | 外部源；本地切片是受控投影 |
 
-一个把项目积分成有损地图，一个把外部规格无损钉在墙上。**别把两者的语义搞混**——尤其别拿 project 的有损 overwrite 套到 references 的切片上（§6 是这条红线的硬约束）。
+一个把项目压成当前地图，一个把外部规格原样钉在墙上。不得把 `.ai/project/` 的概括覆写语义套到 PRD 切片上。
 
-## 2. 两态
+## 2. 两类资料
 
-references/ 下的资料按体量/结构分两态：
+- **扁平资料**：`api-<name>.md`、`design-<name>.md`、`insight-<name>.md` 等小型或已消化资料。一个文件装下，不建 PRD 索引，不受本文件后续的 `prd_id` 约束。
+- **PRD 需求集合**：`.ai/references/prd/`。项目内每份独立需求各占一个稳定目录；大 PRD 可切多个模块，小 PRD 也进入自己的需求目录，只是模块数为 1。
 
-- **扁平态（单文件）**：`api-<name>.md`（接口契约）、`design-<name>.md`（UI 规格）、`insight-<name>.md`（独立 agent 分析报告，如复核/查过时/脑暴产出）。已经是消化过或不大的资料，一个文件装下，**不建索引、不切片**。注入与命名真源仍是 `logic-protocol.md`。
-- **知识文件夹态**：`prd/`——大而结构化的权威规格（典型即 PRD）。它享受和 `.ai/project/` 同构的"索引 + 渐进读"待遇（§3–§5），但切片是**无损原文**（§6），且**带版本**（§7）。
+这两类可以并存。PRD 能力是可选加层：不用 PRD 的项目、直接对话的小任务和既有扁平资料流程继续合法。
 
-判据：资料小、已消化 → 扁平态；资料大、要按模块渐进读、且是逐字权威规格 → 知识文件夹态。小 PRD 也走知识文件夹态、只是**模块数 = 1**（单模块退化态，同一套模型、不额外开特例）。
-
-## 3. prd/ 文件夹结构 + 00_INDEX 入口 + 模块登记表
+## 3. 两层目录与索引
 
 ```txt
 .ai/references/prd/
-  00_INDEX.md          # 入口：这份 PRD 是什么 + 模块地图 + 模块登记表
-  <slug>.md            # 一个模块一片，逐字原文（如 save-validation.md）
-  <slug>.md
-  .archive/            # 改版时冻的旧版全量快照（见 §7）
-    v1.1/ …
+  00_INDEX.md                         # 项目级需求总索引：有哪些需求
+  2026-07-22-user-login/              # prd_id：一份独立需求
+    00_INDEX.md                       # 单需求索引：当前版本 + 有哪些模块
+    login-flow.md                     # module_slug：逐字原文切片
+    validation-copy.md
+    .archive/
+      v1.0/                           # 这份需求自己的旧版全量快照
+        00_INDEX.md
+        login-flow.md
+        validation-copy.md
+  2026-07-23-batch-import/            # 另一份需求，版本序列互不相干
+    00_INDEX.md
+    import-rules.md
+    .archive/
+      v2.1/
+        00_INDEX.md
+        import-rules.md
 ```
 
-**`00_INDEX.md` 契约**——两块：
+### 3.1 项目级 `prd/00_INDEX.md`
 
-1. **入口叙述**：一段话讲清这份 PRD 覆盖什么产品/版本 + 当前版本号 + 模块地图（想找 X 看哪个 slug）。这块**可以是摘要**（它是路由，不是规格本身）。
-2. **模块登记表**：每个模块一行，字段如下——
+项目级索引只回答“项目里有哪些需求、从哪里进入单需求地图”，不得复制各需求的模块登记表。每份需求一行，最小字段如下：
 
 | 字段 | 含义 |
 |---|---|
-| `slug` | 模块的**终身身份**（英文短横线，如 `save-validation`）。一次分配、跨改版不变（§4） |
-| 标题 / 章节 | 该模块在当前版 PRD 里的标题与章节号（**会变的门牌**，改版可重编号） |
-| 首见版本 | 该模块第一次出现的 PRD 版本（如 `v1.0`） |
-| 当前版本 | live 切片当前对应的 PRD 版本 |
-| 状态 | `active`（在用）/ `removed`（某版起被删，切片留档但不再是当前规格） |
+| `prd_id` | 日期化稳定身份，同时是相对目录名，规则见 §4 |
+| 标题 | 当前人类可读标题；可改，不参与稳定寻址 |
+| 当前版本 | 该需求自己的 live 版本，如 `v1.2` |
+| 状态 | `active` / `superseded` / `retired`；不回收 `prd_id` |
+| 来源线索 | 可用于认回同一需求的稳定源标识或回执指针；不得复制整份原文 |
+| 入口 | 固定指向 `<prd_id>/00_INDEX.md` |
 
-登记表是 R5 改版"认亲"（新版切片对回旧 slug）的锚点；本轮只定这张表的**字段与规则**，认亲**动作**属 R5。
+未来的收件箱状态等能力可以增加列或指针，但不得把模块表搬到项目级索引，也不得改变 `prd_id` 的身份语义。代码工作区范围不放项目级 PRD 总索引，统一在单需求入口声明。
 
-## 4. slug 身份规则
+### 3.2 单需求 `<prd_id>/00_INDEX.md`
 
-- **一次分配、终身不变**：模块首次切片时得一个 slug，此后不管 PRD 怎么改版、章节怎么重编号，slug 恒定。引用永远指 slug，不指章节号——章节号是门牌会变、slug 是身份不变。
-- **只增不改**：新版新增模块 → 发新 slug；模块被删 → 状态置 `removed`、slug 不回收不复用；**已存在的 slug 绝不改写含义**。
-- **合并 / 拆分 / 改名**跨版本怎么认亲（一个模块拆成俩、俩并成一个、换标题还算不算同一个）——这些**认亲对账规则**（启发式提候选 → 用户确认、绝不自动认、拿不准退回新增/消失）**已由 `prd-update.md §4.2`（松边）落地**；本节只定"slug 是终身、只增不改的身份"这条地基。
+单需求索引只回答“这份需求当前是哪一版、有哪些模块”。它包含：
 
-## 5. 读纪律（digest-and-point）
+1. 入口叙述：需求标题、`prd_id`、当前版本、来源指针与模块地图；允许摘要，因为它只负责导航。
+2. 模块登记表：每个模块一行，字段为 `module_slug`、标题 / 章节、首见版本、当前版本、状态 `active|removed`。
+3. `Workspace Scope`：用稳定 `workspace_key` 声明整份需求的主要实现、配套可写、只读与排除范围；字段和扩张纪律只以 `workspace-scope-schema.md` 为真源，本文件不复制。
 
-读 prd/ 走 **digest-and-point**（读地图 → 按需钻主题 → 指针钻源）——这套**读纪律的真源是 `context-persistence.md §6`**（它为冷启动读序定义 digest-and-point；`project-digest-schema.md §5` 是配套的**写侧**密度契约、非读侧）。此处**回指、不重复定义**，只标 references 特有的两点差异：
+为让 status 不靠自然语言猜字段，入口必须包含以下机器可读身份块；值与项目级索引同一行严格一致：
 
-1. **先读 `00_INDEX` 地图**（入口 + 登记表）→ 按手头任务**只钻用到的那片** `prd/<slug>.md` → 需要更细再按切片内指针钻源。不一次性读整份 PRD（长 PRD 就是这样省 context 的）。
-2. **执行默认读 live 最新**：正常干活读 `prd/<slug>.md`（live 目录、永远最新，§7）。只有回溯（钉版迭代复现、闭档审计）才去 `.archive/vN/` 读特定旧版。
+```md
+## Requirement Identity
 
-## 6. 无损 vs 有损硬区分（命门）
+- prd_id: 2026-07-22-user-login
+- current_version: v1.0
+- status: active
+```
 
-这是 references 相对 `.ai/project/` 的**关键差异，也是整个 PRD 子系统的命门**：
+字段名固定，值不加解释性尾注。标题与来源仍由入口叙述和项目级索引承载；身份块不复制模块表。
 
-- **`00_INDEX`（含登记表）可以是摘要 / 路由**——它是找路的地图，不是规格本身。
-- **`prd/<slug>.md` 切片必须逐字原文、无损**——PRD 里"提示'信号机品牌、信号机 ID 与 XXX 路口重复'"这种精确文案、精确校验规则，少一个字验收就错。切片是权威真源的镜像，**不是它的摘要**。
+`module_slug` 只在所属 `prd_id` 内唯一。完整模块锚点由 `prd_id + prd_version + module_slug` 唯一表达；项目级需求身份与单需求内模块身份是两层概念，不得把其中一个当另一个使用。
 
-**硬约束**：
+## 4. 两层稳定身份：`prd_id` 与 `module_slug`
 
-> **不得对 `prd/<slug>.md` 切片套用 `.ai/project/` 的 overwrite / 概括 / 蒸馏语义。** project 的主题文件是"当前真相覆写旧结论"的有损摘要；prd 切片是外部规格的**逐字投影**。谁把切片"顺手概括一下"，谁就废掉了 PRD 先行的全部意义。切片只在改版时**整片替换成新版原文**（§7），而非增量概括。
+### 4.1 语法
 
-## 7. 落盘契约
+`prd_id` 严格采用：
 
-prd/ 按**版本**落盘，两处：
+```txt
+YYYY-MM-DD-<requirement-slug>
+```
 
-- **live 目录** `references/prd/<slug>.md`：**最新版、无版本前缀**，执行直读（§5）。它永远镜像当前源 PRD 的最新态。
-- **`.archive/vN/`**：改版时把**旧版整份**冻进来的**全量快照**（每个归档版本自包含、打开就是当年完整规格）。审计 / 钉版回溯时读这里。
+- `YYYY-MM-DD` 必须是合法日期，取**该独立需求首次进入当前项目 Butler 体系的项目本地日期**。
+- 日期不是源文件创建日、产品版本发布日期、最近改版日或当前处理日的任意替代；已经登记后不得重算。
+- `<requirement-slug>` 使用小写 ASCII 字母、数字和单个短横线分词，需表达需求语义；不得用模块 slug、版本号、随机串或纯序号冒充。
+- 同日语义重名必须在首次分配前加有意义的区分词。身份一旦写入项目级索引，不得通过改目录名“修漂亮”；需要纠错时走后续迁移协议并保留旧引用兼容。
 
-要点：
+### 4.2 稳定性
 
-- 版本维度（live / `.archive/vN/`）和 `.ai/project` 的"文件夹态 / 单文件态"**不是一回事**——那是产物形态，这是版本快照，别混。
-- `prd_version`（哪个迭代钉在哪版）如何在 AC 里记、如何绑定——**已由 `acceptance-schema.md §4`（冻结绑定/钉住）+ §5（引用锚点解析）落地**；本节只定"版本这样落盘"。
-- **本节只定落盘形态，不定"何时、怎么冻"**——快照的产生动作（改版时重新派生 + 冻旧版）**已由 `prd-update.md §3`（先冻旧版快照再更 live）落地**（`/prd update`，见 §8）。
+`prd_id` 一次分配、终身不变。以下变化都**不得**产生新 `prd_id`：
 
-## 8. 边界（本轮只定契约，动作留 MILE-0004 后续）
+- PRD 从 v1.0 升到 v1.1；
+- 标题、章节号、源文件名或外部 URL 的展示文本变化；
+- 模块新增、删除、合并、拆分或改名；
+- 实现代码所在目录移动。
 
-本文件是**声明式契约**，不含任何执行逻辑。以下动作显式留给 MILE-0004 路线图后续迭代，此处只作前向指针：
+一份新需求必须领取新的 `prd_id`；两个独立需求不得因为属于同一产品、里程碑或代码包而共用身份。已 retired 的 `prd_id` 不回收、不复用。
 
-| 动作 | 归属 |
+### 4.3 `module_slug`：单需求内的模块身份
+
+- 模块首次切片时领取 `module_slug`；它只在所属 `prd_id` 内唯一，一次分配、只增不改、不回收。
+- 模块改名保留原 slug；新增发新 slug；删除置 `removed`。合并 / 拆分的认亲动作仍由 `prd-update.md` 承担。
+- `prd_id` 定位哪份独立需求，`module_slug` 定位该需求里的哪个规格模块；两层都稳定，但作用域不同。
+
+这小节也保留 MILE-0004 动作层对 `references-schema §4` 的既有回指语义：旧文中的“slug 身份”现在明确指 `module_slug`，不等于日期化 `prd_id`。
+
+## 5. 全新需求、已有需求新版与重复输入
+
+身份判断先认“是不是同一份需求”，再谈版本；不得用标题相似或文件名相同直接覆盖旧目录。按以下证据顺序判断：
+
+1. **显式身份**：输入或既有回执明确给出已登记 `prd_id`，且来源关系不冲突 → 认作该需求。
+2. **持久来源关系**：项目级索引、后续 `.ai/INBOX.md` 或更新回执已把稳定外部文档 ID / 来源锚点绑定到唯一 `prd_id` → 认作该需求。
+3. **内容与业务边界对账**：没有显式绑定时，比较需求目标、产品边界、稳定外部 ID 与历史内容；只有全部证据能唯一命中同一候选时，才可提议认作已有需求新版。
+4. **弱信号不得单独定案**：标题、文件名、上传人、目录位置、相似关键词或同属一个 milestone 都只能辅助，不能独自决定身份。
+
+判断结果是四态：
+
+| 结果 | 条件 | 处置边界 |
+|---|---|---|
+| `new-requirement` | 没有既有候选且证据不冲突 | 提议新的日期化 `prd_id`，经动作层审查后登记 |
+| `new-version` | 唯一命中既有 `prd_id`，内容相对当前版有变化 | 保持 `prd_id`，进入该需求自己的改版流程 |
+| `duplicate` | 唯一命中且内容与已处理版本相同 | 不新建目录、不 bump 版本，记录重复来源即可 |
+| `ambiguous` | 多候选、证据冲突或无法确定是新需求还是新版 | fail-closed：停止身份写入，列出候选与冲突，等待确认 |
+
+任何动作层都不得用“默认新建”绕过 `ambiguous`，也不得用“看起来像”把不同需求静默合并。误新建会制造重复真源，误合并会污染历史；两者都比明确停机更坏。
+
+## 6. 无损硬区分与读纪律
+
+- 两层 `00_INDEX.md` 都是地图，可以摘要。
+- `<prd_id>/<module_slug>.md` 必须是对应模块的逐字原文、无损投影；不得套用 `.ai/project/` 的概括、蒸馏或当前真相覆写语义。
+- 精确文案、字段约束和完整规则不得删改或拆成失去语义的半条。切片只能在目标需求改版时由新版对应原文整片替换。
+- 读取顺序是：先读项目级 `prd/00_INDEX.md` 找 `prd_id` → 读 `<prd_id>/00_INDEX.md` 找 `module_slug` → 只读任务需要的模块切片。
+- 正常执行读该需求的 live；钉版复现才读 `<prd_id>/.archive/vN/`。不得跨需求从另一个目录借同名模块补全当前规格。
+
+这节保留既有动作层对 `references-schema §6` 的无损红线回指；目录从 legacy 根切片升级为 `<prd_id>` 内切片，不改变“模块原文必须逐字”的底线。
+
+## 7. 独立版本历史
+
+- 每个 `<prd_id>` 独立维护版本序列和 `.archive/vN/`。两个需求都可以各自存在 `v1.0`，它们互不比较、互不覆盖。
+- 改版时只把目标 `<prd_id>` 的当前 `00_INDEX.md` 与全部 live 模块冻入该目录的 `.archive/v<旧版>/`，再更新该需求的 live。不得把项目级 `prd/00_INDEX.md` 或其他需求一起塞进单需求快照。
+- 一个归档版本必须自包含，能还原该需求当时的模块地图和全部切片。
+
+## 8. legacy 单 PRD 结构
+
+以下旧形态是 MILE-0004 交付的 **legacy 单 PRD 结构**：
+
+```txt
+.ai/references/prd/
+  00_INDEX.md
+  <module_slug>.md
+  .archive/vN/
+```
+
+迁移前它仍可读，代表“这个项目只有一份尚未领取 `prd_id` 的 PRD”。任何消费者都不得静默创建日期、猜 slug、移动文件或改历史 AC，也不得假装它已经是新集合结构。
+
+### 8.1 显式迁移
+
+迁移由 `$BUTLER_PATH/tools/prd-migrate/prd_migrate.py` 执行，必须先 `inspect/plan`，再由显式 `prd_id` 与标题驱动 `apply`。工具不得从文件 mtime、当前日期、PRD 版本或标题自动回填“首次进入本项目”的日期；证据不足就停。
+
+apply 将 legacy 根完整搬入 `<prd_id>/`，生成项目级 `00_INDEX.md`，并在 `.ai/references/prd/.butler-migration.json` 写 receipt。切换必须使用同父目录 staging/backup/rename；成功后 backup 留在 `.ai/references/.prd-migration-backups/`，直到 verify 通过且用户按指南决定清理。混合布局、symlink、未知结构或 identity 冲突 fail-closed。
+
+receipt 最小字段：`schema_version`、`migration_id`、`prd_id`、`title`、`migrated_at`、`backup`、`legacy_tree_sha256`、`collection_tree_sha256`、逐文件 `legacy_path → collection_path + sha256`、引用影响面。它是兼容解析数据，不是 PRD 内容真源。
+
+### 8.2 历史引用兼容
+
+- 新集合 AC 用 `acceptance-schema.md` 的 `prd_refs`，正文路径必须带 `prd_id`。
+- legacy AC 的 `prd_version + references/prd/<module_slug>.md` 不回写；resolver 从 migration receipt 取得隐式 `prd_id`，live 版本吻合时指向 `<prd_id>/<module_slug>.md`，否则指向 `<prd_id>/.archive/<prd_version>/<module_slug>.md`。
+- `prd/00_INDEX.md` 在迁移后变成项目级索引；旧 legacy index 的逐字副本保存在 `<prd_id>/00_INDEX.md`，resolver 对历史 legacy index 引用也必须转到单需求入口。
+- 缺 receipt、多 receipt 候选、版本目录不存在、模块未登记或文件 hash 漂移都不得猜；返回失败并亮出缺口。
+
+迁移只改 PRD 结构与兼容 receipt，不改 `.ai/MILESTONE.md`、active/future AC 或 `.ai/iterations/` 的历史快照。影响面必须分组报告，让后续工作选择是否改用新路径；closed/frozen 继续靠 resolver 回溯。
+
+## 9. 动作边界与路线
+
+本文件是声明式契约，不含执行逻辑：
+
+| 动作 | 当前归属 |
 |---|---|
-| 把一份 PRD **切成** `prd/<slug>.md`（边界算法、soft 对齐拆法） | **R2 ✅ 已由 `prd-split.md` 落地** |
-| 从 `/milestone` **触发**首切 + 路线图项 ↔ 模块 slug 交叉指针 | **R3 ✅ 已由 `milestone-schema §6.4/§5.3` 落地** |
-| AC frontmatter **钉** `prd_version` + P2/P3/P5 版本化引用接线 | **R4 ✅ 已由 `acceptance-/tech-plan-/verify-schema` 落地** |
-| `/prd update` **改版同步**（重新派生 + 变更检测 + `.archive` 快照 + 三态影响面 + amend 重冻） | **R5 ✅ 已由 `prd-update.md` 落地** |
-| 模块**合并 / 拆分 / 改名**跨版本认亲对账 | **R6 ✅ 已由 `prd-update.md §4.2` 落地** |
+| 单 PRD 首切与模块边界 | ✅ `prd-split.md`：身份四态、日期证据、`<prd_id>/` 首切与 workspace soft 对齐 |
+| 单 PRD 改版、先冻后更、模块认亲 | ✅ `prd-update.md` + `tools/prd-update/`：已确认 spec、事务 apply、持久 receipt、verify/rollback |
+| 多 PRD 版本引用与 legacy 迁移 | ✅ MILE-0009 R5：三阶段 schema + `tools/prd-migrate/` + migration guide |
+| 项目级 status、双宿主命令适配 | ✅ `prd-status.md` + `tools/prd-status/` + 双宿主薄入口 |
+| 工作区范围与实际改动门禁 | ✅ `workspace-scope-schema.md` + `tools/workspace-scope/` + PreToolUse 共享解析内核 |
 
-在这些动作落地前，本契约已可被引用为地基：结构（§3）、身份（§4）、读法（§5）、无损红线（§6）、落盘（§7）均已定死。
+目标结构已经写进本文件，不等于未交付动作已经适配。动作层在各自迭代交付前必须继续把未实现能力标为 planned。
 
-## 9. 非回归门（PRD 子系统不得触碰的非 PRD 流）
+## 10. 非回归门
 
-PRD 先行是**可选加层**（opt-in——项目要用才用，不用则整套按兵不动）。它的立身之本是：**加一层新能力，不动任何一条老路**。"非回归"＝改这个子系统时，那些**不归它管的老流程一行都不能变**（回归 = 老功能被新改动带崩，非回归 = 保证不带崩）。本节把散落在各迭代 AC 里的口头承诺**固化成一处常驻红线**。
+PRD 需求集合是可选加层。任何相关迭代都必须明确自己的改动范围，并守住：
 
-**下列非 PRD 流，PRD 子系统的任何迭代都不得改写**：
-
-| 不得触碰的老路 | 真源 |
-|---|---|
-| 对话驱动录入（不给 PRD、直接聊需求那条路） | `00_System_Prompt/logic-protocol.md` |
-| `origin/` brief 收件箱与合成 | `20_Workflow_Lifecycle/milestone-schema.md`（非 PRD brief 分支） |
-| 扁平态 references 注入（`api-` / `design-` / `insight-` 单文件） | 本文件 §2 + `logic-protocol.md` |
-| 核心 P1–P5 产物链状态机（CONCEPT→AC→TECH_PLAN→执行→VERIFY） | `20_Workflow_Lifecycle/` 各 schema |
-| 里程碑非 PRD brief → MILESTONE 合成管线 | `milestone-schema.md` |
-
-> **验证判据（可核对、非口号）**：任何一个 PRD 子系统迭代收口时，上表所列文件 / 路径的 `git diff` **必须为空**。凡对它们有改动，除非该迭代 AC 明确把"改老路"列进范围并说明理由，否则即算**踩了非回归门**、收口不通过。PRD 先行只在这些老路**之上**叠新入口（`prd/` 文件夹、`/prd` 命令族、AC 的 `prd_version` 字段），绝不修改老路本身的语义。
+- 不用 PRD 的对话驱动 P1–P5 流不变。
+- `api-` / `design-` / `insight-` 等扁平资料流不变。
+- `origin/` 用户原稿不因 PRD 集合而被改写、移动或删除。
+- 已冻结与已收口产物不被静默回写。
+- 若某后续路线必须有意修改既有 PRD 消费者，AC 与 TECH_PLAN 必须明确列出原因、兼容策略和负向回归，不能拿“非回归”口号掩盖真实迁移面。

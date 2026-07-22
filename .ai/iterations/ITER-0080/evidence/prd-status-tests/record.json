@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "prd-status-tests",
+  "iteration": "ITER-0080",
+  "ac_ids": [
+    "AC5",
+    "AC6",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/prd-status/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T14:28:36.713Z",
+  "finished_at": "2026-07-22T14:28:36.717Z",
+  "duration_ms": 4,
+  "process_exit_code": null,
+  "outcome": "launch_error",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 52,
+    "captured_bytes": 52,
+    "sha256": "f8fdac877ae4cb7b00ae61f3a4e1b69831111777eb0092cd9b019a25ef0b3f7f",
+    "truncated": false
+  },
+  "launch_error": "[Errno 2] No such file or directory: 'UV_NO_SYNC=1'"
+}

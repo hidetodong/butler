@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ITER-0081 · 确定性 PRD 改版事务与回执</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f6f4ef;--card:#fff;--text:#20231f;--muted:#60675f;--accent:#176b55;--line:#d8ddd6} @media(prefers-color-scheme:dark){:root{--bg:#151815;--card:#202420;--text:#edf1eb;--muted:#adb6aa;--accent:#77d6b4;--line:#3a413a}} *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,sans-serif} main{max-width:900px;margin:48px auto;padding:0 24px} article{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:38px;box-shadow:0 12px 40px #0001} h1{font-size:2rem;line-height:1.2;margin:0 0 8px} h2{margin-top:30px;font-size:1.15rem;color:var(--accent)} p,li{max-width:75ch}.meta{color:var(--muted);margin-bottom:28px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.step{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}.ok{color:var(--accent);font-weight:700} code{font-family:ui-monospace,SFMono-Regular,monospace;background:#7772;padding:.1em .35em;border-radius:5px}@media(max-width:650px){article{padding:24px}.flow{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body><main><article>
+  <h1>确定性 PRD 改版事务与回执</h1>
+  <div class="meta">ITER-0081 · MILE-0009 R7 · 2026-07-22</div>
+  <p>指定需求的新版现在可以先看清变化，再以可验证、可恢复的整集合事务完成更新。</p>
+  <div class="flow"><div class="step">零写 Plan</div><div class="step">Archive First</div><div class="step">原子 Apply</div><div class="step">Verify / Rollback</div></div>
+  <h2>交付</h2>
+  <ul><li><code>prd-update</code> 提供 plan、apply、verify、rollback。</li><li>显式 <code>prd_id</code>、确认 spec 和完整三态影响处置缺一不可。</li><li>live、archive、双层索引与 receipt 位于同一事务边界。</li><li>receipt 自带 payload hash；漂移、并发、symlink 和篡改全部 fail-closed。</li><li>两个宿主调用同一工具，status 只读投影最近更新。</li></ul>
+  <h2>验证</h2>
+  <p class="ok">12 项事务行为 + 7 项结构合同 + 完整 CI 189 hooks 全部通过。</p>
+  <p>diff check、Goal adjudicator、证据归档和状态审计通过；最终 Must Fix 0、Should Fix 0。</p>
+  <h2>下一步</h2>
+  <p>按用户要求先 compact，再开启 R8 的 workspace 发现、实际 diff/hook 范围门禁和端到端验证。真实 apps 仓写入仍需明确授权。</p>
+</article></main></body>
+</html>

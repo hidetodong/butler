@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "state-audit-closed",
+  "iteration": "ITER-0082",
+  "ac_ids": [
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "scripts/audit-project-state.py",
+      "--project-root",
+      ".",
+      "--allow-unreleased"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T15:35:00.127Z",
+  "finished_at": "2026-07-22T15:35:01.222Z",
+  "duration_ms": 1095,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 45196,
+    "captured_bytes": 45196,
+    "sha256": "1537a2c61aa772a0f3fff84bb424c4706ba9d774abbad3ec82e757be1c3d2aed",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

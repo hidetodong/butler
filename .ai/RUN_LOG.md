@@ -1,5 +1,39 @@
 # Dangerous Mode Run Log
 
+- 2026-07-22 · activation · MILE-0009 · `dangerous-ack`：用户明确要求开启危险模式并开始当前里程碑；确认 MILE-0009 已 active、尚无承接迭代。本次写入上限冻结为 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`，北极星锁定为连续完成 R1–R8 后收口里程碑。
+- 2026-07-22 · route · ITER-0075 · `dangerous-ack`：领取 MILE-0009 R1；限定为需求集合、日期化稳定身份、单需求目录和新需求/新版身份判定契约，不提前实现 monorepo 范围、inbox、多 PRD AC 钉版、命令、迁移或门禁。
+- 2026-07-22 · P2 · ITER-0075 · `dangerous-ack`：AC1–AC7 通过验收自审并自主冻结；项目级索引、`prd_id` 语法与稳定性、单需求目录、身份判定、歧义停机、旧结构兼容边界和文档/测试均有可验证判据，范围未越过 R1。
+- 2026-07-22 · P3 · ITER-0075 · `dangerous-ack`：Plan Admission verdict=`pass`；选择在 `references-schema.md` 原位升级声明式契约并用标准库结构测试守字段，否决新增第二份 schema 与提前改动作层。AC 全覆盖，无已知 Must Fix。
+- 2026-07-22 · P4-correction · ITER-0075 · `dangerous-ack`：完整 CI 首轮暴露根 `README.md` 缺 `docs/workflows.md` 路由，导致 workflow registry 8 项中 6 项连锁失败；该缺口不在 R1 初始 diff，但阻断 AC7。按最小根因修复补回单一人读入口，保留首轮失败结论后重跑。
+- 2026-07-22 · P4-correction · ITER-0075 · `dangerous-ack`：完整 CI 第二轮通过 153 项 hooks 后在 Goal Calibration dogfood 发现 1 个失败：task-state 用自然语言描述“无信号”却漏掉机器契约要求的精确空态行。已恢复 `当前无未闭合运行时信号（N/A）`，不伪造信号表行，待专项与完整矩阵复核。
+- 2026-07-22 · P5-review · ITER-0075 · `dangerous-ack`：完整强审发现 1 个 Must Fix——重排后的 references §4/§6 仍能被旧动作层链接命中，但已分别从“模块 slug 身份 / 无损红线”漂成“仅 prd_id / 读纪律”，形成静默错指。已将 §4 收敛为两层稳定身份、§6 恢复无损真源并保留新集合读序；不修改 legacy 动作算法。
+- 2026-07-22 · P5-review · ITER-0075 · `dangerous-ack`：修复后专项 6/6、完整 CI reproduced exit 0、diff check 与 5 份 evidence integrity 通过；最终 Must Fix 0、Should Fix 0。两份沙箱环境失败 record 保留，绿色 AC 由后续 `reproduced-full-ci` 覆盖；未执行 fresh-context 独立复核并如实披露。
+- 2026-07-22 · close · ITER-0075 · `dangerous-ack`：Goal adjudicator 十项全绿、证据整包归档、四件套/CHANGELOG 快照、MD/HTML 交付与 invariants/frontier 折叠完成；R1 closed，继续 R2。
+- 2026-07-22 · route · ITER-0076 · `dangerous-ack`：自动开启 R2；选择项目知识层稳定 workspace map + 单需求四类范围，不按包复制 PRD、不提前实现 R8 门禁。
+- 2026-07-22 · P2 · ITER-0076 · `dangerous-ack`：AC1–AC7 自审通过并冻结；地图字段、稳定键、四类集合、默认拒绝、模块子集、扩张审查和单包退化均可验证，范围未越过 R2。
+- 2026-07-22 · P3 · ITER-0076 · `dangerous-ack`：Plan Admission=pass；采用独立 workspace-scope schema，references 只接指针，否决路径直写每份 PRD与提前接 hook。无已知 Must Fix。
+- 2026-07-22 · P5-review · ITER-0076 · `dangerous-ack`：完整强审发现 1 个 Must Fix——地图 status 曾含 `moved`，却又规定目录移动只改 path，导致同一稳定键移动后会被“只允许 active 引用”拒绝；另补模块四类互斥与完整声明，封住省略字段默认放行。现已明确移动后保持 active、只更新 path/evidence，并加回归断言。
+- 2026-07-22 · P5-review · ITER-0076 · `dangerous-ack`：修复后专项 7/7、完整 CI reproduced exit 0、160 hooks 与 diff check 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
+- 2026-07-22 · close · ITER-0076 · `dangerous-ack`：Goal adjudicator 十项全绿、证据与四件套归档、双格式交付、知识折叠完成；R2 closed，继续 R3。
+- 2026-07-22 · route · ITER-0077 · `dangerous-ack`：自动开启 R3；选择稳定 source_id + observed/processed 双指纹 + 独立派生关系表，origin 保持用户自管零写入，不提前实现 R4 命令。
+- 2026-07-22 · P2 · ITER-0077 · `dangerous-ack`：AC1–AC7 自审通过并冻结；来源、指纹、封闭状态、幂等、变化、重复候选、多对多和隐私边界均可验证。
+- 2026-07-22 · P3 · ITER-0077 · `dangerous-ack`：Plan Admission=pass；否决 hash 主键和原文复制，采用 inbox schema 单一真源 + 三处薄接线。无已知 Must Fix。
+- 2026-07-22 · P5-review · ITER-0077 · `dangerous-ack`：完整强审发现 1 个 Must Fix——外部文档 revision 曾被建议写入 locator/evidence，会让每次改版改变稳定 locator，破坏同源变化检测。已新增独立可变 `source_revision` 字段，稳定文档 ID/URL 留 locator，hash 继续裁决内容，并补回归断言。
+- 2026-07-22 · P5-review · ITER-0077 · `dangerous-ack`：修复后专项 7/7、完整 CI reproduced exit 0、167 hooks 与 diff check 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
+- 2026-07-22 · close · ITER-0077 · `dangerous-ack`：Goal adjudicator 十项全绿、证据/四件套归档、双格式交付和知识折叠完成；R3 closed，继续 R4。
+- 2026-07-22 · route · ITER-0078 · `dangerous-ack`：自动开启 R4；选择标准库 scanner 管机械事实、双宿主薄入口管语义分类/确认/委托路由，registry 扩为 11，不在 CLI 内复制 PRD 算法。
+- 2026-07-22 · P2 · ITER-0078 · `dangerous-ack`：AC1–AC9 自审通过并冻结；plan/apply、幂等/变化/symlink、路由确认、活工作区保护、双宿主注册和 fixture 均可验证。
+- 2026-07-22 · P3 · ITER-0078 · `dangerous-ack`：Plan Admission=pass；采用 Markdown managed block 单一真源与原子替换，否决纯模型写 ledger 和 JSON sidecar。无已知 Must Fix。
+- 2026-07-22 · P5-review · ITER-0078 · `dangerous-ack`：完整强审先后修复 3 个 Must Fix——表格 parser 空行假设、首次接管时块外尾随内容损失/断链 origin symlink 漏拒绝、registry 重复 ID fixture 依赖旧顺序；均补负向回归。
+- 2026-07-22 · P5-review · ITER-0078 · `dangerous-ack`：scanner 11/11、registry 8/8、协议结构 5/5、完整 CI reproduced exit 0、170 hooks 与 diff check 通过；最终 Must Fix 0、Should Fix 0，未执行 fresh-context 独立复核。
+- 2026-07-22 · close · ITER-0078 · `dangerous-ack`：Goal adjudicator 十项全绿、5 个 evidence（含 1 条已复现纠正的失败诊断）归档、四件套/CHANGELOG、双格式交付与知识折叠完成；R4 closed，继续 R5。
+- 2026-07-22 · route · ITER-0079 · `dangerous-ack`：自动开启 R5；选择 `prd_refs` 多值钉版 + 标准库 resolver/事务迁移 + receipt/backup，不回写 frozen/closed 历史，不提前实现 R6/R7。
+- 2026-07-22 · P2 · ITER-0079 · `dangerous-ack`：AC1–AC9 自审通过并冻结；多引用、legacy 解析、plan/apply/verify/rollback、影响面、指南与负向 fixture 均可验证。
+- 2026-07-22 · P3 · ITER-0079 · `dangerous-ack`：Plan Admission=pass；采用窄 YAML 列表、同父目录事务切换和机器 receipt，否决猜日期/原地 move/回写 closed AC。真实 apps dogfood留 R8。
+- 2026-07-22 · P5-review · ITER-0079 · `dangerous-ack`：完整强审发现 3 个 Must Fix——receipt/backup/mapping 路径可被篡改诱导越界、切换后 verify 失败未自动恢复、影响面漏扫 MILESTONE 的 `→ prd: slug` 指针；已加根约束/ID 校验、失败反切换和路线 slug 扫描及回归。
+- 2026-07-22 · P5-review · ITER-0079 · `dangerous-ack`：另发现完整 CI 未直接执行 scanner/migration 行为测试；已把两组标准库 unittest 纳入 `verify-ci.sh`。最终 targeted 11+11、完整 CI 175 hooks + 两组行为测试均通过；继续采集证据。
+- 2026-07-22 · close · ITER-0079 · `dangerous-ack`：Goal adjudicator 十项全绿、4 个 evidence 与四件套/CHANGELOG 归档、双格式交付和知识折叠完成；R5 closed，继续 R6。
+
 - 2026-07-18 · activation · ITER-0059 · `dangerous-ack`：用户明确要求开启危险模式并完成 MILE-0007；项目开关已置 on，北极星锁定为连续完成 R4/R5 后收口里程碑。
 - 2026-07-18 · P2 · ITER-0059 · `dangerous-ack`：通过验收自审门并自主冻结 AC1–AC9。结论：每条 AC 均有明确负向/正向验证，覆盖功能、结构、事务安全与证据质量；In/Out 边界明确，split/global-install 未决风险如实暴露，无范围膨胀或不可验证项。
 - 2026-07-18 · P3 · ITER-0059 · `dangerous-ack`：通过设计自审门并自主锁定中心 JSON manifest、标准库 CLI、项目内 preflight/transaction/journal 与三执行域方案。结论：AC1–AC9 均有模块和验证映射；未引入通用脚本语言或自动语义 split，影响面未越过 R4。
@@ -64,3 +98,29 @@
 - 2026-07-19：用户补充多个候办方向必须拆块并分文件；按已关闭需求扩张规则开启独立 ITER-0069。
 - 2026-07-19：危险模式自审 P2/P3，冻结 AC1–AC5，方案 verdict=pass。
 - 2026-07-19：同上下文强审完成，Must Fix 0、Should Fix 0；20 项状态审计与完整 CI 通过。
+- 2026-07-22 · route · ITER-0080 · `dangerous-ack`：自动开启 MILE-0009 R6；身份四态先于写盘，采用独立标准库只读 status、`prd_id#module_slug` 指针和双宿主薄路由，不提前实现 R7/R8。
+- 2026-07-22 · P2 · ITER-0080 · `dangerous-ack`：AC1–AC9 自审通过并冻结；日期证据、双层索引、workspace soft 对齐、零写 status、legacy/坏输入和 host 投影均可验证。
+- 2026-07-22 · P3 · ITER-0080 · `dangerous-ack`：Plan Admission=pass；采用 project index 发现真源 + 目录交叉核验 + 窄 Markdown parser，否决散文看板、迁移工具耦合与 R7 写动作。无已知 Must Fix。
+- 2026-07-22 · P5-review · ITER-0080 · `dangerous-ack`：完整强审修复 3 个 Must Fix——workspace key 未与 active 地图对账、祖先 symlink 可越出项目根、argparse 坏参数未保持 JSON；均补负向回归。
+- 2026-07-22 · P5-review · ITER-0080 · `dangerous-ack`：首次完整 CI 暴露新迭代 task-state 仍残留 R5 resolved 投影；已整体覆写为当前 N/A，第二次完整 CI 通过。
+- 2026-07-22 · close · ITER-0080 · `dangerous-ack`：Goal adjudicator 十项全绿、6 个 evidence（含 1 条已纠正 launch error）与四件套/CHANGELOG 归档、双格式交付和知识折叠完成；R6 closed，继续 R7。
+- 2026-07-22 · route · ITER-0081 · `dangerous-ack`：自动开启 MILE-0009 R7；语义确认产 JSON spec，机械层用整 PRD root staging/backup/rename、持久 receipt 与 hash-gated rollback，不提前实现 R8。
+- 2026-07-22 · P2 · ITER-0081 · `dangerous-ack`：AC1–AC9 自审通过并冻结；spec、零写 plan、先冻后更、影响处置、幂等/恢复/篡改和 status 接线均可验证。
+- 2026-07-22 · P3 · ITER-0081 · `dangerous-ack`：Plan Admission=pass；采用已确认 spec + 共享 status parser + 整 collection 事务交换，否决模型启发式 CLI、逐文件半事务和自动改工作产物。无已知 Must Fix。
+- 2026-07-22 · P5-review · ITER-0081 · `dangerous-ack`：两轮强审修复逐路线影响误分类、receipt 自身篡改缺口与共享 status 缺失 hash 依赖；补混合路线、payload 篡改、非法时间和 rollback 中途故障回归，最终 Must Fix 0、Should Fix 0。
+- 2026-07-22 · P5-verify · ITER-0081 · `dangerous-ack`：事务行为 12/12、结构合同 7/7、完整 CI 189 hooks + 行为组、diff check 与 Goal adjudicator 十项全绿；4 个 evidence 完整归档。
+- 2026-07-22 · close · ITER-0081 · `dangerous-ack`：四件套/CHANGELOG 快照、双格式交付和项目知识折叠完成；R7 closed。按用户要求停在 `current: none` 的 compact 边界，不自动开启 R8。
+- 2026-07-22 · close-audit · ITER-0081 · `dangerous-ack`：收口态完整 CI 首轮发现无 active 时 task-state 不应保留 resolved 信号行；历史留 VERIFY/RUN_LOG、活投影恢复 N/A 后，完整 CI 189 hooks + 全行为组、state audit 与 diff check 最终通过。
+- 2026-07-22 · route · ITER-0082 · `dangerous-ack`：compact 后自动开启 MILE-0009 R8；施工授权上限仍为 Butler 仓，真实 apps 只读取证并在临时副本 dogfood，不提前把仓外可读等同可写。
+- 2026-07-22 · P2 · ITER-0082 · `dangerous-ack`：AC1–AC10 自审通过并冻结；覆盖发现/地图/钉版范围/计划/diff/hook/扩张纪律、版本级 e2e、apps 零写 dogfood 与完整收口，明确 shell 与旧 queued 状态边界。
+- 2026-07-22 · P3 · ITER-0082 · `dangerous-ack`：Plan Admission=pass；采用 hook 自包含共享内核 + 驻留 CLI + 写计划三重交集 + P5 diff，apps 走真实只读源和临时副本。无已知 Must Fix。
+- 2026-07-22 · P4-calibration · ITER-0082 · `dangerous-ack`：共享内核/CLI 与 10 项专项通过；新 hook 首次自举因 `_root` 未把 `ctx.cwd: str` 转成 Path 而 fail-closed。危险模式禁止模型自行 bypass，登记 CAL-001 并请求一次受控 gate-repair 授权。
+- 2026-07-22 · P4-dogfood · ITER-0082 · `dangerous-ack`：无写读取 apps：legacy inspect 成功识别 12 live 模块 + v20 archive，Git status hash 前后均为 `71c52a…b75`；真实 npm glob 暴露无 manifest 目录应跳过的 CAL-002。源码门禁仍等待用户显式授权一次受控修复。
+- 2026-07-22 · P4-bypass · ITER-0082 · `user-authorized`：用户明确允许一次受控 bypass；先落非空审计理由，仅修 `_root` 的 str→Path 归一化与 npm glob 跳过无 manifest 普通目录，随即删除理由。后续普通源码 patch 成功，门禁恢复；CAL-001/CAL-002 resolved。
+- 2026-07-22 · P4-e2e · ITER-0082 · `dangerous-ack`：单一临时工程贯通 inbox 幂等、legacy migration/resolver、update receipt、两 PRD 同名模块、多版本钉住与跨包 scope；真实 apps 临时副本进一步发现 `v28` doc-revision 与产品版 `V1.1.0` 并存，补“源”行 doc version 优先和无点 `vN` 兼容后，plan/apply/verify/resolve/rollback 全绿。
+- 2026-07-22 · P4-dogfood · ITER-0082 · `dangerous-ack`：apps 原仓 Git status hash 前后同为 `fb7c0b…97a`；临时副本 rollback 后 legacy PRD 树 hash 恢复 `sha256:91cc34…05fb4`。真实仓未写入，非标准 queued 里程碑未被静默规范化。
+- 2026-07-22 · P5-verify · ITER-0082 · `dangerous-ack`：首轮完整 CI 的实现/宿主/hook 195 项均通过，唯一失败为 task-state 仍投影已 resolved CAL 行；按 Goal Calibration 活投影合同清空为 N/A，保留历史于本日志，待重跑。
+- 2026-07-22 · P5-review · ITER-0082 · `dangerous-ack`：同上下文完整强审发现 glob symlink 与精确 workspace 无 manifest 两个边界缺口；修复并加负向回归后最终 Must Fix 0、Should Fix 0。环境规则禁止委派，未执行 fresh-context 独立复核并如实披露。
+- 2026-07-22 · P5-verify · ITER-0082 · `dangerous-ack`：六份 evidence 校验归档；workspace 10/10、hook/合同 13/13、组合 e2e、真实 apps dogfood、完整 CI 与 diff check 通过，Goal adjudicator 十项全绿、verdict=eligible。
+- 2026-07-22 · close · ITER-0082 / MILE-0009 · `dangerous-ack`：R8 置 closed，迭代/里程碑四件套与双格式交付完成，项目知识折叠；MILE-0009 八条路线全部 closed。未提交、未切版、未推送，等待 closed 状态审计后 compact。
+- 2026-07-22 · close-audit · ITER-0082 / MILE-0009 · `dangerous-ack`：evidence 重新归档后 closed 状态审计 exit 0，ITER/MILE 台账、路线、交付、归档、evidence 与 fold receipt 全部一致，仅保留 `UNRELEASED` 亮牌；收口态完整 CI 与 diff check 再次通过。当前无 active，进入 compact 边界。

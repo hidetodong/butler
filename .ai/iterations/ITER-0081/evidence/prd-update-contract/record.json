@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "prd-update-contract",
+  "iteration": "ITER-0081",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "/usr/bin/env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--python",
+      "3.11",
+      "python",
+      "-m",
+      "pytest",
+      "templates/hooks/tests/test_prd_update_transaction_contract.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T14:48:50.248Z",
+  "finished_at": "2026-07-22T14:48:50.432Z",
+  "duration_ms": 184,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "f82ef5dfe7698ffb764de054a81d190d7df4e7119218d436d12350d7af175f80",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 156,
+    "captured_bytes": 156,
+    "sha256": "9027cd0744aec69fa8de6a6b032eadd0e6ccdb6888094a0f639010d89dcdc2c9",
+    "truncated": false
+  }
+}

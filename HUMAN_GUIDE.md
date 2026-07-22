@@ -76,7 +76,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 2. 在 `~/.claude/CLAUDE.md` 中写入全局配置，让 Claude Code 在所有项目中都能自动发现 butler
 3. 把 butler 的 slash 命令（`.claude/commands/butler/` 命名空间目录，如 `/butler:prd`）整个**软链**到 `~/.claude/commands/butler`，让它们在**所有项目**里都能用——不再只有编辑 butler 仓时才能敲。用软链而非拷贝：butler 仓一加/改命令，全局立即生效、无需重装
 4. 在 `~/.claude/CLAUDE.md` 的全局配置里 `@import` 一行**沟通风格正本**（`communication-style.md`），规定 AI 该怎么跟你说话（语气、详略、说人话）。它跟着 butler 仓走、每个会话常开、跨机器同步；想调说话风格，改这个文件即可
-5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（10 个 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
+5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（11 个 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
 
 执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用，AI 也按你的沟通风格说话。
 
@@ -92,7 +92,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 包含 10 个 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
+v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 当前包含 11 个 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
 
 兼容边界：
 
@@ -110,7 +110,7 @@ v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能
 bash scripts/verify-ci.sh
 ```
 
-入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 10 个 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
+入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 11 个 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
 
 GitHub Actions 在 Linux 与 macOS 上运行同一入口，最终汇总 check 名固定为 **`Butler required checks`**。仓库管理员应先让 workflow 至少运行一次，再到 `main` 的 Ruleset/Branch protection 中把这个精确名称设为 required，并从设置页或只读 GitHub API 复核。
 
@@ -165,10 +165,12 @@ AI 会自动走完整个链路：
 │   ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
 │   ├── ITER-NNNN-<slug>.html #  └ 同名固定格式阅读视图，双击即可浏览器打开
 │   └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md(+.html)
-└── origin/                  # 人类原始概念输入收件箱（你自管，AI 只读不重塑）
+└── origin/                  # 可选原始需求收件箱（你自管，AI 只读且不移动/归档/删除）
 ```
 
-> `origin/` 与 `.ai/references/` 别混：`origin/` 放**你自己的**原始想法/概念文件（AI 只读取、不改写）；`references/` 放**外部第三方资料**（API 文档、设计稿），由 AI 处理改名后注入。
+> `origin/` 与 `.ai/references/` 别混：`origin/` 放**你的原始需求材料**（可选，AI 只读）；`.ai/INBOX.md` 只记处理回执和派生指针、不复制原文；`references/` 放供验收引用的外部规格投影。完整收件箱数据合同见 `Coder/40_Context_Management/inbox-schema.md`。
+
+旧项目如果还是 `.ai/references/prd/<module>.md + .archive/vN/` 的单 PRD 结构，按 [`docs/prd-migration-guide.md`](docs/prd-migration-guide.md) 先盘点、确定首次进入日期化 `prd_id`、看零写 plan，再事务迁移和验证。迁移器不会猜身份，也不会回写 frozen/closed AC；失败恢复与 backup 清理边界也在指南里。
 
 ### Butler 版本（规则源版本与升级）
 

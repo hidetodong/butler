@@ -1,0 +1,17 @@
+test_all_transaction_failure_points_restore_exact_collection (test_prd_update.PrdUpdateTest.test_all_transaction_failure_points_restore_exact_collection) ... ok
+test_apply_archives_then_updates_indexes_receipt_and_leaves_other_prd_untouched (test_prd_update.PrdUpdateTest.test_apply_archives_then_updates_indexes_receipt_and_leaves_other_prd_untouched) ... ok
+test_invalid_one_to_one_new_slug_rename_is_rejected (test_prd_update.PrdUpdateTest.test_invalid_one_to_one_new_slug_rename_is_rejected) ... ok
+test_lock_conflict_and_tampered_receipt_backup_fail_closed (test_prd_update.PrdUpdateTest.test_lock_conflict_and_tampered_receipt_backup_fail_closed) ... ok
+test_milestone_impacts_are_classified_per_route (test_prd_update.PrdUpdateTest.test_milestone_impacts_are_classified_per_route) ... ok
+test_pending_plan_is_exit_one_and_apply_rejects_without_writes (test_prd_update.PrdUpdateTest.test_pending_plan_is_exit_one_and_apply_rejects_without_writes) ... ok
+test_plan_is_zero_write_and_reports_changes_impacts_and_dispositions (test_prd_update.PrdUpdateTest.test_plan_is_zero_write_and_reports_changes_impacts_and_dispositions) ... ok
+test_receipt_payload_tamper_and_invalid_now_fail_closed (test_prd_update.PrdUpdateTest.test_receipt_payload_tamper_and_invalid_now_fail_closed) ... ok
+test_repeat_apply_is_idempotent_and_verify_passes (test_prd_update.PrdUpdateTest.test_repeat_apply_is_idempotent_and_verify_passes) ... ok
+test_rollback_failure_restores_updated_collection_exactly (test_prd_update.PrdUpdateTest.test_rollback_failure_restores_updated_collection_exactly) ... ok
+test_rollback_restores_exact_collection_and_rejects_post_update_drift (test_prd_update.PrdUpdateTest.test_rollback_restores_exact_collection_and_rejects_post_update_drift) ... ok
+test_status_projects_latest_receipt_read_only (test_prd_update.PrdUpdateTest.test_status_projects_latest_receipt_read_only) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.421s
+
+OK

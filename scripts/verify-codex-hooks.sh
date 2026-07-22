@@ -15,8 +15,8 @@ import json
 import sys
 
 hooks = json.load(open(sys.argv[1], encoding="utf-8"))["hooks"]
-assert hooks["PreToolUse"][0]["matcher"] == "apply_patch|Edit|Write"
-assert hooks["PostToolUse"][0]["matcher"] == "apply_patch|Edit|Write"
+assert hooks["PreToolUse"][0]["matcher"] == "apply_patch|Edit|Write|MultiEdit"
+assert hooks["PostToolUse"][0]["matcher"] == "apply_patch|Edit|Write|MultiEdit"
 manifest = json.load(open(sys.argv[2], encoding="utf-8"))
 assert "hooks" not in manifest
 PY

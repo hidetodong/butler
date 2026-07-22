@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "mile0009-e2e",
+  "iteration": "ITER-0082",
+  "ac_ids": [
+    "AC3",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/mile0009-e2e/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T15:27:17.019Z",
+  "finished_at": "2026-07-22T15:27:17.586Z",
+  "duration_ms": 567,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 808,
+    "captured_bytes": 808,
+    "sha256": "bae1b1fbc3c625d9a1766951d4491c43198a247361b926e812fa4f0fbe58d2cb",
+    "truncated": false
+  }
+}

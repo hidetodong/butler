@@ -14,7 +14,7 @@ scope: P3 Design 阶段的技术方案模板、方案准入状态、反证门、
 
 - 必须产出：`.ai/TECH_PLAN.md`
 - 必填 frontmatter：`方案状态`、`方案审查日期`、`方案审查方式`
-- 必填字段：`Goal`、`Files / Modules to Change`、`Interface / Contract`、`State / Boundary`、`Design Decisions`、`Plan Admission`、`Execution Steps`、`Verification Plan`、`Risks / Open Questions`
+- 必填字段：`Goal`、`Files / Modules to Change`、`Interface / Contract`、`State / Boundary`、`Design Decisions`、`Plan Admission`、`Execution Steps`、`Verification Plan`、`Risks / Open Questions`；AC 含 `prd_refs` 时还必须有 `Workspace Write Plan`
 - 可选字段：`External References`（当 `.ai/references/` 下存在参考资料时必填）
 
 ## 3. 标准模板
@@ -36,7 +36,7 @@ scope: P3 Design 阶段的技术方案模板、方案准入状态、反证门、
 # External References
 - .ai/references/api-xxx.md — 接口契约来源，影响 Interface / Contract 定义
 - .ai/references/design-xxx.md — UI 规格来源，影响 Files / Design Decisions
-- .ai/references/prd/save-validation.md — PRD 切片来源（版本继承 AC frontmatter prd_version，方案不自立版本），影响 Interface / Design Decisions
+- .ai/references/prd/2026-07-22-user-login/login-flow.md — PRD 切片来源（身份、版本、模块继承 AC frontmatter prd_refs，方案不自立版本），影响 Interface / Design Decisions
 
 # Interface / Contract
 - 涉及的接口契约
@@ -47,6 +47,13 @@ scope: P3 Design 阶段的技术方案模板、方案准入状态、反证门、
 - 状态边界
 - 模块职责边界
 - 明确不在本次处理范围内的扩展点
+
+# Workspace Write Plan
+
+| workspace_key | access | path_patterns | rationale |
+|---|---|---|---|
+| @acme/web | primary_write | [apps/web/src/**] | 核心实现 |
+| @acme/ui | supporting_write | [packages/ui/src/login/**] | 配套组件 |
 
 # Design Decisions
 - 关键设计选择
@@ -100,7 +107,9 @@ TECH_PLAN 任何实质修改（AC 映射、接口、边界、关键决策、步�
 - 文件范围、接口契约、边界与验证方式必须明确。
 - 若存在 active profiles，应写明其约束点；未命中时只按通用 SOP 与质量门禁设计。
 - 若 `.ai/references/` 下存在已处理的外部参考资料，必须在 `External References` 中列出，并在 `Interface / Contract` 和 `Design Decisions` 中标注哪些决策来源于参考资料。
-- 引用 `references/prd/` 切片时，版本**继承 `AC_LIST.md` frontmatter 钉住的 `prd_version`**（技术方案跟 AC 走、不自立版本、不重复版本号），版本口径与解析规则回指 `acceptance-schema.md §5`、此处不复述；方案对着钉住版设计。
+- 引用需求集合切片时，技术方案逐项继承 `AC_LIST.md` 的 `prd_refs`，不得改 `prd_id`、升级某项版本、扩大 `module_slugs` 或另立版本表；路径带 `prd_id`，精确解析回指 `acceptance-schema.md §5`。
+- legacy 旧迭代只有 `prd_version` 时继续按兼容 resolver 读取；新 TECH_PLAN 不把 legacy 字段转换成自造 `prd_refs`，迁移身份由 migration receipt 提供。非 PRD 方案保持不写引用字段。
+- AC 含 `prd_refs` 时，`# Workspace Write Plan` 必须使用精确表头 `workspace_key | access | path_patterns | rationale`；字段、权限交集与扩张纪律以 `workspace-scope-schema.md §8` 为真源。P3 准入前运行 `check-plan`，不得用宽目录或计划外写入替代 PRD 范围扩张。
 - 不把执行细节写成流水账，重点保留关键设计与实现边界。
 - `Execution Steps` 列为可勾选任务清单：每项一行、动词开头、绑定所服务的 AC（`→ ACn`）；有依赖标"依赖 T<m>"、可并行标 `[P]`；任务编号 `T<n>` 建议但不强制，小迭代可省。
 - 任务清单粒度随迭代大小：大迭代（多文件 / 可并行 / TDD）展开到任务级；极小 / 简化路径保持粗粒度实现顺序即可，不强制细拆，避免过度工程。

@@ -77,7 +77,7 @@ class VendoredValidatorTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             skill_validator = VALIDATORS / "skill-creator" / "quick_validate.py"
             skills = sorted((PLUGIN / "skills").iterdir())
-            self.assertEqual(len(skills), 10)
+            self.assertEqual(len(skills), 11)
             for skill in skills:
                 result = run([sys.executable, str(skill_validator), str(skill)], home)
                 self.assertEqual(result.returncode, 0, f"{skill.name}: {result.stdout}{result.stderr}")

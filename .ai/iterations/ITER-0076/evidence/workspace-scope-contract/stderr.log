@@ -1,0 +1,12 @@
+test_expansion_precedes_write (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_expansion_precedes_write) ... ok
+test_four_scopes_and_write_equation (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_four_scopes_and_write_equation) ... ok
+test_map_failures_are_fail_closed (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_map_failures_are_fail_closed) ... ok
+test_module_scope_can_only_narrow (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_module_scope_can_only_narrow) ... ok
+test_project_map_fields_and_stable_key (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_project_map_fields_and_stable_key) ... ok
+test_registered_and_referenced (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_registered_and_referenced) ... ok
+test_single_package_and_permission_layers (templates.hooks.tests.test_workspace_scope_contract.WorkspaceScopeContractTests.test_single_package_and_permission_layers) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

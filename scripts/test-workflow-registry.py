@@ -135,7 +135,7 @@ class WorkflowRegistryTests(unittest.TestCase):
         labelled_cases: list[tuple[str, dict]] = []
         missing = self.read(); missing["workflows"].pop(); labelled_cases.append(("missing", missing))
         extra = self.read(); extra["workflows"].append(extra["workflows"][0].copy()); labelled_cases.append(("extra", extra))
-        duplicate = self.read(); duplicate["workflows"][1]["id"] = "prd"; labelled_cases.append(("duplicate", duplicate))
+        duplicate = self.read(); duplicate["workflows"][1]["id"] = duplicate["workflows"][0]["id"]; labelled_cases.append(("duplicate", duplicate))
         unsafe = self.read(); unsafe["workflows"][0]["rule_source"] = "../escape.md"; labelled_cases.append(("unsafe", unsafe))
         high = self.read()
         for w in high["workflows"]:

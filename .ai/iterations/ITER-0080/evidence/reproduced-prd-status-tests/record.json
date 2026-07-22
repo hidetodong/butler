@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "reproduced-prd-status-tests",
+  "iteration": "ITER-0080",
+  "ac_ids": [
+    "AC5",
+    "AC6",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "/usr/bin/env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/prd-status/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T14:28:46.734Z",
+  "finished_at": "2026-07-22T14:28:47.228Z",
+  "duration_ms": 495,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1933,
+    "captured_bytes": 1933,
+    "sha256": "b616b525055ba8188b407259ba28382b0f2fac398deb68c09ecc45d081b67c38",
+    "truncated": false
+  }
+}

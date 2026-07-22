@@ -1,0 +1,15 @@
+test_bad_plan_access_and_owner_are_rejected (test_workspace_scope.WorkspaceScopeTest.test_bad_plan_access_and_owner_are_rejected) ... ok
+test_check_diff_covers_rename_delete_and_untracked (test_workspace_scope.WorkspaceScopeTest.test_check_diff_covers_rename_delete_and_untracked) ... ok
+test_check_paths_allows_plan_and_denies_scope_or_plan_escape (test_workspace_scope.WorkspaceScopeTest.test_check_paths_allows_plan_and_denies_scope_or_plan_escape) ... ok
+test_check_plan_uses_archived_pinned_scope_and_module_narrowing (test_workspace_scope.WorkspaceScopeTest.test_check_plan_uses_archived_pinned_scope_and_module_narrowing) ... ok
+test_cross_prd_explicit_permission_conflict_is_rejected (test_workspace_scope.WorkspaceScopeTest.test_cross_prd_explicit_permission_conflict_is_rejected) ... ok
+test_discover_npm_array_and_object_is_zero_write (test_workspace_scope.WorkspaceScopeTest.test_discover_npm_array_and_object_is_zero_write) ... ok
+test_discover_pnpm_and_single_package (test_workspace_scope.WorkspaceScopeTest.test_discover_pnpm_and_single_package) ... ok
+test_discover_rejects_unsafe_duplicate_and_symlink (test_workspace_scope.WorkspaceScopeTest.test_discover_rejects_unsafe_duplicate_and_symlink) ... ok
+test_missing_refs_is_controlled_na_but_legacy_is_rejected (test_workspace_scope.WorkspaceScopeTest.test_missing_refs_is_controlled_na_but_legacy_is_rejected) ... ok
+test_validate_map_and_ownership_fail_closed (test_workspace_scope.WorkspaceScopeTest.test_validate_map_and_ownership_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.464s
+
+OK

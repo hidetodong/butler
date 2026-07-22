@@ -1,0 +1,16 @@
+test_apply_failure_after_backup_restores_legacy (test_prd_migrate.PrdMigrationTests.test_apply_failure_after_backup_restores_legacy) ... ok
+test_apply_verify_idempotent_and_history_zero_write (test_prd_migrate.PrdMigrationTests.test_apply_verify_idempotent_and_history_zero_write) ... ok
+test_bold_and_table_index_versions_are_supported (test_prd_migrate.PrdMigrationTests.test_bold_and_table_index_versions_are_supported) ... ok
+test_collection_prd_refs_resolve_independent_versions (test_prd_migrate.PrdMigrationTests.test_collection_prd_refs_resolve_independent_versions) ... ok
+test_inspect_and_plan_are_zero_write (test_prd_migrate.PrdMigrationTests.test_inspect_and_plan_are_zero_write) ... ok
+test_invalid_identity_mixed_layout_and_symlink_reject (test_prd_migrate.PrdMigrationTests.test_invalid_identity_mixed_layout_and_symlink_reject) ... ok
+test_legacy_reference_resolves_before_and_after_migration (test_prd_migrate.PrdMigrationTests.test_legacy_reference_resolves_before_and_after_migration) ... ok
+test_malformed_or_unpinned_prd_refs_fail_closed (test_prd_migrate.PrdMigrationTests.test_malformed_or_unpinned_prd_refs_fail_closed) ... ok
+test_post_switch_verification_failure_restores_legacy (test_prd_migrate.PrdMigrationTests.test_post_switch_verification_failure_restores_legacy) ... ok
+test_rollback_refuses_drift_then_restores_exact_legacy (test_prd_migrate.PrdMigrationTests.test_rollback_refuses_drift_then_restores_exact_legacy) ... ok
+test_tampered_receipt_paths_cannot_escape_project (test_prd_migrate.PrdMigrationTests.test_tampered_receipt_paths_cannot_escape_project) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.073s
+
+OK

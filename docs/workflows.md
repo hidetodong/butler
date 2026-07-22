@@ -1,9 +1,10 @@
 # Butler 双宿主工作流注册表
 
-> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；本页是唯一八项人读能力表。
+> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；本页是唯一工作流人读能力表。
 
 | ID | Claude Code | Codex | 风险 | 隐式调用 | 语义触发 | 旧名 / 兼容 | 规则真源 |
 |---|---|---|---|---|---|---|---|
+| inbox | `/butler:inbox` | `$butler-inbox` | normal | 允许 | `requirement inbox`、`需求收件箱`、`scan origin`、`处理 origin`、`classify requirements` |  | `Coder/40_Context_Management/inbox-workflow.md` |
 | prd | `/butler:prd` | `$butler-prd` | normal | 允许 | `PRD`、`产品需求文档`、`split PRD`、`update PRD`、`PRD status` | `/butler-prd` (deprecated)<br>`/prd` (natural-language-compat) | `Coder/40_Context_Management/references-schema.md` |
 | review | `/butler:review` | `$butler-review` | normal | 允许 | `review`、`代码复核`、`产物复核`、`independent review` | `/review` (natural-language-compat) | `Coder/60_Extension_CodeReview/review-engine.md` |
 | milestone | `/butler:milestone` | `$butler-milestone` | normal | 允许 | `milestone`、`里程碑`、`roadmap`、`multi-iteration`、`milestone backlog`、`里程碑候办`、`多方向候办`、`one direction per draft` | `/milestone` (natural-language-compat) | `Coder/20_Workflow_Lifecycle/milestone-schema.md` |
@@ -18,7 +19,7 @@
 ## 安全与兼容
 
 - `loop` / `dangerous` 是 high risk，Codex `allow_implicit_invocation=false`；只能由用户显式点名 Butler 模式。旧 `/loop` 与 Claude harness 自带循环撞名，绝不生成旧实体命令。
-- 其余六项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发。
+- 其余九项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发。
 - legacy alias 是识别/弃用元数据，不代表仓库重新创建同名入口。
 
 ## 发现与分发状态
@@ -26,7 +27,7 @@
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
 | Claude 全局命令 | available via setup symlink | `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 10 个相对软链，实体在 `plugins/butler/skills/` |
+| Codex repo discovery | available | `.agents/skills/` 的 11 个相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |

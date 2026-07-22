@@ -1,0 +1,16 @@
+test_broken_markers_fail_without_writing (tools.inbox.tests.test_inbox.InboxScannerTests.test_broken_markers_fail_without_writing) ... ok
+test_broken_origin_symlink_is_rejected (tools.inbox.tests.test_inbox.InboxScannerTests.test_broken_origin_symlink_is_rejected) ... ok
+test_content_change_keeps_source_id (tools.inbox.tests.test_inbox.InboxScannerTests.test_content_change_keeps_source_id) ... ok
+test_content_outside_managed_block_is_preserved (tools.inbox.tests.test_inbox.InboxScannerTests.test_content_outside_managed_block_is_preserved) ... ok
+test_control_character_locator_is_rejected (tools.inbox.tests.test_inbox.InboxScannerTests.test_control_character_locator_is_rejected) ... ok
+test_corrupt_source_id_fails_as_stable_json (tools.inbox.tests.test_inbox.InboxScannerTests.test_corrupt_source_id_fails_as_stable_json) ... ok
+test_missing_origin_is_empty_and_not_created (tools.inbox.tests.test_inbox.InboxScannerTests.test_missing_origin_is_empty_and_not_created) ... ok
+test_missing_source_is_preserved (tools.inbox.tests.test_inbox.InboxScannerTests.test_missing_source_is_preserved) ... ok
+test_plan_is_zero_write_and_apply_is_idempotent (tools.inbox.tests.test_inbox.InboxScannerTests.test_plan_is_zero_write_and_apply_is_idempotent) ... ok
+test_subprocess_json_and_status_are_read_only (tools.inbox.tests.test_inbox.InboxScannerTests.test_subprocess_json_and_status_are_read_only) ... ok
+test_symlink_is_rejected_and_not_followed (tools.inbox.tests.test_inbox.InboxScannerTests.test_symlink_is_rejected_and_not_followed) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.051s
+
+OK

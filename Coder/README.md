@@ -27,7 +27,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `../AGENTS.md`：Codex 编辑 Butler 仓时的自动发现入口与 `.ai/` 冷启动读序。
 - `../docs/codex-compatibility.md`：Claude Code / Codex 共同内核、适配层边界与分阶段支持状态的真源。
 - `../docs/workflows.md`：由机器注册表生成的双宿主入口、风险、触发与旧名兼容人读表。
-- `../plugins/butler/`：Codex plugin 发布包与 10 个工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
+- `../plugins/butler/`：Codex plugin 发布包与 11 个工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
 - `../plugins/butler-pi/`：Pi TypeScript 扩展（`tool_call` / `tool_result` 事件拦截 + Python 门禁调用），安装到 `~/.pi/agent/extensions/`。
 
 宿主入口只负责发现和路由：Claude Code 读根 `CLAUDE.md` 和 `.claude/commands/`，Codex 读根 `AGENTS.md` 与 `plugins/butler/` skills，Pi 读根 `AGENTS.md` 与 `plugins/butler-pi/` 扩展；规则算法仍以本目录为真源。目标项目两模板共同从 `templates/rule-card.md` 注入强制规则，由 `scripts/render-project-entrypoints.py` 在首次部署/升级时幂等维护。完整兼容边界不在本文件复述，统一见 `docs/codex-compatibility.md`。
@@ -84,7 +84,11 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     handoff-spec.md
     project-digest-schema.md
     references-schema.md
+    workspace-scope-schema.md
+    inbox-schema.md
+    inbox-workflow.md
     prd-split.md
+    prd-status.md
     prd-update.md
 
   /50_Extension_Ideation
@@ -167,9 +171,14 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
 - `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、主题边界、digest-and-point、收口折叠与 `fold-state.json` 机器 receipt；receipt 只证文件/hash 参与，不替代语义漂移复核。它是冷启动第一读。
-- `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平态（`api-`/`design-`/`insight-` 单文件，注入真源仍在 `logic-protocol.md`）与知识文件夹态（`prd/` 索引 + 模块登记表 + slug 终身身份 + digest-and-point 读纪律 + 无损切片 + `live`/`.archive/vN/` 版本落盘）；与 `project-digest-schema` 职责分明（项目全貌**有损摘要** vs 外部规格**含无损切片**）。本文件（MILE-0004 R1）只定契约/结构，PRD 切分/入口/钉版/改版同步动作属 R2–R5。
-- `40_Context_Management/prd-split.md` 是 references-schema 契约的**产生动作层**（MILE-0004 R2）——定义"拿到一份大 PRD，怎么切成 `prd/` 知识文件夹"的程序：按 PRD 自身语义/模块边界切（**绝不切碎一条完整规则**）、给每模块分终身 slug、写 `00_INDEX`/登记表、每片逐字保真（守 references-schema §6）、小 PRD 走单模块退化态、**soft 对齐**（提议→确认→落盘，绝不擅自硬切）。只管"首切"；触发接线两条——手动注入见 `00_System_Prompt/logic-protocol.md §外部参考资料注入`（大 PRD 一行，R2），`/milestone` 并进入口见 `20_Workflow_Lifecycle/milestone-schema.md §6.4 步 6`（R3 已落地，brief 是大 PRD 时一份输入喂两海拔 + 路线图项↔slug 交叉指针）；钉版属 R4（已落 `acceptance-schema` 的 `prd_version`）、改版同步属 R5（已落 `prd-update.md`）。契约字段（slug/无损/落盘/结构/判据）一律回指 references-schema、不复述。
-- `40_Context_Management/prd-update.md` 是 references-schema 契约的**改版同步动作层**（MILE-0004 R5）——定义"一份已切进 `prd/` 的 PRD 出新版（V→V+1）怎么同步"：变更检测（修改项清单优先 + old/new diff 兜底 + 对账，分歧必亮）、按 `prd-split` 重新派生受影响模块、**先冻旧版 `.archive/v<旧版>/` 全量快照再更 live**（守 references-schema §7）、登记表认亲（基础态：新增发新 slug/消失置 removed；**松边**：合并/拆分/改名启发式提候选→用户确认、拿不准退回基础态、绝不自动认，见 §4.2，R6 落地）、**三态影响面报告**（没开工/进行中/已收口，**亮牌不自动默认**）、受影响工作路由（进行中接 amend 重冻 / 已收口开新迭代承接 / 没开工无动作，回指 `iteration-schema §5.3/§5.4`+`acceptance-schema §4` 不改仪式）、`/prd status` 只读看板。与 `prd-split` 同族——split 管首切、update 管改版，契约字段一律回指 references-schema、不复述。
+- `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平资料保持单文件；PRD 采用项目级需求总索引 + 日期化稳定 `prd_id` + 单需求模块索引 / 无损切片 / 独立 `.archive/vN/` 的两层集合结构。它区分全新需求、新版、重复与身份歧义，并接通多 PRD 钉版、legacy 迁移、split/status、确定性 update 与范围门禁。
+- `40_Context_Management/workspace-scope-schema.md` 定义项目工作区地图与需求级代码范围：`.ai/project/workspaces.md` 用稳定 workspace key 映射当前路径并声明共享/生成路径 owner，单需求 PRD 以 primary/supporting/read-only/excluded 四类集合声明边界；模块只能收窄，TECH_PLAN 写计划、PreToolUse 与 diff 对账共用同一钉版解析器，越界先走扩张审查。
+- `40_Context_Management/inbox-schema.md` 定义需求收件箱数据合同：`.ai/INBOX.md` 以稳定 `SRC-NNNN`、observed/processed 双 SHA-256、封闭状态和独立派生关系表追踪文件/对话/外部文档；同源变化、跨源重复和失败均 fail-closed，`origin/` 始终用户自管零写入。
+- `40_Context_Management/inbox-workflow.md` 是收件箱动作层：确定性 scanner 登记来源事实，模型逐项分类，standard 确认或 dangerous 自审后委托 PRD/ideation/milestone 等既有规则；活工作区冲突按项等待，独立 sibling 继续。
+- `../docs/prd-migration-guide.md` 是 legacy 单 PRD → 需求集合的人类操作指南：日期身份取证、零写 plan、事务 apply、历史引用解析、verify/rollback 与 backup 清理；执行真源是 `tools/prd-migrate/prd_migrate.py`。
+- `40_Context_Management/prd-split.md` 是 PRD **首切动作层**：身份四态和日期证据先于写盘，按原文边界切模块，并把 `prd_id`、Workspace Scope 与切片方案一次 soft 对齐后写入独立需求目录。
+- `40_Context_Management/prd-status.md` 是多 PRD **只读查询动作层**：项目级列表、按 `prd_id` 下钻、按稳定 workspace key 筛选，legacy 退化可读，坏布局 fail-closed；机械实现位于 `tools/prd-status/`。
+- `40_Context_Management/prd-update.md` 是指定 `prd_id` 的**确定性改版动作层**：语义层确认最终模块/认亲/三态处置，`tools/prd-update/` 负责零写 plan、先冻后更的整 collection 事务、持久 receipt、幂等、verify/rollback；不自动改 active/closed 工作。
 - `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认同上下文简评；审查证据强度明确分 `reported/captured/reproduced`，未重跑不得称复现。独立复核由 `/review` 或 `independent_review: on` 触发，fresh-context 逐 AC 核对（refute 即阻断）。
 - `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` 分别是复核 / 更新说明 / 查过时三帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，各帮手文件回指对应真源不重写。三帮手 G1–G4 均回指 overview §3。

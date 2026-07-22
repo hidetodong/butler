@@ -1,0 +1,11 @@
+test_identity_decision_is_closed_and_fail_closed (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_identity_decision_is_closed_and_fail_closed) ... ok
+test_legacy_is_readable_but_not_silently_migrated (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_legacy_is_readable_but_not_silently_migrated) ... ok
+test_non_prd_paths_remain_optional (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_non_prd_paths_remain_optional) ... ok
+test_prd_id_format_and_stability_are_explicit (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_prd_id_format_and_stability_are_explicit) ... ok
+test_requirement_and_module_identity_are_distinct (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_requirement_and_module_identity_are_distinct) ... ok
+test_two_level_indexes_and_per_requirement_history (templates.hooks.tests.test_prd_collection_contract.PrdCollectionContractTests.test_two_level_indexes_and_per_requirement_history) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.000s
+
+OK

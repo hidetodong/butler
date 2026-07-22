@@ -1,0 +1,19 @@
+test_invalid_cli_arguments_still_return_stable_json (test_prd_status.PrdStatusTest.test_invalid_cli_arguments_still_return_stable_json) ... ok
+test_legacy_is_readable_without_inventing_identity (test_prd_status.PrdStatusTest.test_legacy_is_readable_without_inventing_identity) ... ok
+test_legacy_rejects_prd_id_lookup (test_prd_status.PrdStatusTest.test_legacy_rejects_prd_id_lookup) ... ok
+test_lists_multiple_prds_and_keeps_same_module_slugs_independent (test_prd_status.PrdStatusTest.test_lists_multiple_prds_and_keeps_same_module_slugs_independent) ... ok
+test_prd_id_detail_filter (test_prd_status.PrdStatusTest.test_prd_id_detail_filter) ... ok
+test_rejects_duplicate_prd_id (test_prd_status.PrdStatusTest.test_rejects_duplicate_prd_id) ... ok
+test_rejects_index_identity_drift_and_invalid_date (test_prd_status.PrdStatusTest.test_rejects_index_identity_drift_and_invalid_date) ... ok
+test_rejects_mixed_collection_and_root_module (test_prd_status.PrdStatusTest.test_rejects_mixed_collection_and_root_module) ... ok
+test_rejects_scope_key_missing_or_retired_in_project_map (test_prd_status.PrdStatusTest.test_rejects_scope_key_missing_or_retired_in_project_map) ... ok
+test_rejects_symlink_anywhere_in_prd_tree (test_prd_status.PrdStatusTest.test_rejects_symlink_anywhere_in_prd_tree) ... ok
+test_rejects_symlinked_project_state_ancestor (test_prd_status.PrdStatusTest.test_rejects_symlinked_project_state_ancestor) ... ok
+test_rejects_unindexed_requirement_directory (test_prd_status.PrdStatusTest.test_rejects_unindexed_requirement_directory) ... ok
+test_valid_filter_without_match_is_exit_one_and_read_only (test_prd_status.PrdStatusTest.test_valid_filter_without_match_is_exit_one_and_read_only) ... ok
+test_workspace_filter_and_match_category (test_prd_status.PrdStatusTest.test_workspace_filter_and_match_category) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.404s
+
+OK

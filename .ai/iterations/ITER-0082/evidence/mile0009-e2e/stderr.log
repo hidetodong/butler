@@ -1,0 +1,10 @@
+test_full_resident_tool_chain (test_mile0009_e2e.Mile0009E2E.test_full_resident_tool_chain) ... warning: in the working copy of '.ai/references/.prd-migration-backups/MIG-8c17dd979296/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.ai/references/.prd-update-backups/UPD-1d3cbd566663/2026-07-22-login/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.ai/references/prd/2026-07-22-login/.archive/v1.1/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'origin/login-requirement.md', CRLF will be replaced by LF the next time Git touches it
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.502s
+
+OK

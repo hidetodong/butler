@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "workflow-registry-check",
+  "iteration": "ITER-0080",
+  "ac_ids": [
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/sync-workflow-registry.py",
+      "--check"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T14:28:47.523Z",
+  "finished_at": "2026-07-22T14:28:47.608Z",
+  "duration_ms": 85,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 64,
+    "captured_bytes": 64,
+    "sha256": "267de30c72c9f0dc01281fd6dd76b71188e4510906e3c14f0637b2b0a9999619",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
