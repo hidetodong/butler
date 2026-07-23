@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "artifact-migration-tests",
+  "iteration": "ITER-0089",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/artifact-pipeline/tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:40:30.089Z",
+  "finished_at": "2026-07-23T02:40:30.220Z",
+  "duration_ms": 131,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2514,
+    "captured_bytes": 2514,
+    "sha256": "6ecc3faabf6029961fbf213b93e85ced799ca9b7a81b521be45bae558d1a92f0",
+    "truncated": false
+  }
+}

@@ -462,7 +462,7 @@ class StateAuditTests(unittest.TestCase):
         )
         (diagnostic / "record.json").write_text(json.dumps(failed_record), encoding="utf-8")
         (archive / "VERIFY_REPORT.md").write_text(
-            "# AC Status\n- [x] AC1 (auto·可靠) ✓\n\n# Evidence Index\n"
+            "## AC Status\n- [x] AC1 (auto·可靠) ✓\n\n## Evidence Index\n"
             "| ID | AC | Record |\n|---|---|---|\n"
             "| proof | AC1 | `.ai/iterations/ITER-0001/evidence/proof/record.json` |\n"
             "| diagnostic | AC1 | `.ai/iterations/ITER-0001/evidence/diagnostic/record.json` |\n",

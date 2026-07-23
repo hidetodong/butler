@@ -1,11 +1,11 @@
 {
-  "handoff_sha256": "29f0c478d1975e94b4f2ddaed6e1dc128961b8c08e87f09eed75b71f6a9b9cfb",
+  "handoff_sha256": "bc2ecc502fd24b54580ca7802f34f7e3a02c23d3a41f80e0d8b9233e4e2c333e",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "按用户决定讨论或启动未编号候办 `deterministic-artifact-pipeline`；当前不提交、不推送。",
+    "next": "提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。",
     "phase": "Closed",
     "pointers": [
       ".ai/task-state.md",
@@ -13,20 +13,20 @@
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "complete；真实分片、定向 lookup、迁移与审计已实现、验证并归档"
+    "status": "complete；MILE-0011 四路线与 strict dogfood 已归档"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "6f0f04058ea7a53f80d2242b6136a54d678e3b3e096b7c7812e88d7bb6accc6c"
+      "sha256": "472f2d00e130945330cf754bb2b4f8961d9f25be25df041dd08f4191d7df2d89"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "876d3fbe0c661396e46d9cb27916063b1370b084516f1382054b8a7c3d7a321f"
+      "sha256": "fb1c245b7bd4e79c350e9d70a055fdf2c3646d63ccf3f9f22d0750fbdc5a3e86"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "106fd7b3481466a2dfeafed271bd60ce8a7d3f76dad124d7ef3cdf304ed54e49"
+      "sha256": "f66e141f736cdde55d060ef17687b08e12bb16ba44fbdd8e5c86b9addce9c4c1"
     }
   ]
 }

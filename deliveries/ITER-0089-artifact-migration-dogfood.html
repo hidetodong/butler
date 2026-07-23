@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图模板 (SSOT)
+  ===========================================================================
+  本文件是 butler 交付总结的固定 HTML 模板，是「固定格式」的唯一来源。
+  语义规则见 Coder/20_Workflow_Lifecycle/delivery-summary.md §9。
+
+  填槽协议（迭代/里程碑收口 step ②，在写完同名 .md 之后执行）：
+  1. 读本模板，把每个 {{占位符}} 替换为对应 .md 章节的 HTML 渲染。
+  2. {{占位符}} 与 delivery-summary.md §4 的对应关系：
+       五件套兼容迁移与 dogfood  交付标题（同 .md 首行）
+       ITER-0089     ITER-NNNN 或 MILE-NNNN
+       迭代交付（小版本）  迭代交付（小版本） / 里程碑交付（大版本）
+       2026-07-23   收口日期 YYYY-MM-DD
+       <p>无损迁移 legacy live 五件套并完成 strict dogfood。</p>   §4.1 本次交付目标
+       <p>迁移、回滚、正文保留和当前仓 dogfood 完成。</p>       §4.2 已完成内容
+       <p>五件套迁移不再靠 AI 手工重排。</p>     §4.3 关键变更 / 用户可感知变化
+       <p>artifact pipeline 与 live 五件套。</p>    §4.4 高层影响范围
+       <p>最终 21 项专项和完整 CI 通过。</p>    §4.5 验证方式与结果摘要
+       <p>无阻断风险。</p>           §4.6 已知剩余风险 / 延后事项
+       <ul><li><code>.ai/iterations/ITER-0089/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0089/evidence/</code></li></ul>      §4.7 引用 —— 只放路径指针（<a>/<code>），不得嵌四件套全文
+                §4.8 拆分路线图回填 —— 仅里程碑级填写
+  3. 正文槽位填 block 级 HTML（<p> / <ul><li> / <table>）。
+  4. ROADMAP 块：里程碑级填 ；迭代级把 ROADMAP:START~END 之间整段删除。
+  5. 硬约束：HTML 与 .md 同源、.md 为引用真源；<ul><li><code>.ai/iterations/ITER-0089/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0089/evidence/</code></li></ul> 只引用路径、不嵌全文，
+     保证 HTML 体量恒定、不随迭代膨胀（同 delivery-summary.md §4.7）。
+  6. 单文件自包含：禁止引入外部 CSS / JS / 字体 / 图片链接，保持双击可离线打开。
+  ===========================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0089 交付总结 · 五件套兼容迁移与 dogfood</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>五件套兼容迁移与 dogfood</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0089</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-23</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>无损迁移 legacy live 五件套并完成 strict dogfood。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <p>迁移、回滚、正文保留和当前仓 dogfood 完成。</p>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <p>五件套迁移不再靠 AI 手工重排。</p>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <p>artifact pipeline 与 live 五件套。</p>
+    </section>
+
+    <!-- ROADMAP:START　里程碑级填写；迭代级把本注释块（含 section）整段删除 -->
+    <section class="block roadmap">
+      <h2>拆分路线图回填</h2>
+
+    </section>
+    <!-- ROADMAP:END -->
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>最终 21 项专项和完整 CI 通过。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <p>无阻断风险。</p>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul><li><code>.ai/iterations/ITER-0089/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0089/evidence/</code></li></ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

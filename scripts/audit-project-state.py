@@ -185,7 +185,7 @@ class Audit:
     def audit_evidence(self, iteration: str, verify_path: Path) -> None:
         text = verify_path.read_text(encoding="utf-8")
         section_match = re.search(
-            r"^# Evidence Index\s*$\n(?P<body>.*?)(?=^# (?!Evidence Index\s*$)|\Z)",
+            r"^#{1,6} Evidence Index\s*$\n(?P<body>.*?)(?=^#{1,6} (?!Evidence Index\s*$)|\Z)",
             text,
             re.MULTILINE | re.DOTALL,
         )
@@ -384,6 +384,15 @@ class Audit:
         detail = (result.stdout + result.stderr).strip().replace("\n", "; ")
         self.add(result.returncode == 0, "state_index", detail or f"exit={result.returncode}")
 
+    def audit_artifact_pipeline(self) -> None:
+        tool = self.root / "tools" / "artifact-pipeline" / "contract.py"
+        if not tool.is_file():
+            self.note("artifact_pipeline", "legacy：尚无五件套机器合同", "N/A")
+            return
+        result = subprocess.run([sys.executable, str(tool), "check", "project", "--project-root", str(self.root)], text=True, capture_output=True, check=False)
+        detail = (result.stdout + result.stderr).strip().replace("\n", "; ")
+        self.add(result.returncode == 0, "artifact_pipeline", detail or f"exit={result.returncode}")
+
     def audit_release_metadata(self) -> None:
         version_path = self.root / "VERSION"
         plugin_path = self.root / "plugins" / "butler" / ".codex-plugin" / "plugin.json"
@@ -441,6 +450,7 @@ class Audit:
         self.audit_runtime_pointers(current)
         self.audit_handoff_freshness()
         self.audit_state_index()
+        self.audit_artifact_pipeline()
         self.audit_release_metadata()
         for finding in self.findings:
             print(f"[{finding.level}] {finding.name}: {finding.detail}")

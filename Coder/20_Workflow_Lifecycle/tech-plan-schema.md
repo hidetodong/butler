@@ -6,6 +6,8 @@ scope: P3 Design 阶段的技术方案模板、方案准入状态、反证门、
 
 # Tech Plan Schema
 
+> 结构机器真源：`tools/artifact-pipeline/artifacts.v1.json` + `templates/TECH_PLAN.md`。本文件解释字段语义；新 live 产物的 H2/方案状态由 manifest 固定，条件段 N/A 不删除，legacy 归档不追溯改写。
+
 ## 1. 目标
 
 用于在进入实现前，把改动边界、关键设计决策与验证方式说明清楚。

@@ -6,6 +6,8 @@ scope: P1 Analysis 阶段的问题理解说明模板、字段约束与编写口�
 
 # Concept Schema
 
+> 结构机器真源：`tools/artifact-pipeline/artifacts.v1.json` + `templates/CONCEPT.md`。本文件解释字段语义；新 live 产物的 H2 名称/顺序由 manifest 固定，条件段 N/A 不删除，legacy 归档不追溯改写。
+
 ## 1. 目标
 
 用于在进入验收与设计前，先把“我理解的问题是什么”说清楚。

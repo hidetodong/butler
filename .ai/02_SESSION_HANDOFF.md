@@ -3,7 +3,7 @@
 ## 任务断点
 
 - 迭代：无 active；里程碑：无 active；阶段：Closed。
-- 状态：complete；真实分片、定向 lookup、迁移与审计已实现、验证并归档
+- 状态：complete；MILE-0011 四路线与 strict dogfood 已归档
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按用户决定讨论或启动未编号候办 `deterministic-artifact-pipeline`；当前不提交、不推送。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。
 
 ## 状态指针
 

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "template_version": "1.0.0",
+  "artifacts": {
+    "concept": {
+      "path": ".ai/CONCEPT.md",
+      "phase": "P1",
+      "template": "templates/CONCEPT.md",
+      "sections": ["Current Understanding", "Scope", "Open Questions / Risks"],
+      "conditional_sections": ["Open Questions / Risks"],
+      "frontmatter": {}
+    },
+    "acceptance": {
+      "path": ".ai/AC_LIST.md",
+      "phase": "P2",
+      "template": "templates/AC_LIST.md",
+      "sections": ["Goal", "In Scope", "Out of Scope", "Acceptance Checklist", "Verification Method", "External References", "Open Questions / Risks"],
+      "conditional_sections": ["External References", "Open Questions / Risks"],
+      "frontmatter": {"状态": ["draft", "ack-frozen"], "ACK 日期": "date-or-dash"}
+    },
+    "tech_plan": {
+      "path": ".ai/TECH_PLAN.md",
+      "phase": "P3",
+      "template": "templates/TECH_PLAN.md",
+      "sections": ["Design Decisions", "Failure Paths", "Test Strategy", "References Compliance"],
+      "conditional_sections": ["References Compliance"],
+      "frontmatter": {},
+      "fields": {"方案状态": ["draft", "pass", "must-fix"]}
+    },
+    "verify_report": {
+      "path": ".ai/VERIFY_REPORT.md",
+      "phase": "P5",
+      "template": "templates/VERIFY_REPORT.md",
+      "sections": ["Verification Summary", "AC Status", "Evidence Index", "Verification Results", "Goal Calibration", "Completion Inputs", "Gate Coverage", "References Compliance", "Remaining Risks", "Handoff / Next Step"],
+      "conditional_sections": ["References Compliance", "Remaining Risks"],
+      "frontmatter": {},
+      "fixed_tables": {"Evidence Index": ["Evidence ID", "AC", "强度", "Outcome", "Record"]}
+    },
+    "changelog": {
+      "path": ".ai/01_CHANGELOG.md",
+      "phase": "close",
+      "template": "templates/01_CHANGELOG.md",
+      "sections": ["ADD", "EDIT", "DELETE"],
+      "conditional_sections": ["ADD", "EDIT", "DELETE"],
+      "frontmatter": {}
+    }
+  }
+}

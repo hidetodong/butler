@@ -1,0 +1,12 @@
+test_all_five_templates_match_manifest (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_all_five_templates_match_manifest) ... ok
+test_fixed_table_header_is_rejected (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_fixed_table_header_is_rejected) ... ok
+test_frontmatter_and_field_enums_are_rejected (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_frontmatter_and_field_enums_are_rejected) ... ok
+test_manifest_has_unique_paths_templates_and_phases (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_manifest_has_unique_paths_templates_and_phases) ... ok
+test_marker_version_and_identity_are_rejected (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_marker_version_and_identity_are_rejected) ... ok
+test_missing_reordered_and_duplicate_sections_are_rejected (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_missing_reordered_and_duplicate_sections_are_rejected) ... ok
+test_unknown_artifact_is_rejected (tools.artifact-pipeline.tests.test_contract.ArtifactContractTests.test_unknown_artifact_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK

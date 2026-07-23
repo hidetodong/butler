@@ -4,7 +4,7 @@
 
 ## 当前形态
 
-- **ITER-0085 已完成 MILE-0010 后续纠偏、本地未发布**：双台账现为固定 50 号区间冷片 + 有界根索引 + 逐片回执；旧 MILE-0010/ITER-0084 归档保持原样。按用户要求未提交、未 tag、未推送；独立候办 `deterministic-artifact-pipeline` 尚未启动。
+- **MILE-0011 已收口、待切版推送**：五件套结构 manifest、canonical 模板、阶段生成、strict 检查、hook/audit/CI 和无损 legacy 迁移全部完成；当前 live 五件套已 dogfood 为 strict v1。
 
 - **版本**：v3.0.0；MILE-0009 R1–R8 已交付、收口并发布。
 - **三宿主**：Claude Code / Codex / Pi 三宿主适配全部落地——Pi 由 TypeScript 扩展（`plugins/butler-pi/`）拦截 write/edit 调 Python 门禁，setup.sh 一键安装。
@@ -14,13 +14,13 @@
 
 ## 活跃战线
 
-- 当前无 active milestone / iteration；ITER-0085 已独立收口，MILE-0009 八条路线全部 closed。
+- 当前无 active milestone / iteration；MILE-0011 四条路线全部 closed，待聚合发布。
 - MILE-0009 已形成 origin/inbox → 日期化 PRD 集合 → 多需求钉版 → migration/split/status/update → workspace scope/plan/hook/diff 的完整链路。
 - 真实 `WorkCode.nosync/apps` 已以只读源 + 临时副本验证 28 个 workspace、legacy plan/apply/verify/resolve/rollback 与原仓双 hash 不变；没有替用户升级外部仓。
 - 危险模式仍为 ON；下一方向须由用户启动现有未编号候办或提出新任务。
 
 ## 下一个瓶颈
 - MILE-0009 已随 v3.0.0 发布；外部旧项目获得新结构仍需显式 upgrade/migration，不能把发布写成目标项目已部署。
-- 未编号候办 `deterministic-artifact-pipeline` 可按用户决定提升；当前不预占正式号。
+- milestone backlog 当前为空。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。

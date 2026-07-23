@@ -1,0 +1,26 @@
+test_all_five_templates_match_manifest (test_contract.ArtifactContractTests.test_all_five_templates_match_manifest) ... ok
+test_fixed_table_header_is_rejected (test_contract.ArtifactContractTests.test_fixed_table_header_is_rejected) ... ok
+test_frontmatter_and_field_enums_are_rejected (test_contract.ArtifactContractTests.test_frontmatter_and_field_enums_are_rejected) ... ok
+test_manifest_has_unique_paths_templates_and_phases (test_contract.ArtifactContractTests.test_manifest_has_unique_paths_templates_and_phases) ... ok
+test_marker_version_and_identity_are_rejected (test_contract.ArtifactContractTests.test_marker_version_and_identity_are_rejected) ... ok
+test_missing_reordered_and_duplicate_sections_are_rejected (test_contract.ArtifactContractTests.test_missing_reordered_and_duplicate_sections_are_rejected) ... ok
+test_unknown_artifact_is_rejected (test_contract.ArtifactContractTests.test_unknown_artifact_is_rejected) ... ok
+test_atomic_write_failure_leaves_original (test_generator.ArtifactGeneratorTests.test_atomic_write_failure_leaves_original) ... ok
+test_check_skips_legacy_and_rejects_strict_drift (test_generator.ArtifactGeneratorTests.test_check_skips_legacy_and_rejects_strict_drift) ... ok
+test_downstream_generation_is_rejected (test_generator.ArtifactGeneratorTests.test_downstream_generation_is_rejected) ... ok
+test_dry_run_is_zero_write (test_generator.ArtifactGeneratorTests.test_dry_run_is_zero_write) ... ok
+test_init_is_idempotent_and_never_overwrites (test_generator.ArtifactGeneratorTests.test_init_is_idempotent_and_never_overwrites) ... ok
+test_project_check_reports_missing_and_valid_files (test_generator.ArtifactGeneratorTests.test_project_check_reports_missing_and_valid_files) ... ok
+test_render_replaces_slots (test_generator.ArtifactGeneratorTests.test_render_replaces_slots) ... ok
+test_reset_requires_force (test_generator.ArtifactGeneratorTests.test_reset_requires_force) ... ok
+test_legacy_h1_sections_preserve_every_body (test_migration.MigrationTests.test_legacy_h1_sections_preserve_every_body) ... ok
+test_plan_is_zero_write_and_apply_preserves_content (test_migration.MigrationTests.test_plan_is_zero_write_and_apply_preserves_content) ... ok
+test_rollback_and_post_drift_gate (test_migration.MigrationTests.test_rollback_and_post_drift_gate) ... ok
+test_rollback_can_be_reapplied_from_same_verified_backup (test_migration.MigrationTests.test_rollback_can_be_reapplied_from_same_verified_backup) ... ok
+test_second_apply_is_idempotent (test_migration.MigrationTests.test_second_apply_is_idempotent) ... ok
+test_unknown_and_duplicate_sections_fail_closed (test_migration.MigrationTests.test_unknown_and_duplicate_sections_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.038s
+
+OK

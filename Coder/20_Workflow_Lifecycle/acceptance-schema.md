@@ -6,6 +6,8 @@ scope: P2 阶段验收清单的模板、编写规则与完成判定口径
 
 # Acceptance Schema
 
+> 结构机器真源：`tools/artifact-pipeline/artifacts.v1.json` + `templates/AC_LIST.md`。本文件解释字段语义；新 live 产物的 H2/表头/状态字段由 manifest 固定，条件段 N/A 不删除，legacy 归档不追溯改写。
+
 ## 1. 目标
 
 验收清单用于定义“什么叫完成”，并作为设计、实现、验证的共同依据。

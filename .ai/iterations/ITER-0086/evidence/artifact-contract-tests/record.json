@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "artifact-contract-tests",
+  "iteration": "ITER-0086",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "tools/artifact-pipeline/tests/test_contract.py",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:27:21.221Z",
+  "finished_at": "2026-07-23T02:27:21.299Z",
+  "duration_ms": 78,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1247,
+    "captured_bytes": 1247,
+    "sha256": "d34306c389142c43f46c760d4de7ae57b09df875864168b14cbeb74f8c0bc283",
+    "truncated": false
+  }
+}

@@ -3,10 +3,10 @@
 - 当前迭代：无 active
 - 当前里程碑：无 active
 - 阶段：Closed
-- 状态：complete；真实分片、定向 lookup、迁移与审计已实现、验证并归档
-- 下一动作：按用户决定讨论或启动未编号候办 `deterministic-artifact-pipeline`；当前不提交、不推送。
+- 状态：complete；MILE-0011 四路线与 strict dogfood 已归档
+- 下一动作：提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。
 
 # Goal Calibration
 
-- CAL-001 resolved：单冷文件不是分片；已由独立 ITER-0085 落地固定区间冷片、有界根索引、逐片回执和定向 lookup，不回挂或重开已归档里程碑（依据：state-ledger-tests、state-ledger-dogfood、cold-lookup）。
 - 当前无未闭合运行时信号（N/A）。
+- CAL-001 resolved：首次 dogfood 暴露 legacy H1 正文遗漏；已 receipt 回滚、修复解析并以 21 项测试和最终 strict dogfood 证明解决。

@@ -10,6 +10,10 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0089 | 五件套兼容迁移与非回归：正文保留、legacy、幂等 fixture 与真实仓 dogfood（MILE-0011 R4） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0089-artifact-migration-dogfood.md |
+| ITER-0088 | 五件套校验与门禁：零写检查器、hook、状态审计、CI 与双宿主接线（MILE-0011 R3） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0088-artifact-structure-gates.md |
+| ITER-0087 | 五件套阶段生成器：按阶段生成/重置骨架并保护已有正文与边界（MILE-0011 R2） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0087-artifact-stage-generator.md |
+| ITER-0086 | 五件套结构合同：机器真源、模板版本、固定字段/段落/顺序与 N/A 规则（MILE-0011 R1） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0086-artifact-structure-contract.md |
 | ITER-0085 | 真正的 ITER/MILE 区间分片纠偏（MILE-0010 后续）：固定范围冷分片、索引导航、定向读取、跨分片审计与兼容迁移 | closed | 2026-07-23 | 2026-07-23 | — | deliveries/ITER-0085-fixed-range-state-ledger-shards.md |
 | ITER-0084 | 长编号、双台账热冷分层与规模迁移（MILE-0010 R2–R4·危险模式）：数值身份、机器索引、有界热表、冷历史、幂等迁移与万级验证 | closed | 2026-07-22 | 2026-07-22 | MILE-0010 | deliveries/ITER-0084-scalable-state-ledgers.md |
 | ITER-0083 | handoff 确定性可信闭环（MILE-0010 R1·危险模式）：状态快照读取层、固定生成、触发/检查、来源指纹、陈旧拒绝与重建 | closed | 2026-07-22 | 2026-07-22 | MILE-0010 | deliveries/ITER-0083-trusted-handoff.md |
@@ -26,9 +30,5 @@ current: none
 | ITER-0072 | /butler:init 命令：新项目基地车一键部署 + Codex skill + registry + 同步脚本适配 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0072-butler-init-command.md |
 | ITER-0071 | 说人话补「自造缩写」标准并让产物范例常驻：artifact-style §2 标准一收编掐短词/自造缩写、§6 加对照，rule-card 产物书写段加 3 组现场 ❌→✅ 范例，说准四条 SSOT 作用域 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0071-tone-plainlang-coinage.md |
 | ITER-0070 | Pi 宿主适配器：TypeScript 扩展拦截 write/edit 调 Python 判断模块做流程门禁，setup.sh 安装，文档多宿主化 | closed | 2026-07-19 | 2026-07-20 | — | deliveries/ITER-0070-pi-host-adapter.md |
-| ITER-0069 | 多方向候办拆分：一方向一候办键、一索引块、一草稿文件，禁止多个方向混装；状态审计 20 项与完整 CI 通过 | closed | 2026-07-19 | 2026-07-19 | — | deliveries/ITER-0069-multi-direction-backlog-splitting.md |
-| ITER-0068 | 里程碑候办区与延迟编号：讨论稿不占号，开工才领号，未绑迭代的误开项可退回候办；状态审计 18 项、Goal 16 项与完整 CI 通过 | closed | 2026-07-19 | 2026-07-19 | — | deliveries/ITER-0068-milestone-backlog-numbering.md |
-| ITER-0067 | 项目外写入授权边界：外部目标交宿主、坏输入 fail-closed、多项目逐根门禁；危险模式冻结授权上限，强审修复 2 Must Fix，147 hooks/完整 CI 通过 | closed | 2026-07-18 | 2026-07-18 | — | deliveries/ITER-0067-external-write-authorization-boundary.md |
-| ITER-0066 | Goal 双宿主接线与端到端验证（MILE-0008 R6·危险模式）：共同单向投影、capability 降级、冷启动与驻留 CLI；强审修复外部路径，7 tests/完整矩阵通过 | closed | 2026-07-18 | 2026-07-18 | MILE-0008 | deliveries/ITER-0066-goal-dual-host-wiring.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

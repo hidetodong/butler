@@ -6,6 +6,8 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 # Verify Schema
 
+> 结构机器真源：`tools/artifact-pipeline/artifacts.v1.json` + `templates/VERIFY_REPORT.md`。本文件解释验证语义；新 live 产物的 H2、Evidence 表头和条件段由 manifest 固定，N/A 不删段，legacy 归档不追溯改写。
+
 ## 1. 目标
 
 用于在交付前明确说明：哪些 AC 已满足、如何验证、还剩哪些风险。

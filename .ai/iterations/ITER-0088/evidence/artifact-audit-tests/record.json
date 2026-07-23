@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "artifact-audit-tests",
+  "iteration": "ITER-0088",
+  "ac_ids": [
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-audit-project-state.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:35:07.180Z",
+  "finished_at": "2026-07-23T02:35:10.502Z",
+  "duration_ms": 3321,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 123,
+    "captured_bytes": 123,
+    "sha256": "097e2dbcb34f453176a8ac061e18a4f18f3eec4d8e6b681312b97476b8f0691e",
+    "truncated": false
+  }
+}

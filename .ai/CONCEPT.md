@@ -1,21 +1,19 @@
-# CONCEPT — ITER-0085 · 真正的区间分片纠偏
+<!-- butler-artifact-template: 1.0.0 artifact=concept -->
+# CONCEPT — ITER-0089 · 五件套兼容迁移与 dogfood
 
-> ⚠️ 危险模式：本产物由模型自主 ACK（已过自审门），未经用户逐项确认（ITER-0085，2026-07-23）。
 
-## 目标
+## Current Understanding
 
-把当前“有界热表 + 单个无限增长冷文件”升级为真正的固定编号区间分片。索引必须能把单个 ITER/MILE 直接路由到一个分片，机器审计跨全部分片对账，而冷启动和定向查询的读取量不随总历史线性增长。
 
-## 当前缺口
+- 迁移必须把 legacy 每个已识别 H2 正文映射进 canonical 同名段，未知/重复段拒绝，不静默丢内容。
+- 当前 Butler live 五件套作为真实 dogfood，迁移后 strict check 必须全绿；历史归档不改。
 
-- `.ai/history/ITERATIONS.cold.md` 会无限增长。
-- `.ai/state-index.json` 只有一个 `cold_path`，不能按编号定位。
-- 追溯一个历史身份需要读取整份冷文件。
-- 上一轮只证明根热表有界，没有证明冷分片大小和定向读取量有界。
+## Scope
 
-## 边界
 
-- 不重编号、不改历史交付路径，不覆写 ITER-0084/MILE-0010 归档来伪装当时已完成。
-- ITER 与 MILE 使用相同分片算法；数量未超过热窗口时允许零冷分片。
-- 固定数字区间决定文件名，默认每片 50 个身份；分片内容按数字倒序。
-- 旧单冷文件迁移后删除；迁移必须成组事务化、幂等，失败恢复旧状态。
+- migrate plan/apply、备份/回滚、幂等、正文 hash、当前仓 dogfood、升级文档和最终里程碑验证。
+
+## Open Questions / Risks
+
+
+- N/A

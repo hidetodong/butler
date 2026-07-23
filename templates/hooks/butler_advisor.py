@@ -27,7 +27,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from lib.io import contexts_from_payload, parse_stdin
-from rules import handoff_freshness, prd_split_reminder
+from rules import artifact_structure, handoff_freshness, prd_split_reminder
 
 GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 
@@ -35,6 +35,7 @@ GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 ADVISORY_MODULES = [
     prd_split_reminder,
     handoff_freshness,
+    artifact_structure,
 ]
 
 

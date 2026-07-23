@@ -6,6 +6,8 @@ scope: .ai/01_CHANGELOG.md 的定位、ADD/EDIT/DELETE 格式、粒度与噪声�
 
 # Changelog Schema
 
+> 结构机器真源：`tools/artifact-pipeline/artifacts.v1.json` + `templates/01_CHANGELOG.md`。本文件解释 delta 语义；新 live 产物固定 ADD/EDIT/DELETE 三段，无变更写 N/A，legacy 归档不追溯改写。
+
 ## 1. 定位
 
 `.ai/01_CHANGELOG.md` 是**每迭代的对象级变更流**：本迭代到底新增 / 修改 / 删除了哪些文件与章节，每条绑回它兑现的 AC。它是**变更取向**（写"这一轮改了什么 delta"），与 `PROJECT.md`（状态取向，写"系统现在是什么"）相对。

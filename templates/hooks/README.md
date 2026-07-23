@@ -24,7 +24,8 @@ rules/
   phase_gate.py          # [门禁] 拦 P1/P2/P3 缺失、AC 未冻结或 TECH_PLAN 显式非 pass 的源码写
   ledger_status.py       # [门禁] 拦 .ai/ITERATIONS.md 状态列越界（封闭枚举 active/closed/abandoned）
   single_active_iteration.py  # [门禁] 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
-  artifact_chain.py      # [门禁] 占位，未来承载 AC-ID linkage 等规则
+  artifact_chain.py      # [门禁] AC-ID linkage 等规则预留
+  artifact_structure.py  # [提醒] strict 五件套写后检查 canonical manifest 漂移
   prd_split_reminder.py  # [提醒] 写 .ai/MILESTONE.md 且无 .ai/references/prd/ 时，注入 PRD 先行自检
   handoff_freshness.py   # [提醒] 写 handoff 权威来源后，提示交接前 sync、冷启动先 check
 lib/

@@ -2,6 +2,10 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## 确定性五件套产物链（MILE-0011）
+
+- `tools/artifact-pipeline/artifacts.v1.json` 与五份 canonical 模板共同定义 live 五件套的版本化结构合同；`contract.py render/init/reset/check` 按阶段安全生成并零写验形，hook advisory、状态审计和 CI 共用该合同；`migration.py plan/apply/verify/rollback` 以备份 receipt 和 hash 门控无损迁移 legacy live，历史归档只读不追罚。
+
 ## 可信 handoff 与有界状态台账（MILE-0010）
 
 - `tools/handoff/` 从权威状态确定性生成 `.ai/02_SESSION_HANDOFF.md`，receipt 可检测来源变化、快照漂移和成品篡改；`check` 陈旧即拒绝，`sync` 幂等重建。
