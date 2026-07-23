@@ -3,8 +3,8 @@
 - 当前迭代：无 active
 - 当前里程碑：无 active
 - 阶段：Closed
-- 状态：complete；MILE-0011 四路线与 strict dogfood 已归档
-- 下一动作：提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。
+- 状态：complete；MILE-0010 / MILE-0011 已随 v3.1.0 发布
+- 下一动作：等待用户提出下一方向。
 
 # Goal Calibration
 

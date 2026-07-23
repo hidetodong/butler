@@ -133,3 +133,4 @@
 - 2026-07-22 · P5-review · ITER-0084 · `dangerous-ack`：万行 fixture、当前仓迁移和首次审计/CI 暴露 cold backlog 误读、fold receipt 缺失/locale 污染、task-state 固定句缺失；失败证据保留，逐项修复后 Goal 十项全绿。
 - 2026-07-22 · close · ITER-0084 / MILE-0010 · `dangerous-ack`：84 条迭代拆成 20 热 + 64 冷，state index/check 通过；两个迭代与里程碑归档、双格式交付、fold receipt 完成。用户授权 bypass 但本里程碑未使用；明确不切板、不 tag、不推送。
 - 2026-07-23 · correction · ITER-0085 · `user-triggered`：用户指出单个 `ITERATIONS.cold.md` 不是分片。确认 MILE-0010 已归档不可重开/回挂，开启独立纠偏迭代；旧交付保留事实，新迭代补固定区间多分片与定向读取 proof。
+- 2026-07-23 · release · MILE-0010 / MILE-0011 · `user-requested`：按 MINOR 级别切版 v3.1.0，聚合 ITER-0083–ITER-0089；发布可信 handoff、固定区间状态分片和确定性五件套产物链，升级配方登记 global-install、sync-hooks、regen-entrypoints、restamp，既有项目的数据迁移保持显式执行。

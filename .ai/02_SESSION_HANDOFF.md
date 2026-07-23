@@ -3,7 +3,7 @@
 ## 任务断点
 
 - 迭代：无 active；里程碑：无 active；阶段：Closed。
-- 状态：complete；MILE-0011 四路线与 strict dogfood 已归档
+- 状态：complete；MILE-0010 / MILE-0011 已随 v3.1.0 发布
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：等待用户提出下一方向。
 
 ## 状态指针
 

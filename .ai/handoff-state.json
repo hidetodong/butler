@@ -1,11 +1,11 @@
 {
-  "handoff_sha256": "bc2ecc502fd24b54580ca7802f34f7e3a02c23d3a41f80e0d8b9233e4e2c333e",
+  "handoff_sha256": "2aa62c8395830f0bcbdcd77a98ab88e97fca9ad2c417ea16c092dd6cfbc4f704",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "提交 ITER-0086–0089 / MILE-0011，切版、tag 并推送 GitHub。",
+    "next": "等待用户提出下一方向。",
     "phase": "Closed",
     "pointers": [
       ".ai/task-state.md",
@@ -13,12 +13,12 @@
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "complete；MILE-0011 四路线与 strict dogfood 已归档"
+    "status": "complete；MILE-0010 / MILE-0011 已随 v3.1.0 发布"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "472f2d00e130945330cf754bb2b4f8961d9f25be25df041dd08f4191d7df2d89"
+      "sha256": "68fc816cc76a204c32e17b7d1bdbfd601a08043c7b86f54a2e3cec6d3bb7738a"
     },
     {
       "path": ".ai/ITERATIONS.md",
