@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "state-audit-after-fold",
+  "iteration": "ITER-0084",
+  "ac_ids": [
+    "AC6",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/audit-project-state.py",
+      "--project-root",
+      ".",
+      "--allow-unreleased"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T16:12:19.007Z",
+  "finished_at": "2026-07-22T16:12:20.292Z",
+  "duration_ms": 1285,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 47607,
+    "captured_bytes": 47607,
+    "sha256": "3613f9233802aefff1ba927975c0a50d76cb9b359bb262bde9da6f547ef42580",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

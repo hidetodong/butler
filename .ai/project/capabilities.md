@@ -2,6 +2,12 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## 可信 handoff 与有界状态台账（MILE-0010）
+
+- `tools/handoff/` 从权威状态确定性生成 `.ai/02_SESSION_HANDOFF.md`，receipt 可检测来源变化、快照漂移和成品篡改；`check` 陈旧即拒绝，`sync` 幂等重建。
+- `tools/state-ledger/` 把 ITER/MILE 双台账迁移为最多 20 行的根热表、固定 50 号区间冷片和有界 `.ai/state-index.json`；每片有独立 hash 回执，迁移事务化、幂等并跨分片拒绝重复。
+- 身份号至少四位、超过四位自然增长，最大号和排序只看数字部分。
+
 ## Claude/Codex 双宿主适配（v2.12.0–v2.16.0）
 
 - Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。

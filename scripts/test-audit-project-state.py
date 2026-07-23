@@ -75,6 +75,59 @@ class StateAuditTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         self.assertEqual(before, self.snapshot())
 
+    def test_v2_index_routes_audit_across_cold_shards(self) -> None:
+        hot = self.root / ".ai" / "ITERATIONS.md"
+        text = hot.read_text(encoding="utf-8")
+        old_row = "| ITER-0001 | old | closed | 2026-01-01 | 2026-01-01 | MILE-0001 | deliveries/ITER-0001-old.md |"
+        hot.write_text(text.replace(old_row + "\n", ""), encoding="utf-8")
+        shard = self.root / ".ai/history/iterations/ITER-000001-000050.md"
+        shard.parent.mkdir(parents=True)
+        shard.write_text(
+            "# ITER cold ledger · 1–50\n\n"
+            "| 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |\n"
+            "|---|---|---|---|---|---|---|\n" + old_row + "\n",
+            encoding="utf-8",
+        )
+        (self.root / ".ai/state-index.json").write_text(
+            json.dumps({
+                "schema_version": 2,
+                "shard_size": 50,
+                "ledgers": {
+                    "iterations": {"routing": {
+                        "scheme": "fixed-range-v1", "directory": ".ai/history/iterations",
+                        "prefix": "ITER", "minimum_width": 6, "receipt_suffix": ".json",
+                    }},
+                    "milestones": {"routing": {
+                        "scheme": "fixed-range-v1", "directory": ".ai/history/milestones",
+                        "prefix": "MILE", "minimum_width": 6, "receipt_suffix": ".json",
+                    }},
+                },
+            }),
+            encoding="utf-8",
+        )
+        audit = AUDIT_MODULE.Audit(self.root, False)
+        combined = audit.ledger_text(".ai/ITERATIONS.md", ".ai/history/ITERATIONS.cold.md")
+        self.assertIn(old_row, combined)
+
+    def test_v2_index_rejects_shard_path_escape(self) -> None:
+        (self.root / ".ai/state-index.json").write_text(
+            json.dumps({
+                "schema_version": 2,
+                "shard_size": 50,
+                "ledgers": {
+                    "iterations": {"routing": {
+                        "scheme": "fixed-range-v1", "directory": ".ai/history/escape",
+                        "prefix": "ITER", "minimum_width": 6, "receipt_suffix": ".json",
+                    }},
+                    "milestones": {"routing": {}},
+                },
+            }),
+            encoding="utf-8",
+        )
+        audit = AUDIT_MODULE.Audit(self.root, False)
+        with self.assertRaises(AUDIT_MODULE.AuditError):
+            audit.ledger_text(".ai/ITERATIONS.md", ".ai/history/ITERATIONS.cold.md")
+
     def test_current_and_multiple_active_drift_are_reported(self) -> None:
         path = self.root / ".ai" / "ITERATIONS.md"
         text = path.read_text(encoding="utf-8").replace(
@@ -83,6 +136,13 @@ class StateAuditTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         result = self.invoke()
         self.assertEqual(1, result.returncode)
+
+    def test_noncanonical_zero_identity_is_reported(self) -> None:
+        path = self.root / ".ai" / "ITERATIONS.md"
+        path.write_text(path.read_text().replace("ITER-0001", "ITER-0000"), encoding="utf-8")
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("iterations.ids", result.stdout)
         self.assertIn("iterations.single_active", result.stdout)
         self.assertIn("iterations.current", result.stdout)
 
@@ -243,6 +303,26 @@ class StateAuditTests(unittest.TestCase):
         result = self.invoke()
         self.assertEqual(1, result.returncode)
         self.assertIn(".ai/task-state.md", result.stdout)
+
+    def test_handoff_receipt_is_checked_when_present(self) -> None:
+        task = self.root / ".ai" / "task-state.md"
+        task.write_text(
+            "- 当前迭代：ITER-0002\n- 当前里程碑：MILE-0001\n- 阶段：P1 Analysis\n"
+            "- 状态：active\n- 下一动作：继续。\n",
+            encoding="utf-8",
+        )
+        (self.root / ".ai" / "CONCEPT.md").write_text("# Current Understanding\n- x\n", encoding="utf-8")
+        tool = AUDITOR.parent.parent / "tools" / "handoff" / "handoff.py"
+        synced = subprocess.run(
+            [sys.executable, str(tool), "sync", "--project-root", str(self.root)],
+            text=True, capture_output=True, check=False,
+        )
+        self.assertEqual(0, synced.returncode, synced.stdout + synced.stderr)
+        self.assertEqual(0, self.invoke().returncode)
+        task.write_text(task.read_text().replace("继续", "改变"), encoding="utf-8")
+        result = self.invoke()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("handoff.freshness", result.stdout)
 
     def test_release_metadata_and_unreleased_state_are_explicit(self) -> None:
         (self.root / "plugins" / "butler" / ".codex-plugin").mkdir(parents=True)

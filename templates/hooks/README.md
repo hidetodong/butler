@@ -26,6 +26,7 @@ rules/
   single_active_iteration.py  # [门禁] 拦 .ai/ITERATIONS.md 写入后出现 ≥2 个 active 行（未收口就开新迭代）
   artifact_chain.py      # [门禁] 占位，未来承载 AC-ID linkage 等规则
   prd_split_reminder.py  # [提醒] 写 .ai/MILESTONE.md 且无 .ai/references/prd/ 时，注入 PRD 先行自检
+  handoff_freshness.py   # [提醒] 写 handoff 权威来源后，提示交接前 sync、冷启动先 check
 lib/
   io.py                  # Context/Decision/Advisory、目标分类、Claude/Codex payload → Context
   codex_patch.py         # apply_patch add/update/delete/move、多文件/多 hunk 解析

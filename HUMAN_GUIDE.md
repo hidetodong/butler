@@ -56,7 +56,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### 迭代号与固定需求
 
-每一轮 P1-P5 是一个**迭代**，有一个确定的迭代号 `ITER-NNNN`（单调递增，记在 `.ai/ITERATIONS.md` 台账里）。它的意义是把"这一轮固定了哪些需求、产出了哪套文档"钉死，方便回溯：
+每一轮 P1-P5 是一个**迭代**，有一个确定的迭代号 `ITER-NNNN`（至少四位、单调递增）。近期行在 `.ai/ITERATIONS.md`，旧行按固定数字区间放进 `.ai/history/iterations/`，`.ai/state-index.json` 负责导航；查旧号时工具只读命中的一个分片。它的意义是把"这一轮固定了哪些需求、产出了哪套文档"钉死，方便回溯：
 
 - **固定需求**：你在 P2 ACK 验收清单后，这一迭代的范围就**冻结**了。之后小幅改动可以重新 ACK（记一条修订记录）；但影响面明显扩大时，AI 会开**下一个迭代号**承接，而不是把范围悄悄塞进当前迭代。
 - **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `deliveries/ITER-NNNN-<slug>.md` 交付总结，外加一份同名 `.html` 固定格式阅读视图（双击即可在浏览器里读）。
@@ -149,7 +149,9 @@ AI 会自动走完整个链路：
 │   ├── AC_LIST.md           # P2 产物 = 当前迭代工作区
 │   ├── TECH_PLAN.md         # P3 产物 = 当前迭代工作区
 │   ├── VERIFY_REPORT.md     # P5 产物 = 当前迭代工作区
-│   ├── ITERATIONS.md        # 迭代台账（迭代号/状态/所属 milestone/交付链接）
+│   ├── ITERATIONS.md        # 近期迭代热表（current/状态/所属 milestone/交付链接）
+│   ├── state-index.json     # ITER/MILE 最大号、计数与固定区间路由公式（有界）
+│   ├── history/             # 固定数字区间冷分片 + 同名校验回执（按需读取）
 │   ├── iterations/          # 各迭代收口快照（ITER-NNNN/，按需产生）
 │   ├── MILESTONES.md        # 里程碑台账（大版本，按需产生）
 │   ├── MILESTONE.md         # 当前里程碑工作区：范围评估/理解阐释/拆分路线图（按需产生）
@@ -348,7 +350,7 @@ P5 里写“测试跑过了”“127 tests passed”只是结论，不再单独�
 3. **按阶段推进**：不要一次性把任务和所有上下文倒给 AI。先 P1，确认后 P2，确认后 P3...
 4. **显式 ACK 是你最强的杠杆**：P2 和 P3 的 ACK 机制保证 AI 不会跑偏。用好它。
 5. **及时打断**：发现 AI 偏离流程时立即纠正，不要等它做完再返工。
-6. **长任务分段交接**：超过一个会话能完成的任务，务必让 AI 生成 handoff 文件。
+6. **长任务分段交接**：超过一个会话能完成的任务，先把决定写进 task-state/阶段产物，再运行 `python3 "$BUTLER_PATH/tools/handoff/handoff.py" sync --project-root "$PROJECT_ROOT"`。新会话先 `check`；stale 时先重建，不能直接相信旧 handoff。
 
 ## 8. 规则体系速查
 

@@ -6,6 +6,8 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 # Context Persistence
 
+> 双台账采用热/冷分层的项目，冷启动只读根 `.ai/ITERATIONS.md` / `.ai/MILESTONES.md` 热表与 `.ai/state-index.json`；追溯具体身份时用 state-ledger `lookup` 只读命中的一个 `.ai/history/{iterations,milestones}/` 固定区间分片。机器审计必须跨全部分片对账，AI 不得为“完整”默认吞入冷历史。
+
 ## 1. 目标
 
 长任务质量下降的根因之一，是关键状态只存在于对话上下文里，而没有被外部化。
@@ -115,7 +117,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 当上下文噪音已经影响判断质量时：
 
 1. 执行阶段结晶，净化状态文件
-2. 蒸馏为 `02_SESSION_HANDOFF.md`
+2. 运行 `tools/handoff/handoff.py sync`，从权威状态生成 `02_SESSION_HANDOFF.md`
 3. 以 `02_SESSION_HANDOFF.md` 为入口重新开始
 4. 新入口优先读取最终结论，而不是旧日志
 
@@ -126,8 +128,8 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 1. **项目状态全貌**（系统现在整体是什么、为何如此、长期约束与欠债），冷启动**第一读**；格式见 `project-digest-schema.md`。载体按项目形态**两态**（与收口步④ / 第 6 不变量同一套两态划分）：
    - **采用 `.ai/project/` 知识文件夹的项目**（判据键控**入口文件 `.ai/project/00_INDEX.md` 是否存在**，而非目录是否存在——部署即建的**空种子目录**在首次收口前滚生 `00_INDEX` 前无全貌可读，此暂态按下方"缺全貌产物"倒推处理、**不去读不存在的 `00_INDEX`**，见 `mcv-deployment.md §2`）：第一读 `.ai/project/00_INDEX.md` 拿全貌与地图，再**按当前任务需要**钻相关主题文件。**digest-and-point 读纪律**：读 `00_INDEX` 拿地图 → 只钻与当前任务相关的主题（**不必一次性读全部主题**）→ 再按指针钻代码；如此冷启动预算随文件夹越补越全仍**有界**（读地图 + 定向钻取，不 slurp 整个文件夹）。写侧密度契约见 `project-digest-schema.md §5`。
    - **仍单文件 `.ai/PROJECT.md` 的项目**（R6 前部署、尚未迁移的老项目；butler 仓自身已于 ITER-0034 迁为文件夹态，走上一分支）：第一读 `.ai/PROJECT.md`。
-2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 变更流时间线，怎么一步步走到今天。
-3. `.ai/02_SESSION_HANDOFF.md` —— 当前任务断点（在做什么、卡在哪）。
+2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 只读当前与近期热时间线；需要旧身份时沿 `.ai/state-index.json` 用 state-ledger `lookup` 定向读取一个冷分片，禁止默认读取整个 history 目录。
+3. 先运行 `$BUTLER_PATH/tools/handoff/handoff.py check --project-root "$PROJECT_ROOT"`；fresh 才读 `.ai/02_SESSION_HANDOFF.md`，stale 先 sync 重建，error 先修权威状态。
 4. 当前 TECH_PLAN 的方案 verdict、task-state `Goal Calibration` 与 VERIFY `Completion Inputs` —— 恢复 Goal state/reason/next；宿主 Goal/Task 只是随后可重建的投影。
 5. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
 

@@ -1,0 +1,16 @@
+{
+  "bytes_read": 33531,
+  "id": "ITER-0001",
+  "row": [
+    "ITER-0001",
+    "chat-recap-style 对话层风格约束",
+    "closed",
+    "2026-04-20",
+    "2026-04-20",
+    "—",
+    "deliveries/2026-04-20-chat-recap-style.md"
+  ],
+  "schema_version": 2,
+  "source": ".ai/history/iterations/ITER-000001-000050.md",
+  "status": "found"
+}

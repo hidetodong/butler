@@ -15,7 +15,7 @@ RULE_ID = "ledger_status"
 LEDGER_REL = ".ai/ITERATIONS.md"
 # 镜像 iteration-schema §4.2 的封闭枚举；改这里必须同步 schema（注释互指）。
 VALID_STATES = ("active", "closed", "abandoned")
-_ITER_RE = re.compile(r"^ITER-\d{4}$")
+_ITER_RE = re.compile(r"^ITER-\d{4,}$")
 
 
 def evaluate(ctx: Context) -> Decision:

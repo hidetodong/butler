@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_id": "state-ledger-tests",
+  "iteration": "ITER-0085",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "tools/state-ledger/tests/test_state_ledger.py",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:04:20.978Z",
+  "finished_at": "2026-07-23T02:04:21.217Z",
+  "duration_ms": 239,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1677,
+    "captured_bytes": 1677,
+    "sha256": "aead082623e3f5781eabc1ffe35cab753c0d34ec990cef04dd588a3f5a824b9b",
+    "truncated": false
+  }
+}

@@ -49,7 +49,10 @@ class TestAdvisorEmits:
         (tmp_path / ".ai" / "references" / "prd").mkdir(parents=True)
         r = run_advisor(write_payload(tmp_path, ".ai/MILESTONE.md"), tmp_path)
         assert r.returncode == 0
-        assert r.stdout.strip() == ""  # no advisory → no JSON
+        output = json.loads(r.stdout)
+        context = output["hookSpecificOutput"]["additionalContext"]
+        assert "PRD 先行自检" not in context
+        assert "handoff 新鲜度" in context
 
     def test_apply_patch_milestone_emits_json_once(self, tmp_path):
         (tmp_path / ".ai").mkdir()

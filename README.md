@@ -2,6 +2,8 @@
 
 # 🤖 Butler
 
+长期运行项目可用 `python3 tools/state-ledger/state_ledger.py migrate --project-root <project>` 把 ITER/MILE 台账迁移成有界热表、固定数字区间冷分片与机器索引；用 `lookup ITER-0042` 只读命中的一个分片。先 `inspect` 预览、迁移后 `check`；不重编号、不改历史交付路径，重复执行幂等。
+
 **面向 AI 辅助工程开发的通用协作 SOP 规则仓库**
 
 把 AI 从「自由发挥的编码助手」变成「按流程交付的工程协作者」
@@ -161,6 +163,7 @@ butler/
 ├── tools/                          # Butler 驻留工具（不拷进目标项目，按 $BUTLER 调用）
 │   ├── butler-upgrade/             #   manifest 驱动的 dry-run / 事务升级器
 │   ├── goal-assurance/             #   Goal 完成资格只读裁决器
+│   ├── handoff/                     #   交接入口确定性生成、新鲜度检查与重建
 │   ├── verification-evidence/      #   自动道证据：命令/exit/log/hash 记录
 │   ├── delivery-selftest/          #   人测回传桥：浏览器四态路由
 │   └── codex-validators/           #   OpenAI Codex 官方 validator 快照

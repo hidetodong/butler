@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "external-write-boundary",
+  "iteration": "ITER-0084",
+  "ac_ids": [
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "print('N/A: no authorized external project root supplied; no external write attempted')"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T16:16:13.897Z",
+  "finished_at": "2026-07-22T16:16:13.918Z",
+  "duration_ms": 20,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 79,
+    "captured_bytes": 79,
+    "sha256": "b30ce03e400610a265f123038a7faacd42271b2c500e641c51048a240e988869",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

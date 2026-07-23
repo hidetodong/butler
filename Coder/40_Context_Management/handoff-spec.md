@@ -10,7 +10,7 @@ scope: 02_SESSION_HANDOFF.md 的唯一结构定义与字段约束
 
 ## 1. 定位
 
-`02_SESSION_HANDOFF.md` 是冷启动**入口**，不是自足包。它的目标是让新会话能**定向、开工、不踩雷**。完整 context 由状态文件承载，handoff 通过指针引用。
+`02_SESSION_HANDOFF.md` 是冷启动**入口**，不是自足包。它的目标是让新会话能**定向、开工、不踩雷**。完整 context 由状态文件承载，handoff 通过指针引用。新口径下它是由 `tools/handoff/handoff.py` 从权威状态生成的派生视图；机器新鲜度 receipt 为 `.ai/handoff-state.json`，两者都不得由 AI 直接手改。
 
 其中项目的**状态全貌**由项目全貌产物承载（两态：`.ai/project/` 知识文件夹，或未迁移暂态的单文件 `.ai/PROJECT.md`；格式见 `project-digest-schema.md`）：handoff 给"此刻断点"、全貌产物给"系统整体是什么"，二者互补不重叠，handoff 的状态指针可引用它。冷启动完整读序（含两态第一读）见 `context-persistence.md §6`。
 
@@ -70,13 +70,15 @@ scope: 02_SESSION_HANDOFF.md 的唯一结构定义与字段约束
 
 ## 5. 生成流程
 
-AI 执行冷启动蒸馏时，必须按以下步骤序列写出 `.ai/02_SESSION_HANDOFF.md`，不得跳步：
+AI 不再临场拼接 handoff。重要决定先结晶到 task-state、当前阶段产物、台账或里程碑候办，再运行 `python3 "$BUTLER_PATH/tools/handoff/handoff.py" sync --project-root "$PROJECT_ROOT"`。工具按以下步骤固定生成，不得绕过：
 
 1. **来源确认**：按优先级选定蒸馏来源——`.ai/task-state.md` > P1-P3 产物链（`CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md`） > 当前对话上下文。若来源缺失或陈旧，先按 `context-persistence.md` §5 执行阶段结晶，再蒸馏。
 2. **字段映射**：按 §3 表格顺序逐字段填写。每填一项前先自问"这条信息能否防止新会话做出相反决策或重复踩坑"，否则不写。
 3. **长度自检**：总长度 ≤ 500 tokens。超出时优先压缩"关键决策摘要"与"已知风险"的措辞，不得通过删减字段满足限额。
 4. **完整性自检**：H1 与 §3 必填字段齐全；除"状态指针"在简单任务中可省外，其余字段不得为空或仅留占位注释。
-5. **落盘**：写入 `.ai/02_SESSION_HANDOFF.md`，覆盖式更新，不保留历史版本。
+5. **落盘**：原子更新 `.ai/02_SESSION_HANDOFF.md` 与 `.ai/handoff-state.json`，覆盖式更新，不保留历史版本。
+
+消费前先运行同工具 `check`。exit 0 才能读取；exit 1 表示陈旧，必须先 `sync` 重建；exit 2 表示权威状态非法，先修状态而不是相信旧 handoff。尚无 receipt 的旧项目按 legacy 读取，升级后才启用强校验。
 
 反模式（蒸馏时禁止的产出形态）：
 

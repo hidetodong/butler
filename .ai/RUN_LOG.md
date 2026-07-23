@@ -125,3 +125,11 @@
 - 2026-07-22 · close · ITER-0082 / MILE-0009 · `dangerous-ack`：R8 置 closed，迭代/里程碑四件套与双格式交付完成，项目知识折叠；MILE-0009 八条路线全部 closed。未提交、未切版、未推送，等待 closed 状态审计后 compact。
 - 2026-07-22 · close-audit · ITER-0082 / MILE-0009 · `dangerous-ack`：evidence 重新归档后 closed 状态审计 exit 0，ITER/MILE 台账、路线、交付、归档、evidence 与 fold receipt 全部一致，仅保留 `UNRELEASED` 亮牌；收口态完整 CI 与 diff check 再次通过。当前无 active，进入 compact 边界。
 - 2026-07-22 · release · MILE-0009 · `user-requested`：按 MAJOR 级别切版 v3.0.0，聚合 ITER-0075–ITER-0082；迭代内容与发布元数据保持独立提交，升级配方登记 global-install、sync-hooks、restamp，旧 PRD 内容继续要求显式迁移。
+- 2026-07-22 · route · ITER-0083 / MILE-0010 · `dangerous-ack`：用户明确启动长期规模治理；独立落盘五件套固定化候办后，把 handoff 高频痛点前移为 R1。确认 handoff 是工具生成的派生视图，先落权威状态、再生成/签指纹，陈旧内容不得被冷启动当真。
+- 2026-07-22 · P2/P3 · ITER-0083 · `dangerous-ack`：冻结 AC1–AC9；方案采用标准库派生工具 + sidecar receipt + 写后 advisory + 冷启动 check/sync，不依赖 stop hook，不声称恢复未落盘聊天。Plan Admission=pass。
+- 2026-07-22 · P5-review · ITER-0083 · `dangerous-ack`：完整审查发现成对写缺失败回滚、current 未核前缀/active 两个 Must Fix；回 P4 增加事务恢复与故障注入/坏状态回归，最终专项 6/6、hook 197 项、审计 21 项与完整 CI 通过。
+- 2026-07-22 · close · ITER-0083 · `dangerous-ack`：可信 handoff 的五组 evidence、四件套/CHANGELOG、双格式交付和知识折叠完成；R1 closed。未实际使用 bypass。
+- 2026-07-22 · route · ITER-0084 · `dangerous-ack`：R2–R4 因共享同一状态迁移边界合并收官；冻结至少四位身份、有界双台账、机器索引、幂等迁移与万级验证，外部项目无具体根授权故保持 N/A。
+- 2026-07-22 · P5-review · ITER-0084 · `dangerous-ack`：万行 fixture、当前仓迁移和首次审计/CI 暴露 cold backlog 误读、fold receipt 缺失/locale 污染、task-state 固定句缺失；失败证据保留，逐项修复后 Goal 十项全绿。
+- 2026-07-22 · close · ITER-0084 / MILE-0010 · `dangerous-ack`：84 条迭代拆成 20 热 + 64 冷，state index/check 通过；两个迭代与里程碑归档、双格式交付、fold receipt 完成。用户授权 bypass 但本里程碑未使用；明确不切板、不 tag、不推送。
+- 2026-07-23 · correction · ITER-0085 · `user-triggered`：用户指出单个 `ITERATIONS.cold.md` 不是分片。确认 MILE-0010 已归档不可重开/回挂，开启独立纠偏迭代；旧交付保留事实，新迭代补固定区间多分片与定向读取 proof。

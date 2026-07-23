@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "handoff-tool-tests",
+  "iteration": "ITER-0083",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "tools.handoff.tests.test_handoff"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T16:03:30.355Z",
+  "finished_at": "2026-07-22T16:03:30.430Z",
+  "duration_ms": 75,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 103,
+    "captured_bytes": 103,
+    "sha256": "f96363f8d8dff4c4abed7197c63606ead0bd955ea4259bdcb5fb6f47dbe53992",
+    "truncated": false
+  }
+}

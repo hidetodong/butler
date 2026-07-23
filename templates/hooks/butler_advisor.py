@@ -27,13 +27,14 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from lib.io import contexts_from_payload, parse_stdin
-from rules import prd_split_reminder
+from rules import handoff_freshness, prd_split_reminder
 
 GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 
 # Advisory rules，按注册序执行；各自独立、互不短路（不同于 gate 的 first-deny-wins）。
 ADVISORY_MODULES = [
     prd_split_reminder,
+    handoff_freshness,
 ]
 
 

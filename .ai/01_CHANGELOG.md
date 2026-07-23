@@ -1,13 +1,3 @@
-> 当前无 active 迭代 · closed · 2026-07-22
+# 变更流
 
-## ADD
-
-- 无
-
-## EDIT
-
-- 无
-
-## DELETE
-
-- 无
+当前无开放迭代热数据；ITER-0085 切片已归档至 `.ai/iterations/ITER-0085/CHANGELOG.md`。

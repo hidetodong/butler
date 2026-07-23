@@ -19,6 +19,7 @@ EVIDENCE_PATH_RE = re.compile(
 )
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.ASCII)
+SHARD_RE = re.compile(r"^(ITER|MILE)-([0-9]{6,})-([0-9]{6,})\.md$", re.ASCII)
 
 
 class AuditError(ValueError):
@@ -47,6 +48,59 @@ class Audit:
 
     def read(self, relative: str) -> str:
         return (self.root / relative).read_text(encoding="utf-8")
+
+    def ledger_text(self, hot_relative: str, cold_relative: str) -> str:
+        hot = self.read(hot_relative)
+        index_path = self.root / ".ai" / "state-index.json"
+        if index_path.is_file():
+            try:
+                index = json.loads(index_path.read_text(encoding="utf-8"))
+                if index.get("schema_version") == 2:
+                    kind = "iterations" if hot_relative.endswith("ITERATIONS.md") else "milestones"
+                    prefix = "ITER" if kind == "iterations" else "MILE"
+                    relative_dir = f".ai/history/{kind}"
+                    expected_routing = {
+                        "scheme": "fixed-range-v1",
+                        "directory": relative_dir,
+                        "prefix": prefix,
+                        "minimum_width": 6,
+                        "receipt_suffix": ".json",
+                    }
+                    ledger = index["ledgers"][kind]
+                    if ledger["routing"] != expected_routing:
+                        raise AuditError(f"{kind} routing 元数据非法")
+                    shard_size = int(index["shard_size"])
+                    if shard_size < 1:
+                        raise AuditError("shard_size 必须为正数")
+                    expected_dir = self.root / relative_dir
+                    if expected_dir.is_symlink() or (expected_dir.exists() and not expected_dir.is_dir()):
+                        raise AuditError(f"{kind} shard 目录非法")
+                    chunks = [hot]
+                    if not expected_dir.exists():
+                        return hot
+                    for path in sorted(expected_dir.glob("*.md")):
+                        match = SHARD_RE.fullmatch(path.name)
+                        if path.is_symlink() or not path.is_file() or match is None or match.group(1) != prefix:
+                            raise AuditError(f"{kind} shard 非法：{path.name}")
+                        start, end = int(match.group(2)), int(match.group(3))
+                        width = max(6, len(str(end)))
+                        canonical = f"{prefix}-{start:0{width}d}-{end:0{width}d}.md"
+                        if path.name != canonical or (start - 1) % shard_size or end != start + shard_size - 1:
+                            raise AuditError(f"{kind} shard 范围非法：{path.name}")
+                        chunks.append(path.read_text(encoding="utf-8"))
+                    return "\n".join(chunks)
+            except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+                raise AuditError(f"state index v2 无法导航 {hot_relative}：{error}") from error
+        cold = self.root / cold_relative
+        return hot + ("\n" + cold.read_text(encoding="utf-8") if cold.is_file() else "")
+
+    @staticmethod
+    def canonical_identity(value: str, prefix: str) -> bool:
+        pattern = ITERATION_RE if prefix == "ITER" else MILESTONE_RE
+        if pattern.fullmatch(value) is None:
+            return False
+        numeric = int(value.partition("-")[2])
+        return numeric >= 1 and value == f"{prefix}-{numeric:04d}"
 
     @staticmethod
     def current_pointer(text: str, label: str) -> str:
@@ -95,9 +149,12 @@ class Audit:
         return rows
 
     def audit_iterations(self) -> tuple[str, dict[str, list[str]]]:
-        text = self.read(".ai/ITERATIONS.md")
-        current = self.current_pointer(text, "ITERATIONS.md")
+        hot_text = self.read(".ai/ITERATIONS.md")
+        text = self.ledger_text(".ai/ITERATIONS.md", ".ai/history/ITERATIONS.cold.md")
+        current = self.current_pointer(hot_text, "ITERATIONS.md")
         rows = self.table_rows(text, "ITER-", 7)
+        invalid_ids = sorted(iteration for iteration in rows if not self.canonical_identity(iteration, "ITER"))
+        self.add(not invalid_ids, "iterations.ids", f"invalid={invalid_ids}" if invalid_ids else "格式均合法")
         active = [iteration for iteration, row in rows.items() if row[2] == "active"]
         valid_status = all(row[2] in {"active", "closed", "abandoned"} for row in rows.values())
         self.add(valid_status, "iterations.status", "状态均合法" if valid_status else "存在非法状态")
@@ -218,10 +275,11 @@ class Audit:
         if not path.is_file():
             self.note("milestones", "项目未采用里程碑台账", "N/A")
             return
-        text = path.read_text(encoding="utf-8")
-        current = self.current_pointer(text, "MILESTONES.md")
+        hot_text = path.read_text(encoding="utf-8")
+        text = self.ledger_text(".ai/MILESTONES.md", ".ai/history/MILESTONES.cold.md")
+        current = self.current_pointer(hot_text, "MILESTONES.md")
         rows = self.table_rows(text, "MILE-", 7)
-        invalid_ids = sorted(milestone for milestone in rows if MILESTONE_RE.fullmatch(milestone) is None)
+        invalid_ids = sorted(milestone for milestone in rows if not self.canonical_identity(milestone, "MILE"))
         self.add(not invalid_ids, "milestones.ids", f"invalid={invalid_ids}" if invalid_ids else "格式均合法")
         numbers = sorted(int(milestone.partition("-")[2]) for milestone in rows if MILESTONE_RE.fullmatch(milestone))
         expected_numbers = list(range(1, numbers[-1] + 1)) if numbers else []
@@ -259,7 +317,7 @@ class Audit:
                 actual = iteration_rows.get(iteration, ["", "", "missing"])[2]
                 self.add(route_status == actual, f"route.{values[0]}", f"{iteration}: route={route_status}, ledger={actual}")
 
-        backlog_rows = self.milestone_backlog_rows(text)
+        backlog_rows = self.milestone_backlog_rows(hot_text)
         backlog_root = self.root / ".ai" / "milestone-backlog"
         indexed_paths: set[str] = set()
         for slug, row in backlog_rows.items():
@@ -297,6 +355,34 @@ class Audit:
             text = path.read_text(encoding="utf-8")
             expected = current if current != "none" else "无 active"
             self.add(expected in text, relative, f"应包含当前状态指针：{expected}")
+
+    def audit_handoff_freshness(self) -> None:
+        receipt = self.root / ".ai" / "handoff-state.json"
+        if not receipt.exists():
+            self.note("handoff.freshness", "legacy：尚无 handoff receipt", "N/A")
+            return
+        tool = Path(__file__).resolve().parent.parent / "tools" / "handoff" / "handoff.py"
+        result = subprocess.run(
+            [sys.executable, str(tool), "check", "--project-root", str(self.root)],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        detail = (result.stdout + result.stderr).strip().replace("\n", "; ")
+        self.add(result.returncode == 0, "handoff.freshness", detail or f"exit={result.returncode}")
+
+    def audit_state_index(self) -> None:
+        index = self.root / ".ai" / "state-index.json"
+        if not index.exists():
+            self.note("state_index", "legacy：尚未迁移双台账热冷分层", "N/A")
+            return
+        tool = self.root / "tools" / "state-ledger" / "state_ledger.py"
+        result = subprocess.run(
+            [sys.executable, str(tool), "check", "--project-root", str(self.root)],
+            text=True, capture_output=True, check=False,
+        )
+        detail = (result.stdout + result.stderr).strip().replace("\n", "; ")
+        self.add(result.returncode == 0, "state_index", detail or f"exit={result.returncode}")
 
     def audit_release_metadata(self) -> None:
         version_path = self.root / "VERSION"
@@ -353,6 +439,8 @@ class Audit:
         current, iteration_rows = self.audit_iterations()
         self.audit_milestones(iteration_rows)
         self.audit_runtime_pointers(current)
+        self.audit_handoff_freshness()
+        self.audit_state_index()
         self.audit_release_metadata()
         for finding in self.findings:
             print(f"[{finding.level}] {finding.name}: {finding.detail}")

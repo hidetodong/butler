@@ -1,0 +1,9 @@
+test_duplicate_cross_partition_rejected (test_state_ledger.T.test_duplicate_cross_partition_rejected) ... ok
+test_long_identity_numeric (test_state_ledger.T.test_long_identity_numeric) ... ok
+test_migrate_check_idempotent (test_state_ledger.T.test_migrate_check_idempotent) ... ok
+test_ten_thousand_rows_stay_bounded (test_state_ledger.T.test_ten_thousand_rows_stay_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.664s
+
+OK

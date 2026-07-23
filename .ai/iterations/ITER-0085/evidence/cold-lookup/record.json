@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "cold-lookup",
+  "iteration": "ITER-0085",
+  "ac_ids": [
+    "AC3",
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/state-ledger/state_ledger.py",
+      "lookup",
+      "ITER-0001",
+      "--project-root",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:04:41.941Z",
+  "finished_at": "2026-07-23T02:04:42.015Z",
+  "duration_ms": 74,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 339,
+    "captured_bytes": 339,
+    "sha256": "50da2d511dd3b0b06e75b518a40096bfe9619626bd504e323087834bda1710fc",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

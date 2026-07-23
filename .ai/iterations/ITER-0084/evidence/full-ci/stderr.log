@@ -1,0 +1,85 @@
+Resolved 8 packages in 3ms
+Audited 6 packages in 1ms
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.009s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.069s
+
+OK
+................
+----------------------------------------------------------------------
+Ran 16 tests in 0.017s
+
+OK
+................
+----------------------------------------------------------------------
+Ran 16 tests in 0.190s
+
+OK
+test_check_detects_file_and_symlink_drift_without_writing (__main__.WorkflowRegistryTests.test_check_detects_file_and_symlink_drift_without_writing) ... [DRIFT] .agents/skills/butler-prd: symlink target '/tmp/not-butler' != '../../plugins/butler/skills/butler-prd'
+[DRIFT] plugins/butler/skills/butler-loop/agents/openai.yaml: content drift
+ok
+test_failed_write_rolls_back_applied_files (__main__.WorkflowRegistryTests.test_failed_write_rolls_back_applied_files) ... ok
+test_frontmatter_projection_preserves_workflow_bodies (__main__.WorkflowRegistryTests.test_frontmatter_projection_preserves_workflow_bodies) ... ok
+test_managed_projection_drift_matrix (__main__.WorkflowRegistryTests.test_managed_projection_drift_matrix) ... ok
+test_registry_is_exact_and_high_risk_is_explicit_only (__main__.WorkflowRegistryTests.test_registry_is_exact_and_high_risk_is_explicit_only) ... ok
+test_repository_sets_and_plugin_contract_are_closed (__main__.WorkflowRegistryTests.test_repository_sets_and_plugin_contract_are_closed) ... ok
+test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift (__main__.WorkflowRegistryTests.test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift) ... ok
+test_write_is_idempotent_and_check_is_zero_write (__main__.WorkflowRegistryTests.test_write_is_idempotent_and_check_is_zero_write) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.238s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 1.519s
+
+OK
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 1.317s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.652s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.394s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+.F......
+======================================================================
+FAIL: test_current_empty_projection_has_no_fake_signal_row (__main__.GoalCalibrationTests.test_current_empty_projection_has_no_fake_signal_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/cyborgno2/Documents/WorkCode.nosync/butler/scripts/test-goal-calibration.py", line 75, in test_current_empty_projection_has_no_fake_signal_row
+    self.assertIn("当前无未闭合运行时信号（N/A）", section)
+AssertionError: '当前无未闭合运行时信号（N/A）' not found in '\n\n- 北极星：完成 MILE-0010。\n- 当前路线：R2–R4 合并收官。\n- 外部老项目写迁移：缺少具体项目根授权，保持 N/A，不影响工具/当前仓/万级 fixture 的自动验收。\n'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+FAILED (failures=1)

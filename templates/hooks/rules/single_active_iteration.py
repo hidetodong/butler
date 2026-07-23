@@ -24,7 +24,7 @@ RULE_ID = "single_active_iteration"
 LEDGER_REL = ".ai/ITERATIONS.md"
 ACTIVE = "active"
 # 与 ledger_status 共用的迭代号形状；固定列序见 iteration-schema §4.2/4.3。
-_ITER_RE = re.compile(r"^ITER-\d{4}$")
+_ITER_RE = re.compile(r"^ITER-\d{4,}$")
 
 
 def evaluate(ctx: Context) -> Decision:

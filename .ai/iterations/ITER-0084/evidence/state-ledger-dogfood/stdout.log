@@ -1,0 +1,20 @@
+{
+  "hot_limit": 20,
+  "ledgers": {
+    "iterations": {
+      "cold_path": ".ai/history/ITERATIONS.cold.md",
+      "cold_sha256": "049e552f0ab3dd471ecb8de1c49b906882576a5f76dbc98c489b5d0ae319ec59",
+      "hot_count": 20,
+      "max_used": 84,
+      "row_count": 84
+    },
+    "milestones": {
+      "cold_path": ".ai/history/MILESTONES.cold.md",
+      "cold_sha256": "712579825c51f9f4b62fded72259a6bbb69f4726174a8dac953d19571425331e",
+      "hot_count": 10,
+      "max_used": 10,
+      "row_count": 10
+    }
+  },
+  "schema_version": 1
+}

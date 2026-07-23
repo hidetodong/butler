@@ -202,7 +202,7 @@ Hook 副本与 butler 仓库版本可能漂移。既有项目由 `tools/butler-u
 
 ### 6.2 交付自测桥（delivery-selftest）
 
-当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）、**Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）与 **工作区范围工具**（`$BUTLER/tools/workspace-scope/workspace_scope.py`）。范围工具与已部署 hook 共享解析内核，提供只读 `discover/validate/check-plan/check-paths/check-diff`；宿主只负责传唯一 `PROJECT_ROOT` 调用，不复制算法。各工具调用/schema/退出码以各自 README 为真源。
+当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）、**Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）、**双台账分片工具**（`$BUTLER/tools/state-ledger/state_ledger.py`）与 **工作区范围工具**（`$BUTLER/tools/workspace-scope/workspace_scope.py`）。范围工具与已部署 hook 共享解析内核，提供只读 `discover/validate/check-plan/check-paths/check-diff`；双台账工具提供 `inspect/migrate/check/lookup`，其固定区间、索引和退出码以自身 README 为真源。宿主只负责传唯一 `PROJECT_ROOT` 调用，不复制算法。
 
 目标项目在 P5 触发人测残余时按下述形态调用交付自测桥：
 

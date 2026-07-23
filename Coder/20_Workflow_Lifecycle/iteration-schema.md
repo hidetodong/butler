@@ -21,8 +21,8 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 
 ## 2. 迭代号
 
-- 格式：`ITER-NNNN`，四位零填充、单调递增（`ITER-0001`、`ITER-0002`……）。
-- 分配来源：从 `.ai/ITERATIONS.md` 台账读取最大已用号 + 1，**不依赖对话记忆推断**。
+- 格式：`ITER-<数字>`，至少四位、四位内零填充、超过四位自然增长且单调递增（`ITER-0001`、`ITER-9999`、`ITER-10000`）。编号比较一律取数字部分，不按字符串排序。
+- 分配来源：未分片项目从 `.ai/ITERATIONS.md` 读取最大号；已分片项目从 `.ai/state-index.json` 的 `max_used` 读取并由 `state-ledger check` 对账，再 +1。**不依赖对话记忆或只扫热表推断**。
 - 单调性：迭代号只增不减、不复用；废弃的迭代在台账标记 `abandoned`，号不回收。
 - 唯一性：同一时刻最多只有一个 `active` 迭代。
 
@@ -32,7 +32,7 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 
 | 层 | 位置 | 角色 |
 |---|---|---|
-| 迭代台账 | `.ai/ITERATIONS.md` | 脊柱与索引。记录 `current` 指针与全部迭代的号/标题/状态/时间/交付链接，是"当前迭代号是几、有哪些历史迭代"的唯一真源 |
+| 迭代台账 | `.ai/ITERATIONS.md` + `.ai/state-index.json` + `.ai/history/iterations/*.{md,json}` | 复合真源：根文件保存 `current` 与近期热行，有界 index 保存最大号、计数和固定路由公式；固定区间 `.md` 保存旧行，同名 `.json` 保存该片范围、数量与哈希 |
 | 当前迭代工作区 | `.ai/CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` | 固定路径的活产物，始终对应 `current` 指向的活跃迭代；hook 机械校验的就是这组路径 |
 | 迭代归档 | `.ai/iterations/ITER-NNNN/` | 迭代收口时四件套的冻结快照，只读，供复盘审计 |
 | 人类交付 | `deliveries/ITER-NNNN-<slug>.md` + 同名 `.html` | 迭代收口后给人看的交付总结：`.md` 为引用真源，同名 `.html` 为固定格式阅读视图（`delivery-summary.md` §9）；结构与触发参考 `delivery-summary.md` |
@@ -49,7 +49,7 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 
 - `current`：当前活跃迭代号；无活跃迭代时为 `none`。
 - 迭代表，每行一个迭代，含：`迭代号`、`标题`、`状态`、`开启日期`、`收口日期`、`所属 milestone`、`交付链接`。
-- `所属 milestone`：该迭代归属的里程碑号（`MILE-NNNN`）；不归属任何里程碑的独立迭代填 `—`。本列与 `.ai/MILESTONES.md`「含迭代」列互为对账，机制以 `milestone-schema.md` 为准。本表是全量迭代时间线的真源：单调递增的迭代号给出时间线，`所属 milestone` 列给出版本归组，一张表同时承载两条轴。
+- `所属 milestone`：该迭代归属的里程碑号（`MILE-NNNN`）；不归属任何里程碑的独立迭代填 `—`。本列与里程碑复合台账「含迭代」互为对账。全量时间线由热表与冷分片合并得到，不能只把根热表当全量历史。
 
 ### 4.2 状态取值
 
@@ -83,7 +83,7 @@ current: ITER-0002
 
 - 台账只记结论性索引信息，不写迭代内的过程细节（迭代内的对象级变更记录归 `01_CHANGELOG.md`，格式见 `changelog-schema.md`；活产物在各迭代工作区）。
 - 每次开启 / 收口 / 废弃迭代，必须同步更新本表与 `current` 指针，二者不得不一致。
-- 台账长期增长后，可参考 `mcv-update.md` 把很早的已收口行做语义快照归档，但 `current` 与近期迭代必须留在热数据区。
+- 台账超过热窗口后，用 `tools/state-ledger/state_ledger.py migrate` 把旧行写入固定数字区间冷分片；根表保留 `current` 与近期行。分片布局、index schema、命令和退出码以工具 README 为真源。
 
 ## 5. "固定需求"锁定纪律
 

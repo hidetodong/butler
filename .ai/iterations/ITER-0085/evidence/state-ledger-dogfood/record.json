@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "state-ledger-dogfood",
+  "iteration": "ITER-0085",
+  "ac_ids": [
+    "AC2",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/state-ledger/state_ledger.py",
+      "check",
+      "--project-root",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T02:04:36.074Z",
+  "finished_at": "2026-07-23T02:04:36.148Z",
+  "duration_ms": 75,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 941,
+    "captured_bytes": 941,
+    "sha256": "d68d179b8157e27965f9c8399dbb3c8068c3b39ae5291dad230bae6110ac9a78",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -149,6 +149,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 其中：
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/`（含空 `.ai/project/` 知识文件夹种子，MILE-0003 R6 起——新项目采用文件夹态全貌产物）、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
+- `tools/state-ledger/` 负责 ITER/MILE 双台账的确定性热冷迁移、固定数字区间分片与定向 lookup：根热表与 `.ai/state-index.json` 都有界，index 只保存固定路由公式；`.ai/history/{iterations,milestones}/` 的每个有界冷片由同名 `.json` 独立记录范围/路径/数量/哈希。身份至少四位并按数字部分排序。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/goal-contract.md` 是非极小任务 Goal 的共同合同真源：不新增 GOAL 台账，而从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与收口事实派生 `active / at-risk / blocked / completion-candidate / complete / abandoned`；宿主 Goal/Task 只能做可重建投影。
 - `20_Workflow_Lifecycle/goal-calibration.md` 管 P4/P5 新事实回流：六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号不能被 tasks done 或风险措辞覆盖。
@@ -169,7 +170,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式：每个发布版一份 `migrations/vX.Y.Z.md`，用 typed 步骤（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版要做的幂等动作；切版时产出（`versioning-schema.md §5` 必做步），升级时由 `butler-upgrade.md` 按版本区间收集执行。配方落仓库根 `migrations/`（与 `deliveries/`、`CHANGELOG.md` 同级的发布元数据）。
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的字段与最小模板，在基地车部署的本地化适配步骤产出；它也是**项目级 butler 功能开关的统一持久落点**——「Butler 功能开关」段（`dangerous` / `independent_review` 默认 off、`preference` 默认 on）承载持久模式状态，AI 会话起始读取并据此执行、命令回写或用户手改（§4.1）；其中 `preference` 是 **per-project 抑制开关**（本项目采集闸），consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
-- `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的高密度结构约束。
+- `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的固定结构与派生视图契约；`tools/handoff/handoff.py` 从权威状态执行 inspect/sync/check，receipt 陈旧时冷启动先重建再读取。
 - `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、主题边界、digest-and-point、收口折叠与 `fold-state.json` 机器 receipt；receipt 只证文件/hash 参与，不替代语义漂移复核。它是冷启动第一读。
 - `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平资料保持单文件；PRD 采用项目级需求总索引 + 日期化稳定 `prd_id` + 单需求模块索引 / 无损切片 / 独立 `.archive/vN/` 的两层集合结构。它区分全新需求、新版、重复与身份歧义，并接通多 PRD 钉版、legacy 迁移、split/status、确定性 update 与范围门禁。
 - `40_Context_Management/workspace-scope-schema.md` 定义项目工作区地图与需求级代码范围：`.ai/project/workspaces.md` 用稳定 workspace key 映射当前路径并声明共享/生成路径 owner，单需求 PRD 以 primary/supporting/read-only/excluded 四类集合声明边界；模块只能收窄，TECH_PLAN 写计划、PreToolUse 与 diff 对账共用同一钉版解析器，越界先走扩张审查。

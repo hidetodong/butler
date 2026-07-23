@@ -1,0 +1,32 @@
+{
+  "handoff_sha256": "29f0c478d1975e94b4f2ddaed6e1dc128961b8c08e87f09eed75b71f6a9b9cfb",
+  "schema_version": 1,
+  "snapshot": {
+    "decisions": [],
+    "iteration": "none",
+    "milestone": "none",
+    "next": "按用户决定讨论或启动未编号候办 `deterministic-artifact-pipeline`；当前不提交、不推送。",
+    "phase": "Closed",
+    "pointers": [
+      ".ai/task-state.md",
+      ".ai/ITERATIONS.md",
+      ".ai/MILESTONES.md"
+    ],
+    "risks": [],
+    "status": "complete；真实分片、定向 lookup、迁移与审计已实现、验证并归档"
+  },
+  "sources": [
+    {
+      "path": ".ai/task-state.md",
+      "sha256": "6f0f04058ea7a53f80d2242b6136a54d678e3b3e096b7c7812e88d7bb6accc6c"
+    },
+    {
+      "path": ".ai/ITERATIONS.md",
+      "sha256": "876d3fbe0c661396e46d9cb27916063b1370b084516f1382054b8a7c3d7a321f"
+    },
+    {
+      "path": ".ai/MILESTONES.md",
+      "sha256": "106fd7b3481466a2dfeafed271bd60ce8a7d3f76dad124d7ef3cdf304ed54e49"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "handoff-hook-audit-tests",
+  "iteration": "ITER-0083",
+  "ac_ids": [
+    "AC6",
+    "AC7",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "templates/hooks/tests/test_handoff_freshness.py",
+      "templates/hooks/tests/test_advisor_integration.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-22T16:03:30.472Z",
+  "finished_at": "2026-07-22T16:03:31.015Z",
+  "duration_ms": 542,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "f31552d70249eaa50ce81008149595eaad2d9db8e69d7779355a91425366f800",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

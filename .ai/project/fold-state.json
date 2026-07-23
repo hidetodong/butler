@@ -504,6 +504,66 @@
           "sha256": "39e1d0e118250f87e61aebf9bf1ceed9f33eb765ff5671c5a51b20772771dfd4"
         }
       ]
+    },
+    "ITER-0083": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0083/CHANGELOG.md",
+        "sha256": "7eb8da8ccaba367c708567c33c19d5a8e5bdbbd7eb4cd64203676aa56feb3752"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "0a8df2202a908be5800d2654d787d02b8017df31b48bb530ba189a3ffe442883"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "32634054358f6f111ca72055b0ff86f3757845d5e39993c23608dec8125bf988"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "9094665c68123f00b8a44af1e4c6e60ef14f5812b99ecee35dc5c60420b55e45"
+        }
+      ]
+    },
+    "ITER-0084": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0084/CHANGELOG.md",
+        "sha256": "2adeab8f8254f094f409d0f2fc3310f45fd1c4571b93c8c02a44e1f5b49f520b"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "0a8df2202a908be5800d2654d787d02b8017df31b48bb530ba189a3ffe442883"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "32634054358f6f111ca72055b0ff86f3757845d5e39993c23608dec8125bf988"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "b02db1cc18b9083b401071ac0ed55594cc528bd23b32254571064a22868b6194"
+        }
+      ]
+    },
+    "ITER-0085": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0085/CHANGELOG.md",
+        "sha256": "15178c4c2b0e5924b79519f89f9f1fc43e073ba97effed66ef79a5919f3bc832"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "b18b6ff90daead354021203e8f625ff0a08e5533a0500aa31339c309ca333168"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "8bd2602e1e8904a1b4f80e7898dd80a894f5ada697b93052d4f1f7f0a5b6cc5a"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "df09a5f7f6baa906914babcba488b7adb526bc184f28c4a3bdbc0133755f3105"
+        }
+      ]
     }
   }
 }

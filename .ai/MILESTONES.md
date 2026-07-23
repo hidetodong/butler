@@ -4,6 +4,7 @@ current: none
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
+| MILE-0010 | Butler 长期规模治理：可信 handoff、长编号与有界双台账 | closed | 2026-07-22 | 2026-07-22 | ITER-0083, ITER-0084 | deliveries/milestones/MILE-0010-long-horizon-scale-governance.md |
 | MILE-0009 | 需求收件箱、多 PRD 与 Monorepo 范围治理 | closed | 2026-07-22 | 2026-07-22 | ITER-0075, ITER-0076, ITER-0077, ITER-0078, ITER-0079, ITER-0080, ITER-0081, ITER-0082 | deliveries/milestones/MILE-0009-prd-inbox-monorepo-governance.md |
 | MILE-0008 | Butler 目标可信闭环：让 Goal 从“任务做完”升级为经方案准入、执行校准、证据与反证审查后才可完成的可审计承诺 | closed | 2026-07-18 | 2026-07-18 | ITER-0061, ITER-0062, ITER-0063, ITER-0064, ITER-0065, ITER-0066 | deliveries/milestones/MILE-0008-goal-assurance-loop.md |
 | MILE-0007 | Butler 规则仓工程化加固：安全安装、状态自证、持续验证、可执行升级与双宿主治理收敛 | closed | 2026-07-18 | 2026-07-18 | ITER-0056, ITER-0057, ITER-0058, ITER-0059, ITER-0060 | deliveries/milestones/MILE-0007-engineering-hardening.md |
@@ -18,4 +19,4 @@ current: none
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
-| long-horizon-scale-governance | Butler 长期规模治理：长编号、可信 handoff 与有界迭代台账 | 2026-07-22 | .ai/milestone-backlog/long-horizon-scale-governance.md | 当前 MILE-0009 正在推进，先保留为下一里程碑候选，不提前占号。 |
+| deterministic-artifact-pipeline | 确定性五件套产物链：固定结构、阶段生成与机械校验 | 2026-07-22 | .ai/milestone-backlog/deterministic-artifact-pipeline.md | 已确认方向，但先推进长期规模治理；独立暂存，不提前占号。 |
