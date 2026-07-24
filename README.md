@@ -87,10 +87,10 @@ Butler 规则算法以 `Coder/` 为单一真源，各宿主通过薄适配层接
 | 宿主 | 发现入口 | 适配层 | 门禁 |
 |---|---|---|---|
 | **Claude Code** | `CLAUDE.md` + `.claude/commands/` | 原生 | Python PreToolUse hook |
-| **Codex** | `AGENTS.md` | `plugins/butler/`（11 skills） | Python hook（`apply_patch` 适配） |
+| **Codex** | `AGENTS.md` | `plugins/butler/`（12 skills） | Python hook（`apply_patch` 适配） |
 | **Pi** | `AGENTS.md` | `plugins/butler-pi/`（TypeScript 扩展） | TS 拦截 `tool_call` → Python 门禁 |
 
-> 一次 `setup.sh` 统一安装三宿主。新项目从同一 `rule-card.md` 生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/` 处理。首次启用 hook 须用户审阅信任；PreToolUse 不是 sandbox。兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
+> 首次 bootstrap 用 `setup.sh`，此后可用 `/butler:setup` / `$butler-setup` 统一刷新三宿主。新项目从同一 `rule-card.md` 生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/` 处理。首次启用 hook 须用户审阅信任；PreToolUse 不是 sandbox。兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
 
 ## 🧩 扩展命令
 
@@ -103,6 +103,7 @@ Butler 规则算法以 `Coder/` 为单一真源，各宿主通过薄适配层接
 | `/butler:milestone` | 里程碑录入 / 候办区 / 只读看板 |
 | `/butler:review` | 代码审查（P5 简评 + 可选独立复核） |
 | `/butler:progress` | 结构化进度总览（里程碑 / 迭代 / Goal / 验收 / 风险） |
+| `/butler:setup` | 安装或刷新 Claude / Codex / Pi 的机器级 Butler 能力 |
 | `/butler:init` | 新项目基地车一键部署 |
 | `/butler:upgrade` | 已部署项目升级到最新版 |
 | `/butler:ideation` | 需求脑暴（不进执行主线） |
@@ -168,10 +169,10 @@ butler/
 │   ├── delivery-selftest/          #   人测回传桥：浏览器四态路由
 │   └── codex-validators/           #   OpenAI Codex 官方 validator 快照
 │
-├── .claude/commands/butler/        # /butler:* 命令（11 个，全局软链分发）
-├── plugins/butler/                 # Codex plugin（11 skills 实体真源）
+├── .claude/commands/butler/        # /butler:* 命令（12 个，全局软链分发）
+├── plugins/butler/                 # Codex plugin（12 skills 实体真源）
 ├── plugins/butler-pi/              # Pi 宿主适配器（TypeScript）
-├── .agents/skills/                 # 仓库发现面（11 个相对软链）
+├── .agents/skills/                 # 仓库发现面（12 个相对软链）
 │
 ├── Coder/                          # 🛠 规则真源（核心）
 │   ├── README.md                   #   子系统入口 + 读取顺序

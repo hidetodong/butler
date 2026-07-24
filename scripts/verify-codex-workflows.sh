@@ -6,7 +6,7 @@ plugin="$repo_root/plugins/butler"
 validator_root="$repo_root/tools/codex-validators"
 plugin_validator="$validator_root/plugin-creator/validate_plugin.py"
 skill_validator="$validator_root/skill-creator/quick_validate.py"
-names=(inbox prd review milestone upgrade init ideation preference progress loop dangerous)
+names=(inbox prd review milestone upgrade init setup ideation preference progress loop dangerous)
 
 fail() { echo "[FAIL] $*" >&2; exit 1; }
 require_text() { rg -q --fixed-strings "$2" "$1" || fail "$1 missing: $2"; }
@@ -19,8 +19,8 @@ if rg -q '"(hooks|mcpServers|apps)"' "$plugin/.codex-plugin/plugin.json"; then
   fail "R2 manifest must not declare hooks, MCP, or apps"
 fi
 
-[[ "$(find "$plugin/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" == 11 ]] || fail "plugin must contain exactly 11 skills"
-[[ "$(find "$repo_root/.agents/skills" -mindepth 1 -maxdepth 1 -type l | wc -l | tr -d ' ')" == 11 ]] || fail "repo fallback must contain exactly 11 symlinks"
+[[ "$(find "$plugin/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" == 12 ]] || fail "plugin must contain exactly 12 skills"
+[[ "$(find "$repo_root/.agents/skills" -mindepth 1 -maxdepth 1 -type l | wc -l | tr -d ' ')" == 12 ]] || fail "repo fallback must contain exactly 12 symlinks"
 
 for name in "${names[@]}"; do
   skill="butler-$name"
@@ -32,15 +32,22 @@ for name in "${names[@]}"; do
   [[ "$(readlink "$link")" == "../../plugins/butler/skills/$skill" ]] || fail "fallback must be a relative canonical link: $link"
   require_text "$skill_root/SKILL.md" "name: $skill"
   require_text "$skill_root/SKILL.md" 'BUTLER_PATH'
-  require_text "$skill_root/SKILL.md" 'mcv-deployment.md §0.1'
   require_text "$skill_root/agents/openai.yaml" "\$$skill"
-  require_text "$repo_root/.claude/commands/butler/$name.md" 'mcv-deployment.md §0.1'
+  if [[ "$name" == setup ]]; then
+    require_text "$skill_root/SKILL.md" 'butler-setup.md'
+    require_text "$skill_root/SKILL.md" 'scripts/setup.sh'
+    require_text "$repo_root/.claude/commands/butler/setup.md" 'butler-setup.md'
+    require_text "$repo_root/.claude/commands/butler/setup.md" 'scripts/setup.sh'
+  else
+    require_text "$skill_root/SKILL.md" 'mcv-deployment.md §0.1'
+    require_text "$repo_root/.claude/commands/butler/$name.md" 'mcv-deployment.md §0.1'
+  fi
 done
 
 for name in loop dangerous; do
   require_text "$plugin/skills/butler-$name/agents/openai.yaml" 'allow_implicit_invocation: false'
 done
-for name in inbox prd review milestone upgrade init ideation preference progress; do
+for name in inbox prd review milestone upgrade init setup ideation preference progress; do
   if rg -q 'allow_implicit_invocation: false' "$plugin/skills/butler-$name/agents/openai.yaml"; then
     fail "$name must remain eligible for implicit invocation"
   fi
@@ -62,4 +69,4 @@ for doc in "$repo_root/README.md" "$repo_root/Coder/README.md" "$repo_root/HUMAN
   require_text "$doc" 'plugins/butler'
 done
 
-echo "[OK] Codex workflow/plugin checks passed (11 skills)"
+echo "[OK] Codex workflow/plugin checks passed (12 skills)"

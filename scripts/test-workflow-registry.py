@@ -75,6 +75,20 @@ class WorkflowRegistryTests(unittest.TestCase):
         self.assertFalse(policies["dangerous"])
         self.assertTrue(all(policies[name] for name in registry.EXPECTED_IDS - registry.HIGH_RISK))
 
+    def test_setup_is_a_thin_machine_install_router(self) -> None:
+        data = registry.read_registry(self.root)
+        setup = next(item for item in data["workflows"] if item["id"] == "setup")
+        self.assertEqual("Coder/20_Workflow_Lifecycle/butler-setup.md", setup["rule_source"])
+        command = (self.root / setup["claude"]["path"]).read_text(encoding="utf-8")
+        skill = (self.root / setup["codex"]["path"]).read_text(encoding="utf-8")
+        contract = (self.root / setup["rule_source"]).read_text(encoding="utf-8")
+        for text in (command, skill, contract):
+            self.assertIn("scripts/setup.sh", text)
+        self.assertIn("显式", contract)
+        self.assertIn("不初始化当前项目", contract)
+        self.assertNotIn("configure-global-install.py", command)
+        self.assertNotIn("install-codex-plugin.sh", skill)
+
     def test_write_is_idempotent_and_check_is_zero_write(self) -> None:
         data = registry.read_registry(self.root)
         projections = registry.build_projections(data, self.root)

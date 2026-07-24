@@ -3,43 +3,37 @@
 ACK 日期: 2026-07-23
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0089
+# AC_LIST — ITER-0090
 
 ## Goal
 
-
-- 无损迁移 legacy live 五件套并完成真实仓 strict dogfood。
+- 用 `/butler:setup` / `$butler-setup` 完成 Butler 机器级安装，同时保持安装脚本单一真源和显式授权边界。
 
 ## In Scope
 
-
-- migration plan/apply/rollback、备份、幂等、fixture、当前仓 dogfood与升级说明。
+- setup 规则、双宿主入口、Codex skill 元数据、registry/软链/人读表、init 复用和测试。
 
 ## Out of Scope
 
-
-- 不改历史 `.ai/iterations/` 归档。
+- 不把安装逻辑复制进命令；不自动接受 Codex hook trust；不替代项目 init/upgrade。
 
 ## Acceptance Checklist
 
-
-- [ ] AC1: migrate plan 零写报告同名段映射、缺失/未知/重复和 apply readiness。
-- [ ] AC2: apply 备份原文件并原子写 canonical；已识别正文逐段保留，未知/重复 fail-closed。
-- [ ] AC3: 重复 apply 幂等，rollback 只在当前仍等于 post hash 时恢复，漂移拒绝。
-- [ ] AC4: legacy 历史归档字节不变，当前 Butler 五件套迁移后 project check strict 全绿。
-- [ ] AC5: 迁移、hook、audit、完整 CI、state audit、diff check 全部通过并收口 MILE-0011。
+- [ ] AC1: registry 唯一登记 setup，并生成 `/butler:setup`、`$butler-setup`、agents metadata、仓库发现软链和人读表。
+- [ ] AC2: 两宿主入口解析可信 `BUTLER_PATH`，先说明机器级影响并要求显式确认，再以 argv 方式调用 `scripts/setup.sh`。
+- [ ] AC3: setup 成功时逐项报告 Claude/Codex/Pi 结果；失败时保留真实退出码和部分完成事实，不伪报成功、不自行绕过 hook trust。
+- [ ] AC4: init 只复用 setup 命令/规则指针，不再复制机器级安装算法；init 项目部署语义保持不变。
+- [ ] AC5: 首次安装的 bootstrap 边界写清：完全空白机器仍需从仓库执行脚本，已发现 Butler 的宿主可直接用命令。
+- [ ] AC6: skill validator、registry 正负向、setup 隔离测试、Codex foundation、完整 CI、状态审计和 diff check 全部通过。
 
 ## Verification Method
 
-
-- 隔离 migration fixture + 当前仓迁移前后 hash + 完整 CI/审计。
+- registry/skill 结构检查；临时 HOME + stub Codex/Pi 的 setup 脚本隔离测试；完整 CI 与状态审计。
 
 ## External References
-
 
 - N/A
 
 ## Open Questions / Risks
-
 
 - N/A

@@ -187,14 +187,13 @@
         "初始化",
         "部署基地车",
         "deploy Butler",
-        "setup Butler",
         "bootstrap"
       ],
       "legacy_aliases": [],
       "claude": {
         "name": "/butler:init",
         "path": ".claude/commands/butler/init.md",
-        "description": "在新项目部署 Butler 基地车——侦察技术栈、展开 .ai/ 基础设施、注入规则入口与 hooks、安装全局命令",
+        "description": "在新项目部署 Butler 基地车——侦察技术栈、展开 .ai/ 基础设施、注入规则入口与 hooks",
         "default_prompt": "Use /butler:init for this Butler workflow."
       },
       "codex": {
@@ -204,6 +203,34 @@
         "display_name": "Butler Init",
         "short_description": "Deploy Butler into a new project",
         "default_prompt": "Use $butler-init to deploy Butler base infrastructure into this project."
+      }
+    },
+    {
+      "id": "setup",
+      "rule_source": "Coder/20_Workflow_Lifecycle/butler-setup.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "setup Butler",
+        "install Butler",
+        "refresh Butler plugin",
+        "全局安装 Butler",
+        "刷新 Butler 命令"
+      ],
+      "legacy_aliases": [],
+      "claude": {
+        "name": "/butler:setup",
+        "path": ".claude/commands/butler/setup.md",
+        "description": "安装或刷新 Butler 机器级能力——统一配置 Claude 全局命令、Codex plugin 与 Pi 扩展",
+        "default_prompt": "Use /butler:setup for this Butler workflow."
+      },
+      "codex": {
+        "name": "$butler-setup",
+        "path": "plugins/butler/skills/butler-setup/SKILL.md",
+        "description": "Install or refresh Butler machine-wide across Claude Code, Codex, and Pi by delegating to the repository setup entrypoint. Use when the user invokes $butler-setup, asks to run Butler setup/global installation, refresh host commands or plugins, or install Butler's machine-level integrations.",
+        "display_name": "Butler Setup",
+        "short_description": "Install Butler machine-wide across supported hosts",
+        "default_prompt": "Use $butler-setup to install or refresh Butler machine-wide safely."
       }
     },
     {

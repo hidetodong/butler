@@ -1,38 +1,32 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0089
+# VERIFY_REPORT — ITER-0090
 
 ## Verification Summary
 
-- legacy migration、备份/回滚、正文保留与当前仓 strict dogfood 已完成；首次 dogfood 发现 legacy H1 正文遗漏，已回滚修复并复跑。
+- 独立 setup 命令、双宿主入口、registry 分发与 init 复用已完成；安装仍由 `scripts/setup.sh` 单一执行，并在临时 HOME 成功/失败矩阵中通过。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): plan 零写报告五产物 pre/post hash 与 readiness ✓
-- [x] AC2 (auto·可靠): apply 备份并原子写，21 项最终测试证明 H1/H2 正文保留和坏段拒绝 ✓
-- [x] AC3 (auto·可靠): 幂等、rollback/reapply 与 post-hash 漂移门禁通过 ✓
-- [x] AC4 (auto·可靠): 历史 tree hash 前后同为 bbe64deb…，当前五件套 strict 全绿 ✓
-- [x] AC5 (auto·可靠): migration、hook、audit、完整 CI 与 diff check 通过 ✓
+- [x] AC1 (auto·可靠): registry 12 workflows / 49 projections、setup skill/command/agents/软链与生成表全绿 ✓
+- [x] AC2 (auto·可靠): 双入口只指向 butler-setup 规则与 setup.sh，合同测试证明不复制安装算法 ✓
+- [x] AC3 (auto·可靠): 临时 HOME 覆盖无 Codex、Codex 成功、Codex exit 7 部分完成与 Pi 降级分支 ✓
+- [x] AC4 (auto·可靠): init 两入口改为委托 setup 规则，项目部署步骤保持原样且双宿主矩阵通过 ✓
+- [x] AC5 (auto·可靠): 规则真源、README/HUMAN_GUIDE 均明确首次 bootstrap 边界与 hook trust ✓
+- [x] AC6 (auto·可靠): skill validator、registry 9 项、Codex 12 skills、200 hooks 与完整 CI exit 0 ✓
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| artifact-migration-tests | AC1, AC2, AC3, AC4 | diagnostic | passed | `.ai/iterations/ITER-0089/evidence/artifact-migration-tests/record.json` |
-| artifact-dogfood | AC4, AC5 | diagnostic | passed | `.ai/iterations/ITER-0089/evidence/artifact-dogfood/record.json` |
-| full-ci | AC4, AC5 | diagnostic | passed | `.ai/iterations/ITER-0089/evidence/full-ci/record.json` |
-| artifact-migration-tests-final | AC1, AC2, AC3, AC4 | captured | passed | `.ai/iterations/ITER-0089/evidence/artifact-migration-tests-final/record.json` |
-| artifact-dogfood-final | AC4, AC5 | captured | passed | `.ai/iterations/ITER-0089/evidence/artifact-dogfood-final/record.json` |
-| full-ci-final | AC4, AC5 | captured | passed | `.ai/iterations/ITER-0089/evidence/full-ci-final/record.json` |
-| full-ci-heading-compat | AC4, AC5 | captured | passed | `.ai/iterations/ITER-0089/evidence/full-ci-heading-compat/record.json` |
+| setup-command-matrix | AC1, AC2, AC3, AC4, AC5 | captured | passed | `.ai/iterations/ITER-0090/evidence/setup-command-matrix/record.json` |
+| full-ci | AC1, AC3, AC4, AC6 | captured | passed | `.ai/iterations/ITER-0090/evidence/full-ci/record.json` |
 
 ## Verification Results
 
-- artifact pipeline 21/21；状态审计 24/24（含二级 Evidence Index 回归）；当前仓五产物均 status=ok；完整 CI 最终 exit 0。
+- setup 专项矩阵、skill validator、registry、双宿主/安装器隔离矩阵和完整 CI 全部 exit 0。
 
 ## Goal Calibration
 
-- CAL-001 resolved：首次 dogfood 反证“只解析 H2 可无损迁移”；receipt 回滚后补 legacy H1 解析、逐 token 正文测试与 rollback/reapply，最终证据通过。
-- CAL-002 resolved：strict 模板固定二级标题后暴露审计器只识别一级 Evidence Index；解析器已兼容 H1–H6 并补二级标题回归。
 - 当前无未闭合运行时信号（N/A）。
 
 ## Completion Inputs
@@ -42,7 +36,7 @@
 
 ## Gate Coverage
 
-- 通用质量门禁、strict project check、hook、状态审计与完整 CI 通过。
+- 通用质量门禁、registry 投影、skill/plugin validator、setup 隔离矩阵、双宿主基础、hooks 与 artifact/state/handoff 检查通过。
 
 ## References Compliance
 
@@ -50,8 +44,8 @@
 
 ## Remaining Risks
 
-- 无阻断风险；历史归档保持 legacy 只读。
+- Pi TypeScript 验证仍因本机缺少可选模块/类型定义按既有策略 warning skip；不影响 setup 命令合同与现有强制门禁。
 
 ## Handoff / Next Step
 
-- 完成裁决，收口 ITER-0089 与 MILE-0011，再切版推送。
+- 归档证据和五件套，关闭 ITER-0090；不自动提交、切版或推送。

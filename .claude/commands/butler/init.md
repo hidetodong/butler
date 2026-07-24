@@ -1,5 +1,5 @@
 ---
-description: 在新项目部署 Butler 基地车——侦察技术栈、展开 .ai/ 基础设施、注入规则入口与 hooks、安装全局命令
+description: 在新项目部署 Butler 基地车——侦察技术栈、展开 .ai/ 基础设施、注入规则入口与 hooks
 argument-hint: "[留空=部署当前目录项目]"
 ---
 
@@ -28,15 +28,11 @@ argument-hint: "[留空=部署当前目录项目]"
 4. **§4 本地化适配**：生成 `.ai/local-constraints.md`（含 Butler 功能开关段，安全默认）。
 5. **§5 Hook 注入**：拷贝 `$BUTLER_PATH/templates/hooks/`（除 `tests/`）到 `$PROJECT_ROOT/.claude/hooks/`，并配置 `.claude/settings.json`。
 
-## 第 3 步 全局安装（机器级）
+## 第 3 步 委托 setup（机器级）
 
-部署完项目后，提醒用户运行一次机器级安装以使全局命令/扩展生效：
+部署完项目后，提醒用户可用 `/butler:setup` 安装机器级命令/扩展。若用户同意，按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/butler-setup.md` 委托 setup 工作流；本命令不复制其路径、授权、执行或结果判断算法。
 
-```bash
-bash "$BUTLER_PATH/scripts/setup.sh"
-```
-
-若用户同意，代为执行；若跳过，明确告知「全局命令（/butler:*）和 Pi/Codex 扩展需手动跑 setup.sh 后生效」。
+若跳过，明确告知「全局命令（/butler:*）和 Pi/Codex 扩展可稍后用 `/butler:setup` 安装；完全空白机器的首次 bootstrap 仍需从 Butler 仓运行 `bash scripts/setup.sh`」。
 
 ## 收尾
 

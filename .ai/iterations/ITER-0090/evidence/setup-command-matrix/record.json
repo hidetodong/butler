@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_id": "setup-command-matrix",
+  "iteration": "ITER-0090",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "bash",
+      "scripts/verify-dual-host.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-23T03:55:02.357Z",
+  "finished_at": "2026-07-23T03:55:12.229Z",
+  "duration_ms": 9872,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 861,
+    "captured_bytes": 861,
+    "sha256": "340b3370ab1cf4ec25fd2bc5f854b7b85d5bd0345d10c012612f0bde02f07378",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2544,
+    "captured_bytes": 2544,
+    "sha256": "371d5c42603b1052b251ae20224052413950a50f31c0388f133bc8f641f2af8a",
+    "truncated": false
+  }
+}

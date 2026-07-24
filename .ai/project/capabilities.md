@@ -20,7 +20,8 @@
 
 ## Codex 工作流与 hooks（v2.13.0–v2.15.0）
 
-- `plugins/butler/` 可安装 11 个 skills：inbox/prd/review/milestone/upgrade/init/ideation/preference/loop/dangerous/progress；`.agents/skills/` 软链让仓内直接发现同一真源。
+- `plugins/butler/` 可安装 12 个 skills：inbox/prd/review/milestone/upgrade/init/setup/ideation/preference/loop/dangerous/progress；`.agents/skills/` 软链让仓内直接发现同一真源。
+- `/butler:setup` / `$butler-setup` 在确认机器级写入后只委托 `scripts/setup.sh`，分别报告 Claude/Codex/Pi 安装、跳过或部分失败；首次空白机器 bootstrap 仍从仓库脚本进入。
 - `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
 - `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
 - Claude/Codex 写入适配器按每个目标的真实 Butler/Git 根重建 Context：项目内继续跑该项目门禁，无法归属项目的真实路径退出 Butler 判定并交宿主权限，缺失/坏输入仍 fail-closed；一个 Codex patch 可跨多个项目根逐根校验，任一拒绝即整次拒绝。
@@ -28,7 +29,7 @@
 
 ## 工作流注册与分发治理（MILE-0007 R5）
 
-- `workflows/registry.json` 恰好登记 11 个 workflow 的 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、legacy aliases 和 plugin/distribution 边界。
+- `workflows/registry.json` 恰好登记 12 个 workflow 的 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、legacy aliases 和 plugin/distribution 边界。
 - `scripts/sync-workflow-registry.py --write` 原子生成/校正窄元数据投影并在失败时回滚；`--check` 零写入报告 command/SKILL/openai/doc/软链/plugin/hooks/installer 漂移。
 - `docs/workflows.md` 是唯一工作流人读能力表；loop/dangerous 显式禁隐式，旧 `/loop` 只登记 harness collision、不生成实体。repo discovery 和个人 plugin 可用，team/public 明确未配置。
 - 专项与完整矩阵已接入 `verify-ci.sh`；源码 plugin 保持精确 VERSION，个人安装副本单独加 cachebuster。

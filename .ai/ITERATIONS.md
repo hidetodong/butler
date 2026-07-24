@@ -1,15 +1,16 @@
 # 迭代台账
 
-> ⚠️ 危险模式纠偏：补齐 MILE-0010 遗漏的真正区间分片；保留旧交付事实，不把单冷文件误称为分片。
+> ⚠️ 危险模式自治：新增独立 setup 命令；机器级安装继续复用 `scripts/setup.sh` 单一真源。
 
 ## 危险模式自治路线图
 
-ITER-0085 独立纠偏：固定区间冷分片、索引导航、定向读取、跨分片审计与迁移。
+ITER-0090 独立迭代：setup 规则真源、双宿主入口、registry 分发、init 复用与隔离验证。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0090 | /butler:setup 机器级安装命令：双宿主入口、显式确认、setup.sh 复用与 registry 分发 | closed | 2026-07-23 | 2026-07-23 | — | deliveries/ITER-0090-butler-setup-command.md |
 | ITER-0089 | 五件套兼容迁移与非回归：正文保留、legacy、幂等 fixture 与真实仓 dogfood（MILE-0011 R4） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0089-artifact-migration-dogfood.md |
 | ITER-0088 | 五件套校验与门禁：零写检查器、hook、状态审计、CI 与双宿主接线（MILE-0011 R3） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0088-artifact-structure-gates.md |
 | ITER-0087 | 五件套阶段生成器：按阶段生成/重置骨架并保护已有正文与边界（MILE-0011 R2） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0087-artifact-stage-generator.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0073 | /butler:progress 命令：只读聚合当前项目的结构化进度报告——里程碑、迭代、Goal、验收、执行、验证、风险一页看完 | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0073-butler-progress-command.md |
 | ITER-0072 | /butler:init 命令：新项目基地车一键部署 + Codex skill + registry + 同步脚本适配 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0072-butler-init-command.md |
 | ITER-0071 | 说人话补「自造缩写」标准并让产物范例常驻：artifact-style §2 标准一收编掐短词/自造缩写、§6 加对照，rule-card 产物书写段加 3 组现场 ❌→✅ 范例，说准四条 SSOT 作用域 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0071-tone-plainlang-coinage.md |
-| ITER-0070 | Pi 宿主适配器：TypeScript 扩展拦截 write/edit 调 Python 判断模块做流程门禁，setup.sh 安装，文档多宿主化 | closed | 2026-07-19 | 2026-07-20 | — | deliveries/ITER-0070-pi-host-adapter.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

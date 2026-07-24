@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0090 交付总结 · Butler setup 机器级安装命令</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head, section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    header.delivery-head {
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 { margin: 0 0 0.75rem; font-size: 1.5rem; line-height: 1.35; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .chip.level, .chip.date { background: #eef1f5; color: var(--fg-muted); }
+    section.block { padding: 1.1rem 1.75rem 1.25rem; margin-bottom: 1rem; }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul) { margin: 0.5rem 0; }
+    section.block ul { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      background: #eef1f5;
+      padding: 0.05rem 0.35rem;
+      border-radius: 5px;
+    }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    footer.delivery-foot {
+      margin-top: 1.5rem;
+      text-align: center;
+      color: var(--fg-muted);
+      font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Butler setup 机器级安装命令</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0090</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-23</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>让用户通过 <code>/butler:setup</code> 或 <code>$butler-setup</code> 安装/刷新 Butler，不再记忆脚本路径。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增 setup 规则真源、Claude 命令、Codex skill/metadata 和仓库发现软链。</li>
+        <li>workflow registry 扩为 12 项，并自动生成双宿主投影与人读能力表。</li>
+        <li>init 改为委托 setup 规则；安装机械逻辑继续只存在于 <code>scripts/setup.sh</code>。</li>
+        <li>临时 HOME 覆盖宿主缺失、安装成功和部分失败，完整 CI 通过。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <p>首次 bootstrap 仍从仓库运行 <code>bash scripts/setup.sh</code>；已有 Butler 发现面后，直接调用 setup 命令即可刷新 Claude、Codex 和 Pi。</p>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <p>workflow registry、双宿主入口、安装/初始化规则、Codex plugin 和用户文档。</p>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>setup 双宿主矩阵、skill/plugin validator、registry 9 项、200 hooks 和完整 CI 全绿。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <p>Pi TypeScript 本机缺少可选类型依赖，沿用既有 warning skip；首次 Codex hook trust 仍需用户审阅。</p>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0090/VERIFY_REPORT.md</code></li>
+        <li><code>.ai/iterations/ITER-0090/evidence/</code></li>
+        <li><code>Coder/20_Workflow_Lifecycle/butler-setup.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -134,3 +134,6 @@
 - 2026-07-22 · close · ITER-0084 / MILE-0010 · `dangerous-ack`：84 条迭代拆成 20 热 + 64 冷，state index/check 通过；两个迭代与里程碑归档、双格式交付、fold receipt 完成。用户授权 bypass 但本里程碑未使用；明确不切板、不 tag、不推送。
 - 2026-07-23 · correction · ITER-0085 · `user-triggered`：用户指出单个 `ITERATIONS.cold.md` 不是分片。确认 MILE-0010 已归档不可重开/回挂，开启独立纠偏迭代；旧交付保留事实，新迭代补固定区间多分片与定向读取 proof。
 - 2026-07-23 · release · MILE-0010 / MILE-0011 · `user-requested`：按 MINOR 级别切版 v3.1.0，聚合 ITER-0083–ITER-0089；发布可信 handoff、固定区间状态分片和确定性五件套产物链，升级配方登记 global-install、sync-hooks、regen-entrypoints、restamp，既有项目的数据迁移保持显式执行。
+- 2026-07-23 · route · ITER-0090 · `dangerous-ack`：用户提出把 setup 做进命令；开启独立迭代，采用 `/butler:setup` / `$butler-setup` 薄入口 + `scripts/setup.sh` 机械单一真源，不混入项目 init/upgrade。
+- 2026-07-23 · P5-verify · ITER-0090 · `dangerous-ack`：setup 双宿主/临时 HOME 矩阵、skill/plugin validator、registry 9 项、200 hooks 与完整 CI captured 通过；Goal 十项全绿、verdict=eligible。
+- 2026-07-23 · close · ITER-0090 · `dangerous-ack`：两份 evidence、五件套/CHANGELOG、双格式交付与项目知识折叠完成；未提交、未切版、未推送。

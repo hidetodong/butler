@@ -16,5 +16,5 @@ description: Deploy Butler base infrastructure into a new project. Use when the 
    - **§3 Rule injection**: run `render-project-entrypoints.py` to generate `CLAUDE.md` + `AGENTS.md`.
    - **§4 Local adaptation**: generate `.ai/local-constraints.md` with safe defaults.
    - **§5 Hook injection**: copy hooks from `templates/hooks/` and configure `.claude/settings.json`.
-5. Offer to run `bash "$BUTLER_PATH/scripts/setup.sh"` for global command/extension installation. Execute only with explicit user confirmation.
+5. Offer `$butler-setup` for machine-level command/extension installation and follow `Coder/20_Workflow_Lifecycle/butler-setup.md`; do not duplicate setup steps here. Execute only with the setup workflow's explicit confirmation.
 6. Report: project root, tech stack/profiles, created directories, entrypoints, hooks status, global install result.

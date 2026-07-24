@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Setup"
+  short_description: "Install Butler machine-wide across supported hosts"
+  default_prompt: "Use $butler-setup to install or refresh Butler machine-wide safely."
+policy:
+  allow_implicit_invocation: true

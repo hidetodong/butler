@@ -20,3 +20,4 @@ current: none
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
+| prd-future-route-fulfillment | PRD 改版到未启动里程碑路线项的确定性兑现闭环 | 2026-07-23 | .ai/milestone-backlog/prd-future-route-fulfillment.md | 先保留方向：当前只识别并记录 future disposition，路线项启动时尚无机械消费与兑现门禁。 |

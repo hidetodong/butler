@@ -2,10 +2,10 @@
   "hot_limit": 20,
   "ledgers": {
     "iterations": {
-      "cold_count": 69,
+      "cold_count": 70,
       "hot_count": 20,
-      "hot_sha256": "fb1c245b7bd4e79c350e9d70a055fdf2c3646d63ccf3f9f22d0750fbdc5a3e86",
-      "max_used": 89,
+      "hot_sha256": "d018dcdf8ccd438df8086979d6f79dbfc99834412b64fdcabc0fa202b3cb322f",
+      "max_used": 90,
       "routing": {
         "directory": ".ai/history/iterations",
         "minimum_width": 6,
@@ -13,13 +13,13 @@
         "receipt_suffix": ".json",
         "scheme": "fixed-range-v1"
       },
-      "row_count": 89,
+      "row_count": 90,
       "shard_count": 2
     },
     "milestones": {
       "cold_count": 0,
       "hot_count": 11,
-      "hot_sha256": "f66e141f736cdde55d060ef17687b08e12bb16ba44fbdd8e5c86b9addce9c4c1",
+      "hot_sha256": "3e31ccfe65c3efc523c79844618b93a86f498070eaaee84d0767bb23e5db260b",
       "max_used": 11,
       "routing": {
         "directory": ".ai/history/milestones",
