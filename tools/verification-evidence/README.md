@@ -12,6 +12,9 @@ python3 "$BUTLER/tools/verification-evidence/evidence.py" run \
 python3 "$BUTLER/tools/verification-evidence/evidence.py" verify \
   --project-root "$PROJECT_ROOT" --iteration ITER-0001
 
+python3 "$BUTLER/tools/verification-evidence/evidence.py" check-tdd \
+  --project-root "$PROJECT_ROOT" --iteration ITER-0001
+
 # 迭代置 closed、current 已为 none 后补捕获最终状态审计时，必须显式亮牌：
 python3 "$BUTLER/tools/verification-evidence/evidence.py" run \
   --project-root "$PROJECT_ROOT" --iteration ITER-0001 --allow-closed \
@@ -19,6 +22,25 @@ python3 "$BUTLER/tools/verification-evidence/evidence.py" run \
 ```
 
 `run` 后的命令按 argv 直接执行，不经过 shell。默认 timeout 900 秒、stdout/stderr 各最多持久化 1 MiB；任一输出截断会记 `incomplete`，不得作为通过证据。
+
+## 轻量 TDD 配对
+
+任务只有在 `TECH_PLAN.md` 的 `Test Strategy` 段显式声明 cycle 时才启用配对检查。未声明时 `check-tdd` 输出 N/A、零写返回成功。
+
+```md
+<!-- butler-tdd-cycles: v1 -->
+| Cycle | AC | argv_json | cwd |
+|---|---|---|---|
+| parser | AC1,AC2 | `["python3","-m","pytest","tests/test_parser.py","-q"]` | `.` |
+```
+
+- cycle 名只用小写字母、数字和单连字符。
+- Red evidence ID 固定为 `tdd-<cycle>-red`，必须是 `failed`。
+- Green evidence ID 固定为 `tdd-<cycle>-green`，必须是 `passed`。
+- 两条 record 的 argv、cwd、AC 必须与声明完全一致，且 Red 完整结束后才能开始 Green。
+- record 继续使用 schema v1 固定三文件格式；不增加 sidecar、第二台账或新日志。
+
+`--source archive` 会优先读取迭代归档内的 `TECH_PLAN.md` 和 evidence，供关闭态复核；归档计划不存在时兼容读取 live `TECH_PLAN.md`。本检查只证明 Butler 记录到同一命令先失败、后通过，不证明生产代码一定在 Red 后修改，也不判断失败原因是否有效。
 
 ## Record schema v1
 

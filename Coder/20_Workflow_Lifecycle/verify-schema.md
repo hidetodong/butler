@@ -15,7 +15,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 ## 2. 交付约定
 
 - 必须产出：`.ai/VERIFY_REPORT.md`
-- 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`Goal Calibration`、`Completion Inputs`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
+- 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`TDD Pair Status`、`Goal Calibration`、`Completion Inputs`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
 - 条件字段：`人测道小结`（仅当存在人测道 AC 时必填，见 §3 模板与 §4 分道回填要求）
 
 ## 3. 标准模板
@@ -42,6 +42,10 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - AC1: 使用了什么验证方式，结果如何
 - AC2: 使用了什么验证方式，结果如何
 - AC3: 为什么尚未关闭
+
+# TDD Pair Status
+- TECH_PLAN 未声明 TDD cycle 时写 N/A
+- 已声明时逐 cycle 写 `check-tdd` 的 `[OK]` 或失败诊断，并在 Evidence Index 引用 Red/Green record
 
 # Goal Calibration
 - CAL-001：<signal> → <route> → resolved（依据：<新 evidence / 重审 verdict>）
@@ -76,6 +80,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - 必须按 AC 回填，不得只给笼统结论。
 - **Evidence Index 硬门**：完整路径迭代每条已通过的自动道 AC 必须引用机器生成的 evidence ID，record 最终路径固定在 `.ai/iterations/ITER-NNNN/evidence/<id>/record.json`；只有命令文本、测试数量、截图描述或“passed”措辞一律只是 `reported`，不得勾选。record schema 与校验命令以 `tools/verification-evidence/README.md` 为真源。
 - 失败/超时/截断记录同样保留并列入 Evidence Index，作为纠错轨迹；它们不能覆盖绿色 AC。修复后用新 evidence ID 重跑，只有 outcome=`passed` 的记录可为已勾选自动道 AC 提供覆盖。
+- **TDD 配对投影**：TECH_PLAN 在 `Test Strategy` 声明 cycle 时，P5 必须先运行 `verification-evidence check-tdd`，把逐 cycle 结果写入 `TDD Pair Status`，并把 Red/Green 两条 record 都列入 Evidence Index。任一 cycle 未通过时 `Completion Blockers` 必须为 `present`；未声明时写 N/A，不新增收口义务。
 - **证据强度诚实**：`reported`=仅声称、不能关 AC；`captured`=证据包已校验但未重跑；`reproduced`=复核者重新执行并产生独立 evidence ID。未重跑不得写成“复现”。
 - **分道回填**：每条 AC 必须标所属道 + 置信档，合并记为 `(auto·可靠)` / `(auto·弱)` / `(human·待人)`（道口径见 `30_Quality_Gate/testing-strategy.md §3`，置信档见下条）。自动道 AC 须给可复现的自动验证证据（命令 / 断言 / 脚本 / 代理验证）；人测道 AC 须在「人测道小结」说明归入哪个类目、为何机器不可测，并记其待测 / 结论状态。默认归自动道，说不出人测类目即应回自动道。
 - **分级置信**：道标记内叠三档置信，如实记录、不虚高——
@@ -89,7 +94,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - AC 含 `prd_refs` 时，P5 必须把 `check-plan` 和 `check-diff` 作为 Workspace Scope 证据归档；`check-diff` 覆盖删除、重命名、复制与未跟踪路径，任一越界均阻断完成。无 `prd_refs` 时明确记 N/A；legacy `prd_version` 未迁移时不得把范围检查写成通过。
 - 若仍有未关闭风险，必须显式暴露，不能用总结性措辞掩盖。
 - `Goal Calibration` 按 `goal-calibration.md` 回填本轮 completion-blocking signal、route 与 resolved 依据；仍 open/blocked 时不得勾绿受影响 AC 或收口。Remaining Risks 不能作为绕过该门的垃圾桶。
-- `Completion Inputs` 是完成裁决器的机读输入：`Review Verdict` 只允许 `pass / must-fix / not-run`，`Completion Blockers` 只允许 `none / present`；未知/缺失 fail-closed。完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`，只有 exit 0 / `eligible` 可进入收口仪式。
+- `Completion Inputs` 是完成裁决器的机读输入：`Review Verdict` 只允许 `pass / must-fix / not-run`，`Completion Blockers` 只允许 `none / present`；未知/缺失 fail-closed。完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`，只有 exit 0 / `eligible` 可进入收口仪式。裁决器会独立重查 TECH_PLAN 声明的 TDD 配对，不信任 `TDD Pair Status` 文字本身。
 - `Remaining Risks` 也是 Review / P5 自评产出的 **Should Fix（不阻断项）** 的落点（不得写入 `01_CHANGELOG.md`）；见 `60_Extension_CodeReview/review-engine.md §4`。
 - 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）；AC 回填用紧凑式 `[x] ACn ✓ 一句话证据`，不重抄 AC 原文。
 - `Independent Review` 为可选字段：仅当本迭代跑过独立复核（手动 `/review` 或项目 `Review Policy: independent_review: on`）时回填；未跑则可整段省略。环境不支持 fresh-context 子 agent 而未能独立复核时，须按 `62_Extension_Agents/overview.md §3` 通用规矩 **G2** 如实标注"未执行"并落到 `Remaining Risks`，不得冒称已独立复核。

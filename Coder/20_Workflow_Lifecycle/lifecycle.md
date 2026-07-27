@@ -169,7 +169,7 @@ AI 必须回答：
 
 ### P5 Verify
 
-**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`；完整路径自动道还必须先由 verification evidence runner 生成机器 record，VERIFY 的 Evidence Index 逐 AC 引用，口头/手写“passed”不能替代。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
+**必须产物**：`.ai/VERIFY_REPORT.md`。必填字段参考 `verify-schema.md`；完整路径自动道还必须先由 verification evidence runner 生成机器 record，VERIFY 的 Evidence Index 逐 AC 引用，口头/手写“passed”不能替代。TECH_PLAN 显式声明 TDD cycle 时，P5 还必须运行 `verification-evidence check-tdd`，把 Red/Green 都列入 Evidence Index 并回填 `TDD Pair Status`；配对失败会阻止 Goal 完成资格。未声明时该段写 N/A，不改变旧流程。若本轮已经达到可交付、可验收的闭环状态，还应额外生成给人看的交付总结，结构参考 `delivery-summary.md`，**具体触发条件参考 `delivery-summary.md § 2 触发时机`**，并落在项目根目录 `deliveries/` 下。生成 Delivery Summary 时，P5 对话回应必须同时遵守 `delivery-summary.md § 8` 的对话层风格约束，不得把文件层的编号小节结构原样复述到对话框内。
 
 **迭代收口**：当本轮达到可交付闭环、确认收口当前迭代时，必须执行以下收口步（收口原子仪式：前三步缺一不可、第四步前滚项目全貌产物[文件夹态必做 / 单文件态按需]、第五步自检；详见 `iteration-schema.md` §5.5）：① 校验证据热区并整包归档到 `.ai/iterations/ITER-NNNN/evidence/`，再把工作区四件套与 `01_CHANGELOG.md` 切片快照归档；② 生成 `deliveries/ITER-NNNN-<slug>.md` + 同名 `.html`，只引用产物/证据路径、不嵌全文或日志；③ 台账置 `closed`、填日期/交付、`current` 置 `none`，全局 changelog 收敛；④文件夹态把 delta 折进 topic 并写 fold receipt，单文件态按需前滚；⑤先跑 `audit-project-state.py` 机械检查，再跑一致性自检第 6 条语义漂移检查。若本轮只是中途暂停或等待，不收口、不归档、不更新台账状态。
 
@@ -186,7 +186,7 @@ P5 阶段默认触发 `60_Extension_CodeReview/review-engine.md` 简要自评（
 
 P5 的失败 evidence、refuted AC 或 review finding 同样触发 `goal-calibration.md`；按根因可能回 P1/P2/P3/P4，不得因“已经到验证阶段”就只写 Remaining Risk。所有 completion-blocking signal resolved 前不得收口。
 
-完整路径进入收口仪式前必须运行驻留工具 `python3 "$BUTLER_PATH/tools/goal-assurance/goal.py" evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` / exit 0 可继续。不得从目标项目 cwd 误找相对 `tools/`。它聚合 AC、plan verdict、calibration、evidence、review/blocker 与 active ledger；tasks done 或宿主 complete 不参与裁决。eligible 不是 complete，后者仍由收口事实派生。
+完整路径进入收口仪式前必须运行驻留工具 `python3 "$BUTLER_PATH/tools/goal-assurance/goal.py" evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` / exit 0 可继续。不得从目标项目 cwd 误找相对 `tools/`。它聚合 AC、plan verdict、calibration、evidence、TDD 配对（仅 TECH_PLAN 声明时）、review/blocker 与 active ledger；tasks done 或宿主 complete 不参与裁决。eligible 不是 complete，后者仍由收口事实派生。
 
 长任务在 P5 结束后，应补充 checkpoint 或 handoff summary，确保验证结论可直接被下一阶段继承。
 若生成 `02_SESSION_HANDOFF.md`，其内容结构应符合 `40_Context_Management/handoff-spec.md`。

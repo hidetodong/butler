@@ -19,6 +19,10 @@
 
 - {{CONTENT}}
 
+## TDD Pair Status
+
+- N/A（TECH_PLAN 未声明 TDD cycle）。
+
 ## Goal Calibration
 
 - 当前无未闭合运行时信号（N/A）。

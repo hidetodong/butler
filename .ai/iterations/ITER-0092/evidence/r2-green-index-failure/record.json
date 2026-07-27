@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evidence_id": "r2-green-index-failure",
+  "iteration": "ITER-0092",
+  "ac_ids": [
+    "AC2",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "tools/goal-assurance/test_goal.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-26T11:44:54.085Z",
+  "finished_at": "2026-07-26T11:44:56.937Z",
+  "duration_ms": 2853,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "417fd3ad71370d4f77bcfa4625b6e6e3535cd27cd0de47d3995728b1b8053e68",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

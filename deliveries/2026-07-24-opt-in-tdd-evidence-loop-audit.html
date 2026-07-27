@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Butler Opt-in TDD 可信证据闭环未编号里程碑候办方案审计报告">
+  <title>不能启动：Opt-in TDD 可信证据闭环审计</title>
+  <style>
+    :root {
+      --ink: #0d1d2d;
+      --ink-2: #26394c;
+      --steel: #66788b;
+      --line: #cbd5df;
+      --line-strong: #8fa0b1;
+      --paper: #f3f6f8;
+      --paper-2: #e8edf1;
+      --white: #ffffff;
+      --blue: #2f67c8;
+      --blue-pale: #e5edfb;
+      --red: #d83c3c;
+      --red-dark: #9f2222;
+      --red-pale: #fbe7e5;
+      --green: #12805c;
+      --green-pale: #dff3ea;
+      --amber: #b16b08;
+      --amber-pale: #f8edcf;
+      --display: "Avenir Next Condensed", "Arial Narrow", "PingFang SC", sans-serif;
+      --body: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      --measure: 72rem;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(13, 29, 45, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 29, 45, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 24px 24px;
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.72;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: var(--blue);
+      text-underline-offset: 0.2em;
+    }
+
+    a:hover { color: var(--blue); }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+    }
+
+    code {
+      padding: 0.08rem 0.32rem;
+      background: var(--paper-2);
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.86em;
+      overflow-wrap: anywhere;
+    }
+
+    .page-shell {
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .status-update {
+      position: relative;
+      z-index: 5;
+      padding: 0.8rem 1rem;
+      background: #f1c84b;
+      color: #1d2732;
+      border-bottom: 1px solid #9c7913;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    .status-update strong { font-weight: 800; }
+
+    .hero {
+      position: relative;
+      min-height: 690px;
+      overflow: hidden;
+      background: var(--ink);
+      color: var(--white);
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to right, black, rgba(0, 0, 0, 0.15));
+    }
+
+    .hero::after {
+      content: "REVISE";
+      position: absolute;
+      right: -0.08em;
+      bottom: -0.25em;
+      z-index: -1;
+      color: rgba(255, 255, 255, 0.035);
+      font-family: var(--display);
+      font-size: clamp(11rem, 27vw, 28rem);
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      line-height: 0.8;
+      white-space: nowrap;
+      transform: scaleX(0.78);
+      transform-origin: right bottom;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(430px, 1.14fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      width: min(calc(100% - 3rem), var(--measure));
+      min-height: 690px;
+      margin: 0 auto;
+      padding: 3rem 0 4.5rem;
+      align-items: center;
+    }
+
+    .hero-copy {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 0.25rem;
+    }
+
+    .document-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: #b7c7d7;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .document-mark::before {
+      content: "";
+      width: 2.8rem;
+      height: 2px;
+      background: var(--red);
+    }
+
+    .hero h1 {
+      max-width: 10ch;
+      margin: 3.2rem 0 1.3rem;
+      font-family: var(--display);
+      font-size: clamp(3.8rem, 8vw, 7.3rem);
+      font-stretch: condensed;
+      font-weight: 750;
+      letter-spacing: -0.065em;
+      line-height: 0.88;
+    }
+
+    .hero h1 em {
+      display: block;
+      margin-top: 0.18em;
+      color: #91b4ff;
+      font-style: normal;
+    }
+
+    .thesis {
+      max-width: 31rem;
+      margin: 0;
+      color: #c4d0dc;
+      font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+      line-height: 1.75;
+    }
+
+    .thesis strong { color: var(--white); }
+
+    .verdict-line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 3.5rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .verdict-stamp {
+      padding: 0.35rem 0.65rem 0.28rem;
+      border: 2px solid #ff7a72;
+      color: #ff9b95;
+      font-family: var(--display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      transform: rotate(-2deg);
+    }
+
+    .verdict-line p {
+      margin: 0;
+      color: #b7c7d7;
+      font-size: 0.88rem;
+    }
+
+    .hero-figure {
+      position: relative;
+      min-height: 540px;
+      margin: 0;
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      padding-left: clamp(1.5rem, 4vw, 3.5rem);
+    }
+
+    .figure-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1rem;
+      color: #9eb0c2;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .figure-label strong {
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .chain-board {
+      position: relative;
+      min-height: 500px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .chain-board svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 500px;
+    }
+
+    .chain-board .signal-line {
+      stroke-dasharray: 9 9;
+      animation: signal-flow 12s linear infinite;
+    }
+
+    @keyframes signal-flow {
+      to { stroke-dashoffset: -180; }
+    }
+
+    .break-note {
+      position: absolute;
+      right: 0;
+      bottom: 1.1rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.7rem;
+      width: min(100%, 25rem);
+      padding: 0.7rem 0;
+      color: #c5d1dc;
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+
+    .break-note b {
+      color: #ff9b95;
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .meta-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      width: min(calc(100% - 3rem), var(--measure));
+      margin: 0 auto;
+    }
+
+    .meta-cell {
+      min-height: 6.4rem;
+      padding: 1.2rem 1.4rem 1.1rem;
+      border-left: 1px solid var(--line);
+    }
+
+    .meta-cell:last-child { border-right: 1px solid var(--line); }
+
+    .meta-cell span {
+      display: block;
+      color: var(--steel);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-cell strong {
+      display: block;
+      margin-top: 0.3rem;
+      font-family: var(--display);
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .meta-cell strong.danger { color: var(--red-dark); }
+
+    .report-layout {
+      display: grid;
+      grid-template-columns: 16rem minmax(0, 1fr);
+      gap: 4rem;
+      width: min(calc(100% - 3rem), var(--measure));
+      margin: 0 auto;
+      padding: 5rem 0 6rem;
+    }
+
+    .side-index {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+      padding-top: 0.2rem;
+    }
+
+    .side-index .index-title {
+      margin: 0 0 1rem;
+      color: var(--steel);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .side-index ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: index;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .side-index li {
+      counter-increment: index;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .side-index a {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 0.65rem;
+      align-items: baseline;
+      padding: 0.72rem 0;
+      color: var(--ink-2);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .side-index a::before {
+      content: "0" counter(index);
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+
+    .side-index a:hover { color: var(--blue); }
+
+    .side-note {
+      margin-top: 2rem;
+      padding-left: 0.8rem;
+      border-left: 3px solid var(--red);
+      color: var(--steel);
+      font-size: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .report { min-width: 0; }
+
+    .section {
+      padding: 0 0 5rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .section:last-child { padding-bottom: 0; }
+
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0 0 0.75rem;
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::before {
+      content: "";
+      width: 1.8rem;
+      height: 2px;
+      background: currentColor;
+    }
+
+    .section h2 {
+      max-width: 17ch;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      font-weight: 720;
+      letter-spacing: -0.045em;
+      line-height: 0.98;
+    }
+
+    .lead {
+      max-width: 45rem;
+      margin: 1.5rem 0 0;
+      color: var(--ink-2);
+      font-size: 1.06rem;
+    }
+
+    .decision-bar {
+      display: grid;
+      grid-template-columns: 10rem 1fr;
+      margin-top: 2rem;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .decision-code {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 8rem;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--display);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .decision-copy {
+      display: grid;
+      align-content: center;
+      padding: 1.4rem 1.7rem;
+      background: var(--white);
+    }
+
+    .decision-copy strong {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .decision-copy p {
+      margin: 0.45rem 0 0;
+      color: var(--steel);
+      font-size: 0.9rem;
+    }
+
+    .finding-list {
+      margin-top: 2.5rem;
+      border-top: 2px solid var(--ink);
+    }
+
+    .finding {
+      display: grid;
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      gap: 2rem;
+      padding: 2rem 0 2.2rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .finding-id {
+      position: relative;
+      padding-top: 0.25rem;
+      color: var(--red-dark);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .finding-id::after {
+      content: "";
+      display: block;
+      width: 3.2rem;
+      height: 4px;
+      margin-top: 0.75rem;
+      background: var(--red);
+      clip-path: polygon(0 0, 76% 0, 88% 50%, 76% 100%, 0 100%, 10% 50%);
+    }
+
+    .finding.should .finding-id { color: var(--amber); }
+    .finding.should .finding-id::after { background: var(--amber); }
+
+    .finding-body h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+    }
+
+    .finding-body > p {
+      margin: 0.9rem 0 0;
+      color: var(--ink-2);
+    }
+
+    .repair {
+      display: grid;
+      grid-template-columns: 5rem minmax(0, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+      padding: 1rem 1.1rem;
+      background: var(--white);
+      border-left: 3px solid var(--green);
+    }
+
+    .repair b {
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .repair p { margin: 0; }
+
+    .source-ref {
+      margin-top: 1rem;
+      color: var(--steel);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.7;
+    }
+
+    .proof-chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 2.5rem;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--white);
+    }
+
+    .proof-step {
+      position: relative;
+      min-height: 17rem;
+      padding: 1.2rem 1rem 1.4rem;
+      border-right: 1px solid var(--line);
+    }
+
+    .proof-step:last-child { border-right: 0; }
+
+    .proof-step::before {
+      content: "";
+      position: absolute;
+      top: 5rem;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--line-strong);
+    }
+
+    .proof-step::after {
+      content: "";
+      position: absolute;
+      top: 4.52rem;
+      left: 1rem;
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 3px solid var(--blue);
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .proof-step.red::after { border-color: var(--red); }
+    .proof-step.green::after { border-color: var(--green); }
+
+    .proof-step small {
+      display: block;
+      color: var(--steel);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-step h3 {
+      margin: 0.28rem 0 4.3rem;
+      font-family: var(--display);
+      font-size: 1.35rem;
+      line-height: 1.05;
+    }
+
+    .proof-step p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 0.8rem;
+      line-height: 1.55;
+    }
+
+    .route-table {
+      width: 100%;
+      margin-top: 2.4rem;
+      border-collapse: collapse;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--white);
+    }
+
+    .route-table th,
+    .route-table td {
+      padding: 1rem 1.05rem;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .route-table th {
+      color: var(--steel);
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-table tbody tr:last-child td { border-bottom: 0; }
+
+    .route-table td:first-child {
+      width: 9rem;
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .route-table td:last-child {
+      width: 32%;
+      color: var(--steel);
+      font-size: 0.85rem;
+    }
+
+    .final-gate {
+      position: relative;
+      margin-top: 2.4rem;
+      padding: 2.2rem 2.4rem 2.4rem;
+      overflow: hidden;
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .final-gate::after {
+      content: "HOLD";
+      position: absolute;
+      right: -0.04em;
+      bottom: -0.22em;
+      color: rgba(255, 255, 255, 0.055);
+      font-family: var(--display);
+      font-size: 10rem;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      line-height: 0.8;
+      pointer-events: none;
+    }
+
+    .final-gate h3 {
+      position: relative;
+      z-index: 1;
+      max-width: 20ch;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+    }
+
+    .final-gate p {
+      position: relative;
+      z-index: 1;
+      max-width: 42rem;
+      margin: 1rem 0 0;
+      color: #bfccd8;
+    }
+
+    .reference-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      margin: 2.2rem 0 0;
+      padding: 0;
+      list-style: none;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--white);
+    }
+
+    .reference-list li {
+      min-width: 0;
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      overflow-wrap: anywhere;
+    }
+
+    .reference-list li:nth-child(odd) { border-right: 1px solid var(--line); }
+    .reference-list li:nth-last-child(-n+2) { border-bottom: 0; }
+
+    .method-note {
+      margin-top: 1.4rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--blue);
+      color: var(--steel);
+      font-size: 0.84rem;
+    }
+
+    .page-footer {
+      background: var(--ink);
+      color: #98aabc;
+    }
+
+    .page-footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      width: min(calc(100% - 3rem), var(--measure));
+      margin: 0 auto;
+      padding: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-bottom: 3rem;
+      }
+
+      .hero-copy { min-height: 570px; }
+      .hero-figure { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.14); padding: 2.5rem 0 0; }
+      .report-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .side-index { position: static; }
+      .side-index ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .side-index li { border-right: 1px solid var(--line); }
+      .side-note { display: none; }
+      .proof-chain { grid-template-columns: 1fr; }
+      .proof-step { min-height: auto; padding-left: 4.5rem; border-right: 0; border-bottom: 1px solid var(--line); }
+      .proof-step:last-child { border-bottom: 0; }
+      .proof-step::before { top: 0; left: 2rem; width: 2px; height: 100%; }
+      .proof-step::after { top: 1.45rem; left: 1.52rem; }
+      .proof-step h3 { margin: 0.28rem 0 0.6rem; }
+    }
+
+    @media (max-width: 720px) {
+      body { font-size: 15px; }
+      .hero-inner,
+      .meta-strip-inner,
+      .report-layout,
+      .page-footer-inner { width: min(calc(100% - 1.5rem), var(--measure)); }
+      .hero-copy { min-height: 520px; }
+      .hero h1 { font-size: clamp(3.4rem, 17vw, 5.5rem); }
+      .hero-figure { min-height: 450px; }
+      .chain-board, .chain-board svg { min-height: 420px; }
+      .meta-strip-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .meta-cell:nth-child(2) { border-right: 1px solid var(--line); }
+      .meta-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .side-index ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .finding { grid-template-columns: 1fr; gap: 0.7rem; }
+      .finding-id::after { margin-top: 0.35rem; }
+      .repair { grid-template-columns: 1fr; gap: 0.3rem; }
+      .decision-bar { grid-template-columns: 4rem 1fr; }
+      .reference-list { grid-template-columns: 1fr; }
+      .reference-list li:nth-child(odd) { border-right: 0; }
+      .reference-list li:nth-last-child(2) { border-bottom: 1px solid var(--line); }
+      .route-table { display: block; overflow-x: auto; }
+      .page-footer-inner { display: block; }
+      .page-footer-inner span { display: block; margin: 0.3rem 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .chain-board .signal-line { animation: none; }
+    }
+
+    @media print {
+      @page { margin: 14mm; }
+      html, body { background: #fff; }
+      body { font-size: 11px; }
+      .hero { min-height: auto; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .hero-inner { min-height: auto; padding: 1.5rem 0; }
+      .hero-copy { min-height: auto; }
+      .hero h1 { margin-top: 2rem; font-size: 4.5rem; }
+      .hero-figure { min-height: auto; }
+      .chain-board, .chain-board svg { min-height: 350px; }
+      .meta-strip-inner { width: 100%; }
+      .report-layout { display: block; width: 100%; padding: 2rem 0; }
+      .side-index { display: none; }
+      .section { padding-bottom: 2.5rem; }
+      .finding, .proof-step, .repair, .final-gate { break-inside: avoid; }
+      .page-footer { display: none; }
+      .chain-board .signal-line { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="status-update">
+      <strong>状态更新：</strong>原复杂方案已拆分。轻量 V1 已于 2026-07-24 提升为 <code>MILE-0012</code>；本报告保留为“为什么不一次建设完整证据平台”的历史审计。当前真源见 <code>.ai/MILESTONE.md</code> 与 <code>.ai/milestone-backlog/tdd-evidence-hardening.md</code>。
+    </aside>
+    <header class="hero" id="top">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div>
+            <div class="document-mark">Butler / Design audit / 2026-07-24</div>
+            <h1>能记录红绿，<em>还不能证明先后。</em></h1>
+            <p class="thesis">
+              Opt-in TDD 方向成立，但当前方案把“留下一段 Red→Green 记录”说成了“可信证明测试先于实现”。
+              <strong>两者之间还断着六处关键证据。</strong>
+            </p>
+          </div>
+          <div class="verdict-line">
+            <span class="verdict-stamp">REVISE</span>
+            <p>候办保留；修复六个阻断项前，不提升为正式 milestone。</p>
+          </div>
+        </div>
+
+        <figure class="hero-figure" aria-labelledby="chain-caption">
+          <figcaption class="figure-label" id="chain-caption">
+            <span>Chain of custody</span>
+            <strong>当前证据链</strong>
+          </figcaption>
+          <div class="chain-board">
+            <svg viewBox="0 0 620 500" role="img" aria-label="从策略到收口的 TDD 证据链，其中多个关键连接断裂">
+              <defs>
+                <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#7599dc"></path>
+                </marker>
+                <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef6a63"></path>
+                </marker>
+              </defs>
+
+              <path class="signal-line" d="M72 92 H275" fill="none" stroke="#7599dc" stroke-width="2" marker-end="url(#arrow-blue)"></path>
+              <path d="M335 92 H540" fill="none" stroke="#ef6a63" stroke-width="2" stroke-dasharray="3 9" marker-end="url(#arrow-red)"></path>
+              <path class="signal-line" d="M540 128 V235" fill="none" stroke="#7599dc" stroke-width="2" marker-end="url(#arrow-blue)"></path>
+              <path d="M540 294 V398 H350" fill="none" stroke="#ef6a63" stroke-width="2" stroke-dasharray="3 9" marker-end="url(#arrow-red)"></path>
+              <path class="signal-line" d="M285 398 H92" fill="none" stroke="#7599dc" stroke-width="2" marker-end="url(#arrow-blue)"></path>
+
+              <g transform="translate(24 48)">
+                <rect width="128" height="86" fill="#132a40" stroke="#44607b"></rect>
+                <text x="14" y="25" fill="#9eb0c2" font-family="ui-monospace, monospace" font-size="10">POLICY</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">策略冻结</text>
+                <text x="14" y="70" fill="#ff9b95" font-family="PingFang SC, sans-serif" font-size="10">缺优先级与失效规则</text>
+              </g>
+
+              <g transform="translate(250 48)">
+                <rect width="128" height="86" fill="#132a40" stroke="#44607b"></rect>
+                <text x="14" y="25" fill="#9eb0c2" font-family="ui-monospace, monospace" font-size="10">BASELINE</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">起点事实</text>
+                <text x="14" y="70" fill="#ff9b95" font-family="PingFang SC, sans-serif" font-size="10">未绑定迭代开始时刻</text>
+              </g>
+
+              <g transform="translate(468 48)">
+                <rect width="128" height="86" fill="#3b2023" stroke="#b64b4b"></rect>
+                <text x="14" y="25" fill="#f5aaa4" font-family="ui-monospace, monospace" font-size="10">RED</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">正确失败</text>
+                <text x="14" y="70" fill="#ffb6b0" font-family="PingFang SC, sans-serif" font-size="10">Generic 无可靠 oracle</text>
+              </g>
+
+              <g transform="translate(468 244)">
+                <rect width="128" height="86" fill="#17372f" stroke="#2a8c69"></rect>
+                <text x="14" y="25" fill="#90d9bd" font-family="ui-monospace, monospace" font-size="10">GREEN</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">同证据通过</text>
+                <text x="14" y="70" fill="#b3e7d3" font-family="PingFang SC, sans-serif" font-size="10">argv 相同仍可换测试集</text>
+              </g>
+
+              <g transform="translate(250 354)">
+                <rect width="128" height="86" fill="#132a40" stroke="#44607b"></rect>
+                <text x="14" y="25" fill="#9eb0c2" font-family="ui-monospace, monospace" font-size="10">DIFF</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">实际改动</text>
+                <text x="14" y="70" fill="#ff9b95" font-family="PingFang SC, sans-serif" font-size="10">未与 cycle 全量对账</text>
+              </g>
+
+              <g transform="translate(24 354)">
+                <rect width="128" height="86" fill="#3b2023" stroke="#b64b4b"></rect>
+                <text x="14" y="25" fill="#f5aaa4" font-family="ui-monospace, monospace" font-size="10">P5 / GOAL</text>
+                <text x="14" y="52" fill="#ffffff" font-family="Avenir Next Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="700">完成裁决</text>
+                <text x="14" y="70" fill="#ffb6b0" font-family="PingFang SC, sans-serif" font-size="10">v1 verifier 拒绝 sidecar</text>
+              </g>
+
+              <g fill="none" stroke="#ef6a63" stroke-width="4">
+                <path d="M303 82 l11 20 11-20"></path>
+                <path d="M530 188 l20 11-20 11"></path>
+                <path d="M401 388 l11 20 11-20"></path>
+              </g>
+            </svg>
+            <div class="break-note"><b>×3</b><span>图中只标出三处主断点；正文另包含证据结构、完成语义和实际 diff 覆盖问题。</span></div>
+          </div>
+        </figure>
+      </div>
+    </header>
+
+    <section class="meta-strip" aria-label="审计摘要">
+      <div class="meta-strip-inner">
+        <div class="meta-cell"><span>审计对象</span><strong>未编号候办方案</strong></div>
+        <div class="meta-cell"><span>Must fix</span><strong class="danger">6 个阻断项</strong></div>
+        <div class="meta-cell"><span>Should fix</span><strong>4 个可靠性缺口</strong></div>
+        <div class="meta-cell"><span>审查方式</span><strong>同上下文静态审计</strong></div>
+      </div>
+    </section>
+
+    <div class="report-layout">
+      <nav class="side-index" aria-label="报告目录">
+        <p class="index-title">Audit index</p>
+        <ol>
+          <li><a href="#verdict">裁决</a></li>
+          <li><a href="#blockers">阻断问题</a></li>
+          <li><a href="#contract">可信合同</a></li>
+          <li><a href="#risks">可靠性缺口</a></li>
+          <li><a href="#roadmap">建议路线</a></li>
+          <li><a href="#references">审计依据</a></li>
+        </ol>
+        <p class="side-note">这份报告服务 Butler 维护者：用最短时间决定该候办能否启动，以及启动前必须补齐什么。</p>
+      </nav>
+
+      <main class="report">
+        <section class="section" id="verdict">
+          <p class="section-kicker">Verdict</p>
+          <h2>方向成立，证明合同还没成立。</h2>
+          <p class="lead">
+            当前设计能保留 Red 和 Green 的命令记录，却不能排除“先写实现再启动 cycle”、
+            “同一命令换了测试集合”以及“额外生产改动没进入任何 cycle”等绕过路径。
+            如果现在启动，最可能交付的是一份形式完整、事实不够硬的 TDD 凭证。
+          </p>
+          <div class="decision-bar">
+            <div class="decision-code">HOLD</div>
+            <div class="decision-copy">
+              <strong>保留候办，不提升为正式 milestone。</strong>
+              <p>六个 Must Fix 形成明确机器合同后，做一次定点复查即可；无需重新论证是否应该引入 TDD。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="blockers">
+          <p class="section-kicker">Must fix</p>
+          <h2>六处会让“可信”名不副实的断点。</h2>
+          <div class="finding-list">
+            <article class="finding">
+              <div class="finding-id">MUST / 01</div>
+              <div class="finding-body">
+                <h3>Sidecar 与 evidence v1 的固定目录合同直接冲突</h3>
+                <p>
+                  方案准备在 Green evidence 目录增加 <code>tdd-cycle.json</code>，但现有 verifier 只接受
+                  <code>record.json</code>、<code>stdout.log</code> 和 <code>stderr.log</code>。多一个文件就会失败，
+                  Goal evaluator 也不会读取这个 cycle 文件。
+                </p>
+                <div class="repair"><b>修复合同</b><p>在同一 evidence 根中定义版本化的 cycle evidence 类型或 schema v2，把固定文件集、哈希、归档和 Goal 读取一次说清；不要放未受 verifier 保护的附属文件。</p></div>
+                <p class="source-ref">SOURCE · backlog:15,54 · tools/verification-evidence/evidence.py:303</p>
+              </div>
+            </article>
+
+            <article class="finding">
+              <div class="finding-id">MUST / 02</div>
+              <div class="finding-body">
+                <h3>Baseline 没有绑定迭代起点，无法证明测试先于实现</h3>
+                <p>
+                  如果执行者已经先改了生产代码，再调用 <code>begin</code>，后续依然可以得到一条漂亮的 Red→Green 记录。
+                  当前设计要求拒绝“生产代码提前修改”，却没有定义“提前”相对哪个权威时刻判断。
+                </p>
+                <div class="repair"><b>修复合同</b><p>把 baseline 固定到迭代或切片开始时的工作树事实；要求 <code>B→R</code> 生产代码不变、<code>R→G</code> 测试和证明配置不变，P5 再确认最终文件匹配最后一次有效 Green/Refactor。</p></div>
+                <p class="source-ref">SOURCE · backlog:14,39,44</p>
+              </div>
+            </article>
+
+            <article class="finding">
+              <div class="finding-id">MUST / 03</div>
+              <div class="finding-body">
+                <h3><code>tdd:on</code> 同时被写成“可不阻断”和“必须兑现”</h3>
+                <p>
+                  P1 被要求说明缺 evidence 是否阻止完成，意味着 <code>on</code> 可能只是提醒；
+                  后文又规定 Iteration complete 必须满足 TDD obligation。一个开关不能承担两种完成语义。
+                </p>
+                <div class="repair"><b>修复合同</b><p>规定 <code>tdd:on</code> 必然对 required 切片形成 completion blocker。若需要只记录、不阻断的模式，新增独立 <code>advisory</code> 枚举。</p></div>
+                <p class="source-ref">SOURCE · backlog:11,43</p>
+              </div>
+            </article>
+
+            <article class="finding">
+              <div class="finding-id">MUST / 04</div>
+              <div class="finding-body">
+                <h3>策略与 adapter 没有冻结，可在收口前被降级绕过</h3>
+                <p>
+                  项目默认、单迭代覆盖和 workspace adapter 配置尚无唯一优先级；中途把 <code>on</code> 改成
+                  <code>off</code>、替换 adapter 或修改命令后，已有 cycle 是否失效也没有答案。
+                </p>
+                <div class="repair"><b>修复合同</b><p>提供唯一 policy resolver，在 P1 固定 effective policy、workspace、adapter 与配置摘要；任何削弱义务或改变证明模型的修改都触发 Goal Calibration，并作废相关 cycle。</p></div>
+                <p class="source-ref">SOURCE · backlog:10,16 · local-constraints-schema.md:11</p>
+              </div>
+            </article>
+
+            <article class="finding">
+              <div class="finding-id">MUST / 05</div>
+              <div class="finding-body">
+                <h3>相同 argv 不等于相同测试，更不等于相同证明条件</h3>
+                <p>
+                  配置、依赖锁、插件、环境变量、随机种子和测试发现规则都可能改变实际执行的用例。
+                  Green 可以在命令文本不变的情况下，通过缩小测试集合或切换配置获得。
+                </p>
+                <div class="repair"><b>修复合同</b><p>cycle 还要绑定 adapter 版本、配置和依赖锁哈希、受控环境指纹，以及 Red/Green 实际收集到的测试身份；任一漂移都使旧 cycle 失效。</p></div>
+                <p class="source-ref">SOURCE · backlog:20,40,56</p>
+              </div>
+            </article>
+
+            <article class="finding">
+              <div class="finding-id">MUST / 06</div>
+              <div class="finding-body">
+                <h3>P5 没有把最终生产代码 diff 与 cycle 全量对账</h3>
+                <p>
+                  P3 只要求规划“非平凡代码切片”，P5 只检查已声明的 required cycle。
+                  执行期间额外修改未列入 TDD Strategy 的生产文件时，当前方案没有机械机制发现这部分绕过。
+                </p>
+                <div class="repair"><b>修复合同</b><p>增加类似 Workspace Scope 的 <code>tdd check-diff</code>：每个符合条件的实际生产改动都必须映射到有效 cycle 或经准入确认的 N/A，并明确重叠文件的依赖与失效规则。</p></div>
+                <p class="source-ref">SOURCE · backlog:18,20</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="contract">
+          <p class="section-kicker">Target contract</p>
+          <h2>第一版应该承诺什么。</h2>
+          <p class="lead">
+            不必宣称能证明整个开发历史绝对遵循 TDD。更诚实、也更能落地的承诺是：
+            在固定策略、固定测试身份、固定配置和受控文件差异下，证明一段由 Butler 从开始到结束完整记录的 Red→Green 周期。
+          </p>
+          <div class="proof-chain" aria-label="建议的最小可信 TDD 合同">
+            <article class="proof-step">
+              <small>Policy</small>
+              <h3>冻结义务</h3>
+              <p>唯一 resolver 计算有效策略；后续弱化使已有 cycle 失效。</p>
+            </article>
+            <article class="proof-step">
+              <small>Baseline</small>
+              <h3>固定起点</h3>
+              <p>绑定工作树事实；目标生产代码已有不明变化时拒绝可靠 cycle。</p>
+            </article>
+            <article class="proof-step red">
+              <small>Red</small>
+              <h3>正确失败</h3>
+              <p>测试实际运行；生产代码未改；失败命中声明的行为缺失 oracle。</p>
+            </article>
+            <article class="proof-step green">
+              <small>Green</small>
+              <h3>同证据通过</h3>
+              <p>测试身份、配置和依赖不变；目标生产实现发生变化并通过。</p>
+            </article>
+            <article class="proof-step">
+              <small>P5</small>
+              <h3>对账收口</h3>
+              <p>最终 diff 全覆盖；完整回归通过；证据与最终工作树没有陈旧漂移。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="risks">
+          <p class="section-kicker">Should fix</p>
+          <h2>四个不会立刻击穿、但会持续制造假绿的缺口。</h2>
+          <div class="finding-list">
+            <article class="finding should">
+              <div class="finding-id">SHOULD / 01</div>
+              <div class="finding-body">
+                <h3>Generic Runner 无法天然判断“有效 Red”</h3>
+                <p>任意 argv 的非零退出可能来自断言失败，也可能来自编译、依赖、收集或环境错误。Generic Core 不能仅凭退出码给出可靠结论。</p>
+                <div class="repair"><b>建议</b><p><code>generic</code> 默认只产出弱证据；只有声明机器可校验的 Red oracle，或 adapter 具备可靠分类能力时，才能关闭 required obligation。</p></div>
+              </div>
+            </article>
+
+            <article class="finding should">
+              <div class="finding-id">SHOULD / 02</div>
+              <div class="finding-body">
+                <h3>状态机与 Runner 命令集合不一致</h3>
+                <p>规则要求 <code>supersede/reset</code>，命令列表却没有这两个动作；<code>refactor-confirmed/complete</code> 也不是清晰的机器状态。</p>
+                <div class="repair"><b>建议</b><p>补全状态转移表、允许动作、非法转移、终态和幂等规则；Refactor 后必须重新运行目标测试。</p></div>
+              </div>
+            </article>
+
+            <article class="finding should">
+              <div class="finding-id">SHOULD / 03</div>
+              <div class="finding-body">
+                <h3>R1–R3 横向拆分会留下可配置但不可兑现的半成品</h3>
+                <p>R1 暴露开关和阶段义务，R2 才有 Runner，R3 才接入 Goal 与 P5。前两轮无法独立兑现已经暴露的承诺。</p>
+                <div class="repair"><b>建议</b><p>在最终接线前保持能力不可对外启用，或改成可独立工作的纵向切片；新增 TECH_PLAN 一级章节时，同轮更新 artifact manifest、模板和结构检查器。</p></div>
+              </div>
+            </article>
+
+            <article class="finding should">
+              <div class="finding-id">SHOULD / 04</div>
+              <div class="finding-body">
+                <h3>敏感日志与并行 cycle 还只是“记得处理”</h3>
+                <p>现有 evidence 会保存原始 stdout/stderr 且不自动脱敏；并行 cycle 覆盖同一文件时，也可能互相污染 baseline 和 Green 快照。</p>
+                <div class="repair"><b>建议</b><p>把安全输出策略、配置秘密检测、cycle 路径锁或依赖图写进 R2 的明确验收项和负向 fixture。</p></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="roadmap">
+          <p class="section-kicker">Revised route</p>
+          <h2>按可验证能力拆，不按文件层次拆。</h2>
+          <table class="route-table">
+            <thead>
+              <tr><th>路线项</th><th>建议范围</th><th>结束时必须真实成立</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>R1 / 合同冻结</td>
+                <td>Policy resolver、明确 <code>off/on</code> 语义、配置优先级、P1/P3 固定摘要、artifact manifest 与负向 fixture。</td>
+                <td>TDD 仍不对外启用，不产生半成品承诺。</td>
+              </tr>
+              <tr>
+                <td>R2 / 可信 cycle</td>
+                <td>版本化 cycle evidence、完整状态机、Red oracle、文件与配置指纹、supersede/abort、并发与安全日志。</td>
+                <td>一个 pytest cycle 可生成、校验、识别篡改并原子归档。</td>
+              </tr>
+              <tr>
+                <td>R3 / 对账收口</td>
+                <td><code>tdd check-diff</code>、P5 adjudicator、Goal evaluator、VERIFY 投影、完整回归与陈旧检测。</td>
+                <td>漏 cycle、测试漂移、配置漂移、额外生产改动和陈旧 Green 都被拒绝。</td>
+              </tr>
+              <tr>
+                <td>R4 / 正式启用</td>
+                <td>Butler pytest dogfood、关闭态兼容、双宿主同步、迁移说明和完整 CI。</td>
+                <td>完成 dogfood 后，项目才能正式使用 <code>tdd:on</code>。</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="final-gate">
+            <h3>启动条件不是“文档补得更长”，而是六个断点都有机械答案。</h3>
+            <p>修订完成后只做定点复查：Evidence schema、时间顺序、完成语义、配置冻结、测试身份和最终 diff 对账。全部形成明确合同，即可从候办提升。</p>
+          </div>
+        </section>
+
+        <section class="section" id="references">
+          <p class="section-kicker">Sources</p>
+          <h2>审计依据与边界。</h2>
+          <ul class="reference-list">
+            <li>.ai/milestone-backlog/opt-in-tdd-evidence-loop.md</li>
+            <li>.ai/MILESTONES.md</li>
+            <li>Coder/20_Workflow_Lifecycle/goal-contract.md</li>
+            <li>Coder/20_Workflow_Lifecycle/goal-calibration.md</li>
+            <li>Coder/20_Workflow_Lifecycle/tech-plan-schema.md</li>
+            <li>Coder/20_Workflow_Lifecycle/local-constraints-schema.md</li>
+            <li>Coder/20_Workflow_Lifecycle/verify-schema.md</li>
+            <li>Coder/30_Quality_Gate/testing-strategy.md</li>
+            <li>Coder/60_Extension_CodeReview/review-engine.md</li>
+            <li>tools/verification-evidence/evidence.py</li>
+            <li>tools/verification-evidence/README.md</li>
+            <li>tools/goal-assurance/goal.py</li>
+            <li>tools/artifact-pipeline/artifacts.v1.json</li>
+          </ul>
+          <p class="method-note">
+            审查方式：同上下文静态设计审计。报告未修改候办方案，未执行运行时测试，也未启动 fresh-context 独立复核。
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer class="page-footer">
+      <div class="page-footer-inner">
+        <span>BUTLER DESIGN AUDIT · OPT-IN TDD EVIDENCE LOOP</span>
+        <span>2026-07-24 · VERDICT / REVISE</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

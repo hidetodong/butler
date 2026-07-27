@@ -4,6 +4,7 @@ current: none
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
+| MILE-0012 | 轻量 TDD 配对证据：复用现有 evidence 记录同一测试命令先失败、后通过并接入收口检查 | closed | 2026-07-24 | 2026-07-26 | ITER-0091, ITER-0092 | deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md |
 | MILE-0011 | 确定性五件套产物链：固定结构、阶段生成与机械校验 | closed | 2026-07-23 | 2026-07-23 | ITER-0086, ITER-0087, ITER-0088, ITER-0089 | deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md |
 | MILE-0010 | Butler 长期规模治理：可信 handoff、长编号与有界双台账 | closed | 2026-07-22 | 2026-07-22 | ITER-0083, ITER-0084 | deliveries/milestones/MILE-0010-long-horizon-scale-governance.md |
 | MILE-0009 | 需求收件箱、多 PRD 与 Monorepo 范围治理 | closed | 2026-07-22 | 2026-07-22 | ITER-0075, ITER-0076, ITER-0077, ITER-0078, ITER-0079, ITER-0080, ITER-0081, ITER-0082 | deliveries/milestones/MILE-0009-prd-inbox-monorepo-governance.md |
@@ -21,3 +22,5 @@ current: none
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
 | prd-future-route-fulfillment | PRD 改版到未启动里程碑路线项的确定性兑现闭环 | 2026-07-23 | .ai/milestone-backlog/prd-future-route-fulfillment.md | 先保留方向：当前只识别并记录 future disposition，路线项启动时尚无机械消费与兑现门禁。 |
+| state-transition-trust-gate | 关键节点状态可信闭环：防止 AI 宣称已更新但落档仍陈旧 | 2026-07-24 | .ai/milestone-backlog/state-transition-trust-gate.md | 先保留方向：现有审计能验证结构与哈希，但会放过节点后权威记录、摘要和真实环境之间的确定性矛盾。 |
+| tdd-evidence-hardening | TDD 证据增强：防测试改弱、有效 Red、跨语言 Adapter 与实际改动对账 | 2026-07-24 | .ai/milestone-backlog/tdd-evidence-hardening.md | V1 先验证轻量 Red→Green 配对的实际价值；更强的过程证明等真实使用暴露需要后再推进。 |

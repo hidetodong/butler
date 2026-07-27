@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("goal.py")
+EVIDENCE_TOOL = MODULE_PATH.parent.parent / "verification-evidence" / "evidence.py"
 spec = importlib.util.spec_from_file_location("goal_assurance", MODULE_PATH)
 goal = importlib.util.module_from_spec(spec)
 assert spec.loader
@@ -87,8 +88,79 @@ class GoalAdjudicatorTests(unittest.TestCase):
             ),
         )
 
+    def add_tdd_pair(self) -> None:
+        command = [
+            sys.executable,
+            "-c",
+            "from pathlib import Path; p=Path('tdd.flag'); seen=p.exists(); p.write_text('x'); raise SystemExit(0 if seen else 1)",
+        ]
+        argv_json = json.dumps(command, separators=(",", ":"))
+        write(
+            self.root / ".ai/TECH_PLAN.md",
+            "---\n方案状态: pass\n---\n\n## Test Strategy\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            f"| goal-gate | AC1,AC2 | `{argv_json}` | `.` |\n",
+        )
+        for phase, expected in (("red", 1), ("green", 0)):
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(EVIDENCE_TOOL),
+                    "run",
+                    "--project-root",
+                    str(self.root),
+                    "--iteration",
+                    "ITER-0001",
+                    "--id",
+                    f"tdd-goal-gate-{phase}",
+                    "--ac",
+                    "AC1,AC2",
+                    "--",
+                    *command,
+                ],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(expected, result.returncode, result.stdout + result.stderr)
+        verify = self.root / ".ai/VERIFY_REPORT.md"
+        rows = (
+            "| `tdd-goal-gate-red` | AC1–AC2 | captured | failed | "
+            "`.ai/iterations/ITER-0001/evidence/tdd-goal-gate-red/record.json` |\n"
+            "| `tdd-goal-gate-green` | AC1–AC2 | captured | passed | "
+            "`.ai/iterations/ITER-0001/evidence/tdd-goal-gate-green/record.json` |\n"
+        )
+        write(verify, verify.read_text().replace("# Completion Inputs", rows + "# Completion Inputs"))
+
     def test_positive_eligible(self) -> None:
         self.assertEqual("eligible", goal.evaluate(self.root)["verdict"])
+
+    def test_declared_tdd_without_pair_is_ineligible(self) -> None:
+        write(
+            self.root / ".ai/TECH_PLAN.md",
+            "---\n方案状态: pass\n---\n\n## Test Strategy\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            "| goal-gate | AC1,AC2 | `[\"python3\",\"-m\",\"pytest\"]` | `.` |\n",
+        )
+        self.assert_ineligible("tdd_pairs_valid")
+
+    def test_declared_tdd_with_valid_pair_is_eligible(self) -> None:
+        self.add_tdd_pair()
+        result = goal.evaluate(self.root)
+        self.assertEqual("eligible", result["verdict"], result)
+        check = next(item for item in result["checks"] if item["id"] == "tdd_pairs_valid")
+        self.assertTrue(check["passed"])
+        self.assertIn("[OK] goal-gate", check["detail"])
+
+    def test_declared_tdd_with_drifted_pair_is_ineligible(self) -> None:
+        self.add_tdd_pair()
+        (self.root / ".ai/verification-evidence/tdd-goal-gate-green").rename(
+            self.root / ".ai/verification-evidence/tdd-goal-gate-green-missing"
+        )
+        self.assert_ineligible("tdd_pairs_valid")
 
     def test_failed_diagnostic_is_retained_but_later_passed_proof_still_closes(self) -> None:
         self.add_evidence("failed-first", "failed", ["AC1", "AC2"])

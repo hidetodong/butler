@@ -62,6 +62,54 @@ class EvidenceCliTests(unittest.TestCase):
     def record(self, evidence_id: str) -> dict:
         return json.loads((self.hot / evidence_id / "record.json").read_text(encoding="utf-8"))
 
+    def write_tdd_plan(
+        self,
+        command: list[str] | None = None,
+        *,
+        cycle: str = "sample",
+        ac: str = "AC1,AC3",
+        cwd: str = ".",
+    ) -> list[str]:
+        actual = command or [
+            sys.executable,
+            "-c",
+            "from pathlib import Path; p=Path('tdd.flag'); seen=p.exists(); p.write_text('x'); raise SystemExit(0 if seen else 1)",
+        ]
+        argv_json = json.dumps(actual, ensure_ascii=False, separators=(",", ":"))
+        (self.root / ".ai" / "TECH_PLAN.md").write_text(
+            "# TECH_PLAN — ITER-0099\n\n"
+            "## Test Strategy\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            f"| {cycle} | {ac} | `{argv_json}` | `{cwd}` |\n",
+            encoding="utf-8",
+        )
+        return actual
+
+    def run_tdd_pair(self, command: list[str]) -> None:
+        red = self.run_evidence("tdd-sample-red", command)
+        green = self.run_evidence("tdd-sample-green", command)
+        self.assertEqual(1, red.returncode, red.stdout + red.stderr)
+        self.assertEqual(0, green.returncode, green.stdout + green.stderr)
+
+    def check_tdd(self, source: str = "hot") -> subprocess.CompletedProcess[str]:
+        return self.invoke(
+            "check-tdd",
+            "--project-root",
+            str(self.root),
+            "--iteration",
+            "ITER-0099",
+            "--source",
+            source,
+        )
+
+    def write_record(self, evidence_id: str, record: dict) -> None:
+        (self.hot / evidence_id / "record.json").write_text(
+            json.dumps(record, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
     def test_success_captures_exact_argv_streams_hashes_and_verifies(self) -> None:
         command = [sys.executable, "-c", "import sys; print('out'); print('err', file=sys.stderr)"]
         result = self.run_evidence("unit", command)
@@ -240,6 +288,152 @@ class EvidenceCliTests(unittest.TestCase):
             "reopen", "--project-root", str(self.root), "--iteration", "ITER-0099", "--allow-closed"
         )
         self.assertEqual(0, reopened.returncode, reopened.stdout + reopened.stderr)
+
+    def test_tdd_pair_accepts_same_failed_then_passed_command(self) -> None:
+        command = self.write_tdd_plan()
+        self.run_tdd_pair(command)
+        result = self.check_tdd()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("[OK] sample", result.stdout)
+
+    def test_tdd_check_is_noop_without_declaration(self) -> None:
+        (self.root / ".ai" / "TECH_PLAN.md").write_text(
+            "# TECH_PLAN — ITER-0099\n\n## Test Strategy\n\n"
+            "- 普通测试；文档可写 `<!-- butler-tdd-cycles: v1 -->` 说明格式，但这不算声明。\n",
+            encoding="utf-8",
+        )
+        result = self.check_tdd()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("未声明 TDD cycle", result.stdout)
+        self.assertFalse(self.hot.exists())
+
+    def test_tdd_pair_rejects_missing_green(self) -> None:
+        command = self.write_tdd_plan()
+        red = self.run_evidence("tdd-sample-red", command)
+        self.assertEqual(1, red.returncode)
+        result = self.check_tdd()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("缺少 Green evidence", result.stdout)
+
+    def test_tdd_pair_rejects_missing_red_and_failed_green(self) -> None:
+        command = self.write_tdd_plan()
+        green = self.run_evidence("tdd-sample-green", command)
+        self.assertEqual(1, green.returncode)
+        result = self.check_tdd()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("缺少 Red evidence", result.stdout)
+        self.assertIn("Green outcome 必须是 passed", result.stdout)
+
+    def test_tdd_pair_rejects_outcome_and_order_drift(self) -> None:
+        command = self.write_tdd_plan()
+        self.run_tdd_pair(command)
+
+        red = self.record("tdd-sample-red")
+        red["outcome"] = "passed"
+        red["process_exit_code"] = 0
+        self.write_record("tdd-sample-red", red)
+        wrong_outcome = self.check_tdd()
+        self.assertEqual(1, wrong_outcome.returncode)
+        self.assertIn("Red outcome 必须是 failed", wrong_outcome.stdout)
+
+        red["outcome"] = "failed"
+        red["process_exit_code"] = 1
+        green = self.record("tdd-sample-green")
+        red["finished_at"] = green["started_at"]
+        green["started_at"] = red["started_at"]
+        self.write_record("tdd-sample-red", red)
+        self.write_record("tdd-sample-green", green)
+        wrong_order = self.check_tdd()
+        self.assertEqual(1, wrong_order.returncode)
+        self.assertIn("Red 必须完整结束后才开始 Green", wrong_order.stdout)
+
+    def test_tdd_pair_rejects_command_cwd_and_ac_drift(self) -> None:
+        command = self.write_tdd_plan()
+        self.run_tdd_pair(command)
+        green_path = self.hot / "tdd-sample-green" / "record.json"
+        original = green_path.read_text(encoding="utf-8")
+
+        mutations = (
+            ("argv", "argv 与声明不一致", lambda record: record["command"].__setitem__("argv", ["false"])),
+            ("cwd", "cwd 与声明不一致", lambda record: record["command"].__setitem__("cwd", "other")),
+            ("ac", "AC 与声明不一致", lambda record: record.__setitem__("ac_ids", ["AC1"])),
+        )
+        for label, expected, mutate in mutations:
+            with self.subTest(label=label):
+                green_path.write_text(original, encoding="utf-8")
+                record = json.loads(original)
+                mutate(record)
+                self.write_record("tdd-sample-green", record)
+                result = self.check_tdd()
+                self.assertEqual(1, result.returncode)
+                self.assertIn(expected, result.stdout)
+
+    def test_tdd_declaration_rejects_bad_rows_and_duplicate_cycles(self) -> None:
+        command = self.write_tdd_plan(cycle="Bad_Name")
+        invalid_name = self.check_tdd()
+        self.assertEqual(1, invalid_name.returncode)
+        self.assertIn("cycle 名非法", invalid_name.stdout)
+
+        argv_json = json.dumps(command, separators=(",", ":"))
+        plan = self.root / ".ai" / "TECH_PLAN.md"
+        plan.write_text(
+            "# TECH_PLAN — ITER-0099\n\n## Test Strategy\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            f"| sample | AC1,AC3 | `{argv_json}` | `.` |\n"
+            f"| sample | AC1,AC3 | `{argv_json}` | `.` |\n",
+            encoding="utf-8",
+        )
+        duplicate = self.check_tdd()
+        self.assertEqual(1, duplicate.returncode)
+        self.assertIn("cycle 重复", duplicate.stdout)
+
+        plan.write_text(
+            "# TECH_PLAN — ITER-0099\n\n## Test Strategy\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            "| sample | AC1 | `[not-json]` | `../escape` |\n",
+            encoding="utf-8",
+        )
+        invalid_fields = self.check_tdd()
+        self.assertEqual(1, invalid_fields.returncode)
+        self.assertIn("argv_json 非法", invalid_fields.stdout)
+        self.assertIn("cwd 越出项目根", invalid_fields.stdout)
+
+    def test_tdd_declaration_must_live_in_test_strategy_and_fit_evidence_ids(self) -> None:
+        command = self.write_tdd_plan()
+        argv_json = json.dumps(command, separators=(",", ":"))
+        plan = self.root / ".ai" / "TECH_PLAN.md"
+        plan.write_text(
+            "# TECH_PLAN — ITER-0099\n\n## Design Decisions\n\n"
+            "<!-- butler-tdd-cycles: v1 -->\n"
+            "| Cycle | AC | argv_json | cwd |\n"
+            "|---|---|---|---|\n"
+            f"| sample | AC1,AC3 | `{argv_json}` | `.` |\n\n"
+            "## Test Strategy\n\n- 普通测试。\n",
+            encoding="utf-8",
+        )
+        wrong_section = self.check_tdd()
+        self.assertEqual(1, wrong_section.returncode)
+        self.assertIn("必须位于 Test Strategy 段", wrong_section.stdout)
+
+        self.write_tdd_plan(cycle="a" * 60)
+        too_long = self.check_tdd()
+        self.assertEqual(1, too_long.returncode)
+        self.assertIn("生成的 evidence ID 非法", too_long.stdout)
+
+    def test_tdd_pair_supports_archived_evidence(self) -> None:
+        command = self.write_tdd_plan()
+        self.run_tdd_pair(command)
+        archived = self.invoke(
+            "archive", "--project-root", str(self.root), "--iteration", "ITER-0099"
+        )
+        self.assertEqual(0, archived.returncode, archived.stdout + archived.stderr)
+        result = self.check_tdd("archive")
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("[OK] sample", result.stdout)
 
 
 if __name__ == "__main__":

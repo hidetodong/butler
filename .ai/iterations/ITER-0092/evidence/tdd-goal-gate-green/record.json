@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "tdd-goal-gate-green",
+  "iteration": "ITER-0092",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "tools/goal-assurance/test_goal.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-26T11:47:42.254Z",
+  "finished_at": "2026-07-26T11:47:45.928Z",
+  "duration_ms": 3674,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "4d178de894293336494624b612d85795ca4a8c82b224a1e406eba16854df0cb0",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -76,7 +76,7 @@ Goal 不是“待办是否全勾”的别名，而是对结果的可审计承诺
 - `active / at-risk → completion-candidate`：必须先清零已知风险并完成计划动作，不得跳过。
 - `completion-candidate → at-risk`：P5 或 review 发现问题时必须回流；不得为了保住完成进度压低问题等级。
 - `completion-candidate → complete`：只能在 proof/verdict 与收口事实全部成立后派生。
-- active iteration 由 `tools/goal-assurance/goal.py evaluate` 机械裁决 close eligibility；`eligible` 只允许执行收口，不等于 complete。工具拒绝 AC/plan/calibration/evidence/review/blocker 任一不一致，且不读取 host/tasks 作为绿依据。
+- active iteration 由 `tools/goal-assurance/goal.py evaluate` 机械裁决 close eligibility；`eligible` 只允许执行收口，不等于 complete。工具拒绝 AC/plan/calibration/evidence/review/blocker 任一不一致；TECH_PLAN 显式声明 TDD cycle 时还必须通过 Red→Green 配对检查，未声明则 N/A。裁决器不读取 host/tasks 作为绿依据。
 - `complete / abandoned` 是终态；后续新需求开新迭代，不能把历史归档静默改回 active。
 - 禁止 `active → complete`、`tasks done → complete`、`host complete → project complete` 三类直跳。
 

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "r2-artifact-tests",
+  "iteration": "ITER-0092",
+  "ac_ids": [
+    "AC3",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/artifact-pipeline/tests"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-26T11:53:23.864Z",
+  "finished_at": "2026-07-26T11:53:24.009Z",
+  "duration_ms": 145,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 120,
+    "captured_bytes": 120,
+    "sha256": "459503b77abaa093be540655422a0a324c50bdc4fcb93753382f1a379bd43200",
+    "truncated": false
+  }
+}

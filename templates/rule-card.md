@@ -67,7 +67,7 @@ butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功
 - 不跳过探测直接交付未验证实现
 - 自动化优先：能自动化的验证必须自动化（含浏览器自动化覆盖 UI / 交互），人测只留机器不可测的残余（判定见 `testing-strategy.md §3`）；能造弱自动检查（截图 diff / VLM 判图）的就造、标 `弱` 不当真绿，`待人` 残余如实记不假绿（代理验证见 §3.1）；人测残余不断在人这侧——有人场次经交付自测桥四态回传续跑（通过=收口 / 未通过=纠错 / 延后=入账不阻塞 / 跳过=N/A，见 `human-test-bridge.md`），无人值守不起桥、走 `dangerous-engine §7.4`
 - 无机器证据不打绿：完整路径自动道必须由 verification evidence runner 生成真实 argv/exit/log/hash record，VERIFY 逐 AC 引用 evidence ID；只写命令和“passed”属于 reported，不能关闭 AC。复核区分 reported/captured/reproduced，未重跑不得称复现（真源 `testing-strategy.md §3.2` / `verify-schema.md`）
-- 完整路径收口前运行 `python3 "$BUTLER_PATH/tools/goal-assurance/goal.py" evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` 可进入收口仪式。工具驻留 Butler 仓、不在目标项目找相对 `tools/`；它要求 AC、plan pass、calibration clear、evidence 覆盖、review pass 和零 completion blockers；eligible 不等于 complete
+- 完整路径收口前运行 `python3 "$BUTLER_PATH/tools/goal-assurance/goal.py" evaluate --project-root <PROJECT_ROOT>`；只有 `eligible` 可进入收口仪式。工具驻留 Butler 仓、不在目标项目找相对 `tools/`；它要求 AC、plan pass、calibration clear、evidence 覆盖、review pass 和零 completion blockers；TECH_PLAN 显式声明 TDD cycle 时还要求有效 Red→Green 配对，未声明时 N/A；eligible 不等于 complete
 - 禁止降级修复：不用 `ts-ignore` / 跳过或删测试 / 注释绕过门禁 / 伪造结果制造假通过（每次迭代无条件生效）
 - 验证卡住（无实质进展 / 缺外部条件 / 需用户决策）时诚实停：如实说清现象与所缺输入再交还，不伪造通过、不闷头空磨
 - 不把业务规则写死在视图模板里

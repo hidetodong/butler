@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -13,6 +14,7 @@ SCHEMA_VERSION = 1
 AC_RE = re.compile(r"^- \[[ x]\] (AC[1-9][0-9]*)[：:]", re.MULTILINE)
 PASSED_AC_RE = re.compile(r"^- \[x\] (AC[1-9][0-9]*) \(auto·", re.MULTILINE)
 EVIDENCE_RE = re.compile(r"\.ai/iterations/(ITER-[0-9]{4,})/evidence/([a-z0-9][a-z0-9._-]*)/record\.json")
+TDD_TOOL = Path(__file__).resolve().parents[1] / "verification-evidence" / "evidence.py"
 
 
 class InputError(ValueError):
@@ -97,6 +99,26 @@ def verify_evidence(root: Path, iteration: str, verify: str) -> tuple[bool, str,
     return True, f"records={sorted(ids)}; passing_coverage={sorted(covered)}", covered
 
 
+def verify_tdd_pairs(root: Path, iteration: str) -> tuple[bool, str]:
+    command = [
+        sys.executable,
+        str(TDD_TOOL),
+        "check-tdd",
+        "--project-root",
+        str(root),
+        "--iteration",
+        iteration,
+    ]
+    try:
+        result = subprocess.run(command, text=True, capture_output=True, check=False)
+    except OSError as error:
+        return False, f"TDD 配对检查无法启动: {error}"
+    detail = "\n".join(part.strip() for part in (result.stdout, result.stderr) if part.strip())
+    if result.returncode == 0:
+        return True, detail or "TDD 配对检查通过"
+    return False, detail or f"TDD 配对检查 exit={result.returncode}"
+
+
 def evaluate(root: Path) -> dict[str, object]:
     ledger = read(root, ".ai/ITERATIONS.md")
     iteration, ledger_status = current_iteration(ledger)
@@ -107,6 +129,7 @@ def evaluate(root: Path) -> dict[str, object]:
     required_acs = set(AC_RE.findall(ac_text))
     passed_acs = set(PASSED_AC_RE.findall(verify_text))
     evidence_ok, evidence_detail, evidence_acs = verify_evidence(root, iteration, verify_text)
+    tdd_ok, tdd_detail = verify_tdd_pairs(root, iteration)
     calibration = calibration_blockers(task_text)
 
     raw_checks = [
@@ -120,6 +143,7 @@ def evaluate(root: Path) -> dict[str, object]:
         ("completion_blockers_clear", field(verify_text, ("Completion Blockers",)) == "none", f"blockers={field(verify_text, ('Completion Blockers',))}"),
         ("evidence_valid", evidence_ok, evidence_detail),
         ("evidence_covers_ac", bool(required_acs) and required_acs <= evidence_acs, f"covered={sorted(evidence_acs)}"),
+        ("tdd_pairs_valid", tdd_ok, tdd_detail),
     ]
     checks = [{"id": check_id, "passed": passed, "detail": detail} for check_id, passed, detail in raw_checks]
     reasons = [f"{item['id']}: {item['detail']}" for item in checks if not item["passed"]]

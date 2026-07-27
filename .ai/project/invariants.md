@@ -15,7 +15,7 @@
 - **Goal 是派生视图，不是第二台账**：objective/scope/AC/plan/progress/proof/verdict 各守既有真源；tasks done 最多进入 `completion-candidate`，只有证据、审查和收口事实闭合才能派生 complete。宿主 Goal/Task 只投影 `.ai/`，冲突时项目真相优先。*为什么*：再建 GOAL 文件会复制阶段事实并产生新的漂移源。
 - **P3 方案必须显式准入**：TECH_PLAN 自身保存 `draft / pass / revise / blocked` 单一 verdict，并用 Plan Admission 反证 AC 覆盖、假设、替代/取舍、失败路径、影响面和验证盲区；只有 `pass` 可进入 P4，实质改方案必须退 `draft` 重审。*为什么*：文件存在或任务全勾不能证明方案获准，独立审批台账又会双写漂移。
 - **运行时坏消息必须回流**：六类 calibration signal 只在 task-state 做活跃投影，事实仍守既有阶段真源；按事实性质回 P1–P5 或诚实停，open/blocked 不得被任务进度或风险备注覆盖。*为什么*：发现方案/验收已错却沿旧计划做完，是 Goal 假完成的核心路径；另建 issue 台账又会漂移。
-- **完成资格由只读裁决器聚合**：active iteration 只有在 AC、plan、calibration、evidence、review、blocker 与台账全部一致时才 eligible；host/tasks 不作绿依据，eligible 不等于 complete。*为什么*：任何单一信号都可能制造假完成，程序必须 fail-closed 汇总事实。
+- **完成资格由只读裁决器聚合**：active iteration 只有在 AC、plan、calibration、evidence、已声明 TDD 配对、review、blocker 与台账全部一致时才 eligible；host/tasks 不作绿依据，eligible 不等于 complete。*为什么*：任何单一信号都可能制造假完成，程序必须 fail-closed 汇总事实。
 - **宿主 Goal/Task 只单向薄投影**：两端只显示 objective/state/reason/next，方向 project→host；能力缺失就 `.ai/` 降级，host complete 永不反写。*为什么*：宿主能力可变且会话态可丢，项目真相必须跨宿主稳定。
 - **模板单一来源（SSOT）**：强制约束只改 `templates/rule-card.md` 一处，`CLAUDE.md.template` 与 `AGENTS.md.template` 都用占位符注入、不手工双写。同理各规则的定义只放一处、别处只引用回指。
 - **共同内核 + 宿主薄适配**：`Coder/`、`.ai/`、规则卡和共享判断算法属于共同内核；Claude Code 与 Codex 的入口、命令/skills、hook 配置只做协议适配，不复制规则正文。*为什么*：双写会让两个宿主的规则逐渐漂移。
@@ -31,6 +31,7 @@
 - **hook 管项目流程，宿主管文件权限**：PreToolUse 对能归属 Butler/Git 项目的目标拦跳阶段 / 未冻结 AC / 显式非 pass / 业务扩展保护 / 双 active / 台账非法状态；真实项目外路径退出 Butler 判定，坏输入仍 fail-closed，多项目 patch 逐根 first-deny-wins。Claude/Codex 共用规则模块。*为什么*：hook 看不到可信的用户授权，不能复制宿主权限系统；正常跨目录写入也不该伪装成 bypass。
 - **冷启动读序固定 + 第一读两态**：项目全貌产物 → `ITERATIONS.md`（变更流）→ handoff / task-state（断点）→ 代码。第一读**两态**（MILE-0003 R5 起）——采用 `.ai/project/` 的项目先读 `00_INDEX` + 按需主题（读地图→定向钻取，不 slurp），仍单文件的老项目读 `.ai/PROJECT.md`。**butler 自身现已是文件夹态**（本轮 R8 迁毕）。真源 `context-persistence.md §6`。
 - **自动道无证据不打绿**：完整路径的自动验证先由 `tools/verification-evidence/` 生成真实 argv/exit/log/hash record，VERIFY 按 AC 引用；失败记录保留为纠错轨迹，只有 passed record 能覆盖绿 AC。*为什么*：对话或 Markdown 中手写“已通过”仍只是模型自述。
+- **显式 TDD 只复用 evidence v1 做最小配对**：TECH_PLAN 声明 cycle 后，固定 Red/Green ID 必须证明同一 argv/cwd/AC 先 failed、后 passed；未声明时零行为。不增 sidecar、第二台账，也不把这条轻量记录夸成代码时序或有效 Red 的完整证明。*为什么*：先验证最小纪律收益，避免在真实痛点出现前建设 baseline、adapter、哈希和 diff 审计平台。
 - **本地/CI 单入口且验证依赖固定**：完整矩阵只由 `scripts/verify-ci.sh` 进入，workflow 不复制命令；Python/uv lock、Actions 完整 SHA 与 OpenAI Codex validator commit/hash/license 都必须显式固定，缺失或漂移 fail-closed。workflow 提供 check 不等于远端 required 已启用。*为什么*：否则同一提交会因时间、HOME 或操作者不同得到不同覆盖，还可能把未配置的远端保护口头打绿。
 - **升级以机器 manifest + 程序为真源**：`migrations/manifest.json` 决定连续版本/action 链，`tools/butler-upgrade/upgrade.py` 决定计划与事务；Markdown recipe 只给人读。项目动作、split 决策、HOME 安装分域，默认先零写入 plan，冲突首写前停、失败只恢复本次触及文件。*为什么*：模型解释散文不可复现，把外部动作塞进项目事务会产生覆盖与假成功。
 - **收口是原子仪式**：`iteration-schema §5.5` 五步——①校验并整包归档 evidence，再归档四件套 + changelog 切片 ②交付 md+html ③翻台账 + 收编 01_CHANGELOG ④前滚项目全貌并写 fold receipt（**文件夹态按主题必做折叠** / 单文件态按需前滚）⑤先跑 state auditor 再查语义漂移；前三必做、缺一不可。

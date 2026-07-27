@@ -2,6 +2,11 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## 轻量 TDD 配对证据（MILE-0012）
+
+- `tools/verification-evidence/evidence.py check-tdd` 读取 TECH_PLAN `Test Strategy` 内的版本化 cycle 表，按 `tdd-<cycle>-red/green` 找现有 evidence v1 record，并校验 Red=`failed`、Green=`passed`、先后顺序及 argv/cwd/AC 完全一致。未声明 TDD 时返回 N/A、零写；`--source archive` 支持关闭态复核。V1 只证明同命令先失败后通过，不证明代码修改时序、失败原因或测试未被弱化。
+- TECH_PLAN 声明 cycle 时，P5 在 VERIFY `TDD Pair Status` 投影结果并引用两条 record；`tools/goal-assurance/goal.py evaluate` 会独立复用配对检查，配对无效即 ineligible。未声明时仍为 N/A。
+
 ## 确定性五件套产物链（MILE-0011）
 
 - `tools/artifact-pipeline/artifacts.v1.json` 与五份 canonical 模板共同定义 live 五件套的版本化结构合同；`contract.py render/init/reset/check` 按阶段安全生成并零写验形，hook advisory、状态审计和 CI 共用该合同；`migration.py plan/apply/verify/rollback` 以备份 receipt 和 hash 门控无损迁移 legacy live，历史归档只读不追罚。
@@ -57,7 +62,7 @@
 
 P4/P5 同时启用**Goal 运行时校准**：实现偏差、假设失效、范围漂移、验证失败、review finding、外部阻塞六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号使 Goal at-risk/blocked。真源 `20_Workflow_Lifecycle/goal-calibration.md`。
 
-P5 收口前可运行 `tools/goal-assurance/goal.py evaluate`：只读聚合 active ledger、AC、plan、calibration、hot evidence、review 和 completion blockers，JSON 输出 eligible/ineligible；GFC-001–008 全部负向拒绝。eligible 只准进入收口，不等于 complete。
+P5 收口前可运行 `tools/goal-assurance/goal.py evaluate`：只读聚合 active ledger、AC、plan、calibration、hot evidence、TDD 配对（仅声明时）、review 和 completion blockers，JSON 输出 eligible/ineligible；GFC-001–008 与 TDD 负向场景全部拒绝。eligible 只准进入收口，不等于 complete。
 
 Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；原生能力缺失或失败时靠 task-state/handoff 诚实降级。目标项目从共同 rule-card 获得 `$BUTLER_PATH/tools/goal-assurance/goal.py` 驻留调用，不存工具副本。
 

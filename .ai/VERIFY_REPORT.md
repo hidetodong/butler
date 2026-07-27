@@ -1,33 +1,48 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0090
+# VERIFY_REPORT — ITER-0092
 
 ## Verification Summary
 
-- 独立 setup 命令、双宿主入口、registry 分发与 init 复用已完成；安装仍由 `scripts/setup.sh` 单一执行，并在临时 HOME 成功/失败矩阵中通过。
+- Goal 完成资格裁决已接入 opt-in TDD Red→Green 配对；未声明时保持 N/A，已声明且配对无效时 fail-closed。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): registry 12 workflows / 49 projections、setup skill/command/agents/软链与生成表全绿 ✓
-- [x] AC2 (auto·可靠): 双入口只指向 butler-setup 规则与 setup.sh，合同测试证明不复制安装算法 ✓
-- [x] AC3 (auto·可靠): 临时 HOME 覆盖无 Codex、Codex 成功、Codex exit 7 部分完成与 Pi 降级分支 ✓
-- [x] AC4 (auto·可靠): init 两入口改为委托 setup 规则，项目部署步骤保持原样且双宿主矩阵通过 ✓
-- [x] AC5 (auto·可靠): 规则真源、README/HUMAN_GUIDE 均明确首次 bootstrap 边界与 hook trust ✓
-- [x] AC6 (auto·可靠): skill validator、registry 9 项、Codex 12 skills、200 hooks 与完整 CI exit 0 ✓
+- [x] AC1 (auto·可靠): Goal 对未声明 TDD 保持 eligible，对声明但缺配对的 fixture 拒绝 ✓
+- [x] AC2 (auto·可靠): Goal 从自身安装位置调用 evidence 工具，stdout 保持单 JSON，只读测试通过 ✓
+- [x] AC3 (auto·可靠): VERIFY 固定结构已增加 `TDD Pair Status`，失败时 blockers 规则写入真源 ✓
+- [x] AC4 (auto·可靠): Goal/evidence 40 项与 artifact pipeline 21 项专项测试通过 ✓
+- [x] AC5 (auto·可靠): `goal-gate` 真实 Red/Green 同 argv/cwd 配对已由 `check-tdd` 确认 ✓
+- [x] AC6 (auto·可靠): Goal/VERIFY/lifecycle/规则卡/工具 README 已同步 opt-in 收口语义 ✓
+- [x] AC7 (auto·可靠): 最终完整 CI、五件套/状态审计与 diff check 通过 ✓
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| setup-command-matrix | AC1, AC2, AC3, AC4, AC5 | captured | passed | `.ai/iterations/ITER-0090/evidence/setup-command-matrix/record.json` |
-| full-ci | AC1, AC3, AC4, AC6 | captured | passed | `.ai/iterations/ITER-0090/evidence/full-ci/record.json` |
+| tdd-goal-gate-red | AC1, AC2, AC4, AC5 | captured | failed | `.ai/iterations/ITER-0092/evidence/tdd-goal-gate-red/record.json` |
+| tdd-goal-gate-green | AC1, AC2, AC4, AC5 | captured | passed | `.ai/iterations/ITER-0092/evidence/tdd-goal-gate-green/record.json` |
+| r2-green-sandbox-failure | AC5, AC7 | captured | failed | `.ai/iterations/ITER-0092/evidence/r2-green-sandbox-failure/record.json` |
+| r2-green-index-failure | AC2, AC4, AC5 | captured | passed | `.ai/iterations/ITER-0092/evidence/r2-green-index-failure/record.json` |
+| r2-focused-tests | AC1, AC2, AC3, AC4, AC6 | captured | passed | `.ai/iterations/ITER-0092/evidence/r2-focused-tests/record.json` |
+| r2-artifact-tests | AC3, AC6, AC7 | captured | passed | `.ai/iterations/ITER-0092/evidence/r2-artifact-tests/record.json` |
+| r2-full-ci | AC1, AC2, AC3, AC4, AC5, AC6, AC7 | captured | failed | `.ai/iterations/ITER-0092/evidence/r2-full-ci/record.json` |
+| r2-full-ci-reproduced | AC1, AC2, AC3, AC4, AC5, AC6, AC7 | captured | failed | `.ai/iterations/ITER-0092/evidence/r2-full-ci-reproduced/record.json` |
+| r2-final-full-ci | AC1, AC2, AC3, AC4, AC5, AC6, AC7 | reproduced | passed | `.ai/iterations/ITER-0092/evidence/r2-final-full-ci/record.json` |
 
 ## Verification Results
 
-- setup 专项矩阵、skill validator、registry、双宿主/安装器隔离矩阵和完整 CI 全部 exit 0。
+- Red 在接线前因缺少 `tdd_pairs_valid` 失败；Green 最终 19/19 通过，配对检查为 `[OK] goal-gate`。
+- 第一次 Green 受沙箱 `uv` 缓存权限阻塞，失败 record 保留；宿主环境同命令通过。
+- 完整 CI 首跑发现当前 VERIFY 仍是上迭代结构；已在进入 P5 时用新模板重置，待重跑确认。
+- 第二次完整 CI 发现已修复的校准信号仍被标成 open；结清该事实矛盾后，最终完整 CI 通过。
+
+## TDD Pair Status
+
+- `[OK] goal-gate`：Red=`failed`、Green=`passed`，两者 argv/cwd/AC 一致且时间顺序合法。
 
 ## Goal Calibration
 
-- 当前无未闭合运行时信号（N/A）。
+- CAL-001：verification-failure → P5 重置 VERIFY 结构 → resolved（依据：artifact contract 已通过，后续 CI 已越过原失败点）。
 
 ## Completion Inputs
 
@@ -36,7 +51,9 @@
 
 ## Gate Coverage
 
-- 通用质量门禁、registry 投影、skill/plugin validator、setup 隔离矩阵、双宿主基础、hooks 与 artifact/state/handoff 检查通过。
+- 通用质量门禁：Goal/evidence 40 项、artifact pipeline 21 项、200 个 hook 测试与完整 CI 通过。
+- Workspace Scope：N/A（无 `prd_refs`）。
+- Tech Plan Alignment：采用驻留 evidence CLI 单一算法、受控子进程与 fail-closed 投影，未引入第二套 TDD 状态。
 
 ## References Compliance
 
@@ -44,8 +61,8 @@
 
 ## Remaining Risks
 
-- Pi TypeScript 验证仍因本机缺少可选模块/类型定义按既有策略 warning skip；不影响 setup 命令合同与现有强制门禁。
+- 执行 Goal 完成资格裁决，eligible 后收口 ITER-0092 与 MILE-0012。
 
 ## Handoff / Next Step
 
-- 归档证据和五件套，关闭 ITER-0090；不自动提交、切版或推送。
+- N/A

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "r2-focused-tests",
+  "iteration": "ITER-0092",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "tools.goal-assurance.test_goal",
+      "tools.verification-evidence.test_evidence"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-26T11:53:17.212Z",
+  "finished_at": "2026-07-26T11:53:23.805Z",
+  "duration_ms": 6596,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 139,
+    "captured_bytes": 139,
+    "sha256": "d970d910a6c39393e5e942c094f5b18126c1783d1f37362a69c8534ecc5059da",
+    "truncated": false
+  }
+}

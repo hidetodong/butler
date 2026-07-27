@@ -1,15 +1,17 @@
 # 迭代台账
 
-> ⚠️ 危险模式自治：新增独立 setup 命令；机器级安装继续复用 `scripts/setup.sh` 单一真源。
+> ⚠️ 危险模式自治：MILE-0012 R2 把轻量 TDD Red/Green 配对接入 P5 / Goal 并完成 pytest dogfood。
 
 ## 危险模式自治路线图
 
-ITER-0090 独立迭代：setup 规则真源、双宿主入口、registry 分发、init 复用与隔离验证。
+ITER-0092 归属 MILE-0012 R2：P5 / Goal 完成门、VERIFY 投影、pytest 真实 dogfood 与关闭态兼容。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0092 | TDD 配对收口接线与 pytest dogfood（MILE-0012 R2·危险模式） | closed | 2026-07-26 | 2026-07-26 | MILE-0012 | deliveries/ITER-0092-tdd-goal-gate-dogfood.md |
+| ITER-0091 | 轻量 TDD 配对合同与检查器（MILE-0012 R1·危险模式）：cycle 声明、稳定 evidence ID、顺序/outcome/argv/cwd 校验与负向 fixture | closed | 2026-07-25 | 2026-07-25 | MILE-0012 | deliveries/ITER-0091-lightweight-tdd-pair-checker.md |
 | ITER-0090 | /butler:setup 机器级安装命令：双宿主入口、显式确认、setup.sh 复用与 registry 分发 | closed | 2026-07-23 | 2026-07-23 | — | deliveries/ITER-0090-butler-setup-command.md |
 | ITER-0089 | 五件套兼容迁移与非回归：正文保留、legacy、幂等 fixture 与真实仓 dogfood（MILE-0011 R4） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0089-artifact-migration-dogfood.md |
 | ITER-0088 | 五件套校验与门禁：零写检查器、hook、状态审计、CI 与双宿主接线（MILE-0011 R3） | closed | 2026-07-23 | 2026-07-23 | MILE-0011 | deliveries/ITER-0088-artifact-structure-gates.md |
@@ -28,7 +30,5 @@ current: none
 | ITER-0075 | 需求集合与日期化身份契约（MILE-0009 R1·危险模式）：项目级 PRD 总索引、稳定 prd_id、单需求内部结构与新需求/新版身份边界 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0075-prd-collection-identity-contract.md |
 | ITER-0074 | 仓库卫生清理：清过期 worktree 残留 + 堆积分支 + 空壳目录 + P0 审计修复（test 计数 8→10 / frontier 版本同步） | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0074-repo-cleanup.md |
 | ITER-0073 | /butler:progress 命令：只读聚合当前项目的结构化进度报告——里程碑、迭代、Goal、验收、执行、验证、风险一页看完 | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0073-butler-progress-command.md |
-| ITER-0072 | /butler:init 命令：新项目基地车一键部署 + Codex skill + registry + 同步脚本适配 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0072-butler-init-command.md |
-| ITER-0071 | 说人话补「自造缩写」标准并让产物范例常驻：artifact-style §2 标准一收编掐短词/自造缩写、§6 加对照，rule-card 产物书写段加 3 组现场 ❌→✅ 范例，说准四条 SSOT 作用域 | closed | 2026-07-20 | 2026-07-20 | — | deliveries/ITER-0071-tone-plainlang-coinage.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

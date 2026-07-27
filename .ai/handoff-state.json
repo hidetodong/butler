@@ -1,32 +1,32 @@
 {
-  "handoff_sha256": "e044941de6c87e3280ac6b69b601ab03537b52187d7bafc8f34d15c8f1d9223d",
+  "handoff_sha256": "1b94aab3b2fe23b2049229036497cfea0cbc27fabdaf7fa16603445272ea34da",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "等待用户决定是否提交或切版。",
-    "phase": "Closed",
+    "next": "无；等待新需求或从候办区提升下一个里程碑。",
+    "phase": "Idle",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "complete；ITER-0090 setup 机器级安装命令已归档"
+    "status": "MILE-0012 已收口；R1/R2 与版本级交付完成"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "9102ef2fbba8fa0e7b7a3bf70aa1d2ee07d28edee071f868017e029859ba0d50"
+      "sha256": "18bee417abc3d92cd86cdd912f4d329ecbd8618863fb152387257ae84cf699ad"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "d018dcdf8ccd438df8086979d6f79dbfc99834412b64fdcabc0fa202b3cb322f"
+      "sha256": "f6d2c87a81422ae9e4df755214a8e723c724b8ff0d0837c821b6989df8b35339"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "3e31ccfe65c3efc523c79844618b93a86f498070eaaee84d0767bb23e5db260b"
+      "sha256": "71836f13389176acfb1a9ae50f009789a4394236e7ed1199faf77b8a9457f150"
     }
   ]
 }

@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：无 active；阶段：Closed。
-- 状态：complete；ITER-0090 setup 机器级安装命令已归档
+- 迭代：无 active；里程碑：无 active；阶段：Idle。
+- 状态：MILE-0012 已收口；R1/R2 与版本级交付完成
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：等待用户决定是否提交或切版。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：无；等待新需求或从候办区提升下一个里程碑。
 
 ## 状态指针
 

@@ -137,3 +137,14 @@
 - 2026-07-23 · route · ITER-0090 · `dangerous-ack`：用户提出把 setup 做进命令；开启独立迭代，采用 `/butler:setup` / `$butler-setup` 薄入口 + `scripts/setup.sh` 机械单一真源，不混入项目 init/upgrade。
 - 2026-07-23 · P5-verify · ITER-0090 · `dangerous-ack`：setup 双宿主/临时 HOME 矩阵、skill/plugin validator、registry 9 项、200 hooks 与完整 CI captured 通过；Goal 十项全绿、verdict=eligible。
 - 2026-07-23 · close · ITER-0090 · `dangerous-ack`：两份 evidence、五件套/CHANGELOG、双格式交付与项目知识折叠完成；未提交、未切版、未推送。
+- 2026-07-25 · route · ITER-0091 / MILE-0012 · `dangerous-ack`：用户明确开启危险模式并启动 MILE-0012；授权上限冻结为 Butler 仓，P4 代码回滚锚点为 `1aa6533c86ac448d80e4a0330148f5f3a953ea2e`，既有脏点仅含里程碑规划/状态产物。R1 采用现有 evidence v1 + 稳定 ID 配对，不建设 sidecar、baseline、adapter 或第二台账。
+- 2026-07-25 · P2 · ITER-0091 · `dangerous-ack`：AC1–AC7 经反证、自洽性、可验证性审查后冻结；明确无声明零行为，声明后缺边、outcome、顺序、argv/cwd/AC 漂移均 fail-closed，生命周期完成门留给 R2。
+- 2026-07-25 · P3 · ITER-0091 · `dangerous-ack`：Plan Admission=pass；在 `evidence.py` 增加只读 `check-tdd`，TECH_PLAN 用版本化 marker + 固定表声明 cycle，配对 ID 由名称派生。无已知 Must Fix，进入 P4。
+- 2026-07-25 · P5-review · ITER-0091 · `dangerous-ack`：完整强审先后修复 marker 未限定 Test Strategy、超长 cycle 生成非法 evidence ID、正文引用 marker 误触发、缺边时诊断不完整四项；最终 Must Fix 0、Should Fix 0。未执行 fresh-context 独立复核并如实披露。
+- 2026-07-25 · P5-verify · ITER-0091 · `dangerous-ack`：专项 21/21；首次完整 CI 因沙箱拒绝用户级 uv cache 失败并保留 record，宿主授权后同命令 reproduced exit 0，200 hooks 与全部行为组通过；Goal Calibration 无开放信号。
+- 2026-07-25 · close · ITER-0091 · `dangerous-ack`：Goal adjudicator 十项全绿；三份 evidence、五件套/CHANGELOG、双格式交付和项目知识折叠完成，R1 closed。未提交、未切版、未推送；继续 R2。
+
+- 2026-07-26 | 路线图变更 | ITER-0092 | dangerous-ack | 自审结论：MILE-0012 R2 范围已在里程碑中明确且无外部阻塞；自决摘要：绑定 ITER-0092 并开启 P1。
+- 2026-07-26 | P2 | ITER-0092 | dangerous-ack | 自审结论：AC1–AC7 均可机械验证，功能/结构/质量与关闭态兼容覆盖完整，无隐藏未决项；自决摘要：自主冻结 AC 并进入 P3。
+- 2026-07-26 | P3 | ITER-0092 | dangerous-ack | 自审结论：Plan Admission=pass；AC 全覆盖，无新契约/模块扩张，跨根寻址、stdout JSON 和关闭态失败路径已明确，Must Fix=0；自决摘要：复用 evidence CLI 单一算法并进入 P4。
+- 2026-07-26 | P5-review | ITER-0092 | dangerous-ack | 自审结论：逻辑健壮性/可读性/性能/安全与 AC1–AC7 断言核对通过，Must Fix=0、Should Fix=0；独立复核未启用（项目开关 off，本任务也未获子 agent 委派授权）；自决摘要：允许进入 Goal 完成资格裁决。

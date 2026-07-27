@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture, verify, archive, and reopen Butler verification evidence."""
+"""Capture, verify, pair-check, archive, and reopen Butler verification evidence."""
 from __future__ import annotations
 
 import argparse
@@ -23,12 +23,23 @@ SCHEMA_VERSION = 1
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$", re.ASCII)
 ITERATION_RE = re.compile(r"^ITER-[0-9]{4,}$", re.ASCII)
 AC_RE = re.compile(r"^AC[1-9][0-9]*$", re.ASCII)
+TDD_CYCLE_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", re.ASCII)
+TDD_MARKER = "<!-- butler-tdd-cycles: v1 -->"
+TDD_HEADER = ["Cycle", "AC", "argv_json", "cwd"]
 DEFAULT_TIMEOUT = 900.0
 DEFAULT_MAX_OUTPUT_BYTES = 1_048_576
 
 
 class EvidenceError(ValueError):
     """Raised when an evidence operation cannot be performed safely."""
+
+
+@dataclass(frozen=True)
+class TddCycle:
+    name: str
+    ac_ids: list[str]
+    argv: list[str]
+    cwd: str
 
 
 @dataclass
@@ -385,6 +396,197 @@ def evidence_root(root: Path, iteration: str, source: str) -> Path:
     return root / ".ai" / "iterations" / iteration / "evidence"
 
 
+def markdown_cells(line: str) -> list[str] | None:
+    stripped = line.strip()
+    if not stripped.startswith("|") or not stripped.endswith("|"):
+        return None
+    return [cell.strip() for cell in stripped.strip("|").split("|")]
+
+
+def code_cell(raw: str, field: str) -> str:
+    if len(raw) < 2 or not raw.startswith("`") or not raw.endswith("`"):
+        raise EvidenceError(f"{field} 必须用反引号包裹")
+    return raw[1:-1]
+
+
+def resolve_plan_path(root: Path, iteration: str, source: str, raw: Path | None) -> Path:
+    if raw is None:
+        archived = root / ".ai" / "iterations" / iteration / "TECH_PLAN.md"
+        candidate = archived if source == "archive" and archived.is_file() else root / ".ai" / "TECH_PLAN.md"
+    else:
+        candidate = raw if raw.is_absolute() else root / raw
+    resolved = candidate.resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as error:
+        raise EvidenceError(f"TECH_PLAN 越出项目根：{candidate}") from error
+    if candidate.is_symlink() or not resolved.is_file():
+        raise EvidenceError(f"TECH_PLAN 不存在或不是普通文件：{candidate}")
+    return resolved
+
+
+def parse_tdd_cycles(root: Path, plan_path: Path) -> tuple[list[TddCycle], list[str]]:
+    text = plan_path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    marker_indices = [
+        index
+        for index, line in enumerate(lines)
+        if re.fullmatch(r"<!--\s*butler-tdd-cycles\s*:[^>]*-->", line.strip())
+    ]
+    if not marker_indices:
+        return [], []
+    if len(marker_indices) != 1 or lines[marker_indices[0]].strip() != TDD_MARKER:
+        return [], [f"TDD marker 必须且只能出现一次，并使用 {TDD_MARKER}"]
+
+    marker_index = marker_indices[0]
+    strategy_indices = [index for index, line in enumerate(lines) if line.strip() == "## Test Strategy"]
+    if len(strategy_indices) != 1:
+        return [], ["TECH_PLAN 必须且只能有一个 Test Strategy 段"]
+    strategy_start = strategy_indices[0]
+    strategy_end = next(
+        (index for index in range(strategy_start + 1, len(lines)) if lines[index].startswith("## ")),
+        len(lines),
+    )
+    if not strategy_start < marker_index < strategy_end:
+        return [], ["TDD marker 必须位于 Test Strategy 段"]
+    cursor = marker_index + 1
+    while cursor < len(lines) and not lines[cursor].strip():
+        cursor += 1
+    header = markdown_cells(lines[cursor]) if cursor < len(lines) else None
+    separator = markdown_cells(lines[cursor + 1]) if cursor + 1 < len(lines) else None
+    if header != TDD_HEADER:
+        return [], [f"TDD 表头必须是 {' | '.join(TDD_HEADER)}"]
+    if separator is None or len(separator) != len(TDD_HEADER) or any(
+        re.fullmatch(r":?-{3,}:?", cell) is None for cell in separator
+    ):
+        return [], ["TDD 表格缺少合法分隔行"]
+
+    cycles: list[TddCycle] = []
+    errors: list[str] = []
+    names: set[str] = set()
+    cursor += 2
+    while cursor < len(lines):
+        if not lines[cursor].strip():
+            break
+        cells = markdown_cells(lines[cursor])
+        if cells is None:
+            break
+        row = cursor + 1
+        cursor += 1
+        if len(cells) != 4:
+            errors.append(f"TDD 表格第 {row} 行必须有 4 列")
+            continue
+        name, raw_ac, raw_argv, raw_cwd = cells
+        row_errors: list[str] = []
+        if not TDD_CYCLE_RE.fullmatch(name):
+            row_errors.append(f"cycle 名非法：{name}")
+        elif any(not ID_RE.fullmatch(f"tdd-{name}-{phase}") for phase in ("red", "green")):
+            row_errors.append(f"cycle 生成的 evidence ID 非法：{name}")
+        elif name in names:
+            row_errors.append(f"cycle 重复：{name}")
+        else:
+            names.add(name)
+
+        try:
+            ac_ids = parse_ac_ids(raw_ac)
+        except EvidenceError as error:
+            ac_ids = []
+            row_errors.append(str(error))
+
+        argv: list[str] = []
+        try:
+            parsed = json.loads(code_cell(raw_argv, "argv_json"))
+            if not isinstance(parsed, list) or not parsed or any(not isinstance(value, str) for value in parsed):
+                raise ValueError
+            argv = parsed
+        except (EvidenceError, json.JSONDecodeError, ValueError):
+            row_errors.append("argv_json 非法：必须是非空 JSON string array")
+
+        cwd = ""
+        try:
+            _, cwd = resolve_cwd(root, code_cell(raw_cwd, "cwd"))
+        except EvidenceError as error:
+            row_errors.append(str(error).replace("--cwd", "cwd"))
+
+        if row_errors:
+            errors.extend(f"第 {row} 行：{error}" for error in row_errors)
+        else:
+            cycles.append(TddCycle(name=name, ac_ids=ac_ids, argv=argv, cwd=cwd))
+
+    if not cycles and not errors:
+        errors.append("TDD marker 后至少声明一个 cycle")
+    return cycles, errors
+
+
+def read_record(item_root: Path) -> dict[str, object]:
+    return json.loads((item_root / "record.json").read_text(encoding="utf-8"))
+
+
+def check_tdd_cycle(root: Path, iteration: str, source: str, cycle: TddCycle) -> list[str]:
+    records: dict[str, dict[str, object]] = {}
+    errors: list[str] = []
+    target = evidence_root(root, iteration, source)
+    for phase in ("red", "green"):
+        evidence_id = f"tdd-{cycle.name}-{phase}"
+        item = target / evidence_id
+        if not item.is_dir() or item.is_symlink():
+            errors.append(f"缺少 {phase.title()} evidence：{evidence_id}")
+            continue
+        record_errors = validate_record(item, iteration)
+        if record_errors:
+            errors.extend(f"{evidence_id}: {error}" for error in record_errors)
+            continue
+        records[phase] = read_record(item)
+    red = records.get("red")
+    green = records.get("green")
+    if red is not None and red.get("outcome") != "failed":
+        errors.append("Red outcome 必须是 failed")
+    if green is not None and green.get("outcome") != "passed":
+        errors.append("Green outcome 必须是 passed")
+    if red is None or green is None:
+        return errors
+
+    red_finished = datetime.fromisoformat(str(red["finished_at"]).removesuffix("Z") + "+00:00")
+    green_started = datetime.fromisoformat(str(green["started_at"]).removesuffix("Z") + "+00:00")
+    if green_started < red_finished:
+        errors.append("Red 必须完整结束后才开始 Green")
+
+    for phase, record in (("Red", red), ("Green", green)):
+        command = record["command"]
+        if command["argv"] != cycle.argv:
+            errors.append(f"{phase} argv 与声明不一致")
+        if command["cwd"] != cycle.cwd:
+            errors.append(f"{phase} cwd 与声明不一致")
+        if record["ac_ids"] != cycle.ac_ids:
+            errors.append(f"{phase} AC 与声明不一致")
+    return errors
+
+
+def check_tdd_command(args: argparse.Namespace) -> int:
+    root = resolve_project_root(args.project_root)
+    iteration = require_iteration(args.iteration)
+    plan_path = resolve_plan_path(root, iteration, args.source, args.plan)
+    cycles, errors = parse_tdd_cycles(root, plan_path)
+    if errors:
+        for error in errors:
+            print(f"[DRIFT] {error}")
+        return 1
+    if not cycles:
+        print("[N/A] TECH_PLAN 未声明 TDD cycle")
+        return 0
+
+    ok = True
+    for cycle in cycles:
+        cycle_errors = check_tdd_cycle(root, iteration, args.source, cycle)
+        if cycle_errors:
+            ok = False
+            for error in cycle_errors:
+                print(f"[DRIFT] {cycle.name}: {error}")
+        else:
+            print(f"[OK] {cycle.name}")
+    return 0 if ok else 1
+
+
 def verify_tree(root: Path, iteration: str, source: str, quiet: bool = False) -> bool:
     target = evidence_root(root, iteration, source)
     if target.is_symlink() or not target.is_dir():
@@ -460,6 +662,12 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--iteration", required=True)
     verify.add_argument("--source", choices=("hot", "archive"), default="hot")
 
+    check_tdd = subparsers.add_parser("check-tdd", help="Check declared TDD Red/Green evidence pairs")
+    check_tdd.add_argument("--project-root", required=True, type=Path)
+    check_tdd.add_argument("--iteration", required=True)
+    check_tdd.add_argument("--source", choices=("hot", "archive"), default="hot")
+    check_tdd.add_argument("--plan", type=Path)
+
     for name in ("archive", "reopen"):
         move = subparsers.add_parser(name, help=f"{name.title()} the evidence tree")
         move.add_argument("--project-root", required=True, type=Path)
@@ -475,6 +683,8 @@ def main() -> int:
             return capture_run(args)
         if args.subcommand == "verify":
             return verify_command(args)
+        if args.subcommand == "check-tdd":
+            return check_tdd_command(args)
         return archive_command(args, reopen=args.subcommand == "reopen")
     except (EvidenceError, OSError, UnicodeError, json.JSONDecodeError) as error:
         print(f"verification-evidence: {error}", file=sys.stderr)
