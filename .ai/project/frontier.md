@@ -6,7 +6,7 @@
 
 - **MILE-0010 / MILE-0011 已随 v3.1.0 发布**：可信 handoff、有界状态分片和确定性五件套结构/生成/校验/迁移全部完成；当前 live 五件套已 dogfood 为 strict v1。
 
-- **版本**：v3.1.0；ITER-0090 setup 命令与 MILE-0012 轻量 TDD 配对证据已收口但尚未提交/发布。
+- **版本**：v3.2.0；已聚合发布 ITER-0090 setup 命令与 MILE-0012 轻量 TDD 配对证据。
 - **三宿主**：Claude Code / Codex / Pi 三宿主适配全部落地——Pi 由 TypeScript 扩展（`plugins/butler-pi/`）拦截 write/edit 调 Python 门禁，setup.sh 一键安装。
 - **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与 12 工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
 - **双宿主治理**：49 个入口元数据投影由 registry 生成/校验；个人 Butler plugin 的仓内真源已刷新，team/public distribution 明确未配置。

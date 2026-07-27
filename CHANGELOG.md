@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [3.2.0] - 2026-07-26
+
+向后兼容的能力新增版，聚合 ITER-0090–ITER-0092：新增 Butler 机器级 setup 命令，并完成 MILE-0012 轻量 TDD Red→Green 配对证据、P5/Goal 收口门与 pytest dogfood。版本级交付见 `deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.2.0.md`。
+
 ## [3.1.0] - 2026-07-23
 
 向后兼容的能力新增版，聚合 MILE-0010、MILE-0011 的 ITER-0083–ITER-0089。版本级交付见 `deliveries/milestones/MILE-0010-long-horizon-scale-governance.md` 与 `deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.1.0.md`。
