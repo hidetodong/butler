@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "upgrader-tests",
+  "iteration": "ITER-0095",
+  "ac_ids": [
+    "AC4",
+    "AC6",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "scripts/test-butler-upgrade.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-28T13:44:28.765Z",
+  "finished_at": "2026-07-28T13:44:29.163Z",
+  "duration_ms": 398,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 118,
+    "captured_bytes": 118,
+    "sha256": "b9e7a66a78e057e226524fc619da7994390379f3100d4e94b329a1ba7e0377c4",
+    "truncated": false
+  }
+}

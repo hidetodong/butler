@@ -2,6 +2,12 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## 项目级 Butler 配置（MILE-0013）
+
+- `tools/project-config/config.py` 提供标准库 `inspect`、`resolve`、`init`、`set` 与可导入函数，固定读取显式项目根下的 `.ai/butler.config.json`。缺失配置可严格投影 legacy Markdown；已有配置损坏、字段缺失/未知、类型错误或未知版本一律 fail-closed。
+- `tools/project-config/butler-config.schema.json` 固定 schema v1 的五字段扁平合同：`schema_version`、三个布尔开关和去重非空 `profiles` 数组。写入使用同目录临时文件与原子发布，初始化不覆盖已有文件，更新失败保持原配置字节不变。
+- 新部署直接生成 JSON，`local-constraints.md` 只留人类可读差异；危险模式、独立复核、偏好、进度和双宿主规则统一经 `resolve` 读取，持久修改只经 JSON `set` 写入。`butler-upgrade` 的 v3.3.0 `migrate_config` action 在同一事务内创建 JSON、收窄 Markdown并检测配置漂移；兼容期不双写。
+
 ## 轻量 TDD 配对证据（MILE-0012）
 
 - `tools/verification-evidence/evidence.py check-tdd` 读取 TECH_PLAN `Test Strategy` 内的版本化 cycle 表，按 `tdd-<cycle>-red/green` 找现有 evidence v1 record，并校验 Red=`failed`、Green=`passed`、先后顺序及 argv/cwd/AC 完全一致。未声明 TDD 时返回 N/A、零写；`--source archive` 支持关闭态复核。V1 只证明同命令先失败后通过，不证明代码修改时序、失败原因或测试未被弱化。
@@ -85,8 +91,8 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 | `/butler:inbox` | 零写扫描或登记 `origin/` 来源，逐项分类并经确认/危险自审路由；活工作区冲突项等待，无依赖 sibling 继续 | `.claude/commands/butler/inbox.md`（薄壳，真源 `40_Context_Management/inbox-workflow.md`；机械事实由 `tools/inbox/inbox.py` 管理） |
 | `/butler:ideation` | 独立脑暴、不进执行主线、不冻结（贴模糊需求 / 想法，或留空进对话）；MILE-0005 R2 迁入命名空间 | `.claude/commands/butler/ideation.md`（薄壳，真源 `50_Extension_Ideation/ideation-engine.md §3`） |
 | `/butler:loop` | 收敛闭环、死磕式高强度纠错升档（**高强度·长时·消耗大、郑重触发**）；原名 `/loop`，MILE-0005 R4 迁入命名空间。一次性 P4 升档（无持久态·无 `off`·跑到全绿或定量熔断）；薄壳近乎无参、frontmatter ⚠️ + 第 0 步风险提醒、委托真源**不复述**闭环/熔断算法 | `.claude/commands/butler/loop.md`（薄壳，真源 `55_Extension_ConvergenceLoop/convergence-loop-engine.md` §3/§6） |
-| `/butler:dangerous` | 无人值守长程自治（**实验性**·自审门替 ACK·强制 P5 全审护栏）；每次任务启动冻结宿主预授权上限，上限内可动态追加施工项目、范围外隔离或诚实交还。空参=开启 / `off` 关 / `status` 只读；持久开关外化 `.ai/local-constraints.md` `dangerous`、跨会话 announce-on-read | `.claude/commands/butler/dangerous.md`（薄壳，真源 `65_Extension_Dangerous/dangerous-engine.md` §3/§3.2/§7） |
-| `/butler:preference` | 偏好探针开关（`on`/`off` 隐私总开关 / `reback on\|off` 反哺 / `distill` 手动蒸馏；**留空=只读状态回声**）；原名 `/preference`，MILE-0005 R3 迁入命名空间。参数面最宽（唯一二级参数 `reback`）；只管全局层开关，本项目抑制开关走 `local-constraints` | `.claude/commands/butler/preference.md`（薄壳，真源 `70_Extension_Preference/preference-probe-engine.md` §2.2/§2.3/§2.4/§6/§7） |
+| `/butler:dangerous` | 无人值守长程自治（**实验性**·自审门替 ACK·强制 P5 全审护栏）；每次任务启动冻结宿主预授权上限，上限内可动态追加施工项目、范围外隔离或诚实交还。空参=开启 / `off` 关 / `status` 只读；项目开关由 `.ai/butler.config.json` 持久化，读取走 `resolve`、写入走 `set`，跨会话 announce-on-read | `.claude/commands/butler/dangerous.md`（薄壳，真源 `65_Extension_Dangerous/dangerous-engine.md` §3/§3.2/§7） |
+| `/butler:preference` | 偏好探针开关（`on`/`off` 隐私总开关 / `project on\|off` 项目开关 / `reback on\|off` 反哺 / `distill` 手动蒸馏；**留空=只读状态回声**）；全局数据仍外置，本项目开关由 `.ai/butler.config.json` 持久化 | `.claude/commands/butler/preference.md`（薄壳，真源 `70_Extension_Preference/preference-probe-engine.md` §2.2/§2.3/§2.4/§6/§7） |
 | `/butler:milestone` | 里程碑录入、未编号候办、`start <候办键>` 提升与 `status` 只读看板。多个可独立启动方向会拆成平级候办块，一方向一个键、一行索引、一份文件；讨论稿不占 `MILE-NNNN`，明确开工才领连续号，已绑迭代的号不回收。**brief 是大 PRD 时仍并进触发 `prd-split`** | `.claude/commands/butler/milestone.md`（薄壳，真源 `20_Workflow_Lifecycle/milestone-schema.md` §4.5/§6.4–§7.6） |
 | `/butler:prd` | PRD 集合的双宿主薄入口：split 先判四态并要求首次日期证据，再把身份/模块/Workspace Scope 一次对齐；`status [prd_id] [--workspace key]` 调同一只读 CLI；`update <prd_id>` 以确认 spec 调确定性 plan/apply，强制显式目标与影响处置 | `.claude/commands/butler/prd.md` / `plugins/butler/skills/butler-prd/SKILL.md`；真源 `references-schema.md` / `prd-split.md` / `prd-status.md` / `prd-update.md` |
 | `/butler:review` | **命名空间第二个真命令**（ITER-0047·MILE-0005 R1）——代码 / 产物复核薄壳路由器：默认（留空）当前上下文快速自检、`independent` 另起 fresh 子 agent 独立复核（验证者≠作者）；第 0 步没接 butler 优雅降级、委托真源不复述算法。作后续命令的复制范本 | `.claude/commands/butler/review.md`（薄壳，真源 `review-engine.md §5` / `independent-review.md` / `62_Extension_Agents/overview.md §3`） |

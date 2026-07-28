@@ -1,15 +1,18 @@
 # 迭代台账
 
-> ⚠️ 危险模式自治：MILE-0012 R2 把轻量 TDD Red/Green 配对接入 P5 / Goal 并完成 pytest dogfood。
+> ⚠️ 危险模式自治：MILE-0013 将项目级 Butler 机器配置从 `.ai/local-constraints.md` 拆到顶层扁平的 `.ai/butler.config.json`，完成兼容迁移和全链路切换。
 
 ## 危险模式自治路线图
 
-ITER-0092 归属 MILE-0012 R2：P5 / Goal 完成门、VERIFY 投影、pytest 真实 dogfood 与关闭态兼容。
+ITER-0095 归属 MILE-0013 R3：全消费端统一接线、当前仓迁移、3.3.0 版本链与完整发布验证。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
+| ITER-0094 | Butler 配置部署与 legacy 迁移（MILE-0013 R2·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0094-project-config-migration.md |
+| ITER-0093 | Butler 项目配置合同与统一读写内核（MILE-0013 R1·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0093-project-config-core.md |
 | ITER-0092 | TDD 配对收口接线与 pytest dogfood（MILE-0012 R2·危险模式） | closed | 2026-07-26 | 2026-07-26 | MILE-0012 | deliveries/ITER-0092-tdd-goal-gate-dogfood.md |
 | ITER-0091 | 轻量 TDD 配对合同与检查器（MILE-0012 R1·危险模式）：cycle 声明、稳定 evidence ID、顺序/outcome/argv/cwd 校验与负向 fixture | closed | 2026-07-25 | 2026-07-25 | MILE-0012 | deliveries/ITER-0091-lightweight-tdd-pair-checker.md |
 | ITER-0090 | /butler:setup 机器级安装命令：双宿主入口、显式确认、setup.sh 复用与 registry 分发 | closed | 2026-07-23 | 2026-07-23 | — | deliveries/ITER-0090-butler-setup-command.md |
@@ -27,8 +30,5 @@ current: none
 | ITER-0078 | /butler:inbox 命令与分类路由（MILE-0009 R4·危险模式）：确定性扫描、幂等 INBOX 写入、双宿主入口、确认路由与活工作区保护 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0078-butler-inbox-workflow.md |
 | ITER-0077 | 收件箱数据契约（MILE-0009 R3·危险模式）：origin 只读边界、INBOX 来源身份/指纹/状态、派生关系与幂等变更检测 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0077-inbox-data-contract.md |
 | ITER-0076 | Monorepo 工作区地图与需求级范围契约（MILE-0009 R2·危险模式）：稳定工作区键、路径映射、四类范围与越界扩张纪律 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0076-workspace-scope-contract.md |
-| ITER-0075 | 需求集合与日期化身份契约（MILE-0009 R1·危险模式）：项目级 PRD 总索引、稳定 prd_id、单需求内部结构与新需求/新版身份边界 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0075-prd-collection-identity-contract.md |
-| ITER-0074 | 仓库卫生清理：清过期 worktree 残留 + 堆积分支 + 空壳目录 + P0 审计修复（test 计数 8→10 / frontier 版本同步） | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0074-repo-cleanup.md |
-| ITER-0073 | /butler:progress 命令：只读聚合当前项目的结构化进度报告——里程碑、迭代、Goal、验收、执行、验证、风险一页看完 | closed | 2026-07-21 | 2026-07-21 | — | deliveries/ITER-0073-butler-progress-command.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

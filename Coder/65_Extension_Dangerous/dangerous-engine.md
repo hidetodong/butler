@@ -22,27 +22,27 @@ scope: /butler:dangerous 激活下的无人值守长程自治编程闭环——�
 
 ## 3. 激活与关闭
 
-持久扩展模式，**状态外化到 `.ai/local-constraints.md`「Butler 功能开关」`dangerous: on|off`**（字段语义与读写口径见 `20_Workflow_Lifecycle/local-constraints-schema.md §4.1`）。开启后持续生效直到显式关闭。
+持久扩展模式，**状态外化到 `.ai/butler.config.json` 的 `dangerous` 布尔字段**。读取必须调用驻留 `tools/project-config/config.py resolve`，回写必须调用 `set dangerous true|false`；不得自行解析或改写 Markdown。字段语义与 legacy 兼容见 `20_Workflow_Lifecycle/local-constraints-schema.md`。开启后持续生效直到显式关闭。
 
 激活条件，满足任一即开启：
 
 - 用户输入 `/butler:dangerous`。
 - 用户表达"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"等明确让渡把关权、要求长程自治的语义。
 
-开启动作：把 `dangerous` 开关**回写为 `on`**，并在当回合对话层显式回声进入危险模式。
+开启动作：通过 project-config `set dangerous true`，并在当回合对话层显式回声进入危险模式。
 
 关闭条件：
 
 - 用户输入 `/butler:dangerous off`，或表达"恢复确认"、"每步问我"等收回把关权的语义。
-- 用户**手改** `dangerous: off`。
+- 用户手改合法 JSON 把 `dangerous` 设为 false。
 
-关闭动作：把 `dangerous` 开关回写为 `off`，并在当回合对话层显式回声退出。
+关闭动作：通过 project-config `set dangerous false`，并在当回合对话层显式回声退出。
 
 ### 3.1 跨会话语义（announce-on-read）
 
-本模式**跨会话持久**：状态由 `dangerous` 开关承载，新会话不靠对话记忆。会话起始读到 `dangerous: on` 时，AI **必须当回合显式声明**——例如"⚠️ 危险模式当前为 ON（来自 `.ai/local-constraints.md`），本会话将按无人值守自治执行；要恢复逐步确认请说 `/butler:dangerous off`"——**声明后方自动进入**危险模式，**绝不静默续开**。
+本模式**跨会话持久**：状态由 `dangerous` 开关承载，新会话不靠对话记忆。会话起始 `resolve` 得到 `dangerous=true` 时，AI **必须当回合显式声明**——例如"⚠️ 危险模式当前为 ON（来自 `.ai/butler.config.json`），本会话将按无人值守自治执行；要恢复逐步确认请说 `/butler:dangerous off`"——**声明后方自动进入**危险模式，**绝不静默续开**。若 resolve 失败或输出不可解析，按 off fail-closed 并报告错误，不得写回默认值。
 
-> ⚠️ **安全取舍说明**：本节的"跨会话自动生效"是对早期设计"会话结束即回 Standard、不自动续开"的**有意修订**——后者以"不续开"作冗余防误触，本设计改以**announce-on-read（每会话起始强制亮明 + 一句即可关）**作兜底，换取持久可见与可配置。代价是：若用户忘记关闭，新会话会在显式声明后自动进入无人值守自治。务必只在可隔离、可回滚环境（独立分支 / worktree）保持 `dangerous: on`。
+> ⚠️ **安全取舍说明**：本节的"跨会话自动生效"是对早期设计"会话结束即回 Standard、不自动续开"的**有意修订**——后者以"不续开"作冗余防误触，本设计改以**announce-on-read（每会话起始强制亮明 + 一句即可关）**作兜底，换取持久可见与可配置。代价是：若用户忘记关闭，新会话会在显式声明后自动进入无人值守自治。务必只在可隔离、可回滚环境（独立分支 / worktree）保持 `dangerous=true`。
 
 ### 3.2 无人值守写入范围（启动时冻结）
 

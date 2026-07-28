@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-project-config-tests",
+  "iteration": "ITER-0094",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "tools/project-config/tests/test_config.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-28T12:07:26.126Z",
+  "finished_at": "2026-07-28T12:07:27.389Z",
+  "duration_ms": 1263,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "9c5532038b39dbcd26d4c7da81fb381c5e05b58274da3177ae614aa99b9ccccb",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

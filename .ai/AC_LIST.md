@@ -1,40 +1,43 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-26
+ACK 日期: 2026-07-28
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0092
+# AC_LIST — ITER-0095
 
-> ⚠️ 危险模式：本验收清单由模型完成反证、自洽性与可验证性审查后自主 ACK，未经用户确认（ITER-0092，2026-07-26）
+> ⚠️ 危险模式：本验收清单由模型完成反证、自洽性与可验证性审查后自主 ACK，未经用户确认（ITER-0095，2026-07-28）
+
+修订记录: 2026-07-28 · P5 明确 AC7 验证的是本地 UNRELEASED 发布候选及既定交付路径；迭代/里程碑实体交付属于通过 Goal 后的收口输出，不能反向作为完成资格前置。
 
 ## Goal
 
-- 让显式采用 TDD 的迭代只有在 P5 拿出有效 Red→Green 配对后才能通过 Goal 完成资格裁决，同时保持未启用 TDD 的现有流程不变。
+- 让 Butler 所有活消费端共享 `.ai/butler.config.json` 的确定性读取/回写语义，并以可升级、可验证、未冒充已发布的 v3.3.0 候选收口 MILE-0013。
 
 ## In Scope
 
-- Goal 裁决接线、VERIFY 投影合同、pytest Red/Green 真实 dogfood、正负向测试、规则/说明/CI 同步。
+- `resolve/set` 消费合同、危险/复核/偏好/进度与双宿主接线、当前仓迁移、结构测试、v3.3.0 migration 与发布元数据、完整关闭态验证。
 
 ## Out of Scope
 
-- 不证明代码修改时序、Red 失败原因、测试未被改弱；不增新 evidence schema、sidecar、adapter 或 PreToolUse 硬门。
+- 不删除 legacy 回退解析，不改变外置偏好 consent/data，不迁移任务状态，不提交、打 tag、推送或执行目标项目批量升级。
 
 ## Acceptance Checklist
 
-- [ ] AC1: `goal.py evaluate` 对未声明 TDD 的 TECH_PLAN 保持 N/A/pass，对声明 TDD 但 Red/Green 配对无效的项目 fail-closed。
-- [ ] AC2: Goal 裁决复用 verification-evidence 的唯一配对算法，支持 Butler 工具根与目标 `PROJECT_ROOT` 分离，且保持只读和 stdout 单 JSON 合同。
-- [ ] AC3: `VERIFY_REPORT.md` 必须有 TDD 配对状态投影；已声明 cycle 未通过时，Completion Inputs 不得写 blockers=none。
-- [ ] AC4: goal-assurance 测试覆盖未启用 N/A、有效配对、缺失/漂移配对和 CLI JSON/只读非回归；verification-evidence 现有行为继续全绿。
-- [ ] AC5: ITER-0092 用同一条 pytest argv/cwd 生成 `tdd-goal-gate-red` 失败 record 和 `tdd-goal-gate-green` 通过 record，`check-tdd` 机械确认配对。
-- [ ] AC6: Goal/VERIFY/生命周期真源、工具 README 与双宿主浓缩规则对这一 opt-in 收口义务表达一致，未声明时零行为变化。
-- [ ] AC7: 专项测试、五件套合同、状态审计、完整 CI 与 `git diff --check` 通过。
+- [ ] AC1: 会话冷启动、危险模式、独立复核、偏好和 Active Profiles 的活规则统一调用 project-config `resolve`，不得自行解析 Markdown；坏 JSON fail-closed，危险模式绝不因错误而开启。
+- [ ] AC2: 危险、独立复核和项目偏好回写统一调用 project-config `set` 并只写 JSON；当 `source` 不是 `config` 时明确要求先 init/upgrade，不回写 legacy Markdown、不静默用默认值覆盖旧值。
+- [ ] AC3: `/butler:progress` 与两宿主 progress skill/command 使用同一解析结果展示 source、冲突和三开关/profile；Butler 版本改从入口 stamp 或 VERSION 读取，不再假定 local constraints 存在版本字段。
+- [ ] AC4: 本仓以迁移前真实值生成 `.ai/butler.config.json`，并只从 `.ai/local-constraints.md` 删除 Active Profiles/Butler 开关/Review Policy 机器段；人类约束正文保真，迁移后 `resolve` 返回 config 且无冲突。
+- [ ] AC5: 活 README/HUMAN_GUIDE/Coder/docs/模板/skills/commands 对配置位置、兼容期、写入边界和安全默认描述一致；历史归档与旧 migration 保持历史事实，不追溯改写。
+- [ ] AC6: `migrate_config` 登记到 v3.3.0 manifest/recipe，升级计划能从 v3.2.0 包含该 action；当前版本项目若配置漂移仍会被检测，迁移/重生成/重戳顺序和事务边界明确。
+- [ ] AC7: v3.3.0 的 VERSION、插件 manifest、README badge、根 CHANGELOG 和既定迭代/里程碑交付路径对齐；状态审计明确显示 UNRELEASED，绝不宣称 commit、tag 或远端发布完成。双格式交付实体在 Goal eligible 后按收口仪式生成并由关闭态审计核对。
+- [ ] AC8: 消费合同、project-config、upgrader、文档/registry、完整 CI、关闭态审计与 `git diff --check` 全绿；P5 完整强审无 Must Fix，独立复核关闭状态如实披露。
 
 ## Verification Method
 
-- AC1–AC4：`tools/goal-assurance/test_goal.py` 正负向 fixture 与 CLI 断言。
-- AC5：verification evidence 生成的 Red/Green record + `check-tdd`。
-- AC6：规则/模板/工具文档对账检查。
-- AC7：专项 pytest、artifact/state/handoff 审计、`scripts/verify-ci.sh` 和 diff check。
+- AC1–AC3, AC5：新增消费合同结构测试，逐个扫描活规则、命令与 skills 的 `resolve/set`、错误语义和禁止旧写法。
+- AC4：对本仓运行 `resolve` 并核对 JSON/Markdown 内容；迁移算法专项覆盖同值、冲突和正文保真。
+- AC6：upgrader 专项从 v3.2.0 生成真实计划并断言 `migrate_config`，验证 current drift 回归。
+- AC7–AC8：版本一致性/迁移 manifest、完整 `scripts/verify-ci.sh`、Goal/state auditor、artifact check 与 diff check。
 
 ## External References
 

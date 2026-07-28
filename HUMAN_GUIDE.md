@@ -158,7 +158,8 @@ AI 会自动走完整个链路：
 │   ├── MILESTONES.md        # 里程碑台账（大版本，按需产生）
 │   ├── MILESTONE.md         # 当前里程碑工作区：范围评估/理解阐释/拆分路线图（按需产生）
 │   ├── milestones/          # 各里程碑收口快照（MILE-NNNN/，按需产生）
-│   ├── local-constraints.md # 本地化约束
+│   ├── local-constraints.md # 人类可读本地化约束
+│   ├── butler.config.json   # Butler 项目级机器配置
 │   ├── 00_IDEATION.md       # 脑暴产物（/ideation 模式）
 │   ├── 01_CHANGELOG.md      # 技术决策日志
 │   ├── 02_SESSION_HANDOFF.md # 跨会话恢复入口
@@ -200,19 +201,22 @@ Butler 提供若干可选扩展模式，通过指令或语义触发，默认不�
 
 ### 项目级功能开关（持久配置）
 
-butler 的持久模式开关，统一记在 `.ai/local-constraints.md` 的「**Butler 功能开关**」段里——这是"对 butler 功能做项目级持久化配置"的**一处统一落点**（部署时即建好，默认全 off）：
+butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶层扁平 JSON，部署时即建好；`dangerous` 和 `independent_review` 默认 false，`preference` 默认 true，`profiles` 默认空数组：
 
 | 开关 | 含义 |
 |---|---|
-| `dangerous: on\|off` | 无人值守长程自治模式 |
-| `independent_review: on\|off` | 每次 P5 收口自动起独立复核 |
-| `preference: on\|off` | 本项目偏好探针采集开关（默认 on；off = 本项目不采集/蒸馏/反哺） |
+| `dangerous: true\|false` | 无人值守长程自治模式 |
+| `independent_review: true\|false` | 每次 P5 收口自动起独立复核 |
+| `preference: true\|false` | 本项目偏好探针采集开关（false = 本项目不采集/蒸馏/反哺） |
+| `profiles: []` | 当前项目启用的领域 profile 列表 |
 
-**两种改法，等价**：① 对话里用自然语言/命令说（如 `/butler:dangerous`、"以后这个项目都开严格复核"），AI 帮你回写；② 你直接手改这个文件。AI **每个会话开始都会读它**，据此决定这一会话怎么跑——状态不再只活在对话里、关掉窗口就忘。
+**两种改法，等价**：① 对话里用自然语言/命令说（如 `/butler:dangerous`、`/butler:preference project off`、"以后这个项目都开严格复核"），AI 通过驻留 project-config 工具回写；② 你直接手改合法 JSON。AI **每个会话开始都会用同一个 `resolve` 接口读它**。坏 JSON 会 fail-closed，而不是猜值或静默覆盖。
 
-**⚠️ 危险模式跨会话**：`dangerous: on` 会**跨会话保留**。新会话一开，AI 读到它会**先显式声明**"危险模式当前 ON、本会话将无人值守执行，要关说 `/butler:dangerous off`"，**声明后才自动进入**——绝不静默。代价是：你若忘了关，下次进来它声明完就自己跑。所以只在可隔离、可回滚的环境（独立分支/worktree）里留着 `on`。
+旧项目在升级前仍可从 `.ai/local-constraints.md` 兼容只读；一旦 JSON 存在，它就是唯一真源，冲突会明确报告。回写不会继续改旧 Markdown：先运行 `/butler:upgrade` 完成事务迁移。
 
-**关于 `preference`**：偏好探针的总开关、同意状态与数据是**跨项目**的（外置 `$BUTLER_PREF`），但**本项目可用 `preference: off` 单独抑制**——它只关掉这一个项目的采集，不影响全局同意和别的项目。注意 `on` ≠ 强制采集：没给过全局同意时，即便 `on` 也不会采。consent/数据真源始终在外置存储，这个开关只是本项目的采集闸。
+**⚠️ 危险模式跨会话**：`dangerous: true` 会**跨会话保留**。新会话一开，AI resolve 到它会**先显式声明**"危险模式当前 ON、本会话将无人值守执行，要关说 `/butler:dangerous off`"，**声明后才自动进入**——绝不静默。代价是：你若忘了关，下次进来它声明完就自己跑。所以只在可隔离、可回滚的环境（独立分支/worktree）里留着 true。
+
+**关于 `preference`**：偏好探针的总开关、同意状态与数据是**跨项目**的（外置 `$BUTLER_PREF`），但**本项目可用 `preference: false` 或 `/butler:preference project off` 单独抑制**——它只关掉这一个项目的采集，不影响全局同意和别的项目。注意 true ≠ 强制采集：没给过全局同意时仍不会采。consent/数据真源始终在外置存储，这个字段只是本项目的采集闸。
 
 ### 里程碑（大版本）
 
@@ -258,7 +262,7 @@ butler 的持久模式开关，统一记在 `.ai/local-constraints.md` 的「**B
 平时 P5 收口会做一次**同上下文简要自评**——便宜、快，但本质是"AI 给自己写的代码换个口吻打分"，盲点可能照样在。想要**真·独立**的复核时：
 
 - **手动单跑**：任何时候输 `/review`，AI 会**另起一个全新上下文的子 agent** 来审。这个子 agent 只拿到规格（`AC_LIST` / `TECH_PLAN`）、产物（`git diff`）和 AI 的自评结论，**看不到 AI 原来的推理过程**——所以它不会跟着原作者一起想当然，而是拿验收清单逐条核对：这条 AC 到底兑现了没有？拿不准就判没过。
-- **项目级常开**：某个项目你希望长期严格把关，就在 `.ai/local-constraints.md` 写 `Review Policy: independent_review: on`，之后**每次 P5 收口自动**跑独立复核，不用每轮重输。默认是关的——不是每个项目都值得这道成本。
+- **项目级常开**：某个项目你希望长期严格把关，就让 AI 通过 project-config 把 `.ai/butler.config.json` 的 `independent_review` 设为 true（或手改合法 JSON），之后**每次 P5 收口自动**跑独立复核，不用每轮重输。默认是关的——不是每个项目都值得这道成本。
 - **牙齿**：独立复核 refute 掉一条"已满足"的 AC，或发现 Must Fix，就**阻断收口**，退回去修（修到真过、不许降级蒙混）。
 - **诚实边界**：如果运行环境起不了子 agent，AI **不会**偷偷用自评冒充独立复核，而是如实标"独立复核未执行"，让你自己决定要不要另起 agent 复核。
 

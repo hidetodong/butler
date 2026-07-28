@@ -20,7 +20,7 @@ scope: 代码审查的激活条件、评级标准与闭环控制（共享审查�
 ## 2. 激活条件
 
 - **P5 默认简评**（§5）：进入 P5 交付阶段默认触发同上下文简要自评（用户明确"跳过审查"时除外）。这是默认底线，**不是**独立复核。
-- **独立复核触发**（手动 `/review` / 配置驱动 `independent_review: on` / 危险模式升格）：见 `62_Extension_Agents/independent-review.md §3`。
+- **独立复核触发**（手动 `/review` / 配置驱动 `independent_review=true` / 危险模式升格）：见 `62_Extension_Agents/independent-review.md §3`。
 
 > 独立复核默认关。它是叠在 P5 简评之上的 opt-in 增强，不是替代——简评照常默认跑。
 
@@ -89,7 +89,7 @@ Must Fix / Should Fix 应给文件/行或 evidence ID。P5 至少对风险相关
 - 先校验 Evidence Index；自动道只有 `reported` 时直接列 Must Fix，不接受口头绿
 - 目标是快速拦截交付前的明显问题，不是完整审计
 
-**它是同上下文自检，不是独立复核**。需要结构性独立时，手动 `/review` 或为项目开 `independent_review: on`（触发与契约见 `62_Extension_Agents/independent-review.md`）。
+**它是同上下文自检，不是独立复核**。需要结构性独立时，手动 `/review` 或通过 project-config 为项目设 `independent_review=true`（触发与契约见 `62_Extension_Agents/independent-review.md`）。
 
 ## 6. 独立复核（定义已迁出）
 
@@ -103,7 +103,7 @@ Must Fix / Should Fix 应给文件/行或 evidence ID。P5 至少对风险相关
 - `62_Extension_Agents/overview.md`：帮手通用规矩唯一真源（G1 独立性=上下文隔离 / G2 诚实兜底）；`62_Extension_Agents/independent-review.md`：复核帮手完整定义。
 - `30_Quality_Gate/review-standard.md` 提供通用审计准则。
 - `10_Domain_Stack_Profiles/` 提供技术栈专项审计规则。
-- `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `Review Policy` 配置字段（项目级开关）。
+- `tools/project-config/` 定义 `independent_review` 项目开关的严格读写；`20_Workflow_Lifecycle/local-constraints-schema.md` 只定义 legacy `Review Policy` 的兼容迁移边界。
 - `20_Workflow_Lifecycle/verify-schema.md` 定义 VERIFY_REPORT 的 `Independent Review` 回填字段。
 - `30_Quality_Gate/correction-contract.md` 承接 refute / Must Fix 的修复（修到真过、禁止降级修复）。
 - `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 承接 Must Fix 的高强度修复闭环。

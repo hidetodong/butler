@@ -1,32 +1,32 @@
 {
-  "handoff_sha256": "1b94aab3b2fe23b2049229036497cfea0cbc27fabdaf7fa16603445272ea34da",
+  "handoff_sha256": "73e237a4fa32a14b859d026c544f082f4e3197add6eae138226b73d3e6d96d9b",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "无；等待新需求或从候办区提升下一个里程碑。",
-    "phase": "Idle",
+    "next": "运行关闭态审计与完整 CI；不提交、不打 tag、不推送。",
+    "phase": "Milestone Closed",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "MILE-0012 已收口；R1/R2 与版本级交付完成"
+    "status": "ITER-0095 与 MILE-0013 已完成收口；v3.3.0 为本地 UNRELEASED 候选"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "18bee417abc3d92cd86cdd912f4d329ecbd8618863fb152387257ae84cf699ad"
+      "sha256": "f4cad8214e4277d0d16efe2c8dba78e2009c31a9f57d074dcf420c398fbd2a63"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "f6d2c87a81422ae9e4df755214a8e723c724b8ff0d0837c821b6989df8b35339"
+      "sha256": "01ad3e1c444a4e8fab7c595433e1901a56ad595b0717f75f90811bd12e779ff0"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "71836f13389176acfb1a9ae50f009789a4394236e7ed1199faf77b8a9457f150"
+      "sha256": "eda348be5038f7d44364b9f6d7283cd867ccabc7fe6b85fa42b94f9ecfc65a62"
     }
   ]
 }

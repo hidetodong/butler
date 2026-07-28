@@ -55,7 +55,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" global-install \
 
 `migrations/manifest.json` 为执行数据真源。每个发布区间有严格连续的 source/target、人读 recipe 指针和有限 action；action ID 全局唯一，domain 只能由类型决定：
 
-- `project`：入口、hook/settings、rename/add-field、restamp/no-op。
+- `project`：入口、hook/settings、rename/add-field、`migrate_config`、restamp/no-op。`migrate_config` 只复用 `tools/project-config/` 的纯迁移计划，双文件提交仍走本工具既有事务。
 - `decision`：`split`。
 - `machine`：`global_install`。
 

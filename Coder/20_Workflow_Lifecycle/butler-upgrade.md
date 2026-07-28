@@ -71,7 +71,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply \
 4. 排他创建 `.ai/butler-upgrade/apply.lock`，写 run backup/restore/journal。
 5. 原子替换登记文件。失败只恢复本次已触及文件，不调用 `git reset`/`checkout`，不覆盖其他工作树改动。
 
-项目 action 有限且 schema 化：双入口重生成/重戳、hook + settings 同步、显式 rename/add-field、no-op。历史 `[regen-claude]` 归一为双入口动作。未知 action/字段/domain 立即失败。
+项目 action 有限且 schema 化：双入口重生成/重戳、hook + settings 同步、显式 rename/add-field、项目配置迁移 `migrate_config`、no-op。`migrate_config` 复用 `tools/project-config/` 的纯迁移计划，并由本升级器把 JSON 创建和 Markdown 收窄纳入同一 backup/restore/journal。历史 `[regen-claude]` 归一为双入口动作。未知 action/字段/domain 立即失败。
 
 入口外原文和 CLAUDE.md/AGENTS.md 各自 `<!-- user-managed -->` 区逐字保留；`origin/`、`deliveries/`、历史 `.ai/iterations/` / `.ai/milestones/` 不在可写集合。
 

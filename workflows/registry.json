@@ -285,7 +285,7 @@
       "claude": {
         "name": "/butler:preference",
         "path": ".claude/commands/butler/preference.md",
-        "description": "偏好探针开关——留空看当前状态；on/off 隐私总开关；reback on/off 开关反哺；distill 手动蒸馏（实验性，数据存 butler 仓库之外）",
+        "description": "偏好探针开关——留空看状态；on/off 隐私总开关；project on/off 项目抑制；reback on/off 反哺；distill 手动蒸馏",
         "default_prompt": "Use /butler:preference for this Butler workflow."
       },
       "codex": {

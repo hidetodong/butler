@@ -26,7 +26,7 @@ scope: 复核帮手（independent review）的中立定义——角色/输入/�
 ## 3. 触发
 
 - **手动**：用户输入 `/review`，或提到"看看写得怎么样""有没有坑""评价一下""代码审查"——一次性触发，跑完即止。
-- **配置驱动**：项目 `.ai/local-constraints.md`「Butler 功能开关」`independent_review: on` 时，每次 P5 收口自动起，无需每轮手输（默认 off）。
+- **配置驱动**：project-config `resolve` 返回 `independent_review=true` 时，每次 P5 收口自动起，无需每轮手输（默认 false）。读取失败必须按 false fail-closed 并报告；持久修改只调用 `set independent_review true|false`，legacy 项目先升级，不直接改 Markdown。
 - **危险模式**：`/butler:dangerous` 下 P5 强制完整审查建议升格为独立复核（见 `65_Extension_Dangerous/dangerous-engine.md §7.3`）。
 
 > 独立复核是叠在 P5 简评之上的 opt-in 增强、不替代简评（`60_Extension_CodeReview/review-engine.md §5` 的同上下文简评照常默认跑）。

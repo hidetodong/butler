@@ -135,9 +135,11 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 
 ## 4. 本地化适配 (Local Adaptation)
 
-- 生成 `.ai/local-constraints.md`，字段定义与最小模板参考 `local-constraints-schema.md`。
+- 生成 `.ai/local-constraints.md`，只记录 Project Type、Local Constraints、Scope Exceptions、External References 等需要人解释的项目差异；字段定义与最小模板参考 `local-constraints-schema.md`。
+- 生成 `.ai/butler.config.json` 作为机器配置唯一真源。先运行 `python3 "$BUTLER/tools/project-config/config.py" init --project-root "$PROJECT_ROOT"` 写入安全默认；若侦察命中 profile，再用同工具 `set profiles '<JSON 数组>'` 写入。不得手工拼 JSON 或把 profile 双写回 Markdown。
 - **逻辑：** 不要复制通用规则，而是通过”指针”引用。例如：”本项目遵循通用需求开发 SOP，并启用 TypeScript profile；针对 `/legacy` 目录下的旧代码，允许局部放宽类型检查。”
-- **必含「Butler 功能开关」段**：生成时即写入该段，作为项目级 butler 功能持久配置的统一入口——`dangerous: off`、`independent_review: off`（安全默认），`preference: on`（默认 on；`on` 安全：实际采集仍需全局同意，未同意时不采集）。后续由命令回写或用户手改，AI 会话起始读取（见 `local-constraints-schema.md §4.1`）。
+- JSON 默认值固定为 `dangerous=false`、`independent_review=false`、`preference=true`、`profiles=[]`。配置存在即必须完整合法；缺字段、未知字段/版本或错误类型均 fail-closed，不从 Markdown 静默覆盖。
+- 旧项目仍可由兼容读取器回退旧 Markdown；升级时通过 `butler-upgrade` 的 `migrate_config` action 把 JSON 创建与 Markdown 收窄放进同一事务。新部署不得继续生成 legacy 机器段。
 
 ## 5. Hook 注入 (Hook Injection)
 

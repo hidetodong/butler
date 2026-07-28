@@ -69,6 +69,27 @@ class UpgradeTests(unittest.TestCase):
     def manifest(self):
         return json.loads((ROOT / "migrations" / "manifest.json").read_text())
 
+    def manifest_with_config_migration(self):
+        manifest = self.manifest()
+        current = (ROOT / "VERSION").read_text().strip()
+        released = next(item for item in manifest["migrations"] if item["target"] == current)
+        if any(
+            action["type"] == "migrate_config"
+            for item in manifest["migrations"]
+            if UPGRADE.semver(item["target"]) <= UPGRADE.semver(current)
+            for action in item["actions"]
+        ):
+            return manifest
+        migration = released
+        target = migration["target"]
+        migration["actions"].insert(-1, {
+            "id": f"{target}/test-migrate-config",
+            "type": "migrate_config",
+            "domain": "project",
+            "preconditions": ["legacy-config-readable", "target-path-owned"],
+        })
+        return manifest
+
     def test_manifest_covers_every_recipe_and_rejects_bad_contracts(self):
         data = self.manifest()
         UPGRADE.validate_manifest(data, ROOT)
@@ -84,6 +105,16 @@ class UpgradeTests(unittest.TestCase):
             with self.subTest(value=value["migrations"][0]):
                 with self.assertRaises(UPGRADE.UpgradeError):
                     UPGRADE.validate_manifest(value, ROOT)
+
+    def test_v330_registers_project_config_migration_before_entrypoints(self):
+        migration = self.manifest()["migrations"][-1]
+        self.assertEqual(("3.2.0", "3.3.0", "v3.3.0.md"), (
+            migration["source"], migration["target"], migration["recipe"]
+        ))
+        self.assertEqual(
+            ["global_install", "migrate_config", "regen_entrypoints", "restamp"],
+            [action["type"] for action in migration["actions"]],
+        )
 
     def test_plan_is_zero_write_and_reports_machine_actions(self):
         project = self.project("2.14.0", agents=False)
@@ -249,7 +280,8 @@ class UpgradeTests(unittest.TestCase):
         old = project / ".ai/SESSION_HANDOFF.md"
         old.write_text("history\n")
         manifest = self.manifest()
-        migration = manifest["migrations"][-1]
+        current = (ROOT / "VERSION").read_text().strip()
+        migration = next(item for item in manifest["migrations"] if item["target"] == current)
         target = migration["target"]
         migration["actions"].insert(0, {
             "id": f"{target}/00-rename-handoff", "type": "rename", "domain": "project",
@@ -273,6 +305,88 @@ class UpgradeTests(unittest.TestCase):
         with self.assertRaises(UPGRADE.UpgradeError) as raised:
             UPGRADE.global_install(ROOT, False)
         self.assertEqual(UPGRADE.EXIT_DECISION, raised.exception.code)
+
+    def test_config_migration_action_is_zero_write_transactional_and_idempotent(self):
+        project = self.project("3.1.0")
+        local = project / ".ai/local-constraints.md"
+        local.write_text(
+            "# Project Type\n- CLI\n\n"
+            "# Active Profiles\n- `typescript-rules`\n\n"
+            "# Local Constraints\n- preserve me\n\n"
+            "# Butler 功能开关\n"
+            "- dangerous: on\n"
+            "- independent_review: off\n"
+            "- preference: on\n",
+            encoding="utf-8",
+        )
+        manifest = self.manifest_with_config_migration()
+        original = UPGRADE.read_json
+
+        def fake_read(path):
+            return manifest if path.name == "manifest.json" else original(path)
+
+        before = digest_tree(project)
+        with mock.patch.object(UPGRADE, "read_json", side_effect=fake_read):
+            plan = UPGRADE.build_plan(project, ROOT, "defer")
+        self.assertEqual(before, digest_tree(project))
+        paths = {(item["operation"], item["path"]) for item in plan["changes"]}
+        self.assertIn(("write", ".ai/butler.config.json"), paths)
+        self.assertIn(("write", ".ai/local-constraints.md"), paths)
+
+        applied = UPGRADE.apply_plan(plan, project)
+        self.assertIn(applied["status"], {"applied", "applied-external-pending"})
+        config = json.loads((project / ".ai/butler.config.json").read_text())
+        self.assertTrue(config["dangerous"])
+        self.assertEqual(["typescript-rules"], config["profiles"])
+        narrowed = local.read_text()
+        self.assertNotIn("# Active Profiles", narrowed)
+        self.assertNotIn("# Butler 功能开关", narrowed)
+        self.assertIn("# Local Constraints\n- preserve me", narrowed)
+
+        with mock.patch.object(UPGRADE, "read_json", side_effect=fake_read):
+            again = UPGRADE.build_plan(project, ROOT, "defer")
+        self.assertEqual("already-current", again["status"])
+
+        (project / ".ai/butler.config.json").unlink()
+        with mock.patch.object(UPGRADE, "read_json", side_effect=fake_read):
+            with self.assertRaisesRegex(UPGRADE.UpgradeError, "configuration drift"):
+                UPGRADE.build_plan(project, ROOT, "defer")
+
+    def test_config_migration_conflict_and_failure_leave_no_half_state(self):
+        conflict = self.project("3.1.0")
+        local = conflict / ".ai/local-constraints.md"
+        local.write_text("# Butler 功能开关\n- dangerous: on\n")
+        config_tool = UPGRADE.load_project_config(ROOT)
+        config_tool.initialize(conflict)
+        manifest = self.manifest_with_config_migration()
+        original = UPGRADE.read_json
+
+        def fake_read(path):
+            return manifest if path.name == "manifest.json" else original(path)
+
+        before = digest_tree(conflict)
+        with mock.patch.object(UPGRADE, "read_json", side_effect=fake_read):
+            with self.assertRaisesRegex(UPGRADE.UpgradeError, "conflict"):
+                UPGRADE.build_plan(conflict, ROOT, "defer")
+        self.assertEqual(before, digest_tree(conflict))
+
+        project = self.project("3.1.0")
+        local = project / ".ai/local-constraints.md"
+        local.write_text(
+            "# Active Profiles\n- none\n\n"
+            "# Local Constraints\n- preserve\n\n"
+            "# Butler 功能开关\n- dangerous: off\n",
+            encoding="utf-8",
+        )
+        before = digest_tree(project, ignore_runtime=True)
+        with mock.patch.object(UPGRADE, "read_json", side_effect=fake_read):
+            plan = UPGRADE.build_plan(project, ROOT, "defer")
+        with mock.patch.dict(os.environ, {"BUTLER_UPGRADE_FAIL_AFTER": "2"}):
+            with self.assertRaisesRegex(UPGRADE.UpgradeError, "all project files restored"):
+                UPGRADE.apply_plan(plan, project)
+        self.assertEqual(before, digest_tree(project, ignore_runtime=True))
+        self.assertFalse((project / ".ai/butler.config.json").exists())
+        self.assertIn("# Butler 功能开关", local.read_text())
 
     def test_manifest_rejects_protected_action_paths_and_bad_preconditions(self):
         data = self.manifest()

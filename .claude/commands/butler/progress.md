@@ -31,6 +31,8 @@ argument-hint: "[brief=一行摘要 | 留空=完整结构化报告]"
 
 按下面 9 个段落（§1–§9）**依次**读取并输出。每段缺失数据时如实标注「无」或「不适用」，**不编造、不推测**。
 
+先运行 `python3 "$BUTLER_PATH/tools/project-config/config.py" resolve --project-root "$PROJECT_ROOT"`。成功时后续报告复用这一个 JSON 结果，不另行解析配置；失败时项目配置标为错误，危险/独立复核/偏好均显示 fail-closed，报告仍可只读聚合其余台账。`legacy_conflicts` 非空必须在 §1/§8 亮牌。
+
 ---
 
 #### §1 项目概况
@@ -38,8 +40,9 @@ argument-hint: "[brief=一行摘要 | 留空=完整结构化报告]"
 | 项 | 值 |
 |---|---|
 | 项目 | 从 `git remote -v` 取 origin URL 的 repo 名；无 remote 则取目录名 |
-| Butler 版本 | 读 `$PROJECT_ROOT/.ai/local-constraints.md` 的 butler 版本字段；无则读 `$PROJECT_ROOT/VERSION`；都没有写「未知」 |
+| Butler 版本 | 优先读 `$PROJECT_ROOT/CLAUDE.md` / `AGENTS.md` 的 managed Butler 版本戳（两者冲突必须亮牌）；无戳再读 `$PROJECT_ROOT/VERSION`；都没有写「未知」 |
 | 部署状态 | `.ai/` 存在即 ✅ |
+| 项目配置 | resolve 的 `source`、`dangerous`、`independent_review`、`preference`、`profiles` 与 `legacy_conflicts` |
 
 #### §2 里程碑
 

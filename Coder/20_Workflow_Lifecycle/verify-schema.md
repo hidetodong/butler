@@ -97,7 +97,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - `Completion Inputs` 是完成裁决器的机读输入：`Review Verdict` 只允许 `pass / must-fix / not-run`，`Completion Blockers` 只允许 `none / present`；未知/缺失 fail-closed。完整路径收口前运行 `tools/goal-assurance/goal.py evaluate`，只有 exit 0 / `eligible` 可进入收口仪式。裁决器会独立重查 TECH_PLAN 声明的 TDD 配对，不信任 `TDD Pair Status` 文字本身。
 - `Remaining Risks` 也是 Review / P5 自评产出的 **Should Fix（不阻断项）** 的落点（不得写入 `01_CHANGELOG.md`）；见 `60_Extension_CodeReview/review-engine.md §4`。
 - 字段正文必须讲人话、不啰嗦，口径以 `artifact-style.md` 为准（单一来源，不在此重复）；AC 回填用紧凑式 `[x] ACn ✓ 一句话证据`，不重抄 AC 原文。
-- `Independent Review` 为可选字段：仅当本迭代跑过独立复核（手动 `/review` 或项目 `Review Policy: independent_review: on`）时回填；未跑则可整段省略。环境不支持 fresh-context 子 agent 而未能独立复核时，须按 `62_Extension_Agents/overview.md §3` 通用规矩 **G2** 如实标注"未执行"并落到 `Remaining Risks`，不得冒称已独立复核。
+- `Independent Review` 为可选字段：仅当本迭代跑过独立复核（手动 `/review` 或 project-config `resolve` 返回 `independent_review=true`）时回填；未跑则可整段省略。环境不支持 fresh-context 子 agent 而未能独立复核时，须按 `62_Extension_Agents/overview.md §3` 通用规矩 **G2** 如实标注"未执行"并落到 `Remaining Risks`，不得冒称已独立复核。
 
 ## 5. 与执行流程的关系
 

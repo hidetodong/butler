@@ -51,11 +51,11 @@ handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重�
 1. **先解施工项目根**：会话启动目录不等于项目根。用户点名路径优先；否则按 `mcv-deployment.md §0.1` 用最近已部署 Butler 根 / Git 根证明。目标不唯一就停下询问，仅凭 `cwd` 不得展开。
 2. 向用户回声解析后的绝对项目根，再以它为唯一边界侦察技术栈和目录结构。
 3. 只在该项目根创建 `.ai/`、`deliveries/`、`origin/` 与双宿主入口。
-4. 生成 `.ai/local-constraints.md`（本地化约束，引用而非复制通用规则）。
+4. 生成 `.ai/local-constraints.md`（只写人类可读本地约束）与 `.ai/butler.config.json`（项目级机器配置，使用驻留 project-config 工具初始化）。
 
 ## 项目级功能开关（持久配置）
 
-butler 持久模式开关统一持久在 `.ai/local-constraints.md`「Butler 功能开关」段（`dangerous` / `independent_review`，默认 off）。**会话起始必须读取本段并据此执行**；命令 NL 触发回写、也可手改。`dangerous: on` **跨会话生效**，AI 每会话起始读到即**显式声明后才进入**（announce-on-read，绝不静默进无人值守）。`preference: on|off`（默认 on）也在此段，作**本项目偏好探针抑制开关**（`on` ≠ 强制采集，仍需全局同意；`off` 即本项目不采集）；但 consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），本开关不双写。
+butler 持久模式与 Active Profiles 统一持久在 `.ai/butler.config.json`：`dangerous` / `independent_review` 默认 false，`preference` 默认 true。**会话起始必须通过驻留 `tools/project-config/config.py resolve --project-root "$PROJECT_ROOT"` 读取并据此执行**；JSON 存在即为唯一真源，损坏时 fail-closed，缺失时才兼容回退旧 `.ai/local-constraints.md` 机器段。冲突必须亮牌。回写只用 project-config `set` 且只写 JSON；`source=legacy/missing` 时先 upgrade/init，不改 Markdown。`dangerous=true` 跨会话生效，AI 每会话起始读到即**显式声明后才进入**（announce-on-read，绝不静默进无人值守）。`preference` 只作本项目偏好探针抑制开关；consent/数据真源仍在外置 `$BUTLER_PREF`，不双写。
 
 危险模式不扩大文件权限：每次无人任务启动时回声并冻结宿主已预授权的写入上限（默认当前项目，可由用户预授权额外项目或工作区父目录）；上限内可动态追加施工项目，上限外继续不依赖部分并记阻塞，关键链路受阻则诚实交还。模型不得自行扩权、改宿主权限或用 `BUTLER_BYPASS` 硬闯。Butler hook 只管能归属项目的流程门禁；真实项目外路径交宿主权限，坏输入仍 fail-closed。
 

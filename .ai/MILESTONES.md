@@ -4,6 +4,7 @@ current: none
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
+| MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |
 | MILE-0012 | 轻量 TDD 配对证据：复用现有 evidence 记录同一测试命令先失败、后通过并接入收口检查 | closed | 2026-07-24 | 2026-07-26 | ITER-0091, ITER-0092 | deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md |
 | MILE-0011 | 确定性五件套产物链：固定结构、阶段生成与机械校验 | closed | 2026-07-23 | 2026-07-23 | ITER-0086, ITER-0087, ITER-0088, ITER-0089 | deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md |
 | MILE-0010 | Butler 长期规模治理：可信 handoff、长编号与有界双台账 | closed | 2026-07-22 | 2026-07-22 | ITER-0083, ITER-0084 | deliveries/milestones/MILE-0010-long-horizon-scale-governance.md |
@@ -21,6 +22,8 @@ current: none
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
+| parallel-p4-execution-slots | 单迭代多 Agent 并行 P4：执行槽、证据与集成隔离 | 2026-07-28 | .ai/milestone-backlog/parallel-p4-execution-slots.md | 方向已完成 ideation 与审计；需先补齐身份、worktree 真源、证据和集成隔离合同，再决定正式启动。 |
+| multi-active-iteration-runtime | 多 active 迭代运行时：迭代级真源、Batch 与跨迭代集成审计 | 2026-07-28 | .ai/milestone-backlog/multi-active-iteration-runtime.md | 属高成本后续形态；等待单迭代并行 P4 的真实 dogfood 与收益数据，避免提前迁移全局状态机。 |
 | prd-future-route-fulfillment | PRD 改版到未启动里程碑路线项的确定性兑现闭环 | 2026-07-23 | .ai/milestone-backlog/prd-future-route-fulfillment.md | 先保留方向：当前只识别并记录 future disposition，路线项启动时尚无机械消费与兑现门禁。 |
 | state-transition-trust-gate | 关键节点状态可信闭环：防止 AI 宣称已更新但落档仍陈旧 | 2026-07-24 | .ai/milestone-backlog/state-transition-trust-gate.md | 先保留方向：现有审计能验证结构与哈希，但会放过节点后权威记录、摘要和真实环境之间的确定性矛盾。 |
 | tdd-evidence-hardening | TDD 证据增强：防测试改弱、有效 Red、跨语言 Adapter 与实际改动对账 | 2026-07-24 | .ai/milestone-backlog/tdd-evidence-hardening.md | V1 先验证轻量 Red→Green 配对的实际价值；更强的过程证明等真实使用暴露需要后再推进。 |

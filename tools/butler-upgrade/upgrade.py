@@ -38,6 +38,7 @@ ACTION_DOMAINS = {
     "no_op": "project",
     "split": "decision",
     "global_install": "machine",
+    "migrate_config": "project",
 }
 ACTION_KEYS = {
     "regen_entrypoints": set(),
@@ -48,6 +49,7 @@ ACTION_KEYS = {
     "no_op": set(),
     "split": set(),
     "global_install": set(),
+    "migrate_config": set(),
 }
 ACTION_PRECONDITIONS = {
     "regen_entrypoints": ["entrypoint-markers-valid"],
@@ -58,6 +60,7 @@ ACTION_PRECONDITIONS = {
     "no_op": [],
     "split": ["project-knowledge-shape-valid", "explicit-split-decision"],
     "global_install": ["explicit-machine-confirmation"],
+    "migrate_config": ["legacy-config-readable", "target-path-owned"],
 }
 COMMON_ACTION_KEYS = {"id", "type", "domain", "preconditions"}
 
@@ -189,6 +192,22 @@ def load_renderer(butler_root: Path):
     spec = importlib.util.spec_from_file_location("butler_entrypoint_renderer", path)
     if not spec or not spec.loader:
         raise UpgradeError("cannot load entrypoint renderer")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+    return module
+
+
+def load_project_config(butler_root: Path):
+    path = butler_root / "tools" / "project-config" / "config.py"
+    spec = importlib.util.spec_from_file_location("butler_project_config", path)
+    if not spec or not spec.loader:
+        raise UpgradeError("cannot load project configuration tool")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     previous = sys.dont_write_bytecode
@@ -413,6 +432,21 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
         current_hooks = hook_source_files(butler_root)
         if existing_hooks and tree_digest(existing_hooks) != tree_digest(current_hooks):
             raise UpgradeError("current-version hook content drift")
+        released_actions = [
+            action
+            for migration in manifest["migrations"]
+            if semver(migration["target"]) <= semver(current)
+            for action in migration["actions"]
+        ]
+        if any(action["type"] == "migrate_config" for action in released_actions):
+            config_tool = load_project_config(butler_root)
+            try:
+                pending = config_tool.plan_migration(project)
+            except config_tool.ConfigError as error:
+                raise UpgradeError(f"current-version project configuration drift: {error.message}") from error
+            if pending:
+                paths = ", ".join(path.as_posix() for path in sorted(pending))
+                raise UpgradeError(f"current-version project configuration drift: {paths}")
         result["status"] = "already-current"
         return result
 
@@ -465,6 +499,19 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
             if old.exists():
                 plan_write(new_rel, old.read_bytes(), old.stat().st_mode & 0o777)
                 plan_delete(old_rel)
+        elif action["type"] == "migrate_config":
+            config_tool = load_project_config(butler_root)
+            try:
+                migration_changes = config_tool.plan_migration(project)
+            except config_tool.ConfigError as error:
+                raise UpgradeError(f"cannot migrate project configuration: {error.message}") from error
+            for rel, content in migration_changes.items():
+                target = contained_target(project, rel)
+                plan_write(
+                    rel,
+                    content,
+                    (target.stat().st_mode & 0o777) if target.exists() else 0o644,
+                )
 
     if any(action["type"] == "sync_hooks" for action in actions):
         source = hook_source_files(butler_root)

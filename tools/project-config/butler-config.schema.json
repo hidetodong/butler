@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://butler.local/schemas/butler-config.v1.json",
+  "title": "Butler project configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dangerous",
+    "independent_review",
+    "preference",
+    "profiles"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "dangerous": {
+      "type": "boolean",
+      "default": false
+    },
+    "independent_review": {
+      "type": "boolean",
+      "default": false
+    },
+    "preference": {
+      "type": "boolean",
+      "default": true
+    },
+    "profiles": {
+      "type": "array",
+      "default": [],
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

@@ -680,6 +680,78 @@
           "sha256": "c0c14ce8318d626d307dde9294ed6aaac6c9374742059db4b2f7477b800de36b"
         }
       ]
+    },
+    "ITER-0093": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0093/CHANGELOG.md",
+        "sha256": "c336af59858f2fac3a82386aab3218ea1930f749393601863375fec74080d02d"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "8b10d511b38546b1a6dc7a93f6fecb386ea3033720919880251e18051a8c0f82"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "8bfb65501fa46b4fe13652f4883aa54dd048768b7b021aa765d547472ac66af9"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "654f846cd9243deb88f2b565f20587ddfbb94685075b73cdf111806fa5dc5078"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "4cb0450eceffcb913dd7d52bb958c08d34ccfe2d82bbdf187a0b9f32296ef396"
+        }
+      ]
+    },
+    "ITER-0094": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0094/CHANGELOG.md",
+        "sha256": "1f4f71f5705fbe40a93fe25a2cd96647d3b825087c4e836262643c1b87cc1a7b"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "3fa1e588e334ea465eb7a14d1ee98282836065f0334bbbb1e263f5f3eaaf9f6c"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "dd10281351a4b552208bca3c17893c0e54de04cc37a7b4263059c0bc4ef40ab9"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "724460366105f7128e696551b38d660016dc9e9056900ad182d2a54182564d4a"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "d10e4337b1575e240e1f761134c8cfe3bc926c7c24a20b36b780c558d716589d"
+        }
+      ]
+    },
+    "ITER-0095": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0095/CHANGELOG.md",
+        "sha256": "7da91e081b94d0de5bded102458d123d749910f6f093c194391d072fac77af99"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "116d4a99703b0f1096761685b3948ba6de502ae39ea403bb2644cce296b31595"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "939e8878d7399243d303a7eb681a2aeb6bd020f33839da6b87c64bfc95df5b74"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "57d431b8fdd9157035f75097ec8a42dac169a9c72ede90894da35b706d4fbc72"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "e8554183745c372a4c2364d05516d354eb6b998cbb0790e42900ee42c28cebe3"
+        }
+      ]
     }
   }
 }

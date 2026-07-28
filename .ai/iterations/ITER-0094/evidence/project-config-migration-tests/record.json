@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "project-config-migration-tests",
+  "iteration": "ITER-0094",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "tools/project-config/tests/test_config.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-28T12:05:36.442Z",
+  "finished_at": "2026-07-28T12:05:37.641Z",
+  "duration_ms": 1198,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "0ac8bffce95153a83bc79b238c2231b3516d826b3104bbebef11469d40b78230",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

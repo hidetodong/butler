@@ -1,5 +1,12 @@
 # Dangerous Mode Run Log
 
+- 2026-07-28 | route | ITER-0095 | dangerous-ack | 自动开启 MILE-0013 R3；范围锁定为统一 `resolve/set` 消费语义、当前仓 dogfood 迁移、双宿主文档接线与 3.3.0 迁移/发布验证，不推断 commit、tag 或 push 授权。
+- 2026-07-28 | P2 | ITER-0095 | dangerous-ack | AC1–AC8 覆盖统一读写、source/冲突可见性、本仓保值迁移、活文档清零、真实升级链、版本一致性和完整关闭态验证；自审无不可验证项后自主冻结。
+- 2026-07-28 | P3 | ITER-0095 | dangerous-ack | Plan Admission=pass；采用 `resolve` 唯一读、`set` JSON-only 写、consumer matrix 结构测试、保值 dogfood 和先迁移链后关闭/切版本的顺序，Must Fix=0，自主进入 P4。
+- 2026-07-28 | P2-reentry | ITER-0095 | dangerous-ack | P5 收口顺序审查发现 AC7 不能把“Goal eligible 后才允许生成”的 delivery 实体反向设为完成资格前置；保持原发布范围，只把验收点收窄为 UNRELEASED 元数据与既定路径对齐，实体由关闭态审计核对。
+- 2026-07-28 | P5-review | ITER-0095 | dangerous-ack | 完整强审发现 1 个 Must Fix：直接修改 preference command frontmatter 绕过 workflow registry 投影真源；已改为更新 registry 并重生成。复跑配置专项 32/32、upgrader 19/19、完整 CI exit 0，最终 Must Fix 0、Should Fix 0；独立复核关闭。
+- 2026-07-28 | close | ITER-0095 / MILE-0013 | dangerous-ack | Goal 十一项检查全绿，证据与五件套归档、迭代/里程碑双格式交付生成，R1–R3 全部 closed；v3.3.0 仅为 UNRELEASED 候选，未提交、未打 tag、未推送。
+
 - 2026-07-22 · activation · MILE-0009 · `dangerous-ack`：用户明确要求开启危险模式并开始当前里程碑；确认 MILE-0009 已 active、尚无承接迭代。本次写入上限冻结为 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`，北极星锁定为连续完成 R1–R8 后收口里程碑。
 - 2026-07-22 · route · ITER-0075 · `dangerous-ack`：领取 MILE-0009 R1；限定为需求集合、日期化稳定身份、单需求目录和新需求/新版身份判定契约，不提前实现 monorepo 范围、inbox、多 PRD AC 钉版、命令、迁移或门禁。
 - 2026-07-22 · P2 · ITER-0075 · `dangerous-ack`：AC1–AC7 通过验收自审并自主冻结；项目级索引、`prd_id` 语法与稳定性、单需求目录、身份判定、歧义停机、旧结构兼容边界和文档/测试均有可验证判据，范围未越过 R1。
@@ -148,3 +155,16 @@
 - 2026-07-26 | P2 | ITER-0092 | dangerous-ack | 自审结论：AC1–AC7 均可机械验证，功能/结构/质量与关闭态兼容覆盖完整，无隐藏未决项；自决摘要：自主冻结 AC 并进入 P3。
 - 2026-07-26 | P3 | ITER-0092 | dangerous-ack | 自审结论：Plan Admission=pass；AC 全覆盖，无新契约/模块扩张，跨根寻址、stdout JSON 和关闭态失败路径已明确，Must Fix=0；自决摘要：复用 evidence CLI 单一算法并进入 P4。
 - 2026-07-26 | P5-review | ITER-0092 | dangerous-ack | 自审结论：逻辑健壮性/可读性/性能/安全与 AC1–AC7 断言核对通过，Must Fix=0、Should Fix=0；独立复核未启用（项目开关 off，本任务也未获子 agent 委派授权）；自决摘要：允许进入 Goal 完成资格裁决。
+- 2026-07-28 | route | ITER-0093 | dangerous-ack | 授权上限冻结为 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`；MILE-0013 R1 绑定 ITER-0093，先建立扁平 JSON 配置合同与统一读写内核，不提前切换消费端。
+- 2026-07-28 | P2 | ITER-0093 | dangerous-ack | 自审结论：AC1–AC7 覆盖结构、行为、安全和质量，均有机器验证方法，无隐藏未决项；自主冻结 AC。
+- 2026-07-28 | P3 | ITER-0093 | dangerous-ack | Plan Admission=pass；选择标准库单内核、显式项目根、严格完整配置与原子替换，配置缺失和配置损坏分流清楚，Must Fix=0；自主进入 P4。
+- 2026-07-28 | P5-review | ITER-0093 | dangerous-ack | 完整强审发现 1 个 Must Fix：原子替换后目录同步若失败会出现“命令报错但配置已改变”；已把全部可失败步骤前移到发布前，并补故障注入及路径/字段负向回归。
+- 2026-07-28 | P5-review | ITER-0093 | dangerous-ack | 修复后配置专项 18/18、完整 CI reproduced 与 diff check 通过；最终 Must Fix 0、Should Fix 0。项目 `independent_review` 为 off，未执行 fresh-context 独立复核并如实披露。
+- 2026-07-28 | close | ITER-0093 | dangerous-ack | Goal 十一项检查全绿、9 份 evidence 整包归档，五件套、双格式交付与 4 个知识主题折叠完成；R1 closed，继续 MILE-0013 R2。
+- 2026-07-28 | route | ITER-0094 | dangerous-ack | 自动开启 MILE-0013 R2；以 project-config 纯迁移计划 + upgrader 既有事务承接双文件变更，不提前切消费端或登记未发布版本 action。
+- 2026-07-28 | P2 | ITER-0094 | dangerous-ack | AC1–AC7 覆盖 legacy 解析、JSON 优先、冲突、正文保真、升级事务、新部署和完整回归，均有机械验证方法；自主冻结。
+- 2026-07-28 | P3 | ITER-0094 | dangerous-ack | Plan Admission=pass；采用纯 parser/plan + upgrade transaction 单一 journal，模糊 Markdown fail-closed，Must Fix=0；自主进入 P4。
+- 2026-07-28 | P2-reentry | ITER-0094 | dangerous-ack | 实现核对发现 AC3 未点名 legacy `Review Policy` 清理；在原迁移影响面内补明并重新自审冻结，不新增消费端或版本链范围。
+- 2026-07-28 | P5-review | ITER-0094 | dangerous-ack | 完整强审发现 1 个 Must Fix：未来版本含 `migrate_config` 后，已在当前版本的项目若配置被删会被 `already-current` 隐藏；已按 released action 增加 current-version config drift 检查和回归。
+- 2026-07-28 | P5-review | ITER-0094 | dangerous-ack | 修复后 project-config 27/27、upgrader 18/18、完整 CI reproduced 与 diff check 通过；最终 Must Fix 0、Should Fix 0。独立复核未启用并如实披露。
+- 2026-07-28 | close | ITER-0094 | dangerous-ack | Goal 十一项检查全绿、9 份 evidence 整包归档，五件套、双格式交付和 4 个知识主题折叠完成；R2 closed，继续 MILE-0013 R3。

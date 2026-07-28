@@ -52,13 +52,14 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 ### 1.3 项目级功能开关读取 (Deployed Project State)
 
-在已部署 butler 的项目中（存在 `.ai/local-constraints.md`），**会话起始必须读取其「Butler 功能开关」段**，并据各开关值激活/抑制对应持久模式，不依赖对话记忆判断"上次开着什么"。
+在已部署 butler 的项目中（存在 `.ai/`），**会话起始必须先解析唯一 `PROJECT_ROOT`，再运行驻留 `tools/project-config/config.py resolve --project-root "$PROJECT_ROOT"`**，并据 stdout JSON 的 `config` 激活/抑制持久模式，不依赖对话记忆或自行解析 Markdown。
 
-- `dangerous: on` → 按 §4 Dangerous Mode 跨会话语义处理：**当回合显式声明后**自动进入危险模式（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
-- `independent_review: on` → 每次 P5 收口自动起独立复核。
-- `preference: off` → **本项目抑制偏好探针**（不采集/蒸馏/反哺）；默认/缺省视为 `on`（不抑制，仍受全局同意约束）。preference 低风险、无需 announce，读到即遵循。
-- 无该段或值为 off → 按 Standard Mode / 默认行为推进。
-- 字段语义、读写口径与 legacy 兼容以 `20_Workflow_Lifecycle/local-constraints-schema.md §4.1` 为准。
+- `dangerous=true` → 按 §4 Dangerous Mode 跨会话语义处理：**当回合显式声明后**自动进入危险模式（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
+- `independent_review=true` → 每次 P5 收口自动起独立复核。
+- `preference=false` → **本项目抑制偏好探针**（不采集/蒸馏/反哺）；默认配置为 true（不抑制，仍受全局同意约束）。preference 低风险、无需 announce，读到即遵循。
+- `profiles` 决定本项目启用的 Domain Profiles；空数组表示无。
+- 命令非零、`status != ok`、输出不可解析或配置损坏时必须 fail-closed：不得开启 dangerous/independent review，不得运行偏好探针，并向用户报告诊断。`legacy_conflicts` 非空必须显式亮牌；兼容期仍以 JSON 为真源。
+- 字段语义、读写口径与 legacy 兼容以 `20_Workflow_Lifecycle/local-constraints-schema.md` 和 `tools/project-config/README.md` 为准。
 
 ## 2. 实施协议
 
@@ -87,11 +88,11 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Standard Mode (默认)**: 保持轻量，遵循 `20_Workflow_Lifecycle/` 执行任务。
 - **Ideation Mode (`/ideation`)**: 激活 `50_Extension_Ideation/ideation-engine.md`。当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 `/ideation` 时开启。
 - **收敛闭环模式 (`/butler:loop`)**: 激活 `55_Extension_ConvergenceLoop/convergence-loop-engine.md`，在常驻「纠错收口契约」(`30_Quality_Gate/correction-contract.md`) 之上叠加高强度死磕与定量熔断。当用户提到"死磕"、"必须变绿"、"不准报错"、"严格校验"或输入 `/butler:loop`（旧名 `/loop` 仍识别）时开启。（注：纠错收口契约是 P4 默认常驻的底线纪律，无需触发；本模式只是其 opt-in 升档。）
-- **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。P5 交付阶段默认触发**同上下文简要自评**（用户明确跳过时除外）。**独立复核（opt-in·真·独立·fresh-context 子 agent，单模型下靠上下文隔离而非更强模型）**有两条触发：手动 `/review`（一次性），或项目 `.ai/local-constraints.md`「Butler 功能开关」设 `independent_review: on`（旧 `Review Policy` 字段仍兼容）时每次 P5 收口自动跑。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启独立复核。复核帮手的完整定义见 `62_Extension_Agents/independent-review.md`，帮手通用规矩（含独立性=上下文隔离）见 `62_Extension_Agents/overview.md §3`。
+- **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。P5 交付阶段默认触发**同上下文简要自评**（用户明确跳过时除外）。**独立复核（opt-in·真·独立·fresh-context 子 agent，单模型下靠上下文隔离而非更强模型）**有两条触发：手动 `/review`（一次性），或 project-config `resolve` 返回 `independent_review=true` 时每次 P5 收口自动跑。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启独立复核。复核帮手的完整定义见 `62_Extension_Agents/independent-review.md`，帮手通用规矩（含独立性=上下文隔离）见 `62_Extension_Agents/overview.md §3`。
 - **Butler Upgrade (`/butler:upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler:upgrade`（旧名 `/butler-upgrade`）时开启。非持久 Mode，执行一次后返回 Standard Mode。
 - **Butler Setup (`/butler:setup`)**: 激活 `20_Workflow_Lifecycle/butler-setup.md`，安装或刷新 Claude/Codex/Pi 的机器级 Butler 能力。显式命令或明确要求“现在安装”才构成本次执行确认；咨询语义只说明影响并等待确认。非持久 Mode，不初始化或升级当前项目。
-- **Dangerous Mode (`/butler:dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以收敛闭环跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/butler:dangerous`（旧名 `/dangerous` 仍识别）时开启；`/butler:dangerous off` 或"恢复确认"关闭。**持久状态外化**到 `.ai/local-constraints.md`「Butler 功能开关」`dangerous`：开/关回写该开关；**跨会话**读到 `dangerous: on` 时，AI 当回合**显式声明后自动进入**（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
-- **Preference Mode (`/butler:preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。当用户输入 `/butler:preference`（旧名 `/preference` 仍识别）或说「记住这条偏好 / 学我的取舍」等自然语言时开启。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/butler:dangerous` 自治、只学真人选择（模型自决不采集）**。`/butler:preference on`/`off` 隐私总开关、`/butler:preference reback on`/`off` 开关反哺、`/butler:preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。持久 Mode，跨迭代有效。**per-project 抑制开关**持久在 `.ai/local-constraints.md`「Butler 功能开关」`preference`（默认 on；`off` 即本项目不采集），但 consent/数据真源仍在外置 `$BUTLER_PREF`（跨项目），详见 `70_Extension_Preference/preference-probe-engine.md §2.5`。
+- **Dangerous Mode (`/butler:dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以收敛闭环跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/butler:dangerous`（旧名 `/dangerous` 仍识别）时开启；`/butler:dangerous off` 或"恢复确认"关闭。持久状态由 `.ai/butler.config.json` 的 `dangerous` 承载，读写只经 project-config `resolve/set`；跨会话解析到 true 时，AI 当回合**显式声明后自动进入**（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
+- **Preference Mode (`/butler:preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。当用户输入 `/butler:preference`（旧名 `/preference` 仍识别）或说「记住这条偏好 / 学我的取舍」等自然语言时开启。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/butler:dangerous` 自治、只学真人选择（模型自决不采集）**。`/butler:preference on`/`off` 隐私总开关、`/butler:preference project on`/`off` 项目抑制、`/butler:preference reback on`/`off` 开关反哺、`/butler:preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。项目抑制状态由 `.ai/butler.config.json` 的 `preference` 承载并只经 project-config 读写；consent/数据真源仍在外置 `$BUTLER_PREF`，详见 `70_Extension_Preference/preference-probe-engine.md §2.5`。
 
 若检测到任务复杂度极高（如核心算法、大规模重构），应主动询问："检测到逻辑复杂，是否需要开启收敛闭环模式进行高强度迭代验证？"
 

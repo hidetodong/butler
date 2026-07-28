@@ -6,6 +6,7 @@
 - **双台账热冷分层**：根 ITERATIONS/MILESTONES 只承载 current、近期热行与待办；有界 state index 保存固定区间路由公式，每个冷片以同名 receipt 自校验。AI 默认只定向读一片，机器审计必须跨热冷。*为什么*：冷启动成本和根导航都不能随历史线性增长，但历史追溯不能丢。
 - **ITER/MILE 是自然增长数字身份**：至少四位、永不重编号，比较与分配只取数字部分。*为什么*：字符串排序在 9999→10000 边界不可靠。
 - **五件套结构由机器合同固定**：新 live CONCEPT/AC/TECH/VERIFY/CHANGELOG 的段落、顺序、状态字段和表头以 artifact manifest 为准；条件段 N/A 不删除，legacy 归档不追改。*为什么*：容器若靠模型临场解释，就会逐轮产生细微但不可解析的漂移。
+- **项目机器配置采用严格扁平 JSON**：`.ai/butler.config.json` schema v1 只含版本、三个布尔开关与 profiles；存在即必须完整合法，未知字段/版本 fail-closed。所有消费端统一经 `resolve` 读取，持久修改只经 JSON `set` 写入；兼容期只在 JSON 缺失时严格回退旧 Markdown，迁移由 upgrader 单事务创建 JSON 并移除机器段，禁止长期双写。自然语言约束、运行状态和外置偏好数据不进入该文件。*为什么*：机器开关不能继续依赖模型解析 Markdown，同时第一版字段很少，不值得提前建设嵌套总配置中心。
 
 - **三层分层不混**：SOP Core / Domain / Business 职责不互窜。*为什么*：分层一乱，通用规则就会被某个栈 / 某桩业务污染，失去可复用性。
 - **产物链不依赖对话记忆**：P1 CONCEPT → P2 AC_LIST → P3 TECH_PLAN → P5 VERIFY，每阶段只从上一阶段的**文件**读。*为什么*：换会话就断片，只有落盘产物能跨会话恢复。

@@ -25,13 +25,13 @@
 
 ## 支撑目录（仓库根）
 
-- `plugins/butler/` — Codex 可安装发布包，`skills/` 内 10 个 Butler 工作流是实体真源；`.agents/skills/` 只用相对软链提供 repo discovery。个人 marketplace 安装/刷新由 `scripts/install-codex-plugin.sh` 编排官方 helper 与 CLI。
-- `workflows/registry.json` + `scripts/sync-workflow-registry.py` — 十工作流的双宿主名称、路径、风险、隐式策略、触发、旧名和 plugin/distribution 元数据真源；生成/校验 command/skill frontmatter、openai.yaml、repo 软链与唯一人读表，正文算法仍留在 `Coder/`。
+- `plugins/butler/` — Codex 可安装发布包，`skills/` 内 12 个 Butler 工作流是实体真源；`.agents/skills/` 只用相对软链提供 repo discovery。个人 marketplace 安装/刷新由 `scripts/install-codex-plugin.sh` 编排官方 helper 与 CLI。
+- `workflows/registry.json` + `scripts/sync-workflow-registry.py` — 12 个工作流的双宿主名称、路径、风险、隐式策略、触发、旧名和 plugin/distribution 元数据真源；生成/校验 command/skill frontmatter、openai.yaml、repo 软链与唯一人读表，正文算法仍留在 `Coder/`。
 - `.github/workflows/ci.yml` + `scripts/verify-ci.sh` — PR/main/release tag 的 Ubuntu/macOS 编排层与唯一 local/CI 执行入口；Python/依赖由 `.python-version`、`pyproject.toml`、`uv.lock` 固定，workflow 不复制测试清单。
 
 - `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
 - `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置和命令软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声。
-- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（按 OpenAI Codex commit/hash/license 固定的官方 plugin/skill validators）。
+- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `project-config/`（严格项目配置 schema、原子读写、legacy 兼容投影与纯迁移计划）、`butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器，含 `migrate_config` 双文件事务 action）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（按 OpenAI Codex commit/hash/license 固定的官方 plugin/skill validators）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/manifest.json`（可执行版本/action 链）+ `migrations/v*.md`（人读配方）、`deliveries/`（交付总结存档）。
 
 ## 成熟度（真源里没有的"现状"层）
