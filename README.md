@@ -8,7 +8,7 @@
 
 把 AI 从「自由发挥的编码助手」变成「按流程交付的工程协作者」
 
-![version](https://img.shields.io/badge/version-3.2.0-blue)
+![version](https://img.shields.io/badge/version-3.3.0-blue)
 ![type](https://img.shields.io/badge/type-rules--SOP-blue)
 ![format](https://img.shields.io/badge/format-Markdown-lightgrey)
 ![workflow](https://img.shields.io/badge/workflow-P1→P5-orange)
@@ -79,6 +79,8 @@ Butler 命令入口、双宿主名称、风险级别与旧名兼容以机器注�
 3. **新项目接入**：给 AI 任务时点名项目路径；或在新项目内执行 `/butler:init` 一键部署基地车。
 4. **升级已有项目**：`/butler:upgrade`，走迁移配方、先 dry-run 再事务 apply。
 5. **详细手册**：[`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)
+
+项目级机器配置统一存放在 `.ai/butler.config.json`：危险模式、独立复核、项目偏好抑制和 Active Profiles 都通过驻留 `tools/project-config/config.py resolve/set` 读写。旧 `.ai/local-constraints.md` 机器段仅作升级前兼容读取；自然语言本地约束继续留在 Markdown。
 
 ### 🏗 多宿主支持
 
@@ -163,6 +165,7 @@ butler/
 │
 ├── tools/                          # Butler 驻留工具（不拷进目标项目，按 $BUTLER 调用）
 │   ├── butler-upgrade/             #   manifest 驱动的 dry-run / 事务升级器
+│   ├── project-config/              #   项目机器配置 schema、严格读写与 legacy 迁移计划
 │   ├── goal-assurance/             #   Goal 完成资格只读裁决器
 │   ├── handoff/                     #   交接入口确定性生成、新鲜度检查与重建
 │   ├── verification-evidence/      #   自动道证据：命令/exit/log/hash 记录
