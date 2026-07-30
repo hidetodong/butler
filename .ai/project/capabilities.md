@@ -107,7 +107,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 ## 部署与维护能力
 
 - **全局安装（`scripts/setup.sh`）**：一次性、机器级——由 `configure-global-install.py` 先全量预检 marker/export/软链所有权，再逐对象原子维护 `BUTLER_PATH`、Claude 全局配置、命令目录软链和沟通风格；冲突零破坏停机。Codex plugin 是后续独立组件，失败时明确报告部分完成，不假报总成功。
-- **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 8 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
+- **个人沟通风格正本（`communication-style.md`，仓根）**：把过去散在本机 Matrix 输出风格与多个风格记忆文件里的「怎么跟用户说话」规矩，收敛成**唯一正本**（DRY，改说话风格只改这一处）；随 git 跨机器同步、经上面的 @import 常开。含 9 节（基调 / 详略 / 抓重点 / 说人话〔4 条带例〕/ 把话说顺 / 别急着抛选择菜单 / 格式 / 结尾决策块 / 边界）。只管说话方式、不渗工程行为。Matrix 输出风格作为过渡产物已退休（本机迁移）。
 - **基地车部署**：先解析并回声唯一 `PROJECT_ROOT`，再只在它下建 `.ai/`（含空 `.ai/project/` 种子）/ `deliveries/` / `origin/`，用统一 renderer 注入 CLAUDE.md + AGENTS.md，最后部署 Claude hooks。真源 `20_Workflow_Lifecycle/mcv-deployment.md`。
 - **维护升级**：`mcv-update.md`（维护文件升级）、`maintenance-boundaries.md`（成本 / 批处理边界）。
 - **hook 机械门禁**（部署项目侧）：PreToolUse 拦截跳阶段 / 未冻结 AC / 显式非 pass TECH_PLAN 写源码 / 业务扩展保护 / 双 active 迭代 / 台账非法状态值；真实项目外路径由宿主权限处理，坏输入仍拒绝。方案四态与七项 Plan Admission 真源 `tech-plan-schema.md`；Claude/Codex 共用 `phase_gate`，旧版无字段暂按 legacy 放行。

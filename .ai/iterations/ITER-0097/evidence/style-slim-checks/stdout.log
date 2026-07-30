@@ -1,0 +1,11 @@
+[PASS] AC1  7 行 ❌/✅ 例子逐字一致                原 7 行 / 新 7 行；内容完全一致
+[PASS] AC2  9 个 H2 标题与顺序不变                原 9 节 / 新 9 节；顺序一致
+[PASS] AC3  六条概念映射锚词全部命中                  全部命中
+[PASS] AC5  体积落在 4400–4900 B              原 5381 B → 新 4753 B（11.7% 降幅）
+[PASS] AC5  例子行字节未缩水                      原 953 B / 新 953 B
+[PASS] AC6  capabilities.md 节数记载与实际相符     记载 9 节 / 实际 9 节
+[PASS] AC6  CHANGELOG.md 未被改动             无改动
+[PASS] AC7  安装脚本路径行未动且仍指向正本               diff=空；路径行在
+[PASS] AC7  改动集合不含 templates/ 与 scripts/  改动 6 文件；无越界
+
+9/9 项通过

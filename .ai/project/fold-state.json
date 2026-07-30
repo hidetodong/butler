@@ -776,6 +776,22 @@
           "sha256": "21d7c76679e54c6d24cebe962a9a1f1bc76e7e432912f5fcf7fa98c7f02514b6"
         }
       ]
+    },
+    "ITER-0097": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0097/CHANGELOG.md",
+        "sha256": "7b3ae8f48ea6584eb8343687a05715c72a3013c81b1903d610358df9f144212e"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "562071d1430e437bed920c562e54d0054a2517db828325150e58ae7dac4f9d27"
+        },
+        {
+          "path": ".ai/project/debt.md",
+          "sha256": "117811a201b00083e8ae46ee3cec3ab4205f9b6d164ccecdc5410af1f3663cb2"
+        }
+      ]
     }
   }
 }

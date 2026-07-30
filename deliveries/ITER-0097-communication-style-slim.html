@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0097 交付总结 · 沟通风格正本瘦身：删掉它自己都在犯的毛病，例子和规矩一条没少</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>沟通风格正本瘦身：删掉它自己都在犯的毛病，例子和规矩一条没少</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0097</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-30</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>仓根 <code>communication-style.md</code> 是走全局 <code>@import</code>、每个会话常开的个人语气正本。它讲「往短里写、别注水」，自己却攒了三类冗余：写给人看的元说明、三节之间重复的抽象规矩、以及「把话说顺」那节用三重转折说一件事的散文铺垫。</p>
+      <p>本次要在<strong>规矩语义零改动、例子零删改</strong>的前提下把这些删掉。目标不是省 token——压掉的量约 628 字节（≈200 token），相对本机插件与 MCP 的几万 token 开销可以忽略。真实目的是消除自我矛盾，并去掉规矩之间的互相稀释。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><code>communication-style.md</code> 由 5381 B 压到 4753 B（-11.7%）：引言块删两处元说明；「抓重点」删与「结论先行」同义的首条；「把话说顺」引导段两句压成一句、四条规矩收紧措辞；「别急着抛选择菜单」去填充词。</li>
+        <li>九个小节全部保留、标题与顺序未变——<strong>三节分立不合并</strong>是用户在 P1 拍板的选择，代价是少省约 400 B，换来分类层次和可维护性。</li>
+        <li>「说人话」整节冻结，一字未动；7 行 ❌/✅ 例子逐字保留，953 B 分毫未减。</li>
+        <li>顺带修正一处既有漂移：<code>.ai/project/capabilities.md</code> 把本文件记作「8 节」，实际自 v2.10.0 加「把话说顺」后已是 9 节。</li>
+        <li>新增 <code>.ai/ITER-0097-clause-mapping.md</code> 条目去向对照表，原版每条内容的保留 / 并入 / 删除去向逐条可查。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>AI 的说话方式不变。</strong>这次改的是规矩的表述密度，不是规矩本身。使用者不该感到语气或详略有任何变化——若感到了，说明改坏了，按剩余风险一节处理。</li>
+        <li><strong>正本路径、文件名、<code>@import</code> 链路全部不变</strong>，本机 <code>git pull</code> 后下个会话即生效，<strong>无需重跑 <code>setup.sh</code></strong>。</li>
+        <li>唯一整条删除的规矩是「开头一句总览 / 最重要的判断，让我先看到大局，再分层」，它与「结论先行」同义；其独有的「再分层」已并入「结论先行」，没有丢。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <p>改动两个文件：仓根 <code>communication-style.md</code>（主改）与 <code>.ai/project/capabilities.md</code>（单行记载修正）。</p>
+      <p>不涉及 <code>templates/</code>、<code>scripts/</code>、<code>CHANGELOG.md</code> 与 <code>artifact-style.md</code>。本文件不进 <code>templates/</code>、不下发目标项目，因此已部署项目的 <code>.ai/</code> / <code>deliveries/</code> / <code>origin/</code> / <code>CLAUDE.md</code> / <code>.claude/hooks/</code> <strong>零结构变化</strong>。</p>
+      <p>对象级变更流见 <code>.ai/iterations/ITER-0097/CHANGELOG.md</code>。</p>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>两条机器证据，均 <code>passed</code>，路径见引用一节。</p>
+      <ul>
+        <li><strong>例子与结构未被破坏</strong>（<code>style-slim-checks</code>，覆盖 AC1/AC2/AC3/AC5/AC6/AC7）：脚本从 <code>git show HEAD</code> 取原版而非会话内快照，可独立重跑。7 行例子逐行 diff 零差异；9 个小节标题与顺序零差异；与 <code>artifact-style.md §2</code> 的六条概念映射锚词全部命中；体积 4753 B 落在验收区间；<code>capabilities.md</code> 记载值与实际节数相符；安装脚本与 <code>CHANGELOG.md</code> diff 为空。</li>
+        <li><strong>条目没有意外丢失</strong>（<code>clause-coverage</code>，覆盖 AC4）：用相似度阈值对两版规矩行做双向覆盖比对，原版 24 条中 23 条有对应，唯一整行消失的是白名单内那条，意外丢失 0、意外新增 0。</li>
+      </ul>
+      <p>需要说清证据的边界：机器能证明例子没被改、结构没塌、链路没断、没有条目在无记录的情况下消失；<strong>证明不了「被删的 12 处确实与他处重复」</strong>，那部分由对照表交人复核，在 <code>VERIFY_REPORT.md</code> 里如实标为弱验证。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>AC4 的人判层未经独立复核。</strong>语义等价判断由执行者自评加用户在汇报环节确认，没有 fresh-context 复核者重判。若日后发现某条被误判为重复，在新迭代补回，不追改本迭代归档。</li>
+        <li><strong>措辞品味无机械判据。</strong>改写后的句子是否读起来更好，只能由使用者在日常使用中反馈。</li>
+        <li><strong>发现一处 butler 自身的规则不一致，本迭代未修</strong>：<code>verify-schema.md §2</code> 把「人测道小结」列为条件必填字段，但 <code>tools/artifact-pipeline/artifacts.v1.json</code> 的 verify_report 段落清单不含该段，写进去会被结构检查判 <code>drift</code>。本迭代因 AC4 改判自动道而绕开，但任何真有人测残余的迭代都会撞上。建议另开迭代对齐两处真源。</li>
+        <li>本迭代过程中 AC5 的体积区间被修订过两次，第一次是错的（P3 下调后 P4 撤销）。这不影响交付结果，但说明「拿数字区间当验收项」不是好做法——真正管用的是 AC1 的例子零改和 AC4 的条目覆盖。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>验收清单：<code>.ai/iterations/ITER-0097/AC_LIST.md</code></li>
+        <li>技术方案：<code>.ai/iterations/ITER-0097/TECH_PLAN.md</code></li>
+        <li>验证报告：<code>.ai/iterations/ITER-0097/VERIFY_REPORT.md</code></li>
+        <li>对象级变更流：<code>.ai/iterations/ITER-0097/CHANGELOG.md</code></li>
+        <li>条目去向对照表：<code>.ai/iterations/ITER-0097/ITER-0097-clause-mapping.md</code></li>
+        <li>证据目录：<code>.ai/iterations/ITER-0097/evidence/</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>
