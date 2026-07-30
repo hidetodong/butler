@@ -1,211 +1,165 @@
 <div align="center">
 
-# 🤖 Butler
+# Butler
 
-长期运行项目可用 `python3 tools/state-ledger/state_ledger.py migrate --project-root <project>` 把 ITER/MILE 台账迁移成有界热表、固定数字区间冷分片与机器索引；用 `lookup ITER-0042` 只读命中的一个分片。先 `inspect` 预览、迁移后 `check`；不重编号、不改历史交付路径，重复执行幂等。
+**面向 AI 工程协作的验收导向 SOP**
 
-**面向 AI 辅助工程开发的通用协作 SOP 规则仓库**
-
-把 AI 从「自由发挥的编码助手」变成「按流程交付的工程协作者」
+让 AI 先理解目标、明确验收、确认方案，再实现并拿证据交付。
 
 ![version](https://img.shields.io/badge/version-3.3.0-blue)
 ![type](https://img.shields.io/badge/type-rules--SOP-blue)
 ![format](https://img.shields.io/badge/format-Markdown-lightgrey)
 ![workflow](https://img.shields.io/badge/workflow-P1→P5-orange)
-![AI](https://img.shields.io/badge/AI-collaboration-brightgreen)
+![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)
 
 </div>
 
----
+Butler 是一套 Markdown 规则和配套工具，不是代码框架。它把 AI 开发过程沉淀到项目内的 `.ai/`：需求怎么理解、什么算完成、准备怎么改、验证结果如何，都有明确文件可查，不再依赖一段容易丢失的对话。
 
-## 一句话说清
+## 它解决什么问题
 
-Butler 是一套**验收导向的开发协作 SOP**，把任意项目的需求开发过程固定为五阶段流水线——先对齐理解、再定义验收、再确认方案，最后才动手实现与验证。每个阶段产出落盘文件，Hook 门禁在产物缺失或验收未冻结时机械拦截写码操作。
+- **避免没对齐就写代码**：标准流程在实现前先确认验收标准和技术方案。
+- **让长任务可以接着做**：迭代状态、阶段产物和交接信息都落在项目里，新会话能恢复现场。
+- **让“做完了”有证据**：验证记录必须对应验收项，失败、弱验证和待人工确认的部分如实保留。
+- **让流程约束真正生效**：部署后的 Hook 会在关键产物缺失或未通过门禁时阻止源码写入。
 
-## ✨ 核心特性
+## 工作方式
 
-| | 能力 | 说明 |
-|---|---|---|
-| ✅ | **验收导向 SOP** | `P1→P5` 五阶段状态机，P2/P3 双 ACK 门控质量 |
-| 🔁 | **迭代化** | `ITER-NNNN` 单调递增，需求 ACK 后冻结，文档归档可回溯 |
-| 🏔 | **里程碑** | 大版本范围单元，聚合多个迭代产出交付；支持候办区延迟编号，开工才领号 |
-| 🎯 | **Goal 体系** | 从里程碑/迭代产物自动派生 Goal 合同，运行时信号回注校准，完成资格裁决 |
-| 🧠 | **偏好蒸馏** | 采集设计取舍，蒸馏跨项目通识，只作用于有监督工作 |
-| 🛡 | **Hook 门禁** | 阶段产物缺失或验收未冻结时，PreToolUse hook 机械拦截源码写入 |
-| 📦 | **基地车部署** | 新项目零配置接入，`/butler:init` 一键展开 `.ai/` 基础设施 |
-| 🤝 | **三宿主** | Claude Code / Codex / Pi 均可发现规则并协作 |
-
-## 🔄 核心工作流
+每个非极小任务默认走一轮 `P1 → P5`：
 
 ```mermaid
-flowchart TB
-    subgraph MILE["🏔 &nbsp;Milestone · 大可交付版本 (MILE-NNNN)"]
-        direction TB
-        subgraph ITER1["🔁 &nbsp;Iteration · 小可交付版本 (ITER-NNNN)"]
-            direction LR
-            P1["🔍 P1 Analysis<br/><b>CONCEPT.md</b>"] --> P2["✅ P2 Acceptance<br/><b>AC_LIST.md</b><br/>✋ ACK"]
-            P2 --> P3["📐 P3 Design<br/><b>TECH_PLAN.md</b><br/>✋ ACK"]
-            P3 --> P4["⚙️ P4 Execute<br/>代码 / 配置 / 文档"]
-            P4 --> P5["🧪 P5 Verify<br/><b>VERIFY_REPORT.md</b>"]
-        end
-        ITER2["🔁 &nbsp;ITER-NNNN+1 · P1 → P5 …"]
-        ITER1 -. 下一迭代 .-> ITER2
-    end
-
-    classDef phase fill:#eef2ff,stroke:#6366f1,stroke-width:1px,color:#312e81;
-    classDef gate fill:#fff7ed,stroke:#f59e0b,stroke-width:2px,color:#7c2d12;
-    classDef next fill:#f8fafc,stroke:#94a3b8,stroke-width:1px,color:#475569;
-    class P1,P4,P5 phase;
-    class P2,P3 gate;
-    class ITER2 next;
-    style MILE fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
-    style ITER1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#065f46;
+flowchart LR
+    P1["P1 理解问题<br/>CONCEPT.md"] --> P2["P2 定义完成<br/>AC_LIST.md"]
+    P2 -->|用户确认| P3["P3 确认方案<br/>TECH_PLAN.md"]
+    P3 -->|用户确认| P4["P4 实现<br/>代码 / 配置 / 文档"]
+    P4 --> P5["P5 验证<br/>VERIFY_REPORT.md"]
 ```
 
-> 每个 **迭代 `ITER-NNNN`** 跑一遍 `P1→P5`、独立交付；若干迭代组成一个 **里程碑 `MILE-NNNN`** 大版本。里程碑松耦合可选；每个阶段从上一阶段产物文件读取，不依赖对话记忆。
+| 阶段 | 回答的问题 | 主要产物 |
+|---|---|---|
+| P1 Analysis | 我们到底要解决什么？ | `.ai/CONCEPT.md` |
+| P2 Acceptance | 什么结果才算完成？ | `.ai/AC_LIST.md` |
+| P3 Design | 准备怎么改，风险在哪里？ | `.ai/TECH_PLAN.md` |
+| P4 Execute | 按已确认范围完成实现 | 代码、配置或文档 |
+| P5 Verify | 验收项是否有证据证明？ | `.ai/VERIFY_REPORT.md` |
 
-Butler 命令入口、双宿主名称、风险级别与旧名兼容以机器注册表生成的 [`docs/workflows.md`](docs/workflows.md) 为准。
+一轮 P1–P5 是一个可独立交付的**迭代**（`ITER-NNNN`）。需要多个迭代共同完成的大版本，可以再用可选的**里程碑**（`MILE-NNNN`）组织；只有真正开工时才编号，讨论中的方向先放候办区。
 
-## 🚀 快速上手
+## 快速开始
+
+### 1. 安装机器级能力
+
+首次使用时，在已经克隆的 Butler 仓库中运行：
 
 ```bash
-# 1. 一次性全局安装——Claude 配置/命令/风格 + Codex plugin + Pi 适配器
-./scripts/setup.sh
-
-# 2. 可选 · 偏好探针初始化（opt-in，数据外置，与本仓库解耦）
-./scripts/preference-init.sh
+bash scripts/setup.sh
 ```
 
-3. **新项目接入**：给 AI 任务时点名项目路径；或在新项目内执行 `/butler:init` 一键部署基地车。
-4. **升级已有项目**：`/butler:upgrade`，走迁移配方、先 dry-run 再事务 apply。
-5. **详细手册**：[`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)
+安装脚本会配置 `BUTLER_PATH`，并安装或刷新 Claude Code 命令、Codex plugin 与 Pi 扩展。它只处理本机能力，不会初始化当前业务项目。
 
-项目级机器配置统一存放在 `.ai/butler.config.json`：危险模式、独立复核、项目偏好抑制和 Active Profiles 都通过驻留 `tools/project-config/config.py resolve/set` 读写。旧 `.ai/local-constraints.md` 机器段仅作升级前兼容读取；自然语言本地约束继续留在 Markdown。
+### 2. 接入项目
 
-### 🏗 多宿主支持
+在目标项目中开启新的 AI 会话，然后使用对应入口：
 
-Butler 规则算法以 `Coder/` 为单一真源，各宿主通过薄适配层接入：
-
-| 宿主 | 发现入口 | 适配层 | 门禁 |
-|---|---|---|---|
-| **Claude Code** | `CLAUDE.md` + `.claude/commands/` | 原生 | Python PreToolUse hook |
-| **Codex** | `AGENTS.md` | `plugins/butler/`（12 skills） | Python hook（`apply_patch` 适配） |
-| **Pi** | `AGENTS.md` | `plugins/butler-pi/`（TypeScript 扩展） | TS 拦截 `tool_call` → Python 门禁 |
-
-> 首次 bootstrap 用 `setup.sh`，此后可用 `/butler:setup` / `$butler-setup` 统一刷新三宿主。新项目从同一 `rule-card.md` 生成 `CLAUDE.md` + `AGENTS.md`，既有项目升级由 `tools/butler-upgrade/` 处理。首次启用 hook 须用户审阅信任；PreToolUse 不是 sandbox。兼容边界详见 [`docs/codex-compatibility.md`](docs/codex-compatibility.md)。
-
-## 🧩 扩展命令
-
-全部为可选，通过指令或语义触发：
-
-| 命令 | 用途 |
+| 宿主 | 显式入口 |
 |---|---|
-| `/butler:inbox` | 扫描、分类并安全路由需求收件箱 |
-| `/butler:prd` | PRD 切分 / 版本管理 / 改版同步 |
-| `/butler:milestone` | 里程碑录入 / 候办区 / 只读看板 |
-| `/butler:review` | 代码审查（P5 简评 + 可选独立复核） |
-| `/butler:progress` | 结构化进度总览（里程碑 / 迭代 / Goal / 验收 / 风险） |
-| `/butler:setup` | 安装或刷新 Claude / Codex / Pi 的机器级 Butler 能力 |
-| `/butler:init` | 新项目基地车一键部署 |
-| `/butler:upgrade` | 已部署项目升级到最新版 |
-| `/butler:ideation` | 需求脑暴（不进执行主线） |
-| `/butler:preference` | 偏好探针开关（采集/反哺，实验性） |
-| `/butler:loop` ⚠️ | 收敛闭环——高强度死磕纠错 + 定量熔断 |
-| `/butler:dangerous` ⚠️ | 无人值守长程自治（实验性） |
+| Claude Code | `/butler:init` |
+| Codex | `$butler-init` |
+| Pi | 直接说“用 Butler 初始化当前项目” |
 
-> 命令靠 `setup.sh` 软链全局分发，新增命令自动在所有项目可用，无需重跑安装。
+也可以直接给任务并点名项目路径。AI 发现目标项目尚无 `.ai/` 时，会按同一协议完成初始化；如果所在目录包含多个项目，它会先要求你明确目标，不会猜测施工位置。
 
-## ✅ 持续验证
+### 3. 正常描述任务
 
-**本地一键验证**（与 CI 同入口）：
+```text
+在 /path/to/project 实现登录失败后的账号锁定，并补齐验证。
+```
+
+Butler 会根据任务规模选择简化或完整流程。完整流程中，你主要在 P2 确认“什么算完成”，在 P3 确认“准备怎么做”；实现和验证完成后，会得到迭代归档以及 Markdown、HTML 两种交付总结。
+
+已有 Butler 项目需要同步到当前版本时，使用 `/butler:upgrade`（Claude Code）或 `$butler-upgrade`（Codex）。升级会先给出零写入计划，确认后才事务执行。
+
+## 你会在项目里得到什么
+
+```text
+project/
+├── CLAUDE.md / AGENTS.md       # Claude Code / Codex 项目入口
+├── .ai/
+│   ├── CONCEPT.md              # 当前迭代的问题理解
+│   ├── AC_LIST.md              # 冻结后的验收标准
+│   ├── TECH_PLAN.md            # 通过准入的技术方案
+│   ├── VERIFY_REPORT.md        # 验证结果与剩余风险
+│   ├── ITERATIONS.md           # 迭代台账
+│   ├── task-state.md           # 当前运行状态
+│   ├── project/                # 项目长期知识
+│   └── iterations/             # 已收口迭代快照
+├── deliveries/                 # 给人阅读的 .md / .html 交付总结
+└── origin/                     # 可选的原始需求收件箱，AI 只读
+```
+
+完整布局、旁路 Agent 回执、PRD 管理和版本升级说明见 [使用指南](HUMAN_GUIDE.md)。
+
+## 常用入口
+
+命令只是明确入口；普通场景也可以直接用自然语言表达。高风险能力不会被隐式开启。
+
+| 场景 | Claude Code | Codex |
+|---|---|---|
+| 初始化项目 | `/butler:init` | `$butler-init` |
+| 梳理还没想清的需求 | `/butler:ideation` | `$butler-ideation` |
+| 规划多迭代版本或候办方向 | `/butler:milestone` | `$butler-milestone` |
+| 处理需求收件箱 | `/butler:inbox` | `$butler-inbox` |
+| 切分、查询或更新 PRD | `/butler:prd` | `$butler-prd` |
+| 查看当前进度 | `/butler:progress` | `$butler-progress` |
+| 复核代码或阶段产物 | `/butler:review` | `$butler-review` |
+| 升级已接入项目 | `/butler:upgrade` | `$butler-upgrade` |
+| 刷新本机 Butler 能力 | `/butler:setup` | `$butler-setup` |
+
+`/butler:loop` / `$butler-loop` 是显式开启的高强度纠错；`/butler:dangerous` / `$butler-dangerous` 是显式开启的无人值守自治。两者相互独立，也都不会因为普通任务自动启用。完整命令、触发条件和兼容旧名以机器注册表生成的 [工作流清单](docs/workflows.md) 为准。
+
+## 三宿主如何共享同一套规则
+
+| 宿主 | 项目发现入口 | 适配方式 |
+|---|---|---|
+| Claude Code | `CLAUDE.md` | `/butler:*` 命令与 Python Hooks |
+| Codex | `AGENTS.md` | `plugins/butler/` skills 与 Python Hooks |
+| Pi | `AGENTS.md` | `plugins/butler-pi/` TypeScript 扩展 |
+
+规则算法只维护在 `Coder/`，宿主入口只负责发现和适配，不各自复制一套流程。Hook 是流程门禁，不是操作系统 sandbox；首次启用时仍应审阅并确认信任。双宿主边界和验证矩阵见 [Codex 兼容说明](docs/codex-compatibility.md)。
+
+## 仓库结构
+
+```text
+butler/
+├── Coder/                  # P1–P5、质量门禁、上下文与扩展规则真源
+├── plugins/                # Codex plugin 与 Pi 适配器
+├── templates/              # 项目入口、Hook、交付等模板
+├── tools/                  # 升级、证据、Goal、handoff 等驻留工具
+├── scripts/                # 安装、生成、审计和完整验证入口
+├── workflows/              # 双宿主工作流机器注册表
+├── migrations/             # 已部署项目的版本迁移配方
+├── docs/                   # 兼容边界和专项说明
+└── deliveries/             # Butler 自身的迭代与里程碑交付历史
+```
+
+规则分层、读取顺序和文件职责从 [Coder/README.md](Coder/README.md) 开始。人类操作说明从 [HUMAN_GUIDE.md](HUMAN_GUIDE.md) 开始。
+
+## 维护与验证
+
+修改 Butler 本身后，运行与 CI 相同的完整入口：
 
 ```bash
 bash scripts/verify-ci.sh
 ```
 
-覆盖内容：固定 Python 工具链（`.python-version` + `uv.lock`），运行双宿主安装、状态审计、Codex plugin/skills/hooks、Pi 适配器、Markdown 链接及 CI 契约测试。
+CI 会验证规则投影、Claude/Codex/Pi 适配、Hooks、状态与产物审计、Markdown 链接和各驻留工具。GitHub 上最终汇总检查名为 `Butler required checks`；是否设为分支必需检查仍需仓库管理员在 Ruleset 或 Branch protection 中配置。
 
-**CI 自动运行**：`.github/workflows/ci.yml` 在 PR、`main` push 和 `v*` tag 上，以 `ubuntu-24.04` + `macos-14` 执行同一入口。matrix 全部通过后汇总为 `Butler required checks`。
+长期运行项目如果需要迁移大体量 ITER/MILE 台账，再使用 [`tools/state-ledger/`](tools/state-ledger/) 的 `inspect → migrate → check` 流程；它是维护工具，不是首次使用步骤。
 
-> **关于 Required Check 的配置**：workflow 提供 check 不等于 GitHub 已把它设为 required。管理员需先在 `main` 的 Ruleset / Branch protection 中手动选择 `Butler required checks`，再用 API 远端确认。在远端证据到位前，状态只能写 `pending external configuration`。
+## 继续阅读
 
-## 🧭 规则体系
-
-核心规则在 `Coder/` 目录下按职责分层：
-
-| 层 | 目录 | 职责 |
-|---|---|---|
-| 系统提示 | `00_System_Prompt/` | 协作身份、总调度协议、输出呈现规范 |
-| 领域模板 | `10_Domain_Stack_Profiles/` | 技术栈 profile，按项目类型按需启用 |
-| **流程核心** | `20_Workflow_Lifecycle/` | P1–P5 状态机 · 迭代 · 里程碑 · 部署 · 升级 · 交付 |
-| 质量门禁 | `30_Quality_Gate/` | 纠错契约 · 最小实现纪律 · 自动化优先 · 验证分道 |
-| 上下文治理 | `40_Context_Management/` | 长任务 · 交接 · PRD 切分与改版 · 知识文件夹 |
-| 扩展模块 | `50~70_Extension_*/` | 脑暴 · 收敛闭环 · 审查 · 帮手名册 · 自治 · 偏好 |
-| 业务约束 | `99_Business_Extension/` | 项目级最高优先级业务规则 |
-
-> 入口：[`Coder/README.md`](Coder/README.md)，内含完整读取顺序。
-
-## 📦 目录结构
-
-```txt
-butler/
-├── README.md                       # 本文件
-├── CLAUDE.md / AGENTS.md           # AI 仓库约定（Claude / Codex 双入口）
-├── HUMAN_GUIDE.md                  # 人类操作手册
-├── communication-style.md          # 个人沟通风格正本（全局常开，非 SOP 规则）
-├── VERSION                         # 版本号机器真源
-├── CHANGELOG.md                    # 发布历史
-├── pyproject.toml / uv.lock        # 固定 Python 验证依赖
-│
-├── scripts/                        # 安装 · 审计 · 渲染 · 验证脚本
-│   ├── setup.sh                    #   三宿主一次性全局安装
-│   ├── render-project-entrypoints.py # 幂等生成/升级 CLAUDE.md + AGENTS.md
-│   ├── verify-ci.sh                #   本地/CI 唯一完整验证入口
-│   └── ...                         #   （共 13 个脚本，详见目录内）
-│
-├── tools/                          # Butler 驻留工具（不拷进目标项目，按 $BUTLER 调用）
-│   ├── butler-upgrade/             #   manifest 驱动的 dry-run / 事务升级器
-│   ├── project-config/              #   项目机器配置 schema、严格读写与 legacy 迁移计划
-│   ├── goal-assurance/             #   Goal 完成资格只读裁决器
-│   ├── handoff/                     #   交接入口确定性生成、新鲜度检查与重建
-│   ├── verification-evidence/      #   自动道证据：命令/exit/log/hash 记录
-│   ├── delivery-selftest/          #   人测回传桥：浏览器四态路由
-│   └── codex-validators/           #   OpenAI Codex 官方 validator 快照
-│
-├── .claude/commands/butler/        # /butler:* 命令（12 个，全局软链分发）
-├── plugins/butler/                 # Codex plugin（12 skills 实体真源）
-├── plugins/butler-pi/              # Pi 宿主适配器（TypeScript）
-├── .agents/skills/                 # 仓库发现面（12 个相对软链）
-│
-├── Coder/                          # 🛠 规则真源（核心）
-│   ├── README.md                   #   子系统入口 + 读取顺序
-│   ├── 00_System_Prompt/           #   身份与总调度
-│   ├── 10_Domain_Stack_Profiles/   #   技术栈 profile
-│   ├── 20_Workflow_Lifecycle/      #   P1-P5 状态机 · 迭代 · 里程碑
-│   ├── 30_Quality_Gate/            #   质量门禁
-│   ├── 40_Context_Management/      #   上下文治理
-│   ├── 50~70_Extension_*/          #   扩展模块
-│   └── 99_Business_Extension/      #   业务约束
-│
-├── templates/                      # 目标项目落地模板
-│   ├── CLAUDE.md.template / AGENTS.md.template
-│   ├── rule-card.md                #   浓缩规则卡（SSOT）
-│   ├── delivery.html.template      #   交付总结 HTML 视图模板
-│   ├── hooks/                      #   PreToolUse 流程门禁
-│   └── preference/                 #   偏好探针外置存储骨架
-│
-├── migrations/                     # 迁移配方（每版一份）
-├── workflows/                      # 工作流注册表
-├── docs/                           # 兼容边界 + 注册表人读版
-└── deliveries/                     # 自身交付总结归档（dogfooding）
-```
-
----
-
-<div align="center">
-
-开发按**迭代**推进 · 需求 ACK 后**冻结** · 文档落盘**可回溯**
-
-机制详见 [`Coder/20_Workflow_Lifecycle/`](Coder/20_Workflow_Lifecycle/) · 用法详见 [`HUMAN_GUIDE.md`](HUMAN_GUIDE.md)
-
-</div>
+- [HUMAN_GUIDE.md](HUMAN_GUIDE.md)：安装、项目接入和日常使用
+- [Coder/README.md](Coder/README.md)：规则体系入口与读取顺序
+- [docs/workflows.md](docs/workflows.md)：全部 Claude Code / Codex 工作流入口
+- [docs/codex-compatibility.md](docs/codex-compatibility.md)：双宿主边界与兼容矩阵
+- [CHANGELOG.md](CHANGELOG.md)：版本发布历史
