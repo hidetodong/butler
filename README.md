@@ -99,23 +99,48 @@ project/
 
 完整布局、旁路 Agent 回执、PRD 管理和版本升级说明见 [使用指南](HUMAN_GUIDE.md)。
 
-## 常用入口
+## 功能清单
 
-命令只是明确入口；普通场景也可以直接用自然语言表达。高风险能力不会被隐式开启。
+Butler 的能力按项目接入、需求进入、迭代推进和跨阶段协作组织。命令只是明确入口；普通能力也可以通过自然语言触发。
 
-| 场景 | Claude Code | Codex |
+### 项目接入与版本维护
+
+| 功能 | 作用 | Claude Code / Codex 入口 |
 |---|---|---|
-| 初始化项目 | `/butler:init` | `$butler-init` |
-| 梳理还没想清的需求 | `/butler:ideation` | `$butler-ideation` |
-| 规划多迭代版本或候办方向 | `/butler:milestone` | `$butler-milestone` |
-| 处理需求收件箱 | `/butler:inbox` | `$butler-inbox` |
-| 切分、查询或更新 PRD | `/butler:prd` | `$butler-prd` |
-| 查看当前进度 | `/butler:progress` | `$butler-progress` |
-| 复核代码或阶段产物 | `/butler:review` | `$butler-review` |
-| 升级已接入项目 | `/butler:upgrade` | `$butler-upgrade` |
-| 刷新本机 Butler 能力 | `/butler:setup` | `$butler-setup` |
+| 机器级安装与刷新 | 安装三宿主入口、命令、插件和适配器 | `/butler:setup` · `$butler-setup` |
+| 项目初始化 | 在目标项目部署 `.ai/`、双宿主入口和 Hooks | `/butler:init` · `$butler-init` |
+| 项目升级 | 先生成零写入计划，再按迁移配方事务升级 | `/butler:upgrade` · `$butler-upgrade` |
 
-`/butler:loop` / `$butler-loop` 是显式开启的高强度纠错；`/butler:dangerous` / `$butler-dangerous` 是显式开启的无人值守自治。两者相互独立，也都不会因为普通任务自动启用。完整命令、触发条件和兼容旧名以机器注册表生成的 [工作流清单](docs/workflows.md) 为准。
+### 需求进入与范围规划（P1 之前及 P1）
+
+| 功能 | 所处阶段 | 作用 | Claude Code / Codex 入口 |
+|---|---|---|---|
+| 需求脑暴 | P1 之前 | 梳理还没想清的需求，不直接进入执行主线 | `/butler:ideation` · `$butler-ideation` |
+| 需求收件箱 | P1 之前 | 扫描来源、分类并路由原始需求材料 | `/butler:inbox` · `$butler-inbox` |
+| PRD 管理 | P1–P3 输入 | 切分、查询和更新可独立版本化的产品需求 | `/butler:prd` · `$butler-prd` |
+| 里程碑与候办 | 迭代外层 | 规划多迭代版本，或暂存尚未开工的方向 | `/butler:milestone` · `$butler-milestone` |
+
+### 迭代推进与质量闭环（P1–P5）
+
+| 功能 | 所处阶段 | 作用 | 入口 |
+|---|---|---|---|
+| 标准迭代 | P1–P5 | 按理解、验收、方案、实现、验证完成一次独立交付 | 默认流程，无需命令 |
+| 进度总览 | 任意阶段 | 汇总里程碑、迭代、Goal、验收、验证和风险 | `/butler:progress` · `$butler-progress` |
+| Goal 校准与裁决 | P3–P5 | 让实现偏差和坏消息回流，并用证据判断能否完成 | 默认随完整流程运行 |
+| 验证与交付 | P5 | 记录自动验证、人测残余、证据强度和剩余风险 | 默认随完整流程运行 |
+| 代码与产物复核 | P5 或按需 | 复核实现、阶段产物和验收覆盖，可选择独立复核 | `/butler:review` · `$butler-review` |
+| 高强度纠错 | P4 | 在常规纠错之上持续探测、修正并按上限熔断 | `/butler:loop` · `$butler-loop`（必须显式开启） |
+| 无人值守自治 | P1–P5 外层 | 自主拆迭代并以自审代替阶段确认，保留审计与回滚边界 | `/butler:dangerous` · `$butler-dangerous`（必须显式开启） |
+
+### 上下文与协作扩展（跨阶段）
+
+| 功能 | 作用 | 入口 |
+|---|---|---|
+| 会话恢复与项目知识 | 把当前断点和长期事实落盘，让新会话从项目状态继续 | 自动维护 `.ai/02_SESSION_HANDOFF.md` 与 `.ai/project/` |
+| 旁路工作回执 | 把另一个 Agent 完成的代码或调研成果显式钩回主线 | 用户提供 `.ai/sidework/` 回执路径 |
+| 偏好学习 | 经同意采集真人取舍，在有监督工作中改进提议 | `/butler:preference` · `$butler-preference` |
+
+Loop 与 Dangerous 相互独立，也都不会因为普通任务自动启用。完整命令、触发条件和兼容旧名以机器注册表生成的 [工作流清单](docs/workflows.md) 为准。
 
 ## 三宿主如何共享同一套规则
 
