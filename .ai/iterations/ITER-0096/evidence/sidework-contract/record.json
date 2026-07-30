@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "sidework-contract",
+  "iteration": "ITER-0096",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-sidework-receipt.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-29T09:05:38.816Z",
+  "finished_at": "2026-07-29T09:05:38.856Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 106,
+    "captured_bytes": 106,
+    "sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a",
+    "truncated": false
+  }
+}

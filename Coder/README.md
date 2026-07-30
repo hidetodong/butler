@@ -83,6 +83,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     context-persistence.md
     role-switch.md
     handoff-spec.md
+    sidework-receipt.md
     project-digest-schema.md
     references-schema.md
     workspace-scope-schema.md
@@ -174,6 +175,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的人类可读字段与 legacy 兼容边界；新部署的机器配置改由 `.ai/butler.config.json` 承载，schema/严格读写/legacy 投影以 `tools/project-config/` 为真源。旧 Markdown 机器段只在 JSON 缺失时回退，升级由 `migrate_config` action 事务迁移并收窄本文件职责。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的固定结构与派生视图契约；`tools/handoff/handoff.py` 从权威状态执行 inspect/sync/check，receipt 陈旧时冷启动先重建再读取。
+- `40_Context_Management/sidework-receipt.md` 负责用户主动发起的旁路工作回钩：旁路执行者在 `.ai/sidework/` 写一份短回执并返回路径，用户显式交给主 Agent 定向续接；不建立模型审批状态，不自动扫描，也不允许旁路执行者改主线权威状态。
 - `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、主题边界、digest-and-point、收口折叠与 `fold-state.json` 机器 receipt；receipt 只证文件/hash 参与，不替代语义漂移复核。它是冷启动第一读。
 - `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平资料保持单文件；PRD 采用项目级需求总索引 + 日期化稳定 `prd_id` + 单需求模块索引 / 无损切片 / 独立 `.archive/vN/` 的两层集合结构。它区分全新需求、新版、重复与身份歧义，并接通多 PRD 钉版、legacy 迁移、split/status、确定性 update 与范围门禁。
 - `40_Context_Management/workspace-scope-schema.md` 定义项目工作区地图与需求级代码范围：`.ai/project/workspaces.md` 用稳定 workspace key 映射当前路径并声明共享/生成路径 owner，单需求 PRD 以 primary/supporting/read-only/excluded 四类集合声明边界；模块只能收窄，TECH_PLAN 写计划、PreToolUse 与 diff 对账共用同一钉版解析器，越界先走扩张审查。
@@ -196,5 +198,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - P1-P3 产物存在性（`.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`）在部署后由 Claude/Codex 共享 PreToolUse hook 机械拦截；此外 `AC_LIST.md` 须为 `状态: ack-frozen`，TECH_PLAN 显式状态须为 `方案状态: pass`，否则拦截源码写（两字段缺失的旧产物按 legacy 放行，新产物不得省略）。这套 hook 是**项目流程门禁，不是第二套文件权限**：能归属 Butler / Git 项目的目标按实际项目根校验，真实项目外路径退出判定并交宿主授权；坏输入仍 fail-closed；跨项目 patch 逐根校验且任一拒绝即整次拒绝。迭代台账非法状态值由 `ledger_status` 拦截，≥2 个 `active` 行由 `single_active_iteration` 拦截。详见 `20_Workflow_Lifecycle/mcv-deployment.md §5 Hook 注入`；流程绕过需 `BUTLER_BYPASS=1` + `.ai/bypass-reason.md`（非空），正常项目外授权不走 bypass。此外另有一套 **PostToolUse 提醒 hook**（`butler_advisor.py`，advisory-only、fail-open、**绝不拦截**）：写 `.ai/MILESTONE.md` 时若 `.ai/references/prd/` 不存在，经 `additionalContext` 注入"PRD 先行自检"提醒（兜 PRD 切分软触发被绕过的漏切，`prd_split_reminder` 规则）。
 - `20_Workflow_Lifecycle/` 负责流程推进、交付节奏、基地车部署约束，以及完整交付后的人类可读总结规则。
 - `40_Context_Management/` 负责长上下文、状态同步、阶段快照、交接规范与模式切换治理。
+- 旁路工作回执按 `40_Context_Management/sidework-receipt.md` **触发式读取**：用户发起旁路工作或显式给出 `.ai/sidework/` 回执路径时才读；不进入默认冷启动读序，不扫描目录猜待办。
 - `10_Domain_Stack_Profiles/` 中的规则仅在当前项目类型命中后作为执行 profile 生效。
 - 质量校验必须可验证、可追踪、可回溯到验收项。

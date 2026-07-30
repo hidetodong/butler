@@ -1,43 +1,43 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-28
+ACK 日期: 2026-07-29
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0095
+# AC_LIST — ITER-0096
 
-> ⚠️ 危险模式：本验收清单由模型完成反证、自洽性与可验证性审查后自主 ACK，未经用户确认（ITER-0095，2026-07-28）
+> ⚠️ 危险模式：本验收清单由模型完成反证、自洽性与可验证性审查后自主 ACK，未经用户逐项确认（ITER-0096，2026-07-29）
 
-修订记录: 2026-07-28 · P5 明确 AC7 验证的是本地 UNRELEASED 发布候选及既定交付路径；迭代/里程碑实体交付属于通过 Goal 后的收口输出，不能反向作为完成资格前置。
+修订记录: 2026-07-29 · P5 安全审查明确回执不是写入授权或 Butler 绕过，并把并发同名写入收紧为 create-only 后重选短序号；不改变协议级 MVP 范围。
 
 ## Goal
 
-- 让 Butler 所有活消费端共享 `.ai/butler.config.json` 的确定性读取/回写语义，并以可升级、可验证、未冒充已发布的 v3.3.0 候选收口 MILE-0013。
+- 建立一套轻量、可复用的旁路工作回执协议，让用户主动发起、脱离主上下文完成的代码与调研成果能由用户用一个文件路径稳定钩回主 Agent。
 
 ## In Scope
 
-- `resolve/set` 消费合同、危险/复核/偏好/进度与双宿主接线、当前仓迁移、结构测试、v3.3.0 migration 与发布元数据、完整关闭态验证。
+- 回执规则真源、canonical 模板、首次落盘与命名规则、生产/消费流程、代码与调研混装、共享工作区可信度披露、入口文档和机械结构验证。
 
 ## Out of Scope
 
-- 不删除 legacy 回退解析，不改变外置偏好 consent/data，不迁移任务状态，不提交、打 tag、推送或执行目标项目批量升级。
+- 不新增接受/拒绝或未读/已读状态，不设索引和自动扫描，不自动合并代码，不自动改写主线产物，不新增命令、skill、Agent 调度器或跨项目汇总。
 
 ## Acceptance Checklist
 
-- [ ] AC1: 会话冷启动、危险模式、独立复核、偏好和 Active Profiles 的活规则统一调用 project-config `resolve`，不得自行解析 Markdown；坏 JSON fail-closed，危险模式绝不因错误而开启。
-- [ ] AC2: 危险、独立复核和项目偏好回写统一调用 project-config `set` 并只写 JSON；当 `source` 不是 `config` 时明确要求先 init/upgrade，不回写 legacy Markdown、不静默用默认值覆盖旧值。
-- [ ] AC3: `/butler:progress` 与两宿主 progress skill/command 使用同一解析结果展示 source、冲突和三开关/profile；Butler 版本改从入口 stamp 或 VERSION 读取，不再假定 local constraints 存在版本字段。
-- [ ] AC4: 本仓以迁移前真实值生成 `.ai/butler.config.json`，并只从 `.ai/local-constraints.md` 删除 Active Profiles/Butler 开关/Review Policy 机器段；人类约束正文保真，迁移后 `resolve` 返回 config 且无冲突。
-- [ ] AC5: 活 README/HUMAN_GUIDE/Coder/docs/模板/skills/commands 对配置位置、兼容期、写入边界和安全默认描述一致；历史归档与旧 migration 保持历史事实，不追溯改写。
-- [ ] AC6: `migrate_config` 登记到 v3.3.0 manifest/recipe，升级计划能从 v3.2.0 包含该 action；当前版本项目若配置漂移仍会被检测，迁移/重生成/重戳顺序和事务边界明确。
-- [ ] AC7: v3.3.0 的 VERSION、插件 manifest、README badge、根 CHANGELOG 和既定迭代/里程碑交付路径对齐；状态审计明确显示 UNRELEASED，绝不宣称 commit、tag 或远端发布完成。双格式交付实体在 Goal eligible 后按收口仪式生成并由关闭态审计核对。
-- [ ] AC8: 消费合同、project-config、upgrader、文档/registry、完整 CI、关闭态审计与 `git diff --check` 全绿；P5 完整强审无 Must Fix，独立复核关闭状态如实披露。
+- [ ] AC1: `Coder/40_Context_Management/sidework-receipt.md` 成为单一规则真源，明确旁路工作由用户主动发起、回执用于发现/理解/续接而非模型审批，并与 session handoff、references、task-state 和交付总结划清职责。
+- [ ] AC2: canonical 模板能在同一回执中表达代码、调研、方案、实验和验证成果；固定包含用户目标、成果结论、成果与改动位置、验证事实、主线影响和续接入口，正文只写结论与稳定指针，不复制长报告、代码或日志。
+- [ ] AC3: 生产/消费流程明确要求旁路执行者新建一份回执、返回路径且不修改主线四件套、task-state、台账或 session handoff；主 Agent 仅在用户给出路径后定向读取、对账和亮出冲突，方向取舍仍交给用户。
+- [ ] AC4: `.ai/sidework/<YYYY-MM-DD>-<slug>.md` 按需创建、一个任务一文件；同名时用 create-only 追加递增短序号且绝不覆盖，路径必须留在项目根内。回执不是写入授权或流程绕过；代码成果记录基线和实际改动，共享工作区必须披露低归属强度，不能冒称独立提交。
+- [ ] AC5: `Coder/README.md` 注册新规则文件、触发式读取语义和职责说明；`HUMAN_GUIDE.md` 给出用户可直接照做的发起与回钩示例，并在部署目录说明 `.ai/sidework/` 为按需目录。
+- [ ] AC6: 专项结构检查能发现模板章节/表头漂移、规则入口缺失和危险反模式，纳入 `scripts/verify-ci.sh`；专项、Markdown 链接、完整 CI、状态审计与 `git diff --check` 通过，危险模式完整审查无 Must Fix。
 
 ## Verification Method
 
-- AC1–AC3, AC5：新增消费合同结构测试，逐个扫描活规则、命令与 skills 的 `resolve/set`、错误语义和禁止旧写法。
-- AC4：对本仓运行 `resolve` 并核对 JSON/Markdown 内容；迁移算法专项覆盖同值、冲突和正文保真。
-- AC6：upgrader 专项从 v3.2.0 生成真实计划并断言 `migrate_config`，验证 current drift 回归。
-- AC7–AC8：版本一致性/迁移 manifest、完整 `scripts/verify-ci.sh`、Goal/state auditor、artifact check 与 diff check。
+- AC1: 静态读取规则真源并断言定位、边界与禁止审批语义；核对与既有 handoff/references 指针不冲突。
+- AC2: 专项脚本验证模板 H1/H2 顺序、成果表表头、必填占位和“指针不复制”约束。
+- AC3: 专项脚本断言生产者禁止写入清单、显式路径消费和用户决策边界均存在。
+- AC4: 专项脚本断言目录、命名、并发同名不覆盖、项目根边界、回执非授权、基线与共享工作区披露规则。
+- AC5: 专项脚本核对 `Coder/README.md` 文件登记与说明、`HUMAN_GUIDE.md` 目录/示例接线；运行 Markdown links。
+- AC6: 用 verification evidence runner 捕获专项、完整 CI、状态审计和 diff check；P5 按完整审查门复核实际 diff。
 
 ## External References
 
@@ -45,4 +45,5 @@ ACK 日期: 2026-07-28
 
 ## Open Questions / Risks
 
-- N/A
+- 第一版依赖用户把回执路径显式交给主 Agent；这是已经确认的控制边界，不把“可能忘记回钩”提前升级成自动扫描功能。
+- 规则与模板能提高交接质量，但不能从共享脏工作区事后恢复可靠作者归属；该限制必须在回执中如实暴露。

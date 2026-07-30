@@ -1,5 +1,12 @@
 # Dangerous Mode Run Log
 
+- 2026-07-29 | close | ITER-0096 | dangerous-ack | Goal 十一项检查全绿；12 份 evidence、五件套/CHANGELOG、双格式交付完成归档，旁路回执规则/模板/入口/CI 闭环。危险模式与 Loop 的存量规则耦合保持明示，未扩张进本迭代。
+- 2026-07-29 | P5-review | ITER-0096 | dangerous-ack | 安全修订后专项 9/9、Markdown links、diff check 与宿主环境完整 CI reproduced 通过；最终 Must Fix=0、Should Fix=0。项目 `independent_review=false`，且本轮未获委派授权，未执行 fresh-context 独立复核并如实披露。
+- 2026-07-29 | P5-review | ITER-0096 | dangerous-ack | 完整安全审查发现 1 个 Must Fix：回执协议若不明确“非代码写入授权”，可能让旁路 Agent 借当前迭代四件套包装范围外源码改动；另发现并发同名需 create-only 兜底。已补禁止绕过、隔离路径和竞争重试规则并加结构回归，范围仍为原 AC4。
+- 2026-07-29 | P3-reentry | ITER-0096 | user-corrected | 用户明确危险模式与 Loop 不绑定；撤销 P4 自动 Loop 假设，TECH_PLAN 改回常驻纠错收口契约并重审保持 pass。先前 `[Loop #1]` 仅为对话误标，不作为运行状态；规则真源中的存量耦合另行处理，不扩张本迭代。
+- 2026-07-29 | P3 | ITER-0096 | dangerous-ack | Plan Admission=pass；采用独立 `.ai/sidework/` 的一任务一回执、规则真源 + 可复制模板、用户显式路径回钩和标准库结构检查，否决 handoff/references 混用、状态机、索引、自动扫描及新命令。AC 全覆盖、Must Fix=0，自主进入 P4。
+- 2026-07-29 | P2 | ITER-0096 | dangerous-ack | AC1–AC6 覆盖协议定位、混合成果模板、生产/消费边界、命名与共享工作区可信度、入口接线和完整验证；每项均可机械或证据验证，无模型审批权、自动扫描或隐藏范围扩张，自主冻结。
+- 2026-07-29 | route | ITER-0096 | dangerous-ack | 用户把已收敛构思提升为独立迭代；授权上限冻结为 `/Users/cyborgno2/Documents/WorkCode.nosync/butler`。范围锁定为旁路工作短回执的协议真源、模板、入口与验证，不建设审批状态、索引、自动扫描、命令/skill 或调度器。
 - 2026-07-28 | route | ITER-0095 | dangerous-ack | 自动开启 MILE-0013 R3；范围锁定为统一 `resolve/set` 消费语义、当前仓 dogfood 迁移、双宿主文档接线与 3.3.0 迁移/发布验证，不推断 commit、tag 或 push 授权。
 - 2026-07-28 | P2 | ITER-0095 | dangerous-ack | AC1–AC8 覆盖统一读写、source/冲突可见性、本仓保值迁移、活文档清零、真实升级链、版本一致性和完整关闭态验证；自审无不可验证项后自主冻结。
 - 2026-07-28 | P3 | ITER-0095 | dangerous-ack | Plan Admission=pass；采用 `resolve` 唯一读、`set` JSON-only 写、consumer matrix 结构测试、保值 dogfood 和先迁移链后关闭/切版本的顺序，Must Fix=0，自主进入 P4。

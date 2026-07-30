@@ -22,6 +22,7 @@ current: none
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
+| ai-user-experience-driven-iteration | AI 用户体验驱动迭代：从结果目标到黑盒体验、修复与复验 | 2026-07-30 | .ai/milestone-backlog/ai-user-experience-driven-iteration.md | 方向价值高但 AI 小白代表性、自评偏差与真实改善尚未验证；先用现有能力完成真实 dogfood，再决定是否产品化。 |
 | parallel-p4-execution-slots | 单迭代多 Agent 并行 P4：执行槽、证据与集成隔离 | 2026-07-28 | .ai/milestone-backlog/parallel-p4-execution-slots.md | 方向已完成 ideation 与审计；需先补齐身份、worktree 真源、证据和集成隔离合同，再决定正式启动。 |
 | multi-active-iteration-runtime | 多 active 迭代运行时：迭代级真源、Batch 与跨迭代集成审计 | 2026-07-28 | .ai/milestone-backlog/multi-active-iteration-runtime.md | 属高成本后续形态；等待单迭代并行 P4 的真实 dogfood 与收益数据，避免提前迁移全局状态机。 |
 | prd-future-route-fulfillment | PRD 改版到未启动里程碑路线项的确定性兑现闭环 | 2026-07-23 | .ai/milestone-backlog/prd-future-route-fulfillment.md | 先保留方向：当前只识别并记录 future disposition，路线项启动时尚无机械消费与兑现门禁。 |

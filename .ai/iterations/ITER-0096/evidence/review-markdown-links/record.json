@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-markdown-links",
+  "iteration": "ITER-0096",
+  "ac_ids": [
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/check-markdown-links.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-29T09:16:26.441Z",
+  "finished_at": "2026-07-29T09:16:26.789Z",
+  "duration_ms": 348,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 48,
+    "captured_bytes": 48,
+    "sha256": "992415e6dede7d78743ffcbdd4d33ad0983c6de6ed0fad4ad58a4e4f32c6d26f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -18,9 +18,11 @@
 - MILE-0009 已形成 origin/inbox → 日期化 PRD 集合 → 多需求钉版 → migration/split/status/update → workspace scope/plan/hook/diff 的完整链路。
 - 真实 `WorkCode.nosync/apps` 已以只读源 + 临时副本验证 28 个 workspace、legacy plan/apply/verify/resolve/rollback 与原仓双 hash 不变；没有替用户升级外部仓。
 - 危险模式仍为 ON；当前没有 active 迭代或里程碑路线项。
+- ITER-0096 已关闭：旁路执行者可用 `.ai/sidework/` 短回执把代码与调研混合成果交还，用户显式给路径后主 Agent 定向续接；无审批状态、索引或自动扫描。
 
 ## 下一个瓶颈
 - MILE-0009 已随 v3.0.0 发布；外部旧项目获得新结构仍需显式 upgrade/migration，不能把发布写成目标项目已部署。
 - milestone backlog 当前有 5 个独立候办，包括 PRD future route 兑现、状态转换可信门、TDD 证据增强，以及两项并行执行方向。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。
+- 危险模式规则真源仍把 P4 与 `/butler:loop` 自动绑定，但用户已明确两者正交；需要独立纠偏迭代统一 dangerous engine、logic protocol 和相关入口，避免再次误触发 Loop。

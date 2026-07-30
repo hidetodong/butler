@@ -32,6 +32,7 @@ UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/t
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-goal-calibration.py"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/tools/goal-assurance/test_goal.py"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest tools.handoff.tests.test_handoff
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-sidework-receipt.py"
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/state-ledger/tests
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/artifact-pipeline/tests
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python tools/artifact-pipeline/contract.py check project --project-root .

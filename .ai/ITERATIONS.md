@@ -1,15 +1,16 @@
 # 迭代台账
 
-> ⚠️ 危险模式自治：MILE-0013 将项目级 Butler 机器配置从 `.ai/local-constraints.md` 拆到顶层扁平的 `.ai/butler.config.json`，完成兼容迁移和全链路切换。
+> ⚠️ 危险模式自治：建立旁路工作回执协议，让用户主动发起、脱离主上下文完成的代码与调研成果能以短回执钩回主 Agent；不建设审批状态机、自动扫描或调度器。
 
 ## 危险模式自治路线图
 
-ITER-0095 归属 MILE-0013 R3：全消费端统一接线、当前仓迁移、3.3.0 版本链与完整发布验证。
+ITER-0096 为独立迭代：协议真源、最小模板、生产/消费边界、入口接线与机械验证一次闭环。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0096 | 旁路工作回执协议（危险模式） | closed | 2026-07-29 | 2026-07-29 | — | deliveries/ITER-0096-sidework-receipt.md |
 | ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
 | ITER-0094 | Butler 配置部署与 legacy 迁移（MILE-0013 R2·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0094-project-config-migration.md |
 | ITER-0093 | Butler 项目配置合同与统一读写内核（MILE-0013 R1·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0093-project-config-core.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0079 | 多 PRD 引用、兼容迁移与人类指南（MILE-0009 R5·危险模式）：多需求钉版、legacy 显式迁移/回滚、历史引用解析与独立操作指南 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0079-multi-prd-migration.md |
 | ITER-0078 | /butler:inbox 命令与分类路由（MILE-0009 R4·危险模式）：确定性扫描、幂等 INBOX 写入、双宿主入口、确认路由与活工作区保护 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0078-butler-inbox-workflow.md |
 | ITER-0077 | 收件箱数据契约（MILE-0009 R3·危险模式）：origin 只读边界、INBOX 来源身份/指纹/状态、派生关系与幂等变更检测 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0077-inbox-data-contract.md |
-| ITER-0076 | Monorepo 工作区地图与需求级范围契约（MILE-0009 R2·危险模式）：稳定工作区键、路径映射、四类范围与越界扩张纪律 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0076-workspace-scope-contract.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

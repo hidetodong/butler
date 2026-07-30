@@ -752,6 +752,30 @@
           "sha256": "e8554183745c372a4c2364d05516d354eb6b998cbb0790e42900ee42c28cebe3"
         }
       ]
+    },
+    "ITER-0096": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0096/CHANGELOG.md",
+        "sha256": "1dd07df4d622cb009b57078db2671bbbc9a5ae4adfec3e91115dfdfee7b4a847"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "4e12381ae318520ef08f77860413acdc2d1d20064f2df3d905177b07ebd5dd11"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "af4b083005997127e5c39ce37587d9bb2c293fe9d19d7bd1902333cbaaeb1acb"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "c6c48f465859c07ec9a5ea752d852b33004dfc9f6d757c6b14763eba2a017bdb"
+        },
+        {
+          "path": ".ai/project/debt.md",
+          "sha256": "21d7c76679e54c6d24cebe962a9a1f1bc76e7e432912f5fcf7fa98c7f02514b6"
+        }
+      ]
     }
   }
 }

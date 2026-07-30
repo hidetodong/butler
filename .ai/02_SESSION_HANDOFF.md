@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：无 active；阶段：Milestone Closed。
-- 状态：ITER-0095 与 MILE-0013 已完成收口；v3.3.0 为本地 UNRELEASED 候选
+- 迭代：无 active；里程碑：无 active；阶段：Iteration Closed。
+- 状态：ITER-0096 已完成证据/五件套归档与双格式交付；旁路工作回执协议可用。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：运行关闭态审计与完整 CI；不提交、不打 tag、不推送。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：危险模式与 Loop 的存量规则耦合需另领独立纠偏迭代；不回写 ITER-0096 冻结范围。
 
 ## 状态指针
 

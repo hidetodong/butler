@@ -23,6 +23,11 @@
 - `tools/state-ledger/` 把 ITER/MILE 双台账迁移为最多 20 行的根热表、固定 50 号区间冷片和有界 `.ai/state-index.json`；每片有独立 hash 回执，迁移事务化、幂等并跨分片拒绝重复。
 - 身份号至少四位、超过四位自然增长，最大号和排序只看数字部分。
 
+## 旁路工作回执（ITER-0096）
+
+- 用户主动发起、脱离主上下文完成的代码/调研混合工作，可按 `Coder/40_Context_Management/sidework-receipt.md` 在 `.ai/sidework/` 写一份六段短回执；canonical 骨架为 `templates/sidework-receipt.md`。用户把路径交给主 Agent 后定向续接，不自动扫描目录，也不建立模型的接受/拒绝状态。
+- 回执只传最终结论、成果指针、验证事实和续接入口，不提供额外代码写权限。旁路执行仍受宿主与当前 Butler 范围约束；同名使用 create-only 短序号，共享工作区如实按低归属强度披露。静态合同检查 `scripts/test-sidework-receipt.py` 已接入完整 CI。
+
 ## Claude/Codex 双宿主适配（v2.12.0–v2.16.0）
 
 - Codex 在 Butler 仓根可原生发现 `AGENTS.md`，按固定顺序恢复 `.ai/` 状态并钻取 `Coder/` 真源；`scripts/verify-codex-foundation.sh` 可做结构回归。

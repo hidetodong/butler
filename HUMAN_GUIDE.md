@@ -165,6 +165,7 @@ AI 会自动走完整个链路：
 │   ├── 02_SESSION_HANDOFF.md # 跨会话恢复入口
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
+│   ├── sidework/            # 旁路工作短回执（第一次使用时按需创建）
 │   └── references/          # 外部参考资料（按需创建）
 ├── deliveries/              # 交付总结归档（每份 .md 另有同名 .html 固定格式阅读视图）
 │   ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
@@ -174,6 +175,20 @@ AI 会自动走完整个链路：
 ```
 
 > `origin/` 与 `.ai/references/` 别混：`origin/` 放**你的原始需求材料**（可选，AI 只读）；`.ai/INBOX.md` 只记处理回执和派生指针、不复制原文；`references/` 放供验收引用的外部规格投影。完整收件箱数据合同见 `Coder/40_Context_Management/inbox-schema.md`。
+
+### 把旁路 Agent 的成果钩回主线
+
+当主 Agent 正在推进一个迭代，你又主动另起 Agent 处理一项暂时不相关的代码、调研或混合工作，可以让旁路 Agent 收工时写一份短回执：
+
+> 这是一项旁路工作。完成后按 Butler 的 `Coder/40_Context_Management/sidework-receipt.md` 写回执，不要修改主线状态文件，把回执路径给我。
+
+回执按需落在 `.ai/sidework/<日期>-<主题>.md`，只保存最终结论、代码/报告/证据指针、验证事实和续接入口。它不是第二份 session handoff，也没有“接受 / 拒绝”状态；项目方向仍由你决定。
+
+回到主 Agent 后，把路径交给它即可：
+
+> 接回这份旁路工作：`.ai/sidework/2026-07-29-cache-investigation.md`。先对照当前主线说明成果、冲突和需要我决定的地方，再继续。
+
+主 Agent 不会默认扫描整个目录。这个显式动作可以避免旧回执被误当成当前事实，也不会给每次冷启动增加上下文。完整协议与固定模板分别见 [`sidework-receipt.md`](Coder/40_Context_Management/sidework-receipt.md) 和 [`templates/sidework-receipt.md`](templates/sidework-receipt.md)。
 
 旧项目如果还是 `.ai/references/prd/<module>.md + .archive/vN/` 的单 PRD 结构，按 [`docs/prd-migration-guide.md`](docs/prd-migration-guide.md) 先盘点、确定首次进入日期化 `prd_id`、看零写 plan，再事务迁移和验证。迁移器不会猜身份，也不会回写 frozen/closed AC；失败恢复与 backup 清理边界也在指南里。
 
@@ -388,6 +403,7 @@ Coder/
 ├── 40_Context_Management/     # 上下文治理（长任务必读）
 │   ├── context-persistence.md # 状态外化与阶段结晶
 │   ├── handoff-spec.md        # 02_SESSION_HANDOFF.md 格式契约
+│   ├── sidework-receipt.md    # 旁路工作短回执与显式回钩
 │   └── role-switch.md         # Architect/Coder/Reviewer 角色切换
 ├── 50_Extension_Ideation/     # 脑暴扩展
 ├── 55_Extension_ConvergenceLoop/ # 收敛闭环扩展（/butler:loop 升档）
