@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "term-migration",
+  "iteration": "ITER-0108",
+  "ac_ids": [
+    "AC3"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "from pathlib import Path; import json; expected={\"PRD\",\"Workspace Scope\",\"Milestone\",\"active（Milestone）\",\"Route Item\",\"planned/active（Route Item）\",\"Iteration\",\"active（Iteration）\",\"Lifecycle Phase\",\"Acceptance Criterion\",\"pass（Plan Verdict）\",\"Goal\",\"Evidence\",\"pass（Review Verdict）\",\"Completion Eligibility\",\"Project Root\",\"Dangerous Mode\",\"Convergence Loop\",\"Handoff\",\"Project Knowledge Folder\"}; lines=Path(\"Coder/domain-glossary.md\").read_text(encoding=\"utf-8\").splitlines(); start=next(i for i,x in enumerate(lines) if x.startswith(\"| 概念 | 上下文限定 |\"))+2; actual={x.strip().strip(\"|\").split(\"|\")[0].strip().replace(\"`\",\"\") for x in lines[start:] if x.startswith(\"|\")}; assert actual==expected,(sorted(expected-actual),sorted(actual-expected)); print(json.dumps({\"terms\":len(actual),\"status\":\"equal\"},ensure_ascii=False))"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T07:34:08.614Z",
+  "finished_at": "2026-07-31T07:34:08.654Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 33,
+    "captured_bytes": 33,
+    "sha256": "1877722d7e182266e0d9416b4a94be6bbe3f77fe73f0cfac650ead7beb7539f3",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

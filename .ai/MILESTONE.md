@@ -1,65 +1,73 @@
-# MILESTONE — MILE-0014 · Butler Explore 决策地图接入
+# MILESTONE — MILE-0015 · Butler 领域模型治理：统一语言、限界上下文与可执行边界
 
-> 方向性产物（非冻结、不走 ACK）。把持久化决策探索作为 Butler 的 opt-in 内建能力，衔接既有 Milestone / Iteration；本里程碑暂以用户已确认的阻塞决策与交付切片为输入，不解决入口处的清晰度与体量自动判定。
+> 方向性产物（非冻结、不走 ACK）。吸收 DDD 的战略设计，把 Butler 已有概念的所有权和边界讲清，再用真实冲突验证；不为采用 DDD 重构全仓。
 
 ## 5.1 范围评估
 
 **In Scope（版本级）**
 
-- 保持 Butler 对用户只有一个自然语言入口；把 Explore 定位为按需启用的内部探索模式，而不是所有任务进入 P1 前的强制阶段。
-- 在上游已经给出并经用户确认的“持久化阻塞决策”和“独立交付切片”基础上，建立本地优先、跨会话可恢复的 Decision Map；本里程碑只消费这些结构化输入，不负责判断需求是否清晰或体量大小。
-- 为 Decision Map 定义 Destination、已确认背景、决策问题、Fog、Out of Scope、依赖 DAG、Frontier、claim lease、resolution 和 evidence pointer 等最小合同。
-- 区分 research、prototype、grilling、task 等决策工作类型；允许 research 在互不依赖时受控并行，地图与结论仍由单一协调器写入。
-- 建立 Decision Map 与交付容器的确定性衔接：一个已确认切片可进入独立 Iteration，多个已确认切片可形成 Milestone planned 路线；未来路线按阻塞决策是否解决滚动取得 Iteration Admission。
-- 明确真源所有权：Decision Map 只拥有决策状态，Milestone 只拥有版本范围与路线状态，Iteration 继续独占 P1→P5 的 CONCEPT、AC、方案、实现、证据和收口。
-- 建立 plan/apply/verify、幂等 promotion receipt、依赖校验、过期 claim 恢复和归档机制；任何 active Milestone / Iteration 的创建仍需现有用户意图与 Butler 台账纪律。
-- 调整现有 Ideation 收敛语义：探索结论不得自动写成某个 Iteration 的 `CONCEPT.md` 或跳入 P2；只有选定路线通过 Iteration Admission 后才进入现有 P1→P5。
-- 以 Butler 自身的真实大需求做 dogfood，验证跨会话恢复成本、错误路线减少量、研究并行收益和地图维护负担，再决定是否扩展外部 tracker 适配。
+- 建立 Butler 的领域地图，先以需求治理、交付生命周期、可信保证、宿主运行时、知识连续性五个候选限界上下文为起点，经现有规则和真实使用案例校正后确定边界。
+- 建立核心统一语言合同：为 Goal、Task、AC、Iteration、Milestone、PRD、Evidence、Review、Scope、pass、active、closed 等高频概念标明所属上下文、准确定义、定义真源、允许的别名及废弃路径。
+- 建立上下文预算与渐进注入合同：初始上下文只植入最小语义路由内核，领域地图、术语审计和定义真源按任务需要分层读取，禁止把全部指针一次展开。
+- 明确上下文之间的关系和翻译责任，覆盖 PRD→AC→TECH_PLAN→Evidence→Goal Verdict→Handoff 主链，以及 project config→宿主投影、里程碑→迭代归属等关键支链。
+- 把“权威事实、派生视图、执行投影、叙述摘要”纳入统一分类，继续守住 Goal、handoff、宿主任务等派生视图不得反写真源的既有不变量。
+- 对反复出现且适合机械检查的核心身份、状态和引用建立最小机器合同；人读说明只引用或生成自机器真源，不新增长期双写术语表。
+- 选择现有真实矛盾做试点：解除 dangerous 与 loop 的错误语义绑定；统一人测残余在 verify schema、artifact manifest 和验证工具之间的结构所有权。
+- 将领域模型变更接入评审和 CI：新增或改变核心术语、上下文关系、状态转换时，必须声明所有者、兼容影响、迁移路径和相应负向样例。
 
 **Out of Scope（版本级）**
 
-- 不在本里程碑中定义“需求是否清晰”“一个还是多个交付切片”的判定算法、评分器或模型置信度规则；这是当前尚未解决的独立脆弱点。
-- 不允许模型凭“高 / 低复杂度”静默创建 Decision Map、Milestone 或 Iteration；候选决策与切片必须可检查，生命周期状态转换继续遵守用户确认。
-- 不把 Explore 变成普通明确任务的必经长流程；明确小任务继续使用简化路径或独立 Iteration，明确大需求可直接进入 Milestone。
-- 不替换 Butler 现有 P1→P5、P2 ACK、单 active Iteration、Milestone 方向性演进和证据收口纪律。
-- 不把 Decision ticket 等同于实现任务，不把 Milestone 路线项改造成决策票，也不让 Decision Map 直接冻结 AC。
-- 不引入多 active Iteration、不借本方向实现并行 P4；相关能力继续由已有独立候办承接。
-- MVP 不以 GitHub Issues 或其他外部系统作为唯一真源；是否需要外部 tracker 等本地 dogfood 后再评估。
+- 不因采用 DDD 重排整个 `Coder/` 目录；现有 SOP Core、Domain Profiles、Business Extension 是规则分层，先与领域边界并存。
+- 不引入面向对象框架，不要求把规则改写成 Entity、Value Object、Aggregate 类，也不把 Butler 拆成微服务。
+- 不建设包罗万象的企业术语库、知识图谱或通用 DSL；只有已出现歧义、跨边界传播或需要机器判断的概念进入合同。
+- 不把完整领域审计、全部术语定义或所有真源文件塞进每次冷启动；上下文节约不能靠删除必要门禁或隐瞒冲突实现。
+- 不借本里程碑重做现有 P1→P5、Goal Assurance、PRD、Workspace Scope、状态台账或多 Agent 执行能力。
+- 不吞并 `state-transition-trust-gate` 候办：本方向负责语义所有权和跨上下文翻译，后者继续负责运行时事实与落档投影是否一致。
+- 不无理由改动现有公开命令、文件路径和状态值；必须变更时提供兼容读取、明确迁移和废弃周期。
 
 **关键交付目标**
 
-- 在“阻塞决策与交付切片已被确认”这一明确前提下，后续 Decision Map、Milestone 和 Iteration 的创建、关联、推进与收口可以由结构化合同和确定性工具驱动，不再依赖模型临场发明流程。
-- 大需求可以先形成版本方向，再由 Decision Map 为未来 planned 路线滚动消除不确定性；无需等整张地图完全结束，也不会提前占用未来 Iteration 编号。
-- 任一路线进入 P1 前都能机械回答：它引用哪些已解决决定、是否仍有阻塞决定、由哪个 Milestone 路线承接、为何具备 Iteration Admission 资格。
-- 任何新研究结论只影响尚未冻结的方向或未来路线；已进入 P2 冻结的 Iteration 仍严格走现有修订、回退或范围扩张分流。
-- 未启用 Explore / Decision Map 时，现有简化路径、独立 Iteration、Milestone 和 P1→P5 行为零变化。
+- 任一核心概念都能回答“在哪个上下文成立、由哪份真源定义、谁可以改变、进入下一上下文时如何翻译”。
+- 普通冷启动只承担一个有明确 token 预算的语义路由内核；命中领域治理时先定位上下文和术语，再只跟随少量相关真源，不做递归全展开。
+- 同一个词在不同上下文含义不同时必须显式限定，不能依赖读者猜测；同一上下文内不得存在互相矛盾的定义。
+- 主交付链上的每次跨边界转换都有输入、输出、保真字段、失效条件和责任方，不再依赖对话记忆或散文暗示连接。
+- 至少两个已知语义冲突通过新模型闭环，并形成能永久捕获回归的自动检查或负向 fixture。
+- 未启用新机器检查的普通项目行为保持不变；现有规则和项目升级路径不因概念治理被无声破坏。
+- 领域地图能降低后续里程碑的设计成本；若实际维护成本高于消除的歧义，本里程碑必须允许缩减或停止，而不是继续扩建框架。
 
 ## 5.2 理解阐释
 
-Wayfinder 最值得 Butler 借鉴的部分，是把跨会话的大型模糊工作表达为“决策问题 + 依赖图 + 当前 Frontier”，并让互不依赖的 research 问题并行解决。Butler 已经拥有更完整的交付控制面：Milestone 管版本方向与 planned 路线，Iteration 作为冻结需求的单元独立走 P1→P5，并由 P2 ACK、P5 evidence 和收口审计保证可信交付。因此正确接入方式不是在 Butler 前面再放一条独立 Wayfinder 流程，而是给 Explore 增加可选的持久化 Decision Map，并把其结果通过显式引用喂给现有 Milestone / Iteration。
+Butler 已经具备成熟的流程、产物、状态和验证机制，但核心概念分散在规则正文、schema、manifest、registry、hook 和工具实现中。当前主要风险不再只是“缺一条规则”，而是同一个词被不同模块以不同含义使用、派生视图被误当成权威状态、两个独立能力被某段规则错误建立包含关系。继续局部补文档可以暂时压住问题，却会增加下一次修改需要同时理解和同步的地方。
 
-本次讨论已经稳定了这一后半段架构，但暴露出真正脆弱的前置问题：系统如何可靠判断“当前需求是否足够清晰”和“是否存在多个独立交付切片”。若把这两个语义判断继续交给模型以高 / 低标签控制路由，后续再确定性的状态机也会建立在不可信入口上。因此本里程碑明确把该问题列为外部前提，不在同一版本里假装解决。MVP 先接受用户确认过的阻塞决策与切片清单，验证后续机制的实际价值；前置判定合同成熟后再接入自动建议。
+本方向吸收 DDD 的战略设计，不照搬战术代码模式。统一语言解决“大家是否在说同一件事”；限界上下文允许同一个现实对象在不同问题范围拥有不同模型；上下文映射则规定这些模型怎样交换信息。对 Butler 来说，关键不是创造更多名词，而是给已有名词确定所有权，并让跨边界转换尽量由现有机器真源和工具执行。
 
-设计来源是 2026-08-01 关于 mattpocock Wayfinder 与 Butler 工作流衔接的讨论。该讨论确认 Butler 仍保持单一用户入口和原有交付生命周期；Ideation 是探索方法，Decision Map 是可选持久化产物，Milestone 是版本路线容器，Iteration 才是唯一需求冻结与交付单元。这份对话输入是普通产品 / 工程 brief，不是需要逐字保真的大 PRD，因此不触发 PRD 切分。
+候选边界不是预先冻结的最终答案。R1 必须用现有规则和真实冲突检验五个候选上下文，必要时合并、拆分或改名。只有反复造成歧义、影响状态转换或阻碍机器判断的概念，才值得进入结构化合同；普通说明继续留在相应规则文件中。这样可以避免新增一份“看似完整但很快陈旧”的总词典。
+
+系统影响预计涉及 `Coder/README.md` 与架构说明、生命周期和上下文治理规则、artifact manifest、workflow registry、验证工具、状态审计及双宿主生成投影。实现时必须继续遵守现有单一真源原则：领域地图负责导航和关系，具体字段与状态仍由各自机器合同拥有；两者不能相互复制正文。
+
+R1 dogfood 证明完整领域地图适合审计，却不适合作为常驻初始植入：85 行正文约消耗 3.7k–4.5k tokens，若误展开 22 个真源指针，最坏可放大到约 70k–90k tokens。后续先把运行时路由、术语查询和历史审计拆成不同加载层，再继续建设跨上下文合同。
+
+这份对话输入是普通工程 brief，不是需要逐字保真的大 PRD，因此不触发 PRD 切分。
 
 ## 5.3 拆分路线图
 
-预计由 5 个迭代承接；实际迭代号在各路线项开启时再绑定。
+预计由 5 个迭代承接；实际迭代号在各路线项开启时绑定。
 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
-| R1 | Explore / Decision Map 边界合同：冻结单入口、按需升级、真源所有权、用户确认边界和与现有 Ideation/P1 的兼容语义；输入暂以用户确认的阻塞决策与交付切片为准 | ITER-0102 | closed |
-| R2 | Decision Map 本地合同与确定性状态机：地图/决策文件、依赖 DAG、Frontier、claim lease、resolve、Fog graduation、校验与跨会话恢复 | ITER-0103 | closed |
-| R3 | 决策工作执行与 research helper：research/prototype/grilling/task 输入输出合同、并行研究隔离、证据指针和协调器单写者吸收机制 | ITER-0104 | closed |
-| R4 | Milestone / Iteration 衔接：planned 路线引用 Decision、Iteration Admission、promotion plan/apply/receipt、P2 冻结后的变更分流和收口归档 | ITER-0105 | closed |
-| R5 | Router 接线与 Butler 自身 dogfood：保持快路径零回归，选择真实大需求验证恢复成本、错误路线、并行收益和维护开销，再裁决外部 tracker 是否值得建设 | ITER-0106 | closed |
+| R1 | 领域地图与语言审计：盘点核心术语和重复定义，用真实冲突校正五个候选上下文，明确概念所有者、真源指针、别名与不纳入范围的边界 | ITER-0107 | closed |
+| R2 | 上下文预算与渐进注入：把初始植入收敛为最小语义路由内核，将领域路由、术语查询和完整审计分层；收窄触发条件，限制每次真源展开数量，消除与 README、architecture、invariants、debt 和各 schema 的无效重复，并建立体量回归门 | ITER-0108 | closed |
+| R3 | 上下文映射与主链合同：定义 PRD→AC→Plan→Evidence→Goal→Handoff 等转换的输入、输出、保真、失效和派生关系，并与现有不变量及 schema 对账 | ITER-0109 | closed |
+| R4 | 最小可执行领域合同与双试点：只结构化高风险身份、状态、引用，解除 dangerous/loop 错绑，统一人测 schema/manifest 所有权，补迁移和负向 fixture | — | planned |
+| R5 | 治理接线与真实 dogfood：把领域变更检查接入 review、CI、双宿主投影和升级兼容，用 Butler 自身完成一次跨上下文功能设计并衡量歧义减少与维护成本 | — | planned |
 
 ## 5.4 范围演进记录
 
-- 2026-08-01：由 Wayfinder 接入 Butler 的工作流讨论建立候办；冻结 Decision Map→Milestone/Iteration 的稳定后半段，把“清晰度与交付体量如何可靠判定”明确排除为尚待单独攻克的前置脆弱点。
-- 2026-08-01：用户明确启动候办，正式开启 MILE-0014；保留 5 条 planned 路线，尚未绑定或预占任何 Iteration 编号。
-- 2026-08-01：R1 由 ITER-0102 交付并收口；Explore 统一为既有 Ideation 的 opt-in 深化模式，Standard 只可 suggest 零写等待同意，显式 promotion 从 Iteration P1 接回。R2–R5 保持 planned。
-- 2026-08-01：R2 由 ITER-0103 交付并收口；Decision Map 获得本地单真源、确定性状态机、依赖 Frontier、Claim Lease、幂等并发与恢复合同。R3–R5 保持 planned，不自动开启。
-- 2026-08-01：R3 由 ITER-0104 交付并收口；Decision Work 以不可变 Task/Result sidecar 和单一 helper 合同承接四类决策工作，只有 Research 可受控并行，任何候选都须协调器显式吸收。R4–R5 保持 planned，不自动开启。
-- 2026-08-02：R4 由 ITER-0105 交付并收口；Decision Promotion 以两个显式 adapter、resolved slice、不可变 receipt、项目根锁和 pending journal 确定性衔接既有路线或 Iteration P1。R5 保持 planned，不自动开启。
-- 2026-08-02：R5 由 ITER-0106 交付并收口；共享 Router 仍只有既有 Ideation 入口，真实 dogfood 验证恢复与显式交接，Research 实际串行，外部 tracker 裁决为 defer。R1–R5 已全部 closed，MILE-0014 具备版本级收口资格。
+- 2026-08-04：跨设备汇合时发现已发布 `main` 已占用 `MILE-0014` 与 `ITER-0099`～`ITER-0106`；保留发布历史不动，将本领域模型里程碑整体校正为 `MILE-0015`，已完成 R1～R3 分别校正为 `ITER-0107`～`ITER-0109`，范围、时间与验收结论不变。
+- 2026-07-31：根据 Martin Fowler 对 DDD 的统一语言、限界上下文、上下文映射和演化式模型思想建立候办；先做战略边界和两个真实冲突试点，不启动全仓重构。
+- 2026-07-31：用户确认开工，候办提升并由首个迭代承接 R1 领域地图与语言审计；本行使用 2026-08-04 汇合后的正式编号 MILE-0015 / ITER-0107。
+- 2026-07-31：ITER-0107 收口 R1；五个上下文、20 项统一语言审计和双冲突反证落地，运行行为零变化。R2 继续承接跨上下文合同。
+- 2026-07-31：根据 R1 上下文成本审计，在原跨上下文合同之前插入新 R2“上下文预算与渐进注入”；原 R2–R4 顺延为 R3–R5，语义不变。新 R2 只登记 planned 路线项，开启时再领取 ITER 号。
+- 2026-07-31：ITER-0108 收口 R2；冷启动改为 L0 最小路由，领域地图、20 项术语表和完整审计分为 L1/L2/L3 按需加载，首批真源展开上限 3 份并提供可见续批回执，静态预算与负向测试进入完整 CI。R3 继续承接上下文映射与主链合同。
+- 2026-07-31：用户确认继续推进，R3 绑定 ITER-0109；本轮只建立主链转换的输入、输出、保真、失效、责任方与派生关系，不提前吞并 R4 的机器合同和冲突试点。
+- 2026-07-31：ITER-0109 收口 R3；四类事实、五段九字段转换合同与静态门禁落地，L0 预算不增长。R4 继续承接最小机器合同及 dangerous/loop、人测所有权双试点。

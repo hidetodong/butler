@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-domain-model-contract",
+  "iteration": "ITER-0107",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "from pathlib import Path\nimport re, subprocess\nt=Path(\"Coder/domain-model.md\").read_text()\nctx=t.split(\"## 3. 限界上下文地图\",1)[1].split(\"## 4.\",1)[0]\naudit=t.split(\"## 4. 统一语言审计\",1)[1].split(\"## 5.\",1)[0]\nctx_rows=[x for x in ctx.splitlines() if x.startswith(\"| \")][1:]\nrows=[x for x in audit.splitlines() if x.startswith(\"| \")][1:]\nassert len(ctx_rows)==5 and len(rows)==20\nassert all(len(x.split(\"|\"))==10 and all(c.strip() for c in x.split(\"|\")[1:-1]) for x in rows)\npaths=set(re.findall(r\"`((?:Coder|tools|\\\\.ai)/[^`]+)`\",t))\nassert not [x for x in paths if not Path(x.split(\" §\",1)[0]).exists()]\nassert all(x in t for x in (\"open → R3\",\"Dangerous Mode 与 Convergence Loop\",\"人测残余\",\"不是新的机器合同\"))\nassert not re.search(r\"必须采用.{0,40}(Entity|Value Object|Aggregate|微服务)\",t)\nnames=set(subprocess.check_output([\"git\",\"diff\",\"--name-only\",\"--\",\"Coder\"],text=True).split()) | {\"Coder/domain-model.md\"}\nassert names=={\"Coder/domain-model.md\",\"Coder/README.md\",\"Coder/architecture-overview.md\"}\nprint(\"REVIEW PASS: complete rows, existing pointers, conflict routes open, no tactical-pattern mandate, Coder scope exact\")"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T05:33:04.302Z",
+  "finished_at": "2026-07-31T05:33:04.343Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 116,
+    "captured_bytes": 116,
+    "sha256": "d3f80efbd042eb7d41f4b849d55babe3485851fe7f66aea9b9186a673a4905fc",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

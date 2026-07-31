@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0107 交付总结 · Butler 领域地图与统一语言审计</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Butler 领域地图与统一语言审计</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0107</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-31</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>Butler 的核心概念分散在生命周期、质量门禁、上下文治理、宿主适配和驻留工具中。目录能说明规则放在哪里，却不能稳定回答一个词由谁定义、在哪个范围成立，以及跨模块引用时有没有悄悄改变含义。</p>
+      <p>本次先建立领域边界和统一语言的可查地图，为后续跨上下文合同与机器治理打地基，同时保持现有运行行为不变。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增 <code>Coder/domain-model.md</code>，划分需求与范围、交付生命周期、可信保证、宿主运行时、知识连续性五个限界上下文。</li>
+        <li>审计 20 个高风险概念，逐项标明上下文限定、白话定义、唯一所有者、定义真源、允许别名、非职责与冲突状态。</li>
+        <li>用 dangerous/loop 错误绑定和人测残余 schema/manifest 冲突做反向验证，两个问题均保留为 <code>open → R3</code>，本轮没有偷改行为。</li>
+        <li>在 <code>Coder/README.md</code> 与 <code>Coder/architecture-overview.md</code> 注册领域地图，并明确领域上下文与规则分层是正交视角。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>后续设计遇到 <code>active</code>、<code>pass</code>、Goal、Evidence、Dangerous Mode 等词时，可以先从领域地图确认命名空间和真源。</li>
+        <li>地图只保存边界、所有权和指针，不复制 schema、状态枚举或算法；原规则文件和机器合同仍是唯一执行真源。</li>
+        <li>MILE-0015 后续由 R2 建跨上下文合同，R3 再做术语 registry、门禁和已知冲突修复。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <p>规则功能面只新增 <code>Coder/domain-model.md</code>，并修改 <code>Coder/README.md</code>、<code>Coder/architecture-overview.md</code> 两处导航。DDD 来源摘要保存在 <code>.ai/references/domain-driven-design-fowler.md</code>。</p>
+      <p>本轮没有修改 P1→P5、Goal Assurance、PRD、Workspace Scope、hook、工具、公开命令、状态值或 dangerous/loop 的现有运行逻辑。</p>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li><code>domain-model-contract</code> 与 <code>review-domain-model-contract</code>：确认五个上下文、20 项术语、八列完整、22 个指针存在、两个冲突仍路由 R3，且 Coder 改动集合严格等于计划三文件。</li>
+        <li><code>artifact-contract</code>、<code>markdown-links</code>、<code>diff-check</code>：阶段产物合同、仓库内 Markdown 链接和 diff 格式均通过。</li>
+        <li><code>reproduced-full-ci</code>：完整 CI 通过；首次失败是沙箱拒绝读取 uv 缓存，失败记录如实保留。</li>
+        <li>危险模式完整多维审查 verdict=<code>pass</code>，Must Fix=0、Should Fix=0；AC1–AC7 均有 passed evidence 覆盖。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>五个上下文仍需在 R2/R3 dogfood 中持续演进，未来真实冲突可能要求改名、合并或拆分。</li>
+        <li>本轮完成同上下文完整审查，但未执行 fresh-context 独立复核。</li>
+        <li>dangerous/loop 错误绑定与人测残余容器冲突仅完成定位，实质修复留给 R3。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>验收清单：<code>.ai/iterations/ITER-0107/AC_LIST.md</code></li>
+        <li>技术方案：<code>.ai/iterations/ITER-0107/TECH_PLAN.md</code></li>
+        <li>验证报告：<code>.ai/iterations/ITER-0107/VERIFY_REPORT.md</code></li>
+        <li>对象级变更流：<code>.ai/iterations/ITER-0107/CHANGELOG.md</code></li>
+        <li>证据目录：<code>.ai/iterations/ITER-0107/evidence/</code></li>
+        <li>里程碑路线图：<code>.ai/MILESTONE.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

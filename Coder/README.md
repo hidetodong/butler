@@ -24,6 +24,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 - `README.md`：Coder 子系统主入口。
 - `architecture-overview.md`：规则分层与启用关系的补充说明，不属于 Business Extension。
+- `domain-model.md`：L1 限界上下文地图；只在跨模块所有权、同名状态或真源冲突等触发条件下读取。
+- `domain-glossary.md`：L2 核心术语查询表；只读取当前问题相关行，再沿定义真源下钻。
+- `context-map.md`：L2 主交付链转换合同；只在设计或审计 PRD→AC→Plan→Evidence→Goal→Handoff 时读取相关转换块。
 - `../AGENTS.md`：Codex 编辑 Butler 仓时的自动发现入口与 `.ai/` 冷启动读序。
 - `../docs/codex-compatibility.md`：Claude Code / Codex 共同内核、适配层边界与分阶段支持状态的真源。
 - `../docs/workflows.md`：由机器注册表生成的双宿主入口、风险、触发与旧名兼容人读表。
@@ -38,6 +41,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 /Coder
   README.md
   architecture-overview.md
+  domain-model.md
+  domain-glossary.md
+  context-map.md
 
   /00_System_Prompt
     identity.md
@@ -120,6 +126,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 规则目录说明：
 
+- `domain-model.md` / `domain-glossary.md` / `context-map.md`：分别回答上下文边界、术语消歧与主链跨边界转换；`architecture-overview.md` 继续回答规则如何分层和启用，这些是正交导航。
+
 - `00_System_Prompt/`：协作身份、总调度协议与对话输出呈现协议（`presentation-protocol.md`：方案 / 分析 / 选项类输出结论先行 + 统一标号 + 表格化 + 说人话四条对话层引用[定义真源在 `artifact-style.md §2`]）。
 - `20_Workflow_Lifecycle/`：通用需求开发 SOP 的阶段状态机、阶段交付约束、四件套书写口径与人类可读交付总结规范。
 - `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）。
@@ -143,6 +151,16 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 6. `40_Context_Management/`（长任务、多阶段任务、上下文压缩前重点读取）
 7. `99_Business_Extension/*.md`（如存在，视为最高优先级业务约束）
 8. `10_Domain_Stack_Profiles/` 中与当前项目类型匹配的规则文档，需先在 P1 Analysis 识别项目类型与技术栈后启用
+
+<!-- butler-context-l0:begin -->
+### 核心概念渐进读取（L0）
+
+- 普通单模块任务：停在本入口，直接读取目标专项规则；不得默认加载领域地图。
+- 已知术语需要消歧：只查 `domain-glossary.md` 的相关行，再读取首批最多 3 份直接真源。
+- 涉及跨模块所有权、同名状态、真源冲突或新增核心术语：先读 `domain-model.md` 定位上下文，再按需查术语和真源。
+- 3 份是每批预算而非总上限；续批前先压缩已知结论，并公开记录问题、缺口、已读来源、下一批来源与选择理由。
+- 只有显式完整领域审查才进入历史证据层；任何路径都不得递归追随引用或整目录读取。
+<!-- butler-context-l0:end -->
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 

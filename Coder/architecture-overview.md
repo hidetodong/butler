@@ -10,6 +10,8 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 
 `Coder/` 不是某个单一技术栈的默认开发规范，而是一套**通用需求开发 SOP**。
 
+本文件只解释规则如何分层与启用。核心概念属于哪个问题范围、由谁定义，按需看 L1 `domain-model.md`；已知术语消歧只查 L2 `domain-glossary.md` 的相关行；主交付链跨边界转换只查 `context-map.md` 的相关块。规则分层与领域上下文是两个正交视角。
+
 它把规则拆成三层：
 
 - **SOP Core**：定义通用流程、质量门禁与上下文治理。
@@ -93,3 +95,9 @@ scope: Coder 子系统中 SOP Core、Domain / Stack Profiles、Business Extensio
 - 如果当前项目未命中，该规则是否应完全不启用？
 
 若答案指向特定技术栈，则应把它视为 `10_Domain_Stack_Profiles/` 中的条件规则，而不是通用底座。
+
+## 6. 与领域模型的关系
+
+- 本文件回答“某条规则默认生效、按技术栈启用，还是业务侧最高优先级约束”。
+- `domain-model.md` 回答上下文边界；`domain-glossary.md` 回答具体术语的限定含义和定义真源；`context-map.md` 回答主链转换的保真、失效、责任和权威方向。
+- 不按领域上下文重排 `00/20/30/40` 目录，也不从目录位置反推概念所有权；需要跨模块定位时先看领域地图，再沿真源指针读取对应规则。

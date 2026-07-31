@@ -1,0 +1,11 @@
+test_definition_source_symlink_cannot_escape_project (test_context_budget.ContextBudgetTests.test_definition_source_symlink_cannot_escape_project) ... ok
+test_l0_budget_and_markers_fail_closed (test_context_budget.ContextBudgetTests.test_l0_budget_and_markers_fail_closed) ... ok
+test_l1_context_pointer_and_recursion_guards (test_context_budget.ContextBudgetTests.test_l1_context_pointer_and_recursion_guards) ... ok
+test_l2_count_empty_cell_and_bad_source_fail (test_context_budget.ContextBudgetTests.test_l2_count_empty_cell_and_bad_source_fail) ... ok
+test_missing_receipt_field_and_duplicate_table_fail (test_context_budget.ContextBudgetTests.test_missing_receipt_field_and_duplicate_table_fail) ... ok
+test_repository_baseline_passes (test_context_budget.ContextBudgetTests.test_repository_baseline_passes) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.042s
+
+OK

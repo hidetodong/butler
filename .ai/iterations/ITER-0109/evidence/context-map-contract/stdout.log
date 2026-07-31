@@ -1,0 +1,20 @@
+{
+  "errors": [],
+  "metrics": {
+    "context_map_bytes": 6172,
+    "context_map_lines": 90,
+    "context_map_pointers": 20,
+    "contexts": 5,
+    "fact_classes": 4,
+    "l0_bytes": 694,
+    "l0_nonempty_lines": 6,
+    "l0_pointers": 2,
+    "l1_bytes": 3966,
+    "l1_lines": 55,
+    "l1_pointers": 12,
+    "routes": 4,
+    "terms": 20,
+    "transitions": 5
+  },
+  "status": "ok"
+}

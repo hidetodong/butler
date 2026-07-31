@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "context-budget-tests",
+  "iteration": "ITER-0108",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/context-budget/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T07:34:08.305Z",
+  "finished_at": "2026-07-31T07:34:08.436Z",
+  "duration_ms": 131,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 764,
+    "captured_bytes": 764,
+    "sha256": "5bbb86dedf81d3978353f0053fc97d428bf3a142f974c7be3a6a0ef23670aac5",
+    "truncated": false
+  }
+}

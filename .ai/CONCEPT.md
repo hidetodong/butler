@@ -1,25 +1,20 @@
 <!-- butler-artifact-template: 1.0.0 artifact=concept -->
-# CONCEPT — ITER-0106 · Explore Router 接线与 Butler 自身 dogfood（MILE-0014 R5）
+# CONCEPT — ITER-0109 · 上下文映射与主链转换合同
 
 ## Current Understanding
 
-- 启动 MILE-0014 最后一条 planned 路线：把已交付的 Explore、Decision Map、Decision Work 与 Decision Promotion 接到 Butler 统一语义入口，并用一个真实大需求验证恢复成本、错误路线、并行收益和维护开销，最后对外部 tracker 价值作出证据化裁决。
-- 已确认：用户已明确继续，现启动 MILE-0014 R5，而不是直接关闭里程碑。
-- 已确认：Butler 继续只有一个自然语言入口；Explore 是 opt-in 深化模式，不能由模型按清晰度、大小或置信度静默启用。
-- 已确认：Decision Map 是交付可引用的决策来源，不替代 Milestone、Iteration、冻结 AC 或 P1→P5。
-- 已确认：R5 必须保持普通明确任务的快路径零回归，并以 Butler 自身真实大需求做 dogfood 后再裁决外部 tracker 是否值得建设。
-- 已确认：把现有 codex-structured-question-cards 候办作为本轮 dogfood 样本，因为它包含跨宿主能力、交互合同与架构取舍；本轮只探索它，不自动提升候办、不进入其实现生命周期。
-- 已确认：先定义可复现的 dogfood 场景与最小观测口径，再做 Router 接线；恢复成本、错误路线、Research 并行效果和 Map 维护开销都以机器记录与操作轨迹为依据，不用主观顺滑感代替证据，也不预设结果必须为正。
+- Butler 的主交付链已经由 PRD、AC、TECH_PLAN、Evidence、Goal Verdict 和 Handoff 等成熟产物组成，但各段目前主要各自定义字段与门禁，缺少一张明确说明“上游什么事实进入下游、哪些字段必须保真、何时失效、谁负责拒绝”的跨上下文合同。
+- 这不是要新建一套流水线或复制各 schema，而是建立上下文映射：需求与范围向交付生命周期交接钉版输入，生命周期把承诺投给可信保证，可信保证产出完成资格，知识连续性只保存可验鲜派生视图。
+- 预期结果应让维护者沿主链定位责任：发生信息丢失、版本漂移、证据不足、派生摘要陈旧时，能判断应该在哪个边界失败并回到哪份权威真源修正。
 
 ## Scope
 
-- 把 Explore opt-in 建议与显式进入语义接入现有 Router / 宿主适配，保持单一入口和 explicit-only 边界。
-- 为明确小任务、独立 Iteration、直接 Milestone 与 Explore 深化路径建立零回归合同与负向测试。
-- 选择一个真实 Butler 大需求，端到端演练 Decision Map、Decision Work、promotion 与跨会话恢复。
-- 记录并比较恢复成本、错误路线、Research 并行收益和 Map 维护开销，形成外部 tracker 的 go / no-go 裁决。
-- 完成 R5 后按证据判断 MILE-0014 是否具备版本级收口资格。
+- In Scope：定义 PRD→AC、AC→TECH_PLAN、TECH_PLAN→Evidence、Evidence→Goal Verdict、Goal/权威状态→Handoff 五类转换的输入、输出、保真字段、失效条件、责任方和派生/权威关系。
+- In Scope：把合同做成薄导航并与现有 schema、不变量和工具行为对账；为关键断裂场景建立可回归检查，确保导航不会复制字段全集或成为第二真源。
+- Out of Scope：不改变 P1→P5 阶段算法，不重做 PRD、Goal、Evidence 或 Handoff 工具，不新增并行执行能力，不提前处理 dangerous/loop 解耦和人测所有权试点（属于 R4）。
+- 工程形态：Butler Markdown 规则仓，使用通用 SOP；未命中 Vue / TypeScript / build-tooling profile。
 
 ## Open Questions / Risks
 
-- dogfood 可以证明本地状态与合同是否可用，但不能仅凭一次仓内演练证明多用户、跨机器或第三方宿主的真实效率收益；结论必须区分“已证明”“未观察到”和“尚无证据”。
-- 结构化提问卡片候办仍由自己的未编号 backlog 文件拥有；本轮产生的 Decision Map、工作结果或报告不能被当作该候办已开工。
+- P2 需要决定合同覆盖到“最小保真字段类别”还是逐字段列举；当前倾向前者，并只用指针回到 schema，避免双写漂移。
+- 主链涉及四个限界上下文，后续将继续按每批最多 3 份直接真源下钻；若证据不足，会先写升级回执再续批，不以预算为由省略失效条件。

@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：无 active；阶段：Milestone Closed。
-- 状态：MILE-0014 已聚合 ITER-0102～ITER-0106，完成里程碑归档、Markdown/HTML 版本级交付和台账收口；Decision Map 保留为参考来源，tracker verdict=`defer`。
+- 迭代：无 active；里程碑：MILE-0015；阶段：Closed。
+- 状态：ITER-0109 / MILE-0015 R3 已关闭；13 个 evidence、五件套和双格式交付均已归档。
 
 ## 关键决策摘要
 
@@ -19,10 +19,11 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：交付即止；当前无 active Milestone / Iteration，不自动启动任何 deferred 候办。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按用户指令开启 MILE-0015 R4，结构化最小高风险合同并完成 dangerous/loop 与人测所有权双试点。
 
 ## 状态指针
 
 - `.ai/task-state.md`
 - `.ai/ITERATIONS.md`
 - `.ai/MILESTONES.md`
+- `.ai/MILESTONE.md`

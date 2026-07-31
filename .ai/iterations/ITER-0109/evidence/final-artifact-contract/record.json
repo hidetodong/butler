@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "final-artifact-contract",
+  "iteration": "ITER-0109",
+  "ac_ids": [
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/artifact-pipeline/contract.py",
+      "check",
+      "project",
+      "--project-root",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T09:58:29.560Z",
+  "finished_at": "2026-07-31T09:58:29.641Z",
+  "duration_ms": 77,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 476,
+    "captured_bytes": 476,
+    "sha256": "084bcdf971d52ef2e8c13591d3c3ac1639200005a2c861c94e27b112438a6cc8",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

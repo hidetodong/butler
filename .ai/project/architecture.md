@@ -2,6 +2,14 @@
 
 > 只摘全貌 + 补成熟度。目录树、读取顺序、各规则一句话职责的**真源在 `Coder/README.md`**（"目录结构" + "规则目录说明" 两节），此处不抄。分层关系真源 `Coder/architecture-overview.md`。
 
+## 领域概念导航
+
+- 领域概念采用四层渐进导航：`Coder/README.md` 的 L0 只做任务路由；`Coder/domain-model.md` 的 L1 只保留五个限界上下文、四条跨上下文路径和续批规则；`Coder/domain-glossary.md` 的 L2 承载 20 个高风险术语查询；完整历史审计留在 ITER-0107 的 L3 归档。
+- 领域上下文回答“概念在哪个问题范围成立、由谁定义”；下面的 SOP Core / Domain Profiles / Business Extension 回答“规则如何分层和启用”。两个视角正交，目录位置不决定概念所有权。
+- 地图只存边界、关系和指针；状态枚举、字段与算法继续由被指向的 schema、manifest、registry 和规则正文拥有。
+- `Coder/context-map.md` 按需承载 PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 的五段转换；每段只保留九维最小合同和 1–3 份直接真源，具体 schema 仍归原规则拥有。
+- `tools/context-budget/context_budget.py` 用 bytes、非空行、指针数及结构断言守住 L0/L1/主链预算、四类事实方向和五段转换，并由 `scripts/verify-ci.sh` 持续回归；这些指标是稳定代理，不冒充精确 token 或运行时读取遥测。
+
 ## 三层主干（`Coder/`，所有任务默认走）
 
 三层职责分明、不互窜（这是头号不变量，见 `invariants.md`）：
@@ -56,3 +64,4 @@
 
 - 目录 + 读序 + 各规则一句话职责：`Coder/README.md`（真源，不在此重复）。
 - 分层与启用关系：`Coder/architecture-overview.md`。
+- 核心概念边界与定义真源：`Coder/domain-model.md`。
