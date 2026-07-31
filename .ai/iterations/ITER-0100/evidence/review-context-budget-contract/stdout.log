@@ -1,0 +1,15 @@
+{
+  "errors": [],
+  "metrics": {
+    "contexts": 5,
+    "l0_bytes": 694,
+    "l0_nonempty_lines": 6,
+    "l0_pointers": 2,
+    "l1_bytes": 3894,
+    "l1_lines": 55,
+    "l1_pointers": 11,
+    "routes": 4,
+    "terms": 20
+  },
+  "status": "ok"
+}

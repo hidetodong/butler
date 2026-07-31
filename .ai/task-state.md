@@ -1,14 +1,14 @@
 # Task State
 
 - 当前迭代：无 active
-- 当前里程碑：无 active
-- 阶段：Iteration Closed
-- 状态：ITER-0098 已完成开源授权、README 上手链路、贡献指南、安全策略、证据归档与双格式交付。
-- 已完成：AC1–AC7；Apache-2.0；`CONTRIBUTING.md`；`SECURITY.md`；README 重构；完整 CI；P5 简评；归档与交付。
-- 下一动作：仓库管理员核对 GitHub Private Vulnerability Reporting 开关；行为准则与双语 README 按真实需要另开迭代。
-- 已知风险：私密漏洞报告外部开关未取得只读证据；许可证法律适用性未由法务复核。
+- 当前里程碑：MILE-0014
+- 阶段：Closed
+- 状态：ITER-0101 / MILE-0014 R3 已关闭；13 个 evidence、五件套和双格式交付均已归档。
+- 已完成：四类事实、五段九字段主链合同与 9 项正负测试落地；Goal Assurance=`eligible`，最终 Must Fix=0、Should Fix=0。
+- 下一动作：按用户指令开启 MILE-0014 R4，结构化最小高风险合同并完成 dangerous/loop 与人测所有权双试点。
+- 已知风险：当前只证明静态合同一致性，尚无宿主运行时转换遥测；本轮未执行 fresh-context 独立复核。
 - 授权上限：`/Users/cyborgno2/Documents/WorkCode.nosync/butler`
-- P4 回滚锚点：本迭代已归档，可按 `.ai/iterations/ITER-0098/`、delivery 与 evidence 分层审查。
+- P4 回滚锚点：N/A（迭代已关闭；历史锚点见 ITER-0101 RUN_LOG）。
 
 # Goal Calibration
 

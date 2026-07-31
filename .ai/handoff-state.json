@@ -1,32 +1,37 @@
 {
-  "handoff_sha256": "2808433fabe549b5fe23f74f7cc9cbe9ae627540bb7605870929d3d2026708b1",
+  "handoff_sha256": "1363be333b0001cb396847a182ccf1a3de96b3f35d28f9fa6ced4890c0658fa9",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
-    "milestone": "none",
-    "next": "仓库管理员核对 GitHub Private Vulnerability Reporting 开关；行为准则与双语 README 按真实需要另开迭代。",
-    "phase": "Iteration Closed",
+    "milestone": "MILE-0014",
+    "next": "按用户指令开启 MILE-0014 R4，结构化最小高风险合同并完成 dangerous/loop 与人测所有权双试点。",
+    "phase": "Closed",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
-      ".ai/MILESTONES.md"
+      ".ai/MILESTONES.md",
+      ".ai/MILESTONE.md"
     ],
     "risks": [],
-    "status": "ITER-0098 已完成开源授权、README 上手链路、贡献指南、安全策略、证据归档与双格式交付。"
+    "status": "ITER-0101 / MILE-0014 R3 已关闭；13 个 evidence、五件套和双格式交付均已归档。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "5184d5a4556ef1378d2296ccddbe13c275f89e7134e1c97f75a297eb6365d2df"
+      "sha256": "701ade40a5b4b1c742fe2f418beae9f99ca05c2515200ccf59158355a2600eff"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "8f68dd745ec5ef9a25cb22f785d6dd52fbb9a41db31fb0efd191cfbd6e3a7e49"
+      "sha256": "1730794d7efe1a8c4da352ebc0c4883edd595159dff2012d5c5ef6123d906d9b"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "19b7a5ba36d76ab8edd6490eed4b2cb4ad1d0819f4bf6dbaa3c34d3d2a00f436"
+      "sha256": "fb07df723fc7ac21175deb24fdf88e835c257c71cbd971085e5d068bee4e93a4"
+    },
+    {
+      "path": ".ai/MILESTONE.md",
+      "sha256": "b2c93479d1851ff7d372233a4bc8ebd89351a84d786ce0bb9b431ccf5226c08e"
     }
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "context-map-tests",
+  "iteration": "ITER-0101",
+  "ac_ids": [
+    "AC1",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/context-budget/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T08:38:15.149Z",
+  "finished_at": "2026-07-31T08:38:15.281Z",
+  "duration_ms": 131,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1388,
+    "captured_bytes": 1388,
+    "sha256": "5092d3782af18c1cec0cabeb7593fdc477a98f0cbca6bb1d6f34f309a2b0c32b",
+    "truncated": false
+  }
+}

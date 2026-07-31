@@ -11,6 +11,7 @@
 - **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与 12 工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
 - **双宿主治理**：49 个入口元数据投影由 registry 生成/校验；个人 Butler plugin 的仓内真源已刷新，team/public distribution 明确未配置。
 - **开源入口**：ITER-0098 已关闭，根 README、Apache-2.0 `LICENSE`、`CONTRIBUTING.md` 与 `SECURITY.md` 已形成发现、上手、协作和安全报告的公开入口基线。
+- **领域模型治理**：MILE-0014 已完成 R1–R3；五个限界上下文、20 项统一语言审计、四层渐进导航，以及 PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 五段转换合同均已落地，静态预算和关系检查进入完整 CI。
 - **远端保护**：workflow 尚未推送；required API 返回 403，当前私有仓库需升级 GitHub Pro 或改公开，状态为 `pending external capability`。
 
 ## 活跃战线
@@ -18,7 +19,7 @@
 - MILE-0013 已关闭：项目级机器设置进入扁平 `.ai/butler.config.json`，严格内核、新部署、legacy 事务迁移、全部消费端、双宿主入口与 v3.3.0 迁移链均已接通。
 - MILE-0009 已形成 origin/inbox → 日期化 PRD 集合 → 多需求钉版 → migration/split/status/update → workspace scope/plan/hook/diff 的完整链路。
 - 真实 `WorkCode.nosync/apps` 已以只读源 + 临时副本验证 28 个 workspace、legacy plan/apply/verify/resolve/rollback 与原仓双 hash 不变；没有替用户升级外部仓。
-- 危险模式仍为 ON；当前没有 active 迭代或里程碑路线项。
+- 危险模式仍为 ON；MILE-0014 active，R1/ITER-0099、R2/ITER-0100、R3/ITER-0101 已关闭，等待按用户指令开启 R4。
 - ITER-0098 已关闭：开源 README 与社区治理文档已完成并通过本地完整 CI；GitHub Private Vulnerability Reporting 是否实际启用仍待仓库管理员在外部设置中核验。
 
 ## 下一个瓶颈
@@ -27,3 +28,4 @@
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 可执行升级器仍缺一份真实外部老项目的受监督 dogfood；首次使用保留 backup/journal 并人工审阅 diff。
 - 危险模式规则真源仍把 P4 与 `/butler:loop` 自动绑定，但用户已明确两者正交；需要独立纠偏迭代统一 dangerous engine、logic protocol 和相关入口，避免再次误触发 Loop。
+- MILE-0014 下一瓶颈是 R4：只结构化高风险身份、状态和引用，解除 dangerous/loop 错绑并统一人测 schema/manifest 所有权；R2/R3 尚无运行时读取与转换遥测，只有观察到宿主偏离时才评估补追踪。

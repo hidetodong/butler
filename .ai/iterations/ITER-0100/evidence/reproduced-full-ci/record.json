@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "reproduced-full-ci",
+  "iteration": "ITER-0100",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T07:42:48.527Z",
+  "finished_at": "2026-07-31T07:43:14.884Z",
+  "duration_ms": 26357,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 3393,
+    "captured_bytes": 3393,
+    "sha256": "f222222fab41eb6d7aff7a7745878af73fee7b393f9c2e461bde10355a0ab308",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 5076,
+    "captured_bytes": 5076,
+    "sha256": "6389db1d092f9583ba0dec90f3f6427765c4cc106d8d1d8d7b5835ec7819644b",
+    "truncated": false
+  }
+}

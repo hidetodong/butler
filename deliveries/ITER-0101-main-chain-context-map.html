@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0101 交付总结 · 上下文映射与主链转换合同</title>
+  <style>
+    :root { --fg:#1f2328;--fg-muted:#59636e;--bg:#f6f8fa;--card:#fff;--border:#d1d9e0;--accent:#0969da;--accent-soft:#ddf4ff;--warn-soft:#fff8c5;--mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace; }
+    *{box-sizing:border-box} body{margin:0;padding:2rem 1rem 4rem;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.7;font-size:15px}
+    .sheet{max-width:820px;margin:0 auto} header.delivery-head,section.block{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.75rem 1.25rem;margin-bottom:1rem} header.delivery-head{padding:1.5rem 1.75rem;margin-bottom:1.25rem} h1{margin:0 0 .75rem;font-size:1.5rem;line-height:1.35} h2{margin:0 0 .6rem;font-size:1.05rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+    .meta{display:flex;flex-wrap:wrap;gap:.5rem}.chip{display:inline-flex;padding:.15rem .6rem;border-radius:999px;font-size:.8rem;font-family:var(--mono);background:var(--accent-soft);color:var(--accent)}.chip.level,.chip.date{background:#eef1f5;color:var(--fg-muted)}
+    section.block :is(p,ul){margin:.5rem 0} section.block ul{padding-left:1.3rem} section.block li{margin:.25rem 0} code{font-family:var(--mono);font-size:.88em;background:#eef1f5;padding:.05rem .35rem;border-radius:5px}.risks{background:var(--warn-soft)!important;border-color:#eed888!important}.references{font-size:.92rem} footer{margin-top:1.5rem;text-align:center;color:var(--fg-muted);font-size:.8rem}@media print{body{background:#fff;padding:0}section.block,header.delivery-head{border-color:#ccc;break-inside:avoid}}
+  </style>
+</head>
+<body><main class="sheet">
+  <header class="delivery-head"><h1>上下文映射与主链转换合同</h1><div class="meta"><span class="chip">ITER-0101</span><span class="chip level">迭代交付（小版本）</span><span class="chip date">收口 2026-07-31</span></div></header>
+  <section class="block"><h2>本次交付目标</h2><p>把 PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 主链从分散的规则暗示，收敛为可按需读取、可机械检查且不复制既有 schema 的跨上下文转换合同。</p></section>
+  <section class="block"><h2>已完成内容</h2><ul><li>建立四类事实和五段主链转换。</li><li>每段固定源/目标上下文、输入、输出、最小保真、失效条件、责任方、权威关系和直接真源九个维度。</li><li>扩展 context-budget 检查器与 9 项正负测试。</li></ul></section>
+  <section class="block"><h2>关键变更 / 用户可感知变化</h2><ul><li>只打开 <code>Coder/context-map.md</code> 的相关转换块，再首批读取最多 3 份直接真源。</li><li>每次转换都能回答来源、保真、失效和修复位置，派生视图不能反写真源。</li><li>L1 只增加按需指针，L0 冷启动预算没有增长。</li></ul></section>
+  <section class="block"><h2>高层影响范围</h2><ul><li>规则导航：context-map、domain-model、README、architecture-overview。</li><li>工程门禁：context-budget 检查器、测试与说明。</li><li>项目知识：architecture、invariants、frontier。</li></ul></section>
+  <section class="block"><h2>验证方式与结果摘要</h2><ul><li>AC1–AC8 与 13 个归档 evidence 全部通过。</li><li>专项 9/9、合同、链接、artifact、state、diff 和完整 CI 通过。</li><li>Goal=<code>eligible</code>；最终 Must Fix=0、Should Fix=0。</li></ul></section>
+  <section class="block risks"><h2>已知剩余风险 / 延后事项</h2><ul><li>尚无宿主运行时读取/转换遥测。</li><li><code>independent_review=false</code>，未执行 fresh-context 独立复核。</li><li>最小机器合同和两个冲突试点留给 R4。</li></ul></section>
+  <section class="block references"><h2>引用（只引用路径，不嵌全文）</h2><ul><li><code>.ai/iterations/ITER-0101/AC_LIST.md</code></li><li><code>.ai/iterations/ITER-0101/TECH_PLAN.md</code></li><li><code>.ai/iterations/ITER-0101/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0101/CHANGELOG.md</code></li><li><code>.ai/iterations/ITER-0101/evidence/</code></li></ul></section>
+  <footer>固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9</footer>
+</main></body></html>

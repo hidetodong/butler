@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "domain-model-contract",
+  "iteration": "ITER-0099",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "from pathlib import Path\nimport re, subprocess\nt=Path(\"Coder/domain-model.md\").read_text()\nfront=t.split(\"---\",2)[1]\nassert all(k in front for k in (\"title:\",\"audience:\",\"scope:\"))\nctx=t.split(\"## 3. 限界上下文地图\",1)[1].split(\"## 4.\",1)[0]\nctx_rows=[x for x in ctx.splitlines() if x.startswith(\"| \")][1:]\nassert len(ctx_rows)==5\naudit=t.split(\"## 4. 统一语言审计\",1)[1].split(\"## 5.\",1)[0]\nrows=[x for x in audit.splitlines() if x.startswith(\"| \")][1:]\nassert len(rows)==20 and all(len(x.split(\"|\"))==10 for x in rows)\npaths=set(re.findall(r\"`((?:Coder|tools|\\\\.ai)/[^`]+)`\", t))\nassert not [x for x in paths if not Path(x.split(\" §\",1)[0]).exists()]\nassert \"Dangerous Mode 与 Convergence Loop\" in t and \"人测残余\" in t\nnames=set(subprocess.check_output([\"git\",\"diff\",\"--name-only\",\"--\",\"Coder\"],text=True).split()) | {\"Coder/domain-model.md\"}\nassert names=={\"Coder/domain-model.md\",\"Coder/README.md\",\"Coder/architecture-overview.md\"}\nprint(f\"PASS contexts={len(ctx_rows)} audit_terms={len(rows)} source_paths={len(paths)}\")"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T05:17:35.107Z",
+  "finished_at": "2026-07-31T05:17:35.158Z",
+  "duration_ms": 51,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 47,
+    "captured_bytes": 47,
+    "sha256": "f7f1cf480a6db865f031da959839488f0af8a68a7b3827f8476fbe54ff8a983d",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

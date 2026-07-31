@@ -1,9 +1,10 @@
 # 里程碑台账
 
-current: none
+current: MILE-0014
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
+| MILE-0014 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | active | 2026-07-31 | — | ITER-0099, ITER-0100, ITER-0101 | — |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |
 | MILE-0012 | 轻量 TDD 配对证据：复用现有 evidence 记录同一测试命令先失败、后通过并接入收口检查 | closed | 2026-07-24 | 2026-07-26 | ITER-0091, ITER-0092 | deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md |
 | MILE-0011 | 确定性五件套产物链：固定结构、阶段生成与机械校验 | closed | 2026-07-23 | 2026-07-23 | ITER-0086, ITER-0087, ITER-0088, ITER-0089 | deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md |

@@ -3,54 +3,51 @@
 ACK 日期: 2026-07-31
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0098
+# AC_LIST — ITER-0101
 
 ## Goal
 
-- 补齐 Butler 的开源授权、零基础使用和社区协作入口，让陌生用户不读仓库内部实现也能判断项目用途、完成安装、验证结果并找到正确的反馈渠道。
+- 建立一份可导航、可审计、不会成为第二真源的主链转换合同，让 PRD→AC→Plan→Evidence→Goal→Handoff 每次跨上下文交接都能回答“带什么、保什么、何时拒绝、谁负责、事实归谁”。
 
 ## In Scope
 
-- 根级 `LICENSE`、`CONTRIBUTING.md`、`SECURITY.md`。
-- README 的目录、获取与安装、前置条件、安装影响、成功验证、支持/维护、贡献、安全、许可证、健康状态徽章和最小成果示例。
-- 所有新增入口使用仓库内相对链接，并纳入现有 Markdown 链接检查与完整 CI。
+- 覆盖 PRD→AC、AC→TECH_PLAN、TECH_PLAN→Evidence、Evidence→Goal Verdict、Goal/权威状态→Handoff 五段转换。
+- 每段声明源/目标上下文、输入、输出、最小保真信息、失效条件、责任方以及权威/派生关系。
+- 用薄指针连接现有 schema、工具和不变量，并以确定性检查捕获合同缺段、漏字段、错误权威方向和重复定义回归。
 
 ## Out of Scope
 
-- 不新增行为准则，不承诺尚未建立的社区执法机制。
-- 不增加中英文双语 README。
-- 不修改安装脚本、Butler 规则算法、Hooks、plugin、迁移配方或 GitHub 仓库设置。
-- 不回溯改写历史交付与历史版本说明。
+- 不复制 PRD、AC、TECH_PLAN、Evidence、Goal 或 Handoff 的字段全集、状态枚举和执行算法。
+- 不改变 P1→P5、Goal Assurance、evidence runner、handoff generator 或现有 PRD 工具的运行行为。
+- 不处理 dangerous/loop 解耦、人测 schema/manifest 所有权、宿主遥测或并行执行；这些属于后续路线或独立方向。
 
 ## Acceptance Checklist
 
-- [ ] AC1: 根目录存在用户确认的标准开源许可证全文；README 末尾写明 SPDX 标识、版权归属并链接该文件，且不把第三方子目录许可证误写成全仓许可证。
-- [ ] AC2: `CONTRIBUTING.md` 说明接受哪些贡献、如何提 Issue/PR、本地前置条件、修改边界、必跑验证和行为预期；README 提供清晰入口。
-- [ ] AC3: `SECURITY.md` 说明受支持版本、私密漏洞报告渠道、禁止公开披露的边界和响应流程；README 的安全章节只做摘要并链接全文。
-- [ ] AC4: README 的快速开始覆盖前置条件、官方仓库获取、`setup.sh` 的主要用户级写入影响、安装命令、重启/生效方式和成功验证，不要求读者先翻 `HUMAN_GUIDE.md` 才能完成首次使用。
-- [ ] AC5: README 增加覆盖全部二级标题的目录；顶部徽章收敛为 CI、版本、许可证和宿主支持等可判断状态，静态版本与仓库 `VERSION` 保持一致。
-- [ ] AC6: README 给出一个最小任务输入及其可预期产物/确认点，让读者在一分钟内理解 Butler 的实际使用结果；详细能力清单和深层说明仍通过现有文档下沉。
-- [ ] AC7: README 明确普通支持、维护者、贡献、安全和许可证入口；所有仓库内 Markdown 链接通过离线检查，`git diff --check` 与完整 `bash scripts/verify-ci.sh` 通过。
+- [ ] AC1: 主链合同完整登记 5 段转换；每段都包含源上下文、目标上下文、输入、输出、保真、失效、责任方、权威关系和直接真源指针，缺任一项即不合格。
+- [ ] AC2: PRD→AC 明确以钉版的 `prd_id + prd_version + module_slugs` 作为需求集合保真锚点；非 PRD 流保持合法，冻结 AC 不随 live PRD 自动漂移，缺失/冲突引用 fail-closed。
+- [ ] AC3: AC→TECH_PLAN 明确方案逐项映射冻结 AC，并继承同一 PRD 钉版引用；方案不得自行升级版本、扩大模块或用执行任务替代 AC，实质改动使旧方案 verdict 失效。
+- [ ] AC4: TECH_PLAN→Evidence 明确验证围绕 AC 和方案对齐产生机器 record；失败记录保留但不能打绿，只有通过且强度如实的 evidence 才能覆盖自动道 AC。
+- [ ] AC5: Evidence→Goal Verdict 明确 Goal 是聚合派生视图；裁决必须同时核 AC、plan、calibration、evidence、review、blocker 与收口事实，`eligible` 只授权收口、不等于 `complete`，宿主任务状态不能反写。
+- [ ] AC6: Goal/权威状态→Handoff 明确 handoff 只由工具从权威状态单向生成并带新鲜度校验；陈旧或源状态非法时拒绝消费，handoff 不得反写生命周期、验收或完成状态。
+- [ ] AC7: 合同统一区分权威事实、受控投影、派生视图和叙述摘要；每个失效条件都能路由回唯一修复真源，不在导航层复制字段全集、状态枚举或算法。
+- [ ] AC8: 主链合同接入 L0/L1 渐进导航和完整 CI；确定性正负测试至少覆盖五段齐全、必填维度、权威方向、直接真源存在/仓内边界与禁止递归展开，现有完整验证保持通过。
 
 ## Verification Method
 
-- AC1: 核对根级许可证为所选标准文本；检查 README SPDX 标识、版权归属和相对链接；确认第三方许可证仍局限在其子目录。
-- AC2: 按“贡献类型 → Issue/PR → 本地准备 → 验证 → 提交”路径人工走读；核对文中命令与仓库现有入口一致。
-- AC3: 核对支持版本表、私密报告渠道、公开披露限制和维护者响应步骤齐全；若渠道依赖外部设置，明确写出启用前提。
-- AC4: 从空白读者视角按 README 命令顺序检查 clone、依赖、安装、生效和验证链路；对照 `scripts/setup.sh` 确认主要副作用没有遗漏或夸大。
-- AC5: 提取 README 二级标题与目录逐项对账；核对版本徽章与 `VERSION`；检查徽章目标链接可解释且没有重复装饰性信息。
-- AC6: 人工走读最小示例，确认输入、P2/P3 确认和最终 `.ai/`/`deliveries/` 结果首尾相接。
-- AC7: 运行 `python3 scripts/check-markdown-links.py --root .`、`git diff --check` 与 `bash scripts/verify-ci.sh`，并用 evidence record 逐项绑定 AC。
+- AC1: 运行主链合同检查器，断言转换数恰为 5、身份唯一且每段九个维度非空；删除任一段或维度的 fixture 必须失败。
+- AC2: 静态合同断言 PRD 钉版三元组、非 PRD 分支、冻结不漂移与 fail-closed 语义均存在，并核指针回到 references/acceptance 真源。
+- AC3: 静态合同断言 AC 映射、钉版继承、禁止扩张、任务非替代和 verdict 失效语义；负例改变权威方向必须失败。
+- AC4: 静态合同断言 AC/evidence 对应、record、失败保留不打绿与证据强度；核指针回到 verify/evidence 真源。
+- AC5: 静态合同断言 Goal 聚合输入、`eligible ≠ complete`、host 单向投影和收口条件；核指针回到 goal/goal-assurance 真源。
+- AC6: 静态合同与现有 handoff 单测共同验证生成方向、新鲜度和非法源拒绝；核指针回到 handoff 真源。
+- AC7: 检查器拒绝未知事实分类、缺修复真源、复制型长定义或指向仓外/不存在的直接真源；人工对账现有 invariants 无相反结论。
+- AC8: 运行专项单测、上下文预算检查、artifact contract、Markdown 链接、状态审计、`git diff --check` 与 `bash scripts/verify-ci.sh`，全部通过。
 
 ## External References
 
-- [GitHub About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) — README 常见信息与相对链接口径，支撑 AC4、AC7。
-- [GitHub Community Profiles](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/about-community-profiles-for-public-repositories) — LICENSE、CONTRIBUTING、CODE_OF_CONDUCT 和 SECURITY 等社区健康入口，支撑 AC1–AC3。
-- [Open Source Guides: Starting a Project](https://opensource.guide/starting-a-project/) — 开源项目启动清单，支撑 AC1–AC3。
-- [Standard Readme specification](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) — 长 README 目录、安装、使用、贡献和许可证章节口径，支撑 AC1、AC2、AC4–AC7。
+- N/A
 
 ## Open Questions / Risks
 
-- 2026-07-31 用户已 ACK：Apache-2.0；接受 GitHub Issues 和 Pull Requests；普通支持走 GitHub Issues；安全问题走 GitHub Private Vulnerability Reporting；维护者写 `@hidetodong`。
-- `ego-browser` 能创建 GitHub 标签页但无法附着活动标签，未能只读确认私密漏洞报告入口是否已开启。AC3 不会假称外部设置已就绪；若 P4/P5 仍无法核实，须作为外部待办和剩余风险明确交付。
-- 外部规范是参考基线，不把 Standard Readme 的英文标题或固定章节顺序机械照搬到中文 README；以首次使用和社区协作是否闭环为最终判断。
+- 合同只列“最小保真信息”，字段细节一律回指现有 schema；若实现时发现必须复制字段全集才能检查，应退回 P3 重审，而不是扩大导航文档。
+- 本轮证明静态合同一致性，不声称已获得宿主运行时的逐次读取或转换遥测。

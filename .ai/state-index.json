@@ -2,10 +2,10 @@
   "hot_limit": 20,
   "ledgers": {
     "iterations": {
-      "cold_count": 78,
+      "cold_count": 81,
       "hot_count": 20,
-      "hot_sha256": "8f68dd745ec5ef9a25cb22f785d6dd52fbb9a41db31fb0efd191cfbd6e3a7e49",
-      "max_used": 98,
+      "hot_sha256": "1730794d7efe1a8c4da352ebc0c4883edd595159dff2012d5c5ef6123d906d9b",
+      "max_used": 101,
       "routing": {
         "directory": ".ai/history/iterations",
         "minimum_width": 6,
@@ -13,14 +13,14 @@
         "receipt_suffix": ".json",
         "scheme": "fixed-range-v1"
       },
-      "row_count": 98,
+      "row_count": 101,
       "shard_count": 2
     },
     "milestones": {
       "cold_count": 0,
-      "hot_count": 13,
-      "hot_sha256": "19b7a5ba36d76ab8edd6490eed4b2cb4ad1d0819f4bf6dbaa3c34d3d2a00f436",
-      "max_used": 13,
+      "hot_count": 14,
+      "hot_sha256": "fb07df723fc7ac21175deb24fdf88e835c257c71cbd971085e5d068bee4e93a4",
+      "max_used": 14,
       "routing": {
         "directory": ".ai/history/milestones",
         "minimum_width": 6,
@@ -28,7 +28,7 @@
         "receipt_suffix": ".json",
         "scheme": "fixed-range-v1"
       },
-      "row_count": 13,
+      "row_count": 14,
       "shard_count": 0
     }
   },
