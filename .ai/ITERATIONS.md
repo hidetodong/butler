@@ -10,6 +10,7 @@ current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0098 | 开源就绪：README、许可证与社区协作入口 | closed | 2026-07-31 | 2026-07-31 | — | deliveries/ITER-0098-open-source-readiness.md |
 | ITER-0097 | 沟通风格正本瘦身：砍冗余留例子，守 artifact-style 四条对齐 | closed | 2026-07-30 | 2026-07-30 | — | deliveries/ITER-0097-communication-style-slim.md |
 | ITER-0096 | 旁路工作回执协议（危险模式） | closed | 2026-07-29 | 2026-07-29 | — | deliveries/ITER-0096-sidework-receipt.md |
 | ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0081 | 确定性 PRD 改版执行与回执（MILE-0009 R7·危险模式）：显式 prd_id/spec、先冻后更事务、模块认亲、三态影响与处置、verify/rollback/幂等 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0081-prd-update-transaction.md |
 | ITER-0080 | 首切、状态与命令适配（MILE-0009 R6·危险模式）：身份四态先于写盘、按 prd_id/date 目录首切、只读 status 与 workspace 下钻、双宿主薄路由 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0080-prd-split-status.md |
 | ITER-0079 | 多 PRD 引用、兼容迁移与人类指南（MILE-0009 R5·危险模式）：多需求钉版、legacy 显式迁移/回滚、历史引用解析与独立操作指南 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0079-multi-prd-migration.md |
-| ITER-0078 | /butler:inbox 命令与分类路由（MILE-0009 R4·危险模式）：确定性扫描、幂等 INBOX 写入、双宿主入口、确认路由与活工作区保护 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0078-butler-inbox-workflow.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

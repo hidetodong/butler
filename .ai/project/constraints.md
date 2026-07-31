@@ -5,6 +5,7 @@
 - **写作面向 AI 执行**：措辞用"必须 / 不得 / 应"，中文说明、标识符与文件名用英文。规则之间靠文件名互相引用，不写绝对路径。真源 仓库根 `CLAUDE.md`。
 - **注册即真源、无隐式依赖**：新增规则文件必须在 `Coder/README.md` 的目录结构 + 读取顺序注册；新增知识主题必须在 `.ai/project/00_INDEX.md` 主题表登记。没注册 = 不存在。
 - **兼容状态必须诚实**：v2.15.0 可声称双宿主工作流闭环，但不得把 PreToolUse 冒充 sandbox，或外推为 shell/MCP 等未观测写路径都受保护；hook trust 仍由用户审阅。
+- **开源治理声明必须可验证**：根许可证固定为 Apache-2.0，第三方目录中的许可证保持独立；普通支持、贡献和安全报告分别指向 GitHub Issues、Pull Requests 与 Private Vulnerability Reporting。外部仓库开关未核验时不得声称安全私报渠道已启用。
 - **高风险 Codex skill 只许显式**：`butler-loop` 与 `butler-dangerous` 的 `allow_implicit_invocation` 必须为 false；迁宿主不能降低 Claude 命令已有的郑重触发门槛。
 - **frontmatter 必标 audience + scope**：每个规则文件头必须写清给谁读、管什么范围。
 - **版本 semver（规则仓口径）**：MAJOR 破坏性 / MINOR 兼容新增 / PATCH 澄清修订；切版必写迁移配方 + 打 tag `vX.Y.Z`，切版前后各跑一遍一致性自检。真源 `versioning-schema.md §6`。

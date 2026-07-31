@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0098 交付总结 · Butler 开源就绪：补齐授权、安装、贡献与安全入口</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Butler 开源就绪：补齐授权、安装、贡献与安全入口</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0098</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-07-31</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>Butler 原来的 README 已能讲清项目定位、P1–P5 工作方式和主要能力，但缺少许可证、贡献指南、安全报告渠道和完整的零基础安装路径。公开可读不等于开源可用：没有授权和协作入口，外部用户仍不知道能否合法修改、如何贡献，也无法安全报告漏洞。</p>
+      <p>本次把这些基础入口一次补齐，让陌生用户能从 README 判断用途、完成安装、验证结果，并找到普通支持、贡献和安全问题各自对应的渠道。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增根级 <code>LICENSE</code>，采用用户确认的 Apache License 2.0，版权归属为 <code>© 2026 hidetodong</code>；第三方子目录许可证继续独立生效。</li>
+        <li>新增 <code>CONTRIBUTING.md</code>，说明可贡献内容、Issue/PR 流程、固定开发工具链、完整 CI 和改动边界。</li>
+        <li>新增 <code>SECURITY.md</code>，说明支持版本、GitHub 私密漏洞报告、禁止公开披露和协调处理流程。</li>
+        <li>重构 <code>README.md</code>：补全目录、Git/Bash/Python 3 前置条件、官方 clone、机器级写入影响、安装生效与成功验证，并增加一分钟使用示例。</li>
+        <li>顶部徽章收敛为 CI、版本、许可证和宿主支持；README 末尾新增支持、贡献、安全和许可证入口。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>第一次接触 Butler 的人不再需要猜仓库地址或先翻长指南：README 已给出从 clone 到看到 <code>Butler ready</code> 的完整最短路径。</li>
+        <li>安装命令执行前就能看到它会修改哪些用户级配置，以及 Claude Code、Codex、Pi 分别会安装什么。</li>
+        <li>外部用户现在有明确的 Issue、Pull Request 和私密漏洞报告路径，仓库也有可识别的 Apache-2.0 授权。</li>
+        <li>Butler 的 P1–P5 规则算法、安装脚本行为、Hooks、plugin、迁移配方和已部署项目结构均未改变。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <p>公开内容改动只涉及仓根 <code>README.md</code>，并新增 <code>LICENSE</code>、<code>CONTRIBUTING.md</code>、<code>SECURITY.md</code>。流程产物和证据归档在 <code>.ai/iterations/ITER-0098/</code>。</p>
+      <p>本迭代没有修改 GitHub 仓库设置，也没有新增行为准则、Issue/PR 模板或中英文双语 README；这些属于后续治理或维护选择，不在本轮范围内。</p>
+      <p>对象级变更见 <code>.ai/iterations/ITER-0098/CHANGELOG.md</code>。</p>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>五条 evidence record 已归档，其中最终绿色证据覆盖 AC1–AC7：</p>
+      <ul>
+        <li><code>readme-open-source-readiness</code>：检查许可证关键结构、贡献/安全内容、README 目录与 H2 一致性、安装链路、最小示例和 SPDX 标识。</li>
+        <li><code>repository-doc-checks</code>：仓库内 809 个 Markdown 文件、68 个链接全部通过，<code>git diff --check</code> 通过。</li>
+        <li><code>full-ci-final</code>：完整 <code>bash scripts/verify-ci.sh</code> 通过。此前两次失败也保留：一次是沙箱不能访问 uv 用户缓存，一次是 <code>task-state</code> 固定 N/A 句式被改写；修正后最终全绿。</li>
+      </ul>
+      <p>AC3 与 AC6 标为弱验证：前者未能读取 GitHub 私密漏洞开关状态，后者包含同上下文可读性走查。其余 AC 为可靠自动道。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>GitHub Private Vulnerability Reporting 是否已启用尚未核实；仓库管理员仍应到 GitHub Security 设置确认开关。</li>
+        <li>Apache-2.0 与 <code>hidetodong</code> 版权主体由用户 ACK，未经过公司法务复核。</li>
+        <li>本次是同上下文 P5 简评，项目配置未开启独立复核。</li>
+        <li><code>CODE_OF_CONDUCT.md</code> 和中英文双语 README 明确后置。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>验收清单：<code>.ai/iterations/ITER-0098/AC_LIST.md</code></li>
+        <li>技术方案：<code>.ai/iterations/ITER-0098/TECH_PLAN.md</code></li>
+        <li>验证报告：<code>.ai/iterations/ITER-0098/VERIFY_REPORT.md</code></li>
+        <li>对象级变更流：<code>.ai/iterations/ITER-0098/CHANGELOG.md</code></li>
+        <li>证据目录：<code>.ai/iterations/ITER-0098/evidence/</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

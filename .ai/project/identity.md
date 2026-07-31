@@ -6,7 +6,7 @@ butler 是一套**通用协作 SOP 规则仓库**（纯 Markdown，无运行时�
 
 ## 给谁解决什么问题
 
-- **使用者**：用 Claude Code 等 AI 编程助手做工程开发的开发者。
+- **使用者**：用 Claude Code、Codex、Pi 等 AI 编程助手做工程开发的开发者。
 - **解决的问题**：AI 单轮对话容易"断片"——换一个会话就忘了上一轮干到哪、为什么这么设计。butler 把状态外化成磁盘产物（四件套 + 台账 + 知识文件夹），让 AI 冷启动也能读懂现状接着干，不靠对话记忆。
 
 ## 边界（不做什么）
@@ -18,5 +18,7 @@ butler 是一套**通用协作 SOP 规则仓库**（纯 Markdown，无运行时�
 ## 指针
 
 - 仓库定位与编辑约定：仓库根 `CLAUDE.md`。
+- 面向开源使用者的总入口：仓库根 `README.md`。
 - 面向人类用户的操作手册：`HUMAN_GUIDE.md`。
 - 规则总入口：`Coder/README.md`。
+- 社区协作与安全入口：`CONTRIBUTING.md`、`SECURITY.md`；许可证正文：`LICENSE`。

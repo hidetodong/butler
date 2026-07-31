@@ -6,11 +6,10 @@
 
 让 AI 先理解目标、明确验收、确认方案，再实现并拿证据交付。
 
-![version](https://img.shields.io/badge/version-3.3.0-blue)
-![type](https://img.shields.io/badge/type-rules--SOP-blue)
-![format](https://img.shields.io/badge/format-Markdown-lightgrey)
-![workflow](https://img.shields.io/badge/workflow-P1→P5-orange)
-![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)
+[![CI](https://github.com/hidetodong/butler/actions/workflows/ci.yml/badge.svg)](https://github.com/hidetodong/butler/actions/workflows/ci.yml)
+[![version](https://img.shields.io/badge/version-3.3.0-blue)](CHANGELOG.md)
+[![license](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
+[![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)](#三宿主如何共享同一套规则)
 
 </div>
 
@@ -22,6 +21,23 @@ Butler 是一套 Markdown 规则和配套工具，不是代码框架。它把 AI
 - **让长任务可以接着做**：迭代状态、阶段产物和交接信息都落在项目里，新会话能恢复现场。
 - **让“做完了”有证据**：验证记录必须对应验收项，失败、弱验证和待人工确认的部分如实保留。
 - **让流程约束真正生效**：部署后的 Hook 会在关键产物缺失或未通过门禁时阻止源码写入。
+
+## 目录
+
+- [它解决什么问题](#它解决什么问题)
+- [工作方式](#工作方式)
+- [快速开始](#快速开始)
+- [一分钟示例](#一分钟示例)
+- [你会在项目里得到什么](#你会在项目里得到什么)
+- [功能清单](#功能清单)
+- [三宿主如何共享同一套规则](#三宿主如何共享同一套规则)
+- [仓库结构](#仓库结构)
+- [维护与验证](#维护与验证)
+- [继续阅读](#继续阅读)
+- [支持与维护](#支持与维护)
+- [参与贡献](#参与贡献)
+- [安全](#安全)
+- [许可证](#许可证)
 
 ## 工作方式
 
@@ -47,17 +63,41 @@ flowchart LR
 
 ## 快速开始
 
-### 1. 安装机器级能力
+### 1. 准备环境
 
-首次使用时，在已经克隆的 Butler 仓库中运行：
+首次使用需要：
+
+- Git、Bash 和 Python 3。
+- Claude Code、Codex 或 Pi 中至少一个宿主；未安装的宿主会被跳过。
+- macOS 或 Linux。仓库 CI 当前在 macOS 14 和 Ubuntu 24.04 上验证；Windows 原生环境尚未纳入验证矩阵。
+
+### 2. 获取并安装 Butler
 
 ```bash
+git clone https://github.com/hidetodong/butler.git
+cd butler
 bash scripts/setup.sh
 ```
 
-安装脚本会配置 `BUTLER_PATH`，并安装或刷新 Claude Code 命令、Codex plugin 与 Pi 扩展。它只处理本机能力，不会初始化当前业务项目。
+运行前请知道它会修改用户级配置：
 
-### 2. 接入项目
+- 在现有 `~/.zshrc` 或 `~/.bashrc` 中写入 `BUTLER_PATH`；两者都不存在时会提示你手动配置。
+- 更新 `~/.claude/CLAUDE.md` 并维护 Butler 命令软链。
+- 检测到 Codex CLI 时，在用户插件目录安装或刷新 Butler plugin。
+- 检测到 Pi CLI 时，在 `~/.pi/agent/extensions/` 安装 Butler 扩展。
+
+安装器会先检查冲突，再以可重复运行的方式更新已认领内容。它只安装机器级能力，不会初始化你的业务项目；首次启用 Hook 或 plugin 时仍应审阅并确认信任。完整写入边界和故障处理见 [使用指南](HUMAN_GUIDE.md#3-安装一次性)。
+
+安装完成后重启终端，或重新加载当前 shell 配置：
+
+```bash
+source ~/.zshrc  # 使用 Bash 时改为 source ~/.bashrc
+test -n "$BUTLER_PATH" && test -f "$BUTLER_PATH/Coder/README.md" && echo "Butler ready"
+```
+
+看到 `Butler ready` 表示路径已经生效。对应宿主需要新开会话，才能加载刚安装的命令、plugin 或扩展。
+
+### 3. 接入项目
 
 在目标项目中开启新的 AI 会话，然后使用对应入口：
 
@@ -69,7 +109,7 @@ bash scripts/setup.sh
 
 也可以直接给任务并点名项目路径。AI 发现目标项目尚无 `.ai/` 时，会按同一协议完成初始化；如果所在目录包含多个项目，它会先要求你明确目标，不会猜测施工位置。
 
-### 3. 正常描述任务
+### 4. 正常描述任务
 
 ```text
 在 /path/to/project 实现登录失败后的账号锁定，并补齐验证。
@@ -78,6 +118,24 @@ bash scripts/setup.sh
 Butler 会根据任务规模选择简化或完整流程。完整流程中，你主要在 P2 确认“什么算完成”，在 P3 确认“准备怎么做”；实现和验证完成后，会得到迭代归档以及 Markdown、HTML 两种交付总结。
 
 已有 Butler 项目需要同步到当前版本时，使用 `/butler:upgrade`（Claude Code）或 `$butler-upgrade`（Codex）。升级会先给出零写入计划，确认后才事务执行。
+
+## 一分钟示例
+
+在已经接入 Butler 的项目里，直接告诉 AI 目标和项目路径：
+
+```text
+在 /path/to/project 实现登录失败后的账号锁定，并补齐验证。
+```
+
+一个完整迭代通常会发生这些事：
+
+1. AI 先把问题理解写进 `.ai/CONCEPT.md`。
+2. 你在 P2 确认 `.ai/AC_LIST.md` 中“什么算完成”。
+3. 你在 P3 确认 `.ai/TECH_PLAN.md` 中“准备怎么改”。
+4. AI 实现并验证，将证据写进 `.ai/VERIFY_REPORT.md`。
+5. 收口后，冻结产物进入 `.ai/iterations/ITER-NNNN/`，并在 `deliveries/` 生成 Markdown、HTML 两种交付总结。
+
+因此，新会话接手时读的是项目里的目标、状态和证据，而不是猜测上一段对话发生过什么。
 
 ## 你会在项目里得到什么
 
@@ -156,6 +214,9 @@ Loop 与 Dangerous 相互独立，也都不会因为普通任务自动启用。�
 
 ```text
 butler/
+├── LICENSE                 # Butler 自身的 Apache-2.0 许可证
+├── CONTRIBUTING.md         # Issue、Pull Request 与本地验证约定
+├── SECURITY.md             # 私密漏洞报告与支持版本
 ├── Coder/                  # P1–P5、质量门禁、上下文与扩展规则真源
 ├── plugins/                # Codex plugin 与 Pi 适配器
 ├── templates/              # 项目入口、Hook、交付等模板
@@ -188,3 +249,23 @@ CI 会验证规则投影、Claude/Codex/Pi 适配、Hooks、状态与产物审�
 - [docs/workflows.md](docs/workflows.md)：全部 Claude Code / Codex 工作流入口
 - [docs/codex-compatibility.md](docs/codex-compatibility.md)：双宿主边界与兼容矩阵
 - [CHANGELOG.md](CHANGELOG.md)：版本发布历史
+
+## 支持与维护
+
+普通使用问题、Bug 和功能建议请提交到 [GitHub Issues](https://github.com/hidetodong/butler/issues)。提交前先搜索是否已有同类问题，并附上 Butler 版本、宿主、操作系统和最小复现步骤。
+
+当前维护者是 [@hidetodong](https://github.com/hidetodong)。安全问题不要提交公开 Issue，请走下面的私密报告入口。
+
+## 参与贡献
+
+Butler 接受 Issues 和 Pull Requests。提交改动前请阅读 [贡献指南](CONTRIBUTING.md)，按范围修改并运行与 CI 相同的验证入口；无法运行的检查必须如实写明，不能把未执行描述成已通过。
+
+## 安全
+
+未修复漏洞请通过 GitHub Private Vulnerability Reporting 私下报告，不要公开披露复现细节。受支持版本、报告内容和协调披露流程见 [安全策略](SECURITY.md)。
+
+## 许可证
+
+Butler 采用 [Apache License 2.0](LICENSE)，SPDX 标识为 `Apache-2.0`。
+
+Copyright © 2026 hidetodong。仓库中标有独立许可证的第三方组件仍分别适用其自身条款。

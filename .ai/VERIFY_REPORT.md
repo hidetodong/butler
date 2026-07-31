@@ -1,47 +1,50 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0097
+# VERIFY_REPORT — ITER-0098
 
 ## Verification Summary
 
-- 覆盖 AC1–AC7。`communication-style.md` 由 5381 B 压到 4753 B（-11.7%），9 个小节与 7 行 ❌/✅ 例子逐字未动，与 `artifact-style.md §2` 的六条概念映射全部保住。
-- 两条 evidence record 均 `outcome=passed`：`style-slim-checks` 覆盖 AC1/AC2/AC3/AC5/AC6/AC7，`clause-coverage` 覆盖 AC4。七条 AC 全在自动道，其中 AC3、AC4 标 `弱`。
-- 总体结论：可交付。唯一未闭合的是 AC4 的语义判断没有独立复核者，已列入 Remaining Risks，不冒充机器结论。
+- 覆盖 AC1–AC7：根级 Apache-2.0 许可证、贡献指南、安全策略与 README 开源入口均已落地。
+- 文档结构断言、仓库内 Markdown 链接、`git diff --check` 和完整 `bash scripts/verify-ci.sh` 最终全部通过。
+- P5 同上下文简评结论为 pass：无 Must Fix；一项 Should Fix 是 GitHub Private Vulnerability Reporting 外部开关未能只读核实，作为非阻断剩余风险保留。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): 7 行例子提取后与 git HEAD 原版逐行 diff 零差异 ✓
-- [x] AC2 (auto·可靠): 9 个 H2 标题与顺序 diff 零差异 ✓
-- [x] AC3 (auto·弱): 六条映射锚词全部命中；语义未弱化系人工判读，故标弱档 ✓
-- [x] AC4 (auto·弱): 条目覆盖代理验证——原版 24 条规矩行，23 条有对应、1 条为预期删除，意外丢失与新增均为 0 ✓
-- [x] AC5 (auto·可靠): 4753 B 落在 4400–4900；例子行字节 953 → 953，未缩水 ✓
-- [x] AC6 (auto·可靠): `capabilities.md` 记载 9 节 = 实际 9 节；`CHANGELOG.md` diff 为空 ✓
-- [x] AC7 (auto·可靠): 安装脚本 diff 为空且路径行仍在；改动集合无 `templates/` 与 `scripts/` ✓
+- [x] AC1 (auto·可靠): 根级 Apache-2.0 全文、`© 2026 hidetodong`、README SPDX 标识和第三方许可证边界均有确定性断言 ✓
+- [x] AC2 (auto·可靠): `CONTRIBUTING.md` 覆盖贡献类型、Issue/PR、本地环境、修改边界和完整验证，README 已接入 ✓
+- [x] AC3 (auto·弱): `SECURITY.md` 的版本、私密报告、禁止公开披露和处理流程齐全；外部开关状态未核实，故不标可靠 ✓
+- [x] AC4 (auto·可靠): README 覆盖 Git/Bash/Python 3、clone、用户级写入、安装、生效和成功验证链路 ✓
+- [x] AC5 (auto·可靠): README 目录与除目录自身外的全部 H2 一一对应，许可证为最后一节，四类徽章与版本事实一致 ✓
+- [x] AC6 (auto·弱): 一分钟示例覆盖任务输入、P2/P3 确认、验证、归档和双格式交付；可读性为同上下文走读，故标弱 ✓
+- [x] AC7 (auto·可靠): 仓库内 809 个 Markdown 文件、68 个链接通过检查，`git diff --check` 通过，完整 CI 最终通过 ✓
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| style-slim-checks | AC1, AC2, AC3, AC5, AC6, AC7 | captured | passed | `.ai/iterations/ITER-0097/evidence/style-slim-checks/record.json` |
-| clause-coverage | AC4 | captured | passed | `.ai/iterations/ITER-0097/evidence/clause-coverage/record.json` |
+| readme-open-source-readiness | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/readme-open-source-readiness/record.json` |
+| repository-doc-checks | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/repository-doc-checks/record.json` |
+| full-ci | AC7 | captured | failed | `.ai/iterations/ITER-0098/evidence/full-ci/record.json` |
+| full-ci-retry | AC7 | captured | failed | `.ai/iterations/ITER-0098/evidence/full-ci-retry/record.json` |
+| full-ci-final | AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/full-ci-final/record.json` |
 
 ## Verification Results
 
-- AC1: 脚本从 `git show HEAD:communication-style.md` 取原版（不依赖会话内快照，可独立重跑），按 ❌/✅ 提取例子行并剔除「格式」节 emoji 说明与「结尾决策块」推荐标签两行非例子，剩 7 行做列表相等比对——完全一致。
-- AC2: 同源取原版，`## ` 开头行列表比对，9 行顺序内容全同。
-- AC3: 六个锚词（术语先解释 / 别把词掐短 / 比喻要落地 / 裸奔 / 别写翻译腔 / 流畅优先于省字）在新版全部命中。锚词在只能证明规矩还在，证明不了措辞强度未被削弱，故这条标 `弱` 不标 `可靠`。
-- AC4: 两层。**代理验证层（机器）**：`clause-coverage` 提取两版的规矩行（列表项，排除例子），用 `difflib` 相似度 0.60 为阈值做双向覆盖比对——原版 24 条中 23 条在新版有对应，唯一整行消失的是白名单内的「开头一句总览…」，意外丢失 0、意外新增 0。它证明的是「没有条目在无记录的情况下消失」，也顺带守住了 Out of Scope 的「不新增规矩」。**人判层**：「被删的那 12 处是否真属重复」机器断言不了，由 `.ai/ITER-0097-clause-mapping.md` 对照表逐条列出判定依据交人复核，该层为 `reported` 强度，故本条整体标 `弱` 不标 `可靠`。
-- AC4 分道说明：初稿曾判 `human·待人`，复核 `testing-strategy.md §3.1` 后改判——人测道的前提是「连弱检查都造不出」，而本条造得出上述代理验证，按「默认归自动道」原则回自动道。
-- AC5: `wc -c` 口径 4753 B。**本条经历两次 AC 修订**，见 Goal Calibration CAL-001。
-- AC6: 正则取 `capabilities.md` 的「含 N 节」记载值与实际 H2 计数比对，均为 9；`git diff --stat CHANGELOG.md` 为空串。
-- AC7: `git diff --stat scripts/configure-global-install.py` 为空且文件仍含 `communication-style.md` 路径；`git diff --name-only` 六个改动文件中无 `templates/` 或 `scripts/` 前缀。
+- AC1：`readme-open-source-readiness` 检查许可证关键结构、版权行、README SPDX 和末节位置；根 `LICENSE` 使用 Apache-2.0 标准条款，`tools/codex-validators/LICENSE` 的第三方边界未改。
+- AC2：同一 record 检查贡献指南包含 Pull Request、完整 CI 和安全策略入口；人工走读确认“贡献类型 → Issue/PR → 本地准备 → 验证 → 提交范围”顺序完整。
+- AC3：自动断言确认 Private Vulnerability Reporting、禁止公开 Issue、支持版本与处理流程均在；`ego-browser` 因活动标签附着失败，未取得外部开关状态，故整体标弱。
+- AC4：自动断言覆盖 clone URL、Python 3、shell 配置、Claude 用户配置和 `Butler ready` 成功判据；内容逐段对照 `scripts/setup.sh` 与 `scripts/configure-global-install.py`。
+- AC5：脚本提取 README H2 和目录标签并要求列表完全相等，另断言许可证为最后一节；版本徽章 3.3.0 与 `VERSION` 一致。
+- AC6：最小示例能从输入走到 P2/P3、验证、归档和交付，未复制 `HUMAN_GUIDE.md` 的高级说明；该项包含可读性判断，标弱。
+- AC7：`repository-doc-checks` 捕获链接检查和 diff 检查；`full-ci-final` 捕获完整 CI 通过。`full-ci` 因沙箱无法访问 uv 用户缓存失败，`full-ci-retry` 因 task-state 的 Goal Calibration 固定句式被改写而失败；修正状态文件后第三次通过，两条失败 record 保留为纠错轨迹。
 
 ## TDD Pair Status
 
-- N/A — TECH_PLAN 的 Test Strategy 未声明 TDD cycle。
+- N/A — TECH_PLAN 未声明 TDD cycle。
 
 ## Goal Calibration
 
-- CAL-001：验证失败信号（首轮 AC5 实测 4753 B 超出当时区间上限 4700）→ route 回 P2 做迭代内修订 → resolved。依据：核查确认 P3 那次把区间由 4400–4900 下调到 4100–4700 的前提（「把话说顺」非例子部分可再砍一半）不成立——该节剩余内容均具独有语义，硬砍将违反 AC4。区间恢复原值后重跑 evidence，outcome=passed。**这是 AC 参数修订，不是把标准放宽去迁就结果**：原始区间是用户 P1 拍板时看到的「约 4700 B」预期，实测值与之相差 53 B。
+- CAL-001：`full-ci` 环境失败信号 → route 到同命令沙箱外重跑 → resolved。依据：`full-ci-retry` 已越过 uv 缓存初始化并进入仓库测试。
+- CAL-002：`full-ci-retry` 状态合同失败信号 → route 回 P4，把外部待核项移出 Goal Calibration、恢复固定 N/A 句式 → resolved。依据：`full-ci-final` outcome=passed。
 
 ## Completion Inputs
 
@@ -50,24 +53,22 @@
 
 ## Gate Coverage
 
-- 通用质量门禁：五件套结构合同 `contract.py check` 对 concept / acceptance / tech_plan / verify_report 全部 `status: ok`；本迭代只改 Markdown，无 lint / 单测 / 构建适用面。
-- Workspace Scope：N/A — AC_LIST 无 `prd_refs`。
-- Active Profiles：未命中任何 Domain / Stack Profile，仅按通用 SOP 与文档写作口径推进。
-- Tech Plan Alignment：Design Decisions 逐项兑现，**两处有意偏离已记录**——① 结尾决策块计划收紧约 41 B，P4 逐句核查未发现可删的重复或元说明，故整节未动；② 「把话说顺」计划压到约 1000 B，实际 1313 B，因该节非例子部分只有 27% 属冗余而非计划假设的 50%。两处偏离都是「宁可不压也不砍语义」，方向与 AC4 一致，未扩张范围。
-- References Compliance：N/A — `.ai/references/` 下无本迭代相关参考资料。
+- 通用质量门禁：五件套 `contract.py check project` 为 ok；Markdown 链接、diff 检查与完整 CI 均有 passed record。
+- Workspace Scope：N/A — AC_LIST 无 `prd_refs`，本迭代只改仓根公开文档。
+- Active Profiles：未命中 Domain / Stack Profile，仅按通用 SOP、文档结构和仓库 CI 推进。
+- Tech Plan Alignment：四个计划文件全部按边界落地；未修改安装脚本、规则算法、Hooks、plugin、迁移配方或 GitHub 外部设置。
+- References Compliance：四份外部规范只用于确定信息结构与社区健康基线，未复制其受版权保护的大段正文；Apache-2.0 标准法律文本按许可证用途完整落盘。
 
 ## References Compliance
 
-- N/A — `.ai/references/` 下无本迭代相关参考资料，AC_LIST 无 `prd_refs`。
+- P2 引用的 GitHub Docs、Open Source Guides 和 Standard Readme 均只支撑结构判断；实现保持中文项目语境，没有机械照搬英文标题和固定顺序。
 
 ## Remaining Risks
 
-- **AC4 的人判层未经独立复核**：代理验证只证明没有条目意外消失；「被删的 12 处确实与他处重复」由执行者自评 + 用户在汇报环节确认，没有 fresh-context 复核者重判。若日后发现某条被误判为重复，按 `iteration-schema.md §5.3` 在新迭代补回，不追改本迭代归档。
-- **`verify-schema.md` 与 manifest 存在既有不一致**（本迭代发现，未修）：schema §2 把「人测道小结」列为条件必填字段，但 `artifacts.v1.json` 的 verify_report sections 不含该段，写进去会被 `contract.py check` 判 `drift`。本迭代因 AC4 改判自动道而绕开，但任何真有人测残余的迭代都会撞上。建议另开迭代对齐两处真源，不在本迭代范围内顺手改。
-- **措辞品味无机械判据**：机械证据能证明例子未改、结构未塌、链路未断、体积达标，证明不了改写后的句子读起来是否更好。这部分只能由本文件的使用者在日常使用中反馈。
-- **体积收益本身很小**：净减 628 B（约 200 token），相对本机插件与 MCP 的几万 token 开销可忽略。本迭代的实际价值在消除自我矛盾（讲「别注水」的文件不再注水）与去掉跨节重复，不在省 token——这一点在 CONCEPT 已写明，交付时不应包装成性能收益。
+- **GitHub Private Vulnerability Reporting 开关未核实**：`SECURITY.md` 已如实写明按钮不可见时的处理方式，但 `ego-browser` 本次无法附着活动标签，未确认外部入口是否启用。建议仓库管理员在 GitHub Security 设置中核对；这不影响仓库内文档完成，但影响私密入口的即时可用性。
+- **法律适用性未由法务复核**：许可证类型和版权主体由用户 ACK，机器只能验证文本与归属一致，不能替代公司知识产权审查。
+- 本次为同上下文 P5 简评，项目配置 `independent_review=false`，未执行 fresh-context 独立复核。
 
 ## Handoff / Next Step
 
-- 本迭代已闭环，收口后 `current` 置 `none`，无后续待办。
-- 正本走全局 `@import`、路径未变，本机 `git pull` 后下个会话即生效，**无需重跑 `setup.sh`**。
+- Goal 裁决通过后执行证据归档、四件套快照、双格式交付、台账收口和项目知识折叠。

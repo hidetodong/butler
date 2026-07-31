@@ -1,11 +1,11 @@
 {
-  "handoff_sha256": "e448e1dc57f5b784b2f64201d771f2f689ad93789346c20056846e8a9e1d46ab",
+  "handoff_sha256": "2808433fabe549b5fe23f74f7cc9cbe9ae627540bb7605870929d3d2026708b1",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "危险模式与 Loop 的存量规则耦合需另领独立纠偏迭代；不回写 ITER-0096 冻结范围。",
+    "next": "仓库管理员核对 GitHub Private Vulnerability Reporting 开关；行为准则与双语 README 按真实需要另开迭代。",
     "phase": "Iteration Closed",
     "pointers": [
       ".ai/task-state.md",
@@ -13,16 +13,16 @@
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "ITER-0096 已完成证据/五件套归档与双格式交付；旁路工作回执协议可用。"
+    "status": "ITER-0098 已完成开源授权、README 上手链路、贡献指南、安全策略、证据归档与双格式交付。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "6edea821d7128845dab54ff311d6e3f19ebedcde17a6f6e71126bcc55a9dfac6"
+      "sha256": "5184d5a4556ef1378d2296ccddbe13c275f89e7134e1c97f75a297eb6365d2df"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "fb81cef9bc519cf39c6278e21c16de5b41fbb779ed50a4a3397a541a545b0ce2"
+      "sha256": "8f68dd745ec5ef9a25cb22f785d6dd52fbb9a41db31fb0efd191cfbd6e3a7e49"
     },
     {
       "path": ".ai/MILESTONES.md",

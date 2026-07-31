@@ -2,6 +2,12 @@
 
 > R2 新增层（旧单文件没有）：从现状盘"butler 落地后到底能干什么"。引擎正文指各扩展模块，此处只给清单 + 一句话 + 指针。
 
+## 开源使用与社区协作（ITER-0098）
+
+- 根 `README.md` 已提供目录、前置条件、克隆与安装、安装副作用、宿主初始化、一分钟示例、支持/贡献/安全/许可证入口，覆盖新用户从发现项目到首次使用的主路径。
+- 根许可证采用 Apache License 2.0，版权声明为 `Copyright 2026 hidetodong`；第三方组件仍保留各自许可证，不由根许可证替代。
+- 普通问题和支持走 GitHub Issues，代码贡献走 Pull Requests；`CONTRIBUTING.md` 固化本地工具链与完整验证入口，`SECURITY.md` 要求安全问题走 GitHub Private Vulnerability Reporting，且不得公开披露。
+
 ## 项目级 Butler 配置（MILE-0013）
 
 - `tools/project-config/config.py` 提供标准库 `inspect`、`resolve`、`init`、`set` 与可导入函数，固定读取显式项目根下的 `.ai/butler.config.json`。缺失配置可严格投影 legacy Markdown；已有配置损坏、字段缺失/未知、类型错误或未知版本一律 fail-closed。

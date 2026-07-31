@@ -1,58 +1,56 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-07-30
+ACK 日期: 2026-07-31
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0097
-
-修订记录: 2026-07-30 · P3 逐节测算后把 AC5 体积区间由 4400–4900 改为 4100–4700——原区间参照的试压稿只压了「把话说顺」开头一句，未计入该节四条规矩的措辞收紧，下限估高约 300 B。不改变范围、不增删 AC 条目。
-修订记录: 2026-07-30 · 撤销上一条，AC5 区间恢复为 4400–4900。上一条的依据「把话说顺非例子部分可再砍一半」在 P4 逐条核查时不成立——该节剩余内容均有独有语义，硬砍会违反 AC4。P4 实测 4753 B，落在原始区间内，且与 P1 拍板时选项里写明的「约 4700 B」相差 53 B。原始区间本就正确，是上一条修订错了。不改变范围、不增删 AC 条目。
+# AC_LIST — ITER-0098
 
 ## Goal
 
-- 在规矩语义零改动、例子零删改的前提下，去掉仓根 `communication-style.md` 里的冗余表述（元说明、跨节重复、自相矛盾的散文铺垫），并守住它与 `artifact-style.md §2` 的概念对齐。
+- 补齐 Butler 的开源授权、零基础使用和社区协作入口，让陌生用户不读仓库内部实现也能判断项目用途、完成安装、验证结果并找到正确的反馈渠道。
 
 ## In Scope
 
-- 改写 `communication-style.md` 的非例子正文：压缩引言块的元说明；删除基调 / 详略 / 抓重点三节之间重复的规矩表述；重写「把话说顺」开头的散文铺垫；收紧「别急着抛选择菜单」与「结尾决策块」的措辞。
-- 保留全部 9 个 H2 小节（含标题文字与顺序），保持三节分立不合并——已在 P1 由用户拍板。
-- 修正既有漂移：`.ai/project/capabilities.md:110` 把本文件记作「8 节」，实际自 v2.10.0 加「把话说顺」后已是 9 节。
+- 根级 `LICENSE`、`CONTRIBUTING.md`、`SECURITY.md`。
+- README 的目录、获取与安装、前置条件、安装影响、成功验证、支持/维护、贡献、安全、许可证、健康状态徽章和最小成果示例。
+- 所有新增入口使用仓库内相对链接，并纳入现有 Markdown 链接检查与完整 CI。
 
 ## Out of Scope
 
-- 不改任何一条规矩的语义，不新增规矩。
-- 不删、不改写、不合并任何一组 ❌/✅ 例子。
-- 不动 `scripts/setup.sh` 与 `scripts/configure-global-install.py` 的 `@import` 路径，文件名与仓根位置不变。
-- 不动 `templates/`，不下发目标项目；目标项目 `.ai/` / `deliveries/` / `origin/` / `CLAUDE.md` / `.claude/hooks/` 零结构变化。
-- 不回溯改写 `CHANGELOG.md:139`（ITER-0046 发布史记的是当时事实的 8 节，历史不追溯）。
-- 不动 `artifact-style.md` 本身及 butler 体系内其他风格真源。
+- 不新增行为准则，不承诺尚未建立的社区执法机制。
+- 不增加中英文双语 README。
+- 不修改安装脚本、Butler 规则算法、Hooks、plugin、迁移配方或 GitHub 仓库设置。
+- 不回溯改写历史交付与历史版本说明。
 
 ## Acceptance Checklist
 
-- [ ] AC1: 7 行 ❌/✅ 例子逐字保留——原版第 24/26/28/30/39/40/46 行的例子内容在新版中完全一致（允许行号变化，不允许任何字符增删改）。
-- [ ] AC2: 9 个 H2 小节全部保留，标题文字与出现顺序均不变（基调 / 详略 / 抓重点 / 说人话（简短 ≠ 好懂）/ 把话说顺（短 ≠ 碎）/ 别急着抛选择菜单 / 格式 / 结尾决策块（需要我拍板时）/ 边界）。
-- [ ] AC3: 与 `artifact-style.md §2` 的 6 条概念映射在新版中逐条可定位——术语先解释↔标准一、掐短词/自造缩写↔标准一、比喻要落地↔标准二、英文/变量裸奔↔标准三、别写翻译腔↔标准四、流畅优先于省字↔§3「反啰嗦 ≠ 砍成电报体」。
-- [ ] AC4: 规矩条目零丢失——原版每条具备独有语义的规矩，在新版中都有对应条目；删除的只能是与其他条目重复的表述，逐条对照表列出去向。
-- [ ] AC5: 体积下降到 4400–4900 字节区间，且例子行合计字节数不低于原版。
-- [ ] AC6: `.ai/project/capabilities.md` 的节数记载与新版实际 H2 数一致；`CHANGELOG.md:139` 保持原样未被改动。
-- [ ] AC7: `@import` 链路不变——`scripts/configure-global-install.py:151` 的路径行与 `communication-style.md` 的仓根位置、文件名均未改动；改动文件集合不含 `templates/` 与 `scripts/`。
+- [ ] AC1: 根目录存在用户确认的标准开源许可证全文；README 末尾写明 SPDX 标识、版权归属并链接该文件，且不把第三方子目录许可证误写成全仓许可证。
+- [ ] AC2: `CONTRIBUTING.md` 说明接受哪些贡献、如何提 Issue/PR、本地前置条件、修改边界、必跑验证和行为预期；README 提供清晰入口。
+- [ ] AC3: `SECURITY.md` 说明受支持版本、私密漏洞报告渠道、禁止公开披露的边界和响应流程；README 的安全章节只做摘要并链接全文。
+- [ ] AC4: README 的快速开始覆盖前置条件、官方仓库获取、`setup.sh` 的主要用户级写入影响、安装命令、重启/生效方式和成功验证，不要求读者先翻 `HUMAN_GUIDE.md` 才能完成首次使用。
+- [ ] AC5: README 增加覆盖全部二级标题的目录；顶部徽章收敛为 CI、版本、许可证和宿主支持等可判断状态，静态版本与仓库 `VERSION` 保持一致。
+- [ ] AC6: README 给出一个最小任务输入及其可预期产物/确认点，让读者在一分钟内理解 Butler 的实际使用结果；详细能力清单和深层说明仍通过现有文档下沉。
+- [ ] AC7: README 明确普通支持、维护者、贡献、安全和许可证入口；所有仓库内 Markdown 链接通过离线检查，`git diff --check` 与完整 `bash scripts/verify-ci.sh` 通过。
 
 ## Verification Method
 
-- AC1: `grep -n '❌\|✅' communication-style.md` 提取例子行，剔除「格式」节 emoji 说明行与「结尾决策块」推荐标签行，对新旧两版做逐行 diff，要求 7 行内容完全相同。
-- AC2: `grep '^## ' communication-style.md` 前后对比，要求 9 行输出逐行完全相同。
-- AC3: 对 6 条映射各取一个关键词在新版 grep（术语先解释 / 掐短 / 比喻 / 裸奔 / 翻译腔 / 流畅优先或等义表述），全部命中；再人工确认语义未被弱化。
-- AC4: 产出「原版条目 → 新版去向」逐条对照表，标注保留 / 合并到哪条 / 判定为重复删除；表中不得出现「删除且无对应」的独有语义条目。
-- AC5: `wc -c communication-style.md` 落在 4400–4900；例子行字节数用 AC1 的提取结果计算，新版 ≥ 原版。
-- AC6: `grep -n '节' .ai/project/capabilities.md` 核对记载与 `grep -c '^## '` 实际值一致；`git diff CHANGELOG.md` 为空。
-- AC7: `grep -n 'communication-style' scripts/configure-global-install.py` 输出与改动前一致；`git diff --name-only` 结果人工核对无 `templates/` 与 `scripts/` 路径。
+- AC1: 核对根级许可证为所选标准文本；检查 README SPDX 标识、版权归属和相对链接；确认第三方许可证仍局限在其子目录。
+- AC2: 按“贡献类型 → Issue/PR → 本地准备 → 验证 → 提交”路径人工走读；核对文中命令与仓库现有入口一致。
+- AC3: 核对支持版本表、私密报告渠道、公开披露限制和维护者响应步骤齐全；若渠道依赖外部设置，明确写出启用前提。
+- AC4: 从空白读者视角按 README 命令顺序检查 clone、依赖、安装、生效和验证链路；对照 `scripts/setup.sh` 确认主要副作用没有遗漏或夸大。
+- AC5: 提取 README 二级标题与目录逐项对账；核对版本徽章与 `VERSION`；检查徽章目标链接可解释且没有重复装饰性信息。
+- AC6: 人工走读最小示例，确认输入、P2/P3 确认和最终 `.ai/`/`deliveries/` 结果首尾相接。
+- AC7: 运行 `python3 scripts/check-markdown-links.py --root .`、`git diff --check` 与 `bash scripts/verify-ci.sh`，并用 evidence record 逐项绑定 AC。
 
 ## External References
 
-- N/A
+- [GitHub About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) — README 常见信息与相对链接口径，支撑 AC4、AC7。
+- [GitHub Community Profiles](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/about-community-profiles-for-public-repositories) — LICENSE、CONTRIBUTING、CODE_OF_CONDUCT 和 SECURITY 等社区健康入口，支撑 AC1–AC3。
+- [Open Source Guides: Starting a Project](https://opensource.guide/starting-a-project/) — 开源项目启动清单，支撑 AC1–AC3。
+- [Standard Readme specification](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) — 长 README 目录、安装、使用、贡献和许可证章节口径，支撑 AC1、AC2、AC4–AC7。
 
 ## Open Questions / Risks
 
-- "哪句是冗余、哪句是必要的喘息"没有机械判据，AC4 的逐条对照表是人工判断的产物；机械部分（AC1/AC2/AC5/AC6/AC7）只能保证例子、结构与链路不被破坏，保证不了措辞打磨的品味。
-- 本迭代净收益约 500–900 字节（≈160–300 token），投入产出比偏低，属用户明确选择的流程档位；若中途改主意可按 `iteration-schema.md §5.6` 废弃 ITER-0097。
-- `capabilities.md` 的节数修正属于本迭代顺带修的既有漂移，不是本次改动引入的；若收口时发现还有别处记载节数，一并纳入 AC6 而不另开迭代。
+- 2026-07-31 用户已 ACK：Apache-2.0；接受 GitHub Issues 和 Pull Requests；普通支持走 GitHub Issues；安全问题走 GitHub Private Vulnerability Reporting；维护者写 `@hidetodong`。
+- `ego-browser` 能创建 GitHub 标签页但无法附着活动标签，未能只读确认私密漏洞报告入口是否已开启。AC3 不会假称外部设置已就绪；若 P4/P5 仍无法核实，须作为外部待办和剩余风险明确交付。
+- 外部规范是参考基线，不把 Standard Readme 的英文标题或固定章节顺序机械照搬到中文 README；以首次使用和社区协作是否闭环为最终判断。

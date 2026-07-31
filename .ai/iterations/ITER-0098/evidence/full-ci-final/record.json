@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "full-ci-final",
+  "iteration": "ITER-0098",
+  "ac_ids": [
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T03:35:40.449Z",
+  "finished_at": "2026-07-31T03:36:03.100Z",
+  "duration_ms": 22651,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 3144,
+    "captured_bytes": 3144,
+    "sha256": "dfd626ca21d21b1f8ba90467f32f71f7b894319be3fe89d7e25ed6533d37ca52",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 4973,
+    "captured_bytes": 4973,
+    "sha256": "26b2592e089f312816ad25085e7a25dd096c3e55495d6935ad3c92050c81fbf3",
+    "truncated": false
+  }
+}

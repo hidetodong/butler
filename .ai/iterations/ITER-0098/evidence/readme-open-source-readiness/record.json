@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "readme-open-source-readiness",
+  "iteration": "ITER-0098",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "import re; from pathlib import Path; root=Path(\".\"); readme=(root/\"README.md\").read_text(); license_text=(root/\"LICENSE\").read_text(); contributing=(root/\"CONTRIBUTING.md\").read_text(); security=(root/\"SECURITY.md\").read_text(); headings=re.findall(r\"^## (.+)$\", readme, re.M); toc=readme.split(\"## 目录\\n\",1)[1].split(\"\\n## \",1)[0]; labels=re.findall(r\"^- \\[([^]]+)\\]\\(#[^)]+\\)$\", toc, re.M); assert labels == [h for h in headings if h != \"目录\"], (labels, headings); assert headings[-1] == \"许可证\"; assert \"Apache License\" in license_text and \"Copyright 2026 hidetodong\" in license_text and \"END OF TERMS AND CONDITIONS\" in license_text; assert \"Pull Request\" in contributing and \"bash scripts/verify-ci.sh\" in contributing and \"SECURITY.md\" in contributing; assert \"Private Vulnerability Reporting\" in security and \"不要为未修复漏洞创建公开 Issue\" in security and \"当前发布版本\" in security; required=[\"git clone https://github.com/hidetodong/butler.git\", \"Python 3\", \"~/.zshrc\", \"~/.claude/CLAUDE.md\", \"Butler ready\", \"## 一分钟示例\", \"## 支持与维护\", \"## 参与贡献\", \"## 安全\", \"SPDX 标识为 `Apache-2.0`\"]; missing=[item for item in required if item not in readme]; assert not missing, missing; print(\"README open-source readiness assertions passed\")"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T03:29:28.481Z",
+  "finished_at": "2026-07-31T03:29:28.500Z",
+  "duration_ms": 19,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 47,
+    "captured_bytes": 47,
+    "sha256": "b31e34f045101e6310b30346eae45ec28af360e6d98b136d540e7197bc9710bc",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
