@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "deployed-hook-matrix-final",
+  "iteration": "ITER-0099",
+  "ac_ids": [
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "import importlib.util,json,pathlib,sys; root=pathlib.Path.cwd(); spec=importlib.util.spec_from_file_location(\"butler_upgrade\",root/\"tools/butler-upgrade/upgrade.py\"); mod=importlib.util.module_from_spec(spec); sys.modules[spec.name]=mod; spec.loader.exec_module(mod); known=set(json.loads((root/\"migrations/manifest.json\").read_text())[\"known_hook_tree_digests\"]); names=[\"butler-radar\",\"butler-sticker\",\"m5-sticks3-lab\",\"ultra-learning\",\"utopia\",\"claude-skills\"]; base=root.parent; results={name:mod.tree_digest(mod.target_hook_files(base/name)) in known for name in names}; print(json.dumps(results,sort_keys=True)); expected={name: name != \"claude-skills\" for name in names}; assert results==expected,(results,expected)"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T16:32:30.547Z",
+  "finished_at": "2026-07-31T16:32:30.623Z",
+  "duration_ms": 76,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 135,
+    "captured_bytes": 135,
+    "sha256": "dbcd1baaeddfddcda210f760cd33536ba95e73e3225fe6c74db4b885678a72d5",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

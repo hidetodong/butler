@@ -1,0 +1,12 @@
+{
+  "status": "already-current",
+  "project_root": "/Users/xingzidong/Documents/Developer/projects/butler-radar",
+  "from_version": "3.3.0",
+  "to_version": "3.3.0",
+  "deployment": "stamped",
+  "actions": [],
+  "changes": [],
+  "conflicts": [],
+  "external_pending": [],
+  "run_id": null
+}

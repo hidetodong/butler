@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -414,6 +415,124 @@ class UpgradeTests(unittest.TestCase):
         (ambiguous / "CLAUDE.md").write_text(f"> 规则源：butler v{current}\nowner\n")
         with self.assertRaisesRegex(UPGRADE.UpgradeError, "ambiguous"):
             UPGRADE.build_plan(ambiguous, ROOT, "defer")
+
+    def test_hook_filter_is_single_source_and_excludes_pytest_scaffold(self):
+        """AC1 / AC2：源侧与目标侧共用同一过滤口径，且都不把 pytest 脚手架计入摘要。"""
+        for name in UPGRADE.NON_DEPLOYED_HOOK_FILES:
+            self.assertTrue(
+                (ROOT / "templates" / "hooks" / name).is_file(),
+                f"排除清单项在 templates/hooks 下不存在，排除会静默失效: {name}",
+            )
+        tree = self.base / "hooktree"
+        (tree / "lib").mkdir(parents=True)
+        (tree / "tests").mkdir()
+        (tree / "__pycache__").mkdir()
+        (tree / "butler_gate.py").write_text("gate\n")
+        (tree / "lib" / "io.py").write_text("io\n")
+        (tree / "lib" / "conftest.py").write_text("nested stays\n")
+        (tree / "conftest.py").write_text("")
+        (tree / "pytest.ini").write_text("[pytest]\n")
+        (tree / "tests" / "test_gate.py").write_text("t\n")
+        (tree / "__pycache__" / "gate.pyc").write_bytes(b"\x00")
+        (tree / "stale.pyc").write_bytes(b"\x00")
+
+        fake_butler = self.base / "fake-butler"
+        (fake_butler / "templates").mkdir(parents=True)
+        shutil.copytree(tree, fake_butler / "templates" / "hooks")
+        fake_project = self.base / "fake-project"
+        (fake_project / ".claude").mkdir(parents=True)
+        shutil.copytree(tree, fake_project / ".claude" / "hooks")
+
+        source = UPGRADE.hook_source_files(fake_butler)
+        target = UPGRADE.target_hook_files(fake_project)
+        self.assertEqual(source, target, "源侧与目标侧口径分叉会让树摘要永久错位")
+        self.assertEqual(
+            {"butler_gate.py", "lib/io.py", "lib/conftest.py"},
+            {path.as_posix() for path in source},
+        )
+        self.assertEqual(UPGRADE.tree_digest(source), UPGRADE.tree_digest(target))
+
+    def test_modified_hook_tree_is_still_refused(self):
+        """AC6：内容被改或含项目独有文件的 hook 树仍须拒绝覆盖，且零写入。"""
+        source = UPGRADE.hook_source_files(ROOT)
+
+        def modify_existing(hooks: Path) -> None:
+            victim = hooks / "rules" / "phase_gate.py"
+            victim.write_bytes(victim.read_bytes() + b"\n# tampered\n")
+
+        def add_owned_file(hooks: Path) -> None:
+            (hooks / "rules" / "custom.py").write_text("owner rule\n")
+
+        for label, mutate in (("modified-content", modify_existing), ("extra-file", add_owned_file)):
+            with self.subTest(drift=label):
+                project = self.project("2.14.0")
+                hooks = project / ".claude" / "hooks"
+                for rel, content in source.items():
+                    target = hooks / rel
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(content)
+                mutate(hooks)
+                before = digest_tree(project)
+                with self.assertRaisesRegex(UPGRADE.UpgradeError, "hook tree"):
+                    UPGRADE.build_plan(project, ROOT, "defer")
+                self.assertEqual(before, digest_tree(project), "拒绝路径必须零写入")
+
+    def test_whitelist_holds_only_recomputable_history_digests(self):
+        """AC3：白名单每项都能被某个历史 tag 按当前口径复现，混口径值会被这条抓住。"""
+        digests = self.manifest()["known_hook_tree_digests"]
+        self.assertEqual(len(digests), len(set(digests)), "白名单不得有重复项")
+
+        probe = subprocess.run(
+            ["git", "-C", str(ROOT), "tag"], capture_output=True, text=True, check=False
+        )
+        if probe.returncode != 0 or not probe.stdout.strip():
+            self.skipTest("git tag 不可用（浅克隆或无 tag），跳过历史复算对账")
+
+        available = set(probe.stdout.split())
+        checkpoints = [tag for tag in ("v1.0.0", "v2.18.0", "v3.1.0") if tag in available]
+        if not checkpoints:
+            self.skipTest("代表性 tag 均不存在，跳过历史复算对账")
+
+        for tag in checkpoints:
+            with self.subTest(tag=tag):
+                self.assertIn(
+                    self._historic_hook_digest(tag),
+                    set(digests),
+                    f"{tag} 的 hook 树摘要不在白名单里，该版本部署的项目将无法升级",
+                )
+
+        current = UPGRADE.tree_digest(UPGRADE.hook_source_files(ROOT))
+        released = (ROOT / "VERSION").read_text().strip()
+        if f"v{released}" in available:
+            self.assertEqual(
+                self._historic_hook_digest(f"v{released}"),
+                current,
+                "工作区 templates/hooks 与已发布 tag 不一致，白名单对账结论不可信",
+            )
+
+    def _historic_hook_digest(self, ref: str) -> str:
+        """按 upgrade.py 当前口径复算某个 git ref 上的 templates/hooks 树摘要。"""
+        listing = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-tree", "-r", "-z", f"{ref}:templates/hooks"],
+            capture_output=True, check=True,
+        )
+        files: dict[Path, bytes] = {}
+        for entry in listing.stdout.split(b"\0"):
+            if not entry:
+                continue
+            meta, path = entry.split(b"\t", 1)
+            mode, _kind, oid = meta.split(b" ")
+            if mode == b"120000":
+                continue
+            rel = Path(path.decode())
+            if UPGRADE.skip_hook_file(rel):
+                continue
+            blob = subprocess.run(
+                ["git", "-C", str(ROOT), "cat-file", "blob", oid.decode()],
+                capture_output=True, check=True,
+            )
+            files[rel] = blob.stdout
+        return UPGRADE.tree_digest(files)
 
 
 if __name__ == "__main__":

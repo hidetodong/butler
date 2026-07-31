@@ -3,13 +3,14 @@
 - 当前迭代：无 active
 - 当前里程碑：无 active
 - 阶段：Iteration Closed
-- 状态：ITER-0098 已完成开源授权、README 上手链路、贡献指南、安全策略、证据归档与双格式交付。
-- 已完成：AC1–AC7；Apache-2.0；`CONTRIBUTING.md`；`SECURITY.md`；README 重构；完整 CI；P5 简评；归档与交付。
-- 下一动作：仓库管理员核对 GitHub Private Vulnerability Reporting 开关；行为准则与双语 README 按真实需要另开迭代。
-- 已知风险：私密漏洞报告外部开关未取得只读证据；许可证法律适用性未由法务复核。
-- 授权上限：`/Users/cyborgno2/Documents/WorkCode.nosync/butler`
-- P4 回滚锚点：本迭代已归档，可按 `.ai/iterations/ITER-0098/`、delivery 与 evidence 分层审查。
+- 状态：ITER-0099 已完成编号迁移、升级器 hook 摘要口径修复、证据归档、双格式交付和知识折叠。
+- 已完成：AC1–AC8；升级器 22 项；六项目只读矩阵；butler-radar plan；完整 CI；Goal eligible；五件套与 evidence 归档。
+- 下一动作：提交 ITER-0099 收口变更；是否发布新版本由后续独立决定。
+- 已知风险：旧证据属于冲突编号 ITER-0096，不可改号复用；白名单无法穷尽其他机器上的历史部署裁剪变体。
+- 授权上限：`/Users/xingzidong/Documents/Developer/projects/butler`
+- P4 回滚锚点：权威归档为 `.ai/iterations/ITER-0099/`；pull 前恢复点仍在 `stash@{0}`，远端基线为 `aa708e2`。
 
 # Goal Calibration
 
-- 当前无未闭合运行时信号（N/A）。
+- CAL-001（旧 ITER-0096 证据不可改号复用）已通过 ITER-0099 全量重跑解决。
+- CAL-002（矩阵诊断首次动态导入失败）已通过修正脚本并以新 Evidence ID 重跑解决。

@@ -1,5 +1,4 @@
 {
-  "schema_version": 1,
   "receipts": {
     "ITER-0057": {
       "changelog": {
@@ -313,26 +312,6 @@
         }
       ]
     },
-    "ITER-0074": {
-      "changelog": {
-        "path": ".ai/iterations/ITER-0074/CHANGELOG.md",
-        "sha256": "aef845d75d9e2c17d39868da130f468919b21ea5f590f295893ac0170b18e078"
-      },
-      "topics": [
-        {
-          "path": ".ai/project/architecture.md",
-          "sha256": "5b9f97e37df2785de20bcb202ce969dd85d93c0eb54b9631f8a7a640527973a4"
-        },
-        {
-          "path": ".ai/project/frontier.md",
-          "sha256": "b59cd6c457bb9e24b0d50a0d673538bda226f5abfdda4157c5517f1f97d8adbb"
-        },
-        {
-          "path": ".ai/project/invariants.md",
-          "sha256": "b1d77302421f4d6bfa9f13de292361aca77558ed0812a8d7f851a4dccc269437"
-        }
-      ]
-    },
     "ITER-0073": {
       "changelog": {
         "path": ".ai/iterations/ITER-0073/CHANGELOG.md",
@@ -354,6 +333,26 @@
         {
           "path": ".ai/project/capabilities.md",
           "sha256": "3dc7a3975e2a24e4d816e81d2ee60e2e12adb645a959b745d96e29f98802027a"
+        }
+      ]
+    },
+    "ITER-0074": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0074/CHANGELOG.md",
+        "sha256": "aef845d75d9e2c17d39868da130f468919b21ea5f590f295893ac0170b18e078"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "5b9f97e37df2785de20bcb202ce969dd85d93c0eb54b9631f8a7a640527973a4"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "b59cd6c457bb9e24b0d50a0d673538bda226f5abfdda4157c5517f1f97d8adbb"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "b1d77302421f4d6bfa9f13de292361aca77558ed0812a8d7f851a4dccc269437"
         }
       ]
     },
@@ -816,6 +815,27 @@
           "sha256": "7e89343fac1ecb7aeed2a8b688a60ab60066e005157df2816006b65a5f69560b"
         }
       ]
+    },
+    "ITER-0099": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0099/CHANGELOG.md",
+        "sha256": "80f637cc76ed4789f1ef079f43f468fc893c39e593a2bd61ae07bfb4337d0ef2"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "47a05ffd9c1c107cd8195891bbe126b461a43b9f7576280e028c60c0d91671aa"
+        },
+        {
+          "path": ".ai/project/debt.md",
+          "sha256": "54f68d7f7905b5879f7b390163da8b34b49bc167db1b79703d36bcf8b5bc29a2"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "a17cf13f73b7778a19ac6e4266b07cb863f70e89b357a9ecd004aef22b71bf47"
+        }
+      ]
     }
-  }
+  },
+  "schema_version": 1
 }

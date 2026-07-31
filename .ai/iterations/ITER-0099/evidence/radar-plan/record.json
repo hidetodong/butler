@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "radar-plan",
+  "iteration": "ITER-0099",
+  "ac_ids": [
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/butler-upgrade/upgrade.py",
+      "plan",
+      "--project-root",
+      "/Users/xingzidong/Documents/Developer/projects/butler-radar",
+      "--json"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-07-31T16:32:13.975Z",
+  "finished_at": "2026-07-31T16:32:14.099Z",
+  "duration_ms": 125,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 291,
+    "captured_bytes": 291,
+    "sha256": "16c83d8241af286cea9adab89376fb5d38e9756f09d25c00501af73e879d7b2e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

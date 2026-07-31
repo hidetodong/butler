@@ -1,41 +1,42 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0098
+# VERIFY_REPORT — ITER-0099
 
 ## Verification Summary
 
-- 覆盖 AC1–AC7：根级 Apache-2.0 许可证、贡献指南、安全策略与 README 开源入口均已落地。
-- 文档结构断言、仓库内 Markdown 链接、`git diff --check` 和完整 `bash scripts/verify-ci.sh` 最终全部通过。
-- P5 同上下文简评结论为 pass：无 Must Fix；一项 Should Fix 是 GitHub Private Vulnerability Reporting 外部开关未能只读核实，作为非阻断剩余风险保留。
+- hook 树摘要的源侧与目标侧已收敛为同一过滤函数；历史摘要白名单按实际部署文件集重算为 10 项。
+- 升级器 22 项测试与仓库完整 CI 均在 ITER-0099 下重新执行并通过；完整 CI 使用钉版 uv 0.9.28 与 Python 3.12.12。
+- 六项目只读矩阵确认五个 Butler 管理的 hook 树命中白名单，`claude-skills` 的项目自有 hook 保持拒绝；butler-radar 的 plan 当前为 `already-current` 且无冲突。
+- P5 同上下文简评结论为 pass，无 Must Fix；保留历史部署覆盖面与旧部署凭据两项非阻断风险。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): 根级 Apache-2.0 全文、`© 2026 hidetodong`、README SPDX 标识和第三方许可证边界均有确定性断言 ✓
-- [x] AC2 (auto·可靠): `CONTRIBUTING.md` 覆盖贡献类型、Issue/PR、本地环境、修改边界和完整验证，README 已接入 ✓
-- [x] AC3 (auto·弱): `SECURITY.md` 的版本、私密报告、禁止公开披露和处理流程齐全；外部开关状态未核实，故不标可靠 ✓
-- [x] AC4 (auto·可靠): README 覆盖 Git/Bash/Python 3、clone、用户级写入、安装、生效和成功验证链路 ✓
-- [x] AC5 (auto·可靠): README 目录与除目录自身外的全部 H2 一一对应，许可证为最后一节，四类徽章与版本事实一致 ✓
-- [x] AC6 (auto·弱): 一分钟示例覆盖任务输入、P2/P3 确认、验证、归档和双格式交付；可读性为同上下文走读，故标弱 ✓
-- [x] AC7 (auto·可靠): 仓库内 809 个 Markdown 文件、68 个链接通过检查，`git diff --check` 通过，完整 CI 最终通过 ✓
+- [x] AC1 (auto·可靠): `skip_hook_file()` 是唯一过滤定义，源侧与目标侧收集器共同调用 ✓
+- [x] AC2 (auto·可靠): 测试覆盖顶层 pytest 脚手架、缓存、测试目录及子目录同名文件，两个收集器返回同一文件集与摘要 ✓
+- [x] AC3 (auto·可靠): 10 项白名单覆盖代表性历史 tag，并补齐 v2.18.0、v3.0.0、v3.1.0 ✓
+- [x] AC4 (auto·弱): 本机六项目只读矩阵机械断言五项命中、`claude-skills` 不命中；该结论受本机样本范围限制 ✓
+- [x] AC5 (auto·可靠): butler-radar 的只读 plan exit 0，状态 `already-current`，`conflicts` 为空 ✓
+- [x] AC6 (auto·可靠): 两类篡改 fixture 均仍抛 `UpgradeError`，拒绝路径零写入 ✓
+- [x] AC7 (auto·可靠): `scripts/test-butler-upgrade.py` 共 22 项全部通过 ✓
+- [x] AC8 (auto·可靠): `bash scripts/verify-ci.sh` 使用仓库钉版工具链完整通过 ✓
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| readme-open-source-readiness | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/readme-open-source-readiness/record.json` |
-| repository-doc-checks | AC1–AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/repository-doc-checks/record.json` |
-| full-ci | AC7 | captured | failed | `.ai/iterations/ITER-0098/evidence/full-ci/record.json` |
-| full-ci-retry | AC7 | captured | failed | `.ai/iterations/ITER-0098/evidence/full-ci-retry/record.json` |
-| full-ci-final | AC7 | captured | passed | `.ai/iterations/ITER-0098/evidence/full-ci-final/record.json` |
+| upgrader-tests | AC1, AC2, AC3, AC6, AC7 | reproduced | passed | `.ai/iterations/ITER-0099/evidence/upgrader-tests/record.json` |
+| full-ci | AC8 | reproduced | passed | `.ai/iterations/ITER-0099/evidence/full-ci/record.json` |
+| radar-plan | AC5 | reproduced | passed | `.ai/iterations/ITER-0099/evidence/radar-plan/record.json` |
+| deployed-hook-matrix | AC4 | diagnostic | failed | `.ai/iterations/ITER-0099/evidence/deployed-hook-matrix/record.json` |
+| deployed-hook-matrix-final | AC4 | reproduced | passed | `.ai/iterations/ITER-0099/evidence/deployed-hook-matrix-final/record.json` |
 
 ## Verification Results
 
-- AC1：`readme-open-source-readiness` 检查许可证关键结构、版权行、README SPDX 和末节位置；根 `LICENSE` 使用 Apache-2.0 标准条款，`tools/codex-validators/LICENSE` 的第三方边界未改。
-- AC2：同一 record 检查贡献指南包含 Pull Request、完整 CI 和安全策略入口；人工走读确认“贡献类型 → Issue/PR → 本地准备 → 验证 → 提交范围”顺序完整。
-- AC3：自动断言确认 Private Vulnerability Reporting、禁止公开 Issue、支持版本与处理流程均在；`ego-browser` 因活动标签附着失败，未取得外部开关状态，故整体标弱。
-- AC4：自动断言覆盖 clone URL、Python 3、shell 配置、Claude 用户配置和 `Butler ready` 成功判据；内容逐段对照 `scripts/setup.sh` 与 `scripts/configure-global-install.py`。
-- AC5：脚本提取 README H2 和目录标签并要求列表完全相等，另断言许可证为最后一节；版本徽章 3.3.0 与 `VERSION` 一致。
-- AC6：最小示例能从输入走到 P2/P3、验证、归档和交付，未复制 `HUMAN_GUIDE.md` 的高级说明；该项包含可读性判断，标弱。
-- AC7：`repository-doc-checks` 捕获链接检查和 diff 检查；`full-ci-final` 捕获完整 CI 通过。`full-ci` 因沙箱无法访问 uv 用户缓存失败，`full-ci-retry` 因 task-state 的 Goal Calibration 固定句式被改写而失败；修正状态文件后第三次通过，两条失败 record 保留为纠错轨迹。
+- AC1 / AC2 / AC6：`upgrader-tests` 对统一过滤入口、部署文件集相等及真实篡改拒绝做确定性断言；内容修改与项目独有文件两种偏差都不会被白名单放过。
+- AC3：同一测试从 Git 历史复算代表性 tag，确认 manifest 的新口径摘要可追溯；当前源与已发布 tag 的摘要一致。
+- AC4：第一次矩阵诊断因 Python 3.14 动态导入未登记 `sys.modules` 而失败；修正诊断脚本后，`deployed-hook-matrix-final` 输出五项 `true`、`claude-skills=false` 并通过精确断言。失败 record 保留为纠错轨迹。
+- AC5：butler-radar 已在此前独立动作中升级，因此本次 plan 返回 `already-current`，同时 `conflicts=[]`、`changes=[]`；证明当前摘要守门不再产生 hook 树冲突。
+- AC7：升级器入口 22 项全部通过，新增测试与既有回归同一命令运行。
+- AC8：完整 CI 成功准备 Python 3.12.12，覆盖双宿主、Codex plugin/hooks、artifact、state ledger、升级器、PRD 与 workspace-scope 等仓库检查；Pi TypeScript 仅报告既有依赖不可解析警告，验证脚本按既定契约继续并最终 exit 0。
 
 ## TDD Pair Status
 
@@ -43,8 +44,8 @@
 
 ## Goal Calibration
 
-- CAL-001：`full-ci` 环境失败信号 → route 到同命令沙箱外重跑 → resolved。依据：`full-ci-retry` 已越过 uv 缓存初始化并进入仓库测试。
-- CAL-002：`full-ci-retry` 状态合同失败信号 → route 回 P4，把外部待核项移出 Goal Calibration、恢复固定 N/A 句式 → resolved。依据：`full-ci-final` outcome=passed。
+- CAL-001：旧证据属于冲突编号 ITER-0096 → 不改号复用，移动到临时备份并在 ITER-0099 全量重跑 → resolved。
+- CAL-002：本机矩阵诊断首次动态导入失败 → 修正 `sys.modules` 登记后用新 Evidence ID 重跑 → resolved。
 
 ## Completion Inputs
 
@@ -53,22 +54,22 @@
 
 ## Gate Coverage
 
-- 通用质量门禁：五件套 `contract.py check project` 为 ok；Markdown 链接、diff 检查与完整 CI 均有 passed record。
-- Workspace Scope：N/A — AC_LIST 无 `prd_refs`，本迭代只改仓根公开文档。
-- Active Profiles：未命中 Domain / Stack Profile，仅按通用 SOP、文档结构和仓库 CI 推进。
-- Tech Plan Alignment：四个计划文件全部按边界落地；未修改安装脚本、规则算法、Hooks、plugin、迁移配方或 GitHub 外部设置。
-- References Compliance：四份外部规范只用于确定信息结构与社区健康基线，未复制其受版权保护的大段正文；Apache-2.0 标准法律文本按许可证用途完整落盘。
+- 通用质量门禁：五件套结构、22 项升级器测试、完整 CI 与 evidence 完整性均有机器结果。
+- Workspace Scope：N/A — 本迭代没有 `prd_refs`；写入范围限于三处实现文件和 Butler 收口产物，六个目标项目仅只读。
+- Active Profiles：项目配置 `profiles=[]`，未命中领域 Profile。
+- Tech Plan Alignment：统一过滤定义、历史白名单重算、负向守门和回归入口均按方案落地；没有修改 hook 运行时规则、split 或配置迁移语义。
 
 ## References Compliance
 
-- P2 引用的 GitHub Docs、Open Source Guides 和 Standard Readme 均只支撑结构判断；实现保持中文项目语境，没有机械照搬英文标题和固定顺序。
+- N/A — 无 `.ai/references/` 外部参考资料。
 
 ## Remaining Risks
 
-- **GitHub Private Vulnerability Reporting 开关未核实**：`SECURITY.md` 已如实写明按钮不可见时的处理方式，但 `ego-browser` 本次无法附着活动标签，未确认外部入口是否启用。建议仓库管理员在 GitHub Security 设置中核对；这不影响仓库内文档完成，但影响私密入口的即时可用性。
-- **法律适用性未由法务复核**：许可证类型和版权主体由用户 ACK，机器只能验证文本与归属一致，不能替代公司知识产权审查。
-- 本次为同上下文 P5 简评，项目配置 `independent_review=false`，未执行 fresh-context 独立复核。
+- 本机六个项目不能穷尽其他机器上的历史部署裁剪变体；未来若出现新文件集差异，应考虑部署侧机械文件清单或逐路径历史内容集合。
+- v1.0.0 时代没有部署时凭据，“现有九文件与 v1.0.0 逐字一致”是事后比对，不是原始部署记录。
+- `claude-skills` 把项目自有 hook 放在 `.claude/hooks/`，当前守门正确拒绝覆盖；兼容项目自有 hook 属独立需求。
+- 本次按配置 `independent_review=false` 执行同上下文简评，未做 fresh-context 独立复核。
 
 ## Handoff / Next Step
 
-- Goal 裁决通过后执行证据归档、四件套快照、双格式交付、台账收口和项目知识折叠。
+- 运行 Goal 完成资格裁决；若 eligible，则归档 evidence 与五件套，生成双格式交付、更新台账和知识文件夹后提交。

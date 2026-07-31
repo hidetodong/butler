@@ -287,6 +287,25 @@ def contained_target(project: Path, relative: Path) -> Path:
     return target
 
 
+# templates/hooks 下不随部署铺到目标项目的文件：仅供仓内 pytest 驱动 tests/ 使用。
+# 计入树摘要会让项目侧永远无法与白名单对齐——与已排除的 tests/ 同源，见 ITER-0096。
+NON_DEPLOYED_HOOK_FILES: frozenset[str] = frozenset({"conftest.py", "pytest.ini"})
+
+
+def skip_hook_file(relative: Path) -> bool:
+    """源侧与目标侧共用的 hook 文件过滤。
+
+    两处口径必须出自本函数：各自持有条件曾让摘要永久错位（ITER-0096）。
+    排除按 posix 相对路径整串匹配，不按文件名匹配，避免误伤子目录同名文件。
+    """
+    parts = relative.parts
+    if "tests" in parts or "__pycache__" in parts or ".pytest_cache" in parts:
+        return True
+    if relative.suffix == ".pyc":
+        return True
+    return relative.as_posix() in NON_DEPLOYED_HOOK_FILES
+
+
 def hook_source_files(butler_root: Path) -> dict[Path, bytes]:
     root = butler_root / "templates" / "hooks"
     result: dict[Path, bytes] = {}
@@ -294,9 +313,7 @@ def hook_source_files(butler_root: Path) -> dict[Path, bytes]:
         rel = path.relative_to(root)
         if not path.is_file() or path.is_symlink():
             continue
-        if "tests" in rel.parts or "__pycache__" in rel.parts or ".pytest_cache" in rel.parts:
-            continue
-        if path.suffix == ".pyc":
+        if skip_hook_file(rel):
             continue
         result[rel] = path.read_bytes()
     return result
@@ -323,7 +340,7 @@ def target_hook_files(project: Path) -> dict[Path, bytes]:
             raise UpgradeError(f"hook symlink is not owned: {path.relative_to(project)}")
         if path.is_file():
             rel = path.relative_to(root)
-            if "__pycache__" in rel.parts or ".pytest_cache" in rel.parts or path.suffix == ".pyc":
+            if skip_hook_file(rel):
                 continue
             result[rel] = path.read_bytes()
     return result

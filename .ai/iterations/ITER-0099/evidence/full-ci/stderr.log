@@ -1,0 +1,156 @@
+Downloading cpython-3.12.12-macos-aarch64-none (download) (16.8MiB)
+ Downloaded cpython-3.12.12-macos-aarch64-none (download)
+Using CPython 3.12.12
+Creating virtual environment at: .venv
+Resolved 8 packages in 1ms
+Downloading pygments (1.2MiB)
+ Downloaded pygments
+Prepared 6 packages in 1.71s
+Installed 6 packages in 6ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.2
+ + pyyaml==6.0.3
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.010s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.096s
+
+OK
+................
+----------------------------------------------------------------------
+Ran 16 tests in 0.017s
+
+OK
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.286s
+
+OK
+test_check_detects_file_and_symlink_drift_without_writing (__main__.WorkflowRegistryTests.test_check_detects_file_and_symlink_drift_without_writing) ... [DRIFT] .agents/skills/butler-prd: symlink target '/tmp/not-butler' != '../../plugins/butler/skills/butler-prd'
+[DRIFT] plugins/butler/skills/butler-loop/agents/openai.yaml: content drift
+ok
+test_failed_write_rolls_back_applied_files (__main__.WorkflowRegistryTests.test_failed_write_rolls_back_applied_files) ... ok
+test_frontmatter_projection_preserves_workflow_bodies (__main__.WorkflowRegistryTests.test_frontmatter_projection_preserves_workflow_bodies) ... ok
+test_managed_projection_drift_matrix (__main__.WorkflowRegistryTests.test_managed_projection_drift_matrix) ... ok
+test_registry_is_exact_and_high_risk_is_explicit_only (__main__.WorkflowRegistryTests.test_registry_is_exact_and_high_risk_is_explicit_only) ... ok
+test_repository_sets_and_plugin_contract_are_closed (__main__.WorkflowRegistryTests.test_repository_sets_and_plugin_contract_are_closed) ... ok
+test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift (__main__.WorkflowRegistryTests.test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift) ... ok
+test_setup_is_a_thin_machine_install_router (__main__.WorkflowRegistryTests.test_setup_is_a_thin_machine_install_router) ... ok
+test_write_is_idempotent_and_check_is_zero_write (__main__.WorkflowRegistryTests.test_write_is_idempotent_and_check_is_zero_write) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.302s
+
+OK
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 2.948s
+
+OK
+........................
+----------------------------------------------------------------------
+Ran 24 tests in 1.523s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.457s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.412s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 0.932s
+
+OK
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.019s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.164s
+
+OK
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 0.037s
+
+OK
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.132s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.029s
+
+OK
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 0.044s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.086s
+
+OK
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.418s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 1.300s
+
+OK
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 1.655s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.516s
+
+OK

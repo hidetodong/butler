@@ -126,7 +126,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 - `tools/prd-update/` — 按显式 `prd_id` 和确认 JSON spec 执行零写 plan、整 PRD collection 事务 apply、持久 receipt、verify 与 hash-gated rollback；复用 status parser，逐路线扫描三态影响，重复执行幂等，故障或篡改 fail-closed。
 - `tools/workspace-scope/` — 工作区范围只读执行器：从 npm/pnpm manifest 发现候选，校验地图与共享/生成路径 owner，解析 AC 钉版的多 PRD/模块范围，核 TECH_PLAN 写计划、显式路径和 Git diff。PreToolUse 对 apply_patch/Edit/Write/MultiEdit 复用同一 parser；shell 由 P5 `check-diff` 兜底。
 - `tools/mile0009-e2e/` — 把 inbox、migration、status、update 与 workspace scope 串成单工程回归，并提供真实项目只读源 + 自动临时副本 migration/rollback dogfood runner。
-- `tools/butler-upgrade/` — 已部署项目的确定性升级器：机器迁移链、JSON plan、项目事务、历史 fixture 与失败恢复；HOME 安装始终独立确认。
+- `tools/butler-upgrade/` — 已部署项目的确定性升级器：机器迁移链、JSON plan、项目事务、历史 fixture 与失败恢复；hook 树摘要以实际部署文件集为统一口径，历史白名单可从 tag 复算，真实篡改仍拒绝；HOME 安装始终独立确认。
 - `tools/verification-evidence/` — P5 **自动道证据工具**（Python 标准库）：按真实 argv 执行验证，生成有界 stdout/stderr、exit、时间与 SHA-256 record；只读校验后在收口时整包从热区移入迭代归档，失败记录保留但不能覆盖绿 AC。默认只认 current；显式 `--allow-closed` 仅在 `current: none` 且目标迭代 closed 时允许补捕获/移动收口态检查。
 - `tools/delivery-selftest/` — 交付自测**人测回传桥**（Node 零依赖）：读 manifest JSON → 生成 GitHub 风格分步流程页 → 收人工四态回传（通过 / 未通过 / 延后 / 跳过）→ 写 `results.json` + 自退。P5 人测道下游接线协议 `20_Workflow_Lifecycle/human-test-bridge.md`，契约真源 `tools/delivery-selftest/README.md`。
 - `scripts/audit-project-state.py` — 收口/切版的**只读状态审计器**：机械对账台账、路线、归档、交付、Evidence Index、fold receipt 与 Butler 发布元数据；VERSION tag 必须实际指向 HEAD 才算已发布，工作树干净但提交领先 tag 仍亮 `UNRELEASED`。

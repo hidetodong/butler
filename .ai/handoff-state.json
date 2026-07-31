@@ -1,11 +1,11 @@
 {
-  "handoff_sha256": "2808433fabe549b5fe23f74f7cc9cbe9ae627540bb7605870929d3d2026708b1",
+  "handoff_sha256": "0d834bf8df928b693c3a47595d156cc1fcec6cca431fbf7d30dba20a60f28d84",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "仓库管理员核对 GitHub Private Vulnerability Reporting 开关；行为准则与双语 README 按真实需要另开迭代。",
+    "next": "提交 ITER-0099 收口变更；是否发布新版本由后续独立决定。",
     "phase": "Iteration Closed",
     "pointers": [
       ".ai/task-state.md",
@@ -13,16 +13,16 @@
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "ITER-0098 已完成开源授权、README 上手链路、贡献指南、安全策略、证据归档与双格式交付。"
+    "status": "ITER-0099 已完成编号迁移、升级器 hook 摘要口径修复、证据归档、双格式交付和知识折叠。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "5184d5a4556ef1378d2296ccddbe13c275f89e7134e1c97f75a297eb6365d2df"
+      "sha256": "8e7918c9aa8b65dac4639a2a45ddbb8323adf10026f5f0115cbfcd0ab52468ff"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "8f68dd745ec5ef9a25cb22f785d6dd52fbb9a41db31fb0efd191cfbd6e3a7e49"
+      "sha256": "3facb090a25285375fe95e7b3cc45052f3572d594f8519ef9c816f4c96c2d88a"
     },
     {
       "path": ".ai/MILESTONES.md",
