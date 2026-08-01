@@ -108,7 +108,7 @@ class UpgradeTests(unittest.TestCase):
                     UPGRADE.validate_manifest(value, ROOT)
 
     def test_v330_registers_project_config_migration_before_entrypoints(self):
-        migration = self.manifest()["migrations"][-1]
+        migration = next(item for item in self.manifest()["migrations"] if item["target"] == "3.3.0")
         self.assertEqual(("3.2.0", "3.3.0", "v3.3.0.md"), (
             migration["source"], migration["target"], migration["recipe"]
         ))

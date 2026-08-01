@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [3.4.0] - 2026-08-01
+
+向后兼容的工作流与宿主集成增强版，聚合 ITER-0096–ITER-0101：新增旁路工作回执、统一语义 Router 与会话转迭代入口，完善开源入口和沟通风格，并修复升级器 hook 摘要、Codex plugin 校验运行时及 UTF-8 setup 回声。迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.4.0.md`。
+
 ## [3.3.0] - 2026-07-28
 
 向后兼容的项目配置结构化版本，聚合 MILE-0013 的 ITER-0093–ITER-0095。版本级交付路径为 `deliveries/milestones/MILE-0013-project-config-structure.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.3.0.md`。

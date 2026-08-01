@@ -7,7 +7,7 @@
 让 AI 先理解目标、明确验收、确认方案，再实现并拿证据交付。
 
 [![CI](https://github.com/hidetodong/butler/actions/workflows/ci.yml/badge.svg)](https://github.com/hidetodong/butler/actions/workflows/ci.yml)
-[![version](https://img.shields.io/badge/version-3.3.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-3.4.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)](#三宿主如何共享同一套规则)
 

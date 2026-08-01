@@ -852,6 +852,29 @@
           ]
         }
       ]
+    },
+    {
+      "source": "3.3.0",
+      "target": "3.4.0",
+      "recipe": "v3.4.0.md",
+      "actions": [
+        {
+          "id": "3.4.0/01-global-install",
+          "type": "global_install",
+          "domain": "machine",
+          "preconditions": [
+            "explicit-machine-confirmation"
+          ]
+        },
+        {
+          "id": "3.4.0/02-restamp",
+          "type": "restamp",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        }
+      ]
     }
   ]
 }
