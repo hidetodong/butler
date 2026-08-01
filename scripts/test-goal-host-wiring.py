@@ -46,7 +46,7 @@ class GoalHostWiringTests(unittest.TestCase):
 
     def test_registry_workflow_count_and_no_parallel_goal_file(self) -> None:
         registry = json.loads((ROOT / "workflows/registry.json").read_text(encoding="utf-8"))
-        self.assertEqual(12, len(registry["workflows"]))
+        self.assertEqual(13, len(registry["workflows"]))
         self.assertFalse((ROOT / ".ai/GOAL.md").exists())
         self.assertFalse((ROOT / ".ai/GOALS.md").exists())
 

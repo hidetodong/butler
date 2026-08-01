@@ -12,6 +12,7 @@ python3 "$ROOT/scripts/test-resolve-project-root.py"
 python3 "$ROOT/scripts/test-configure-global-install.py"
 python3 "$ROOT/scripts/test-butler-upgrade.py"
 python3 "$ROOT/scripts/test-workflow-registry.py"
+python3 "$ROOT/tools/iteration-intake/test_intake.py"
 python3 "$ROOT/scripts/sync-workflow-registry.py" --check
 python3 "$ROOT/tools/verification-evidence/test_evidence.py"
 python3 "$ROOT/scripts/test-audit-project-state.py"
@@ -34,6 +35,7 @@ run_setup "$NO_CODEX_HOME" env BUTLER_CODEX_COMMAND=butler-codex-missing > "$WOR
 grep -q '未找到 Codex CLI' "$WORK/no-codex-2.log"
 [[ "$(grep -Fc '<!-- butler-global-config -->' "$NO_CODEX_HOME/.claude/CLAUDE.md")" -eq 2 ]]
 [[ -L "$NO_CODEX_HOME/.claude/commands/butler" ]]
+[[ -L "$NO_CODEX_HOME/.claude/commands/butler.md" ]]
 [[ "$(grep -c '^export BUTLER_PATH=' "$NO_CODEX_HOME/.zshrc")" -eq 1 ]]
 
 # 用户配置异常：全量预检失败，shell/Claude/commands 都不产生部分写入。
@@ -52,6 +54,7 @@ grep -q '应有 0 个或 2 个 Butler marker' "$WORK/conflict.log"
 [[ "$conflict_shell_before" == "$(shasum "$CONFLICT_HOME/.zshrc")" ]]
 [[ "$conflict_claude_before" == "$(shasum "$CONFLICT_HOME/.claude/CLAUDE.md")" ]]
 [[ ! -e "$CONFLICT_HOME/.claude/commands/butler" ]]
+[[ ! -e "$CONFLICT_HOME/.claude/commands/butler.md" ]]
 
 # Codex 可用：setup 调 installer，且本进程已导出正确 BUTLER_PATH。
 WITH_CODEX_HOME="$WORK/with-codex-home"
@@ -77,6 +80,7 @@ grep -q '部分完成.*Codex plugin 安装失败' "$WORK/failed-codex.log"
 ! grep -q '^安装完成' "$WORK/failed-codex.log"
 [[ -f "$FAILED_CODEX_HOME/.claude/CLAUDE.md" ]]
 [[ -L "$FAILED_CODEX_HOME/.claude/commands/butler" ]]
+[[ -L "$FAILED_CODEX_HOME/.claude/commands/butler.md" ]]
 [[ "$(grep -c '^export BUTLER_PATH=' "$FAILED_CODEX_HOME/.zshrc")" -eq 1 ]]
 
 # 两份入口通过同一 renderer 生成，重复运行不漂移。
@@ -115,5 +119,6 @@ python3 -m compileall -q "$ROOT/tools/verification-evidence/evidence.py"
 python3 -m compileall -q "$ROOT/tools/butler-upgrade/upgrade.py"
 python3 -m compileall -q "$ROOT/scripts/sync-workflow-registry.py"
 python3 -m compileall -q "$ROOT/scripts/audit-project-state.py"
+python3 -m compileall -q "$ROOT/tools/iteration-intake/intake.py"
 
 echo "[OK] Claude/Codex unified setup and project entrypoint matrix passed"

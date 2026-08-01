@@ -40,6 +40,10 @@ class GlobalInstallTests(unittest.TestCase):
     def command_link(self) -> Path:
         return self.home / ".claude" / "commands" / "butler"
 
+    @property
+    def router_link(self) -> Path:
+        return self.home / ".claude" / "commands" / "butler.md"
+
     def plan(self):
         return MODULE.plan_global_install(self.home, self.repo)
 
@@ -53,11 +57,13 @@ class GlobalInstallTests(unittest.TestCase):
             "zshrc": self.zshrc.read_bytes(),
             "claude": self.claude_md.read_bytes(),
             "link": os.readlink(self.command_link),
+            "router_link": os.readlink(self.router_link),
         }
         self.apply()
         self.assertEqual(first["zshrc"], self.zshrc.read_bytes())
         self.assertEqual(first["claude"], self.claude_md.read_bytes())
         self.assertEqual(first["link"], os.readlink(self.command_link))
+        self.assertEqual(first["router_link"], os.readlink(self.router_link))
         self.assertEqual(1, self.zshrc.read_text().count("export BUTLER_PATH="))
         self.assertEqual(2, self.claude_md.read_text().count(MODULE.GLOBAL_MARKER))
 
@@ -171,6 +177,13 @@ class GlobalInstallTests(unittest.TestCase):
             self.plan()
         self.assertEqual("mine", owner_file.read_text(encoding="utf-8"))
         self.assertEqual([owner_file], list(self.command_link.iterdir()))
+
+    def test_user_owned_router_file_is_never_overwritten(self) -> None:
+        self.router_link.parent.mkdir(parents=True)
+        self.router_link.write_text("user router\n", encoding="utf-8")
+        with self.assertRaises(MODULE.ConfigError):
+            self.plan()
+        self.assertEqual("user router\n", self.router_link.read_text(encoding="utf-8"))
 
     def test_unrelated_or_unowned_broken_symlink_rejects(self) -> None:
         self.command_link.parent.mkdir(parents=True)

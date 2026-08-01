@@ -1,6 +1,6 @@
 # Butler 双宿主工作流注册表
 
-> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；本页是唯一工作流人读能力表。
+> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；`/butler` / `$butler-router` 是共享语义入口，不计入下方业务工作流候选。
 
 | ID | Claude Code | Codex | 风险 | 隐式调用 | 语义触发 | 旧名 / 兼容 | 规则真源 |
 |---|---|---|---|---|---|---|---|
@@ -16,19 +16,20 @@
 | loop | `/butler:loop` | `$butler-loop` | high | 禁止（必须显式） | `$butler-loop`、`/butler:loop`、`死磕`、`explicit convergence loop` | `/loop` (harness-collision-do-not-generate) | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
 | dangerous | `/butler:dangerous` | `$butler-dangerous` | high | 禁止（必须显式） | `$butler-dangerous`、`/butler:dangerous`、`危险模式`、`explicit unattended autonomy` | `/dangerous` (deprecated-do-not-generate) | `Coder/65_Extension_Dangerous/dangerous-engine.md` |
 | progress | `/butler:progress` | `$butler-progress` | normal | 允许 | `progress`、`进度`、`项目进度`、`current status`、`当前状态`、`how is it going` |  | `.claude/commands/butler/progress.md` |
+| iteration | `/butler:iteration` | `$butler-iteration` | normal | 允许 | `summarize this session and start an iteration`、`总结当前 session 然后领一个迭代`、`总结这次讨论并开工`、`claim an iteration`、`领一个迭代做这些内容` |  | `Coder/20_Workflow_Lifecycle/iteration-intake.md` |
 
 ## 安全与兼容
 
 - `loop` / `dangerous` 是 high risk，Codex `allow_implicit_invocation=false`；只能由用户显式点名 Butler 模式。旧 `/loop` 与 Claude harness 自带循环撞名，绝不生成旧实体命令。
-- 其余十项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
+- 其余十一项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
 - legacy alias 是识别/弃用元数据，不代表仓库重新创建同名入口。
 
 ## 发现与分发状态
 
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
-| Claude 全局命令 | available via setup symlink | `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 12 个相对软链，实体在 `plugins/butler/skills/` |
+| Claude 全局命令 | available via setup symlinks | `.claude/commands/butler.md` 与 `.claude/commands/butler/` → `scripts/setup.sh` |
+| Codex repo discovery | available | `.agents/skills/` 的 Router + 13 个业务 Skill 相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |

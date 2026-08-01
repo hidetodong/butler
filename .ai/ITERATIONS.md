@@ -1,15 +1,16 @@
 # 迭代台账
 
-> 沟通风格正本瘦身：把 `communication-style.md` 里的元说明、跨节重复表述与自相矛盾的散文铺垫删掉，四组 ❌/✅ 例子一条不动；守住它与 `artifact-style.md §2` 四条的概念对齐。
+> Butler 统一语义 Router 与会话转迭代入口：共享路由真源，为 Claude 与 Codex / ChatGPT 提供薄适配，并把「总结当前 session 后领取迭代」收敛为标准 Butler 工作流。
 
 ## 最近迭代
 
-ITER-0097 为独立迭代：仓根个人语气副本瘦身，不改规矩语义、不动例子、不下发目标项目。
+ITER-0100 为独立迭代：收敛 Claude 与 Codex / ChatGPT 的 Butler 统一语义路由，新增会话转迭代工作流；不改现有业务算法，不将 loop / dangerous 放开为隐式调用。
 
 current: none
 
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0100 | Butler 统一语义 Router 与会话转迭代入口 | closed | 2026-08-01 | 2026-08-01 | — | deliveries/ITER-0100-semantic-router-session-intake.md |
 | ITER-0099 | 升级器 hook 树摘要与部署文件集对齐：修复 sync_hooks 失配 | closed | 2026-08-01 | 2026-08-01 | — | deliveries/ITER-0099-hook-tree-digest-alignment.md |
 | ITER-0098 | 开源就绪：README、许可证与社区协作入口 | closed | 2026-07-31 | 2026-07-31 | — | deliveries/ITER-0098-open-source-readiness.md |
 | ITER-0097 | 沟通风格正本瘦身：砍冗余留例子，守 artifact-style 四条对齐 | closed | 2026-07-30 | 2026-07-30 | — | deliveries/ITER-0097-communication-style-slim.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0083 | handoff 确定性可信闭环（MILE-0010 R1·危险模式）：状态快照读取层、固定生成、触发/检查、来源指纹、陈旧拒绝与重建 | closed | 2026-07-22 | 2026-07-22 | MILE-0010 | deliveries/ITER-0083-trusted-handoff.md |
 | ITER-0082 | 工作区范围发现、计划/改动门禁与端到端验证（MILE-0009 R8·危险模式）：稳定地图发现、TECH_PLAN 对账、实际改动/hook 拦截、真实 apps 只读样本迁移回归 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0082-workspace-scope-gate-e2e.md |
 | ITER-0081 | 确定性 PRD 改版执行与回执（MILE-0009 R7·危险模式）：显式 prd_id/spec、先冻后更事务、模块认亲、三态影响与处置、verify/rollback/幂等 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0081-prd-update-transaction.md |
-| ITER-0080 | 首切、状态与命令适配（MILE-0009 R6·危险模式）：身份四态先于写盘、按 prd_id/date 目录首切、只读 status 与 workspace 下钻、双宿主薄路由 | closed | 2026-07-22 | 2026-07-22 | MILE-0009 | deliveries/ITER-0080-prd-split-status.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

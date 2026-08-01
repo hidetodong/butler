@@ -1,0 +1,10 @@
+test_active_iteration_refuses_without_new_id (__main__.IntakeTests.test_active_iteration_refuses_without_new_id) ... ok
+test_active_milestone_requires_and_binds_a_planned_route (__main__.IntakeTests.test_active_milestone_requires_and_binds_a_planned_route) ... ok
+test_apply_crystallizes_without_raw_transcript (__main__.IntakeTests.test_apply_crystallizes_without_raw_transcript) ... ok
+test_apply_rolls_back_every_ai_file_on_failure (__main__.IntakeTests.test_apply_rolls_back_every_ai_file_on_failure) ... ok
+test_plan_is_zero_write_and_uses_composite_max (__main__.IntakeTests.test_plan_is_zero_write_and_uses_composite_max) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.018s
+
+OK

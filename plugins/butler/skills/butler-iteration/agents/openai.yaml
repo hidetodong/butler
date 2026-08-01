@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Iteration"
+  short_description: "Turn this session into an auditable iteration"
+  default_prompt: "Use $butler-iteration to summarize this session and start an auditable iteration."
+policy:
+  allow_implicit_invocation: true

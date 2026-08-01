@@ -24,7 +24,7 @@ Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个�
 ## 2. 单一真源红线
 
 - 强制规则卡只改 `templates/rule-card.md`。`CLAUDE.md.template` 与 `AGENTS.md.template` 都通过 `{{RULE_CARD_CONTENT}}` 注入，不手工抄规则正文。
-- P1–P5、迭代、里程碑、PRD、复核和危险模式算法仍在 `Coder/`。commands、skills 和入口文件只能路由到真源。
+- P1–P5、迭代、里程碑、PRD、复核和危险模式算法仍在 `Coder/`。统一语义路由真源是 `Coder/00_System_Prompt/workflow-router.md`，会话转迭代真源是 `Coder/20_Workflow_Lifecycle/iteration-intake.md`；commands、skills 和入口文件只能路由到真源。
 - Hook 的阶段判断继续复用 `templates/hooks/rules/` 与 `lib/`。宿主差异只放 dispatcher 或输入适配器。
 - README、HUMAN_GUIDE 和 Coder 入口只登记能力并回指本文件，不复制整份支持矩阵。
 
@@ -38,7 +38,7 @@ Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个�
 | R4 / ITER-0054 | setup、首次部署、既有升级、迁移配方和 Claude/Codex 双端回归矩阵 | v2.15.0 已交付 |
 | R5 / ITER-0070 | Pi 宿主适配器：TypeScript 扩展拦截 write/edit 调 Python 判断模块做流程门禁，setup.sh 安装，文档多宿主化 | 进行中 |
 
-至 v2.15.0，MILE-0006 的安装、规则发现、当时的 10 个工作流、apply_patch hooks、目标项目双入口与升级链已经闭环；当前 registry 已随需求收件箱和独立 setup 命令扩为 12 个工作流。这里的“兼容”是工作流兼容，不是不可绕过的安全边界；未观测的 shell/MCP 写路径不在保护声明内。
+至 v2.15.0，MILE-0006 的安装、规则发现、当时的 10 个工作流、apply_patch hooks、目标项目双入口与升级链已经闭环；当前 registry 是 schema v2，包含一个不进入候选集的 Router 元入口和 13 个业务工作流。这里的“兼容”是工作流兼容，不是不可绕过的安全边界；未观测的 shell/MCP 写路径不在保护声明内。
 
 ## 4. 多宿主原生入口
 
@@ -57,7 +57,7 @@ Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装�
 
 Pi 的门禁层用 TypeScript 扩展（`plugins/butler-pi/`）实现 `tool_call` / `tool_result` 事件拦截，复用 Python 判断模块。安装通过 `scripts/setup.sh` 幂等软链到 `~/.pi/agent/extensions/`。
 
-入口、双宿主名称、风险、语义触发和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。高风险入口在各宿主分别禁止隐式调用；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
+入口、双宿主名称、风险、语义触发、冲突/前置关系和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。Claude 可用 `/butler <自然语言>`，Codex / ChatGPT 可隐式选择 `$butler-router`；显式 `/butler:*` 或 `$butler-*` 始终绕过 Router。高风险入口在各宿主分别禁止隐式调用；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
 
 - 官方说明：[Customization](https://learn.chatgpt.com/docs/customization/overview.md)、[Build skills](https://learn.chatgpt.com/docs/build-skills)
 - 安装/刷新：`bash scripts/install-codex-plugin.sh`；它使用官方 creator/cachebuster/validator 与 `codex plugin add`，安装后新开 Codex thread 生效。

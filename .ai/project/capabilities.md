@@ -51,9 +51,11 @@
 
 ## 工作流注册与分发治理（MILE-0007 R5）
 
-- `workflows/registry.json` 恰好登记 12 个 workflow 的 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、legacy aliases 和 plugin/distribution 边界。
+- `workflows/registry.json` schema v2 登记 1 个不进入候选的 Router 元入口和 13 个业务 workflow，并统一维护 Claude/Codex 名称与路径、规则真源、风险、隐式策略、语义触发、优先级、排除词、冲突、前置、legacy aliases 和分发边界。
 - `scripts/sync-workflow-registry.py --write` 原子生成/校正窄元数据投影并在失败时回滚；`--check` 零写入报告 command/SKILL/openai/doc/软链/plugin/hooks/installer 漂移。
 - `docs/workflows.md` 是唯一工作流人读能力表；loop/dangerous 显式禁隐式，旧 `/loop` 只登记 harness collision、不生成实体。repo discovery 和个人 plugin 可用，team/public 明确未配置。
+- Claude `/butler <自然语言>` 与 Codex / ChatGPT `$butler-router` 共用 `workflow-router.md`，显式具体入口绕过 Router，一次只选一个主工作流；四态与 13 个业务工作流的共享样例由 registry 校验。
+- Claude `/butler:iteration` 与 Codex `$butler-iteration` 共用 `iteration-intake.md`：只总结零写；明确开工时由驻留工具分开结晶用户决定/模型建议/开放问题，拒绝双 active，并事务更新台账、五件套、里程碑、task-state 与 handoff。
 - 专项与完整矩阵已接入 `verify-ci.sh`；源码 plugin 保持精确 VERSION，个人安装副本单独加 cachebuster。
 
 ## 持续验证与状态自证（MILE-0007 R2–R3）

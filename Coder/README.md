@@ -27,7 +27,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `../AGENTS.md`：Codex 编辑 Butler 仓时的自动发现入口与 `.ai/` 冷启动读序。
 - `../docs/codex-compatibility.md`：Claude Code / Codex 共同内核、适配层边界与分阶段支持状态的真源。
 - `../docs/workflows.md`：由机器注册表生成的双宿主入口、风险、触发与旧名兼容人读表。
-- `../plugins/butler/`：Codex plugin 发布包与 12 个工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
+- `../plugins/butler/`：Codex plugin 发布包、1 个 Router skill 与 13 个业务工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
 - `../plugins/butler-pi/`：Pi TypeScript 扩展（`tool_call` / `tool_result` 事件拦截 + Python 门禁调用），安装到 `~/.pi/agent/extensions/`。
 
 宿主入口只负责发现和路由：Claude Code 读根 `CLAUDE.md` 和 `.claude/commands/`，Codex 读根 `AGENTS.md` 与 `plugins/butler/` skills，Pi 读根 `AGENTS.md` 与 `plugins/butler-pi/` 扩展；规则算法仍以本目录为真源。目标项目两模板共同从 `templates/rule-card.md` 注入强制规则，由 `scripts/render-project-entrypoints.py` 在首次部署/升级时幂等维护。完整兼容边界不在本文件复述，统一见 `docs/codex-compatibility.md`。
@@ -158,6 +158,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/goal-calibration.md` 管 P4/P5 新事实回流：六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号不能被 tasks done 或风险措辞覆盖。
 - `20_Workflow_Lifecycle/butler-upgrade.md` 负责已部署项目到当前 butler 仓库最新版的主动升级协议（`/butler-upgrade`）；版本感知，以 `migrations/` 下的迁移配方为主干、按版本区间收集后按序幂等执行（不再现场推导差异），并随升级同步 `.claude/hooks/` 副本。
 - `20_Workflow_Lifecycle/butler-setup.md` 负责 `/butler:setup` / `$butler-setup` 的机器级安装语义：解析可信 Butler 根、亮明用户目录影响、确认后只委托 `scripts/setup.sh`，并分别汇报 Claude/Codex/Pi 结果；不替代项目 init/upgrade。
+- `00_System_Prompt/workflow-router.md` 是 Claude `/butler` 与 Codex / ChatGPT `$butler-router` 共用的语义分发真源：显式工作流绕过、一次只选一个主路由、模糊请求消歧，高风险入口只返回显式调用要求。
+- `20_Workflow_Lifecycle/iteration-intake.md` 负责把当前会话结晶为已确认决策 / 模型建议 / 开放问题，并在明确开工意图下通过 `tools/iteration-intake/` 事务领取一次迭代；只总结时零写入。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `30_Quality_Gate/correction-contract.md`（纠错收口契约）是 P4 默认常驻的底线纪律——修到真过、探测绑 AC、禁止降级修复、诚实停，无需触发、每次迭代生效。
 - `30_Quality_Gate/implementation-discipline.md`（最小实现纪律）是与纠错契约并列的 P4 常驻底线——写新码爬「最小实现阶梯」（YAGNI→复用→标准库→平台原生→已装依赖→一行→最小新代码）、有意简化用 `butler-min:` 注释标天花板 + 升级路径、修 bug 挖根因不打症状补丁；但信任边界校验 / 安全 / 无障碍 / 用户明确要求不得砍、绝不对理解问题偷懒。无需触发、每次迭代生效；随 `30_Quality_Gate/` 常规读、不单列冷启动必读。

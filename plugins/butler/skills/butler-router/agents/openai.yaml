@@ -1,0 +1,6 @@
+interface:
+  display_name: "Butler Router"
+  short_description: "Route requests to one safe Butler workflow"
+  default_prompt: "Use $butler-router to route this request to the correct Butler workflow."
+policy:
+  allow_implicit_invocation: true

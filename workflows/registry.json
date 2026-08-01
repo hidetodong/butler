@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "plugin": {
     "name": "butler",
     "root": "plugins/butler",
@@ -9,6 +9,30 @@
     "setup_entrypoint": "scripts/setup.sh",
     "marketplace_mode": "personal",
     "team_distribution": "not-configured"
+  },
+  "router": {
+    "rule_source": "Coder/00_System_Prompt/workflow-router.md",
+    "statuses": [
+      "routed",
+      "ambiguous",
+      "explicit-required",
+      "not-butler"
+    ],
+    "allow_implicit_invocation": true,
+    "claude": {
+      "name": "/butler",
+      "path": ".claude/commands/butler.md",
+      "description": "按语义把自然语言请求安全路由到一个 Butler 工作流",
+      "default_prompt": "Use /butler to route this request."
+    },
+    "codex": {
+      "name": "$butler-router",
+      "path": "plugins/butler/skills/butler-router/SKILL.md",
+      "description": "Route an unqualified natural-language Butler request to exactly one registered workflow while preserving explicit-only safety boundaries.",
+      "display_name": "Butler Router",
+      "short_description": "Route requests to one safe Butler workflow",
+      "default_prompt": "Use $butler-router to route this request to the correct Butler workflow."
+    }
   },
   "workflows": [
     {
@@ -37,6 +61,12 @@
         "display_name": "Butler Inbox",
         "short_description": "Classify and route requirement sources safely",
         "default_prompt": "Use $butler-inbox to scan and process this requirement inbox safely."
+      },
+      "routing": {
+        "priority": 60,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -74,6 +104,12 @@
         "display_name": "Butler PRD",
         "short_description": "Split, update, or filter independent PRDs",
         "default_prompt": "Use $butler-prd to process or inspect this independently identified product requirement."
+      },
+      "routing": {
+        "priority": 60,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -106,6 +142,15 @@
         "display_name": "Butler Review",
         "short_description": "Run the Butler review workflow safely",
         "default_prompt": "Use $butler-review to review the current changes against Butler criteria."
+      },
+      "routing": {
+        "priority": 50,
+        "negative_triggers": [
+          "project status",
+          "项目进度"
+        ],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -142,6 +187,16 @@
         "display_name": "Butler Milestone",
         "short_description": "Plan milestones without reserving numbers early",
         "default_prompt": "Use $butler-milestone to plan this roadmap; split independent deferred directions into separate unnumbered draft files until each starts."
+      },
+      "routing": {
+        "priority": 60,
+        "negative_triggers": [
+          "single iteration",
+          "一个迭代",
+          "领迭代"
+        ],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -174,6 +229,15 @@
         "display_name": "Butler Upgrade",
         "short_description": "Run the Butler upgrade workflow safely",
         "default_prompt": "Use $butler-upgrade to upgrade this deployed Butler project safely."
+      },
+      "routing": {
+        "priority": 80,
+        "negative_triggers": [],
+        "conflicts_with": [
+          "setup",
+          "init"
+        ],
+        "prerequisites": []
       }
     },
     {
@@ -203,6 +267,15 @@
         "display_name": "Butler Init",
         "short_description": "Deploy Butler into a new project",
         "default_prompt": "Use $butler-init to deploy Butler base infrastructure into this project."
+      },
+      "routing": {
+        "priority": 80,
+        "negative_triggers": [],
+        "conflicts_with": [
+          "setup",
+          "upgrade"
+        ],
+        "prerequisites": []
       }
     },
     {
@@ -231,6 +304,15 @@
         "display_name": "Butler Setup",
         "short_description": "Install Butler machine-wide across supported hosts",
         "default_prompt": "Use $butler-setup to install or refresh Butler machine-wide safely."
+      },
+      "routing": {
+        "priority": 90,
+        "negative_triggers": [],
+        "conflicts_with": [
+          "init",
+          "upgrade"
+        ],
+        "prerequisites": []
       }
     },
     {
@@ -263,6 +345,12 @@
         "display_name": "Butler Ideation",
         "short_description": "Run the Butler ideation workflow safely",
         "default_prompt": "Use $butler-ideation to refine this idea before execution."
+      },
+      "routing": {
+        "priority": 40,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -295,6 +383,12 @@
         "display_name": "Butler Preference",
         "short_description": "Run the Butler preference workflow safely",
         "default_prompt": "Use $butler-preference to inspect Butler preference-learning status."
+      },
+      "routing": {
+        "priority": 40,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -327,6 +421,12 @@
         "display_name": "Butler Loop",
         "short_description": "Run the convergence loop only when invoked",
         "default_prompt": "Use $butler-loop to run the explicit high-intensity convergence loop."
+      },
+      "routing": {
+        "priority": 100,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -359,6 +459,12 @@
         "display_name": "Butler Dangerous",
         "short_description": "Control unattended Butler autonomy explicitly",
         "default_prompt": "Use $butler-dangerous to inspect or explicitly control dangerous mode."
+      },
+      "routing": {
+        "priority": 100,
+        "negative_triggers": [],
+        "conflicts_with": [],
+        "prerequisites": []
       }
     },
     {
@@ -388,6 +494,54 @@
         "display_name": "Butler Progress",
         "short_description": "Show structured project progress at a glance",
         "default_prompt": "Use $butler-progress to see the current project progress."
+      },
+      "routing": {
+        "priority": 50,
+        "negative_triggers": [
+          "review changes",
+          "代码复核"
+        ],
+        "conflicts_with": [],
+        "prerequisites": []
+      }
+    },
+    {
+      "id": "iteration",
+      "rule_source": "Coder/20_Workflow_Lifecycle/iteration-intake.md",
+      "risk": "normal",
+      "allow_implicit_invocation": true,
+      "semantic_triggers": [
+        "summarize this session and start an iteration",
+        "总结当前 session 然后领一个迭代",
+        "总结这次讨论并开工",
+        "claim an iteration",
+        "领一个迭代做这些内容"
+      ],
+      "routing": {
+        "priority": 70,
+        "negative_triggers": [
+          "summary only",
+          "只总结",
+          "milestone",
+          "里程碑"
+        ],
+        "conflicts_with": [],
+        "prerequisites": []
+      },
+      "legacy_aliases": [],
+      "claude": {
+        "name": "/butler:iteration",
+        "path": ".claude/commands/butler/iteration.md",
+        "description": "总结当前会话的已确认内容，并安全领取一个可审计迭代",
+        "default_prompt": "Use /butler:iteration to summarize this session and start an auditable iteration."
+      },
+      "codex": {
+        "name": "$butler-iteration",
+        "path": "plugins/butler/skills/butler-iteration/SKILL.md",
+        "description": "Summarize the durable decisions from the current session and start one auditable Butler iteration. Use when the user asks to recap the discussion and claim or start an iteration for it; keep summary-only requests read-only.",
+        "display_name": "Butler Iteration",
+        "short_description": "Turn this session into an auditable iteration",
+        "default_prompt": "Use $butler-iteration to summarize this session and start an auditable iteration."
       }
     }
   ]

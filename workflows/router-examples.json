@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "examples": [
+    {"request": "处理 origin 里的需求收件箱", "expected_status": "routed", "expected_primary": "inbox"},
+    {"request": "把这份产品需求文档拆成独立 PRD", "expected_status": "routed", "expected_primary": "prd"},
+    {"request": "复核当前改动是否满足验收项", "expected_status": "routed", "expected_primary": "review"},
+    {"request": "把这个 roadmap 拆成多个迭代的里程碑", "expected_status": "routed", "expected_primary": "milestone"},
+    {"request": "升级这个已经部署 Butler 的项目", "expected_status": "routed", "expected_primary": "upgrade"},
+    {"request": "在这个新项目初始化 Butler", "expected_status": "routed", "expected_primary": "init"},
+    {"request": "刷新机器上的 Butler 插件和全局命令", "expected_status": "routed", "expected_primary": "setup"},
+    {"request": "这个产品想法还没想清楚，先一起脑暴", "expected_status": "routed", "expected_primary": "ideation"},
+    {"request": "查看 Butler 偏好学习是否开启", "expected_status": "routed", "expected_primary": "preference"},
+    {"request": "总结当前 session 的确认内容，然后领一个迭代做", "expected_status": "routed", "expected_primary": "iteration"},
+    {"request": "现在项目进度怎么样", "expected_status": "routed", "expected_primary": "progress"},
+    {"request": "让 Butler 自动死磕到通过", "expected_status": "explicit-required", "expected_primary": "loop"},
+    {"request": "打开 Butler 无人值守危险模式", "expected_status": "explicit-required", "expected_primary": "dangerous"},
+    {"request": "只总结当前会话，不要创建或修改文件", "expected_status": "not-butler", "expected_primary": null},
+    {"request": "看看这个", "expected_status": "ambiguous", "expected_primary": null},
+    {"request": "明天上海天气如何", "expected_status": "not-butler", "expected_primary": null}
+  ]
+}

@@ -8,8 +8,9 @@
 
 - **版本**：v3.3.0；已聚合发布 MILE-0013 项目级配置结构化（ITER-0093～ITER-0095）。
 - **三宿主**：Claude Code / Codex / Pi 三宿主适配全部落地——Pi 由 TypeScript 扩展（`plugins/butler-pi/`）拦截 write/edit 调 Python 门禁，setup.sh 一键安装。
-- **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与 12 工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
-- **双宿主治理**：49 个入口元数据投影由 registry 生成/校验；个人 Butler plugin 的仓内真源已刷新，team/public distribution 明确未配置。
+- **工程化加固**：安全安装、证据/状态审计、固定 CI 合同、可执行升级器与 schema v2 Router + 13 业务工作流 registry 全部闭环；本地 Darwin/arm64 完整矩阵有机器证据。
+- **双宿主治理**：57 个入口元数据投影由 registry 生成/校验；Claude 根命令与命名空间双软链、Codex Router / iteration Skill 已入安装链，个人 plugin 的仓内真源已刷新，team/public distribution 明确未配置。
+- **语义入口**：共享 Router 和会话转迭代入口已交付；真实 Claude `/butler` UI 共存与 ChatGPT App `@Butler` 隐式注入仍待安装后人测，不宣称平台端到端已证。
 - **开源入口**：ITER-0098 已关闭，根 README、Apache-2.0 `LICENSE`、`CONTRIBUTING.md` 与 `SECURITY.md` 已形成发现、上手、协作和安全报告的公开入口基线。
 - **升级器摘要口径**：ITER-0099 已把源模板与目标项目的 hook 文件过滤收敛为单一定义，历史白名单按实际部署文件集重算；升级器 22 项与完整 CI 通过。
 - **远端保护**：workflow 尚未推送；required API 返回 403，当前私有仓库需升级 GitHub Pro 或改公开，状态为 `pending external capability`。

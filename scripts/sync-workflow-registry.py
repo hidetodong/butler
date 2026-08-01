@@ -12,11 +12,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "preference", "loop", "dangerous", "progress"}
+EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "preference", "loop", "dangerous", "progress", "iteration"}
 HIGH_RISK = {"loop", "dangerous"}
-TOP_KEYS = {"schema_version", "plugin", "workflows"}
+TOP_KEYS = {"schema_version", "plugin", "router", "workflows"}
 PLUGIN_KEYS = {"name", "root", "manifest", "hooks", "personal_installer", "setup_entrypoint", "marketplace_mode", "team_distribution"}
-WORKFLOW_KEYS = {"id", "rule_source", "risk", "allow_implicit_invocation", "semantic_triggers", "legacy_aliases", "claude", "codex"}
+ROUTER_KEYS = {"rule_source", "statuses", "allow_implicit_invocation", "claude", "codex"}
+WORKFLOW_KEYS = {"id", "rule_source", "risk", "allow_implicit_invocation", "semantic_triggers", "routing", "legacy_aliases", "claude", "codex"}
+ROUTING_KEYS = {"priority", "negative_triggers", "conflicts_with", "prerequisites"}
 CLAUDE_KEYS = {"name", "path", "description", "default_prompt"}
 CODEX_KEYS = {"name", "path", "description", "display_name", "short_description", "default_prompt"}
 ALIAS_KEYS = {"name", "status"}
@@ -72,8 +74,8 @@ def nonempty(value: Any, label: str) -> str:
 
 def validate_registry(data: Any, root: Path) -> None:
     exact_keys(data, TOP_KEYS, "registry")
-    if data["schema_version"] != 1:
-        raise RegistryError("schema_version must be 1")
+    if data["schema_version"] != 2:
+        raise RegistryError("schema_version must be 2")
     plugin = exact_keys(data["plugin"], PLUGIN_KEYS, "plugin")
     expected_plugin = {
         "name": "butler", "root": "plugins/butler",
@@ -90,9 +92,31 @@ def validate_registry(data: Any, root: Path) -> None:
         if not path.exists():
             raise RegistryError(f"registered plugin path does not exist: {plugin[field]}")
 
+    router = exact_keys(data["router"], ROUTER_KEYS, "router")
+    if router["statuses"] != ["routed", "ambiguous", "explicit-required", "not-butler"]:
+        raise RegistryError("router statuses must match the shared contract")
+    if router["allow_implicit_invocation"] is not True:
+        raise RegistryError("router must allow implicit invocation")
+    rule = safe_path(root, nonempty(router["rule_source"], "router.rule_source"))
+    if not rule.is_file():
+        raise RegistryError("router rule source missing")
+    router_claude = exact_keys(router["claude"], CLAUDE_KEYS, "router.claude")
+    router_codex = exact_keys(router["codex"], CODEX_KEYS, "router.codex")
+    if router_claude["name"] != "/butler" or router_claude["path"] != ".claude/commands/butler.md":
+        raise RegistryError("router Claude projection must be /butler")
+    if router_codex["name"] != "$butler-router" or router_codex["path"] != "plugins/butler/skills/butler-router/SKILL.md":
+        raise RegistryError("router Codex projection must be $butler-router")
+    for host, fields in (("claude", router_claude), ("codex", router_codex)):
+        path = safe_path(root, fields["path"])
+        if not path.is_file():
+            raise RegistryError(f"router {host} entry missing: {fields['path']}")
+        for key, value in fields.items():
+            if key != "path":
+                nonempty(value, f"router.{host}.{key}")
+
     workflows = data["workflows"]
-    if not isinstance(workflows, list) or len(workflows) != 12:
-        raise RegistryError("registry must contain exactly 12 workflows")
+    if not isinstance(workflows, list) or len(workflows) != 13:
+        raise RegistryError("registry must contain exactly 13 business workflows")
     ids: set[str] = set()
     names: set[str] = set()
     aliases: set[str] = set()
@@ -117,6 +141,15 @@ def validate_registry(data: Any, root: Path) -> None:
         triggers = item["semantic_triggers"]
         if not isinstance(triggers, list) or not triggers or any(not isinstance(x, str) or not x for x in triggers):
             raise RegistryError(f"semantic_triggers must be non-empty strings: {workflow_id}")
+        routing = exact_keys(item["routing"], ROUTING_KEYS, f"{workflow_id}.routing")
+        if not isinstance(routing["priority"], int) or isinstance(routing["priority"], bool) or not 0 <= routing["priority"] <= 100:
+            raise RegistryError(f"routing priority must be an integer from 0 to 100: {workflow_id}")
+        for field in ("negative_triggers", "conflicts_with", "prerequisites"):
+            values = routing[field]
+            if not isinstance(values, list) or any(not isinstance(value, str) or not value for value in values) or len(values) != len(set(values)):
+                raise RegistryError(f"routing {field} must contain unique non-empty strings: {workflow_id}")
+        if workflow_id in routing["conflicts_with"] or workflow_id in routing["prerequisites"]:
+            raise RegistryError(f"workflow cannot route to itself: {workflow_id}")
         alias_items = item["legacy_aliases"]
         if not isinstance(alias_items, list):
             raise RegistryError(f"legacy_aliases must be a list: {workflow_id}")
@@ -146,11 +179,35 @@ def validate_registry(data: Any, root: Path) -> None:
         names.update({claude["name"], codex["name"]})
     if ids != EXPECTED_IDS:
         raise RegistryError(f"workflow set mismatch: missing={sorted(EXPECTED_IDS-ids)}, extra={sorted(ids-EXPECTED_IDS)}")
+    by_id = {item["id"]: item for item in workflows}
+    for workflow_id, item in by_id.items():
+        routing = item["routing"]
+        for related in routing["conflicts_with"] + routing["prerequisites"]:
+            if related not in ids:
+                raise RegistryError(f"unknown routing workflow id: {workflow_id} -> {related}")
+        for conflict in routing["conflicts_with"]:
+            if workflow_id not in by_id[conflict]["routing"]["conflicts_with"]:
+                raise RegistryError(f"routing conflict must be symmetric: {workflow_id} <-> {conflict}")
+    visiting: set[str] = set()
+    visited: set[str] = set()
+    def visit(workflow_id: str) -> None:
+        if workflow_id in visiting:
+            raise RegistryError(f"routing prerequisite cycle contains: {workflow_id}")
+        if workflow_id in visited:
+            return
+        visiting.add(workflow_id)
+        for prerequisite in by_id[workflow_id]["routing"]["prerequisites"]:
+            visit(prerequisite)
+        visiting.remove(workflow_id)
+        visited.add(workflow_id)
+    for workflow_id in ids:
+        visit(workflow_id)
     if "/loop" not in aliases:
         raise RegistryError("legacy /loop harness collision must stay registered")
     validate_repository_sets(data, root)
     validate_plugin_contract(data, root)
     validate_human_doc_routes(root)
+    validate_router_examples(root, data)
 
 
 def validate_repository_sets(data: dict[str, Any], root: Path) -> None:
@@ -158,11 +215,11 @@ def validate_repository_sets(data: dict[str, Any], root: Path) -> None:
     actual_commands = {path.relative_to(root).as_posix() for path in (root / ".claude/commands/butler").glob("*.md")}
     if actual_commands != expected_commands:
         raise RegistryError(f"Claude workflow set drift: missing={sorted(expected_commands-actual_commands)}, extra={sorted(actual_commands-expected_commands)}")
-    expected_skills = {item["codex"]["path"] for item in data["workflows"]}
+    expected_skills = {item["codex"]["path"] for item in data["workflows"]} | {data["router"]["codex"]["path"]}
     actual_skills = {path.relative_to(root).as_posix() for path in (root / "plugins/butler/skills").glob("*/SKILL.md")}
     if actual_skills != expected_skills:
         raise RegistryError(f"Codex workflow set drift: missing={sorted(expected_skills-actual_skills)}, extra={sorted(actual_skills-expected_skills)}")
-    expected_links = {item["codex"]["name"].removeprefix("$") for item in data["workflows"]}
+    expected_links = {item["codex"]["name"].removeprefix("$") for item in data["workflows"]} | {data["router"]["codex"]["name"].removeprefix("$")}
     skills_dir = root / ".agents/skills"
     actual_links = {path.name for path in skills_dir.iterdir() if path.name.startswith("butler-")}
     if actual_links != expected_links:
@@ -224,6 +281,34 @@ def validate_human_doc_routes(root: Path) -> None:
             raise RegistryError(f"human workflow guide must route to generated registry table: {relative}")
 
 
+def validate_router_examples(root: Path, data: dict[str, Any]) -> None:
+    path = root / "workflows/router-examples.json"
+    try:
+        fixture = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise RegistryError(f"router examples are invalid: {error}") from error
+    exact_keys(fixture, {"schema_version", "examples"}, "router examples")
+    if fixture["schema_version"] != 1 or not isinstance(fixture["examples"], list):
+        raise RegistryError("router examples schema mismatch")
+    statuses = set(data["router"]["statuses"])
+    ids = {item["id"] for item in data["workflows"]}
+    covered: set[str] = set()
+    for index, example in enumerate(fixture["examples"]):
+        item = exact_keys(example, {"request", "expected_status", "expected_primary"}, f"router example[{index}]")
+        nonempty(item["request"], f"router example[{index}].request")
+        if item["expected_status"] not in statuses:
+            raise RegistryError(f"unknown router example status: {item['expected_status']}")
+        primary = item["expected_primary"]
+        if primary is not None and primary not in ids:
+            raise RegistryError(f"unknown router example workflow: {primary}")
+        if item["expected_status"] in {"routed", "explicit-required"} and primary is None:
+            raise RegistryError("routed router example must name a primary workflow")
+        if primary:
+            covered.add(primary)
+    if covered != ids:
+        raise RegistryError(f"router examples must cover every workflow: missing={sorted(ids-covered)}")
+
+
 def rewrite_frontmatter(path: Path, updates: dict[str, str]) -> bytes:
     text = path.read_text(encoding="utf-8")
     lines = text.splitlines(keepends=True)
@@ -270,7 +355,7 @@ def docs_table(data: dict[str, Any]) -> bytes:
         )
     text = f"""# Butler 双宿主工作流注册表
 
-> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；本页是唯一工作流人读能力表。
+> 本页由 `workflows/registry.json` 通过 `scripts/sync-workflow-registry.py --write` 生成，请勿手改。机器 registry 是元数据真源；`/butler` / `$butler-router` 是共享语义入口，不计入下方业务工作流候选。
 
 | ID | Claude Code | Codex | 风险 | 隐式调用 | 语义触发 | 旧名 / 兼容 | 规则真源 |
 |---|---|---|---|---|---|---|---|
@@ -279,15 +364,15 @@ def docs_table(data: dict[str, Any]) -> bytes:
 ## 安全与兼容
 
 - `loop` / `dangerous` 是 high risk，Codex `allow_implicit_invocation=false`；只能由用户显式点名 Butler 模式。旧 `/loop` 与 Claude harness 自带循环撞名，绝不生成旧实体命令。
-- 其余十项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
+- 其余十一项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
 - legacy alias 是识别/弃用元数据，不代表仓库重新创建同名入口。
 
 ## 发现与分发状态
 
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
-| Claude 全局命令 | available via setup symlink | `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 12 个相对软链，实体在 `plugins/butler/skills/` |
+| Claude 全局命令 | available via setup symlinks | `.claude/commands/butler.md` 与 `.claude/commands/butler/` → `scripts/setup.sh` |
+| Codex repo discovery | available | `.agents/skills/` 的 Router + 13 个业务 Skill 相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |
@@ -297,7 +382,7 @@ def docs_table(data: dict[str, Any]) -> bytes:
 
 def build_projections(data: dict[str, Any], root: Path) -> list[Projection]:
     projections: list[Projection] = []
-    for item in data["workflows"]:
+    for item in [data["router"], *data["workflows"]]:
         claude = root / item["claude"]["path"]
         skill = root / item["codex"]["path"]
         projections.append(Projection(claude, "file", rewrite_frontmatter(claude, {"description": item["claude"]["description"]})))

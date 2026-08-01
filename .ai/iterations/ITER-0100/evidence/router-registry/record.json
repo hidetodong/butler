@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "router-registry",
+  "iteration": "ITER-0100",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T05:49:46.210Z",
+  "finished_at": "2026-08-01T05:49:46.868Z",
+  "duration_ms": 658,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 289,
+    "captured_bytes": 289,
+    "sha256": "da89d67c8f800029f2c1f5d27173f94e07553f14db65874a0fd53bef22c32f12",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1897,
+    "captured_bytes": 1897,
+    "sha256": "b3357e704bff7596e51a7960c4d485bebb0a89ea70a4be6ff790e7204e0b5785",
+    "truncated": false
+  }
+}

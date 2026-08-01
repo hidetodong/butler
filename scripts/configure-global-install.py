@@ -72,6 +72,12 @@ def _butler_root_for_command_target(target: Path) -> Path | None:
     ):
         root = target.parent.parent.parent
     elif (
+        target.name == "butler.md"
+        and target.parent.name == "commands"
+        and target.parent.parent.name == ".claude"
+    ):
+        root = target.parent.parent.parent
+    elif (
         target.name == "butler-prd.md"
         and target.parent.name == "commands"
         and target.parent.parent.name == ".claude"
@@ -270,6 +276,25 @@ def _plan_command_link(plan: InstallPlan, home: Path, butler_root: Path) -> None
     )
 
 
+def _plan_router_link(plan: InstallPlan, home: Path, butler_root: Path) -> None:
+    source = butler_root / ".claude" / "commands" / "butler.md"
+    if not source.is_file():
+        raise ConfigError(f"Butler Router 命令源不存在：{source}")
+    destination = home / ".claude" / "commands" / "butler.md"
+    if not _lexists(destination):
+        plan.link_writes.append(LinkWrite(destination, source, None, f"[软链] Butler Router 根命令：{destination}"))
+        return
+    if not destination.is_symlink():
+        raise ConfigError(f"Claude Router 命令目标已存在且不是软链：{destination}。Butler 不会覆盖用户文件。")
+    target = _normalized_link_target(destination)
+    if target == source:
+        plan.notes.append(f"[保持] Butler Router 命令软链已是最新：{destination}")
+        return
+    if _butler_root_for_command_target(target) is None:
+        raise ConfigError(f"Claude Router 命令软链不属于可识别的 Butler checkout：{destination} -> {os.readlink(destination)}。")
+    plan.link_writes.append(LinkWrite(destination, source, os.readlink(destination), f"[更新] Butler Router 命令软链迁移到当前仓库：{destination}"))
+
+
 def plan_global_install(home: Path, butler_root: Path) -> InstallPlan:
     home = home.expanduser().resolve()
     butler_root = butler_root.expanduser().resolve()
@@ -284,6 +309,7 @@ def plan_global_install(home: Path, butler_root: Path) -> InstallPlan:
     _plan_claude(plan, home, butler_root)
     _plan_legacy_flat_link(plan, home)
     _plan_command_link(plan, home, butler_root)
+    _plan_router_link(plan, home, butler_root)
     return plan
 
 

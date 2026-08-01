@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "global-install",
+  "iteration": "ITER-0100",
+  "ac_ids": [
+    "AC3",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-configure-global-install.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T05:49:53.374Z",
+  "finished_at": "2026-08-01T05:49:53.447Z",
+  "duration_ms": 73,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 116,
+    "captured_bytes": 116,
+    "sha256": "5bb8b40040770827862692d0ce2cfa7c8ec3ab7b70397aac34345606fd8842c6",
+    "truncated": false
+  }
+}

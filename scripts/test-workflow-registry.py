@@ -41,10 +41,14 @@ class WorkflowRegistryTests(unittest.TestCase):
         data = json.loads((ROOT / "workflows/registry.json").read_text(encoding="utf-8"))
         copy_paths = {
             "workflows/registry.json", "README.md", "HUMAN_GUIDE.md", "Coder/README.md",
+            "workflows/router-examples.json",
             "docs/codex-compatibility.md", "docs/workflows.md", "scripts/setup.sh",
             "scripts/install-codex-plugin.sh", "plugins/butler/.codex-plugin/plugin.json",
             "plugins/butler/hooks/hooks.json",
         }
+        router = data["router"]
+        copy_paths.update({router["rule_source"], router["claude"]["path"], router["codex"]["path"]})
+        copy_paths.add(str(Path(router["codex"]["path"]).parent / "agents/openai.yaml"))
         for item in data["workflows"]:
             copy_paths.update({item["rule_source"], item["claude"]["path"], item["codex"]["path"]})
             copy_paths.add(str(Path(item["codex"]["path"]).parent / "agents/openai.yaml"))
@@ -55,7 +59,7 @@ class WorkflowRegistryTests(unittest.TestCase):
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
-        for item in data["workflows"]:
+        for item in [router, *data["workflows"]]:
             name = item["codex"]["name"].removeprefix("$")
             link = self.root / ".agents/skills" / name
             link.parent.mkdir(parents=True, exist_ok=True)
@@ -69,11 +73,33 @@ class WorkflowRegistryTests(unittest.TestCase):
 
     def test_registry_is_exact_and_high_risk_is_explicit_only(self) -> None:
         data = registry.read_registry(self.root)
+        self.assertEqual(2, data["schema_version"])
+        self.assertEqual("/butler", data["router"]["claude"]["name"])
+        self.assertEqual("$butler-router", data["router"]["codex"]["name"])
         self.assertEqual(registry.EXPECTED_IDS, {item["id"] for item in data["workflows"]})
         policies = {item["id"]: item["allow_implicit_invocation"] for item in data["workflows"]}
         self.assertFalse(policies["loop"])
         self.assertFalse(policies["dangerous"])
         self.assertTrue(all(policies[name] for name in registry.EXPECTED_IDS - registry.HIGH_RISK))
+
+    def test_routing_metadata_rejects_unknown_asymmetric_self_and_cycles(self) -> None:
+        cases = []
+        unknown = self.read(); unknown["workflows"][0]["routing"]["prerequisites"] = ["ghost"]; cases.append(unknown)
+        asymmetric = self.read(); asymmetric["workflows"][0]["routing"]["conflicts_with"] = ["prd"]; cases.append(asymmetric)
+        self_route = self.read(); self_route["workflows"][0]["routing"]["prerequisites"] = ["inbox"]; cases.append(self_route)
+        cycle = self.read()
+        cycle["workflows"][0]["routing"]["prerequisites"] = ["prd"]
+        cycle["workflows"][1]["routing"]["prerequisites"] = ["inbox"]
+        cases.append(cycle)
+        for case in cases:
+            with self.assertRaises(registry.RegistryError):
+                registry.validate_registry(case, self.root)
+
+    def test_shared_router_examples_cover_all_workflows_and_statuses(self) -> None:
+        data = registry.read_registry(self.root)
+        examples = json.loads((self.root / "workflows/router-examples.json").read_text())["examples"]
+        self.assertEqual(registry.EXPECTED_IDS, {item["expected_primary"] for item in examples if item["expected_primary"]})
+        self.assertEqual(set(data["router"]["statuses"]), {item["expected_status"] for item in examples})
 
     def test_setup_is_a_thin_machine_install_router(self) -> None:
         data = registry.read_registry(self.root)

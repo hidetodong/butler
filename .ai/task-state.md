@@ -3,14 +3,13 @@
 - 当前迭代：无 active
 - 当前里程碑：无 active
 - 阶段：Iteration Closed
-- 状态：ITER-0099 已完成编号迁移、升级器 hook 摘要口径修复、证据归档、双格式交付和知识折叠。
-- 已完成：AC1–AC8；升级器 22 项；六项目只读矩阵；butler-radar plan；完整 CI；Goal eligible；五件套与 evidence 归档。
-- 下一动作：提交 ITER-0099 收口变更；是否发布新版本由后续独立决定。
-- 已知风险：旧证据属于冲突编号 ITER-0096，不可改号复用；白名单无法穷尽其他机器上的历史部署裁剪变体。
+- 状态：ITER-0100 已完成实现、证据归档、交付与台账收口；真实 Claude / ChatGPT App 发现交互保留为非阻断弱验证。
+- 已完成：共享 Router、Registry v2、Claude/Codex 薄入口、iteration-intake 事务工具、双软链安装、共享样例、专项测试、官方 Skill 校验和固定工具链完整 CI。
+- 下一动作：如需在本机立即启用新入口，用户显式运行 Butler setup / refresh；否则交付即止。
+- 已知风险：Claude `/butler` 与现有命名空间需实测；ChatGPT 平台发现行为不可全由仓内测试保证；模糊语义必须 fail-safe 消歧；会话结晶不得把模型建议冒充用户决策或在已有 active 时再开新号。
 - 授权上限：`/Users/xingzidong/Documents/Developer/projects/butler`
-- P4 回滚锚点：权威归档为 `.ai/iterations/ITER-0099/`；pull 前恢复点仍在 `stash@{0}`，远端基线为 `aa708e2`。
+- P4 回滚锚点：进入 P4 前的用户改动基线已由 `git status --short` 记录；仅修改 ITER-0100 授权范围内文件，不覆盖其他工作树内容。
 
 # Goal Calibration
 
-- CAL-001（旧 ITER-0096 证据不可改号复用）已通过 ITER-0099 全量重跑解决。
-- CAL-002（矩阵诊断首次动态导入失败）已通过修正脚本并以新 Evidence ID 重跑解决。
+- 当前无未闭合运行时信号（N/A）。
