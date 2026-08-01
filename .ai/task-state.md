@@ -3,12 +3,11 @@
 - 当前迭代：无 active
 - 当前里程碑：无 active
 - 阶段：Iteration Closed
-- 状态：ITER-0100 已完成实现、证据归档、交付与台账收口；真实 Claude / ChatGPT App 发现交互保留为非阻断弱验证。
-- 已完成：共享 Router、Registry v2、Claude/Codex 薄入口、iteration-intake 事务工具、双软链安装、共享样例、专项测试、官方 Skill 校验和固定工具链完整 CI。
-- 下一动作：如需在本机立即启用新入口，用户显式运行 Butler setup / refresh；否则交付即止。
-- 已知风险：Claude `/butler` 与现有命名空间需实测；ChatGPT 平台发现行为不可全由仓内测试保证；模糊语义必须 fail-safe 消歧；会话结晶不得把模型建议冒充用户决策或在已有 active 时再开新号。
+- 状态：ITER-0101 已完成实现、证据归档、交付与台账收口；全局 setup 整体成功。
+- 已完成：安装器 runtime 回退、两个 UTF-8 变量边界、iteration-intake 状态结构回归、专项与完整 CI、真实三宿主刷新。
+- 下一动作：发布聚合 ITER-0096–ITER-0101 的 v3.4.0；新开 Codex 会话加载已刷新 plugin。
+- 已知风险：本轮无剩余已知风险；当前已打开的 Codex 会话不会热替换 Skill。
 - 授权上限：`/Users/xingzidong/Documents/Developer/projects/butler`
-- P4 回滚锚点：进入 P4 前的用户改动基线已由 `git status --short` 记录；仅修改 ITER-0100 授权范围内文件，不覆盖其他工作树内容。
 
 # Goal Calibration
 

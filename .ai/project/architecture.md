@@ -30,7 +30,7 @@
 - `.github/workflows/ci.yml` + `scripts/verify-ci.sh` — PR/main/release tag 的 Ubuntu/macOS 编排层与唯一 local/CI 执行入口；Python/依赖由 `.python-version`、`pyproject.toml`、`uv.lock` 固定，workflow 不复制测试清单。
 
 - `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
-- `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置、`butler.md` 根命令和 `butler/` 命名空间双软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声。
+- `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置、`butler.md` 根命令和 `butler/` 命名空间双软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声，所有中文后缀旁的变量都用显式边界保留真实退出码。
 - `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `iteration-intake/`（会话结晶后的零写 plan、事务开迭代与回滚）、`project-config/`（严格项目配置 schema、原子读写、legacy 兼容投影与纯迁移计划）、`butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（固定的官方 plugin/skill validators）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/manifest.json`（可执行版本/action 链）+ `migrations/v*.md`（人读配方）、`deliveries/`（交付总结存档）。
 

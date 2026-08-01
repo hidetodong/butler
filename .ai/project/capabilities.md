@@ -44,7 +44,7 @@
 
 - `plugins/butler/` 可安装 12 个 skills：inbox/prd/review/milestone/upgrade/init/setup/ideation/preference/loop/dangerous/progress；`.agents/skills/` 软链让仓内直接发现同一真源。
 - `/butler:setup` / `$butler-setup` 在确认机器级写入后只委托 `scripts/setup.sh`，分别报告 Claude/Codex/Pi 安装、跳过或部分失败；首次空白机器 bootstrap 仍从仓库脚本进入。
-- `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
+- `scripts/install-codex-plugin.sh` 安装/刷新个人 plugin：优先用 uv 运行官方 validator，无 uv 时只复用能导入 PyYAML 的仓库 `.venv` 或系统 Python，全部不可用则明确失败；`scripts/verify-codex-workflows.sh` 做结构回归。loop/dangerous 禁隐式调用。
 - `plugins/butler/hooks/hooks.json` 默认注册 PreToolUse/PostToolUse；共享 dispatcher 已能解析 canonical `apply_patch` 的 add/update/delete/move、多文件与多 hunk，并对每个 target 复用既有门禁/提醒规则。`scripts/verify-codex-hooks.sh` 做包装器和配置回归。
 - Claude/Codex 写入适配器按每个目标的真实 Butler/Git 根重建 Context：项目内继续跑该项目门禁，无法归属项目的真实路径退出 Butler 判定并交宿主权限，缺失/坏输入仍 fail-closed；一个 Codex patch 可跨多个项目根逐根校验，任一拒绝即整次拒绝。
 - 真实 Codex 已验证 phase deny、protected-path deny、allow 和 advisory 上下文注入。边界只覆盖送入 hook 的工具事件，不替代 sandbox，也不保证覆盖 shell/MCP。

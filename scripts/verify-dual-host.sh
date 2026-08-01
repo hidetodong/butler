@@ -4,6 +4,7 @@ export LC_ALL=C
 export LANG=C
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PLUGIN_CREATOR_ROOT="${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/butler-dual-host.XXXXXX")"
 trap 'rm -rf "$WORK"' EXIT HUP INT TERM
 
@@ -61,18 +62,21 @@ WITH_CODEX_HOME="$WORK/with-codex-home"
 BIN="$WORK/bin"
 mkdir -p "$BIN"
 printf '#!/bin/sh\nexit 0\n' > "$BIN/fake-codex"
+printf '#!/bin/sh\nexit 0\n' > "$BIN/fake-pi"
 printf '#!/bin/sh\nprintf "%%s" "$BUTLER_PATH" > "$HOME/plugin-installed"\n' > "$BIN/fake-installer"
-chmod +x "$BIN/fake-codex" "$BIN/fake-installer"
-run_setup "$WITH_CODEX_HOME" env PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/fake-installer" > "$WORK/with-codex.log"
+chmod +x "$BIN/fake-codex" "$BIN/fake-pi" "$BIN/fake-installer"
+run_setup "$WITH_CODEX_HOME" env LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/fake-installer" BUTLER_PI_COMMAND=fake-pi > "$WORK/with-codex.log"
 grep -q 'Codex Butler plugin 已安装/刷新' "$WORK/with-codex.log"
 [[ "$(cat "$WITH_CODEX_HOME/plugin-installed")" == "$ROOT" ]]
+[[ -L "$WITH_CODEX_HOME/.pi/agent/extensions/butler-pi" ]]
+grep -q 'Pi Butler 扩展已安装到' "$WORK/with-codex.log"
 
 # Codex 是独立组件：它失败时保留已完成的安全配置，但不得输出总成功。
 FAILED_CODEX_HOME="$WORK/failed-codex-home"
 printf '#!/bin/sh\nexit 7\n' > "$BIN/failing-installer"
 chmod +x "$BIN/failing-installer"
 set +e
-run_setup "$FAILED_CODEX_HOME" env PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/failing-installer" > "$WORK/failed-codex.log" 2>&1
+run_setup "$FAILED_CODEX_HOME" env LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/failing-installer" > "$WORK/failed-codex.log" 2>&1
 failed_codex_rc=$?
 set -e
 [[ "$failed_codex_rc" -eq 7 ]]
@@ -82,6 +86,32 @@ grep -q '部分完成.*Codex plugin 安装失败' "$WORK/failed-codex.log"
 [[ -L "$FAILED_CODEX_HOME/.claude/commands/butler" ]]
 [[ -L "$FAILED_CODEX_HOME/.claude/commands/butler.md" ]]
 [[ "$(grep -c '^export BUTLER_PATH=' "$FAILED_CODEX_HOME/.zshrc")" -eq 1 ]]
+
+# 无全局 uv/PyYAML 时，installer 复用仓库锁定 venv；所有 validator runtime 都不可用则明确失败。
+NO_UV_BIN="$WORK/no-uv-bin"
+mkdir -p "$NO_UV_BIN"
+for command_name in bash cp dirname mkdir rm; do
+  ln -s "$(command -v "$command_name")" "$NO_UV_BIN/$command_name"
+done
+ln -s "$(command -v python3)" "$NO_UV_BIN/python3"
+VALIDATOR_HOME="$WORK/validator-home"
+mkdir -p "$VALIDATOR_HOME"
+HOME="$VALIDATOR_HOME" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
+  bash "$ROOT/scripts/install-codex-plugin.sh" --no-add > "$WORK/validator-venv.log"
+grep -q 'Plugin validation passed' "$WORK/validator-venv.log"
+grep -q 'install skipped' "$WORK/validator-venv.log"
+
+rm "$NO_UV_BIN/python3"
+printf '%s\n' '#!/bin/sh' 'if [ "$1" = "-c" ] && [ "$2" = "import yaml" ]; then exit 1; fi' 'exec "$BUTLER_TEST_REAL_PYTHON" "$@"' > "$NO_UV_BIN/python3"
+chmod +x "$NO_UV_BIN/python3"
+set +e
+HOME="$WORK/validator-missing-home" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
+  BUTLER_PLUGIN_VALIDATOR_PYTHON="$WORK/missing-python" BUTLER_TEST_REAL_PYTHON="$(command -v python3)" \
+  bash "$ROOT/scripts/install-codex-plugin.sh" --no-add > "$WORK/validator-missing.log" 2>&1
+validator_missing_rc=$?
+set -e
+[[ "$validator_missing_rc" -eq 2 ]]
+grep -q 'requires uv or a Python runtime with PyYAML' "$WORK/validator-missing.log"
 
 # 两份入口通过同一 renderer 生成，重复运行不漂移。
 TARGET="$WORK/target"

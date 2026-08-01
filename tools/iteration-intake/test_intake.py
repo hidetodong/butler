@@ -75,6 +75,7 @@ class IntakeTests(unittest.TestCase):
         self.assertIn("已确认：Support Claude and Codex", concept)
         self.assertIn("建议（未确认）：Use registry v2", concept)
         self.assertNotIn("transcript", concept.lower())
+        self.assertIn("# Goal Calibration", (self.root / ".ai/task-state.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

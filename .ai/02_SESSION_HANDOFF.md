@@ -3,7 +3,7 @@
 ## 任务断点
 
 - 迭代：无 active；里程碑：无 active；阶段：Iteration Closed。
-- 状态：ITER-0100 已完成实现、证据归档、交付与台账收口；真实 Claude / ChatGPT App 发现交互保留为非阻断弱验证。
+- 状态：ITER-0101 已完成实现、证据归档、交付与台账收口；全局 setup 整体成功。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：如需在本机立即启用新入口，用户显式运行 Butler setup / refresh；否则交付即止。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：发布聚合 ITER-0096–ITER-0101 的 v3.4.0；新开 Codex 会话加载已刷新 plugin。
 
 ## 状态指针
 

@@ -189,7 +189,7 @@ def apply(project_root: Path, spec: dict[str, Any], *, after_write: Callable[[],
             update_milestone(ai, proposed["milestone"], spec["milestone_route"], identity)
         render_artifacts(ai, identity, spec)
         (ai / "task-state.md").write_text(
-            f"# Task State\n\n- 当前迭代：{identity}\n- 当前里程碑：{proposed['milestone'] or '无 active'}\n- 阶段：P1 Analysis\n- 状态：已从会话结晶需求，等待确认 Current Understanding 与 Scope。\n- 下一动作：审阅 `.ai/CONCEPT.md`，确认后进入 P2。\n",
+            f"# Task State\n\n- 当前迭代：{identity}\n- 当前里程碑：{proposed['milestone'] or '无 active'}\n- 阶段：P1 Analysis\n- 状态：已从会话结晶需求，等待确认 Current Understanding 与 Scope。\n- 下一动作：审阅 `.ai/CONCEPT.md`，确认后进入 P2。\n\n# Goal Calibration\n\n- 当前无未闭合运行时信号（N/A）。\n",
             encoding="utf-8",
         )
         if after_write:

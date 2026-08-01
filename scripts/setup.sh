@@ -36,7 +36,7 @@ if command -v "$CODEX_COMMAND" >/dev/null 2>&1; then
       echo "[安装] Codex Butler plugin 已安装/刷新（请新开会话；首次 hook 启用须审阅并信任）"
     else
       rc=$?
-      echo "[部分完成] Claude 与 shell 配置已完成，但 Codex plugin 安装失败（exit $rc）。" >&2
+      echo "[部分完成] Claude 与 shell 配置已完成，但 Codex plugin 安装失败（exit ${rc}）。" >&2
       echo "[错误] 修复上方 Codex 错误后重跑 setup.sh；安全配置会幂等保持。" >&2
       exit "$rc"
     fi
@@ -61,7 +61,7 @@ if command -v "$PI_COMMAND" >/dev/null 2>&1; then
     rm -rf "$PI_EXTENSION_LINK"
   fi
   ln -sfn "$PI_EXTENSION_SRC" "$PI_EXTENSION_LINK"
-  echo "[安装] Pi Butler 扩展已安装到 $PI_EXTENSION_LINK（请新开 Pi 会话生效）"
+  echo "[安装] Pi Butler 扩展已安装到 ${PI_EXTENSION_LINK}（请新开 Pi 会话生效）"
 else
   echo "[跳过] 未找到 Pi CLI；Claude Code 与 Codex 安装已完成。安装 Pi 后重跑 setup.sh 即可补装扩展。"
 fi

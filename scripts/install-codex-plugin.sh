@@ -7,6 +7,7 @@ personal_root="$HOME/.agents/plugins"
 marketplace="$personal_root/marketplace.json"
 target_parent="$HOME/plugins"
 creator_root="${BUTLER_PLUGIN_CREATOR_DIR:-${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator}"
+validator_python="${BUTLER_PLUGIN_VALIDATOR_PYTHON:-$repo_root/.venv/bin/python}"
 skip_add=false
 
 if [[ "${1:-}" == "--no-add" ]]; then
@@ -55,8 +56,13 @@ python3 "$creator_root/scripts/update_plugin_cachebuster.py" "$target_plugin"
 if [[ -f "$creator_root/scripts/validate_plugin.py" ]]; then
   if command -v uv >/dev/null 2>&1; then
     uv run --with pyyaml python "$creator_root/scripts/validate_plugin.py" "$target_plugin"
-  else
+  elif [[ -x "$validator_python" ]] && "$validator_python" -c 'import yaml' >/dev/null 2>&1; then
+    "$validator_python" "$creator_root/scripts/validate_plugin.py" "$target_plugin"
+  elif python3 -c 'import yaml' >/dev/null 2>&1; then
     python3 "$creator_root/scripts/validate_plugin.py" "$target_plugin"
+  else
+    echo "plugin validation requires uv or a Python runtime with PyYAML; checked: $validator_python and python3" >&2
+    exit 2
   fi
 fi
 

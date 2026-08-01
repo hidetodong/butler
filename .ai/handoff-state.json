@@ -1,11 +1,11 @@
 {
-  "handoff_sha256": "fbe8011ce5bf1e2fe0025dfaa3ab62b4ddb0148ac8c60c08a768bbd2a57f6987",
+  "handoff_sha256": "dd500122a883449eedcb97203d8609a60092f6479a18ff76dfae46511792ad2d",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "如需在本机立即启用新入口，用户显式运行 Butler setup / refresh；否则交付即止。",
+    "next": "发布聚合 ITER-0096–ITER-0101 的 v3.4.0；新开 Codex 会话加载已刷新 plugin。",
     "phase": "Iteration Closed",
     "pointers": [
       ".ai/task-state.md",
@@ -13,20 +13,20 @@
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "ITER-0100 已完成实现、证据归档、交付与台账收口；真实 Claude / ChatGPT App 发现交互保留为非阻断弱验证。"
+    "status": "ITER-0101 已完成实现、证据归档、交付与台账收口；全局 setup 整体成功。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "067585adce8faa0281e3d26a89b03f89d0fcde711894c62542f8c1bfb1a4fc6e"
+      "sha256": "51cb13d7a22b213e1e154f99ee9ead6ef59704bcd46c8d6e163718e2b78b894a"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "08189df066ea8fd8754c82260ee9222e824c50b3b1b61afd3af56b1c4913a82c"
+      "sha256": "35a19bd987bcd0cc367478f2f9b0199b3dd4fd18da855a80d371eaf3a748058c"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "19b7a5ba36d76ab8edd6490eed4b2cb4ad1d0819f4bf6dbaa3c34d3d2a00f436"
+      "sha256": "66e3fa036107c921aa11feffff576c6c5a3959f5ae2a2263fa2b816294c68ae8"
     }
   ]
 }
