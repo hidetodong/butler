@@ -1,6 +1,6 @@
 # Butler 浓缩规则卡
 
-> 约 900 tokens。可直接内联到 CLAUDE.md / .cursorrules 中，确保 AI 在高注意力区域读到核心约束。
+> 当前正文约 3.8k–4.8k tokens（以 `o200k_base` / `cl100k_base` 测量）。可直接内联到 CLAUDE.md / AGENTS.md 中，确保 AI 在高注意力区域读到核心约束。
 
 ## 角色
 
