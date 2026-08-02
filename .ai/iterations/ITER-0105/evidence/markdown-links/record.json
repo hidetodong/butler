@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "markdown-links",
+  "iteration": "ITER-0105",
+  "ac_ids": [
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/check-markdown-links.py",
+      "--root",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T02:51:43.909Z",
+  "finished_at": "2026-08-02T02:51:44.674Z",
+  "duration_ms": 765,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 48,
+    "captured_bytes": 48,
+    "sha256": "7eb4d528d12d32e6bc991e1d0737a6e88b676a44e143c71019f776b21a88f59c",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

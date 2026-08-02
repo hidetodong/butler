@@ -1,0 +1,23 @@
+test_apply_stale_plan_and_idempotent_retry (test_cli.DecisionMapCliTests.test_apply_stale_plan_and_idempotent_retry) ... ok
+test_conflict_and_bad_input_have_stable_exit_codes (test_cli.DecisionMapCliTests.test_conflict_and_bad_input_have_stable_exit_codes) ... ok
+test_four_action_cli_and_cross_process_recovery (test_cli.DecisionMapCliTests.test_four_action_cli_and_cross_process_recovery) ... ok
+test_dag_and_abandoned_dependency_fail_closed (test_engine.DecisionMapEngineTests.test_dag_and_abandoned_dependency_fail_closed) ... ok
+test_dependency_frontier_abandon_and_close_lifecycle (test_engine.DecisionMapEngineTests.test_dependency_frontier_abandon_and_close_lifecycle) ... ok
+test_fog_graduation_is_atomic_and_can_create_an_internal_dag (test_engine.DecisionMapEngineTests.test_fog_graduation_is_atomic_and_can_create_an_internal_dag) ... ok
+test_idempotent_retry_returns_original_claim_and_conflicting_id_fails (test_engine.DecisionMapEngineTests.test_idempotent_retry_returns_original_claim_and_conflicting_id_fails) ... ok
+test_inspect_plan_verify_are_zero_write (test_engine.DecisionMapEngineTests.test_inspect_plan_verify_are_zero_write) ... ok
+test_lease_expiry_reclaim_and_stale_worker_are_deterministic (test_engine.DecisionMapEngineTests.test_lease_expiry_reclaim_and_stale_worker_are_deterministic) ... ok
+test_missing_cross_map_and_unknown_contract_fields_are_rejected (test_engine.DecisionMapEngineTests.test_missing_cross_map_and_unknown_contract_fields_are_rejected) ... ok
+test_renew_release_and_direct_resolve (test_engine.DecisionMapEngineTests.test_renew_release_and_direct_resolve) ... ok
+test_create_rename_failure_leaves_no_visible_or_staged_map (test_storage.DecisionMapStorageTests.test_create_rename_failure_leaves_no_visible_or_staged_map) ... ok
+test_nonblocking_lock_conflict_is_safe (test_storage.DecisionMapStorageTests.test_nonblocking_lock_conflict_is_safe) ... ok
+test_stale_plan_is_rejected_without_state_change (test_storage.DecisionMapStorageTests.test_stale_plan_is_rejected_without_state_change) ... ok
+test_symlink_state_and_map_root_fail_closed (test_storage.DecisionMapStorageTests.test_symlink_state_and_map_root_fail_closed) ... ok
+test_two_processes_from_one_base_commit_at_most_once (test_storage.DecisionMapStorageTests.test_two_processes_from_one_base_commit_at_most_once) ... ok
+test_update_replace_failure_preserves_original_and_cleans_temp (test_storage.DecisionMapStorageTests.test_update_replace_failure_preserves_original_and_cleans_temp) ... ok
+test_verify_reports_staging_and_noncanonical_state_without_writing (test_storage.DecisionMapStorageTests.test_verify_reports_staging_and_noncanonical_state_without_writing) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.791s
+
+OK

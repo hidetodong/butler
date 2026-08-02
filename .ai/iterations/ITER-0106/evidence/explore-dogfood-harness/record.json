@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "explore-dogfood-harness",
+  "iteration": "ITER-0106",
+  "ac_ids": [
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/explore-dogfood/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T14:28:08.212Z",
+  "finished_at": "2026-08-02T14:28:08.521Z",
+  "duration_ms": 309,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 549,
+    "captured_bytes": 549,
+    "sha256": "6d70b0f7912fc020bd17f26ed33f0fbfb467537e34003a84ce3dba88a5b244b1",
+    "truncated": false
+  }
+}

@@ -1,32 +1,32 @@
 {
-  "handoff_sha256": "dd500122a883449eedcb97203d8609a60092f6479a18ff76dfae46511792ad2d",
+  "handoff_sha256": "5843118a6b7052a0e23e3c2da6050b672e97d368f934f817880ebc218929c320",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "发布聚合 ITER-0096–ITER-0101 的 v3.4.0；新开 Codex 会话加载已刷新 plugin。",
-    "phase": "Iteration Closed",
+    "next": "交付即止；当前无 active Milestone / Iteration，不自动启动任何 deferred 候办。",
+    "phase": "Milestone Closed",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "ITER-0101 已完成实现、证据归档、交付与台账收口；全局 setup 整体成功。"
+    "status": "MILE-0014 已聚合 ITER-0102～ITER-0106，完成里程碑归档、Markdown/HTML 版本级交付和台账收口；Decision Map 保留为参考来源，tracker verdict=`defer`。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "51cb13d7a22b213e1e154f99ee9ead6ef59704bcd46c8d6e163718e2b78b894a"
+      "sha256": "1ea445a50d7d233d5ced6367daec012afd50343af366beb2f930ade1b9d7ae6d"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "35a19bd987bcd0cc367478f2f9b0199b3dd4fd18da855a80d371eaf3a748058c"
+      "sha256": "013c00522fd0a7cc2d18a025e163c83f8ae7924c59e9effd500f920f5de5ca4f"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "19b7a5ba36d76ab8edd6490eed4b2cb4ad1d0819f4bf6dbaa3c34d3d2a00f436"
+      "sha256": "21e7307f1e2418357b11efbae33f6d7db28e31d55e30eea9c139d8ec950d4cd0"
     }
   ]
 }

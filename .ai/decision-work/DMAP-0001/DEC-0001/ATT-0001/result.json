@@ -1,0 +1,35 @@
+{
+  "actual_execution_mode": "serial",
+  "attempt_id": "ATT-0001",
+  "decision_id": "DEC-0001",
+  "details": {
+    "evidence": [
+      "repo:.ai/milestone-backlog/codex-structured-question-cards.md",
+      "repo:Coder/20_Workflow_Lifecycle/acceptance-schema.md",
+      "repo:Coder/20_Workflow_Lifecycle/tech-plan-schema.md"
+    ],
+    "outcome": "Use native cards only for bounded mutually exclusive confirmations; preserve text or HITL for open and true multi-select questions",
+    "payload": {
+      "findings": [
+        "Use native cards only for bounded mutually exclusive confirmations; preserve text or HITL for open and true multi-select questions"
+      ],
+      "sources": [
+        ".ai/milestone-backlog/codex-structured-question-cards.md",
+        "Coder/20_Workflow_Lifecycle/acceptance-schema.md",
+        "Coder/20_Workflow_Lifecycle/tech-plan-schema.md"
+      ],
+      "uncertainties": [
+        "No elapsed-time or correction-rate evidence exists yet"
+      ]
+    },
+    "rationale": "The current repository contracts support this bounded conclusion"
+  },
+  "fresh_context": false,
+  "map_id": "DMAP-0001",
+  "record_operation_id": "OP-r5-record-1",
+  "request_sha256": "sha256:f0085f89ac6e2766f4d4af404cd9d1c3187b134d00e7e0918838c3b5d5f9176e",
+  "schema_version": 1,
+  "status": "candidate",
+  "submitted_at": "2026-08-02T06:08:00Z",
+  "task_sha256": "sha256:725f97620cc0857b402cf6531aed3f53a9df09362f248637e0fc87b00cf6e7e8"
+}

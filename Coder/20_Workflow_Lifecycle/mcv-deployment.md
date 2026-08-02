@@ -66,7 +66,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 
 **运行态文件**（按需产生，随会话更新）：
 
-- `00_IDEATION.md`：`/ideation` 模式下的脑暴过程与中间结论；收敛后由 `CONCEPT.md` 承载进入 P2 的已确认结论。
+- `00_IDEATION.md`：Explore / Ideation 已获用户 opt-in 且项目根唯一时的可选 Decision Map 载体，只保存已确认决定、开放问题与参考依据；始终位于 P1→P5 之外，显式 promotion 后由 Iteration P1 的 `CONCEPT.md` 接管当前交付语义。
 - `01_CHANGELOG.md`：记录本迭代的**对象级变更流**（严格 ADD/EDIT/DELETE、绑 AC，格式见 `changelog-schema.md`），**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
 - **项目全貌产物**（项目常驻全貌摘要·状态取向，冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`）——**两态**（MILE-0003 R6 起）：
@@ -204,7 +204,7 @@ Hook 副本与 butler 仓库版本可能漂移。既有项目由 `tools/butler-u
 
 ### 6.2 交付自测桥（delivery-selftest）
 
-当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）、**Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）、**双台账分片工具**（`$BUTLER/tools/state-ledger/state_ledger.py`）与 **工作区范围工具**（`$BUTLER/tools/workspace-scope/workspace_scope.py`）。范围工具与已部署 hook 共享解析内核，提供只读 `discover/validate/check-plan/check-paths/check-diff`；双台账工具提供 `inspect/migrate/check/lookup`，其固定区间、索引和退出码以自身 README 为真源。宿主只负责传唯一 `PROJECT_ROOT` 调用，不复制算法。
+当前驻留工具包括 **P5 人测回传桥**（`$BUTLER/tools/delivery-selftest/`）、**自动道证据工具**（`$BUTLER/tools/verification-evidence/evidence.py`）、**Goal 完成资格裁决器**（`$BUTLER/tools/goal-assurance/goal.py`）、**双台账分片工具**（`$BUTLER/tools/state-ledger/state_ledger.py`）、**Decision Map 本地状态工具**（`$BUTLER/tools/decision-map/decision_map.py`）、**Decision Work 不可变工作工具**（`$BUTLER/tools/decision-work/decision_work.py`）、**Decision Promotion 交接工具**（`$BUTLER/tools/decision-promotion/decision_promotion.py`）与 **工作区范围工具**（`$BUTLER/tools/workspace-scope/workspace_scope.py`）。Decision Map 工具只暴露 `inspect/plan/apply/verify`，拥有探索状态、依赖 DAG、派生 Frontier、Claim Lease 和原子恢复，不拥有 Explore 激活或 promotion；Decision Work 使用同名四动作保存 host-neutral Task/Result，只允许 Research 求证并行且必须由协调器显式吸收，不启动 agent、不直接写 Map、不拥有 promotion；Decision Promotion 使用同名四动作消费用户显式选择的 resolved slice，只能引用既有 planned route 或复用 iteration-intake 从 P1 开工，不判断清晰度/大小、不创建路线、不进入 P2；范围工具与已部署 hook 共享解析内核，提供只读 `discover/validate/check-plan/check-paths/check-diff`；双台账工具提供 `inspect/migrate/check/lookup`。各工具数据合同和退出码以自身 README 为真源，宿主只负责传唯一 `PROJECT_ROOT` 调用，不复制算法。
 
 目标项目在 P5 触发人测残余时按下述形态调用交付自测桥：
 

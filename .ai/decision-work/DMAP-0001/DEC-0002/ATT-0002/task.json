@@ -1,0 +1,44 @@
+{
+  "attempt_id": "ATT-0002",
+  "batch_id": "OP-r5-prepare-research",
+  "batch_members": [
+    {
+      "attempt_id": "ATT-0001",
+      "decision_id": "DEC-0001"
+    },
+    {
+      "attempt_id": "ATT-0002",
+      "decision_id": "DEC-0002"
+    }
+  ],
+  "claim_observed_expires_at": "2026-08-03T06:06:00Z",
+  "claim_operation_id": "OP-r5-claim-2",
+  "claim_owner": "iter-0106-coordinator",
+  "claim_token_sha256": "sha256:aaf485d3101b7e390cfa492879fc09dc84bb28fdf13804ccce3cd078372939bf",
+  "confirmed_context": [
+    "The structured-question-card direction remains a deferred milestone backlog",
+    "Only current Butler repository contracts are authoritative for this dogfood"
+  ],
+  "constraints": [
+    "Do not modify the target project from helper work",
+    "Do not claim a host capability that is not present",
+    "Keep the backlog deferred"
+  ],
+  "created_at": "2026-08-02T06:07:00Z",
+  "decision_id": "DEC-0002",
+  "expected_output": [
+    "Bounded recommendation",
+    "Repository evidence",
+    "Explicit uncertainties"
+  ],
+  "map_id": "DMAP-0001",
+  "map_revision": 7,
+  "map_sha256": "sha256:4809280de0a61d2fab21411d3ba9defae8de71037eb3d5c380497e3736ce86a9",
+  "predecessor_attempt_id": null,
+  "prepare_operation_id": "OP-r5-prepare-research",
+  "question": "What Claude, Codex and Pi capability boundary can Butler honestly promise?",
+  "request_sha256": "sha256:732f05680c577500053b39d80a46d103f12e75219b05f794c7cddb696de798b1",
+  "requested_execution_mode": "parallel",
+  "schema_version": 1,
+  "work_type": "research"
+}

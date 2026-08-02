@@ -1,0 +1,14 @@
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=1
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] Markdown links passed: files=873, links=74
+[OK] Codex R1 地基结构检查通过
+[OK] Codex workflow/plugin checks passed (Router + 13 workflow skills)
+Codex hook wrapper verification passed
+........................................................................ [ 36%]
+........................................................................ [ 72%]
+........................................................                 [100%]
+200 passed in 3.40s
+[OK] Claude/Codex unified setup and project entrypoint matrix passed

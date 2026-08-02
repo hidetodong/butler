@@ -4,6 +4,7 @@ current: none
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
+| MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | ITER-0102, ITER-0103, ITER-0104, ITER-0105, ITER-0106 | deliveries/milestones/MILE-0014-explore-decision-map-integration.md |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |
 | MILE-0012 | 轻量 TDD 配对证据：复用现有 evidence 记录同一测试命令先失败、后通过并接入收口检查 | closed | 2026-07-24 | 2026-07-26 | ITER-0091, ITER-0092 | deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md |
 | MILE-0011 | 确定性五件套产物链：固定结构、阶段生成与机械校验 | closed | 2026-07-23 | 2026-07-23 | ITER-0086, ITER-0087, ITER-0088, ITER-0089 | deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md |
@@ -22,6 +23,7 @@ current: none
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
+| codex-structured-question-cards | Codex 结构化提问卡片：让 Butler 的有限选项确认可点击，并在宿主不支持时可靠降级 | 2026-08-01 | .ai/milestone-backlog/codex-structured-question-cards.md | Codex 当前原生能力受运行模式和单选限制，且卡片由宿主而非 skill 控制；先建立能力合同、文字降级和真实使用证据，再决定是否值得建设自定义 UI。 |
 | ai-user-experience-driven-iteration | AI 用户体验驱动迭代：从结果目标到黑盒体验、修复与复验 | 2026-07-30 | .ai/milestone-backlog/ai-user-experience-driven-iteration.md | 方向价值高但 AI 小白代表性、自评偏差与真实改善尚未验证；先用现有能力完成真实 dogfood，再决定是否产品化。 |
 | parallel-p4-execution-slots | 单迭代多 Agent 并行 P4：执行槽、证据与集成隔离 | 2026-07-28 | .ai/milestone-backlog/parallel-p4-execution-slots.md | 方向已完成 ideation 与审计；需先补齐身份、worktree 真源、证据和集成隔离合同，再决定正式启动。 |
 | multi-active-iteration-runtime | 多 active 迭代运行时：迭代级真源、Batch 与跨迭代集成审计 | 2026-07-28 | .ai/milestone-backlog/multi-active-iteration-runtime.md | 属高成本后续形态；等待单迭代并行 P4 的真实 dogfood 与收益数据，避免提前迁移全局状态机。 |

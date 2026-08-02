@@ -135,6 +135,8 @@ current: ITER-0002
 ## 6. 与执行流程的关系
 
 - 迭代不是新阶段，而是套在 `P1 -> P5` 状态机外层的需求锁定单元；阶段推进规则仍以 `lifecycle.md` 为准。
+- Explore 的 resolved Decision slice 若经 `tools/decision-promotion/` 的 `iteration-start` 进入交付，仍由现有 iteration-intake 在 P1 领号和整体覆写活产物；promotion 只在 `CONCEPT.md` 留 Source References 与不可变 receipt，不产生另一种 Iteration、不直接进入 P2。存在 active Milestone 时必须指定其既有 planned route；没有 active Milestone 时才允许 standalone。
+- P2 冻结后，Decision Map 的新结论不得经 promotion 覆盖当前迭代：未突破原影响面按 §5.3 amend 并重新 ACK，影响面扩大按 §5.4 进入未来 route / Iteration。
 - 迭代之上还可套一层**里程碑 (Milestone)** 作为大版本范围单元：处于 `active` 里程碑期间开启的迭代自动归属它，归属关系与版本级交付机制以 `milestone-schema.md` 为准。里程碑松耦合可选，迭代不依赖里程碑也能独立成立。
 - 工作区四件套字段仍分别以 `concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 为准。
 - 收口交付的文件层与对话层规则以 `delivery-summary.md` 为准。

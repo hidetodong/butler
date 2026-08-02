@@ -875,6 +875,126 @@
           "sha256": "8faa86ce25a7fedf38a230905cda614e9f964d38b467de4021aca38dd73b4fdd"
         }
       ]
+    },
+    "ITER-0102": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0102/CHANGELOG.md",
+        "sha256": "39a74a1a4ba428a398ca522bcba34e49bcf09edf54c95d01a080c6b77a9db371"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "f833e765e397d99ff55cdbf654f7d757f1ce61e664d2eaeaa09cc2708bc037e0"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "26533eeadc95eb7020ca835f383402ec5cb0a12a8ab91984f153686b584df360"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "6b7ec3111de8924147a37af206246728da8dfdd44e75215afa701b9355ae46d8"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "f558a28138addbeee9bd6a7ea6b47a8240d86121a34dd39e6adb040446f67e8b"
+        }
+      ]
+    },
+    "ITER-0103": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0103/CHANGELOG.md",
+        "sha256": "4f2ff1c1edc71cdbcd815e697f8bb68e34e0cf6e24df7b39197e019d8171f910"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "05436c963b1a74a6e1d2565fd75cafccf8ad9e3111a365f2b8175e9bf885bfea"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "56ebad366d63327dd00588cb4027c3848cef9a548c03171bda68ae69eaa4620a"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "bbc65d352bb31edc98dc4824b2228cd2e7aa754205dbe0a420f501bec51e0670"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "207a68c469acbedbf3ef64d0e7fbab73420ef7599bfc501783edc08c6fcc0dd5"
+        }
+      ]
+    },
+    "ITER-0104": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0104/CHANGELOG.md",
+        "sha256": "590cf2258dcf80f48c40505b3d3027be6fcdce91554fb7ba4fb368182896be7e"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "440298b93aa3bd227a7d3876dfc65d59d296c4d44c91eb1ad09b9852e7c4a01e"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "ad8ec2e703bd04f36919b9795d8de41a41eba80c33326dfa7372f54f15841fcd"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "e7b0a39cb67abe723550133677e9d6a3d99e296391eb66bad6bdd890f41b05f8"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "89711041290f3fd96f744ab881fe7bbf3d546e8c984f6c7a06057ffd98351127"
+        }
+      ]
+    },
+    "ITER-0105": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0105/CHANGELOG.md",
+        "sha256": "f74c833f2d425a85a627dbe9901193c5f538deda6b7be3bad5c9e3cf40e59e5b"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "e47c20990c0da0ae7e31e8bb48b9a9e44922a3f29328d5d6cb41e0e55cf2b4d8"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "99b5ac6b3096da48dde15a48a3d55b6cde867e66eb2a82b072742b3324049ead"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "43813187a0b45d3a767d7e046739324c041e9d7bcf23e8cadd5de3b616ba6e3d"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "641963a75827dbc92eeb7450dbd23a0d88affca7c26385d3693088a2029fccd8"
+        }
+      ]
+    },
+    "ITER-0106": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0106/CHANGELOG.md",
+        "sha256": "da350dd604b1727573f5a6e01ed26ab9180a5f776306c99ab3aea75824fbe500"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "855322d4d3689764f9fcf31d1d9bfa4a7d915a99b4a14b756cf0b9992670a42f"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "4da7b60fc6a1189629e62c129b91e129ab8a274ea3aaa63ed67c25ceb2230efb"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "8f2b7b82e8df477d3b4f43db6fbf3755c11885a05d6d99b4bd0844ba2c64901f"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "68fdbb68a87b5b1bb7ef46942a032b684d6548855c1f8cb67a354b7eb827a098"
+        }
+      ]
     }
   },
   "schema_version": 1

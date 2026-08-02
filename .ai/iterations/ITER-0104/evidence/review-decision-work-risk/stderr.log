@@ -1,0 +1,14 @@
+test_bad_batch_is_zero_write_and_limits_are_strict (__main__.DecisionWorkStorageTests.test_bad_batch_is_zero_write_and_limits_are_strict) ... ok
+test_batch_publish_failure_rolls_back_attempt_tree (__main__.DecisionWorkStorageTests.test_batch_publish_failure_rolls_back_attempt_tree) ... ok
+test_claim_replacement_makes_result_stale_but_recordable (__main__.DecisionWorkStorageTests.test_claim_replacement_makes_result_stale_but_recordable) ... ok
+test_inspect_plan_verify_are_zero_write (__main__.DecisionWorkStorageTests.test_inspect_plan_verify_are_zero_write) ... ok
+test_prepare_and_record_are_immutable_and_idempotent (__main__.DecisionWorkStorageTests.test_prepare_and_record_are_immutable_and_idempotent) ... ok
+test_two_processes_publish_one_immutable_attempt (__main__.DecisionWorkStorageTests.test_two_processes_publish_one_immutable_attempt) ... ok
+test_verify_reports_absorbed_result_deleted_after_commit (__main__.DecisionWorkStorageTests.test_verify_reports_absorbed_result_deleted_after_commit) ... ok
+test_verify_reports_result_content_tampering_before_absorb (__main__.DecisionWorkStorageTests.test_verify_reports_result_content_tampering_before_absorb) ... ok
+test_verify_reports_symlink_and_tampering (__main__.DecisionWorkStorageTests.test_verify_reports_symlink_and_tampering) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.100s
+
+OK

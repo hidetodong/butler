@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "full-ci",
+  "iteration": "ITER-0102",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "/usr/bin/env",
+      "PATH=/tmp/butler-ci-uv.Z3XtXY/bootstrap/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "/bin/bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T11:06:24.098Z",
+  "finished_at": "2026-08-01T11:06:50.231Z",
+  "duration_ms": 26133,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1744,
+    "captured_bytes": 1744,
+    "sha256": "4b0b4d90ffdf067a36abb85b12b685a0c214cadb57c64d88997194f7d1f2a553",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 5587,
+    "captured_bytes": 5587,
+    "sha256": "57e875ee629f003aa745770660bbc40a0f622645a543ab87ea8118204a983bf0",
+    "truncated": false
+  }
+}

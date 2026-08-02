@@ -156,6 +156,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 - 路线项状态取值：`planned`（已规划未开启）、`active`（对应迭代进行中）、`closed`（对应迭代已收口）、`abandoned`（路线项取消或对应迭代废弃）。
 - 路线项状态必须与台账中该迭代的实际状态对账，不得不一致。
 - **与迭代状态消歧**：「路线项状态」是路线项自身的命名空间，**与迭代行状态不是同一字段**——迭代行状态是 `iteration-schema.md §4.2` 的封闭三态（`active`/`closed`/`abandoned`，无 `planned`）。`planned` 路线项的「实际 ITER」恒为 `—`、**不产生迭代台账行**；故 `planned` 不应出现在 `.ai/ITERATIONS.md`（部署项目由 `ledger_status` hook 机械拦截）。路线项绑定真实迭代号时，台账里那一行的状态走 §4.2 三态。
+- **Decision Map 来源引用**：路线项仍必须先由本 Milestone 工作流显式创建。用户选定 resolved Decision slice 后，可用驻留 `tools/decision-promotion/` 的 `route-reference` 把它引用到当前 Milestone 中已存在、未绑定 ITER 的 planned route；该动作只写不可变 promotion receipt，不给本表加列、不镜像 Decision 状态，也不自动开启 Iteration。引用视图由工具扫描 receipts 派生；路线的创建、排序、取消和状态仍只由本文件拥有。
 - **（PRD 派生里程碑专用）「相关模块」标注**：当里程碑由大 PRD 派生（§6.4 步 6），新路线项**可选**在主题后写完整锚点（如 `→ prd: 2026-07-22-signal-editor#save-validation, 2026-07-22-signal-editor#signal-list`），作为「里程碑方向 → references 细节」的唯一指针；路径解析为 `references/prd/<prd_id>/<module_slug>.md`。`module_slug` 只在所属需求内唯一，因此新指针不得省略 `prd_id`。**模块 ↔ 路线项映射以此处为单一真源**，单需求 `00_INDEX` 只回指里程碑号、不重列映射。旧的 slug-only 标注仅作历史兼容读取，不回写 closed 里程碑；非 PRD 里程碑无需标注。
 
 ### 5.4 范围演进记录

@@ -1,0 +1,22 @@
+test_cli_reports_bad_input_as_single_json (test_cli.DecisionWorkCliTests.test_cli_reports_bad_input_as_single_json) ... ok
+test_cross_process_prepare_record_inspect_verify (test_cli.DecisionWorkCliTests.test_cross_process_prepare_record_inspect_verify) ... ok
+test_absorb_uses_fresh_map_base_for_parallel_results (test_engine.DecisionWorkEngineTests.test_absorb_uses_fresh_map_base_for_parallel_results) ... ok
+test_failed_cancelled_and_late_never_resolve (test_engine.DecisionWorkEngineTests.test_failed_cancelled_and_late_never_resolve) ... ok
+test_four_work_type_candidate_contracts (test_engine.DecisionWorkEngineTests.test_four_work_type_candidate_contracts) ... ok
+test_invalid_human_and_task_candidates_fail_closed (test_engine.DecisionWorkEngineTests.test_invalid_human_and_task_candidates_fail_closed) ... ok
+test_needs_input_requires_new_predecessor_attempt (test_engine.DecisionWorkEngineTests.test_needs_input_requires_new_predecessor_attempt) ... ok
+test_research_candidate_requires_explicit_absorb (test_engine.DecisionWorkEngineTests.test_research_candidate_requires_explicit_absorb) ... ok
+test_bad_batch_is_zero_write_and_limits_are_strict (test_storage.DecisionWorkStorageTests.test_bad_batch_is_zero_write_and_limits_are_strict) ... ok
+test_batch_publish_failure_rolls_back_attempt_tree (test_storage.DecisionWorkStorageTests.test_batch_publish_failure_rolls_back_attempt_tree) ... ok
+test_claim_replacement_makes_result_stale_but_recordable (test_storage.DecisionWorkStorageTests.test_claim_replacement_makes_result_stale_but_recordable) ... ok
+test_inspect_plan_verify_are_zero_write (test_storage.DecisionWorkStorageTests.test_inspect_plan_verify_are_zero_write) ... ok
+test_prepare_and_record_are_immutable_and_idempotent (test_storage.DecisionWorkStorageTests.test_prepare_and_record_are_immutable_and_idempotent) ... ok
+test_two_processes_publish_one_immutable_attempt (test_storage.DecisionWorkStorageTests.test_two_processes_publish_one_immutable_attempt) ... ok
+test_verify_reports_absorbed_result_deleted_after_commit (test_storage.DecisionWorkStorageTests.test_verify_reports_absorbed_result_deleted_after_commit) ... ok
+test_verify_reports_result_content_tampering_before_absorb (test_storage.DecisionWorkStorageTests.test_verify_reports_result_content_tampering_before_absorb) ... ok
+test_verify_reports_symlink_and_tampering (test_storage.DecisionWorkStorageTests.test_verify_reports_symlink_and_tampering) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.530s
+
+OK

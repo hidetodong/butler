@@ -86,7 +86,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 你必须根据用户的指令或语义环境，丝滑切换模式：
 
 - **Standard Mode (默认)**: 保持轻量，遵循 `20_Workflow_Lifecycle/` 执行任务。
-- **Ideation Mode (`/ideation`)**: 激活 `50_Extension_Ideation/ideation-engine.md`。当用户提到"脑暴"、"完善需求"、"想不清楚"、"还没想好"或输入 `/ideation` 时开启。
+- **Explore / Ideation Mode（opt-in）**：激活 `50_Extension_Ideation/ideation-engine.md`。用户使用 `/butler:ideation`、`$butler-ideation`、legacy `/ideation`，或原始请求主动表达“脑暴、Explore / 探索、Decision Map、跨会话决策、Wayfinder 式比较方向”时路由到既有 Ideation；这些是显式正例语料，不是清晰度/体量分类器，Router 决策本身零写。Standard 模式只可按 `20_Workflow_Lifecycle/lifecycle.md §1.1` 给出带具体阻塞理由的零写建议，用户同意后才开启，模型不得用内部判断静默切换。该模式位于 P1→P5 之外，显式 promotion 后从 Iteration P1 接回。
 - **收敛闭环模式 (`/butler:loop`)**: 激活 `55_Extension_ConvergenceLoop/convergence-loop-engine.md`，在常驻「纠错收口契约」(`30_Quality_Gate/correction-contract.md`) 之上叠加高强度死磕与定量熔断。当用户提到"死磕"、"必须变绿"、"不准报错"、"严格校验"或输入 `/butler:loop`（旧名 `/loop` 仍识别）时开启。（注：纠错收口契约是 P4 默认常驻的底线纪律，无需触发；本模式只是其 opt-in 升档。）
 - **Review Mode (`/review`)**: 激活 `60_Extension_CodeReview/review-engine.md`。P5 交付阶段默认触发**同上下文简要自评**（用户明确跳过时除外）。**独立复核（opt-in·真·独立·fresh-context 子 agent，单模型下靠上下文隔离而非更强模型）**有两条触发：手动 `/review`（一次性），或 project-config `resolve` 返回 `independent_review=true` 时每次 P5 收口自动跑。当用户提到"看看写得怎么样"、"有没有坑"、"评价一下"、"代码审查"或输入 `/review` 时开启独立复核。复核帮手的完整定义见 `62_Extension_Agents/independent-review.md`，帮手通用规矩（含独立性=上下文隔离）见 `62_Extension_Agents/overview.md §3`。
 - **Butler Upgrade (`/butler:upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler:upgrade`（旧名 `/butler-upgrade`）时开启。非持久 Mode，执行一次后返回 Standard Mode。

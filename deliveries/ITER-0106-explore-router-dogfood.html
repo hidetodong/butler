@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+  固定格式交付总结 · HTML 阅读视图模板 (SSOT)
+  ===========================================================================
+  本文件是 butler 交付总结的固定 HTML 模板，是「固定格式」的唯一来源。
+  语义规则见 Coder/20_Workflow_Lifecycle/delivery-summary.md §9。
+
+  填槽协议（迭代/里程碑收口 step ②，在写完同名 .md 之后执行）：
+  1. 读本模板，把每个占位符替换为对应 .md 章节的 HTML 渲染。
+  2. 正文槽位填 block 级 HTML（p / ul / table）。
+  3. 本文件为迭代级交付，已删除里程碑 ROADMAP 段。
+  4. HTML 与 .md 同源、.md 为引用真源；引用段只放路径，不嵌四件套全文。
+  5. 单文件自包含：无外部 CSS / JS / 字体 / 图片链接。
+  ===========================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0106 交付总结 · Explore Router 接线与 Butler 真实 dogfood</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Explore Router 接线与 Butler 真实 dogfood</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0106</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-02</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把已经完成的 Explore / Decision Map / Decision Work / Decision Promotion 接入 Butler 现有单一入口，并用 Butler 自身的一项真实大需求检验恢复、研究、交接和维护成本。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>扩充既有 <code>ideation</code> workflow 的显式 Explore / Decision Map / Wayfinder 语料，没有新增入口或 workflow ID。</li>
+        <li>建立 24 个零写 Router 合同样本和六类快路径下界检查，保留明确任务、Iteration、Milestone 与轻量 Ideation 的原行为。</li>
+        <li>新增 <code>tools/explore-dogfood/</code>，覆盖依赖 Frontier、两项 Research、显式 absorb、fresh-process 恢复与合法 promotion。</li>
+        <li>建立真实 <code>DMAP-0001</code>；三个 Decision 已解决，一个 Fog 保留，原候办继续 deferred。</li>
+        <li>增加 live verifier，证明 R5 promotion 被确定性拒绝、没有 receipt 且语义状态零写。</li>
+        <li>形成四项观测报告，外部 tracker 裁决为 <code>defer</code>。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>Explore 是既有 Ideation 的 opt-in 持久化深度，不是普通任务进入 P1 前的新必经阶段。</li>
+        <li>Router 不用清晰度、体量或模型置信度静默开状态；只有显式探索或用户接受具体 blocker 建议才进入 Explore。</li>
+        <li>Decision Map 是可参考、可恢复的决策来源；真正开工仍显式回到 Milestone / Iteration，并从 P1 开始。</li>
+        <li>Research 请求为 parallel，实际为 serial、非 fresh-context；没有把结构上的可并行冒充成已提速。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>Router / registry 与 Claude、Codex、Pi 薄适配的共同合同。</li>
+        <li>Explore / Ideation 的生命周期边界与部署说明。</li>
+        <li>三个 Decision Module 的内部 dogfood harness、live verifier、回归矩阵和人读报告。</li>
+        <li>Butler 当前项目的真实 Decision Map / Work 状态、P5 evidence 与知识文件夹。</li>
+      </ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>Router 13 项、dogfood 4 项、三个 Decision Module 53 项及双宿主/三宿主静态矩阵均通过。</li>
+        <li><code>explore-dogfood-live-r2</code> 核对三项 Decision resolved、候办 deferred、promotion 拒绝及零语义写。</li>
+        <li><code>review-explore-risk-r2</code> 重新执行风险矩阵；最终 Must Fix 0、Should Fix 0。</li>
+        <li><code>full-ci-r3</code> 在锁定 Python 3.12.12 / uv 0.9.28 环境通过；失败 record 保留为纠错轨迹。</li>
+        <li>Goal Assurance 返回 <code>eligible</code>；完整逐 AC 结论见归档验证报告与 evidence。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>任意自然语言改写仍由宿主模型理解；本次不是生产误路由率测试。</li>
+        <li>本轮没有观察到并行提速，也没有覆盖跨机器、多人写入、通知查询与长期规模。</li>
+        <li>外部 tracker 保持 defer；开放 Fog 只作为未来参考，不阻塞交付。</li>
+        <li>项目配置未启用独立复核，本次仅执行同上下文简评。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/iterations/ITER-0106/CONCEPT.md</code></li>
+        <li><code>.ai/iterations/ITER-0106/AC_LIST.md</code></li>
+        <li><code>.ai/iterations/ITER-0106/TECH_PLAN.md</code></li>
+        <li><code>.ai/iterations/ITER-0106/VERIFY_REPORT.md</code></li>
+        <li><code>.ai/iterations/ITER-0106/CHANGELOG.md</code></li>
+        <li><code>.ai/iterations/ITER-0106/evidence/</code></li>
+        <li><code>docs/explore-dogfood-r5.md</code></li>
+        <li><code>tools/explore-dogfood/README.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

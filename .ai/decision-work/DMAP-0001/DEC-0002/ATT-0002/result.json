@@ -1,0 +1,35 @@
+{
+  "actual_execution_mode": "serial",
+  "attempt_id": "ATT-0002",
+  "decision_id": "DEC-0002",
+  "details": {
+    "evidence": [
+      "repo:workflows/registry.json",
+      "repo:plugins/butler/skills/butler-router/SKILL.md",
+      "repo:plugins/butler-pi/index.ts"
+    ],
+    "outcome": "Describe stable capabilities rather than internal tool names; Claude and Codex have workflow entries while Pi currently provides shared gates only",
+    "payload": {
+      "findings": [
+        "Describe stable capabilities rather than internal tool names; Claude and Codex have workflow entries while Pi currently provides shared gates only"
+      ],
+      "sources": [
+        "workflows/registry.json",
+        "plugins/butler/skills/butler-router/SKILL.md",
+        "plugins/butler-pi/index.ts"
+      ],
+      "uncertainties": [
+        "Interactive card availability varies by host mode and is not proven by repository files alone"
+      ]
+    },
+    "rationale": "The current repository contracts support this bounded conclusion"
+  },
+  "fresh_context": false,
+  "map_id": "DMAP-0001",
+  "record_operation_id": "OP-r5-record-2",
+  "request_sha256": "sha256:2803c8834d3cb84426872edc328b06129d4863867bda0c229000480a9a3771bd",
+  "schema_version": 1,
+  "status": "candidate",
+  "submitted_at": "2026-08-02T06:08:00Z",
+  "task_sha256": "sha256:c7a7770a9c9583f544643e4e01b9bc86115ef648a198e48eacac38b6f96e379e"
+}

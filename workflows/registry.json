@@ -324,7 +324,12 @@
         "brainstorm",
         "脑暴",
         "需求还没想清",
-        "refine idea"
+        "refine idea",
+        "explore",
+        "探索",
+        "Decision Map",
+        "跨会话决策",
+        "Wayfinder"
       ],
       "legacy_aliases": [
         {
@@ -335,15 +340,15 @@
       "claude": {
         "name": "/butler:ideation",
         "path": ".claude/commands/butler/ideation.md",
-        "description": "需求还没想清时的脑暴——把模糊意图逼成可执行的验收清单：意图探测 → 隐性需求展开 → 多维压力测试 → 收敛 AC",
+        "description": "用户主动脑暴或接受 Explore 建议时，在 P1→P5 之外澄清决定与开放问题；显式 promotion 后从 Iteration P1 接回交付",
         "default_prompt": "Use /butler:ideation for this Butler workflow."
       },
       "codex": {
         "name": "$butler-ideation",
         "path": "plugins/butler/skills/butler-ideation/SKILL.md",
-        "description": "Explore and refine an unclear product or engineering idea with Butler without entering the execution lifecycle. Use for brainstorming, requirement discovery, trade-off analysis, MVP reduction, or shaping a vague request before implementation.",
+        "description": "Explore and refine a product or engineering idea with Butler outside P1–P5. Use when the user explicitly requests brainstorming or accepts an Explore suggestion; promotion into delivery always restarts at Iteration P1.",
         "display_name": "Butler Ideation",
-        "short_description": "Run the Butler ideation workflow safely",
+        "short_description": "Explore decisions before explicitly promoting to P1",
         "default_prompt": "Use $butler-ideation to refine this idea before execution."
       },
       "routing": {

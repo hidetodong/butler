@@ -1,0 +1,21 @@
+test_cli_duplicate_json_key_and_bad_filter_return_one_json_error (test_cli.DecisionPromotionCliTests.test_cli_duplicate_json_key_and_bad_filter_return_one_json_error) ... ok
+test_route_reference_cross_process_plan_apply_inspect_verify (test_cli.DecisionPromotionCliTests.test_route_reference_cross_process_plan_apply_inspect_verify) ... ok
+test_intake_callback_or_sync_failure_rolls_back_all_ai_state (test_engine.DecisionPromotionTests.test_intake_callback_or_sync_failure_rolls_back_all_ai_state) ... ok
+test_invalid_route_states_and_standalone_under_active_milestone_fail (test_engine.DecisionPromotionTests.test_invalid_route_states_and_standalone_under_active_milestone_fail) ... ok
+test_iteration_start_reuses_intake_and_writes_source_reference (test_engine.DecisionPromotionTests.test_iteration_start_reuses_intake_and_writes_source_reference) ... ok
+test_nonblocking_global_lock_conflict_is_zero_semantic_write (test_engine.DecisionPromotionTests.test_nonblocking_global_lock_conflict_is_zero_semantic_write) ... ok
+test_receipt_publish_failure_leaves_no_visible_or_staged_promotion (test_engine.DecisionPromotionTests.test_receipt_publish_failure_leaves_no_visible_or_staged_promotion) ... ok
+test_receipt_replay_is_idempotent_and_id_conflict_fails (test_engine.DecisionPromotionTests.test_receipt_replay_is_idempotent_and_id_conflict_fails) ... ok
+test_route_reference_only_adds_receipt_semantic_state_and_is_inspectable (test_engine.DecisionPromotionTests.test_route_reference_only_adds_receipt_semantic_state_and_is_inspectable) ... ok
+test_route_state_change_makes_plan_stale_but_unrelated_map_change_does_not (test_engine.DecisionPromotionTests.test_route_state_change_makes_plan_stale_but_unrelated_map_change_does_not) ... ok
+test_source_closure_allows_partial_map_and_empty_evidence (test_engine.DecisionPromotionTests.test_source_closure_allows_partial_map_and_empty_evidence) ... ok
+test_standalone_iteration_only_when_no_active_milestone (test_engine.DecisionPromotionTests.test_standalone_iteration_only_when_no_active_milestone) ... ok
+test_two_processes_commit_one_receipt_for_same_plan (test_engine.DecisionPromotionTests.test_two_processes_commit_one_receipt_for_same_plan) ... ok
+test_unknown_fields_duplicate_roots_and_bad_ids_fail_closed (test_engine.DecisionPromotionTests.test_unknown_fields_duplicate_roots_and_bad_ids_fail_closed) ... ok
+test_unresolved_or_unknown_source_fails_without_writes (test_engine.DecisionPromotionTests.test_unresolved_or_unknown_source_fails_without_writes) ... ok
+test_verify_reports_incomplete_marker_tampering_and_symlink (test_engine.DecisionPromotionTests.test_verify_reports_incomplete_marker_tampering_and_symlink) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.551s
+
+OK

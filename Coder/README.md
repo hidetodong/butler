@@ -124,8 +124,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/`：通用需求开发 SOP 的阶段状态机、阶段交付约束、四件套书写口径与人类可读交付总结规范。
 - `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
-- `50_Extension_Ideation/`：仅在显式 `/ideation` 指令下启用的独立脑暴扩展模块。
-- `62_Extension_Agents/`：butler 派出去干活的帮手（临时子 agent）的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手=一份中立定义资料，用时读、临时起干净子 agent 执行、不下发到项目。当前住册三帮手：复核（`independent-review`，接 P5）、更新说明（`knowledge-fold`，收尾把 delta 折进 `.ai/project/`、只写该目录）、查过时（`drift-check`，冷启动/收口抽查说明过时、只读）；后两者是收口折叠 / 漂移自检的推荐 fresh-context 执行者（opt-in、非强制，折叠必做本身由收口步④定）。
+- `50_Extension_Ideation/`：Butler 内建但 opt-in 的 Explore / Ideation 模块；用户主动探索或接受带具体阻塞理由的建议后启用，位于 P1→P5 之外。
+- `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册四帮手：复核（`independent-review`，接 P5）、更新说明（`knowledge-fold`，收尾把 delta 折进 `.ai/project/`、只写该目录）、查过时（`drift-check`，冷启动/收口抽查说明过时、只读）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
 - `65_Extension_Dangerous/`：仅在显式 `/butler:dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
 - `70_Extension_Preference/`：实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/butler:dangerous`**；只学真人选择，外置存储、与本仓库解耦。
 - `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
@@ -152,6 +152,10 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 - `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/`（含空 `.ai/project/` 知识文件夹种子，MILE-0003 R6 起——新项目采用文件夹态全貌产物）、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
 - `tools/state-ledger/` 负责 ITER/MILE 双台账的确定性热冷迁移、固定数字区间分片与定向 lookup：根热表与 `.ai/state-index.json` 都有界，index 只保存固定路由公式；`.ai/history/{iterations,milestones}/` 的每个有界冷片由同名 `.json` 独立记录范围/路径/数量/哈希。身份至少四位并按数字部分排序。
+- `tools/decision-map/` 是 Explore 的本地确定性状态 Module：每 Map 单一原子 `state.json`，依赖 DAG、派生 Frontier、Claim Lease、revision 与 operation receipt 都隐藏在 `inspect/plan/apply/verify` Interface 后；它不新增 Explore 入口，不做清晰度/大小分类，也不拥有 Milestone/Iteration promotion。
+- `tools/decision-work/` 是 Decision Map 的不可变决策工作 sidecar：一个 `inspect/plan/apply/verify` Interface 统一 research / prototype / grilling / task，只有 Research 求证可显式并行，任何 Result 都须协调器显式 absorb 才能经 Decision Map resolve；它不启动 agent、不写交付期真源。
+- `tools/decision-promotion/` 是 Explore→Delivery 的确定性交接 Module：用户显式选择 resolved Decision slice 与 `route-reference` / `iteration-start` 目标后，工具用 closure digest、target digest、不可变 receipt 和全局写锁执行；它不做清晰度/大小判断、不创建 Milestone route、不更新 active Iteration，开工只复用 iteration-intake 从 P1 开始。
+- `tools/explore-dogfood/` 是三个 Decision Module 的内部端到端回归 harness：只在临时项目编排公开边界，另提供零写聚合 inspect 供跨会话恢复观测；不加入 workflow registry、不调度 agent、不保存派生状态。R5 观测报告在 `docs/explore-dogfood-r5.md`。
 - `tools/artifact-pipeline/` 是五件套结构的机器 SSOT：versioned manifest 唯一定义 live 产物路径、阶段、H2 顺序、固定表头/状态字段和条件段，canonical templates 与其机械对账；新标记产物 strict，legacy 归档只读不追罚。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/goal-contract.md` 是非极小任务 Goal 的共同合同真源：不新增 GOAL 台账，而从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与收口事实派生 `active / at-risk / blocked / completion-candidate / complete / abandoned`；宿主 Goal/Task 只能做可重建投影。
@@ -187,9 +191,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `40_Context_Management/prd-split.md` 是 PRD **首切动作层**：身份四态和日期证据先于写盘，按原文边界切模块，并把 `prd_id`、Workspace Scope 与切片方案一次 soft 对齐后写入独立需求目录。
 - `40_Context_Management/prd-status.md` 是多 PRD **只读查询动作层**：项目级列表、按 `prd_id` 下钻、按稳定 workspace key 筛选，legacy 退化可读，坏布局 fail-closed；机械实现位于 `tools/prd-status/`。
 - `40_Context_Management/prd-update.md` 是指定 `prd_id` 的**确定性改版动作层**：语义层确认最终模块/认亲/三态处置，`tools/prd-update/` 负责零写 plan、先冻后更的整 collection 事务、持久 receipt、幂等、verify/rollback；不自动改 active/closed 工作。
-- `50_Extension_Ideation/ideation-engine.md` 只在显式 `/ideation` 指令下启用，不属于默认执行主线。
+- `50_Extension_Ideation/ideation-engine.md` 是统一探索真源：显式入口和用户主动探索语义直接进入，Standard 模式只能先 suggest 并等待同意；结构化持久状态统一委托 `tools/decision-map/`，Decision Map 在探索期拥有决策状态，显式 promotion 后从 Iteration P1 接回交付并降为参考，不属于普通任务的必经主线。R5 dogfood 进一步确认 Router 选择本身零写、轻量 Ideation 不自动持久化，结果与局限见 `docs/explore-dogfood-r5.md`。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认同上下文简评；审查证据强度明确分 `reported/captured/reproduced`，未重跑不得称复现。独立复核由 `/review` 或 project-config `independent_review=true` 触发，fresh-context 逐 AC 核对（refute 即阻断）。
-- `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` 分别是复核 / 更新说明 / 查过时三帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，各帮手文件回指对应真源不重写。三帮手 G1–G4 均回指 overview §3。
+- `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` / `decision-work.md` 分别是复核 / 更新说明 / 查过时 / Decision Work 四帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，Decision Work 的 Task/Result/absorb 机器合同回指 `tools/decision-work/README.md`。各帮手文件回指对应真源不重写，并共同遵守 overview §3。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 
 ## 使用原则

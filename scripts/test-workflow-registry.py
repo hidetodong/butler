@@ -45,6 +45,14 @@ class WorkflowRegistryTests(unittest.TestCase):
             "docs/codex-compatibility.md", "docs/workflows.md", "scripts/setup.sh",
             "scripts/install-codex-plugin.sh", "plugins/butler/.codex-plugin/plugin.json",
             "plugins/butler/hooks/hooks.json",
+            "Coder/20_Workflow_Lifecycle/lifecycle.md",
+            "Coder/20_Workflow_Lifecycle/mcv-deployment.md",
+            "Coder/00_System_Prompt/logic-protocol.md",
+            "Coder/62_Extension_Agents/overview.md",
+            "Coder/62_Extension_Agents/decision-work.md",
+            "tools/decision-work/README.md",
+            "tools/decision-promotion/README.md",
+            "plugins/butler-pi/index.ts",
         }
         router = data["router"]
         copy_paths.update({router["rule_source"], router["claude"]["path"], router["codex"]["path"]})
@@ -100,6 +108,56 @@ class WorkflowRegistryTests(unittest.TestCase):
         examples = json.loads((self.root / "workflows/router-examples.json").read_text())["examples"]
         self.assertEqual(registry.EXPECTED_IDS, {item["expected_primary"] for item in examples if item["expected_primary"]})
         self.assertEqual(set(data["router"]["statuses"]), {item["expected_status"] for item in examples})
+        self.assertTrue(all(item["expected_state_writes"] is False for item in examples))
+
+    def test_explore_routing_corpus_is_explicit_and_fast_paths_stay_out(self) -> None:
+        data = registry.read_registry(self.root)
+        ideation = next(item for item in data["workflows"] if item["id"] == "ideation")
+        self.assertEqual(
+            {"explore", "探索", "Decision Map", "跨会话决策", "Wayfinder"},
+            {item for item in ideation["semantic_triggers"] if item in {"explore", "探索", "Decision Map", "跨会话决策", "Wayfinder"}},
+        )
+        examples = json.loads((self.root / "workflows/router-examples.json").read_text())["examples"]
+        actual = {item["request"]: (item["expected_status"], item["expected_primary"]) for item in examples}
+        expected = {
+            "这是一个明确的小修复，直接按普通流程处理": ("not-butler", None),
+            "需求已经明确，领一个迭代做这些内容": ("routed", "iteration"),
+            "这是明确的大版本，直接开 Milestone 拆路线": ("routed", "milestone"),
+            "只做轻量脑暴，不需要持久化 Decision Map": ("routed", "ideation"),
+            "用 Explore 建一张 Decision Map，跨会话比较这些方向": ("routed", "ideation"),
+            "帮我看看这个需求": ("ambiguous", None),
+        }
+        self.assertEqual(expected, {request: actual[request] for request in expected})
+        workflows = data["workflows"]
+
+        def literal_trigger_candidates(request: str) -> set[str]:
+            normalized = request.casefold()
+            return {
+                workflow["id"]
+                for workflow in workflows
+                if any(trigger.casefold() in normalized for trigger in workflow["semantic_triggers"])
+            }
+
+        # This is an auditable lower bound for explicit markers, not a second
+        # production classifier. Arbitrary paraphrase remains model-mediated.
+        literal_expected = {
+            "这是一个明确的小修复，直接按普通流程处理": set(),
+            "需求已经明确，领一个迭代做这些内容": {"iteration"},
+            "这是明确的大版本，直接开 Milestone 拆路线": {"milestone"},
+            "只做轻量脑暴，不需要持久化 Decision Map": {"ideation"},
+            "用 Explore 建一张 Decision Map，跨会话比较这些方向": {"ideation"},
+            "帮我看看这个需求": set(),
+        }
+        self.assertEqual(
+            literal_expected,
+            {request: literal_trigger_candidates(request) for request in literal_expected},
+        )
+        router = (self.root / data["router"]["rule_source"]).read_text(encoding="utf-8")
+        self.assertIn("routing decision itself is zero-write", router)
+        self.assertIn("not a clarity or size classifier", router)
+        pi = (self.root / "plugins/butler-pi/index.ts").read_text(encoding="utf-8")
+        for forbidden in ("semantic_triggers", "workflow-router.md", "decision-map/decision_map.py"):
+            self.assertNotIn(forbidden, pi)
 
     def test_setup_is_a_thin_machine_install_router(self) -> None:
         data = registry.read_registry(self.root)
@@ -114,6 +172,66 @@ class WorkflowRegistryTests(unittest.TestCase):
         self.assertIn("不初始化当前项目", contract)
         self.assertNotIn("configure-global-install.py", command)
         self.assertNotIn("install-codex-plugin.sh", skill)
+
+    def test_ideation_is_opt_in_explore_and_promotes_only_to_p1(self) -> None:
+        data = registry.read_registry(self.root)
+        ideation = next(item for item in data["workflows"] if item["id"] == "ideation")
+        self.assertEqual("Coder/50_Extension_Ideation/ideation-engine.md", ideation["rule_source"])
+        self.assertEqual("/butler:ideation", ideation["claude"]["name"])
+        self.assertEqual("$butler-ideation", ideation["codex"]["name"])
+        self.assertIn({"name": "/ideation", "status": "natural-language-compat"}, ideation["legacy_aliases"])
+        self.assertNotIn("explore", {item["id"] for item in data["workflows"]})
+
+        lifecycle = (self.root / "Coder/20_Workflow_Lifecycle/lifecycle.md").read_text(encoding="utf-8")
+        engine = (self.root / ideation["rule_source"]).read_text(encoding="utf-8")
+        router = (self.root / data["router"]["rule_source"]).read_text(encoding="utf-8")
+        command = (self.root / ideation["claude"]["path"]).read_text(encoding="utf-8")
+        skill = (self.root / ideation["codex"]["path"]).read_text(encoding="utf-8")
+        logic = (self.root / "Coder/00_System_Prompt/logic-protocol.md").read_text(encoding="utf-8")
+        deployment = (self.root / "Coder/20_Workflow_Lifecycle/mcv-deployment.md").read_text(encoding="utf-8")
+        coder_readme = (self.root / "Coder/README.md").read_text(encoding="utf-8")
+        agents = (self.root / "Coder/62_Extension_Agents/overview.md").read_text(encoding="utf-8")
+        decision_work_agent = (self.root / "Coder/62_Extension_Agents/decision-work.md").read_text(encoding="utf-8")
+        decision_work = (self.root / "tools/decision-work/README.md").read_text(encoding="utf-8")
+        decision_promotion = (self.root / "tools/decision-promotion/README.md").read_text(encoding="utf-8")
+
+        for token in ("具体阻塞项", "零状态写入", "用户明确同意", "普通明确需求继续直接"):
+            self.assertIn(token, lifecycle)
+        for token in ("P1→P5 执行生命周期之外", "Decision Map", "显式 promotion", "从 P1 Analysis"):
+            self.assertIn(token, engine)
+        for token in ("tools/decision-map/", "inspect / plan / apply / verify", "不得因为内部判断"):
+            self.assertIn(token, engine)
+        for token in ("tools/decision-work/", "显式选择 ID", "并行的只能是", "不会自动 resolve"):
+            self.assertIn(token, engine)
+        self.assertIn("user's original request is the only input", router)
+        self.assertIn("must not silently reroute", router)
+        self.assertIn("zero state writes", router)
+        self.assertIn("Iteration P1", command)
+        self.assertIn("never jump to P2", skill)
+        self.assertIn("模型不得用内部判断静默切换", logic)
+        self.assertIn("可选 Decision Map 载体", deployment)
+        self.assertIn("tools/decision-map/decision_map.py", deployment)
+        self.assertIn("tools/decision-work/decision_work.py", deployment)
+        self.assertIn("tools/decision-promotion/decision_promotion.py", deployment)
+        self.assertIn("不拥有 Explore 激活或 promotion", deployment)
+        self.assertIn("普通任务的必经主线", coder_readme)
+        self.assertIn("不做清晰度/大小分类", coder_readme)
+        self.assertIn("Decision Work", agents)
+        for token in ("不是新的 workflow", "不写目标项目", "显式 `absorb_result`", "只有 Research 可多项并行"):
+            self.assertIn(token, decision_work_agent)
+        for token in ("四动作 Interface", "不启动 agent", "helper 完成、record 成功", "不会改 Map"):
+            self.assertIn(token, decision_work)
+        for token in ("route-reference", "iteration-start", "不判断需求是否清晰", "不创建 Milestone route"):
+            self.assertIn(token, decision_promotion)
+        self.assertEqual(13, len(data["workflows"]))
+
+        forbidden_engine_contracts = (
+            "作为 P2 阶段的标准输入",
+            "结晶完成后，进入 `lifecycle.md` P2 阶段",
+            "Ideation 结论已转为 AC 清单并获得用户 ACK",
+        )
+        for text in forbidden_engine_contracts:
+            self.assertNotIn(text, engine)
 
     def test_write_is_idempotent_and_check_is_zero_write(self) -> None:
         data = registry.read_registry(self.root)

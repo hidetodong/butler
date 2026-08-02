@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "router-contract",
+  "iteration": "ITER-0106",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T14:28:07.509Z",
+  "finished_at": "2026-08-02T14:28:08.157Z",
+  "duration_ms": 646,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 289,
+    "captured_bytes": 289,
+    "sha256": "da89d67c8f800029f2c1f5d27173f94e07553f14db65874a0fd53bef22c32f12",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2217,
+    "captured_bytes": 2217,
+    "sha256": "cc54495f7073a1c13bd57f81da4945fe85764c200719e8d9b639d8e593d791a3",
+    "truncated": false
+  }
+}

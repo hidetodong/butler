@@ -1,0 +1,9 @@
+test_cli_emits_one_json_document (test_scenario.ExploreDogfoodScenarioTests.test_cli_emits_one_json_document) ... ok
+test_dogfood_report_has_four_complete_observations_and_one_verdict (test_scenario.ExploreDogfoodScenarioTests.test_dogfood_report_has_four_complete_observations_and_one_verdict) ... ok
+test_end_to_end_report_is_honest_and_recoverable (test_scenario.ExploreDogfoodScenarioTests.test_end_to_end_report_is_honest_and_recoverable) ... ok
+test_live_verifier_proves_refusal_without_semantic_writes (test_scenario.ExploreDogfoodScenarioTests.test_live_verifier_proves_refusal_without_semantic_writes) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.338s
+
+OK

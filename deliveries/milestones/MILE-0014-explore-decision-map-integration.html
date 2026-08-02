@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0014 交付总结 · Butler Explore 决策地图接入</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 { margin: 0 0 0.75rem; font-size: 1.5rem; line-height: 1.35; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level, .chip.date { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Butler Explore 决策地图接入</h1>
+      <div class="meta">
+        <span class="chip id">MILE-0014</span>
+        <span class="chip level">里程碑交付（大版本）</span>
+        <span class="chip date">收口 2026-08-02</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把 Wayfinder 值得借鉴的决策问题、依赖图、当前 Frontier 与跨会话恢复能力接入 Butler，同时守住单一入口、显式 opt-in 和原有交付生命周期。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>R1 冻结 Explore / Decision Map 的边界。</li>
+        <li>R2 交付本地 Decision Map 状态机。</li>
+        <li>R3 交付不可变 Decision Work sidecar 与单写 absorb。</li>
+        <li>R4 交付两个显式 Decision Promotion adapter。</li>
+        <li>R5 完成 Router 接线与 Butler 真实 dogfood。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>Butler 仍只有一个自然语言入口；Explore 仅在显式意图或用户接受具体 blocker 建议后启用。</li>
+        <li>Decision Map 只拥有探索期决策状态，Milestone 与 Iteration 继续拥有版本和交付真相。</li>
+        <li>用户可以选择已解决且依赖闭合的 slice，显式引用到 planned route 或从 Iteration P1 开工。</li>
+        <li>系统不按模型清晰度、大小或置信度静默建状态，也没有新增 Explore workflow ID。</li>
+        <li>真实 dogfood 证明单机恢复和 fail-closed 交接，但没有观察到 Research 并行提速。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>Explore / Ideation、Router、Milestone、Iteration 与 P1→P5 的领域边界。</li>
+        <li>Decision Map、Decision Work、Decision Promotion 三个确定性 Module。</li>
+        <li>Claude、Codex、Pi 薄适配与共享 registry / CI。</li>
+        <li>真实 dogfood 状态、观测报告、验证证据与项目知识文件夹。</li>
+      </ul>
+    </section>
+
+    <section class="block roadmap">
+      <h2>拆分路线图回填</h2>
+      <table>
+        <thead><tr><th>路线</th><th>交付切片</th><th>承接迭代</th><th>结果</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>Explore / Decision Map 边界合同</td><td>ITER-0102</td><td>closed</td></tr>
+          <tr><td>R2</td><td>Decision Map 本地状态机</td><td>ITER-0103</td><td>closed</td></tr>
+          <tr><td>R3</td><td>Decision Work 与单写吸收</td><td>ITER-0104</td><td>closed</td></tr>
+          <tr><td>R4</td><td>Milestone / Iteration 确定性交接</td><td>ITER-0105</td><td>closed</td></tr>
+          <tr><td>R5</td><td>Router 接线与真实 dogfood</td><td>ITER-0106</td><td>closed</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+        <li>五个迭代全部 closed，各自具备归档、双格式交付、机器 evidence 与 fold receipt。</li>
+        <li>三个 Decision Module 53 项、Router 13 项、dogfood 4 项及完整宿主矩阵通过。</li>
+        <li>live Map 可一条命令恢复；已占用路线的 promotion 零写拒绝，隔离合法交接通过。</li>
+        <li>ITER-0106 简评 Must Fix 0、Should Fix 0；关闭态项目审计与路线/台账对账通过。</li>
+      </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>任意自然语言路由仍由宿主模型理解，代表 corpus 不是生产误路由率。</li>
+        <li>Research 实际串行，没有证明并行时间收益。</li>
+        <li>外部 tracker 保持 defer，开放 Fog 与结构化卡片候办只作未来参考。</li>
+        <li>项目配置未启用独立复核。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li><code>.ai/milestones/MILE-0014/MILESTONE.md</code></li>
+        <li><code>deliveries/ITER-0102-explore-decision-map-boundary.md</code></li>
+        <li><code>deliveries/ITER-0103-decision-map-local-state-machine.md</code></li>
+        <li><code>deliveries/ITER-0104-decision-work-helper-contract.md</code></li>
+        <li><code>deliveries/ITER-0105-decision-promotion-bridge.md</code></li>
+        <li><code>deliveries/ITER-0106-explore-router-dogfood.md</code></li>
+        <li><code>docs/explore-dogfood-r5.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

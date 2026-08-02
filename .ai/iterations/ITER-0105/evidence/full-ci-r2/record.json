@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "full-ci-r2",
+  "iteration": "ITER-0105",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "env",
+      "PATH=/var/folders/x5/j871x_k54wb_1c5n7__wb99r0000gn/T//butler-uv-wheel-0.9.28/extracted/uv-0.9.28.data/scripts:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pkg/env/active/bin:/opt/pmk/env/global/bin:/Users/xingzidong/.codex/tmp/arg0/codex-arg0H4cul8:/Users/xingzidong/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xingzidong/.local/state/fnm_multishells/61232_1785508991822/bin:/Users/xingzidong/.cargo/bin:/Users/xingzidong/.local/bin:/Users/xingzidong/.local/share/fnm/node-versions/v23.10.0/installation/bin:/Users/xingzidong/.bun/bin:/opt/homebrew/opt/openjdk@17/bin:/Users/xingzidong/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Users/xingzidong/.local/bin",
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T02:56:56.089Z",
+  "finished_at": "2026-08-02T02:57:15.773Z",
+  "duration_ms": 19683,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 2587,
+    "captured_bytes": 2587,
+    "sha256": "765c63a03f6e85487ddd5e98135f1e08984342bf912dac3d34602302beae9736",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 5432,
+    "captured_bytes": 5432,
+    "sha256": "8c06c6cfea17f45a60cb5a45790609ac48ebf7a125b9a3128ab94314798cd3a8",
+    "truncated": false
+  }
+}

@@ -58,6 +58,38 @@
 - Claude `/butler:iteration` 与 Codex `$butler-iteration` 共用 `iteration-intake.md`：只总结零写；明确开工时由驻留工具分开结晶用户决定/模型建议/开放问题，拒绝双 active，并事务更新台账、五件套、里程碑、task-state 与 handoff。
 - 专项与完整矩阵已接入 `verify-ci.sh`；源码 plugin 保持精确 VERSION，个人安装副本单独加 cachebuster。
 
+## Explore / Decision Map 边界（MILE-0014 R1）
+
+- Butler 仍只有一个自然语言入口；Explore 是既有 `ideation` workflow 的 opt-in 深化模式，不是普通任务进入 P1 前的固定阶段。用户主动表达探索意图可直接进入；Standard 发现具体 blocker 时只能给出零写建议并等待同意。
+- `/butler:ideation`、`$butler-ideation` 与 legacy `/ideation` 共用 `Coder/50_Extension_Ideation/ideation-engine.md`。探索期 Decision Map 只保存已确认决定、开放问题和参考依据；未 promotion 不创建 Iteration 或四件套。
+- 显式 promotion 是唯一交付交接：先解析唯一项目根，再从 Iteration P1 生成 `CONCEPT.md`。进入交付后 Decision Map 降为理由、证据和历史参考，Milestone 与 Iteration 继续拥有路线和当前交付真相。
+
+## Decision Map 本地状态机（MILE-0014 R2）
+
+- `tools/decision-map/` 以 `inspect / plan / apply / verify` 四动作封装 Map 创建、Decision / Fog、依赖、Claim Lease、收敛与关闭；helper 只提交 operation spec，内核机械决定合法性。
+- 单 Map 单原子 state 是唯一可写真源，Frontier 始终派生；revision、state digest、永久 operation receipt、非阻塞文件锁与原子替换支持跨会话恢复、幂等重试和本地多进程竞争。
+- R2 只交付探索状态底座：没有新增 workflow 或用户入口，也没有实现 Milestone / Iteration promotion、远端协调或模型自动路由。
+
+## Decision Work 不可变决策工作（MILE-0014 R3）
+
+- `tools/decision-work/` 用同一 `inspect / plan / apply / verify` Interface 管理 `.ai/decision-work/<Map>/<Decision>/<Attempt>/{task.json,result.json}`；文件 create-only，状态、迟到性、与当前 Map 的关系和 absorbability 都从 sidecar + R2 查询派生。
+- 四种 work type 共享一个 host-neutral helper 合同：Research 可对显式选择、逐项 claim 的独立 Frontier Decision 组成 `1..8` batch；Prototype、Grilling、Task 保持单项 serial/HITL，helper 对目标项目与 Map 零写。
+- record 只保存 candidate/needs-input/failed/cancelled；只有协调器显式 absorb 才会在当刻生成 fresh R2 resolve plan并追加相对路径 + SHA-256 evidence pointer。完成、落盘或 absorbable 都不会自动解决 Decision。
+- 非阻塞 work lock、canonical digest、claim receipt、predecessor/batch binding、原子发布/回滚和 operation receipt 支持本地并发与跨进程恢复；R3 不新增 workflow、agent scheduler、R2 schema 或 R4 promotion。
+
+## Decision Promotion 确定性交接（MILE-0014 R4）
+
+- `tools/decision-promotion/` 从用户明确选择的 resolved Decision roots 计算依赖闭包，并提供 `route-reference` 与 `iteration-start` 两个 adapter；前者只更新既有 planned 路线引用，后者复用 iteration-intake 从 P1 创建一次 Iteration。
+- plan 绑定 source slice 与目标 digest，apply 发布不可变 receipt；幂等重放返回同一结果，目标漂移、未解决依赖、active Milestone 下缺少路线或不完整 pending 状态均 fail-closed。
+- 项目根 inode guard 与 `.ai` 锁覆盖 intake 回滚替换 `.ai` 的并发窗口，pending journal 让强杀后的未完成 promotion 可被 verify 检出；工具不做模型路由、不创建路线、不跳 P2，也不改变冻结后的 amend / re-ACK 纪律。
+
+## Explore Router 与 dogfood（MILE-0014 R5）
+
+- 唯一 `ideation` workflow 的 trigger 覆盖显式 Explore、探索、Decision Map、跨会话决策与 Wayfinder；普通明确任务继续原路径，Router 决策零写，不按清晰度、大小或置信度静默建状态。
+- `workflows/router-examples.json` 保存 24 个零写合同样本；六类核心快路径另有 literal-trigger 下界检查。它只锁显式标记与代表合同，不冒充任意自然语言分类器。
+- `tools/explore-dogfood/` 在临时项目端到端编排 Map / Work / Promotion，并能从新进程恢复 persisted 状态；live verifier 核对真实 `DMAP-0001`、deferred 候办和已占用路线的确定性零写拒绝。
+- 真实 dogfood 的 Research 请求为 parallel、实际为 serial / 非 fresh-context；外部 tracker 因没有观察到跨机器、多人、查询通知或规模阻塞，裁决为 defer。
+
 ## 持续验证与状态自证（MILE-0007 R2–R3）
 
 - `bash scripts/verify-ci.sh` 是开发机和 GitHub Actions 的唯一完整入口：固定 Python 3.12.12、uv 0.9.28 与 `uv.lock`，运行安装、状态/证据、双宿主、hooks、Markdown 和 CI contract 全矩阵。
@@ -133,6 +165,6 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 - `tools/delivery-selftest/` — 交付自测**人测回传桥**（Node 零依赖）：读 manifest JSON → 生成 GitHub 风格分步流程页 → 收人工四态回传（通过 / 未通过 / 延后 / 跳过）→ 写 `results.json` + 自退。P5 人测道下游接线协议 `20_Workflow_Lifecycle/human-test-bridge.md`，契约真源 `tools/delivery-selftest/README.md`。
 - `scripts/audit-project-state.py` — 收口/切版的**只读状态审计器**：机械对账台账、路线、归档、交付、Evidence Index、fold receipt 与 Butler 发布元数据；VERSION tag 必须实际指向 HEAD 才算已发布，工作树干净但提交领先 tag 仍亮 `UNRELEASED`。
 
-## 帮手（临时子 agent，不下发到项目）
+## 帮手（中立 worker 定义，不下发到项目）
 
-当前住册三帮手，用时读定义、临时起干净上下文子 agent 执行：复核（`independent-review`，只读、接 P5）/ 更新说明（`knowledge-fold`，收尾把改动折进 `.ai/project/`、只写该目录）/ 查过时（`drift-check`，抽查说明是否过时、只读）。名册与通用规矩真源 `62_Extension_Agents/overview.md`。
+当前住册四帮手：复核（`independent-review`，只读、接 P5）/ 更新说明（`knowledge-fold`，只写 `.ai/project/`）/ 查过时（`drift-check`，只读）/ Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）。检查类使用 fresh-context；Decision Work 按模式使用 fresh-context、serial 或 HITL 并如实回声。名册与通用规矩真源 `62_Extension_Agents/overview.md`。

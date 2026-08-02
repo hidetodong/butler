@@ -14,6 +14,16 @@ This file is the single source of truth for routing an unqualified Butler reques
 2. `/butler <natural language>` and implicit `$butler-router` invocation enter this router.
 3. Load `workflows/registry.json`; never route to the top-level `router` object itself.
 
+## Explore opt-in boundary
+
+The user's original request is the only input to semantic trigger matching. If that request explicitly asks to brainstorm, explore, compare directions, or says the requirement is not yet clear, routing to the existing `ideation` workflow is an opt-in action.
+
+Explicit Explore language includes the registered `ideation.semantic_triggers` such as Explore / 探索, Decision Map, cross-session decisions, Wayfinder, brainstorming, or an equally direct natural-language request to compare directions before delivery. This vocabulary is an auditable positive corpus, not a clarity or size classifier: absence of one literal phrase does not prove a request is clear, while vague wording alone does not authorize persistent Explore state.
+
+If a Standard workflow later infers that exploration may help, that inference is not a new router input and must not silently reroute. Follow `Coder/20_Workflow_Lifecycle/lifecycle.md §1.1`: state the concrete blocker, suggest Explore, perform zero state writes, and wait for user consent. On consent, route to the same existing `ideation` workflow; never create an `explore` workflow or duplicate the exploration algorithm here.
+
+The routing decision itself is zero-write. Returning `routed` only selects and loads a workflow; any later project write must pass that workflow's own consent, project-root, plan/apply, and lifecycle gates. `workflows/router-examples.json` is the executable representative corpus for this boundary, not another runtime router.
+
 ## Candidate selection
 
 1. Compare the request with each workflow's description and `semantic_triggers`.

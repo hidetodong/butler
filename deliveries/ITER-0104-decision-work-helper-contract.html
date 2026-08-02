@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0104 交付总结 · Decision Work 帮手合同与显式吸收</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 { margin: 0 0 0.75rem; font-size: 1.5rem; line-height: 1.35; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level, .chip.date { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em; background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot { margin-top: 1.5rem; text-align: center; color: var(--fg-muted); font-size: 0.8rem; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Decision Work 帮手合同与显式吸收</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0104</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-01</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把 Wayfinder 式“并行求证”接入 Butler 已有 Decision Map，同时确保 helper 只产出可审阅事实，不能靠模型临场判断直接改 Map 或推进交付流程。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul><li>新增 <code>tools/decision-work/</code> 四动作 Module，统一不可变 Task Packet 与 Result Envelope。</li><li>用一个 helper 合同覆盖 research、prototype、grilling、task；只有 Research 可对显式 claim 的 Decision 组成 batch。</li><li>建立四种结果、predecessor 接续、迟到/失败恢复与显式 absorb 合同。</li><li>接入 Ideation、帮手名册、驻留工具说明、领域词汇、workflow 边界和完整 CI。</li></ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul><li>Explore 仍是单一 opt-in 入口，不按需求大小、清晰度或置信度自动启用。</li><li>前期流程固定为“展示 Frontier → 显式选 ID → claim → prepare → helper/HITL → record → 审阅 → absorb”。</li><li>并行的是 Research 求证，不是 Map 写入；其它模式保持单项 serial/HITL。</li><li>helper 完成、result 落盘或 <code>absorbable=true</code> 都不会自动解决 Decision。</li></ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul><li>新增 Decision Work 深 Module、CLI、合同文档和 17 项专项测试。</li><li>新增一个 Decision Work 帮手定义，并更新 Agents、Ideation、部署说明、README 与 <code>CONTEXT.md</code>。</li><li>没有新增 workflow ID、宿主命令、R2 schema、agent scheduler 或 R4 promotion。</li></ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul><li>Decision Work 专项 17 项通过，覆盖真实并发、故障回滚、跨进程恢复、迟到/stale/篡改和 absorb。</li><li>P5 Must Fix 修复后风险定点 evidence 以 <code>reproduced</code> 通过，最终 Must Fix 0、Should Fix 0。</li><li>Workflow 合同 12 项通过，Router + 13 workflows 与 R1/R4 边界不变。</li><li>完整 CI 在 Python 3.12.12 / uv 0.9.28 下 exit 0；四份 evidence 已归档并复核。</li></ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul><li>真实 fresh-context/parallel 能力仍需 R5 多宿主 dogfood。</li><li>不可变 sidecar 的归档与压缩生命周期属于 R4。</li><li>Claim token digest 不是身份认证，文件锁也不覆盖跨主机协调。</li><li>R4 尚未启动，本轮不会自动创建下一迭代。</li></ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul><li><a href="../.ai/iterations/ITER-0104/CONCEPT.md"><code>.ai/iterations/ITER-0104/CONCEPT.md</code></a></li><li><a href="../.ai/iterations/ITER-0104/AC_LIST.md"><code>.ai/iterations/ITER-0104/AC_LIST.md</code></a></li><li><a href="../.ai/iterations/ITER-0104/TECH_PLAN.md"><code>.ai/iterations/ITER-0104/TECH_PLAN.md</code></a></li><li><a href="../.ai/iterations/ITER-0104/VERIFY_REPORT.md"><code>.ai/iterations/ITER-0104/VERIFY_REPORT.md</code></a></li><li><a href="../.ai/iterations/ITER-0104/CHANGELOG.md"><code>.ai/iterations/ITER-0104/CHANGELOG.md</code></a></li><li><a href="../.ai/iterations/ITER-0104/evidence/"><code>.ai/iterations/ITER-0104/evidence/</code></a></li></ul>
+    </section>
+
+    <footer class="delivery-foot">固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9</footer>
+  </main>
+</body>
+</html>

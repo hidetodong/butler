@@ -288,13 +288,17 @@ def validate_router_examples(root: Path, data: dict[str, Any]) -> None:
     except (OSError, json.JSONDecodeError) as error:
         raise RegistryError(f"router examples are invalid: {error}") from error
     exact_keys(fixture, {"schema_version", "examples"}, "router examples")
-    if fixture["schema_version"] != 1 or not isinstance(fixture["examples"], list):
+    if fixture["schema_version"] != 2 or not isinstance(fixture["examples"], list):
         raise RegistryError("router examples schema mismatch")
     statuses = set(data["router"]["statuses"])
     ids = {item["id"] for item in data["workflows"]}
     covered: set[str] = set()
     for index, example in enumerate(fixture["examples"]):
-        item = exact_keys(example, {"request", "expected_status", "expected_primary"}, f"router example[{index}]")
+        item = exact_keys(
+            example,
+            {"request", "expected_status", "expected_primary", "expected_state_writes"},
+            f"router example[{index}]",
+        )
         nonempty(item["request"], f"router example[{index}].request")
         if item["expected_status"] not in statuses:
             raise RegistryError(f"unknown router example status: {item['expected_status']}")
@@ -303,6 +307,8 @@ def validate_router_examples(root: Path, data: dict[str, Any]) -> None:
             raise RegistryError(f"unknown router example workflow: {primary}")
         if item["expected_status"] in {"routed", "explicit-required"} and primary is None:
             raise RegistryError("routed router example must name a primary workflow")
+        if item["expected_state_writes"] is not False:
+            raise RegistryError("routing examples must remain zero-write before workflow execution")
         if primary:
             covered.add(primary)
     if covered != ids:

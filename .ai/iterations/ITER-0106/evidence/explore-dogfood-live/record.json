@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "explore-dogfood-live",
+  "iteration": "ITER-0106",
+  "ac_ids": [
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC10",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/explore-dogfood/scenario.py",
+      "--inspect-project-root",
+      ".",
+      "--map-id",
+      "DMAP-0001"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T14:28:08.571Z",
+  "finished_at": "2026-08-02T14:28:08.658Z",
+  "duration_ms": 87,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 574,
+    "captured_bytes": 574,
+    "sha256": "3406627e2d79f5a22859a6762e1b9cd01958b10c57251a041b59506951a77cc2",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

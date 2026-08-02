@@ -11,7 +11,7 @@
 | upgrade | `/butler:upgrade` | `$butler-upgrade` | normal | 允许 | `upgrade Butler`、`升级 Butler`、`同步 Butler`、`version gap` | `/butler-upgrade` (deprecated) | `Coder/20_Workflow_Lifecycle/butler-upgrade.md` |
 | init | `/butler:init` | `$butler-init` | normal | 允许 | `init`、`initialize`、`初始化`、`部署基地车`、`deploy Butler`、`bootstrap` |  | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` |
 | setup | `/butler:setup` | `$butler-setup` | normal | 允许 | `setup Butler`、`install Butler`、`refresh Butler plugin`、`全局安装 Butler`、`刷新 Butler 命令` |  | `Coder/20_Workflow_Lifecycle/butler-setup.md` |
-| ideation | `/butler:ideation` | `$butler-ideation` | normal | 允许 | `brainstorm`、`脑暴`、`需求还没想清`、`refine idea` | `/ideation` (natural-language-compat) | `Coder/50_Extension_Ideation/ideation-engine.md` |
+| ideation | `/butler:ideation` | `$butler-ideation` | normal | 允许 | `brainstorm`、`脑暴`、`需求还没想清`、`refine idea`、`explore`、`探索`、`Decision Map`、`跨会话决策`、`Wayfinder` | `/ideation` (natural-language-compat) | `Coder/50_Extension_Ideation/ideation-engine.md` |
 | preference | `/butler:preference` | `$butler-preference` | normal | 允许 | `preference`、`偏好探针`、`reback`、`distill preference` | `/preference` (natural-language-compat) | `Coder/70_Extension_Preference/preference-probe-engine.md` |
 | loop | `/butler:loop` | `$butler-loop` | high | 禁止（必须显式） | `$butler-loop`、`/butler:loop`、`死磕`、`explicit convergence loop` | `/loop` (harness-collision-do-not-generate) | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
 | dangerous | `/butler:dangerous` | `$butler-dangerous` | high | 禁止（必须显式） | `$butler-dangerous`、`/butler:dangerous`、`危险模式`、`explicit unattended autonomy` | `/dangerous` (deprecated-do-not-generate) | `Coder/65_Extension_Dangerous/dangerous-engine.md` |

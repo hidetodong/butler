@@ -5,6 +5,10 @@
 .venv/
 .uv-cache/
 
+# Explore 本地并发锁（运行时生成，不是 Decision Map 状态真源）
+.ai/.decision-map-locks/
+.ai/.decision-work-locks/
+
 # Python 字节码缓存（hook 体系 pytest 运行时产生）
 __pycache__/
 *.py[cod]

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0103 交付总结 · Decision Map 本地合同与确定性状态机</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Decision Map 本地合同与确定性状态机</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0103</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-01</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把 Wayfinder 式依赖图、Frontier 与并行领取能力落成 Butler 的确定性本地状态 Module，同时避免把关键路由和状态转换交给模型临场判断。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul><li>新增驻留工具 <code>tools/decision-map/</code>，对外只提供 <code>inspect</code>、<code>plan</code>、<code>apply</code>、<code>verify</code> 四个动作。</li><li>为每张 Decision Map 建立单一原子状态、依赖 DAG、派生 Frontier、Fog graduation 和 Claim Lease 合同。</li><li>用 revision、state digest、operation receipt、文件锁和原子替换保证并发、幂等与故障恢复。</li><li>保持 R1 的单入口、opt-in 与显式 promotion 边界，并将 18 项专项测试接入完整 CI。</li></ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul><li>用户选择深入 Explore 后，可跨会话保存结构化 Map，并让多个 worker 在互不依赖的 Frontier 上领取决策工作。</li><li>模型或 helper 只提交 operation spec；状态机判断转换是否合法，模型的清晰度、大小或置信度不决定 Map 生命周期。</li><li>竞争、过期重领、旧 token、重复请求和写入故障都有确定性结果。</li><li>本轮没有增加第二个入口，也没有实现 Milestone / Iteration promotion。</li></ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul><li>新增 <code>tools/decision-map/</code> resident Module、CLI、合同文档和专项测试。</li><li>更新 Ideation 真源、驻留工具部署说明、Coder / 项目 README、workflow 合同测试与完整 CI。</li><li>没有新增 workflow registry ID、宿主命令、远端状态后端，也没有改变 Milestone / Iteration 的所有权。</li></ul>
+    </section>
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul><li>Decision Map 专项 18 项、Workflow 合同 12 项全部通过。</li><li>P5 同上下文风险复核：Must Fix 0、Should Fix 0；三项防御性细节修正后重新通过。</li><li>完整 <code>scripts/verify-ci.sh</code> 在 Python 3.12.12 / uv 0.9.28 下 exit 0。</li><li>四份 evidence 已归档并通过 archive verifier。</li></ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul><li><code>applied_operations</code> receipt 会随单张 Map 的操作数增长。</li><li>只保证当前 macOS / Linux 本地文件系统；不覆盖跨主机和网络文件系统协调。</li><li>Claim token 是协调凭据，不是权限认证边界。</li><li>R3 research helper 与 R4 promotion 仍为 planned，必须由用户显式启动。</li></ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul><li><a href="../.ai/iterations/ITER-0103/CONCEPT.md"><code>.ai/iterations/ITER-0103/CONCEPT.md</code></a></li><li><a href="../.ai/iterations/ITER-0103/AC_LIST.md"><code>.ai/iterations/ITER-0103/AC_LIST.md</code></a></li><li><a href="../.ai/iterations/ITER-0103/TECH_PLAN.md"><code>.ai/iterations/ITER-0103/TECH_PLAN.md</code></a></li><li><a href="../.ai/iterations/ITER-0103/VERIFY_REPORT.md"><code>.ai/iterations/ITER-0103/VERIFY_REPORT.md</code></a></li><li><a href="../.ai/iterations/ITER-0103/CHANGELOG.md"><code>.ai/iterations/ITER-0103/CHANGELOG.md</code></a></li><li><a href="../.ai/iterations/ITER-0103/evidence/"><code>.ai/iterations/ITER-0103/evidence/</code></a></li></ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

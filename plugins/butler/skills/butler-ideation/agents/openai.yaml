@@ -1,6 +1,6 @@
 interface:
   display_name: "Butler Ideation"
-  short_description: "Run the Butler ideation workflow safely"
+  short_description: "Explore decisions before explicitly promoting to P1"
   default_prompt: "Use $butler-ideation to refine this idea before execution."
 policy:
   allow_implicit_invocation: true

@@ -160,7 +160,7 @@ AI 会自动走完整个链路：
 │   ├── milestones/          # 各里程碑收口快照（MILE-NNNN/，按需产生）
 │   ├── local-constraints.md # 人类可读本地化约束
 │   ├── butler.config.json   # Butler 项目级机器配置
-│   ├── 00_IDEATION.md       # 脑暴产物（/ideation 模式）
+│   ├── 00_IDEATION.md       # opt-in Explore 的可选 Decision Map 载体
 │   ├── 01_CHANGELOG.md      # 技术决策日志
 │   ├── 02_SESSION_HANDOFF.md # 跨会话恢复入口
 │   ├── 03_BUG_LOG.md        # RCA 报告
@@ -208,7 +208,7 @@ Butler 提供若干可选扩展模式，通过指令或语义触发，默认不�
 
 | 模式 | 触发方式 | 用途 |
 |---|---|---|
-| **Ideation** | `/ideation` 或 "脑暴"、"完善需求"、"想不清楚"、"还没想好" | 需求脑暴与完善 |
+| **Explore / Ideation** | `/butler:ideation`、`$butler-ideation`、legacy `/ideation`，用户主动说“脑暴 / 还没想清”，或接受 Butler 的具体建议 | 在 P1→P5 之外梳理决定、开放问题与依据；显式 promotion 后从 Iteration P1 接回 |
 | **收敛闭环** | `/butler:loop` 或 "死磕"、"必须变绿" | 高强度纠错升档（死磕到绿 + 定量熔断）；底线由常驻纠错收口契约保证 |
 | **Review** | `/review` 或 "看看写得怎么样"、"代码审查" | 代码审计：P5 默认同上下文轻量自评；**独立复核**（fresh-context 第三方 agent）手动 `/review` 或项目配置开启，详见下方 |
 | **Dangerous** ⚠️ | `/butler:dangerous` 或 "放手做"、"自己跑完"、"别等我确认" | 实验性无人值守长程自治：自动拆迭代连续推进、P2/P3 ACK 由自审门替代，附审计/回滚/P5 强制审查护栏。仅在可隔离、可回滚环境用 |
@@ -405,7 +405,7 @@ Coder/
 │   ├── handoff-spec.md        # 02_SESSION_HANDOFF.md 格式契约
 │   ├── sidework-receipt.md    # 旁路工作短回执与显式回钩
 │   └── role-switch.md         # Architect/Coder/Reviewer 角色切换
-├── 50_Extension_Ideation/     # 脑暴扩展
+├── 50_Extension_Ideation/     # opt-in Explore / Ideation 探索真源
 ├── 55_Extension_ConvergenceLoop/ # 收敛闭环扩展（/butler:loop 升档）
 ├── 60_Extension_CodeReview/   # 代码审查扩展
 ├── 65_Extension_Dangerous/    # 无人值守长程自治扩展（实验性）

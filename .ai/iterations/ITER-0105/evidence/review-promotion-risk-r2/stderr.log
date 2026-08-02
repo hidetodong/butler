@@ -1,0 +1,12 @@
+test_route_reference_only_adds_receipt_semantic_state_and_is_inspectable (test_engine.DecisionPromotionTests.test_route_reference_only_adds_receipt_semantic_state_and_is_inspectable) ... ok
+test_iteration_start_reuses_intake_and_writes_source_reference (test_engine.DecisionPromotionTests.test_iteration_start_reuses_intake_and_writes_source_reference) ... ok
+test_receipt_replay_is_idempotent_and_id_conflict_fails (test_engine.DecisionPromotionTests.test_receipt_replay_is_idempotent_and_id_conflict_fails) ... ok
+test_two_processes_commit_one_receipt_for_same_plan (test_engine.DecisionPromotionTests.test_two_processes_commit_one_receipt_for_same_plan) ... ok
+test_project_root_guard_blocks_even_if_ai_lock_inode_can_change (test_engine.DecisionPromotionTests.test_project_root_guard_blocks_even_if_ai_lock_inode_can_change) ... ok
+test_pending_journal_makes_pre_callback_crash_detectable_and_blocks_retry (test_engine.DecisionPromotionTests.test_pending_journal_makes_pre_callback_crash_detectable_and_blocks_retry) ... ok
+test_intake_callback_or_sync_failure_rolls_back_all_ai_state (test_engine.DecisionPromotionTests.test_intake_callback_or_sync_failure_rolls_back_all_ai_state) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.122s
+
+OK

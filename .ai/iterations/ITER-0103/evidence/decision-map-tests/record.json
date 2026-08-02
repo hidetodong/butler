@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "decision-map-tests",
+  "iteration": "ITER-0103",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/decision-map/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T12:05:02.481Z",
+  "finished_at": "2026-08-01T12:05:03.405Z",
+  "duration_ms": 924,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2785,
+    "captured_bytes": 2785,
+    "sha256": "c28639cddd92eb5b04a152fc1f9bdefad39c119f5cbfec758e71e714d1799d16",
+    "truncated": false
+  }
+}

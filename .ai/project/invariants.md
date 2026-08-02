@@ -23,6 +23,11 @@
 - **共同内核 + 宿主薄适配**：`Coder/`、`.ai/`、规则卡和共享判断算法属于共同内核；Claude Code 与 Codex 的入口、命令/skills、hook 配置只做协议适配，不复制规则正文。*为什么*：双写会让两个宿主的规则逐渐漂移。
 - **Codex skill 单一实体源**：Router + 13 个业务 skill 的实体只在 `plugins/butler/skills/`；`.agents/skills/` 必须保持相对软链，不能复制 SKILL.md。*为什么*：repo discovery 与 plugin 分发若各存一份会漂移。
 - **工作流元数据单一注册源**：Router 元入口与 13 个业务工作流的宿主名称/路径、风险/隐式策略、触发/排除/冲突/前置和分发声明只在 `workflows/registry.json` 维护；`docs/workflows.md` 与入口元数据是生成投影。Router 不路由到自身，显式具体入口绕过 Router，loop/dangerous 永远显式调用。*为什么*：人工同步多宿主和多文档会漂移，尤其可能无声降低高风险或机器级写入门槛。
+- **Router corpus 是合同下界，不是第二分类器**：机器检查可以锁定显式 trigger、代表 status 和零写边界，但任意自然语言含义仍由宿主模型按共同 Router 合同理解；不得为了让测试看似更确定而新增关键词分类引擎。*为什么*：有限词表既无法解决语义判断，又会与 Router 正文形成第二算法真源。
+- **Explore opt-in 且只从 P1 交付**：用户主动探索或接受带具体 blocker 的零写建议才进入既有 Ideation；Decision Map 只拥有探索决策状态，显式 promotion 后降为参考并从 Iteration P1 接回，不直入 P2、不覆盖 Milestone 或冻结 AC。*为什么*：让模型自行判定清晰度/大小并静默建状态，会把整个确定性生命周期建立在脆弱入口上；新增 Explore workflow 又会制造第二真源。
+- **Decision Map 状态由确定性 Module 独占**：每张 Map 只有 canonical `state.json` 可写，Frontier 只从依赖与状态派生；helper 不得绕过 `inspect / plan / apply / verify` 直接改 JSON，目录级全局索引也不得成为第二写真源。*为什么*：并行领取、幂等恢复和跨会话继续只有在所有转换共用同一校验与提交边界时才可信。
+- **决策求证可并行，Map 吸收必须单写**：Decision Work 只发布不可变 Task/Result，只有显式选择并逐项 claim 的 Research 可多项 batch；helper 完成、record 或 absorbable 都不等于 resolved，协调器必须显式 absorb 且只经 Decision Map Module 提交。*为什么*：把求证吞吐与状态所有权拆开，才能获得并行收益而不把最终决策交给 helper 或模型置信度。
+- **Decision Promotion 只做显式、可重放的交接**：调用方必须指定 resolved Decision roots 与 `route-reference` / `iteration-start`；前者只引用既有 planned 路线，后者只复用 iteration-intake 从 P1 开始。source/target digest、不可变 receipt 与 pending journal 共同 fail-closed，工具不得创建路线、自动选路或跳 P2。*为什么*：Decision Map 应是参考来源而非第二交付真源，交接边界也不能重新依赖模型对清晰度、大小或目标容器的临场判断。
 - **双入口共同渲染**：目标项目 CLAUDE.md/AGENTS.md 必须由 `render-project-entrypoints.py` 从两模板 + 单一 rule-card 同步产生；管理区外原文、两份 user-managed 区各自保留，marker 异常 fail-closed。*为什么*：手工分别更新会漂移或覆盖用户内容。
 - **项目根先于任何台账写入**：会话 cwd 只是发现起点，用户点名路径优先；否则只接受最近已部署 Butler 根或 Git 根。无法唯一证明时不创建 `.ai/`、不扫子目录猜测。*为什么*：多仓聚合目录是会话容器，不是其中每个项目的共享台账根。
 - **全局用户配置先验安全**：安装器必须先完整校验 marker、有效 export 与命令软链所有权，再逐对象同目录暂存并原子替换；证据不足时 fail-closed，跨组件部分成功必须如实回声。*为什么*：全局配置属于用户资产，幂等便利不能凌驾于不丢数据和不误接管。
@@ -39,6 +44,6 @@
 - **收口是原子仪式**：`iteration-schema §5.5` 五步——①校验并整包归档 evidence，再归档四件套 + changelog 切片 ②交付 md+html ③翻台账 + 收编 01_CHANGELOG ④前滚项目全貌并写 fold receipt（**文件夹态按主题必做折叠** / 单文件态按需前滚）⑤先跑 state auditor 再查语义漂移；前三必做、缺一不可。
 - **一致性自检 6 不变量**：冷启动读序末 + 收口末步各跑一遍——current↔状态一致 / 至多一个 active 迭代 / closed 有交付且文件在 / closed 有归档 / 里程碑路线项对账 / **知识文件夹漂移**（第 6 条，条件不变量：采用 `.ai/project/` 的项目适用、单文件项目 N/A；MILE-0003 R3 起）。**butler 自身现已进第 6 条适用范围**。
 - **每迭代对象级变更流**：`01_CHANGELOG.md` 记本迭代 ADD/EDIT/DELETE（绑 AC、文件 + 章节级），收口归档 `iterations/ITER-NNNN/CHANGELOG.md`。Review / 自评的 Should Fix 归 `VERIFY_REPORT.md` 的 Remaining Risks，不入 changelog。
-- **帮手名册（MILE-0003 R1/R4）**：butler 派出去的"帮手"= 一份中立定义资料、用时读、临时起干净子 agent 执行、**不下发到项目**；总述 `62_Extension_Agents/overview.md` 是名册 + 通用规矩 G1–G4（干净上下文 / 叫不起来如实说绝不假装做过 / 权限约定 / 定义用时读不下发）的唯一真源。折叠必做（收口步④定），唤帮手 opt-in 非强制（起不了子 agent 则主线自做并如实标注）。
+- **帮手是中立 worker 定义，不等于一律起子 agent**：总述 `62_Extension_Agents/overview.md` 是名册 + 通用规矩 G1–G4 的唯一真源；检查类必须 fresh-context，Decision Work 按 research/serial/HITL 合同执行并如实回传实际模式，定义本身不下发到项目。*为什么*：隔离要求应服务于角色，不能为统一术语伪造宿主能力或把真人问答后台化。
 - **冷启动全貌产物 = 知识文件夹（MILE-0003 R2 起）**：`project-digest-schema.md` 把全貌产物从"单文件薄索引"升级为 `.ai/project/` 知识文件夹（`00_INDEX` + 推荐主题集 + digest-and-point 密度 + 收口折叠 + overwrite 禁历史层）。哲学=越补越全的知识地图，最大风险=陈旧的完整比诚实的薄更毒，故生死系于强制 + 可验证的收口折叠。
 - **输出说人话（MILE-0003 R7 起）**：面向人的输出（对话 + 落地文档）守说人话三条硬标准——术语先解释 / 比喻要落地 / 别让英文·变量裸奔；真源 `artifact-style.md §2`，对话层 `presentation-protocol.md §7` 引用不重述。

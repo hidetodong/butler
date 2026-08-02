@@ -1,0 +1,803 @@
+[OK] iterations.ids: 格式均合法
+[OK] iterations.status: 状态均合法
+[OK] iterations.single_active: active=['ITER-0106']
+[OK] iterations.current: current=ITER-0106, expected=ITER-0106
+[OK] ITER-0105.closed_date: 2026-08-02
+[OK] ITER-0105.delivery: deliveries/ITER-0105-decision-promotion-bridge.md
+[OK] ITER-0105.delivery_html: deliveries/ITER-0105-decision-promotion-bridge.html
+[OK] ITER-0105.archive: complete
+[OK] ITER-0105.evidence_index: ids=['decision-promotion-tests', 'decision-promotion-tests-r2', 'full-ci', 'full-ci-r2', 'full-ci-r3', 'markdown-links', 'review-promotion-risk', 'review-promotion-risk-r2', 'workflow-contract']
+[OK] ITER-0105.evidence_iteration: 引用迭代一致
+[OK] ITER-0105.evidence_set: index=['decision-promotion-tests', 'decision-promotion-tests-r2', 'full-ci', 'full-ci-r2', 'full-ci-r3', 'markdown-links', 'review-promotion-risk', 'review-promotion-risk-r2', 'workflow-contract'], actual=['decision-promotion-tests', 'decision-promotion-tests-r2', 'full-ci', 'full-ci-r2', 'full-ci-r3', 'markdown-links', 'review-promotion-risk', 'review-promotion-risk-r2', 'workflow-contract']
+[OK] ITER-0105.evidence_ac_coverage: auto=['AC1', 'AC10', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0105.evidence_diagnostics: 保留非通过记录=['full-ci-r2']
+[OK] ITER-0105.evidence_hashes: [OK] decision-promotion-tests; [OK] decision-promotion-tests-r2; [OK] full-ci; [OK] full-ci-r2; [OK] full-ci-r3; [OK] markdown-links; [OK] review-promotion-risk; [OK] review-promotion-risk-r2; [OK] workflow-contract
+[OK] ITER-0105.fold_receipt: topics=4, mode=current
+[OK] ITER-0104.closed_date: 2026-08-01
+[OK] ITER-0104.delivery: deliveries/ITER-0104-decision-work-helper-contract.md
+[OK] ITER-0104.delivery_html: deliveries/ITER-0104-decision-work-helper-contract.html
+[OK] ITER-0104.archive: complete
+[OK] ITER-0104.evidence_index: ids=['decision-work-tests', 'full-ci', 'review-decision-work-risk', 'workflow-contract']
+[OK] ITER-0104.evidence_iteration: 引用迭代一致
+[OK] ITER-0104.evidence_set: index=['decision-work-tests', 'full-ci', 'review-decision-work-risk', 'workflow-contract'], actual=['decision-work-tests', 'full-ci', 'review-decision-work-risk', 'workflow-contract']
+[OK] ITER-0104.evidence_ac_coverage: auto=['AC1', 'AC10', 'AC11', 'AC12', 'AC13', 'AC14', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC11', 'AC12', 'AC13', 'AC14', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0104.evidence_hashes: [OK] decision-work-tests; [OK] full-ci; [OK] review-decision-work-risk; [OK] workflow-contract
+[OK] ITER-0104.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0103.closed_date: 2026-08-01
+[OK] ITER-0103.delivery: deliveries/ITER-0103-decision-map-local-state-machine.md
+[OK] ITER-0103.delivery_html: deliveries/ITER-0103-decision-map-local-state-machine.html
+[OK] ITER-0103.archive: complete
+[OK] ITER-0103.evidence_index: ids=['decision-map-tests', 'full-ci', 'review-decision-map-risk', 'workflow-contract']
+[OK] ITER-0103.evidence_iteration: 引用迭代一致
+[OK] ITER-0103.evidence_set: index=['decision-map-tests', 'full-ci', 'review-decision-map-risk', 'workflow-contract'], actual=['decision-map-tests', 'full-ci', 'review-decision-map-risk', 'workflow-contract']
+[OK] ITER-0103.evidence_ac_coverage: auto=['AC1', 'AC10', 'AC11', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC11', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0103.evidence_hashes: [OK] decision-map-tests; [OK] full-ci; [OK] review-decision-map-risk; [OK] workflow-contract
+[OK] ITER-0103.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0102.closed_date: 2026-08-01
+[OK] ITER-0102.delivery: deliveries/ITER-0102-explore-decision-map-boundary.md
+[OK] ITER-0102.delivery_html: deliveries/ITER-0102-explore-decision-map-boundary.html
+[OK] ITER-0102.archive: complete
+[OK] ITER-0102.evidence_index: ids=['explore-contract', 'full-ci', 'review-explore-contract']
+[OK] ITER-0102.evidence_iteration: 引用迭代一致
+[OK] ITER-0102.evidence_set: index=['explore-contract', 'full-ci', 'review-explore-contract'], actual=['explore-contract', 'full-ci', 'review-explore-contract']
+[OK] ITER-0102.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6']
+[OK] ITER-0102.evidence_hashes: [OK] explore-contract; [OK] full-ci; [OK] review-explore-contract
+[OK] ITER-0102.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0101.closed_date: 2026-08-01
+[OK] ITER-0101.delivery: deliveries/ITER-0101-plugin-refresh-runtime-fix.md
+[OK] ITER-0101.delivery_html: deliveries/ITER-0101-plugin-refresh-runtime-fix.html
+[OK] ITER-0101.archive: complete
+[OK] ITER-0101.evidence_index: ids=['full-ci', 'full-ci-final', 'full-ci-final2']
+[OK] ITER-0101.evidence_iteration: 引用迭代一致
+[OK] ITER-0101.evidence_set: index=['full-ci', 'full-ci-final', 'full-ci-final2'], actual=['full-ci', 'full-ci-final', 'full-ci-final2']
+[OK] ITER-0101.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4'], passed=['AC1', 'AC2', 'AC3', 'AC4']
+[INFO] ITER-0101.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-final']
+[OK] ITER-0101.evidence_hashes: [OK] full-ci; [OK] full-ci-final; [OK] full-ci-final2
+[OK] ITER-0101.fold_receipt: topics=2, mode=historical-snapshot
+[OK] ITER-0100.closed_date: 2026-08-01
+[OK] ITER-0100.delivery: deliveries/ITER-0100-semantic-router-session-intake.md
+[OK] ITER-0100.delivery_html: deliveries/ITER-0100-semantic-router-session-intake.html
+[OK] ITER-0100.archive: complete
+[OK] ITER-0100.evidence_index: ids=['full-ci', 'global-install', 'iteration-intake', 'router-registry']
+[OK] ITER-0100.evidence_iteration: 引用迭代一致
+[OK] ITER-0100.evidence_set: index=['full-ci', 'global-install', 'iteration-intake', 'router-registry'], actual=['full-ci', 'global-install', 'iteration-intake', 'router-registry']
+[OK] ITER-0100.evidence_ac_coverage: auto=['AC1', 'AC10', 'AC11', 'AC12', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC11', 'AC12', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0100.evidence_hashes: [OK] full-ci; [OK] global-install; [OK] iteration-intake; [OK] router-registry
+[OK] ITER-0100.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0099.closed_date: 2026-08-01
+[OK] ITER-0099.delivery: deliveries/ITER-0099-hook-tree-digest-alignment.md
+[OK] ITER-0099.delivery_html: deliveries/ITER-0099-hook-tree-digest-alignment.html
+[OK] ITER-0099.archive: complete
+[OK] ITER-0099.evidence_index: ids=['deployed-hook-matrix', 'deployed-hook-matrix-final', 'full-ci', 'radar-plan', 'upgrader-tests']
+[OK] ITER-0099.evidence_iteration: 引用迭代一致
+[OK] ITER-0099.evidence_set: index=['deployed-hook-matrix', 'deployed-hook-matrix-final', 'full-ci', 'radar-plan', 'upgrader-tests'], actual=['deployed-hook-matrix', 'deployed-hook-matrix-final', 'full-ci', 'radar-plan', 'upgrader-tests']
+[OK] ITER-0099.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0099.evidence_diagnostics: 保留非通过记录=['deployed-hook-matrix']
+[OK] ITER-0099.evidence_hashes: [OK] deployed-hook-matrix; [OK] deployed-hook-matrix-final; [OK] full-ci; [OK] radar-plan; [OK] upgrader-tests
+[OK] ITER-0099.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0098.closed_date: 2026-07-31
+[OK] ITER-0098.delivery: deliveries/ITER-0098-open-source-readiness.md
+[OK] ITER-0098.delivery_html: deliveries/ITER-0098-open-source-readiness.html
+[OK] ITER-0098.archive: complete
+[OK] ITER-0098.evidence_index: ids=['full-ci', 'full-ci-final', 'full-ci-retry', 'readme-open-source-readiness', 'repository-doc-checks']
+[OK] ITER-0098.evidence_iteration: 引用迭代一致
+[OK] ITER-0098.evidence_set: index=['full-ci', 'full-ci-final', 'full-ci-retry', 'readme-open-source-readiness', 'repository-doc-checks'], actual=['full-ci', 'full-ci-final', 'full-ci-retry', 'readme-open-source-readiness', 'repository-doc-checks']
+[OK] ITER-0098.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0098.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-retry']
+[OK] ITER-0098.evidence_hashes: [OK] full-ci; [OK] full-ci-final; [OK] full-ci-retry; [OK] readme-open-source-readiness; [OK] repository-doc-checks
+[OK] ITER-0098.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0097.closed_date: 2026-07-30
+[OK] ITER-0097.delivery: deliveries/ITER-0097-communication-style-slim.md
+[OK] ITER-0097.delivery_html: deliveries/ITER-0097-communication-style-slim.html
+[OK] ITER-0097.archive: complete
+[OK] ITER-0097.evidence_index: ids=['clause-coverage', 'style-slim-checks']
+[OK] ITER-0097.evidence_iteration: 引用迭代一致
+[OK] ITER-0097.evidence_set: index=['clause-coverage', 'style-slim-checks'], actual=['clause-coverage', 'style-slim-checks']
+[OK] ITER-0097.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0097.evidence_hashes: [OK] clause-coverage; [OK] style-slim-checks
+[OK] ITER-0097.fold_receipt: topics=2, mode=historical-snapshot
+[OK] ITER-0096.closed_date: 2026-07-29
+[OK] ITER-0096.delivery: deliveries/ITER-0096-sidework-receipt.md
+[OK] ITER-0096.delivery_html: deliveries/ITER-0096-sidework-receipt.html
+[OK] ITER-0096.archive: complete
+[OK] ITER-0096.evidence_index: ids=['close-diff-check', 'diff-check', 'full-ci', 'markdown-links', 'reproduced-full-ci', 'review-diff-check', 'review-full-ci', 'review-markdown-links', 'review-sidework-contract', 'sidework-contract', 'state-audit-active', 'state-audit-active-final']
+[OK] ITER-0096.evidence_iteration: 引用迭代一致
+[OK] ITER-0096.evidence_set: index=['close-diff-check', 'diff-check', 'full-ci', 'markdown-links', 'reproduced-full-ci', 'review-diff-check', 'review-full-ci', 'review-markdown-links', 'review-sidework-contract', 'sidework-contract', 'state-audit-active', 'state-audit-active-final'], actual=['close-diff-check', 'diff-check', 'full-ci', 'markdown-links', 'reproduced-full-ci', 'review-diff-check', 'review-full-ci', 'review-markdown-links', 'review-sidework-contract', 'sidework-contract', 'state-audit-active', 'state-audit-active-final']
+[OK] ITER-0096.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6']
+[INFO] ITER-0096.evidence_diagnostics: 保留非通过记录=['full-ci']
+[OK] ITER-0096.evidence_hashes: [OK] close-diff-check; [OK] diff-check; [OK] full-ci; [OK] markdown-links; [OK] reproduced-full-ci; [OK] review-diff-check; [OK] review-full-ci; [OK] review-markdown-links; [OK] review-sidework-contract; [OK] sidework-contract; [OK] state-audit-active; [OK] state-audit-active-final
+[OK] ITER-0096.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0095.closed_date: 2026-07-28
+[OK] ITER-0095.delivery: deliveries/ITER-0095-project-config-consumers.md
+[OK] ITER-0095.delivery_html: deliveries/ITER-0095-project-config-consumers.html
+[OK] ITER-0095.archive: complete
+[OK] ITER-0095.evidence_index: ids=['diff-check', 'full-ci', 'project-config-tests', 'reproduced-full-ci', 'reproduced-project-config-tests', 'review-full-ci', 'review-project-config-tests', 'state-audit-active', 'state-audit-active-final', 'state-audit-closed', 'upgrader-tests']
+[OK] ITER-0095.evidence_iteration: 引用迭代一致
+[OK] ITER-0095.evidence_set: index=['diff-check', 'full-ci', 'project-config-tests', 'reproduced-full-ci', 'reproduced-project-config-tests', 'review-full-ci', 'review-project-config-tests', 'state-audit-active', 'state-audit-active-final', 'state-audit-closed', 'upgrader-tests'], actual=['diff-check', 'full-ci', 'project-config-tests', 'reproduced-full-ci', 'reproduced-project-config-tests', 'review-full-ci', 'review-project-config-tests', 'state-audit-active', 'state-audit-active-final', 'state-audit-closed', 'upgrader-tests']
+[OK] ITER-0095.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0095.evidence_diagnostics: 保留非通过记录=['full-ci', 'project-config-tests', 'state-audit-active']
+[OK] ITER-0095.evidence_hashes: [OK] diff-check; [OK] full-ci; [OK] project-config-tests; [OK] reproduced-full-ci; [OK] reproduced-project-config-tests; [OK] review-full-ci; [OK] review-project-config-tests; [OK] state-audit-active; [OK] state-audit-active-final; [OK] state-audit-closed; [OK] upgrader-tests
+[OK] ITER-0095.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0094.closed_date: 2026-07-28
+[OK] ITER-0094.delivery: deliveries/ITER-0094-project-config-migration.md
+[OK] ITER-0094.delivery_html: deliveries/ITER-0094-project-config-migration.html
+[OK] ITER-0094.archive: complete
+[OK] ITER-0094.evidence_index: ids=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'full-ci', 'full-ci-reproduced', 'project-config-migration-tests', 'review-project-config-tests', 'review-upgrader-config-tests', 'upgrader-config-migration-tests']
+[OK] ITER-0094.evidence_iteration: 引用迭代一致
+[OK] ITER-0094.evidence_set: index=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'full-ci', 'full-ci-reproduced', 'project-config-migration-tests', 'review-project-config-tests', 'review-upgrader-config-tests', 'upgrader-config-migration-tests'], actual=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'full-ci', 'full-ci-reproduced', 'project-config-migration-tests', 'review-project-config-tests', 'review-upgrader-config-tests', 'upgrader-config-migration-tests']
+[OK] ITER-0094.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0094.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+[OK] ITER-0094.evidence_hashes: [OK] diff-check; [OK] final-full-ci; [OK] final-full-ci-reproduced; [OK] full-ci; [OK] full-ci-reproduced; [OK] project-config-migration-tests; [OK] review-project-config-tests; [OK] review-upgrader-config-tests; [OK] upgrader-config-migration-tests
+[OK] ITER-0094.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0093.closed_date: 2026-07-28
+[OK] ITER-0093.delivery: deliveries/ITER-0093-project-config-core.md
+[OK] ITER-0093.delivery_html: deliveries/ITER-0093-project-config-core.html
+[OK] ITER-0093.archive: complete
+[OK] ITER-0093.evidence_index: ids=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'final-project-config-tests', 'full-ci', 'full-ci-reproduced', 'project-config-tests', 'review-final-project-config-tests', 'review-project-config-tests']
+[OK] ITER-0093.evidence_iteration: 引用迭代一致
+[OK] ITER-0093.evidence_set: index=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'final-project-config-tests', 'full-ci', 'full-ci-reproduced', 'project-config-tests', 'review-final-project-config-tests', 'review-project-config-tests'], actual=['diff-check', 'final-full-ci', 'final-full-ci-reproduced', 'final-project-config-tests', 'full-ci', 'full-ci-reproduced', 'project-config-tests', 'review-final-project-config-tests', 'review-project-config-tests']
+[OK] ITER-0093.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0093.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+[OK] ITER-0093.evidence_hashes: [OK] diff-check; [OK] final-full-ci; [OK] final-full-ci-reproduced; [OK] final-project-config-tests; [OK] full-ci; [OK] full-ci-reproduced; [OK] project-config-tests; [OK] review-final-project-config-tests; [OK] review-project-config-tests
+[OK] ITER-0093.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0092.closed_date: 2026-07-26
+[OK] ITER-0092.delivery: deliveries/ITER-0092-tdd-goal-gate-dogfood.md
+[OK] ITER-0092.delivery_html: deliveries/ITER-0092-tdd-goal-gate-dogfood.html
+[OK] ITER-0092.archive: complete
+[OK] ITER-0092.evidence_index: ids=['r2-artifact-tests', 'r2-final-full-ci', 'r2-focused-tests', 'r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-index-failure', 'r2-green-sandbox-failure', 'tdd-goal-gate-green', 'tdd-goal-gate-red']
+[OK] ITER-0092.evidence_iteration: 引用迭代一致
+[OK] ITER-0092.evidence_set: index=['r2-artifact-tests', 'r2-final-full-ci', 'r2-focused-tests', 'r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-index-failure', 'r2-green-sandbox-failure', 'tdd-goal-gate-green', 'tdd-goal-gate-red'], actual=['r2-artifact-tests', 'r2-final-full-ci', 'r2-focused-tests', 'r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-index-failure', 'r2-green-sandbox-failure', 'tdd-goal-gate-green', 'tdd-goal-gate-red']
+[OK] ITER-0092.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0092.evidence_diagnostics: 保留非通过记录=['r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-sandbox-failure', 'tdd-goal-gate-red']
+[OK] ITER-0092.evidence_hashes: [OK] r2-artifact-tests; [OK] r2-final-full-ci; [OK] r2-focused-tests; [OK] r2-full-ci; [OK] r2-full-ci-reproduced; [OK] r2-green-index-failure; [OK] r2-green-sandbox-failure; [OK] tdd-goal-gate-green; [OK] tdd-goal-gate-red
+[OK] ITER-0092.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0091.closed_date: 2026-07-25
+[OK] ITER-0091.delivery: deliveries/ITER-0091-lightweight-tdd-pair-checker.md
+[OK] ITER-0091.delivery_html: deliveries/ITER-0091-lightweight-tdd-pair-checker.html
+[OK] ITER-0091.archive: complete
+[OK] ITER-0091.evidence_index: ids=['r1-full-ci', 'r1-full-ci-reproduced', 'r1-tdd-evidence-tests']
+[OK] ITER-0091.evidence_iteration: 引用迭代一致
+[OK] ITER-0091.evidence_set: index=['r1-full-ci', 'r1-full-ci-reproduced', 'r1-tdd-evidence-tests'], actual=['r1-full-ci', 'r1-full-ci-reproduced', 'r1-tdd-evidence-tests']
+[OK] ITER-0091.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0091.evidence_diagnostics: 保留非通过记录=['r1-full-ci']
+[OK] ITER-0091.evidence_hashes: [OK] r1-full-ci; [OK] r1-full-ci-reproduced; [OK] r1-tdd-evidence-tests
+[OK] ITER-0091.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0090.closed_date: 2026-07-23
+[OK] ITER-0090.delivery: deliveries/ITER-0090-butler-setup-command.md
+[OK] ITER-0090.delivery_html: deliveries/ITER-0090-butler-setup-command.html
+[OK] ITER-0090.archive: complete
+[OK] ITER-0090.evidence_index: ids=['full-ci', 'setup-command-matrix']
+[OK] ITER-0090.evidence_iteration: 引用迭代一致
+[OK] ITER-0090.evidence_set: index=['full-ci', 'setup-command-matrix'], actual=['full-ci', 'setup-command-matrix']
+[OK] ITER-0090.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6']
+[OK] ITER-0090.evidence_hashes: [OK] full-ci; [OK] setup-command-matrix
+[OK] ITER-0090.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0089.closed_date: 2026-07-23
+[OK] ITER-0089.delivery: deliveries/ITER-0089-artifact-migration-dogfood.md
+[OK] ITER-0089.delivery_html: deliveries/ITER-0089-artifact-migration-dogfood.html
+[OK] ITER-0089.archive: complete
+[OK] ITER-0089.evidence_index: ids=['artifact-dogfood', 'artifact-dogfood-final', 'artifact-migration-tests', 'artifact-migration-tests-final', 'full-ci', 'full-ci-final', 'full-ci-heading-compat']
+[OK] ITER-0089.evidence_iteration: 引用迭代一致
+[OK] ITER-0089.evidence_set: index=['artifact-dogfood', 'artifact-dogfood-final', 'artifact-migration-tests', 'artifact-migration-tests-final', 'full-ci', 'full-ci-final', 'full-ci-heading-compat'], actual=['artifact-dogfood', 'artifact-dogfood-final', 'artifact-migration-tests', 'artifact-migration-tests-final', 'full-ci', 'full-ci-final', 'full-ci-heading-compat']
+[OK] ITER-0089.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5']
+[OK] ITER-0089.evidence_hashes: [OK] artifact-dogfood; [OK] artifact-dogfood-final; [OK] artifact-migration-tests; [OK] artifact-migration-tests-final; [OK] full-ci; [OK] full-ci-final; [OK] full-ci-heading-compat
+[OK] ITER-0089.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0088.closed_date: 2026-07-23
+[OK] ITER-0088.delivery: deliveries/ITER-0088-artifact-structure-gates.md
+[OK] ITER-0088.delivery_html: deliveries/ITER-0088-artifact-structure-gates.html
+[OK] ITER-0088.archive: complete
+[OK] ITER-0088.evidence_index: ids=['artifact-audit-tests', 'artifact-gate-tests', 'full-ci']
+[OK] ITER-0088.evidence_iteration: 引用迭代一致
+[OK] ITER-0088.evidence_set: index=['artifact-audit-tests', 'artifact-gate-tests', 'full-ci'], actual=['artifact-audit-tests', 'artifact-gate-tests', 'full-ci']
+[OK] ITER-0088.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5']
+[OK] ITER-0088.evidence_hashes: [OK] artifact-audit-tests; [OK] artifact-gate-tests; [OK] full-ci
+[OK] ITER-0088.fold_receipt: topics=1, mode=historical-snapshot
+[OK] ITER-0087.closed_date: 2026-07-23
+[OK] ITER-0087.delivery: deliveries/ITER-0087-artifact-stage-generator.md
+[OK] ITER-0087.delivery_html: deliveries/ITER-0087-artifact-stage-generator.html
+[OK] ITER-0087.archive: complete
+[OK] ITER-0087.evidence_index: ids=['artifact-generator-tests', 'full-ci']
+[OK] ITER-0087.evidence_iteration: 引用迭代一致
+[OK] ITER-0087.evidence_set: index=['artifact-generator-tests', 'full-ci'], actual=['artifact-generator-tests', 'full-ci']
+[OK] ITER-0087.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5']
+[OK] ITER-0087.evidence_hashes: [OK] artifact-generator-tests; [OK] full-ci
+[OK] ITER-0087.fold_receipt: topics=1, mode=historical-snapshot
+[OK] ITER-0050.closed_date: 2026-07-14
+[OK] ITER-0050.delivery: deliveries/ITER-0050-risk-gate-commands.md
+[OK] ITER-0050.delivery_html: deliveries/ITER-0050-risk-gate-commands.html
+[OK] ITER-0050.archive: complete
+[OK] ITER-0049.closed_date: 2026-07-14
+[OK] ITER-0049.delivery: deliveries/ITER-0049-preference-namespace-command.md
+[OK] ITER-0049.delivery_html: deliveries/ITER-0049-preference-namespace-command.html
+[OK] ITER-0049.archive: complete
+[OK] ITER-0048.closed_date: 2026-07-14
+[OK] ITER-0048.delivery: deliveries/ITER-0048-namespace-commands-batch.md
+[OK] ITER-0048.delivery_html: deliveries/ITER-0048-namespace-commands-batch.html
+[OK] ITER-0048.archive: complete
+[OK] ITER-0047.closed_date: 2026-07-14
+[OK] ITER-0047.delivery: deliveries/ITER-0047-command-namespace-foundation.md
+[OK] ITER-0047.delivery_html: deliveries/ITER-0047-command-namespace-foundation.html
+[OK] ITER-0047.archive: complete
+[OK] ITER-0046.closed_date: 2026-07-13
+[OK] ITER-0046.delivery: deliveries/ITER-0046-communication-style-voice-file.md
+[OK] ITER-0046.delivery_html: deliveries/ITER-0046-communication-style-voice-file.html
+[OK] ITER-0046.archive: complete
+[OK] ITER-0045.closed_date: 2026-07-13
+[OK] ITER-0045.delivery: deliveries/ITER-0045-slash-command-global-distribution.md
+[OK] ITER-0045.delivery_html: deliveries/ITER-0045-slash-command-global-distribution.html
+[OK] ITER-0045.archive: complete
+[OK] ITER-0044.closed_date: 2026-07-13
+[OK] ITER-0044.delivery: deliveries/ITER-0044-butler-prd-slash-command.md
+[OK] ITER-0044.delivery_html: deliveries/ITER-0044-butler-prd-slash-command.html
+[OK] ITER-0044.archive: complete
+[OK] ITER-0043.closed_date: 2026-07-12
+[OK] ITER-0043.delivery: deliveries/ITER-0043-engineering-principles-absorption.md
+[OK] ITER-0043.delivery_html: deliveries/ITER-0043-engineering-principles-absorption.html
+[OK] ITER-0043.archive: complete
+[OK] ITER-0042.closed_date: 2026-07-12
+[OK] ITER-0042.delivery: deliveries/ITER-0042-prd-trigger-hardening.md
+[OK] ITER-0042.delivery_html: deliveries/ITER-0042-prd-trigger-hardening.html
+[OK] ITER-0042.archive: complete
+[OK] ITER-0041.closed_date: 2026-07-09
+[OK] ITER-0041.delivery: deliveries/ITER-0041-recognition-edge-and-nonregression-gate.md
+[OK] ITER-0041.delivery_html: deliveries/ITER-0041-recognition-edge-and-nonregression-gate.html
+[OK] ITER-0041.archive: complete
+[OK] ITER-0040.closed_date: 2026-07-09
+[OK] ITER-0040.delivery: deliveries/ITER-0040-prd-update-revision-sync.md
+[OK] ITER-0040.delivery_html: deliveries/ITER-0040-prd-update-revision-sync.html
+[OK] ITER-0040.archive: complete
+[OK] ITER-0039.closed_date: 2026-07-09
+[OK] ITER-0039.delivery: deliveries/ITER-0039-ac-prd-version-pinning.md
+[OK] ITER-0039.delivery_html: deliveries/ITER-0039-ac-prd-version-pinning.html
+[OK] ITER-0039.archive: complete
+[OK] ITER-0038.closed_date: 2026-07-09
+[OK] ITER-0038.delivery: deliveries/ITER-0038-milestone-prd-entry.md
+[OK] ITER-0038.delivery_html: deliveries/ITER-0038-milestone-prd-entry.html
+[OK] ITER-0038.archive: complete
+[OK] ITER-0037.closed_date: 2026-07-09
+[OK] ITER-0037.delivery: deliveries/ITER-0037-prd-split-mechanism.md
+[OK] ITER-0037.delivery_html: deliveries/ITER-0037-prd-split-mechanism.html
+[OK] ITER-0037.archive: complete
+[OK] ITER-0036.closed_date: 2026-07-09
+[OK] ITER-0036.delivery: deliveries/ITER-0036-references-index-schema.md
+[OK] ITER-0036.delivery_html: deliveries/ITER-0036-references-index-schema.html
+[OK] ITER-0036.archive: complete
+[OK] ITER-0035.closed_date: 2026-07-08
+[OK] ITER-0035.delivery: deliveries/ITER-0035-split-upgrade-wiring.md
+[OK] ITER-0035.delivery_html: deliveries/ITER-0035-split-upgrade-wiring.html
+[OK] ITER-0035.archive: complete
+[OK] ITER-0034.closed_date: 2026-07-08
+[OK] ITER-0034.delivery: deliveries/ITER-0034-dogfood-knowledge-folder-migration.md
+[OK] ITER-0034.delivery_html: deliveries/ITER-0034-dogfood-knowledge-folder-migration.html
+[OK] ITER-0034.archive: complete
+[OK] ITER-0033.closed_date: 2026-07-07
+[OK] ITER-0033.delivery: deliveries/ITER-0033-plain-language-standards.md
+[OK] ITER-0033.delivery_html: deliveries/ITER-0033-plain-language-standards.html
+[OK] ITER-0033.archive: complete
+[OK] ITER-0032.closed_date: 2026-07-07
+[OK] ITER-0032.delivery: deliveries/ITER-0032-deploy-seed-and-folder-migration.md
+[OK] ITER-0032.delivery_html: deliveries/ITER-0032-deploy-seed-and-folder-migration.html
+[OK] ITER-0032.archive: complete
+[OK] ITER-0031.closed_date: 2026-07-07
+[OK] ITER-0031.delivery: deliveries/ITER-0031-coldstart-read-order-switch.md
+[OK] ITER-0031.delivery_html: deliveries/ITER-0031-coldstart-read-order-switch.html
+[OK] ITER-0031.archive: complete
+[OK] ITER-0030.closed_date: 2026-07-07
+[OK] ITER-0030.delivery: deliveries/ITER-0030-fold-drift-helpers.md
+[OK] ITER-0030.delivery_html: deliveries/ITER-0030-fold-drift-helpers.html
+[OK] ITER-0030.archive: complete
+[OK] ITER-0029.closed_date: 2026-07-07
+[OK] ITER-0029.delivery: deliveries/ITER-0029-maintenance-loop-wiring.md
+[OK] ITER-0029.delivery_html: deliveries/ITER-0029-maintenance-loop-wiring.html
+[OK] ITER-0029.archive: complete
+[OK] ITER-0028.closed_date: 2026-07-07
+[OK] ITER-0028.delivery: deliveries/ITER-0028-knowledge-folder-schema.md
+[OK] ITER-0028.delivery_html: deliveries/ITER-0028-knowledge-folder-schema.html
+[OK] ITER-0028.archive: complete
+[OK] ITER-0027.closed_date: 2026-07-06
+[OK] ITER-0027.delivery: deliveries/ITER-0027-implementation-discipline.md
+[OK] ITER-0027.delivery_html: deliveries/ITER-0027-implementation-discipline.html
+[OK] ITER-0027.archive: complete
+[OK] ITER-0026.closed_date: 2026-07-05
+[OK] ITER-0026.delivery: deliveries/ITER-0026-agent-roster-review-split.md
+[OK] ITER-0026.delivery_html: deliveries/ITER-0026-agent-roster-review-split.html
+[OK] ITER-0026.archive: complete
+[OK] ITER-0025.closed_date: 2026-07-02
+[OK] ITER-0025.delivery: deliveries/ITER-0025-bridge-usage-docs.md
+[OK] ITER-0025.delivery_html: deliveries/ITER-0025-bridge-usage-docs.html
+[OK] ITER-0025.archive: complete
+[OK] ITER-0024.closed_date: 2026-07-02
+[OK] ITER-0024.delivery: deliveries/ITER-0024-human-test-bridge-wiring.md
+[OK] ITER-0024.delivery_html: deliveries/ITER-0024-human-test-bridge-wiring.html
+[OK] ITER-0024.archive: complete
+[OK] ITER-0023.closed_date: 2026-07-02
+[OK] ITER-0023.delivery: deliveries/ITER-0023-delivery-selftest-bridge.md
+[OK] ITER-0023.delivery_html: deliveries/ITER-0023-delivery-selftest-bridge.html
+[OK] ITER-0023.archive: complete
+[OK] ITER-0022.closed_date: 2026-07-02
+[OK] ITER-0022.delivery: deliveries/ITER-0022-graded-confidence-proxy-and-admission.md
+[OK] ITER-0022.delivery_html: deliveries/ITER-0022-graded-confidence-proxy-and-admission.html
+[OK] ITER-0022.archive: complete
+[OK] ITER-0021.closed_date: 2026-07-02
+[OK] ITER-0021.delivery: deliveries/ITER-0021-automation-first-testing-lanes.md
+[OK] ITER-0021.delivery_html: deliveries/ITER-0021-automation-first-testing-lanes.html
+[OK] ITER-0021.archive: complete
+[OK] ITER-0020.closed_date: 2026-07-02
+[OK] ITER-0020.delivery: deliveries/ITER-0020-commit-release-sop.md
+[OK] ITER-0020.delivery_html: deliveries/ITER-0020-commit-release-sop.html
+[OK] ITER-0020.archive: complete
+[OK] ITER-0019.closed_date: 2026-06-30
+[OK] ITER-0019.delivery: deliveries/ITER-0019-close-gate.md
+[OK] ITER-0019.delivery_html: deliveries/ITER-0019-close-gate.html
+[OK] ITER-0019.archive: complete
+[OK] ITER-0018.closed_date: 2026-06-30
+[OK] ITER-0018.delivery: deliveries/ITER-0018-changelog-formalization.md
+[OK] ITER-0018.delivery_html: deliveries/ITER-0018-changelog-formalization.html
+[OK] ITER-0018.archive: complete
+[OK] ITER-0017.closed_date: 2026-06-30
+[OK] ITER-0017.delivery: deliveries/ITER-0017-project-digest.md
+[OK] ITER-0017.delivery_html: deliveries/ITER-0017-project-digest.html
+[OK] ITER-0017.archive: complete
+[OK] ITER-0016.closed_date: 2026-06-30
+[OK] ITER-0016.delivery: deliveries/ITER-0016-tasks-step-lite.md
+[OK] ITER-0016.delivery_html: deliveries/ITER-0016-tasks-step-lite.html
+[OK] ITER-0016.archive: complete
+[OK] ITER-0015.closed_date: 2026-06-30
+[OK] ITER-0015.delivery: deliveries/ITER-0015-handoff-template-and-flow.md
+[OK] ITER-0015.delivery_html: deliveries/ITER-0015-handoff-template-and-flow.html
+[OK] ITER-0015.archive: complete
+[OK] ITER-0014.closed_date: 2026-06-30
+[OK] ITER-0014.delivery: deliveries/ITER-0014-migration-ledger.md
+[OK] ITER-0014.delivery_html: deliveries/ITER-0014-migration-ledger.html
+[OK] ITER-0014.archive: complete
+[OK] ITER-0013.closed_date: 2026-06-30
+[OK] ITER-0013.delivery: deliveries/ITER-0013-concept-layering.md
+[OK] ITER-0013.delivery_html: deliveries/ITER-0013-concept-layering.html
+[OK] ITER-0013.archive: complete
+[OK] ITER-0012.closed_date: 2026-06-30
+[OK] ITER-0012.delivery: deliveries/ITER-0012-artifact-plain-language.md
+[OK] ITER-0012.delivery_html: deliveries/ITER-0012-artifact-plain-language.html
+[OK] ITER-0012.archive: complete
+[OK] ITER-0011.closed_date: 2026-06-22
+[OK] ITER-0011.delivery: deliveries/ITER-0011-presentation-protocol.md
+[OK] ITER-0011.delivery_html: deliveries/ITER-0011-presentation-protocol.html
+[OK] ITER-0011.archive: complete
+[OK] ITER-0010.closed_date: 2026-06-20
+[OK] ITER-0010.delivery: deliveries/ITER-0010-delivery-html-view.md
+[OK] ITER-0010.delivery_html: deliveries/ITER-0010-delivery-html-view.html
+[OK] ITER-0010.archive: complete
+[OK] ITER-0009.closed_date: 2026-06-19
+[OK] ITER-0009.delivery: deliveries/ITER-0009-preference-per-project-toggle.md
+[OK] ITER-0009.archive: complete
+[OK] ITER-0008.closed_date: 2026-06-19
+[OK] ITER-0008.delivery: deliveries/ITER-0008-iteration-status-enum-lockdown.md
+[OK] ITER-0008.archive: complete
+[OK] ITER-0007.closed_date: 2026-06-19
+[OK] ITER-0007.delivery: deliveries/ITER-0007-versioning-baseline-v1.0.0.md
+[OK] ITER-0007.archive: complete
+[OK] ITER-0006.closed_date: 2026-06-19
+[OK] ITER-0006.delivery: deliveries/ITER-0006-feature-toggles-and-milestone-auto-attach.md
+[OK] ITER-0006.archive: complete
+[OK] ITER-0005.closed_date: 2026-06-19
+[OK] ITER-0005.delivery: deliveries/ITER-0005-milestone-intake-origin-command.md
+[OK] ITER-0005.archive: complete
+[OK] ITER-0004.closed_date: 2026-06-15
+[OK] ITER-0004.delivery: deliveries/ITER-0004-ack-freeze-and-triage.md
+[OK] ITER-0004.archive: complete
+[OK] ITER-0003.closed_date: 2026-06-03
+[OK] ITER-0003.delivery: deliveries/ITER-0003-doc-scoping-hardening.md
+[OK] ITER-0003.archive: complete
+[OK] ITER-0002.closed_date: 2026-06-03
+[OK] ITER-0002.delivery: deliveries/ITER-0002-iteration-requirement-mgmt.md
+[OK] ITER-0002.archive: complete
+[OK] ITER-0001.closed_date: 2026-04-20
+[OK] ITER-0001.delivery: deliveries/2026-04-20-chat-recap-style.md
+[OK] ITER-0001.archive: complete
+[OK] ITER-0086.closed_date: 2026-07-23
+[OK] ITER-0086.delivery: deliveries/ITER-0086-artifact-structure-contract.md
+[OK] ITER-0086.delivery_html: deliveries/ITER-0086-artifact-structure-contract.html
+[OK] ITER-0086.archive: complete
+[OK] ITER-0086.evidence_index: ids=['artifact-contract-tests', 'full-ci']
+[OK] ITER-0086.evidence_iteration: 引用迭代一致
+[OK] ITER-0086.evidence_set: index=['artifact-contract-tests', 'full-ci'], actual=['artifact-contract-tests', 'full-ci']
+[OK] ITER-0086.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5']
+[OK] ITER-0086.evidence_hashes: [OK] artifact-contract-tests; [OK] full-ci
+[OK] ITER-0086.fold_receipt: topics=1, mode=historical-snapshot
+[OK] ITER-0085.closed_date: 2026-07-23
+[OK] ITER-0085.delivery: deliveries/ITER-0085-fixed-range-state-ledger-shards.md
+[OK] ITER-0085.delivery_html: deliveries/ITER-0085-fixed-range-state-ledger-shards.html
+[OK] ITER-0085.archive: complete
+[OK] ITER-0085.evidence_index: ids=['cold-lookup', 'full-ci', 'full-ci-after-fix', 'full-ci-final', 'state-audit-active', 'state-audit-tests', 'state-audit-tests-final', 'state-ledger-dogfood', 'state-ledger-tests', 'state-ledger-tests-final']
+[OK] ITER-0085.evidence_iteration: 引用迭代一致
+[OK] ITER-0085.evidence_set: index=['cold-lookup', 'full-ci', 'full-ci-after-fix', 'full-ci-final', 'state-audit-active', 'state-audit-tests', 'state-audit-tests-final', 'state-ledger-dogfood', 'state-ledger-tests', 'state-ledger-tests-final'], actual=['cold-lookup', 'full-ci', 'full-ci-after-fix', 'full-ci-final', 'state-audit-active', 'state-audit-tests', 'state-audit-tests-final', 'state-ledger-dogfood', 'state-ledger-tests', 'state-ledger-tests-final']
+[OK] ITER-0085.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0085.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit-active']
+[OK] ITER-0085.evidence_hashes: [OK] cold-lookup; [OK] full-ci; [OK] full-ci-after-fix; [OK] full-ci-final; [OK] state-audit-active; [OK] state-audit-tests; [OK] state-audit-tests-final; [OK] state-ledger-dogfood; [OK] state-ledger-tests; [OK] state-ledger-tests-final
+[OK] ITER-0085.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0084.closed_date: 2026-07-22
+[OK] ITER-0084.delivery: deliveries/ITER-0084-scalable-state-ledgers.md
+[OK] ITER-0084.delivery_html: deliveries/ITER-0084-scalable-state-ledgers.html
+[OK] ITER-0084.archive: complete
+[OK] ITER-0084.evidence_index: ids=['external-write-boundary', 'full-ci', 'full-ci-after-fix', 'state-audit', 'state-audit-after-fold', 'state-audit-final', 'state-ledger-dogfood', 'state-ledger-tests']
+[OK] ITER-0084.evidence_iteration: 引用迭代一致
+[OK] ITER-0084.evidence_set: index=['external-write-boundary', 'full-ci', 'full-ci-after-fix', 'state-audit', 'state-audit-after-fold', 'state-audit-final', 'state-ledger-dogfood', 'state-ledger-tests'], actual=['external-write-boundary', 'full-ci', 'full-ci-after-fix', 'state-audit', 'state-audit-after-fold', 'state-audit-final', 'state-ledger-dogfood', 'state-ledger-tests']
+[OK] ITER-0084.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0084.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit', 'state-audit-after-fold']
+[OK] ITER-0084.evidence_hashes: [OK] external-write-boundary; [OK] full-ci; [OK] full-ci-after-fix; [OK] state-audit; [OK] state-audit-after-fold; [OK] state-audit-final; [OK] state-ledger-dogfood; [OK] state-ledger-tests
+[OK] ITER-0084.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0083.closed_date: 2026-07-22
+[OK] ITER-0083.delivery: deliveries/ITER-0083-trusted-handoff.md
+[OK] ITER-0083.delivery_html: deliveries/ITER-0083-trusted-handoff.html
+[OK] ITER-0083.archive: complete
+[OK] ITER-0083.evidence_index: ids=['full-ci', 'full-ci-after-review', 'handoff-hook-audit-tests', 'handoff-tool-tests', 'handoff-tool-tests-after-review']
+[OK] ITER-0083.evidence_iteration: 引用迭代一致
+[OK] ITER-0083.evidence_set: index=['full-ci', 'full-ci-after-review', 'handoff-hook-audit-tests', 'handoff-tool-tests', 'handoff-tool-tests-after-review'], actual=['full-ci', 'full-ci-after-review', 'handoff-hook-audit-tests', 'handoff-tool-tests', 'handoff-tool-tests-after-review']
+[OK] ITER-0083.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0083.evidence_hashes: [OK] full-ci; [OK] full-ci-after-review; [OK] handoff-hook-audit-tests; [OK] handoff-tool-tests; [OK] handoff-tool-tests-after-review
+[OK] ITER-0083.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0082.closed_date: 2026-07-22
+[OK] ITER-0082.delivery: deliveries/ITER-0082-workspace-scope-gate-e2e.md
+[OK] ITER-0082.delivery_html: deliveries/ITER-0082-workspace-scope-gate-e2e.html
+[OK] ITER-0082.archive: complete
+[OK] ITER-0082.evidence_index: ids=['apps-readonly-dogfood', 'diff-check', 'mile0009-e2e', 'reproduced-full-ci', 'state-audit-closed', 'workspace-hook-contract', 'workspace-scope-tests']
+[OK] ITER-0082.evidence_iteration: 引用迭代一致
+[OK] ITER-0082.evidence_set: index=['apps-readonly-dogfood', 'diff-check', 'mile0009-e2e', 'reproduced-full-ci', 'state-audit-closed', 'workspace-hook-contract', 'workspace-scope-tests'], actual=['apps-readonly-dogfood', 'diff-check', 'mile0009-e2e', 'reproduced-full-ci', 'state-audit-closed', 'workspace-hook-contract', 'workspace-scope-tests']
+[OK] ITER-0082.evidence_ac_coverage: auto=['AC1', 'AC10', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0082.evidence_diagnostics: 保留非通过记录=['state-audit-closed']
+[OK] ITER-0082.evidence_hashes: [OK] apps-readonly-dogfood; [OK] diff-check; [OK] mile0009-e2e; [OK] reproduced-full-ci; [OK] state-audit-closed; [OK] workspace-hook-contract; [OK] workspace-scope-tests
+[OK] ITER-0082.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0081.closed_date: 2026-07-22
+[OK] ITER-0081.delivery: deliveries/ITER-0081-prd-update-transaction.md
+[OK] ITER-0081.delivery_html: deliveries/ITER-0081-prd-update-transaction.html
+[OK] ITER-0081.archive: complete
+[OK] ITER-0081.evidence_index: ids=['diff-check', 'prd-update-contract', 'prd-update-tests', 'reproduced-full-ci']
+[OK] ITER-0081.evidence_iteration: 引用迭代一致
+[OK] ITER-0081.evidence_set: index=['diff-check', 'prd-update-contract', 'prd-update-tests', 'reproduced-full-ci'], actual=['diff-check', 'prd-update-contract', 'prd-update-tests', 'reproduced-full-ci']
+[OK] ITER-0081.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0081.evidence_hashes: [OK] diff-check; [OK] prd-update-contract; [OK] prd-update-tests; [OK] reproduced-full-ci
+[OK] ITER-0081.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0080.closed_date: 2026-07-22
+[OK] ITER-0080.delivery: deliveries/ITER-0080-prd-split-status.md
+[OK] ITER-0080.delivery_html: deliveries/ITER-0080-prd-split-status.html
+[OK] ITER-0080.archive: complete
+[OK] ITER-0080.evidence_index: ids=['diff-check', 'prd-split-status-contract', 'prd-status-tests', 'reproduced-full-ci', 'reproduced-prd-status-tests', 'workflow-registry-check']
+[OK] ITER-0080.evidence_iteration: 引用迭代一致
+[OK] ITER-0080.evidence_set: index=['diff-check', 'prd-split-status-contract', 'prd-status-tests', 'reproduced-full-ci', 'reproduced-prd-status-tests', 'workflow-registry-check'], actual=['diff-check', 'prd-split-status-contract', 'prd-status-tests', 'reproduced-full-ci', 'reproduced-prd-status-tests', 'workflow-registry-check']
+[OK] ITER-0080.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0080.evidence_diagnostics: 保留非通过记录=['prd-status-tests']
+[OK] ITER-0080.evidence_hashes: [OK] diff-check; [OK] prd-split-status-contract; [OK] prd-status-tests; [OK] reproduced-full-ci; [OK] reproduced-prd-status-tests; [OK] workflow-registry-check
+[OK] ITER-0080.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0079.closed_date: 2026-07-22
+[OK] ITER-0079.delivery: deliveries/ITER-0079-multi-prd-migration.md
+[OK] ITER-0079.delivery_html: deliveries/ITER-0079-multi-prd-migration.html
+[OK] ITER-0079.archive: complete
+[OK] ITER-0079.evidence_index: ids=['diff-check', 'multi-prd-contract', 'prd-migration-tests', 'reproduced-full-ci']
+[OK] ITER-0079.evidence_iteration: 引用迭代一致
+[OK] ITER-0079.evidence_set: index=['diff-check', 'multi-prd-contract', 'prd-migration-tests', 'reproduced-full-ci'], actual=['diff-check', 'multi-prd-contract', 'prd-migration-tests', 'reproduced-full-ci']
+[OK] ITER-0079.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0079.evidence_hashes: [OK] diff-check; [OK] multi-prd-contract; [OK] prd-migration-tests; [OK] reproduced-full-ci
+[OK] ITER-0079.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0078.closed_date: 2026-07-22
+[OK] ITER-0078.delivery: deliveries/ITER-0078-butler-inbox-workflow.md
+[OK] ITER-0078.delivery_html: deliveries/ITER-0078-butler-inbox-workflow.html
+[OK] ITER-0078.archive: complete
+[OK] ITER-0078.evidence_index: ids=['diff-check', 'inbox-tool-tests', 'inbox-workflow-registry', 'inbox-workflow-registry-reproduced', 'reproduced-full-ci']
+[OK] ITER-0078.evidence_iteration: 引用迭代一致
+[OK] ITER-0078.evidence_set: index=['diff-check', 'inbox-tool-tests', 'inbox-workflow-registry', 'inbox-workflow-registry-reproduced', 'reproduced-full-ci'], actual=['diff-check', 'inbox-tool-tests', 'inbox-workflow-registry', 'inbox-workflow-registry-reproduced', 'reproduced-full-ci']
+[OK] ITER-0078.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0078.evidence_diagnostics: 保留非通过记录=['inbox-workflow-registry']
+[OK] ITER-0078.evidence_hashes: [OK] diff-check; [OK] inbox-tool-tests; [OK] inbox-workflow-registry; [OK] inbox-workflow-registry-reproduced; [OK] reproduced-full-ci
+[OK] ITER-0078.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0077.closed_date: 2026-07-22
+[OK] ITER-0077.delivery: deliveries/ITER-0077-inbox-data-contract.md
+[OK] ITER-0077.delivery_html: deliveries/ITER-0077-inbox-data-contract.html
+[OK] ITER-0077.archive: complete
+[OK] ITER-0077.evidence_index: ids=['diff-check', 'inbox-contract', 'reproduced-full-ci']
+[OK] ITER-0077.evidence_iteration: 引用迭代一致
+[OK] ITER-0077.evidence_set: index=['diff-check', 'inbox-contract', 'reproduced-full-ci'], actual=['diff-check', 'inbox-contract', 'reproduced-full-ci']
+[OK] ITER-0077.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0077.evidence_hashes: [OK] diff-check; [OK] inbox-contract; [OK] reproduced-full-ci
+[OK] ITER-0077.fold_receipt: topics=2, mode=historical-snapshot
+[OK] ITER-0076.closed_date: 2026-07-22
+[OK] ITER-0076.delivery: deliveries/ITER-0076-workspace-scope-contract.md
+[OK] ITER-0076.delivery_html: deliveries/ITER-0076-workspace-scope-contract.html
+[OK] ITER-0076.archive: complete
+[OK] ITER-0076.evidence_index: ids=['diff-check', 'reproduced-full-ci', 'workspace-scope-contract']
+[OK] ITER-0076.evidence_iteration: 引用迭代一致
+[OK] ITER-0076.evidence_set: index=['diff-check', 'reproduced-full-ci', 'workspace-scope-contract'], actual=['diff-check', 'reproduced-full-ci', 'workspace-scope-contract']
+[OK] ITER-0076.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0076.evidence_hashes: [OK] diff-check; [OK] reproduced-full-ci; [OK] workspace-scope-contract
+[OK] ITER-0076.fold_receipt: topics=2, mode=historical-snapshot
+[OK] ITER-0075.closed_date: 2026-07-22
+[OK] ITER-0075.delivery: deliveries/ITER-0075-prd-collection-identity-contract.md
+[OK] ITER-0075.delivery_html: deliveries/ITER-0075-prd-collection-identity-contract.html
+[OK] ITER-0075.archive: complete
+[OK] ITER-0075.evidence_index: ids=['diff-check', 'final-full-ci', 'full-ci', 'prd-collection-contract', 'reproduced-full-ci']
+[OK] ITER-0075.evidence_iteration: 引用迭代一致
+[OK] ITER-0075.evidence_set: index=['diff-check', 'final-full-ci', 'full-ci', 'prd-collection-contract', 'reproduced-full-ci'], actual=['diff-check', 'final-full-ci', 'full-ci', 'prd-collection-contract', 'reproduced-full-ci']
+[OK] ITER-0075.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[INFO] ITER-0075.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+[OK] ITER-0075.evidence_hashes: [OK] diff-check; [OK] final-full-ci; [OK] full-ci; [OK] prd-collection-contract; [OK] reproduced-full-ci
+[OK] ITER-0075.fold_receipt: topics=2, mode=historical-snapshot
+[OK] ITER-0074.closed_date: 2026-07-21
+[OK] ITER-0074.delivery: deliveries/ITER-0074-repo-cleanup.md
+[OK] ITER-0074.delivery_html: deliveries/ITER-0074-repo-cleanup.html
+[OK] ITER-0074.archive: complete
+[OK] ITER-0073.closed_date: 2026-07-21
+[OK] ITER-0073.delivery: deliveries/ITER-0073-butler-progress-command.md
+[OK] ITER-0073.delivery_html: deliveries/ITER-0073-butler-progress-command.html
+[OK] ITER-0073.archive: complete
+[OK] ITER-0072.closed_date: 2026-07-20
+[OK] ITER-0072.delivery: deliveries/ITER-0072-butler-init-command.md
+[OK] ITER-0072.delivery_html: deliveries/ITER-0072-butler-init-command.html
+[OK] ITER-0072.archive: complete
+[OK] ITER-0072.evidence_index: ids=['registry-check']
+[OK] ITER-0072.evidence_iteration: 引用迭代一致
+[OK] ITER-0072.evidence_set: index=['registry-check'], actual=['registry-check']
+[OK] ITER-0072.evidence_ac_coverage: auto=[], passed=['AC3', 'AC4', 'AC5']
+[OK] ITER-0072.evidence_hashes: [OK] registry-check
+[OK] ITER-0072.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0071.closed_date: 2026-07-20
+[OK] ITER-0071.delivery: deliveries/ITER-0071-tone-plainlang-coinage.md
+[OK] ITER-0071.delivery_html: deliveries/ITER-0071-tone-plainlang-coinage.html
+[OK] ITER-0071.archive: complete
+[OK] ITER-0070.closed_date: 2026-07-20
+[OK] ITER-0070.delivery: deliveries/ITER-0070-pi-host-adapter.md
+[OK] ITER-0070.delivery_html: deliveries/ITER-0070-pi-host-adapter.html
+[OK] ITER-0070.archive: complete
+[OK] ITER-0070.evidence_index: ids=['ac1-ac5-pi-session', 'code-review', 'verify-ci-full', 'verify-pi-extension']
+[OK] ITER-0070.evidence_iteration: 引用迭代一致
+[OK] ITER-0070.evidence_set: index=['ac1-ac5-pi-session', 'code-review', 'verify-ci-full', 'verify-pi-extension'], actual=['ac1-ac5-pi-session', 'code-review', 'verify-ci-full', 'verify-pi-extension']
+[OK] ITER-0070.evidence_ac_coverage: auto=['AC10', 'AC11', 'AC12', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC10', 'AC11', 'AC12', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[OK] ITER-0070.evidence_hashes: [OK] ac1-ac5-pi-session; [OK] code-review; [OK] verify-ci-full; [OK] verify-pi-extension
+[OK] ITER-0070.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0069.closed_date: 2026-07-19
+[OK] ITER-0069.delivery: deliveries/ITER-0069-multi-direction-backlog-splitting.md
+[OK] ITER-0069.delivery_html: deliveries/ITER-0069-multi-direction-backlog-splitting.html
+[OK] ITER-0069.archive: complete
+[OK] ITER-0069.evidence_index: ids=['auditor-tests', 'diff-check', 'full-ci', 'registry-check']
+[OK] ITER-0069.evidence_iteration: 引用迭代一致
+[OK] ITER-0069.evidence_set: index=['auditor-tests', 'diff-check', 'full-ci', 'registry-check'], actual=['auditor-tests', 'diff-check', 'full-ci', 'registry-check']
+[OK] ITER-0069.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5']
+[OK] ITER-0069.evidence_hashes: [OK] auditor-tests; [OK] diff-check; [OK] full-ci; [OK] registry-check
+[OK] ITER-0069.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0068.closed_date: 2026-07-19
+[OK] ITER-0068.delivery: deliveries/ITER-0068-milestone-backlog-numbering.md
+[OK] ITER-0068.delivery_html: deliveries/ITER-0068-milestone-backlog-numbering.html
+[OK] ITER-0068.archive: complete
+[OK] ITER-0068.evidence_index: ids=['auditor-tests', 'diff-check', 'final-full-ci', 'full-ci', 'full-ci-retry', 'registry-check']
+[OK] ITER-0068.evidence_iteration: 引用迭代一致
+[OK] ITER-0068.evidence_set: index=['auditor-tests', 'diff-check', 'final-full-ci', 'full-ci', 'full-ci-retry', 'registry-check'], actual=['auditor-tests', 'diff-check', 'final-full-ci', 'full-ci', 'full-ci-retry', 'registry-check']
+[OK] ITER-0068.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0068.evidence_diagnostics: 保留非通过记录=['full-ci']
+[OK] ITER-0068.evidence_hashes: [OK] auditor-tests; [OK] diff-check; [OK] final-full-ci; [OK] full-ci; [OK] full-ci-retry; [OK] registry-check
+[OK] ITER-0068.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0067.closed_date: 2026-07-18
+[OK] ITER-0067.delivery: deliveries/ITER-0067-external-write-authorization-boundary.md
+[OK] ITER-0067.delivery_html: deliveries/ITER-0067-external-write-authorization-boundary.html
+[OK] ITER-0067.archive: complete
+[OK] ITER-0067.evidence_index: ids=['codex-hook-wrapper', 'final-codex-wrapper', 'final-full-ci', 'final-hook-tests', 'full-ci', 'hook-tests']
+[OK] ITER-0067.evidence_iteration: 引用迭代一致
+[OK] ITER-0067.evidence_set: index=['codex-hook-wrapper', 'final-codex-wrapper', 'final-full-ci', 'final-hook-tests', 'full-ci', 'hook-tests'], actual=['codex-hook-wrapper', 'final-codex-wrapper', 'final-full-ci', 'final-hook-tests', 'full-ci', 'hook-tests']
+[OK] ITER-0067.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0067.evidence_hashes: [OK] codex-hook-wrapper; [OK] final-codex-wrapper; [OK] final-full-ci; [OK] final-hook-tests; [OK] full-ci; [OK] hook-tests
+[OK] ITER-0067.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0066.closed_date: 2026-07-18
+[OK] ITER-0066.delivery: deliveries/ITER-0066-goal-dual-host-wiring.md
+[OK] ITER-0066.delivery_html: deliveries/ITER-0066-goal-dual-host-wiring.html
+[OK] ITER-0066.archive: complete
+[OK] ITER-0066.evidence_index: ids=['diff-check-review', 'full-matrix', 'full-matrix-review', 'host-wiring-tests', 'host-wiring-tests-review', 'state-audit-active']
+[OK] ITER-0066.evidence_iteration: 引用迭代一致
+[OK] ITER-0066.evidence_set: index=['diff-check-review', 'full-matrix', 'full-matrix-review', 'host-wiring-tests', 'host-wiring-tests-review', 'state-audit-active'], actual=['diff-check-review', 'full-matrix', 'full-matrix-review', 'host-wiring-tests', 'host-wiring-tests-review', 'state-audit-active']
+[OK] ITER-0066.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0066.evidence_hashes: [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] host-wiring-tests; [OK] host-wiring-tests-review; [OK] state-audit-active
+[OK] ITER-0066.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0065.closed_date: 2026-07-18
+[OK] ITER-0065.delivery: deliveries/ITER-0065-goal-completion-adjudicator.md
+[OK] ITER-0065.delivery_html: deliveries/ITER-0065-goal-completion-adjudicator.html
+[OK] ITER-0065.archive: complete
+[OK] ITER-0065.evidence_index: ids=['adjudicator-tests', 'adjudicator-tests-review', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'state-audit-active']
+[OK] ITER-0065.evidence_iteration: 引用迭代一致
+[OK] ITER-0065.evidence_set: index=['adjudicator-tests', 'adjudicator-tests-review', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'state-audit-active'], actual=['adjudicator-tests', 'adjudicator-tests-review', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'state-audit-active']
+[OK] ITER-0065.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0065.evidence_hashes: [OK] adjudicator-tests; [OK] adjudicator-tests-review; [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] state-audit-active
+[OK] ITER-0065.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0064.closed_date: 2026-07-18
+[OK] ITER-0064.delivery: deliveries/ITER-0064-goal-runtime-calibration.md
+[OK] ITER-0064.delivery_html: deliveries/ITER-0064-goal-runtime-calibration.html
+[OK] ITER-0064.archive: complete
+[OK] ITER-0064.evidence_index: ids=['diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-calibration-tests', 'goal-calibration-tests-review', 'state-audit-active']
+[OK] ITER-0064.evidence_iteration: 引用迭代一致
+[OK] ITER-0064.evidence_set: index=['diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-calibration-tests', 'goal-calibration-tests-review', 'state-audit-active'], actual=['diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-calibration-tests', 'goal-calibration-tests-review', 'state-audit-active']
+[OK] ITER-0064.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0064.evidence_hashes: [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] goal-calibration-tests; [OK] goal-calibration-tests-review; [OK] state-audit-active
+[OK] ITER-0064.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0063.closed_date: 2026-07-18
+[OK] ITER-0063.delivery: deliveries/ITER-0063-plan-admission-gate.md
+[OK] ITER-0063.delivery_html: deliveries/ITER-0063-plan-admission-gate.html
+[OK] ITER-0063.archive: complete
+[OK] ITER-0063.evidence_index: ids=['diff-check-review', 'full-matrix', 'full-matrix-review', 'phase-gate-tests', 'plan-admission-tests', 'plan-admission-tests-review', 'state-audit-active']
+[OK] ITER-0063.evidence_iteration: 引用迭代一致
+[OK] ITER-0063.evidence_set: index=['diff-check-review', 'full-matrix', 'full-matrix-review', 'phase-gate-tests', 'plan-admission-tests', 'plan-admission-tests-review', 'state-audit-active'], actual=['diff-check-review', 'full-matrix', 'full-matrix-review', 'phase-gate-tests', 'plan-admission-tests', 'plan-admission-tests-review', 'state-audit-active']
+[OK] ITER-0063.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7']
+[OK] ITER-0063.evidence_hashes: [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] phase-gate-tests; [OK] plan-admission-tests; [OK] plan-admission-tests-review; [OK] state-audit-active
+[OK] ITER-0063.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0062.closed_date: 2026-07-18
+[OK] ITER-0062.delivery: deliveries/ITER-0062-goal-contract.md
+[OK] ITER-0062.delivery_html: deliveries/ITER-0062-goal-contract.html
+[OK] ITER-0062.archive: complete
+[OK] ITER-0062.evidence_index: ids=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-contract-tests', 'goal-contract-tests-review', 'state-audit-active']
+[OK] ITER-0062.evidence_iteration: 引用迭代一致
+[OK] ITER-0062.evidence_set: index=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-contract-tests', 'goal-contract-tests-review', 'state-audit-active'], actual=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-contract-tests', 'goal-contract-tests-review', 'state-audit-active']
+[OK] ITER-0062.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6']
+[OK] ITER-0062.evidence_hashes: [OK] diff-check; [OK] diff-check-final; [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] goal-contract-tests; [OK] goal-contract-tests-review; [OK] state-audit-active
+[OK] ITER-0062.fold_receipt: topics=3, mode=historical-snapshot
+[OK] ITER-0061.closed_date: 2026-07-18
+[OK] ITER-0061.delivery: deliveries/ITER-0061-goal-system-baseline.md
+[OK] ITER-0061.delivery_html: deliveries/ITER-0061-goal-system-baseline.html
+[OK] ITER-0061.archive: complete
+[OK] ITER-0061.evidence_index: ids=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-baseline-contract', 'goal-baseline-contract-review', 'state-audit-active', 'state-audit-active-final']
+[OK] ITER-0061.evidence_iteration: 引用迭代一致
+[OK] ITER-0061.evidence_set: index=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-baseline-contract', 'goal-baseline-contract-review', 'state-audit-active', 'state-audit-active-final'], actual=['diff-check', 'diff-check-final', 'diff-check-review', 'full-matrix', 'full-matrix-review', 'goal-baseline-contract', 'goal-baseline-contract-review', 'state-audit-active', 'state-audit-active-final']
+[OK] ITER-0061.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6']
+[OK] ITER-0061.evidence_hashes: [OK] diff-check; [OK] diff-check-final; [OK] diff-check-review; [OK] full-matrix; [OK] full-matrix-review; [OK] goal-baseline-contract; [OK] goal-baseline-contract-review; [OK] state-audit-active; [OK] state-audit-active-final
+[OK] ITER-0061.fold_receipt: topics=1, mode=historical-snapshot
+[OK] ITER-0060.closed_date: 2026-07-18
+[OK] ITER-0060.delivery: deliveries/ITER-0060-workflow-registry-distribution.md
+[OK] ITER-0060.delivery_html: deliveries/ITER-0060-workflow-registry-distribution.html
+[OK] ITER-0060.archive: complete
+[OK] ITER-0060.evidence_index: ids=['diff-check', 'diff-check-closed', 'full-matrix', 'full-matrix-closure', 'full-matrix-final', 'plugin-contract-final', 'state-audit-active', 'state-audit-closed', 'workflow-registry-check', 'workflow-registry-check-closed', 'workflow-registry-check-final', 'workflow-registry-tests', 'workflow-registry-tests-closure', 'workflow-registry-tests-final']
+[OK] ITER-0060.evidence_iteration: 引用迭代一致
+[OK] ITER-0060.evidence_set: index=['diff-check', 'diff-check-closed', 'full-matrix', 'full-matrix-closure', 'full-matrix-final', 'plugin-contract-final', 'state-audit-active', 'state-audit-closed', 'workflow-registry-check', 'workflow-registry-check-closed', 'workflow-registry-check-final', 'workflow-registry-tests', 'workflow-registry-tests-closure', 'workflow-registry-tests-final'], actual=['diff-check', 'diff-check-closed', 'full-matrix', 'full-matrix-closure', 'full-matrix-final', 'plugin-contract-final', 'state-audit-active', 'state-audit-closed', 'workflow-registry-check', 'workflow-registry-check-closed', 'workflow-registry-check-final', 'workflow-registry-tests', 'workflow-registry-tests-closure', 'workflow-registry-tests-final']
+[OK] ITER-0060.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0060.evidence_diagnostics: 保留非通过记录=['plugin-contract-final', 'state-audit-closed']
+[OK] ITER-0060.evidence_hashes: [OK] diff-check; [OK] diff-check-closed; [OK] full-matrix; [OK] full-matrix-closure; [OK] full-matrix-final; [OK] plugin-contract-final; [OK] state-audit-active; [OK] state-audit-closed; [OK] workflow-registry-check; [OK] workflow-registry-check-closed; [OK] workflow-registry-check-final; [OK] workflow-registry-tests; [OK] workflow-registry-tests-closure; [OK] workflow-registry-tests-final
+[OK] ITER-0060.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0059.closed_date: 2026-07-18
+[OK] ITER-0059.delivery: deliveries/ITER-0059-executable-upgrader.md
+[OK] ITER-0059.delivery_html: deliveries/ITER-0059-executable-upgrader.html
+[OK] ITER-0059.archive: complete
+[OK] ITER-0059.evidence_index: ids=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final']
+[OK] ITER-0059.evidence_iteration: 引用迭代一致
+[OK] ITER-0059.evidence_set: index=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final'], actual=['diff-check', 'diff-check-after-review', 'diff-check-final', 'review-manifest-current-drift', 'review-upgrade-safety', 'state-audit-active', 'state-audit-after-review', 'state-audit-final', 'state-audit-plugin-fix', 'upgrade-full-matrix', 'upgrade-full-matrix-after-review', 'upgrade-full-matrix-final', 'upgrade-tests', 'upgrade-tests-after-review', 'upgrade-tests-final']
+[OK] ITER-0059.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8', 'AC9']
+[INFO] ITER-0059.evidence_diagnostics: 保留非通过记录=['state-audit-active']
+[OK] ITER-0059.evidence_hashes: [OK] diff-check; [OK] diff-check-after-review; [OK] diff-check-final; [OK] review-manifest-current-drift; [OK] review-upgrade-safety; [OK] state-audit-active; [OK] state-audit-after-review; [OK] state-audit-final; [OK] state-audit-plugin-fix; [OK] upgrade-full-matrix; [OK] upgrade-full-matrix-after-review; [OK] upgrade-full-matrix-final; [OK] upgrade-tests; [OK] upgrade-tests-after-review; [OK] upgrade-tests-final
+[OK] ITER-0059.fold_receipt: topics=5, mode=historical-snapshot
+[OK] ITER-0058.closed_date: 2026-07-18
+[OK] ITER-0058.delivery: deliveries/ITER-0058-ci-reproducible-verification.md
+[OK] ITER-0058.delivery_html: deliveries/ITER-0058-ci-reproducible-verification.html
+[OK] ITER-0058.archive: complete
+[OK] ITER-0058.evidence_index: ids=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests']
+[OK] ITER-0058.evidence_iteration: 引用迭代一致
+[OK] ITER-0058.evidence_set: index=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests'], actual=['auditor-tests-fold-fix', 'ci-contract-tests', 'ci-local-matrix', 'ci-local-matrix-after-fold-fix', 'ci-local-matrix-final', 'ci-local-matrix-platform', 'diff-check', 'diff-check-after-fold-fix', 'diff-check-final', 'markdown-scan', 'markdown-tests', 'remote-required-state', 'remote-workflow-state', 'review-ci-fail-closed', 'review-fold-history', 'review-markdown-boundaries', 'review-validator-integrity', 'state-audit-active', 'state-audit-active-final', 'state-audit-fold-fix', 'validator-tests']
+[OK] ITER-0058.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0058.evidence_diagnostics: 保留非通过记录=['remote-required-state']
+[OK] ITER-0058.evidence_hashes: [OK] auditor-tests-fold-fix; [OK] ci-contract-tests; [OK] ci-local-matrix; [OK] ci-local-matrix-after-fold-fix; [OK] ci-local-matrix-final; [OK] ci-local-matrix-platform; [OK] diff-check; [OK] diff-check-after-fold-fix; [OK] diff-check-final; [OK] markdown-scan; [OK] markdown-tests; [OK] remote-required-state; [OK] remote-workflow-state; [OK] review-ci-fail-closed; [OK] review-fold-history; [OK] review-markdown-boundaries; [OK] review-validator-integrity; [OK] state-audit-active; [OK] state-audit-active-final; [OK] state-audit-fold-fix; [OK] validator-tests
+[OK] ITER-0058.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0057.closed_date: 2026-07-18
+[OK] ITER-0057.delivery: deliveries/ITER-0057-verification-evidence-state-audit.md
+[OK] ITER-0057.delivery_html: deliveries/ITER-0057-verification-evidence-state-audit.html
+[OK] ITER-0057.archive: complete
+[OK] ITER-0057.evidence_index: ids=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun']
+[OK] ITER-0057.evidence_iteration: 引用迭代一致
+[OK] ITER-0057.evidence_set: index=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun'], actual=['auditor-tests', 'auditor-tests-rerun', 'diff-check', 'diff-check-rerun', 'dual-host-matrix', 'dual-host-matrix-rerun', 'review-archive-single-source', 'review-runner-security', 'review-state-drift', 'runner-tests', 'state-audit-active', 'state-audit-active-rerun']
+[OK] ITER-0057.evidence_ac_coverage: auto=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8'], passed=['AC1', 'AC2', 'AC3', 'AC4', 'AC5', 'AC6', 'AC7', 'AC8']
+[INFO] ITER-0057.evidence_diagnostics: 保留非通过记录=['dual-host-matrix']
+[OK] ITER-0057.evidence_hashes: [OK] auditor-tests; [OK] auditor-tests-rerun; [OK] diff-check; [OK] diff-check-rerun; [OK] dual-host-matrix; [OK] dual-host-matrix-rerun; [OK] review-archive-single-source; [OK] review-runner-security; [OK] review-state-drift; [OK] runner-tests; [OK] state-audit-active; [OK] state-audit-active-rerun
+[OK] ITER-0057.fold_receipt: topics=4, mode=historical-snapshot
+[OK] ITER-0056.closed_date: 2026-07-18
+[OK] ITER-0056.delivery: deliveries/ITER-0056-global-installer-transaction-safety.md
+[OK] ITER-0056.delivery_html: deliveries/ITER-0056-global-installer-transaction-safety.html
+[OK] ITER-0056.archive: complete
+[OK] ITER-0055.closed_date: 2026-07-17
+[OK] ITER-0055.delivery: deliveries/ITER-0055-project-root-deployment-boundary.md
+[OK] ITER-0055.delivery_html: deliveries/ITER-0055-project-root-deployment-boundary.html
+[OK] ITER-0055.archive: complete
+[OK] ITER-0054.closed_date: 2026-07-17
+[OK] ITER-0054.delivery: deliveries/ITER-0054-dual-host-deployment-upgrade.md
+[OK] ITER-0054.delivery_html: deliveries/ITER-0054-dual-host-deployment-upgrade.html
+[OK] ITER-0054.archive: complete
+[OK] ITER-0053.closed_date: 2026-07-17
+[OK] ITER-0053.delivery: deliveries/ITER-0053-codex-apply-patch-hooks.md
+[OK] ITER-0053.delivery_html: deliveries/ITER-0053-codex-apply-patch-hooks.html
+[OK] ITER-0053.archive: complete
+[OK] ITER-0052.closed_date: 2026-07-17
+[OK] ITER-0052.delivery: deliveries/ITER-0052-codex-workflow-plugin.md
+[OK] ITER-0052.delivery_html: deliveries/ITER-0052-codex-workflow-plugin.html
+[OK] ITER-0052.archive: complete
+[OK] ITER-0051.closed_date: 2026-07-17
+[OK] ITER-0051.delivery: deliveries/ITER-0051-codex-compatibility-foundation.md
+[OK] ITER-0051.delivery_html: deliveries/ITER-0051-codex-compatibility-foundation.html
+[OK] ITER-0051.archive: complete
+[OK] milestones.ids: 格式均合法
+[OK] milestones.sequence: actual=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], expected=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+[OK] milestones.status: 状态均合法
+[OK] milestones.single_active: active=['MILE-0014']
+[OK] milestones.current: current=MILE-0014, expected=MILE-0014
+[OK] MILE-0014.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0013.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0013.delivery: deliveries/milestones/MILE-0013-project-config-structure.md
+[OK] MILE-0013.archive: .ai/milestones/MILE-0013/MILESTONE.md
+[OK] MILE-0012.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0012.delivery: deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md
+[OK] MILE-0012.archive: .ai/milestones/MILE-0012/MILESTONE.md
+[OK] MILE-0011.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0011.delivery: deliveries/milestones/MILE-0011-deterministic-artifact-pipeline.md
+[OK] MILE-0011.archive: .ai/milestones/MILE-0011/MILESTONE.md
+[OK] MILE-0010.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0010.delivery: deliveries/milestones/MILE-0010-long-horizon-scale-governance.md
+[OK] MILE-0010.archive: .ai/milestones/MILE-0010/MILESTONE.md
+[OK] MILE-0009.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0009.delivery: deliveries/milestones/MILE-0009-prd-inbox-monorepo-governance.md
+[OK] MILE-0009.archive: .ai/milestones/MILE-0009/MILESTONE.md
+[OK] MILE-0008.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0008.delivery: deliveries/milestones/MILE-0008-goal-assurance-loop.md
+[OK] MILE-0008.archive: .ai/milestones/MILE-0008/MILESTONE.md
+[OK] MILE-0007.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0007.delivery: deliveries/milestones/MILE-0007-engineering-hardening.md
+[OK] MILE-0007.archive: .ai/milestones/MILE-0007/MILESTONE.md
+[OK] MILE-0006.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0006.delivery: deliveries/milestones/MILE-0006-codex-dual-host-compatibility.md
+[OK] MILE-0006.archive: .ai/milestones/MILE-0006/MILESTONE.md
+[OK] MILE-0005.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0005.delivery: deliveries/milestones/MILE-0005-command-namespace-system.md
+[OK] MILE-0005.archive: .ai/milestones/MILE-0005/MILESTONE.md
+[OK] MILE-0004.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0004.delivery: deliveries/milestones/MILE-0004-prd-first-versioned-references.md
+[OK] MILE-0004.archive: .ai/milestones/MILE-0004/MILESTONE.md
+[OK] MILE-0003.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0003.delivery: deliveries/milestones/MILE-0003-knowledge-folder-agents-plainlang.md
+[OK] MILE-0003.archive: .ai/milestones/MILE-0003/MILESTONE.md
+[OK] MILE-0002.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0002.delivery: deliveries/milestones/MILE-0002-automation-and-human-test-loop.md
+[OK] MILE-0002.archive: .ai/milestones/MILE-0002/MILESTONE.md
+[OK] MILE-0001.iterations: unknown=[], wrong_owner=[]
+[OK] MILE-0001.delivery: deliveries/milestones/MILE-0001-coldstart-recoverability.md
+[OK] MILE-0001.archive: .ai/milestones/MILE-0001/MILESTONE.md
+[OK] milestones.workspace: .ai/MILESTONE.md
+[OK] route.R1: ITER-0102: route=closed, ledger=closed
+[OK] route.R2: ITER-0103: route=closed, ledger=closed
+[OK] route.R3: ITER-0104: route=closed, ledger=closed
+[OK] route.R4: ITER-0105: route=closed, ledger=closed
+[OK] route.R5: ITER-0106: route=active, ledger=active
+[OK] backlog.codex-structured-question-cards.slug: kebab-case
+[OK] backlog.codex-structured-question-cards.path: actual=.ai/milestone-backlog/codex-structured-question-cards.md, expected=.ai/milestone-backlog/codex-structured-question-cards.md
+[OK] backlog.codex-structured-question-cards.draft: .ai/milestone-backlog/codex-structured-question-cards.md
+[OK] backlog.codex-structured-question-cards.markers: unique identity
+[OK] backlog.ai-user-experience-driven-iteration.slug: kebab-case
+[OK] backlog.ai-user-experience-driven-iteration.path: actual=.ai/milestone-backlog/ai-user-experience-driven-iteration.md, expected=.ai/milestone-backlog/ai-user-experience-driven-iteration.md
+[OK] backlog.ai-user-experience-driven-iteration.draft: .ai/milestone-backlog/ai-user-experience-driven-iteration.md
+[OK] backlog.ai-user-experience-driven-iteration.markers: unique identity
+[OK] backlog.parallel-p4-execution-slots.slug: kebab-case
+[OK] backlog.parallel-p4-execution-slots.path: actual=.ai/milestone-backlog/parallel-p4-execution-slots.md, expected=.ai/milestone-backlog/parallel-p4-execution-slots.md
+[OK] backlog.parallel-p4-execution-slots.draft: .ai/milestone-backlog/parallel-p4-execution-slots.md
+[OK] backlog.parallel-p4-execution-slots.markers: unique identity
+[OK] backlog.multi-active-iteration-runtime.slug: kebab-case
+[OK] backlog.multi-active-iteration-runtime.path: actual=.ai/milestone-backlog/multi-active-iteration-runtime.md, expected=.ai/milestone-backlog/multi-active-iteration-runtime.md
+[OK] backlog.multi-active-iteration-runtime.draft: .ai/milestone-backlog/multi-active-iteration-runtime.md
+[OK] backlog.multi-active-iteration-runtime.markers: unique identity
+[OK] backlog.prd-future-route-fulfillment.slug: kebab-case
+[OK] backlog.prd-future-route-fulfillment.path: actual=.ai/milestone-backlog/prd-future-route-fulfillment.md, expected=.ai/milestone-backlog/prd-future-route-fulfillment.md
+[OK] backlog.prd-future-route-fulfillment.draft: .ai/milestone-backlog/prd-future-route-fulfillment.md
+[OK] backlog.prd-future-route-fulfillment.markers: unique identity
+[OK] backlog.state-transition-trust-gate.slug: kebab-case
+[OK] backlog.state-transition-trust-gate.path: actual=.ai/milestone-backlog/state-transition-trust-gate.md, expected=.ai/milestone-backlog/state-transition-trust-gate.md
+[OK] backlog.state-transition-trust-gate.draft: .ai/milestone-backlog/state-transition-trust-gate.md
+[OK] backlog.state-transition-trust-gate.markers: unique identity
+[OK] backlog.tdd-evidence-hardening.slug: kebab-case
+[OK] backlog.tdd-evidence-hardening.path: actual=.ai/milestone-backlog/tdd-evidence-hardening.md, expected=.ai/milestone-backlog/tdd-evidence-hardening.md
+[OK] backlog.tdd-evidence-hardening.draft: .ai/milestone-backlog/tdd-evidence-hardening.md
+[OK] backlog.tdd-evidence-hardening.markers: unique identity
+[OK] milestones.backlog_set: index=['.ai/milestone-backlog/ai-user-experience-driven-iteration.md', '.ai/milestone-backlog/codex-structured-question-cards.md', '.ai/milestone-backlog/multi-active-iteration-runtime.md', '.ai/milestone-backlog/parallel-p4-execution-slots.md', '.ai/milestone-backlog/prd-future-route-fulfillment.md', '.ai/milestone-backlog/state-transition-trust-gate.md', '.ai/milestone-backlog/tdd-evidence-hardening.md'], actual=['.ai/milestone-backlog/ai-user-experience-driven-iteration.md', '.ai/milestone-backlog/codex-structured-question-cards.md', '.ai/milestone-backlog/multi-active-iteration-runtime.md', '.ai/milestone-backlog/parallel-p4-execution-slots.md', '.ai/milestone-backlog/prd-future-route-fulfillment.md', '.ai/milestone-backlog/state-transition-trust-gate.md', '.ai/milestone-backlog/tdd-evidence-hardening.md']
+[OK] .ai/task-state.md: 应包含当前状态指针：ITER-0106
+[OK] .ai/02_SESSION_HANDOFF.md: 应包含当前状态指针：ITER-0106
+[DRIFT] handoff.freshness: {"reasons": ["handoff-not-current", "snapshot-changed", "sources-changed"], "schema_version": 1, "status": "stale"}
+[OK] state_index: {;   "hot_limit": 20,;   "ledgers": {;     "iterations": {;       "cold_count": 86,;       "hot_count": 20,;       "hot_sha256": "8009dac046d7ae924d31db9a255b1186108df98d25060b77485c1cefbefbb689",;       "max_used": 106,;       "routing": {;         "directory": ".ai/history/iterations",;         "minimum_width": 6,;         "prefix": "ITER",;         "receipt_suffix": ".json",;         "scheme": "fixed-range-v1";       },;       "row_count": 106,;       "shard_count": 2;     },;     "milestones": {;       "cold_count": 0,;       "hot_count": 14,;       "hot_sha256": "d635dcf31737d712e4a0942f15d34215e740ad361243c4b1664414a91d1261b5",;       "max_used": 14,;       "routing": {;         "directory": ".ai/history/milestones",;         "minimum_width": 6,;         "prefix": "MILE",;         "receipt_suffix": ".json",;         "scheme": "fixed-range-v1";       },;       "row_count": 14,;       "shard_count": 0;     };   },;   "schema_version": 2,;   "shard_size": 50; }
+[OK] artifact_pipeline: {"artifacts": [{"artifact": "concept", "errors": [], "path": ".ai/CONCEPT.md", "status": "ok"}, {"artifact": "acceptance", "errors": [], "path": ".ai/AC_LIST.md", "status": "ok"}, {"artifact": "tech_plan", "errors": [], "path": ".ai/TECH_PLAN.md", "status": "ok"}, {"artifact": "verify_report", "errors": [], "path": ".ai/VERIFY_REPORT.md", "status": "ok"}, {"artifact": "changelog", "errors": [], "path": ".ai/01_CHANGELOG.md", "status": "ok"}], "drift": [], "status": "ok"}
+[OK] release.version: 3.4.0
+[OK] release.plugin: VERSION=3.4.0, plugin=3.4.0
+[OK] release.changelog: 3.4.0
+[OK] release.migration: migrations/v3.4.0.md
+[UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+[OK] release.tag: v3.4.0 points at HEAD

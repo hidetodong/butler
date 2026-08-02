@@ -1,0 +1,27 @@
+[INFO] pinned toolchain: platform=Darwin/arm64 python=3.12.12 uv=0.9.28
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=1
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] Markdown links passed: files=873, links=74
+[OK] Codex R1 地基结构检查通过
+[OK] Codex workflow/plugin checks passed (Router + 13 workflow skills)
+Codex hook wrapper verification passed
+........................................................................ [ 36%]
+........................................................................ [ 72%]
+........................................................                 [100%]
+200 passed in 3.11s
+[OK] Claude/Codex unified setup and project entrypoint matrix passed
+=== Butler Pi 扩展验证 ===
+
+[✓] 文件存在性
+name: butler-pi
+pi.extensions: ['./index.ts']
+[✓] package.json 合法
+[跳过] 未找到 npx；TypeScript 语法检查未运行。
+
+=== Pi 扩展验证完成 ===
+{"artifacts": [{"artifact": "concept", "errors": [], "path": ".ai/CONCEPT.md", "status": "ok"}, {"artifact": "acceptance", "errors": [], "path": ".ai/AC_LIST.md", "status": "ok"}, {"artifact": "tech_plan", "errors": [], "path": ".ai/TECH_PLAN.md", "status": "ok"}, {"artifact": "verify_report", "errors": [], "path": ".ai/VERIFY_REPORT.md", "status": "ok"}, {"artifact": "changelog", "errors": [], "path": ".ai/01_CHANGELOG.md", "status": "ok"}], "drift": [], "status": "ok"}
+................................                                         [100%]
+32 passed in 1.22s

@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：无 active；阶段：Iteration Closed。
-- 状态：ITER-0101 已完成实现、证据归档、交付与台账收口；全局 setup 整体成功。
+- 迭代：无 active；里程碑：无 active；阶段：Milestone Closed。
+- 状态：MILE-0014 已聚合 ITER-0102～ITER-0106，完成里程碑归档、Markdown/HTML 版本级交付和台账收口；Decision Map 保留为参考来源，tracker verdict=`defer`。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：发布聚合 ITER-0096–ITER-0101 的 v3.4.0；新开 Codex 会话加载已刷新 plugin。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：交付即止；当前无 active Milestone / Iteration，不自动启动任何 deferred 候办。
 
 ## 状态指针
 

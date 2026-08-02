@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-decision-map-risk",
+  "iteration": "ITER-0103",
+  "ac_ids": [
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/decision-map/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T12:05:15.537Z",
+  "finished_at": "2026-08-01T12:05:16.471Z",
+  "duration_ms": 934,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2785,
+    "captured_bytes": 2785,
+    "sha256": "28e53db87027e1a4294ed6874632b83ec629ec77a7e6cd72a43f095bde0d1f16",
+    "truncated": false
+  }
+}

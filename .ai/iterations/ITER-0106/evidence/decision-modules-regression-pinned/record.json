@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "decision-modules-regression-pinned",
+  "iteration": "ITER-0106",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC11",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "/var/folders/x5/j871x_k54wb_1c5n7__wb99r0000gn/T/butler-uv-wheel-0.9.28/extracted/uv-0.9.28.data/scripts/uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "bash",
+      "scripts/verify-dual-host.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T14:28:51.082Z",
+  "finished_at": "2026-08-02T14:29:01.652Z",
+  "duration_ms": 10570,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 401,
+    "captured_bytes": 401,
+    "sha256": "c27160a1321499c3253d99c7de5f31f0c71f71b0e65b9066a6aa84d9c06e22a8",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 4834,
+    "captured_bytes": 4834,
+    "sha256": "e2aa002668c8c0ec94fcc43d8dbdbe1cdb0082bd69c881dafd6db48f898b6e80",
+    "truncated": false
+  }
+}

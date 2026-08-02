@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evidence_id": "decision-promotion-tests",
+  "iteration": "ITER-0105",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/decision-promotion/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T02:51:42.299Z",
+  "finished_at": "2026-08-02T02:51:43.117Z",
+  "duration_ms": 818,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2787,
+    "captured_bytes": 2787,
+    "sha256": "23c34d279198d588bd4a2f07980914db59ebc4e2013bb733761e64508daae67d",
+    "truncated": false
+  }
+}

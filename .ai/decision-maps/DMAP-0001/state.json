@@ -1,0 +1,217 @@
+{
+  "applied_operations": {
+    "OP-r5-add-1": {
+      "request_sha256": "sha256:ca3ba67d814936f0632a5e6a8b2b3a168023b8cdd5753965b6df5a0dfd86bb92",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0001",
+        "kind": "add_decision",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-add-1",
+        "revision": 3,
+        "status": "ok"
+      },
+      "revision": 3
+    },
+    "OP-r5-add-2": {
+      "request_sha256": "sha256:3354e01fbad37bf5daaeb83864b6983666166b84c05e2b755ec911eaca52b887",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0002",
+        "kind": "add_decision",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-add-2",
+        "revision": 4,
+        "status": "ok"
+      },
+      "revision": 4
+    },
+    "OP-r5-add-3": {
+      "request_sha256": "sha256:cc8e593589f8faa952c21d182557aeb8dd325db5a235af2be1a87c46da3f13f8",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0003",
+        "kind": "add_decision",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-add-3",
+        "revision": 5,
+        "status": "ok"
+      },
+      "revision": 5
+    },
+    "OP-r5-add-fog": {
+      "request_sha256": "sha256:86941fd2e2b9a3a695d77bea017299b65c07ba9f59de4d745e47dbb960957feb",
+      "result": {
+        "action": "apply",
+        "fog_id": "FOG-0001",
+        "kind": "add_fog",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-add-fog",
+        "revision": 2,
+        "status": "ok"
+      },
+      "revision": 2
+    },
+    "OP-r5-claim-1": {
+      "request_sha256": "sha256:443e886a577492a9145a72c6bb207922beeced6365b3b1bf3807192899769ffd",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0001",
+        "expires_at": "2026-08-03T06:06:00Z",
+        "kind": "claim",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-claim-1",
+        "owner": "iter-0106-coordinator",
+        "revision": 6,
+        "status": "ok",
+        "token": "WfXtanj0qulzHsn2jngnmzQ_lrOZUhzLXGSHll-8R3Q"
+      },
+      "revision": 6
+    },
+    "OP-r5-claim-2": {
+      "request_sha256": "sha256:f80627c55ef6c67ca2a2571142098e3142a32905fb07a461f68cce0682e80544",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0002",
+        "expires_at": "2026-08-03T06:06:00Z",
+        "kind": "claim",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-claim-2",
+        "owner": "iter-0106-coordinator",
+        "revision": 7,
+        "status": "ok",
+        "token": "IUurEqdNkIQ6gfBqMknBWKccxJbKS39TyMHQQ_wHRVs"
+      },
+      "revision": 7
+    },
+    "OP-r5-create-map": {
+      "request_sha256": "sha256:558892ecba8c971d62bc7ab1b8f35bb795c4166d6084170aed21a8eea574e5f6",
+      "result": {
+        "action": "apply",
+        "kind": "create_map",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-create-map",
+        "revision": 1,
+        "status": "ok"
+      },
+      "revision": 1
+    },
+    "OP-r5-map-absorb-1": {
+      "request_sha256": "sha256:cf2601fe5a3f4170229976c7dd90ed03fb43c449d4976481201f47af2539ebef",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0001",
+        "kind": "resolve",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-map-absorb-1",
+        "revision": 8,
+        "status": "ok"
+      },
+      "revision": 8
+    },
+    "OP-r5-map-absorb-2": {
+      "request_sha256": "sha256:d5eb0656bbb72a9d7bde7960e8b25b0584c348a389a6676113d2492e83f8e1e9",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0002",
+        "kind": "resolve",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-map-absorb-2",
+        "revision": 9,
+        "status": "ok"
+      },
+      "revision": 9
+    },
+    "OP-r5-resolve-3": {
+      "request_sha256": "sha256:924c063337c89d013b2522b299150e9c36badc134ac2cb529226ae372e7244fb",
+      "result": {
+        "action": "apply",
+        "decision_id": "DEC-0003",
+        "kind": "resolve",
+        "map_id": "DMAP-0001",
+        "operation_id": "OP-r5-resolve-3",
+        "revision": 10,
+        "status": "ok"
+      },
+      "revision": 10
+    }
+  },
+  "created_at": "2026-08-02T06:00:00Z",
+  "decisions": {
+    "DEC-0001": {
+      "abandon": null,
+      "claim": null,
+      "depends_on": [],
+      "id": "DEC-0001",
+      "question": "Which Butler confirmations fit native cards versus text or HITL?",
+      "resolution": {
+        "at": "2026-08-02T06:10:00Z",
+        "evidence": [
+          "repo:.ai/milestone-backlog/codex-structured-question-cards.md",
+          "repo:Coder/20_Workflow_Lifecycle/acceptance-schema.md",
+          "repo:Coder/20_Workflow_Lifecycle/tech-plan-schema.md",
+          "decision-work:.ai/decision-work/DMAP-0001/DEC-0001/ATT-0001/result.json#sha256:989f4975db90f3bed3261a64182c4d8febcc1a9f945f06a1397b8986a6839804"
+        ],
+        "outcome": "Use native cards only for bounded mutually exclusive confirmations; preserve text or HITL for open and true multi-select questions",
+        "rationale": "The current repository contracts support this bounded conclusion"
+      },
+      "status": "resolved"
+    },
+    "DEC-0002": {
+      "abandon": null,
+      "claim": null,
+      "depends_on": [],
+      "id": "DEC-0002",
+      "question": "What Claude, Codex and Pi capability boundary can Butler honestly promise?",
+      "resolution": {
+        "at": "2026-08-02T06:10:00Z",
+        "evidence": [
+          "repo:workflows/registry.json",
+          "repo:plugins/butler/skills/butler-router/SKILL.md",
+          "repo:plugins/butler-pi/index.ts",
+          "decision-work:.ai/decision-work/DMAP-0001/DEC-0002/ATT-0002/result.json#sha256:cb0604fed1fbde4478c44ef8e85e93627e14c8c2e1bc4b8898e94215fc7e9ec5"
+        ],
+        "outcome": "Describe stable capabilities rather than internal tool names; Claude and Codex have workflow entries while Pi currently provides shared gates only",
+        "rationale": "The current repository contracts support this bounded conclusion"
+      },
+      "status": "resolved"
+    },
+    "DEC-0003": {
+      "abandon": null,
+      "claim": null,
+      "depends_on": [
+        "DEC-0001",
+        "DEC-0002"
+      ],
+      "id": "DEC-0003",
+      "question": "What evidence would justify a custom UI or external coordination tracker?",
+      "resolution": {
+        "at": "2026-08-02T06:11:00Z",
+        "evidence": [
+          "decision:DEC-0001",
+          "decision:DEC-0002",
+          "dogfood:tools/explore-dogfood/scenario.py"
+        ],
+        "outcome": "Build an external layer only after observing concrete multi-machine, multi-writer, query/notification, or scale blockers; current evidence supports defer",
+        "rationale": "The local workflow recovered correctly and no external coordination blocker was observed; a single local run cannot justify implementation"
+      },
+      "status": "resolved"
+    }
+  },
+  "destination": "Decide how Butler should use native question cards without replacing text fallback or lifecycle gates",
+  "fog": {
+    "FOG-0001": {
+      "description": "Real cross-host time savings and correction rates have not yet been observed",
+      "dismissal": null,
+      "graduation": null,
+      "id": "FOG-0001",
+      "status": "open"
+    }
+  },
+  "map_id": "DMAP-0001",
+  "revision": 10,
+  "schema_version": 1,
+  "status": "open",
+  "title": "Codex structured question card boundary",
+  "updated_at": "2026-08-02T06:11:00Z"
+}

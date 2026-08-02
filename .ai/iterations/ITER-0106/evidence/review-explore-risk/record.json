@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-explore-risk",
+  "iteration": "ITER-0106",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC10",
+    "AC11",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "env",
+      "PATH=/var/folders/x5/j871x_k54wb_1c5n7__wb99r0000gn/T/butler-uv-wheel-0.9.28/extracted/uv-0.9.28.data/scripts:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "bash",
+      "scripts/verify-dual-host.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-02T14:37:23.460Z",
+  "finished_at": "2026-08-02T14:37:36.644Z",
+  "duration_ms": 13184,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 401,
+    "captured_bytes": 401,
+    "sha256": "c27160a1321499c3253d99c7de5f31f0c71f71b0e65b9066a6aa84d9c06e22a8",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 4403,
+    "captured_bytes": 4403,
+    "sha256": "7f9d4e8a27c6b8127f02388d81fbc861226b25858cc9f4fba3b7718b52c4e94b",
+    "truncated": false
+  }
+}

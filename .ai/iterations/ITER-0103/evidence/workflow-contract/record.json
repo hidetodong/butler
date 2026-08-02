@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "workflow-contract",
+  "iteration": "ITER-0103",
+  "ac_ids": [
+    "AC10",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T12:05:03.456Z",
+  "finished_at": "2026-08-01T12:05:03.933Z",
+  "duration_ms": 477,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 289,
+    "captured_bytes": 289,
+    "sha256": "da89d67c8f800029f2c1f5d27173f94e07553f14db65874a0fd53bef22c32f12",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2049,
+    "captured_bytes": 2049,
+    "sha256": "9f4018ae052a2fcd0d90e88a037d4bc991735f50e74b17178365a9a3a369ddef",
+    "truncated": false
+  }
+}

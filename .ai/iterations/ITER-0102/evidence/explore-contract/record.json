@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "explore-contract",
+  "iteration": "ITER-0102",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-workflow-registry.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-01T11:06:17.284Z",
+  "finished_at": "2026-08-01T11:06:17.792Z",
+  "duration_ms": 507,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 289,
+    "captured_bytes": 289,
+    "sha256": "da89d67c8f800029f2c1f5d27173f94e07553f14db65874a0fd53bef22c32f12",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2049,
+    "captured_bytes": 2049,
+    "sha256": "e8a38a6834de0f276b8649c1154e56cf0963c6d4e72b8a220ef595d73864e49f",
+    "truncated": false
+  }
+}

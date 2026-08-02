@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-promotion-risk",
+  "iteration": "ITER-0105",
+  "ac_ids": [
+    "AC3",
+    "AC4",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "test_engine.DecisionPromotionTests.test_route_reference_only_adds_receipt_semantic_state_and_is_inspectable",
+      "test_engine.DecisionPromotionTests.test_iteration_start_reuses_intake_and_writes_source_reference",
+      "test_engine.DecisionPromotionTests.test_receipt_replay_is_idempotent_and_id_conflict_fails",
+      "test_engine.DecisionPromotionTests.test_two_processes_commit_one_receipt_for_same_plan",
+      "test_engine.DecisionPromotionTests.test_intake_callback_or_sync_failure_rolls_back_all_ai_state",
+      "-v"
+    ],
+    "cwd": "tools/decision-promotion/tests"
+  },
+  "started_at": "2026-08-02T02:51:44.759Z",
+  "finished_at": "2026-08-02T02:51:44.994Z",
+  "duration_ms": 235,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 928,
+    "captured_bytes": 928,
+    "sha256": "a95ceaccd3b431f89af6dfc6ce26bbdc05673690bb6b749bb42c966eb3014ae0",
+    "truncated": false
+  }
+}

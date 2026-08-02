@@ -27,6 +27,7 @@ Butler 是一套 Markdown 规则和配套工具，不是代码框架。它把 AI
 - [它解决什么问题](#它解决什么问题)
 - [工作方式](#工作方式)
 - [快速开始](#快速开始)
+- [普通任务、Milestone 与 Explore](#普通任务milestone-与-explore)
 - [一分钟示例](#一分钟示例)
 - [你会在项目里得到什么](#你会在项目里得到什么)
 - [功能清单](#功能清单)
@@ -115,9 +116,62 @@ test -n "$BUTLER_PATH" && test -f "$BUTLER_PATH/Coder/README.md" && echo "Butler
 在 /path/to/project 实现登录失败后的账号锁定，并补齐验证。
 ```
 
-Butler 会根据任务规模选择简化或完整流程。完整流程中，你主要在 P2 确认“什么算完成”，在 P3 确认“准备怎么做”；实现和验证完成后，会得到迭代归档以及 Markdown、HTML 两种交付总结。
+普通任务默认从迭代入口开始；流程内再按既有规则决定走简化或完整 P1–P5。完整流程中，你主要在 P2 确认“什么算完成”，在 P3 确认“准备怎么做”；实现和验证完成后，会得到迭代归档以及 Markdown、HTML 两种交付总结。
 
 已有 Butler 项目需要同步到当前版本时，使用 `/butler:upgrade`（Claude Code）或 `$butler-upgrade`（Codex）。升级会先给出零写入计划，确认后才事务执行。
+
+## 普通任务、Milestone 与 Explore
+
+三者不是三个互相竞争的入口，而是解决不同问题：**Iteration 管一次交付，Milestone 管多次交付，Explore 管开工前尚未收敛的关键决策。** Butler 不依赖模型先猜“需求有多大、够不够清晰”再自动分流；默认仍按普通任务处理，只有用户明确选择 Explore，或接受 AI 针对具体阻塞点提出的 Explore 建议，才进入持久化探索。
+
+| 你的情况 | 建议路径 | 原因 |
+|---|---|---|
+| 目标和下一步已经明确，预计一次能交付 | 直接开始 Iteration | 不增加前置流程 |
+| 目标明确，但需要多个 Iteration | 先建立 Milestone，再启动第一个 Iteration | 路线问题已解决，只需要组织交付 |
+| 存在会阻塞路线的未知项，而且要跨会话求证、比较或并行探索 | 显式选择 Explore | 需要保存 Decision、证据、依赖和待办前沿 |
+| 只是想快速聊想法 | 使用轻量 Ideation，不建立 Decision Map | 保持低成本，随时可结束 |
+
+Explore 仍使用现有 Ideation 入口，没有新增一套命令：
+
+| 宿主 | 入口 |
+|---|---|
+| Claude Code | `/butler:ideation` |
+| Codex | `$butler-ideation` |
+| Pi | 直接说“用 Explore 帮我梳理这个方向，先不要开 Iteration” |
+
+例如：
+
+```text
+用 Explore 帮我梳理离线同步方案。把会阻塞路线的决策和证据保存下来，
+可以做 Research 或 Prototype，但先不要建立 Milestone，也不要开 Iteration。
+```
+
+```mermaid
+flowchart LR
+    A["普通任务"] --> I["Iteration P1–P5"]
+    B["目标明确，但要分批交付"] --> M["Milestone planned route"]
+    M --> I
+    C["用户显式选择 Explore"] --> E["Ideation / Decision Map"]
+    E --> W["Research / Prototype / Grilling"]
+    W --> D["resolved Decision slice"]
+    D -->|"显式引用既有路线"| M
+    D -->|"显式开工"| I
+```
+
+Decision Map 记录的是“为什么这样选”的参考来源，不是新的交付计划，也不会自动变成 Milestone 或 Iteration。交接必须由用户明确指定已解决的 Decision slice 和目标：
+
+```text
+把 DMAP-0001 中已经解决的离线冲突策略作为参考，
+接到 MILE-0015 的 planned route；先不要启动 Iteration。
+```
+
+或者直接开工：
+
+```text
+用 DMAP-0001 已解决的 D-003 作为输入，启动一个 Iteration；从 P1 开始。
+```
+
+这里有三条固定边界：Explore 不替代 Milestone 的多迭代路线管理；promotion 只负责显式交接，不创建隐含路线、不跳过 P1；模型可以建议 Explore，但不能仅凭“看起来很大或不清晰”自动开启它。跨会话继续时，只需说“继续当前 Decision Map，先告诉我 Frontier 和下一步”，Butler 会从落盘状态恢复，而不是重新猜测上次讨论。
 
 ## 一分钟示例
 
@@ -173,7 +227,7 @@ Butler 的能力按项目接入、需求进入、迭代推进和跨阶段协作�
 
 | 功能 | 所处阶段 | 作用 | Claude Code / Codex 入口 |
 |---|---|---|---|
-| 需求脑暴 | P1 之前 | 梳理还没想清的需求，不直接进入执行主线 | `/butler:ideation` · `$butler-ideation` |
+| Explore / 需求脑暴 | P1→P5 之外 | 用户主动探索或接受具体建议后梳理 Decision Map；显式 promotion 才从 Iteration P1 接回 | `/butler:ideation` · `$butler-ideation` |
 | 需求收件箱 | P1 之前 | 扫描来源、分类并路由原始需求材料 | `/butler:inbox` · `$butler-inbox` |
 | PRD 管理 | P1–P3 输入 | 切分、查询和更新可独立版本化的产品需求 | `/butler:prd` · `$butler-prd` |
 | 里程碑与候办 | 迭代外层 | 规划多迭代版本，或暂存尚未开工的方向 | `/butler:milestone` · `$butler-milestone` |
@@ -241,6 +295,14 @@ bash scripts/verify-ci.sh
 CI 会验证规则投影、Claude/Codex/Pi 适配、Hooks、状态与产物审计、Markdown 链接和各驻留工具。GitHub 上最终汇总检查名为 `Butler required checks`；是否设为分支必需检查仍需仓库管理员在 Ruleset 或 Branch protection 中配置。
 
 长期运行项目如果需要迁移大体量 ITER/MILE 台账，再使用 [`tools/state-ledger/`](tools/state-ledger/) 的 `inspect → migrate → check` 流程；它是维护工具，不是首次使用步骤。
+
+Explore 中需要结构化、跨会话或并行的 Decision Map 时，使用 [`tools/decision-map/`](tools/decision-map/) 的 `inspect → plan → apply → verify` Interface。它是 opt-in Explore 的内部持久化能力，不是新的入口，也不会自动判断需求大小或把探索结果送入 Milestone/Iteration。
+
+对已显式选择并 claim 的 Decision 做受控求证时，使用 [`tools/decision-work/`](tools/decision-work/) 的同名四动作 Interface。它保存不可变 Task/Result；只有 Research 求证可以受控并行，候选结果必须由协调器显式 absorb 才能解决 Decision，不会自动进入交付流程。
+
+用户明确选择 resolved Decision slice 及目标后，使用 [`tools/decision-promotion/`](tools/decision-promotion/) 的同名四动作 Interface。`route-reference` 只引用既有 Milestone planned route；`iteration-start` 复用现有 intake 从 P1 开工。它不判断需求大小/清晰度、不创建路线、不自动进入 P2，Decision Map 此后只是参考来源。
+
+三段能力的端到端本地回归由 [`tools/explore-dogfood/`](tools/explore-dogfood/) 编排；它不是新入口或状态真源。MILE-0014 R5 的真实样本、四项观测和外部 tracker `defer` 裁决见 [`docs/explore-dogfood-r5.md`](docs/explore-dogfood-r5.md)。当前结论是：这套持久化探索适合确有跨会话阻塞决策的大需求，不应成为普通任务或轻量 Ideation 的默认路径。
 
 ## 继续阅读
 
