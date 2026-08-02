@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [3.5.1] - 2026-08-03
+
+不改变运行行为的文档修订版（PATCH）：按渐进式使用重新组织 README，让普通 Iteration、Milestone、Explore 与按需能力逐层出现；同时用当前规则文件实测 Butler 自身的上下文占用，区分常规阶段加载与 20k 以上的过度深读路径，并纠正规则卡中过时的 Token 体量说明。对应提交为 `064e8ef`，升级动作见 `migrations/v3.5.1.md`。
+
 ## [3.5.0] - 2026-08-02
 
 向后兼容的 opt-in Explore 能力新增版，聚合 MILE-0014 的 ITER-0102–ITER-0106：在既有 Ideation 入口下新增持久化 Decision Map、受控 Decision Work、显式 promotion 交接和端到端 dogfood，同时保持普通任务与明确多迭代需求分别直达 Iteration、Milestone。版本级交付见 `deliveries/milestones/MILE-0014-explore-decision-map-integration.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.5.0.md`。
