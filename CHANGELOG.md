@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [3.5.0] - 2026-08-02
+
+向后兼容的 opt-in Explore 能力新增版，聚合 MILE-0014 的 ITER-0102–ITER-0106：在既有 Ideation 入口下新增持久化 Decision Map、受控 Decision Work、显式 promotion 交接和端到端 dogfood，同时保持普通任务与明确多迭代需求分别直达 Iteration、Milestone。版本级交付见 `deliveries/milestones/MILE-0014-explore-decision-map-integration.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.5.0.md`。
+
 ## [3.4.0] - 2026-08-01
 
 向后兼容的工作流与宿主集成增强版，聚合 ITER-0096–ITER-0101：新增旁路工作回执、统一语义 Router 与会话转迭代入口，完善开源入口和沟通风格，并修复升级器 hook 摘要、Codex plugin 校验运行时及 UTF-8 setup 回声。迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.4.0.md`。
