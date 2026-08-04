@@ -33,7 +33,7 @@
 ## 下一个瓶颈
 - MILE-0009 已随 v3.0.0 发布；外部旧项目获得新结构仍需显式 upgrade/migration，不能把发布写成目标项目已部署。
 - MILE-0015 下一瓶颈是 R4：只结构化高风险身份、状态和引用，解除 dangerous/loop 错绑并统一人测 schema/manifest 所有权；R2/R3 尚无运行时读取与转换遥测，只有观察到宿主偏离时才评估补追踪。
-- milestone backlog 当前有 7 个独立候办，包括结构化提问卡片、AI 用户体验迭代、PRD future route 兑现、状态转换可信门、TDD 证据增强，以及两项并行执行方向。
+- milestone backlog 当前有 9 个独立候办，包括升级收敛引擎、PRD 原文疑问检索、结构化提问卡片、AI 用户体验迭代、PRD future route 兑现、状态转换可信门、TDD 证据增强，以及两项并行执行方向。
 - 若要让 `Butler required checks` 成为远端合并门禁，需用户授权套餐/可见性变化，并在 workflow 推送后配置和核验保护规则。
 - 项目自有 hook 与 Butler 受管 `.claude/hooks/` 仍缺安全共存合同；在明确目录所有权前继续 fail-closed。
 - 危险模式规则真源仍把 P4 与 `/butler:loop` 自动绑定，但用户已明确两者正交；需要独立纠偏迭代统一 dangerous engine、logic protocol 和相关入口，避免再次误触发 Loop。

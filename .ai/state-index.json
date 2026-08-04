@@ -4,7 +4,7 @@
     "iterations": {
       "cold_count": 89,
       "hot_count": 20,
-      "hot_sha256": "64b567d645f72424bc30d2eed06dc604da98b9538a23cc7fe41f778e30d717b5",
+      "hot_sha256": "eb63ca73961107cd752757efe2038e0fed0e5c7decadfef45cb299c4b0e01185",
       "max_used": 109,
       "routing": {
         "directory": ".ai/history/iterations",
@@ -19,7 +19,7 @@
     "milestones": {
       "cold_count": 0,
       "hot_count": 15,
-      "hot_sha256": "c56811dffac43c85d569b95953db5d7e7d5e3be32fd61ddb815c8cddb43a68e4",
+      "hot_sha256": "1a55f157843cb59166f889fb0e9fdb97b6d1ff972e4cbca968d2dee5b66ad8b9",
       "max_used": 15,
       "routing": {
         "directory": ".ai/history/milestones",

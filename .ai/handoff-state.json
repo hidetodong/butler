@@ -1,32 +1,37 @@
 {
-  "handoff_sha256": "5843118a6b7052a0e23e3c2da6050b672e97d368f934f817880ebc218929c320",
+  "handoff_sha256": "3a5650220f0002cff69a3c51f2856439ae26c7cc7e608649bb625d9d3f988340",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
-    "milestone": "none",
-    "next": "交付即止；当前无 active Milestone / Iteration，不自动启动任何 deferred 候办。",
-    "phase": "Milestone Closed",
+    "milestone": "MILE-0015",
+    "next": "按用户指令开启 MILE-0015 R4，结构化最小高风险合同并完成 dangerous/loop 与人测所有权双试点。",
+    "phase": "Closed",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
-      ".ai/MILESTONES.md"
+      ".ai/MILESTONES.md",
+      ".ai/MILESTONE.md"
     ],
     "risks": [],
-    "status": "MILE-0014 已聚合 ITER-0102～ITER-0106，完成里程碑归档、Markdown/HTML 版本级交付和台账收口；Decision Map 保留为参考来源，tracker verdict=`defer`。"
+    "status": "ITER-0109 / MILE-0015 R3 已关闭；13 个 evidence、五件套和双格式交付均已归档。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "1ea445a50d7d233d5ced6367daec012afd50343af366beb2f930ade1b9d7ae6d"
+      "sha256": "01912b707c1d146aa9746cfc6bbbbd719c2c674ef2f7c47aefdf584e54674322"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "013c00522fd0a7cc2d18a025e163c83f8ae7924c59e9effd500f920f5de5ca4f"
+      "sha256": "eb63ca73961107cd752757efe2038e0fed0e5c7decadfef45cb299c4b0e01185"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "21e7307f1e2418357b11efbae33f6d7db28e31d55e30eea9c139d8ec950d4cd0"
+      "sha256": "1a55f157843cb59166f889fb0e9fdb97b6d1ff972e4cbca968d2dee5b66ad8b9"
+    },
+    {
+      "path": ".ai/MILESTONE.md",
+      "sha256": "30a6b77060d5d59a75737a73d6a3dcfcafda234134735a2bf13ebb12667ab06a"
     }
   ]
 }
