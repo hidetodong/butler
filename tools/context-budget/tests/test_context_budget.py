@@ -30,8 +30,8 @@ class ContextBudgetTests(unittest.TestCase):
             ".ai/project/architecture.md",
             ".ai/project/invariants.md",
             ".ai/project/debt.md",
-            ".ai/iterations/ITER-0099/AC_LIST.md",
-            "deliveries/ITER-0099-domain-model-boundaries.md",
+            ".ai/iterations/ITER-0107/AC_LIST.md",
+            "deliveries/ITER-0107-domain-model-boundaries.md",
         ):
             source = ROOT / relative
             target = self.root / relative
