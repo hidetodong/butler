@@ -919,6 +919,37 @@
           ]
         }
       ]
+    },
+    {
+      "source": "3.5.1",
+      "target": "3.6.0",
+      "recipe": "v3.6.0.md",
+      "actions": [
+        {
+          "id": "3.6.0/01-global-install",
+          "type": "global_install",
+          "domain": "machine",
+          "preconditions": [
+            "explicit-machine-confirmation"
+          ]
+        },
+        {
+          "id": "3.6.0/02-regen-entrypoints",
+          "type": "regen_entrypoints",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        },
+        {
+          "id": "3.6.0/03-restamp",
+          "type": "restamp",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        }
+      ]
     }
   ]
 }

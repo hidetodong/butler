@@ -7,7 +7,7 @@
 让 AI 先理解目标、明确验收、确认方案，再实现并拿证据交付。
 
 [![CI](https://github.com/hidetodong/butler/actions/workflows/ci.yml/badge.svg)](https://github.com/hidetodong/butler/actions/workflows/ci.yml)
-[![version](https://img.shields.io/badge/version-3.5.1-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-3.6.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)](#三宿主如何共享同一套规则)
 
@@ -156,7 +156,7 @@ flowchart LR
 
 这里估算的是 **Butler 自身占用的上下文窗口**，不是完成工作的总 Token：只计算项目入口、Butler 规则、工作流 Skill、Schema 和内部工具合同；不计算用户需求、业务代码、项目知识、对话正文、工具输出、验证日志、Research / Prototype 结果或模型的实现推理。
 
-下表基于 Butler v3.5.1 当前文件，用 `o200k_base` 与 `cl100k_base` 两种 tokenizer 测量后取整。不同宿主和模型的 tokenizer、prompt cache 与 Skill 注入方式不同，因此它是**静态协议体量的估算**，不是 API 账单或硬上限。
+下表基于 Butler v3.5.1 文件测量，用 `o200k_base` 与 `cl100k_base` 两种 tokenizer 测量后取整；v3.6.0 用同一渲染器复测常驻入口，体量比 v3.5.1 略低约 4%（新增 L0 渐进读取纪律，但同期删减多于新增），因此各行区间沿用不变。不同宿主和模型的 tokenizer、prompt cache 与 Skill 注入方式不同，因此它是**静态协议体量的估算**，不是 API 账单或硬上限。
 
 | 当前使用方式 | Butler 上下文总占用 | 相对常驻入口的按需增量 | 主要加载内容 |
 |---|---:|---:|---|

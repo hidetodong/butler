@@ -1,37 +1,32 @@
 {
-  "handoff_sha256": "117f0274d34a198402b813d404863924c64935a2d4fa7516a5a35b8b735cab2f",
+  "handoff_sha256": "f17ea3bf7928bbd7cb7f3db51321a0d9dd5b1ca896d820153d8c6bb9cbf5eb55",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
-    "milestone": "MILE-0015",
-    "next": "R5「治理接线与真实 dogfood」待领下一迭代号开工。",
-    "phase": "已收口（ITER-0110 closed）",
+    "milestone": "none",
+    "next": "等用户指示。可选方向——① 推送 `main` 与 `v3.6.0` tag 到远端（github / origin 两个 remote）；② 开启下一个里程碑，运行时观测方向见 `.ai/milestone-backlog/butler-slim-down.md`（R5 留下的「衡量歧义减少」缺口就在这条）。",
+    "phase": "MILE-0015 已收口并随 v3.6.0 切版发布（台账 `current: none`，收口日期 2026-08-17）",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
-      ".ai/MILESTONES.md",
-      ".ai/MILESTONE.md"
+      ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "8/8 AC 全绿（auto·可靠），完整 CI 通过，裁决 eligible；证据已归档、四件套已快照、台账已置 closed。"
+    "status": "五个路线项（ITER-0107～ITER-0111）全部 closed，快照与版本级交付已产出；v3.6.0 聚合本区间发布，`VERSION` / `CHANGELOG.md` / `migrations/v3.6.0.md` / manifest / README badge / Codex plugin 六处版本载体对齐，完整 CI 退出码 0，状态审计无漂移。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "577af10d42cc00c9c829de9b4e22ff93a5f1c8149351466b60a6346c049e38a2"
+      "sha256": "4fb446e3be4b578ba8a1464d859f114bed1c5a1bd42022e3defe4e8ebdcf0ebe"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "9202bd3197aac3b58e86ed6cc3fda0b26adf62478a4dc408e7650f86ee84b363"
+      "sha256": "904f249847acc7408c99b131f4139ae49d26db6b0afb7a4750e9cf538669529f"
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "e1736927ab9ac95c470ccc6d38ebd5750d668d63ac0abb906eaad49d22699fa8"
-    },
-    {
-      "path": ".ai/MILESTONE.md",
-      "sha256": "71119c3061f309602cd76641cb0f6b78ae0893417fab13e97f0281dc2ddaf0be"
+      "sha256": "eb2f769c9c7301dab6a4ed0cf09d819595a2acdad17777df4616b7476eb302aa"
     }
   ]
 }
