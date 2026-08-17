@@ -78,5 +78,45 @@ class MigrationTests(unittest.TestCase):
         with self.assertRaises(migration.MigrationError): migration.rollback(root, mid)
         temporary.cleanup()
 
+    def test_strict_verify_missing_human_section_is_migrated(self):
+        manifest = migration.contract.load_manifest(ROOT)
+        text = migration.contract.render(ROOT, "verify_report", "ITER-1234", "T")
+        old = text.replace(migration.HUMAN_TEST_SECTION, "")
+        self.assertNotIn("## 人测道小结", old)
+        migrated = migration.migrate_strict_verify(old, manifest)
+        self.assertIn("## 人测道小结", migrated)
+        self.assertEqual([], migration.contract.validate_text("verify_report", migrated, manifest))
+        self.assertIn("## Verification Summary", migrated)
+        self.assertIn("## Handoff / Next Step", migrated)
+
+    def test_strict_verify_already_migrated_is_idempotent(self):
+        manifest = migration.contract.load_manifest(ROOT)
+        text = migration.contract.render(ROOT, "verify_report", "ITER-1234", "T")
+        self.assertEqual(text, migration.migrate_strict_verify(text, manifest))
+
+    def test_strict_verify_misplaced_human_section_is_rejected(self):
+        manifest = migration.contract.load_manifest(ROOT)
+        text = migration.contract.render(ROOT, "verify_report", "ITER-1234", "T")
+        misplaced = text.replace(migration.HUMAN_TEST_SECTION, "") + "## 人测道小结\n\n- misplaced\n\n"
+        with self.assertRaises(migration.MigrationError) as ctx:
+            migration.migrate_strict_verify(misplaced, manifest)
+        self.assertIn("misplaced or duplicate", str(ctx.exception))
+
+    def test_strict_verify_duplicate_human_section_is_rejected(self):
+        manifest = migration.contract.load_manifest(ROOT)
+        text = migration.contract.render(ROOT, "verify_report", "ITER-1234", "T")
+        duplicate = text + "## 人测道小结\n\n- duplicate\n\n"
+        with self.assertRaises(migration.MigrationError) as ctx:
+            migration.migrate_strict_verify(duplicate, manifest)
+        self.assertIn("misplaced or duplicate", str(ctx.exception))
+
+    def test_strict_verify_unknown_marker_is_rejected(self):
+        manifest = migration.contract.load_manifest(ROOT)
+        text = migration.contract.render(ROOT, "verify_report", "ITER-1234", "T")
+        bad = text.replace("1.0.0", "9.0.0")
+        with self.assertRaises(migration.MigrationError) as ctx:
+            migration.migrate_strict_verify(bad, manifest)
+        self.assertIn("marker", str(ctx.exception))
+
 
 if __name__ == "__main__": unittest.main()

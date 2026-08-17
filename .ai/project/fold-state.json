@@ -1055,6 +1055,34 @@
           "sha256": "b98aa1181515ac16b5208537e98eb9b94ddcc95ad401200001eb7da3b6575443"
         }
       ]
+    },
+    "ITER-0110": {
+      "changelog": {
+        "path": ".ai/iterations/ITER-0110/CHANGELOG.md",
+        "sha256": "ee3e58daf0b7024b801800d23f510a60d40cb7aa4a9b32d4af76ca47aee42819"
+      },
+      "topics": [
+        {
+          "path": ".ai/project/architecture.md",
+          "sha256": "e8b9ba21449a798ce3774c19720538a911669f3e0404cae07a84caa4d5779f3a"
+        },
+        {
+          "path": ".ai/project/capabilities.md",
+          "sha256": "d454b7508940fb64be481d694f8ba3f35d69014bd69f0c8f12faedbade88f1aa"
+        },
+        {
+          "path": ".ai/project/invariants.md",
+          "sha256": "8246b124b675d0edf584c8e3d3ade76d659d8b54ca8f4e74f6df8745abf5127e"
+        },
+        {
+          "path": ".ai/project/frontier.md",
+          "sha256": "90432b7c0a48fe9397360f7fcfb9a0183436a753deeb74cea2a3cdc44160fe4f"
+        },
+        {
+          "path": ".ai/project/debt.md",
+          "sha256": "bd681c59bf5fb2e0bdfcaa70952c82b0f6c5a311b62b59b9bde22b301a902144"
+        }
+      ]
     }
   },
   "schema_version": 1

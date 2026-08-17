@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：MILE-0015；阶段：Closed。
-- 状态：ITER-0109 / MILE-0015 R3 已关闭；13 个 evidence、五件套和双格式交付均已归档。
+- 迭代：无 active；里程碑：MILE-0015；阶段：已收口（ITER-0110 closed）。
+- 状态：8/8 AC 全绿（auto·可靠），完整 CI 通过，裁决 eligible；证据已归档、四件套已快照、台账已置 closed。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按用户指令开启 MILE-0015 R4，结构化最小高风险合同并完成 dangerous/loop 与人测所有权双试点。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：R5「治理接线与真实 dogfood」待领下一迭代号开工。
 
 ## 状态指针
 

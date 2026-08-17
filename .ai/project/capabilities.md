@@ -21,7 +21,7 @@
 
 ## 确定性五件套产物链（MILE-0011）
 
-- `tools/artifact-pipeline/artifacts.v1.json` 与五份 canonical 模板共同定义 live 五件套的版本化结构合同；`contract.py render/init/reset/check` 按阶段安全生成并零写验形，hook advisory、状态审计和 CI 共用该合同；`migration.py plan/apply/verify/rollback` 以备份 receipt 和 hash 门控无损迁移 legacy live，历史归档只读不追罚。
+- `tools/artifact-pipeline/artifacts.v1.json` 与五份 canonical 模板共同定义 live 五件套的版本化结构合同（含 VERIFY「人测道小结」段的结构所有权）；`contract.py render/init/reset/check` 按阶段安全生成并零写验形，hook advisory、状态审计和 CI 共用该合同；`migration.py plan/apply/verify/rollback` 以备份 receipt 和 hash 门控无损迁移 legacy live 与缺段 strict VERIFY，历史归档只读不追罚。
 
 ## 可信 handoff 与有界状态台账（MILE-0010）
 
@@ -154,6 +154,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 
 ## 驻留工具
 
+- `tools/domain-contract/` — 高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—种类—唯一所有者—真源」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，并扫描 Dangerous/Loop 错绑与人测段所有权回归；不复制执行枚举或字段全集。
 - `tools/inbox/` — 需求收件箱确定性 scanner：plan 默认零写、apply 原子维护 `.ai/INBOX.md` managed block，按原始 bytes 做 SHA-256 并处理幂等、变化、缺失、symlink/损坏 ledger；不做语义分类、不改 `origin/`。
 - `tools/prd-migrate/` — legacy 单 PRD 的 inspect/plan/apply/verify/rollback 与多 PRD/legacy 钉版 resolver；显式日期化身份、同父 staging/backup/rename、机器 receipt、历史影响面和路径越界拒绝。人类步骤见 `docs/prd-migration-guide.md`。
 - `tools/prd-status/` — 多 PRD 确定性只读查询：项目列表、`prd_id` 下钻、workspace key 筛选与 legacy 退化；总索引、单需求目录和 active workspace map 交叉核验，混合/漂移/symlink fail-closed，稳定 JSON/退出码且零缓存。

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "domain-contract-tests",
+  "iteration": "ITER-0110",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/domain-contract/tests",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-13T04:10:16.189Z",
+  "finished_at": "2026-08-13T04:10:16.238Z",
+  "duration_ms": 48,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "44e920f67235b19a4ab0aa98f9d54d00114666fc570c9c3f9c0fab203398c81e",
+    "truncated": false
+  }
+}

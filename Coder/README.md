@@ -83,6 +83,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     testing-strategy.md
     review-standard.md
     correction-contract.md
+    bounded-convergence.md
     implementation-discipline.md
 
   /40_Context_Management
@@ -130,7 +131,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 - `00_System_Prompt/`：协作身份、总调度协议与对话输出呈现协议（`presentation-protocol.md`：方案 / 分析 / 选项类输出结论先行 + 统一标号 + 表格化 + 说人话四条对话层引用[定义真源在 `artifact-style.md §2`]）。
 - `20_Workflow_Lifecycle/`：通用需求开发 SOP 的阶段状态机、阶段交付约束、四件套书写口径与人类可读交付总结规范。
-- `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）。
+- `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）+ 供 opt-in 模式共享的定量熔断纪律（`bounded-convergence`）。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
 - `50_Extension_Ideation/`：Butler 内建但 opt-in 的 Explore / Ideation 模块；用户主动探索或接受带具体阻塞理由的建议后启用，位于 P1→P5 之外。
 - `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册四帮手：复核（`independent-review`，接 P5）、更新说明（`knowledge-fold`，收尾把 delta 折进 `.ai/project/`、只写该目录）、查过时（`drift-check`，冷启动/收口抽查说明过时、只读）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
@@ -175,6 +176,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `tools/decision-promotion/` 是 Explore→Delivery 的确定性交接 Module：用户显式选择 resolved Decision slice 与 `route-reference` / `iteration-start` 目标后，工具用 closure digest、target digest、不可变 receipt 和全局写锁执行；它不做清晰度/大小判断、不创建 Milestone route、不更新 active Iteration，开工只复用 iteration-intake 从 P1 开始。
 - `tools/explore-dogfood/` 是三个 Decision Module 的内部端到端回归 harness：只在临时项目编排公开边界，另提供零写聚合 inspect 供跨会话恢复观测；不加入 workflow registry、不调度 agent、不保存派生状态。R5 观测报告在 `docs/explore-dogfood-r5.md`。
 - `tools/artifact-pipeline/` 是五件套结构的机器 SSOT：versioned manifest 唯一定义 live 产物路径、阶段、H2 顺序、固定表头/状态字段和条件段，canonical templates 与其机械对账；新标记产物 strict，legacy 归档只读不追罚。
+- `tools/domain-contract/` 是高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—合同种类—唯一所有者—真源指针」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，不复制任何执行枚举或字段全集。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/goal-contract.md` 是非极小任务 Goal 的共同合同真源：不新增 GOAL 台账，而从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与收口事实派生 `active / at-risk / blocked / completion-candidate / complete / abandoned`；宿主 Goal/Task 只能做可重建投影。
 - `20_Workflow_Lifecycle/goal-calibration.md` 管 P4/P5 新事实回流：六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号不能被 tasks done 或风险措辞覆盖。
@@ -184,9 +186,10 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/iteration-intake.md` 负责把当前会话结晶为已确认决策 / 模型建议 / 开放问题，并在明确开工意图下通过 `tools/iteration-intake/` 事务领取一次迭代；只总结时零写入。
 - `20_Workflow_Lifecycle/maintenance-boundaries.md` 负责维护成本与批处理边界。
 - `30_Quality_Gate/correction-contract.md`（纠错收口契约）是 P4 默认常驻的底线纪律——修到真过、探测绑 AC、禁止降级修复、诚实停，无需触发、每次迭代生效。
+- `30_Quality_Gate/bounded-convergence.md`（有界 P4 收敛策略）是供 Convergence Loop 与 Dangerous Mode 的 P4 共享的定量熔断纪律（重试上限/死锁/环境阻塞 + RCA）；两模式并列引用、互不激活，激活仍各自显式触发。
 - `30_Quality_Gate/implementation-discipline.md`（最小实现纪律）是与纠错契约并列的 P4 常驻底线——写新码爬「最小实现阶梯」（YAGNI→复用→标准库→平台原生→已装依赖→一行→最小新代码）、有意简化用 `butler-min:` 注释标天花板 + 升级路径、修 bug 挖根因不打症状补丁；但信任边界校验 / 安全 / 无障碍 / 用户明确要求不得砍、绝不对理解问题偷懒。无需触发、每次迭代生效；随 `30_Quality_Gate/` 常规读、不单列冷启动必读。
 - `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 只在显式 `/butler:loop` 指令或语义触发下启用，是 P4 纠错的高强度升档（叠在常驻纠错收口契约之上），负责死磕式闭环与定量熔断规则。
-- `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/butler:dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用收敛闭环，附审计、回滚与 P5 强制完整审查护栏；无人值守下人测残余按 §7.4 依赖感知准入闸处置（不阻塞入账 / 弱验证顶 / 卡下游不硬闯 / 绝不假绿）。
+- `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/butler:dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用有界 P4 收敛策略，附审计、回滚与 P5 强制完整审查护栏；无人值守下人测残余按 §7.4 依赖感知准入闸处置（不阻塞入账 / 弱验证顶 / 卡下游不硬闯 / 绝不假绿）。
 - `70_Extension_Preference/preference-probe-engine.md` 是实验性偏好探针：**采集 + 蒸馏经一次性同意后默认常驻**、**反哺 opt-in 仅作用于有监督工作（P2/P3 提案 / 选项排序）、绝不参与 `/butler:dangerous`**；只学真人选择（模型自决不采集）；数据外置（`$BUTLER_PREF`，与本仓库解耦）、先验非权威、绝不侵入迭代数据流。命令：`/butler:preference on`/`off`（隐私总开关）、`reback on`/`off`（反哺）、`distill`（手动蒸馏）。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板；VERIFY 含 Evidence Index、Goal Calibration 和 Completion Inputs。完整路径先由 verification evidence 生成 record，再由 `tools/goal-assurance/goal.py` 只读裁决 close eligibility；无证据或任一 blocker 不打绿。
 - `20_Workflow_Lifecycle/human-test-bridge.md` 定义 P5 人测道残余的**等待-回收-续跑闭环**：有人场次触发条件 → 生成 manifest → `run_in_background` 起 butler 驻留「交付自测桥」（`tools/delivery-selftest/`）→ 阻塞等待桥进程自退 → 读 `results.json` → **四态路由**（通过=收口 / 未通过=进 `correction-contract` 纠错 / 延后=入账不阻塞 / 跳过=N/A）；无人值守（`/butler:dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。桥体输入 / 输出契约以 `tools/delivery-selftest/README.md` 为真源，本协议只接下游消费、不重抄字段。

@@ -16,7 +16,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 
 - 必须产出：`.ai/VERIFY_REPORT.md`
 - 必填字段：`Verification Summary`、`AC Status`、`Evidence Index`、`Verification Results`、`TDD Pair Status`、`Goal Calibration`、`Completion Inputs`、`Gate Coverage`、`Remaining Risks`、`Handoff / Next Step`
-- 条件字段：`人测道小结`（仅当存在人测道 AC 时必填，见 §3 模板与 §4 分道回填要求）
+- 条件字段：`人测道小结`（段位置与空值口径由 `tools/artifact-pipeline/artifacts.v1.json` + `templates/VERIFY_REPORT.md` 固定，缺省 N/A 不删段；存在 human·待人 档 AC 时必填，见 §3 模板与 §4 分道回填要求）
 
 ## 3. 标准模板
 
@@ -30,7 +30,7 @@ scope: P5 Verify 阶段的验证结果、风险说明与验收回填模板
 - [x] AC2 (auto·弱): 已满足 ✓（代理验证：截图对基线 diff）
 - [ ] AC3 (human·待人): 待人测 — 归 <类目>
 
-# 人测道小结（仅当存在 human·待人 档 AC 时；无则整段省略）
+# 人测道小结（段位置由 manifest/template 固定；无 human·待人 档 AC 时整段保留 N/A）
 - AC3：<归入类目：主观审美 / 物理设备 / 真人感知 / 外部人工闸> — 状态：待人测 / 结论摘要
 
 # Evidence Index

@@ -9,6 +9,10 @@
 
 - [ ] AC1 (auto·可靠): {{CONTENT}}
 
+## 人测道小结
+
+- N/A（本轮无 human·待人 档 AC，人测道不适用）。
+
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |

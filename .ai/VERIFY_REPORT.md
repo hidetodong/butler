@@ -1,50 +1,47 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0109
+# VERIFY_REPORT — ITER-0110
 
 ## Verification Summary
 
-- AC1–AC8 已由主链合同检查、9 项正负测试、链接/产物/状态/diff 门禁与两轮完整 CI 覆盖。
-- 同上下文审查发现并修复 1 个 Must Fix：权威关系分类由子串命中改为箭头两侧严格 token 校验；最终 Must Fix=0、Should Fix=0。
+- 本轮把 MILE-0015 R4 的 AC1–AC8 全部落成并验证：新增最小领域合同薄工具、解除 Dangerous/Loop 错误包含、统一 VERIFY「人测道小结」结构所有权、给 strict VERIFY 补确定性迁移，并接入 CI。
+- 总体验收结论：8/8 AC 全绿（auto·可靠），完整 `verify-ci.sh` 退出码 0，MILE-0014 与 R2/R3 无回退。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): 五段转换与九个必填字段由确定性 parser 验证 ✓
-- [x] AC2 (auto·可靠): PRD→AC 钉版、非 PRD 分支、漂移拒绝与修复真源均被合同断言 ✓
-- [x] AC3 (auto·可靠): AC→TECH_PLAN 的逐 AC 继承、禁止扩张与 verdict 失效均被合同断言 ✓
-- [x] AC4 (auto·可靠): TECH_PLAN→Evidence 的 record、强度与失败不打绿语义均被合同断言 ✓
-- [x] AC5 (auto·可靠): Evidence→Goal 的聚合输入、`eligible ≠ complete` 与单向派生均被合同断言 ✓
-- [x] AC6 (auto·可靠): Handoff 单向生成、新鲜度拒绝与修复真源均被合同及既有测试覆盖 ✓
-- [x] AC7 (auto·可靠): 四类事实、严格权威方向、唯一修复真源与防重复导航均有负向回归 ✓
-- [x] AC8 (auto·可靠): L0/L1 预算、主链体量、真源路径、禁止递归与完整 CI 全部通过 ✓
+- [x] AC1 (auto·可靠): 最小领域合同登记身份/上下文/种类/唯一所有者/真源，重复/未知/越界 fail-closed ✓
+- [x] AC2 (auto·可靠): 只存导航关系、复制型载荷被拒（负例证明）✓
+- [x] AC3 (auto·可靠): Dangerous 与 Loop 并列、互不激活，共享有界收敛策略 ✓
+- [x] AC4 (auto·可靠): Dangerous 既有安全护栏与有界收敛指针未降级 ✓
+- [x] AC5 (auto·可靠): 「人测道小结」由 manifest/template 独占，verify-schema 只解释 ✓
+- [x] AC6 (auto·可靠): strict VERIFY 缺段确定性迁移 + 幂等 + 拒绝诊断，legacy/归档零写 ✓
+- [x] AC7 (auto·可靠): 正负 fixture 命中具体诊断，非仅非零退出 ✓
+- [x] AC8 (auto·可靠): MILE-0014 三 Module + Router、R2/R3 与完整 CI 全绿 ✓
+
+## 人测道小结
+
+- N/A（本轮无 human·待人 档 AC，人测道不适用）。
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| `artifact-contract` | AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/artifact-contract/record.json` |
-| `context-map-contract` | AC1, AC2, AC3, AC4, AC5, AC6, AC7, AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/context-map-contract/record.json` |
-| `context-map-tests` | AC1, AC7, AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/context-map-tests/record.json` |
-| `diff-check` | AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/diff-check/record.json` |
-| `final-artifact-contract` | AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/final-artifact-contract/record.json` |
-| `full-ci` | AC1, AC2, AC3, AC4, AC5, AC6, AC7, AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/full-ci/record.json` |
-| `markdown-links` | AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/markdown-links/record.json` |
-| `review-context-map-contract` | AC1, AC2, AC3, AC4, AC5, AC6, AC7, AC8 | reproduced | passed | `.ai/iterations/ITER-0109/evidence/review-context-map-contract/record.json` |
-| `review-context-map-tests` | AC1, AC7, AC8 | reproduced | passed | `.ai/iterations/ITER-0109/evidence/review-context-map-tests/record.json` |
-| `review-diff-check` | AC8 | reproduced | passed | `.ai/iterations/ITER-0109/evidence/review-diff-check/record.json` |
-| `review-full-ci` | AC1, AC2, AC3, AC4, AC5, AC6, AC7, AC8 | reproduced | passed | `.ai/iterations/ITER-0109/evidence/review-full-ci/record.json` |
-| `review-markdown-links` | AC8 | reproduced | passed | `.ai/iterations/ITER-0109/evidence/review-markdown-links/record.json` |
-| `state-audit-active` | AC8 | captured | passed | `.ai/iterations/ITER-0109/evidence/state-audit-active/record.json` |
+| domain-contract-tests | AC1,AC2,AC3,AC4,AC5,AC7 | captured | passed | `.ai/iterations/ITER-0110/evidence/domain-contract-tests/record.json` |
+| domain-contract-check | AC1,AC2,AC3,AC4,AC5 | captured | passed | `.ai/iterations/ITER-0110/evidence/domain-contract-check/record.json` |
+| artifact-pipeline-tests | AC5,AC6 | captured | passed | `.ai/iterations/ITER-0110/evidence/artifact-pipeline-tests/record.json` |
+| artifact-contract-check | AC5,AC8 | captured | passed | `.ai/iterations/ITER-0110/evidence/artifact-contract-check/record.json` |
+| context-budget-check | AC8 | captured | passed | `.ai/iterations/ITER-0110/evidence/context-budget-check/record.json` |
+| verify-ci | AC8 | captured | passed | `.ai/iterations/ITER-0110/evidence/verify-ci/record.json` |
 
 ## Verification Results
 
-- AC1：`context-map-contract` 与 `review-context-map-contract` 均确认 transitions=5、每段固定九字段。
-- AC2：PRD→AC 块保留钉版三元组、非 PRD 目标/范围与 fail-closed 路由，直接真源有效。
-- AC3：AC→TECH_PLAN 块保留冻结义务与 `prd_refs`，明确任务不替代 AC、实质改动使 verdict 失效。
-- AC4：TECH_PLAN→Evidence 块区分 record、证据强度和失败轨迹；失败不能覆盖绿色 AC。
-- AC5：Evidence→Goal 块列齐裁决输入，并将 eligibility、收口事实和 complete 分离。
-- AC6：Goal/权威状态→Handoff 块与既有 handoff 测试共同覆盖单向生成、新鲜度与非法源拒绝。
-- AC7：审查后严格解析 `权威事实 / 受控投影 / 派生视图 / 叙述摘要` token；未知分类、缺修复真源、重复块和仓外路径均失败。
-- AC8：context-map=6163 bytes/90 行/20 指针；L0=694 bytes、L1=3966 bytes，5 上下文/20 术语/4 路径基线未回退；完整 CI 两次通过，最终 artifact contract 通过。
+- AC1: `domain_contract.py check` 通过；重复 id / 重复所有者 / 未知上下文·种类 / 缺失或越界真源均命中具体诊断（`domain-contract-tests`）。
+- AC2: 复制型载荷字段（`values` 等未知字段）被拒，负例命中「copy-type payload」（`domain-contract-tests`）。
+- AC3: 5 个规则文件耦合措辞清除 + `relations` 并列 + `assertions` 旧包含措辞命中即 fail（`domain-contract-check`）。
+- AC4: `bounded-convergence.md` 承载定量熔断，Dangerous 安全护栏（自审/审查/人测准入/熔断/RCA）保留（`domain-contract-check`）。
+- AC5: manifest/template 对账通过，verify-schema 无「无则整段省略」自立口径（`artifact-contract-check` + `domain-contract-check`）。
+- AC6: strict VERIFY 缺段迁移 + 幂等 + 错位/重复/未知 marker 拒绝（`artifact-pipeline-tests` 26 例）。
+- AC7: 11 例领域合同正负 fixture + 5 例迁移 fixture 均断言具体诊断（`domain-contract-tests` + `artifact-pipeline-tests`）。
+- AC8: 完整 CI 含 decision-map/work/promotion/explore-dogfood、markdown 链接、state audit、context-budget 全绿（`verify-ci`）。
 
 ## TDD Pair Status
 
@@ -52,9 +49,7 @@
 
 ## Goal Calibration
 
-- CAL-001：P5 审查发现权威分类使用子串匹配，未知分类可能混入 → 回 P4 改为箭头两侧严格 token 集校验并补负例 → resolved（依据：`review-context-map-tests`、`review-context-map-contract`、`review-full-ci`）。
-- CAL-002：首次 Goal Assurance 发现 Evidence Index 使用热区路径，解析器无法识别归档证据 → 改为 ITER-0109 规范归档路径 → resolved（不改变证据内容）。
-- 当前无未闭合运行时信号。
+- 当前无未闭合运行时信号（N/A）。
 
 ## Completion Inputs
 
@@ -63,20 +58,22 @@
 
 ## Gate Coverage
 
-- 通用质量门禁：专项 9/9、artifact contract、Markdown 链接、state audit、diff check 与完整 CI 通过。
-- Workspace Scope：N/A（本迭代无 `prd_refs`）。
-- Tech Plan Alignment：独立按需合同、L1 薄指针、复用 context-budget checker、无第二 CI 入口均按方案兑现。
-- Active Profiles：N/A（未启用 Domain / Stack Profile）。
+- 通用质量门禁：完整 `verify-ci.sh` 退出码 0（含 artifact contract、context-budget、domain-contract、state audit、markdown 链接、全量单测）。
+- Workspace Scope：N/A（本轮无 `prd_refs`）。
+- Active Profiles：N/A（未命中业务 Domain / Stack Profile，仅通用 SOP）。
+- Tech Plan Alignment：TECH_PLAN 的 T1–T7 全部兑现（bounded-convergence / domain-contract 工具与测试 / 5 文件解耦 / 人测段所有权 / strict 迁移 / CI 与 debt）。
+- References Compliance：N/A。
 
 ## References Compliance
 
-- N/A：本迭代没有 `.ai/references/` 外部资料或 PRD 钉版输入；合同只回指 Butler 仓内现行真源。
+- N/A
 
 ## Remaining Risks
 
-- 静态检查能证明合同结构与真源一致，不能证明每个宿主会话运行时都按转换块读取或执行。
-- `independent_review=false`，本轮只执行同上下文审查；未冒称 fresh-context 独立复核。
+- `tech_plan` 的 manifest（4 段 + `方案状态` 枚举 draft/pass/must-fix）与 `tech-plan-schema.md`（10 段 + draft/pass/revise/blocked）仍存在漂移，不在本轮 AC 范围，建议另开迭代对齐。
+- 本轮只证明静态合同与确定性迁移；各宿主运行时实际加载了哪些领域文件的遥测仍留 R5。
+- `.ai/.artifact-migration-backups/ART-70442eeaecbd/` 为本次 strict VERIFY 迁移的 pre 备份，确认无误后可清理。
 
 ## Handoff / Next Step
 
-- 校验最终 artifact/evidence 集并运行 Goal Assurance；eligible 后执行 ITER-0109 收口，MILE-0015 继续 R4。
+- ITER-0110 收口；MILE-0015 仍 active，R5「治理接线与真实 dogfood」（接入 review/CI/双宿主投影/升级兼容 + 效果度量）待领下一迭代号开工。

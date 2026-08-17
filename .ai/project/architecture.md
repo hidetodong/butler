@@ -17,7 +17,7 @@
 - **SOP Core**（`00`/`20`/`30`/`40`）——通用主干，任何任务默认加载。
   - `00_System_Prompt` — 协作身份 + 总调度逻辑 + 输出呈现协议（结论先行 / 统一标号 / 表格化 / 说人话）。
   - `20_Workflow_Lifecycle` — P1→P5 状态机 + 四件套 schema + 迭代 / 里程碑 / 版本 / 迁移 / 交付 / 部署规则。**最大一层、骨架所在**。
-  - `30_Quality_Gate` — linting / 测试策略 / 复核标准 + P4 常驻底线（纠错契约 `correction-contract`、最小实现纪律 `implementation-discipline`）。
+  - `30_Quality_Gate` — linting / 测试策略 / 复核标准 + P4 常驻底线（纠错契约 `correction-contract`、最小实现纪律 `implementation-discipline`）+ 供 opt-in 模式共享的定量熔断纪律 `bounded-convergence`。
   - `40_Context_Management` — 状态外化、冷启动读序、handoff、知识文件夹契约（`project-digest-schema` 管项目自身全貌 / `references-schema` 管外部参考资料 `.ai/references/` 的索引与渐进读契约 / `prd-split` 管把大 PRD 切成 `prd/` 切片的首切动作 / `prd-update` 管 PRD 改版同步）、角色切换。
 - **Domain / Stack Profiles**（`10`）——按项目技术栈**识别后才启用**（vue3 / typescript / build-tooling），不默认前置。
 - **Business Extension**（`99`）——业务侧**最高优先级**约束，若存在则压过通用 SOP。当前仓内只有 `.gitkeep`（占位）。
@@ -25,7 +25,7 @@
 ## 扩展模块（按需 / 命令触发，不进冷启动必读）
 
 - `50_Extension_Ideation` — opt-in Explore / Ideation 真源：位于 P1→P5 之外，管理 Decision Map 探索状态并通过显式 promotion 从 Iteration P1 接回。
-- `55_Extension_ConvergenceLoop` — 收敛闭环 `/butler:loop`（P4 纠错的高强度升档）。
+- `55_Extension_ConvergenceLoop` — 收敛闭环 `/butler:loop`（P4 纠错的高强度升档；引用共享 `bounded-convergence`，与 Dangerous 并列）。
 - `60_Extension_CodeReview` — 代码复核 `/review`（共享审查流程真源）。
 - `62_Extension_Agents` — **帮手名册**：复核 / 更新说明 / 查过时 / Decision Work 四个中立 worker 定义及通用规矩 G1–G4。按合同使用 fresh-context、serial 或 HITL；触发式加载、定义不下发到目标项目。
 
@@ -35,7 +35,7 @@
 - `tools/decision-work/` — Decision Map 的不可变工作 sidecar。同样只暴露四动作，以 Task Packet / Result Envelope 封装 research / prototype / grilling / task；只有 Research 求证可受控并行，所有 Map 变更必须由协调器显式 absorb 后经 Decision Map Module 提交。
 - `tools/decision-promotion/` — Explore 到 Delivery 的确定性交接桥。调用方显式选择 `route-reference` 或 `iteration-start`，工具从 resolved Decision roots 计算传递闭包并用 source/target digest、不可变 receipt、项目根锁、`.ai` 锁和 pending journal 保证幂等与故障可见；它只引用既有 planned 路线或复用 iteration-intake 从 P1 开始，不创建路线、不跳 P2。
 - `tools/explore-dogfood/` — 三个 Decision Module 的内部端到端回归 harness：在临时项目编排公开边界，并提供单命令恢复 inspect 与 live promotion 零写拒绝 verifier；不进入 workflow registry、不调度 agent、不保存派生状态。
-- `65_Extension_Dangerous` — 危险模式 `/butler:dangerous`（实验性无人值守长程自治外壳）。
+- `65_Extension_Dangerous` — 危险模式 `/butler:dangerous`（实验性无人值守长程自治外壳；P4 引用共享 `bounded-convergence`，与 Loop 并列、互不激活）。
 - `70_Extension_Preference` — 偏好探针 `/butler:preference`（学真人选择、外置存储、反哺 opt-in）。
 
 ## 支撑目录（仓库根）
@@ -46,7 +46,7 @@
 
 - `templates/` — 部署到目标项目的两入口模板、强制规则卡 SSOT、交付 HTML 模板和共享 hook 体系；两入口由 `scripts/render-project-entrypoints.py` 统一渲染，施工根由 `templates/hooks/lib/project_root.py` 的单一算法解析（`scripts/resolve-project-root.py` 是 CLI 薄壳），hook rules 由 Claude/Codex dispatcher 共用。
 - `scripts/configure-global-install.py` — 全局安装的安全配置边界：统一规划 shell、Claude 配置、`butler.md` 根命令和 `butler/` 命名空间双软链，再以同目录暂存 + 原子替换应用；`setup.sh` 只负责编排与外部 plugin 状态回声，所有中文后缀旁的变量都用显式边界保留真实退出码。
-- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `decision-map/`、`decision-work/` 与 `decision-promotion/` 三个 Explore/交接 Module、它们的内部 `explore-dogfood/` harness、`iteration-intake/`（会话结晶后的零写 plan、事务开迭代与回滚）、`project-config/`（严格项目配置 schema、原子读写、legacy 兼容投影与纯迁移计划）、`butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（固定的官方 plugin/skill validators）。
+- `tools/` — butler **驻留**可执行工具（非规则、非部署模板；目标项目按 `$BUTLER` 路径传参调用、不拷副本）。包括 `decision-map/`、`decision-work/` 与 `decision-promotion/` 三个 Explore/交接 Module、它们的内部 `explore-dogfood/` harness、`iteration-intake/`（会话结晶后的零写 plan、事务开迭代与回滚）、`project-config/`（严格项目配置 schema、原子读写、legacy 兼容投影与纯迁移计划）、`butler-upgrade/`（manifest 驱动的 dry-run/项目事务升级器）、`verification-evidence/`（自动道真实命令/exit/log/hash 证据）、`domain-contract/`（高风险身份/状态/引用领域合同，fail-closed 校验）、`delivery-selftest/`（人测回传桥）与 `codex-validators/`（固定的官方 plugin/skill validators）。
 - 发布元数据 — `VERSION`（版本号机器 SSOT）、`CHANGELOG.md`（人读发布史）、`migrations/manifest.json`（可执行版本/action 链）+ `migrations/v*.md`（人读配方）、`deliveries/`（交付总结存档）。
 
 ## 成熟度（真源里没有的"现状"层）

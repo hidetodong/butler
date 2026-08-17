@@ -51,8 +51,44 @@ def sections(text: str, allowed: list[str]) -> tuple[list[str], dict[str, str], 
     return names, bodies, title
 
 
+HUMAN_TEST_SECTION = "## 人测道小结\n\n- N/A（本轮无 human·待人 档 AC，人测道不适用）。\n\n"
+
+
+def migrate_strict_verify(text: str, manifest: dict[str, object]) -> str:
+    spec = manifest["artifacts"]["verify_report"]
+    expected = spec["sections"]
+    old_expected = [heading for heading in expected if heading != "人测道小结"]
+    headings = contract.H2_RE.findall(text)
+    if headings == expected:
+        errors = contract.validate_text("verify_report", text, manifest)
+        if errors:
+            raise MigrationError(f"strict verify_report is invalid: {errors}")
+        return text
+    if "人测道小结" in headings:
+        raise MigrationError(
+            f"strict verify_report has misplaced or duplicate 人测道小结 section: {headings!r}"
+        )
+    if headings != old_expected:
+        raise MigrationError(
+            f"strict verify_report has unexpected section order: {headings!r}; "
+            f"cannot safely migrate"
+        )
+    insertion_point = re.search(r"^## Evidence Index\s*$", text, re.MULTILINE)
+    if insertion_point is None:
+        raise MigrationError("cannot locate Evidence Index insertion point")
+    migrated = (
+        text[: insertion_point.start()] + HUMAN_TEST_SECTION + text[insertion_point.start() :]
+    )
+    errors = contract.validate_text("verify_report", migrated, manifest)
+    if errors:
+        raise MigrationError(f"migrated strict verify_report invalid: {errors}")
+    return migrated
+
+
 def migrate_text(name: str, text: str, manifest: dict[str, object], iteration: str) -> str:
     if contract.MARKER_RE.search(text):
+        if name == "verify_report":
+            return migrate_strict_verify(text, manifest)
         errors = contract.validate_text(name, text, manifest)
         if errors:
             raise MigrationError(f"strict artifact is invalid: {name}: {errors}")

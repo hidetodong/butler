@@ -31,8 +31,8 @@
       "path": ".ai/VERIFY_REPORT.md",
       "phase": "P5",
       "template": "templates/VERIFY_REPORT.md",
-      "sections": ["Verification Summary", "AC Status", "Evidence Index", "Verification Results", "TDD Pair Status", "Goal Calibration", "Completion Inputs", "Gate Coverage", "References Compliance", "Remaining Risks", "Handoff / Next Step"],
-      "conditional_sections": ["References Compliance", "Remaining Risks"],
+      "sections": ["Verification Summary", "AC Status", "人测道小结", "Evidence Index", "Verification Results", "TDD Pair Status", "Goal Calibration", "Completion Inputs", "Gate Coverage", "References Compliance", "Remaining Risks", "Handoff / Next Step"],
+      "conditional_sections": ["References Compliance", "Remaining Risks", "人测道小结"],
       "frontmatter": {},
       "fixed_tables": {"Evidence Index": ["Evidence ID", "AC", "强度", "Outcome", "Record"]}
     },

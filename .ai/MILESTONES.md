@@ -4,7 +4,7 @@ current: MILE-0015
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
-| MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | active | 2026-07-31 | — | ITER-0107, ITER-0108, ITER-0109 | — |
+| MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | active | 2026-07-31 | — | ITER-0107, ITER-0108, ITER-0109, ITER-0110 | — |
 | MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | ITER-0102, ITER-0103, ITER-0104, ITER-0105, ITER-0106 | deliveries/milestones/MILE-0014-explore-decision-map-integration.md |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |
 | MILE-0012 | 轻量 TDD 配对证据：复用现有 evidence 记录同一测试命令先失败、后通过并接入收口检查 | closed | 2026-07-24 | 2026-07-26 | ITER-0091, ITER-0092 | deliveries/milestones/MILE-0012-lightweight-tdd-pair-evidence.md |
@@ -24,6 +24,8 @@ current: MILE-0015
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
+| butler-slim-down | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | 2026-08-17 | .ai/milestone-backlog/butler-slim-down.md | 由本轮 `/grill-me` audit 收敛：`.ai/project/` fold 长期无消费与校准（作者不读、drift-check 几无触发、MILE-0014 已知失真三周未发现）、progress 与旧 inbox / origin 长期零使用、根 layout 臃肿、无 usage instrumentation 导致不可淘汰。当前 MILE-0015 仍 active，按单 active 约束先入待办，R5 收口后提升为正式 MILE-NNNN。 |
+| prd-impact-reconciliation | PRD 改版的实现面对账：从切片变化推到代码落点，并证明没有漏 | 2026-08-06 | .ai/milestone-backlog/prd-impact-reconciliation.md | 由 signal-assistant 一次真实漏项收敛而来；当前 MILE-0015 仍 active，按单 active 约束先入待办。首版只做枚举、四态判定与双向覆盖，静态分析和自动改码明确留待以后。 |
 | upgrade-convergence-engine | Butler 升级收敛引擎：文件所有权、确定性迁移与可恢复诊断 | 2026-08-04 | .ai/milestone-backlog/upgrade-convergence-engine.md | 方向已完成 ideation；当前 MILE-0015 仍 active，按单 active 约束先入待办，待现里程碑处理完后再独立提升。 |
 | prd-evidence-check | PRD 原文疑问检索：基于当前版本给出带证据的四态判断 | 2026-08-04 | .ai/milestone-backlog/prd-evidence-check.md | 方向已完成 ideation；本轮只入候办、不开工，历史版本查询与版本对比明确留待以后。 |
 | codex-structured-question-cards | Codex 结构化提问卡片：让 Butler 的有限选项确认可点击，并在宿主不支持时可靠降级 | 2026-08-01 | .ai/milestone-backlog/codex-structured-question-cards.md | Codex 当前原生能力受运行模式和单选限制，且卡片由宿主而非 skill 控制；先建立能力合同、文字降级和真实使用证据，再决定是否值得建设自定义 UI。 |

@@ -10,6 +10,7 @@
 - **五件套结构由机器合同固定**：新 live CONCEPT/AC/TECH/VERIFY/CHANGELOG 的段落、顺序、状态字段和表头以 artifact manifest 为准；条件段 N/A 不删除，legacy 归档不追改。*为什么*：容器若靠模型临场解释，就会逐轮产生细微但不可解析的漂移。
 - **项目机器配置采用严格扁平 JSON**：`.ai/butler.config.json` schema v1 只含版本、三个布尔开关与 profiles；存在即必须完整合法，未知字段/版本 fail-closed。所有消费端统一经 `resolve` 读取，持久修改只经 JSON `set` 写入；兼容期只在 JSON 缺失时严格回退旧 Markdown，迁移由 upgrader 单事务创建 JSON 并移除机器段，禁止长期双写。自然语言约束、运行状态和外置偏好数据不进入该文件。*为什么*：机器开关不能继续依赖模型解析 Markdown，同时第一版字段很少，不值得提前建设嵌套总配置中心。
 - **领域知识渐进加载，导航不做第二真源**：普通冷启动只读 `Coder/README.md` 的 L0 路由；跨上下文任务再读 `domain-model.md` L1，术语歧义定向查询 `domain-glossary.md` L2，历史审计才进入归档 L3。首批最多展开 3 份直接真源；不足时必须给出已读、缺口、下一批及理由的可见回执后续批。字段、封闭枚举和算法仍由所指 schema / manifest / registry / 规则正文拥有。*为什么*：把完整审计常驻或递归展开指针会吞噬初始上下文，而复制执行合同又会制造双写漂移。
+- **Dangerous 与 Loop 并列，人测段结构单一所有者**：Dangerous Mode 与 Convergence Loop 是并列模式，各自显式触发、互不读写激活状态，只共用 `30_Quality_Gate/bounded-convergence.md` 的有界收敛纪律；VERIFY「人测道小结」结构只归 artifact manifest + canonical template 拥有，verify-schema 只解释触发/回填，delivery-selftest README 继续独占四态机器码与桥 JSON。机器合同 `tools/domain-contract/` 以负例防复制型合同与旧包含措辞回潮。*为什么*：模式包含会混淆「全生命周期无人值守」与「P4 高强度纠错」，结构双写会制造「写了判错、不写违规」的死锁。
 
 - **三层分层不混**：SOP Core / Domain / Business 职责不互窜。*为什么*：分层一乱，通用规则就会被某个栈 / 某桩业务污染，失去可复用性。
 - **产物链不依赖对话记忆**：P1 CONCEPT → P2 AC_LIST → P3 TECH_PLAN → P5 VERIFY，每阶段只从上一阶段的**文件**读。*为什么*：换会话就断片，只有落盘产物能跨会话恢复。

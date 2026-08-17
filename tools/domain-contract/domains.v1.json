@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "contexts": ["需求与范围", "交付生命周期", "可信保证", "宿主运行时", "知识连续性"],
+  "contract_types": ["模式身份", "状态枚举", "结构所有权", "桥输入输出", "共享策略"],
+  "entries": [
+    {
+      "id": "dangerous-mode",
+      "concept": "Dangerous Mode",
+      "context": "宿主运行时",
+      "type": "模式身份",
+      "owner": "Coder/65_Extension_Dangerous/dangerous-engine.md",
+      "source": "Coder/65_Extension_Dangerous/dangerous-engine.md"
+    },
+    {
+      "id": "convergence-loop",
+      "concept": "Convergence Loop",
+      "context": "宿主运行时",
+      "type": "模式身份",
+      "owner": "Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md",
+      "source": "Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md"
+    },
+    {
+      "id": "bounded-p4-convergence",
+      "concept": "有界 P4 收敛策略",
+      "context": "宿主运行时",
+      "type": "共享策略",
+      "owner": "Coder/30_Quality_Gate/bounded-convergence.md",
+      "source": "Coder/30_Quality_Gate/bounded-convergence.md"
+    },
+    {
+      "id": "four-state-machine-code",
+      "concept": "四态机器码 pass/fail/defer/skip",
+      "context": "可信保证",
+      "type": "状态枚举",
+      "owner": "tools/delivery-selftest/README.md",
+      "source": "tools/delivery-selftest/README.md"
+    },
+    {
+      "id": "bridge-manifest-results-json",
+      "concept": "交付自测桥 manifest/results JSON",
+      "context": "可信保证",
+      "type": "桥输入输出",
+      "owner": "tools/delivery-selftest/README.md",
+      "source": "tools/delivery-selftest/README.md"
+    },
+    {
+      "id": "human-test-section-structure",
+      "concept": "人测道小结段落结构",
+      "context": "可信保证",
+      "type": "结构所有权",
+      "owner": "tools/artifact-pipeline/artifacts.v1.json",
+      "source": "tools/artifact-pipeline/templates/VERIFY_REPORT.md"
+    }
+  ],
+  "relations": [
+    {"kind": "并列", "left": "dangerous-mode", "right": "convergence-loop"},
+    {"kind": "共享策略", "left": "dangerous-mode", "right": "bounded-p4-convergence"},
+    {"kind": "共享策略", "left": "convergence-loop", "right": "bounded-p4-convergence"}
+  ],
+  "assertions": [
+    {
+      "file": "Coder/65_Extension_Dangerous/dangerous-engine.md",
+      "must_not_contain": ["复用 `55_Extension_ConvergenceLoop", "复用收敛闭环"],
+      "must_contain": ["bounded-convergence.md"],
+      "reason": "Dangerous 与 Loop 并列，不复用 Loop 模块、须引用共享有界收敛策略"
+    },
+    {
+      "file": "Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md",
+      "must_not_contain": ["直接复用本模块"],
+      "must_contain": ["bounded-convergence.md"],
+      "reason": "Loop 不得自称被 Dangerous 直接复用、须引用共享有界收敛策略"
+    },
+    {
+      "file": "Coder/30_Quality_Gate/correction-contract.md",
+      "must_not_contain": ["复用收敛闭环"],
+      "reason": "correction-contract 不得写 Dangerous 复用 Loop"
+    },
+    {
+      "file": "Coder/00_System_Prompt/logic-protocol.md",
+      "must_not_contain": ["以收敛闭环跑完整生命周期"],
+      "reason": "Dangerous 描述不得把 Loop 当必然组成"
+    },
+    {
+      "file": "Coder/README.md",
+      "must_not_contain": ["P4 复用收敛闭环"],
+      "reason": "README 不得写 Dangerous 复用 Loop"
+    },
+    {
+      "file": "tools/artifact-pipeline/templates/VERIFY_REPORT.md",
+      "must_contain": ["## 人测道小结"],
+      "reason": "人测道小结段结构由模板拥有"
+    },
+    {
+      "file": "tools/artifact-pipeline/artifacts.v1.json",
+      "must_contain": ["人测道小结"],
+      "reason": "人测道小结段由 manifest 拥有"
+    },
+    {
+      "file": "Coder/20_Workflow_Lifecycle/verify-schema.md",
+      "must_not_contain": ["无则整段省略"],
+      "reason": "verify-schema 不得自立人测段省略口径"
+    }
+  ]
+}
