@@ -23,6 +23,8 @@ class ContextBudgetTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         for relative in (
             "Coder/README.md",
+            "AGENTS.md",
+            "templates/rule-card.md",
             "Coder/domain-model.md",
             "Coder/domain-glossary.md",
             "Coder/context-map.md",
@@ -77,6 +79,29 @@ class ContextBudgetTests(unittest.TestCase):
 
         self._replace("Coder/README.md", context_budget.L0_BEGIN, "")
         with self.assertRaisesRegex(ValueError, "markers"):
+            context_budget.check_project(self.root)
+
+    def test_l0_projection_mismatch_names_the_file(self) -> None:
+        for relative in context_budget.L0_PROJECTIONS:
+            with self.subTest(relative=relative):
+                self.tearDown()
+                self.setUp()
+                self._replace(relative, "停在本入口", "停在别的入口")
+                result = context_budget.check_project(self.root)
+                joined = "\n".join(result.errors)
+                self.assertIn("L0 projection mismatch", joined)
+                self.assertIn(relative, joined)
+
+    def test_l0_source_edit_breaks_both_projections(self) -> None:
+        self._replace(context_budget.L0_SOURCE, "停在本入口", "停在别的入口")
+        result = context_budget.check_project(self.root)
+        joined = "\n".join(result.errors)
+        for relative in context_budget.L0_PROJECTIONS:
+            self.assertIn(relative, joined)
+
+    def test_l0_projection_missing_markers_fail_closed(self) -> None:
+        self._replace("AGENTS.md", context_budget.L0_END, "")
+        with self.assertRaisesRegex(ValueError, "AGENTS.md"):
             context_budget.check_project(self.root)
 
     def test_l1_context_pointer_and_recursion_guards(self) -> None:

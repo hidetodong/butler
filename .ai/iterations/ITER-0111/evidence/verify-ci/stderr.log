@@ -1,0 +1,191 @@
+Resolved 8 packages in 3ms
+Audited 6 packages in 2ms
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.013s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.079s
+
+OK
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.019s
+
+OK
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.053s
+
+OK
+test_check_detects_file_and_symlink_drift_without_writing (__main__.WorkflowRegistryTests.test_check_detects_file_and_symlink_drift_without_writing) ... [DRIFT] .agents/skills/butler-prd: symlink target '/tmp/not-butler' != '../../plugins/butler/skills/butler-prd'
+[DRIFT] plugins/butler/skills/butler-loop/agents/openai.yaml: content drift
+ok
+test_explore_routing_corpus_is_explicit_and_fast_paths_stay_out (__main__.WorkflowRegistryTests.test_explore_routing_corpus_is_explicit_and_fast_paths_stay_out) ... ok
+test_failed_write_rolls_back_applied_files (__main__.WorkflowRegistryTests.test_failed_write_rolls_back_applied_files) ... ok
+test_frontmatter_projection_preserves_workflow_bodies (__main__.WorkflowRegistryTests.test_frontmatter_projection_preserves_workflow_bodies) ... ok
+test_ideation_is_opt_in_explore_and_promotes_only_to_p1 (__main__.WorkflowRegistryTests.test_ideation_is_opt_in_explore_and_promotes_only_to_p1) ... ok
+test_managed_projection_drift_matrix (__main__.WorkflowRegistryTests.test_managed_projection_drift_matrix) ... ok
+test_registry_is_exact_and_high_risk_is_explicit_only (__main__.WorkflowRegistryTests.test_registry_is_exact_and_high_risk_is_explicit_only) ... ok
+test_repository_sets_and_plugin_contract_are_closed (__main__.WorkflowRegistryTests.test_repository_sets_and_plugin_contract_are_closed) ... ok
+test_routing_metadata_rejects_unknown_asymmetric_self_and_cycles (__main__.WorkflowRegistryTests.test_routing_metadata_rejects_unknown_asymmetric_self_and_cycles) ... ok
+test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift (__main__.WorkflowRegistryTests.test_schema_rejects_missing_extra_duplicate_unsafe_and_policy_drift) ... ok
+test_setup_is_a_thin_machine_install_router (__main__.WorkflowRegistryTests.test_setup_is_a_thin_machine_install_router) ... ok
+test_shared_router_examples_cover_all_workflows_and_statuses (__main__.WorkflowRegistryTests.test_shared_router_examples_cover_all_workflows_and_statuses) ... ok
+test_write_is_idempotent_and_check_is_zero_write (__main__.WorkflowRegistryTests.test_write_is_idempotent_and_check_is_zero_write) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.453s
+
+OK
+test_active_iteration_refuses_without_new_id (__main__.IntakeTests.test_active_iteration_refuses_without_new_id) ... ok
+test_active_milestone_requires_and_binds_a_planned_route (__main__.IntakeTests.test_active_milestone_requires_and_binds_a_planned_route) ... ok
+test_apply_crystallizes_without_raw_transcript (__main__.IntakeTests.test_apply_crystallizes_without_raw_transcript) ... ok
+test_apply_rolls_back_every_ai_file_on_failure (__main__.IntakeTests.test_apply_rolls_back_every_ai_file_on_failure) ... ok
+test_plan_is_zero_write_and_uses_composite_max (__main__.IntakeTests.test_plan_is_zero_write_and_uses_composite_max) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.018s
+
+OK
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.511s
+
+OK
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.411s
+
+OK
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.373s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.181s
+
+OK
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 2.689s
+
+OK
+........................
+----------------------------------------------------------------------
+Ran 24 tests in 1.338s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.464s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.505s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 0.984s
+
+OK
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.020s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.183s
+
+OK
+..........................
+----------------------------------------------------------------------
+Ran 26 tests in 0.063s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.125s
+
+OK
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.008s
+
+OK
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.029s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.028s
+
+OK
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 0.043s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.085s
+
+OK
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.410s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 1.158s
+
+OK
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 1.510s
+
+OK
+warning: in the working copy of '.ai/references/.prd-migration-backups/MIG-8c17dd979296/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.ai/references/.prd-update-backups/UPD-1d3cbd566663/2026-07-22-login/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.ai/references/prd/2026-07-22-login/.archive/v1.1/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'origin/login-requirement.md', CRLF will be replaced by LF the next time Git touches it
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.636s
+
+OK

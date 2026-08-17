@@ -47,6 +47,7 @@ scope: 代码审查的激活条件、评级标准与闭环控制（共享审查�
 - **可读性与命名**
 - **性能**
 - **安全**
+- **领域变更**（仅当改动命中领域治理面时生效；触发范围与四项强制声明见 `30_Quality_Gate/review-standard.md §5`，本文件不复制口径）
 - **领域专项**（若已激活 profile）
 
 > 独立复核在多维评审之外额外承担一层**断言核对**（逐条独立核对 `AC_LIST` 声明是否真兑现），属复核专有，见 `62_Extension_Agents/independent-review.md §4`。
@@ -101,7 +102,7 @@ Must Fix / Should Fix 应给文件/行或 evidence ID。P5 至少对风险相关
 ## 7. 与其他模块的关系
 
 - `62_Extension_Agents/overview.md`：帮手通用规矩唯一真源（G1 独立性=上下文隔离 / G2 诚实兜底）；`62_Extension_Agents/independent-review.md`：复核帮手完整定义。
-- `30_Quality_Gate/review-standard.md` 提供通用审计准则。
+- `30_Quality_Gate/review-standard.md` 提供通用审计准则，并独占「领域变更」维度的触发范围与四项强制声明（唯一所有者 / 兼容影响 / 迁移路径 / 负向样例）；本文件只在多维评审列表中登记该维度。
 - `10_Domain_Stack_Profiles/` 提供技术栈专项审计规则。
 - `tools/project-config/` 定义 `independent_review` 项目开关的严格读写；`20_Workflow_Lifecycle/local-constraints-schema.md` 只定义 legacy `Review Policy` 的兼容迁移边界。
 - `20_Workflow_Lifecycle/verify-schema.md` 定义 VERIFY_REPORT 的 `Independent Review` 回填字段。

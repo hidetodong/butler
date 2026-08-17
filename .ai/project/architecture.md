@@ -8,7 +8,8 @@
 - 领域上下文回答“概念在哪个问题范围成立、由谁定义”；下面的 SOP Core / Domain Profiles / Business Extension 回答“规则如何分层和启用”。两个视角正交，目录位置不决定概念所有权。
 - 地图只存边界、关系和指针；状态枚举、字段与算法继续由被指向的 schema、manifest、registry 和规则正文拥有。
 - `Coder/context-map.md` 按需承载 PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 的五段转换；每段只保留九维最小合同和 1–3 份直接真源，具体 schema 仍归原规则拥有。
-- `tools/context-budget/context_budget.py` 用 bytes、非空行、指针数及结构断言守住 L0/L1/主链预算、四类事实方向和五段转换，并由 `scripts/verify-ci.sh` 持续回归；这些指标是稳定代理，不冒充精确 token 或运行时读取遥测。
+- `tools/context-budget/context_budget.py` 用 bytes、非空行、指针数及结构断言守住 L0/L1/主链预算、四类事实方向和五段转换，并校验 L0 内核在 `Coder/README.md`（真源）、`AGENTS.md` 与 `templates/rule-card.md` 三处字节一致、失配时指名被改文件；全部由 `scripts/verify-ci.sh` 持续回归。这些指标是稳定代理，不冒充精确 token 或运行时读取遥测。
+- 领域变更的审计口径归 `30_Quality_Gate/review-standard.md §5` 独占，`60_Extension_CodeReview/review-engine.md` 只登记维度并回指；升级侧处置判据归 `20_Workflow_Lifecycle/migration-schema.md §5`。三份文件各守一段，不互抄正文。
 
 ## 三层主干（`Coder/`，所有任务默认走）
 

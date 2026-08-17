@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "context-budget-projection",
+  "iteration": "ITER-0111",
+  "ac_ids": [
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/context-budget/context_budget.py",
+      "check",
+      "--project-root",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-17T07:49:03.620Z",
+  "finished_at": "2026-08-17T07:49:03.661Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 407,
+    "captured_bytes": 407,
+    "sha256": "f175fc87b3e736860dd45d29480fbef834f3bc2b2865a130014d3a4ee13484ec",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,50 +1,53 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-08-13
+ACK 日期: 2026-08-17
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0110
+# AC_LIST — ITER-0111
 
 ## Goal
 
-- 建立一份小而可执行的领域合同，让本轮涉及的高风险身份、状态和引用都能被机器定位到唯一所有者与真源；完成 Dangerous/Loop 解耦和 VERIFY 人测结构所有权统一，同时保持现有公开入口、安全强度与 MILE-0014 行为不回退。
+- 把 R1–R4 建好的领域模型接进三条它现在够不着的路径——评审、宿主入口投影、发布升级——并补上 CI 里那个「登记了却没人抓」的漏洞；然后用本迭代自身量一次真实成本，给 MILE-0015 一个继续 / 缩减 / 停止的明确判断，而不是默认继续扩建。
 
 ## In Scope
 
-- 为本轮双试点涉及的领域概念登记稳定身份、所属上下文、合同种类、唯一所有者和执行真源，并提供确定性校验。
-- 把 Dangerous Mode 与 Convergence Loop 的激活语义改为并列；两者可依赖同一有界 P4 收敛策略，但互不自动开启、互不拥有对方状态。
-- 让 artifact manifest 独占 VERIFY 段落结构，delivery-selftest 合同独占桥的 manifest/results 字段与四态机器码，verify schema 和 human-test bridge 只解释消费语义。
-- 为 strict live 产物补确定性兼容迁移，并覆盖重复所有者、悬空引用、非法合同类型、旧包含关系、模板漂移和迁移失败等负例。
-- 更新必要规则、工具说明、项目知识与完整 CI。
+- 评审口径新增「领域变更」审计维度，并在共享审查流程的多维评审列表中登记；四项强制声明为唯一所有者、兼容影响、迁移路径、负向样例。
+- 领域合同检查器新增条目覆盖门：每条登记条目必须至少被一条断言或一条关系覆盖，未覆盖即 fail-closed 并指名条目。
+- L0 渐进读取内核以 `Coder/README.md` 为唯一真源，按字节投影到 `AGENTS.md` 与 `templates/rule-card.md`，由上下文预算检查器校验三处一致且预算不超。
+- 迁移配方规范补「领域变更的升级处置」口径，并对本次 rule-card 变更给出实际处置结论。
+- 用本迭代自身完成一次跨上下文设计 dogfood，量化路由层级、读取份数、token 口径与新增维护成本，结论写回 `.ai/MILESTONE.md`。
 
 ## Out of Scope
 
-- 不修改 `tools/decision-map/`、`tools/decision-work/`、`tools/decision-promotion/` 的状态机或 MILE-0014 已冻结的 Explore→Delivery 边界。
-- 不建立全仓术语 DSL、知识图谱或完整状态总注册表，不复制现有状态枚举、JSON 字段表和执行算法。
-- 不提前接入 R5 的 review 治理入口、双宿主投影、项目升级 dogfood或运行时效果度量。
-- 不处理多 active iteration、并行 P4、状态落档可信门或其他 milestone backlog。
+- 不做运行时加载遥测采集（属 `butler-slim-down` 候办的 usage instrumentation）；本轮只做一次性人工计量。
+- 不新增限界上下文、不扩充 20 项术语表条目、不重构 `Coder/` 目录分层。
+- 不改既有命令、文件路径与状态值；不改动 MILE-0014 的 Decision Map / Work / Promotion 状态机。
+- 不给 Pi 扩展新建规则注入面，因此 Pi 不承载 L0 投影。
+- 不修 `tech_plan` 的 manifest 与 schema 段数漂移（ITER-0110 已登记为另开迭代的欠债）。
 
 ## Acceptance Checklist
 
-- [ ] AC1: 最小领域合同只覆盖本轮双试点所需的高风险身份、状态和引用；每项都有稳定 ID、五上下文之一、受控合同种类、唯一所有者和仓内执行真源，重复 ID、重复所有者、未知上下文/种类、缺失或越界真源均 fail-closed。
-- [ ] AC2: 最小领域合同保持“导航/关系而非第二真源”边界：不得复制 Dangerous/Loop 激活枚举、bridge manifest/results 字段全集、四态枚举或 artifact 算法；机器检查能以负例证明复制型合同或悬空引用不会被接受。
-- [ ] AC3: Dangerous Mode 与 Convergence Loop 在规则和机器合同中是两个并列模式：各自保留现有显式入口和激活条件，互不读写对方激活状态；共同使用的 P4 重试/探测/熔断纪律落在明确共享策略或底层合同中，不能再用“Dangerous 自动包含/开启 Loop”表达。
-- [ ] AC4: 解耦不降低 Dangerous 的既有安全和收敛强度：无人值守 P2/P3 自审、P5 强制审查、人测残余准入、P4 有界重试、死锁/环境熔断与 RCA 交还仍有真源和回归断言；普通 P4 与显式 Loop 的既有行为保持不变。
-- [ ] AC5: VERIFY 人测结构只有一个结构所有者：artifact manifest 和 canonical template 固定“人测道小结”的位置与空值口径；verify schema 只解释触发/回填，human-test bridge 只解释等待与四态路由，delivery-selftest README 继续独占 manifest/results JSON 和 `pass/fail/defer/skip` 机器码。
-- [ ] AC6: 现有带 artifact marker 的 strict live VERIFY 可通过确定性、幂等、保内容的迁移进入新结构；重复/错位人测段、未知 marker 或无法安全迁移时拒绝并给出可定位诊断，legacy 无 marker 产物及历史归档不被追改。
-- [ ] AC7: 正负 fixture 至少覆盖合同身份/所有者/真源校验、Dangerous/Loop 错绑回归、人测段 manifest/template/schema 对账、旧 strict VERIFY 迁移与幂等；失败 fixture 必须证明门禁因预期原因失败，不能只断言非零退出。
-- [ ] AC8: MILE-0014 的 Explore、Decision Map、Decision Work、Decision Promotion 和 Router 合同保持通过，R2/R3 的上下文预算与主链合同不回退；artifact contract、Markdown 链接、状态审计、`git diff --check` 与完整 `scripts/verify-ci.sh` 全部通过。
+- [ ] AC1: 评审口径中存在一条独立的「领域变更」审计维度，明确列出触发范围（核心术语、上下文关系、状态枚举、领域合同条目、L0/L1/L2 内容）与四项强制声明（唯一所有者、兼容影响、迁移路径、负向样例）；共享审查流程的多维评审列表同步登记该维度，两处不各写一套口径。
+- [ ] AC2: 领域合同检查器新增覆盖门：任一登记条目若既未被任何断言引用（按文件路径匹配其 owner 或 source）、也未出现在任何关系的两端，检查失败并在诊断中指名该条目 id；当前 6 条登记条目在门开启后全部通过，不靠放宽规则达标。
+- [ ] AC3: 覆盖门不放宽既有 fail-closed 行为：重复 id、重复所有者、未知上下文/种类、缺失或越界真源、复制型载荷、悬空引用与断言命中仍各自失败并保留原诊断。
+- [ ] AC4: `Coder/README.md`、`AGENTS.md`、`templates/rule-card.md` 三处的 L0 块内容按字节完全一致（成对标记之间的正文），`Coder/README.md` 是唯一真源；任一处被单独改动都会被机器检查判失败并指出不一致的文件。
+- [ ] AC5: L0 进入 rule-card 后，部署入口生成器产出的 `CLAUDE.md` 与 `AGENTS.md` 都带上同一份 L0 块，既有双宿主验证与项目入口矩阵仍全绿；L0 自身仍满足既有预算上限（1600 字节 / 18 非空行 / 4 个指针）。
+- [ ] AC6: 迁移配方规范中存在一节说明领域变更的升级处置：只改 `Coder/` 领域正文时对部署项目为何无影响、改到 rule-card 或宿主入口模板时必须给出重新生成动作；并对本次 rule-card 变更写明实际处置结论（下个发布版需重生成宿主入口，非 `[no-op]`）。
+- [ ] AC7: 正负 fixture 覆盖新增行为：至少含未覆盖条目的负例、断言按 owner 与按 source 两种覆盖方式的正例、三处 L0 不一致的负例（各处分别被改）、L0 标记缺失或成对错误的负例；每条负例断言命中具体诊断，不只断言非零退出。
+- [ ] AC8: dogfood 记录以事实呈现：写明本迭代实际走到哪一层路由、读了几份真源、L0/L1/L2 各自的实测体量与 token 口径、新增了几处需要长期维护的检查点；并据此在 `.ai/MILESTONE.md` 给出继续 / 缩减 / 停止的判断和理由，收益不足时必须如实写不足，不得因为已经做了就写成有效。
+- [ ] AC9: 完整 `scripts/verify-ci.sh` 通过（含双宿主、Pi 扩展、artifact contract、context-budget、domain-contract、状态审计与全量单测），`git diff --check` 干净，无无关变更混入。
 
 ## Verification Method
 
-- AC1: 运行领域合同 checker，核登记集合、字段、上下文、种类、唯一所有者与真源路径；分别注入重复 ID/所有者、未知值、缺失路径和仓外 symlink fixture，断言具体错误码或诊断。
-- AC2: 用 checker 的禁止字段/体量/内容规则和负例确认合同只保存关系元信息；对照既有 manifest、delivery-selftest README 与模式规则，确认执行枚举仍只存在原真源。
-- AC3: 运行模式边界合同测试，扫描公开触发与规则关系；构造“Dangerous 自动激活 Loop”旧语义 fixture 必须失败，并证明两种模式各自入口仍可独立解析。
-- AC4: 对 Dangerous 关键护栏和 P4 有界收敛条款做结构断言，重跑现有 workflow/config/规则合同；删除任一自审、审查、人测准入、熔断/RCA 指针的 fixture 必须失败。
-- AC5: 运行 artifact manifest、canonical template、verify schema、human-test bridge 与 delivery-selftest 契约对账；断言结构/消费/桥 I/O 三类所有权唯一且没有字段全集双写。
-- AC6: 在临时项目分别迁移旧 strict VERIFY、重复运行迁移、注入已有/错位/重复人测段和未知 marker；核内容 hash/段落保真、幂等、拒绝诊断和 legacy/归档零写。
-- AC7: 专项单测输出逐类 fixture 名和命中诊断；P5 以机器 evidence 捕获正向检查与负向套件结果。
-- AC8: 重跑 Decision 三 Module、workflow registry、context-budget 和 artifact pipeline 相关测试，再运行 Markdown 链接、state audit、diff check 与完整 CI；核实际 diff 不含 MILE-0014 状态机实现。
+- AC1: 读取评审口径与共享审查流程两份规则，核对维度存在、触发范围与四项声明齐全，且两处为引用关系而非各写一套；`grep` 断言两处互指的锚点。
+- AC2: 运行领域合同检查器，断言 6 条现有条目全通过；注入一条无断言无关系的新条目 fixture，断言退出码 1 且诊断包含该条目 id。
+- AC3: 复跑 ITER-0110 已有的全部负例 fixture，断言诊断文本与退出码不变。
+- AC4: 运行上下文预算检查器，断言三处一致通过；分别篡改三个文件之一的 L0 正文，断言各自失败并在诊断中指名被改文件。
+- AC5: 在临时目录跑部署入口生成器，断言两份产出都含 L0 成对标记与同一正文；运行 `scripts/verify-dual-host.sh` 与既有入口矩阵测试；运行上下文预算检查器读出 L0 实测体量并核对上限。
+- AC6: 读取迁移配方规范，核对新增小节存在且判据可执行；核对本次处置结论已写明。
+- AC7: 逐条运行新增 fixture，断言每条命中预期诊断字符串。
+- AC8: 读取 `.ai/VERIFY_REPORT.md` 的 dogfood 记录与 `.ai/MILESTONE.md` 的范围演进记录，核对数字来自实际命令输出（有 evidence record 支撑）而非估算，且结论与数字一致。
+- AC9: 运行 `bash scripts/verify-ci.sh` 断言退出码 0；运行 `git diff --check`。
 
 ## External References
 
@@ -52,6 +55,7 @@ ACK 日期: 2026-08-13
 
 ## Open Questions / Risks
 
-- 领域合同最终复用 context-budget checker 还是形成独立薄工具，由 P3 按职责内聚、迁移成本和负例可读性裁决；AC 不预设文件名。
-- artifact template/version 的兼容策略由 P3 在阅读现有 migration 工具后确定，但不得通过追改历史归档或把 strict 检查降成 legacy 放行满足 AC6。
-- 本轮验证静态合同和确定性迁移，不声明已覆盖各宿主模型实际加载了哪些领域文件；运行时读取遥测留给 R5。
+- **需你拍板 1 · Pi 不投影**：Pi 扩展现在只拦写入、不注入任何读取顺序，没有承载 L0 的位置。我按「不投影」写进 Out of Scope；要覆盖 Pi 得先给它建一个规则注入面，那是另一个迭代的量。
+- **需你拍板 2 · 部署项目多付约 0.4k tokens**：L0 上限 1600 字节，进 rule-card 后每个部署项目冷启动都要付这笔，相对现在约 3.8k–4.8k 的规则卡增幅约一成。换来的是部署项目也按分层读领域规则、而不是撞上术语就全量吞。我按「接受」写；你要是觉得不值，AC4/AC5 就收缩成只投影 `AGENTS.md`（butler 仓自己的 Codex 入口），部署项目不动。
+- **风险 · 接线可能只是搬字**：如果三处 L0 只是字节复制、没产生任何可观察差别，这条就是纯成本。AC8 要求诚实回答，收益不足就写不足。
+- **风险 · dogfood 样本只有一个**：单迭代样本量不出普遍结论，AC8 的判断必须标明样本范围。

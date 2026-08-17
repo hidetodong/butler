@@ -153,9 +153,9 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 7. `99_Business_Extension/*.md`（如存在，视为最高优先级业务约束）
 8. `10_Domain_Stack_Profiles/` 中与当前项目类型匹配的规则文档，需先在 P1 Analysis 识别项目类型与技术栈后启用
 
-<!-- butler-context-l0:begin -->
 ### 核心概念渐进读取（L0）
 
+<!-- butler-context-l0:begin -->
 - 普通单模块任务：停在本入口，直接读取目标专项规则；不得默认加载领域地图。
 - 已知术语需要消歧：只查 `domain-glossary.md` 的相关行，再读取首批最多 3 份直接真源。
 - 涉及跨模块所有权、同名状态、真源冲突或新增核心术语：先读 `domain-model.md` 定位上下文，再按需查术语和真源。
@@ -176,7 +176,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `tools/decision-promotion/` 是 Explore→Delivery 的确定性交接 Module：用户显式选择 resolved Decision slice 与 `route-reference` / `iteration-start` 目标后，工具用 closure digest、target digest、不可变 receipt 和全局写锁执行；它不做清晰度/大小判断、不创建 Milestone route、不更新 active Iteration，开工只复用 iteration-intake 从 P1 开始。
 - `tools/explore-dogfood/` 是三个 Decision Module 的内部端到端回归 harness：只在临时项目编排公开边界，另提供零写聚合 inspect 供跨会话恢复观测；不加入 workflow registry、不调度 agent、不保存派生状态。R5 观测报告在 `docs/explore-dogfood-r5.md`。
 - `tools/artifact-pipeline/` 是五件套结构的机器 SSOT：versioned manifest 唯一定义 live 产物路径、阶段、H2 顺序、固定表头/状态字段和条件段，canonical templates 与其机械对账；新标记产物 strict，legacy 归档只读不追罚。
-- `tools/domain-contract/` 是高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—合同种类—唯一所有者—真源指针」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，不复制任何执行枚举或字段全集。
+- `tools/domain-contract/` 是高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—合同种类—唯一所有者—真源指针」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，并要求每条登记条目至少被一条断言或关系锚住（登记了却没有任何回归能抓，视为失败），不复制任何执行枚举或字段全集。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/goal-contract.md` 是非极小任务 Goal 的共同合同真源：不新增 GOAL 台账，而从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与收口事实派生 `active / at-risk / blocked / completion-candidate / complete / abandoned`；宿主 Goal/Task 只能做可重建投影。
 - `20_Workflow_Lifecycle/goal-calibration.md` 管 P4/P5 新事实回流：六类信号投影到 task-state，再按事实性质回 P1–P5 或诚实停；open/blocked 信号不能被 tasks done 或风险措辞覆盖。
@@ -213,7 +213,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `40_Context_Management/prd-status.md` 是多 PRD **只读查询动作层**：项目级列表、按 `prd_id` 下钻、按稳定 workspace key 筛选，legacy 退化可读，坏布局 fail-closed；机械实现位于 `tools/prd-status/`。
 - `40_Context_Management/prd-update.md` 是指定 `prd_id` 的**确定性改版动作层**：语义层确认最终模块/认亲/三态处置，`tools/prd-update/` 负责零写 plan、先冻后更的整 collection 事务、持久 receipt、幂等、verify/rollback；不自动改 active/closed 工作。
 - `50_Extension_Ideation/ideation-engine.md` 是统一探索真源：显式入口和用户主动探索语义直接进入，Standard 模式只能先 suggest 并等待同意；结构化持久状态统一委托 `tools/decision-map/`，Decision Map 在探索期拥有决策状态，显式 promotion 后从 Iteration P1 接回交付并降为参考，不属于普通任务的必经主线。R5 dogfood 进一步确认 Router 选择本身零写、轻量 Ideation 不自动持久化，结果与局限见 `docs/explore-dogfood-r5.md`。
-- `60_Extension_CodeReview/review-engine.md`：P5 默认同上下文简评；审查证据强度明确分 `reported/captured/reproduced`，未重跑不得称复现。独立复核由 `/review` 或 project-config `independent_review=true` 触发，fresh-context 逐 AC 核对（refute 即阻断）。
+- `60_Extension_CodeReview/review-engine.md`：P5 默认同上下文简评；多维评审含「领域变更」一维（仅命中领域治理面时生效，口径正文在 `30_Quality_Gate/review-standard.md §5`，本文件只登记）；审查证据强度明确分 `reported/captured/reproduced`，未重跑不得称复现。独立复核由 `/review` 或 project-config `independent_review=true` 触发，fresh-context 逐 AC 核对（refute 即阻断）。
 - `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` / `decision-work.md` 分别是复核 / 更新说明 / 查过时 / Decision Work 四帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，Decision Work 的 Task/Result/absorb 机器合同回指 `tools/decision-work/README.md`。各帮手文件回指对应真源不重写，并共同遵守 overview §3。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0111 交付总结 · 领域治理接线与真实 dogfood</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>领域治理接线与真实 dogfood</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0111</span>
+        <span class="chip level">迭代交付（小版本） · MILE-0015 R5</span>
+        <span class="chip date">收口 2026-08-17</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>前四轮把领域模型建起来了，但它只在 butler 仓自己的一条路径上生效：改了领域定义没人拦，Codex 入口和部署项目根本不知道有这套渐进读取规则，发布时也没说部署项目要不要跟。这一轮把这三处接线补上，再用本迭代自身量一次成本，回答「这套治理值不值得继续」。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+  <li>评审多了一维「领域变更」：命中领域文件时必须显式声明唯一所有者、兼容影响、迁移路径、负向样例，缺一条按 Must Fix 处理。口径归 <code>review-standard.md §5</code> 独占，<code>review-engine.md</code> 只登记名字和指针。</li>
+  <li>领域合同检查器加了条目覆盖门：登记了却没有任何断言或关系能抓住它变坏，直接判失败并指名条目。</li>
+  <li>L0 渐进读取内核从只存在于 <code>Coder/README.md</code>，变成三处字节一致——加上 Codex 入口 <code>AGENTS.md</code> 和部署项目用的 <code>templates/rule-card.md</code>，任一处被单独改动都会被 CI 抓住并指出是哪一份不一致。</li>
+  <li>迁移配方规范补了「领域变更的升级处置」判据：哪类改动对部署项目无影响、哪类必须重新生成宿主入口，无影响也要显式写进「不需要动作」。</li>
+  <li>新增 9 条 fixture 与 5 条常驻断言，全部接进完整 CI。</li>
+</ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+  <li><strong>部署项目冷启动会多读一段约 234 token 的读取纪律</strong>（占规则卡全文 3.8%）：撞上领域术语时按分层读，而不是全量吞。</li>
+  <li><strong>覆盖门一开就抓到两条真缺口</strong>：<code>four-state-machine-code</code>（四态机器码 pass/fail/defer/skip）和 <code>bridge-manifest-results-json</code>（人测桥输入输出契约）此前完全没有任何断言或关系锚住。已补真断言，不是放宽判定。</li>
+  <li><strong>下个发布版必须含 <code>[regen-entrypoints]</code></strong>：因为改了 <code>templates/rule-card.md</code>，已部署项目不重新生成入口就拿不到新的 L0，不得记 <code>[no-op]</code>。</li>
+</ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+  <li>新增章节：<code>review-standard.md §5</code>、<code>migration-schema.md §5</code>（原 §5/§6 顺延为 §6/§7）。</li>
+  <li>修改工具：<code>tools/domain-contract/</code>（覆盖门 + 5 条断言 + 6 例 fixture）、<code>tools/context-budget/</code>（三处一致校验 + 3 例 fixture）。</li>
+  <li>修改入口：<code>Coder/README.md</code>、<code>AGENTS.md</code>、<code>templates/rule-card.md</code> 各含一份同源 L0 块。</li>
+  <li>顺延修正：<code>project-digest-schema.md</code> 两处 <code>migration-schema.md §6</code> 改为 <code>§7</code>（全仓唯一受影响的活引用）。</li>
+  <li>未触碰 MILE-0014 的 Decision Map / Work / Promotion 状态机，未改任何命令、路径与状态值。</li>
+</ul>
+    </section>
+
+    
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+  <li>9/9 AC 全绿（auto·可靠），7 条 evidence record 全部 passed，完整 <code>verify-ci.sh</code> 退出码 0，<code>git diff --check</code> 干净，Goal 裁决 <code>eligible</code>。</li>
+  <li>过程中 Goal 门先判过一次 <code>ineligible</code>——AC1 与 AC6 只有规则正文、没有机器证据，被拒绝按口头结论打绿。处理方式不是补一次性 grep，而是把三份文件的结构锚点注册成常驻断言，进 CI 每次跑。</li>
+  <li>三层导航实测体量：L0 656 字节 / L1 3966 字节 / L2 术语表 5456 字节 / L2 转换合同 6163 字节。token 数为换算值（中文约 0.9 token/字符），非 tokenizer 实测。</li>
+</ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+  <li><strong>证明不了宿主真的按 L0 分层读了</strong>。能证明三处字节一致、能证明 L0 进了部署入口，但没有任何运行时观测能说明某个宿主在真实会话里确实照它分层读取。这是 R5 定义里「衡量歧义减少」最实的那一半，本轮拿不到，已划给 <code>butler-slim-down</code> 候办的 usage instrumentation。</li>
+  <li><strong>机器只能查声明在不在，查不出想没想对</strong>。四项声明里「兼容影响」和「迁移路径」写得对不对、有没有漏掉依赖方，机器判不了，执行仍靠自觉。</li>
+  <li><strong>覆盖门是文件级粒度</strong>。将来若有条目蹭同文件的无关断言，门会误判为已覆盖。</li>
+  <li><strong>dogfood 样本只有一个迭代</strong>，不构成普遍结论。</li>
+</ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+  <li><code>.ai/iterations/ITER-0111/CONCEPT.md</code></li>
+  <li><code>.ai/iterations/ITER-0111/AC_LIST.md</code></li>
+  <li><code>.ai/iterations/ITER-0111/TECH_PLAN.md</code></li>
+  <li><code>.ai/iterations/ITER-0111/VERIFY_REPORT.md</code></li>
+  <li><code>.ai/iterations/ITER-0111/evidence/</code></li>
+</ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

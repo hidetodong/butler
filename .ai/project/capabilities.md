@@ -154,7 +154,7 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 
 ## 驻留工具
 
-- `tools/domain-contract/` — 高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—种类—唯一所有者—真源」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，并扫描 Dangerous/Loop 错绑与人测段所有权回归；不复制执行枚举或字段全集。
+- `tools/domain-contract/` — 高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—种类—唯一所有者—真源」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，要求每条登记条目至少被一条断言或关系锚住（登记了却没有回归能抓即失败），并扫描 Dangerous/Loop 错绑、人测段所有权、桥四态与输入输出契约、评审「领域变更」维度与迁移升级判据等回归；不复制执行枚举或字段全集。
 - `tools/inbox/` — 需求收件箱确定性 scanner：plan 默认零写、apply 原子维护 `.ai/INBOX.md` managed block，按原始 bytes 做 SHA-256 并处理幂等、变化、缺失、symlink/损坏 ledger；不做语义分类、不改 `origin/`。
 - `tools/prd-migrate/` — legacy 单 PRD 的 inspect/plan/apply/verify/rollback 与多 PRD/legacy 钉版 resolver；显式日期化身份、同父 staging/backup/rename、机器 receipt、历史影响面和路径越界拒绝。人类步骤见 `docs/prd-migration-guide.md`。
 - `tools/prd-status/` — 多 PRD 确定性只读查询：项目列表、`prd_id` 下钻、workspace key 筛选与 legacy 退化；总索引、单需求目录和 active workspace map 交叉核验，混合/漂移/symlink fail-closed，稳定 JSON/退出码且零缓存。
@@ -165,6 +165,13 @@ Claude/Codex 读取同一 Goal 真相并只投影 objective/state/reason/next；
 - `tools/verification-evidence/` — P5 **自动道证据工具**（Python 标准库）：按真实 argv 执行验证，生成有界 stdout/stderr、exit、时间与 SHA-256 record；只读校验后在收口时整包从热区移入迭代归档，失败记录保留但不能覆盖绿 AC。默认只认 current；显式 `--allow-closed` 仅在 `current: none` 且目标迭代 closed 时允许补捕获/移动收口态检查。
 - `tools/delivery-selftest/` — 交付自测**人测回传桥**（Node 零依赖）：读 manifest JSON → 生成 GitHub 风格分步流程页 → 收人工四态回传（通过 / 未通过 / 延后 / 跳过）→ 写 `results.json` + 自退。P5 人测道下游接线协议 `20_Workflow_Lifecycle/human-test-bridge.md`，契约真源 `tools/delivery-selftest/README.md`。
 - `scripts/audit-project-state.py` — 收口/切版的**只读状态审计器**：机械对账台账、路线、归档、交付、Evidence Index、fold receipt 与 Butler 发布元数据；VERSION tag 必须实际指向 HEAD 才算已发布，工作树干净但提交领先 tag 仍亮 `UNRELEASED`。
+
+
+## 领域治理接线（MILE-0015 R5）
+
+- **评审维度**：`30_Quality_Gate/review-standard.md §5` 独占「领域变更」审计口径——命中领域文件时必须声明唯一所有者、兼容影响、迁移路径、负向样例，缺一条按 Must Fix 处理；`60_Extension_CodeReview/review-engine.md` 只在多维评审列表登记并回指，不复制正文。
+- **L0 三处同源**：渐进读取内核以 `Coder/README.md` 为唯一真源，字节投影到 `AGENTS.md`（Codex 入口）与 `templates/rule-card.md`（经生成器进部署项目的 `CLAUDE.md` / `AGENTS.md`）。`tools/context-budget/` 校验三处严格相等，不一致时诊断指名被改文件。
+- **升级处置**：`20_Workflow_Lifecycle/migration-schema.md §5` 给出判据——只改 `Coder/` 领域正文对部署项目无影响（运行时实时读），改到 rule-card 或入口模板必须 `[regen-entrypoints]`；术语改名要多判一层旧名是否进过 `.ai/` 产物。无影响也须显式落「不需要动作」。
 
 ## 帮手（中立 worker 定义，不下发到项目）
 

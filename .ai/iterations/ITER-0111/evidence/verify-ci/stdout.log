@@ -1,0 +1,64 @@
+[INFO] pinned toolchain: platform=Darwin/arm64 python=3.12.12 uv=0.9.28
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=1
+[OK] synchronized workflow registry: workflows=13 projections=57 changed=0
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] workflow registry projections: workflows=13 projections=57
+[OK] Markdown links passed: files=923, links=79
+[OK] Codex R1 地基结构检查通过
+[OK] Codex workflow/plugin checks passed (Router + 13 workflow skills)
+Codex hook wrapper verification passed
+........................................................................ [ 36%]
+........................................................................ [ 72%]
+........................................................                 [100%]
+200 passed in 2.40s
+[OK] Claude/Codex unified setup and project entrypoint matrix passed
+=== Butler Pi 扩展验证 ===
+
+[✓] 文件存在性
+name: butler-pi
+pi.extensions: ['./index.ts']
+[✓] package.json 合法
+
+--- TypeScript 语法检查 (npx tsc --noEmit) ---
+index.ts(11,35): error TS2307: Cannot find module '@earendil-works/pi-coding-agent' or its corresponding type declarations.
+index.ts(12,26): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+index.ts(13,28): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+index.ts(14,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+index.ts(62,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+index.ts(75,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+index.ts(75,36): error TS7006: Parameter 'ctx' implicitly has an 'any' type.
+index.ts(110,31): error TS7006: Parameter 'event' implicitly has an 'any' type.
+index.ts(110,38): error TS7006: Parameter 'ctx' implicitly has an 'any' type.
+[信息] tsc 报告了错误，检查是否为模块解析问题（非语法错误）...
+[警告] 无法确认语法状态（tsc 不可用或模块解析失败），跳过
+
+=== Pi 扩展验证完成 ===
+{"artifacts": [{"artifact": "concept", "errors": [], "path": ".ai/CONCEPT.md", "status": "ok"}, {"artifact": "acceptance", "errors": [], "path": ".ai/AC_LIST.md", "status": "ok"}, {"artifact": "tech_plan", "errors": [], "path": ".ai/TECH_PLAN.md", "status": "ok"}, {"artifact": "verify_report", "errors": [], "path": ".ai/VERIFY_REPORT.md", "status": "ok"}, {"artifact": "changelog", "errors": [], "path": ".ai/01_CHANGELOG.md", "status": "ok"}], "drift": [], "status": "ok"}
+{
+  "errors": [],
+  "metrics": {
+    "context_map_bytes": 6163,
+    "context_map_lines": 90,
+    "context_map_pointers": 20,
+    "contexts": 5,
+    "fact_classes": 4,
+    "l0_bytes": 656,
+    "l0_nonempty_lines": 5,
+    "l0_pointers": 2,
+    "l0_projections": 2,
+    "l1_bytes": 3966,
+    "l1_lines": 55,
+    "l1_pointers": 12,
+    "routes": 4,
+    "terms": 20,
+    "transitions": 5
+  },
+  "status": "ok"
+}
+{
+  "errors": [],
+  "status": "ok"
+}
+................................                                         [100%]
+32 passed in 1.07s

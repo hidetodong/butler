@@ -59,6 +59,40 @@
   ],
   "assertions": [
     {
+      "file": "Coder/30_Quality_Gate/review-standard.md",
+      "must_contain": [
+        "## 5. 领域变更 (Domain Change)",
+        "**唯一所有者**",
+        "**兼容影响**",
+        "**迁移路径**",
+        "**负向样例**"
+      ],
+      "reason": "领域变更审计维度及其四项强制声明由 review-standard 独占"
+    },
+    {
+      "file": "Coder/60_Extension_CodeReview/review-engine.md",
+      "must_contain": ["review-standard.md §5"],
+      "reason": "review-engine 只登记领域变更维度并回指口径真源，不复制正文"
+    },
+    {
+      "file": "Coder/20_Workflow_Lifecycle/migration-schema.md",
+      "must_contain": [
+        "## 5. 领域变更的升级处置",
+        "[regen-entrypoints]"
+      ],
+      "reason": "领域变更的升级处置判据由 migration-schema 独占"
+    },
+    {
+      "file": "tools/delivery-selftest/README.md",
+      "must_contain": ["`state` 机器码（ASCII）：`pass` / `fail` / `skip` / `defer`"],
+      "reason": "四态机器码枚举由桥 README 独占，改名或删除即失去唯一真源"
+    },
+    {
+      "file": "tools/delivery-selftest/README.md",
+      "must_contain": ["## 输入契约（manifest JSON）", "## 输出契约（results JSON）"],
+      "reason": "桥的 manifest/results 输入输出契约由桥 README 独占，段落删除即失去唯一真源"
+    },
+    {
       "file": "Coder/65_Extension_Dangerous/dangerous-engine.md",
       "must_not_contain": ["复用 `55_Extension_ConvergenceLoop", "复用收敛闭环"],
       "must_contain": ["bounded-convergence.md"],

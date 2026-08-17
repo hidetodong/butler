@@ -12,6 +12,8 @@ from pathlib import Path
 
 L0_BEGIN = "<!-- butler-context-l0:begin -->"
 L0_END = "<!-- butler-context-l0:end -->"
+L0_SOURCE = "Coder/README.md"
+L0_PROJECTIONS = ("AGENTS.md", "templates/rule-card.md")
 L0_LIMITS = {"bytes": 1600, "nonempty_lines": 18, "pointers": 4}
 L1_LIMITS = {"bytes": 7000, "lines": 70, "pointers": 15}
 CONTEXT_MAP_LIMITS = {"bytes": 9000, "lines": 120, "pointers": 24}
@@ -175,20 +177,31 @@ def _validate_source(root: Path, raw: str) -> bool:
     return resolved.is_relative_to(root) and resolved.is_file()
 
 
+def _l0_block(text: str, label: str) -> str:
+    """Return the bytes between the L0 markers, failing closed on bad markers."""
+    if text.count(L0_BEGIN) != 1 or text.count(L0_END) != 1:
+        raise ValueError(f"L0 markers must each occur exactly once in {label}")
+    before, remainder = text.split(L0_BEGIN, 1)
+    block, after = remainder.split(L0_END, 1)
+    if L0_END in before or L0_BEGIN in after:
+        raise ValueError(f"L0 markers are malformed in {label}")
+    return block
+
 def check_project(root: Path) -> CheckResult:
     root = root.resolve()
-    readme = _read(root, "Coder/README.md")
+    readme = _read(root, L0_SOURCE)
     l1 = _read(root, "Coder/domain-model.md")
     glossary = _read(root, "Coder/domain-glossary.md")
     context_map = _read(root, "Coder/context-map.md")
     errors: list[str] = []
 
-    if readme.count(L0_BEGIN) != 1 or readme.count(L0_END) != 1:
-        raise ValueError("L0 markers must each occur exactly once")
-    before, remainder = readme.split(L0_BEGIN, 1)
-    l0, after = remainder.split(L0_END, 1)
-    if L0_END in before or L0_BEGIN in after:
-        raise ValueError("L0 markers are malformed")
+    l0 = _l0_block(readme, L0_SOURCE)
+    for relative in L0_PROJECTIONS:
+        projected = _l0_block(_read(root, relative), relative)
+        if projected != l0:
+            errors.append(
+                f"L0 projection mismatch: {relative} differs from {L0_SOURCE}"
+            )
 
     l0_metrics, l0_errors = _metric_errors(
         "L0", l0, L0_LIMITS, physical_lines=False
@@ -335,6 +348,7 @@ def check_project(root: Path) -> CheckResult:
         "l0_bytes": l0_metrics["bytes"],
         "l0_nonempty_lines": l0_metrics["nonempty_lines"],
         "l0_pointers": l0_metrics["pointers"],
+        "l0_projections": len(L0_PROJECTIONS),
         "l1_bytes": l1_metrics["bytes"],
         "l1_lines": l1_metrics["lines"],
         "l1_pointers": l1_metrics["pointers"],

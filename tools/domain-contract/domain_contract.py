@@ -3,7 +3,9 @@
 
 `domains.v1.json` registers only navigation metadata — concept identity, bounded
 context, controlled contract type, unique owner and in-repo truth-source pointer —
-plus relations and file-level assertions. It must never copy execution enums,
+plus relations and file-level assertions. Every entry must be anchored by at
+least one assertion or relation, so a registered concept always has something
+that can catch it breaking. It must never copy execution enums,
 bridge field sets or artifact algorithms (those stay with their owners); unknown
 payload fields are rejected fail-closed.
 """
@@ -128,6 +130,41 @@ def _validate_assertions(root: Path, registry: dict[str, object]) -> list[str]:
     return errors
 
 
+def _validate_coverage(registry: dict[str, object]) -> list[str]:
+    """Every registered entry must be reachable by at least one regression anchor.
+
+    An entry counts as covered when a file-level assertion targets its owner or
+    source, or when its id appears on either side of a relation. Registering a
+    concept without any anchor means nothing can catch it breaking, so it fails
+    closed and names the entry.
+    """
+    errors: list[str] = []
+    assertion_files = {
+        assertion["file"]
+        for assertion in registry["assertions"]
+        if isinstance(assertion, dict) and isinstance(assertion.get("file"), str)
+    }
+    related_ids: set[str] = set()
+    for relation in registry["relations"]:
+        if not isinstance(relation, dict):
+            continue
+        for side in ("left", "right"):
+            value = relation.get(side)
+            if isinstance(value, str) and value:
+                related_ids.add(value)
+    for entry in registry["entries"]:
+        if not isinstance(entry, dict):
+            continue
+        ident = entry.get("id")
+        if not isinstance(ident, str) or not ident:
+            continue
+        anchors = {entry.get("owner"), entry.get("source")} & assertion_files
+        if anchors or ident in related_ids:
+            continue
+        errors.append(f"{ident}: not covered by any assertion or relation")
+    return errors
+
+
 def check(root: Path) -> tuple[bool, list[str]]:
     root = root.resolve()
     tool_root = Path(__file__).resolve().parent
@@ -136,6 +173,7 @@ def check(root: Path) -> tuple[bool, list[str]]:
     errors.extend(_validate_entries(root, registry))
     errors.extend(_validate_relations(registry))
     errors.extend(_validate_assertions(root, registry))
+    errors.extend(_validate_coverage(registry))
     return not errors, errors
 
 
