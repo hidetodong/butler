@@ -18,6 +18,7 @@
 - 新增仓根 meta 文件逃生舱：README / CHANGELOG / .gitignore / VERSION / LICENSE 等在无 active 迭代时也可直接写入，不再被 phase_gate 与 workspace-scope 拦。
 - 新增 usage instrumentation：每个 CLI 入口记录最后调用时间戳（本地状态、进 gitignore、不进共享仓），配 `tools/usage-report/` 提供 `usage report --since 90d`，A/B/C/D 分档由数据自动生成。
 - evidence 消费链降维：承认 `goal.py` 是唯一消费者，砍或收窄 `tools/verification-evidence/` 的归档逻辑。
+- 扩展升级器的动作类型：现有九种标签里没有任何一种能表达「删目录」和「把仓根目录移进 `.ai/`」，需新增删除与移动两类 typed 标签，同步改 `migration-schema.md §4` 的标签集与 `upgrade.py` 的动作域、字段、前置三张表及路径校验，并各自满足幂等、起始态校验、冲突即停与可回滚。
 - 产出 `migrations/v4.0.0.md` 完整迁移配方，覆盖全部移除、改名与迁移动作；本里程碑收口时聚合切版 v4.0.0（MAJOR）。
 
 **Out of Scope（版本级）**
@@ -56,7 +57,7 @@ Butler 走到 v3.6.0，规则文件 30 多份、驻留工具 20 多个、命令 
 
 ## 5.3 拆分路线图
 
-预计跨度：13 个迭代承接，分止血、重造、治根三段推进。三段严格串行——止血决定冷启动读序，重造的新 inbox 与根布局依赖新读序，治根的使用数据才能验证前两段到底砍对没有。实际迭代号在各路线项开启时绑定，本文件不预占。
+预计跨度：14 个迭代承接，分止血、重造、治根三段推进。三段严格串行——止血决定冷启动读序，重造的新 inbox 与根布局依赖新读序，治根的使用数据才能验证前两段到底砍对没有。实际迭代号在各路线项开启时绑定，本文件不预占。
 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
@@ -72,7 +73,8 @@ Butler 走到 v3.6.0，规则文件 30 多份、驻留工具 20 多个、命令 
 | R10 | 治根·usage instrumentation：全 CLI 入口记录最后调用时间戳，本地状态不进共享仓 | — | planned |
 | R11 | 治根·`tools/usage-report/` 与 `usage report --since 90d`：A/B/C/D 分档由数据生成，替代手工回忆 | — | planned |
 | R12 | 治根·preference 反哺断言实验与处置，evidence 消费链降维，`/butler:loop` 依数据最终处置 | — | planned |
-| R13 | 治根·`migrations/v4.0.0.md` 完整配方与已部署项目升级回归，audit 欠债清账，`debt.md` 收尾 | — | planned |
+| R13 | 治根·升级器动作类型扩展：新增删除与移动两类 typed 标签，改 `migration-schema.md §4` 与 `upgrade.py` 三张表及路径校验，补幂等、冲突即停与回滚 | — | planned |
+| R14 | 治根·`migrations/v4.0.0.md` 完整配方与已部署项目升级回归，audit 欠债清账，`debt.md` 收尾 | — | planned |
 
 v4.0.0 的聚合切版本身走里程碑收口仪式（`milestone-schema.md §7.4` + `versioning-schema.md §6.3`），不单独占路线项。
 
@@ -81,3 +83,5 @@ v4.0.0 的聚合切版本身走里程碑收口仪式（`milestone-schema.md §7.
 - 2026-08-17：由 `/grill-me` 深度审计收敛入候办。依据是对 34 项命令、帮手、工具的 A/B/C/D 使用度标注、三轮针对性追问，以及「过去半年是否因读知识文件夹做过决策」答不出来这一条。同轮定下 `deliveries/` 迁 `.ai/deliveries/`、不留兼容期软链、`.ai/deliveries/` 扁平布局三项边界决策。当时 MILE-0015 仍 active，按单 active 约束先入待办。
 - 2026-08-18：MILE-0015 收口并发布 v3.6.0 后，用户确认开工，候办 `butler-slim-down` 提升为正式 MILE-0016。同时按 `milestone-schema.md §5.3`「路线项扁平原子、一项约等于一迭代、不设子项」把草稿里的 3 个大路线项拍平为 13 个平级路线项，内容不变，只是把原先写在段落里的「每个 R 内含 4–5 个迭代」展开成独立行。
 - 2026-08-18：补记一项 R1 必须处理的连带改动——迭代收口仪式第四步与里程碑收口仪式第四步当前把知识文件夹折叠写成必做，退役 `.ai/project/` 必须同批解除这两处强制，否则收口规则会指向不存在的目录。
+- 2026-08-18：整理路线项时查出升级器缺口——`upgrade.py` 现有九种 typed 标签（`rename` / `split` / `add_field` / `regen_entrypoints` / `regen_claude` / `global_install` / `sync_hooks` / `restamp` / `no_op`）没有一种能表达本里程碑的两类核心动作：删掉 `.ai/project/` 整个目录，以及把仓根的 `deliveries/` 移进 `.ai/`。后者还额外撞上 `rename` 的硬校验——该标签要求源和目标路径第一段都是 `.ai/`，仓根来源直接被拒。故新增独立路线项 R13 承接标签扩展，原 R13 顺延为 R14；路线项总数由 13 增至 14。
+- 2026-08-18：修正 R8 的影响面估计。`deliveries/` 迁位不只是改路径字符串：全仓有 46 份规则、脚本、工具与文档提到该目录，`CHANGELOG.md` 里有 71 处引用，`milestone-schema.md §9` 整节在画它的目录树，另有 3 份里程碑交付用 `../ITER-NNNN-*.md` 相对链接指向上级目录、目录一动即失效。R8 的回归预算按此重新估。

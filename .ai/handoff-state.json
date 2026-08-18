@@ -1,5 +1,5 @@
 {
-  "handoff_sha256": "54da5fa05746d8ce38ee2437a19f0c020c5b886a2da64ded42ccba4daf2a6c59",
+  "handoff_sha256": "bb1dc01773267e20b326420c59835b80d24ec16f596c3cfdc9ae9ef1c667f3b2",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
@@ -14,12 +14,12 @@
       ".ai/MILESTONE.md"
     ],
     "risks": [],
-    "status": "候办 `butler-slim-down` 已提升为正式 MILE-0016，`.ai/MILESTONE.md` 整体覆写，台账置 active、`current: MILE-0016`，待办索引与草稿已原子移除。路线图按 schema 拍平为 13 个平级路线项（止血 R1–R4 / 重造 R5–R9 / 治根 R10–R13），三段严格串行。"
+    "status": "候办 `butler-slim-down` 已提升为正式 MILE-0016，`.ai/MILESTONE.md` 整体覆写，台账置 active、`current: MILE-0016`，待办索引与草稿已原子移除。路线图按 schema 拍平为 14 个平级路线项（止血 R1–R4 / 重造 R5–R9 / 治根 R10–R14），三段严格串行；R13 为新增的升级器动作类型扩展。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "6c78dd4a124ed3d8de63db26128312fdd37124a16bd9b3898cc025d8481b6310"
+      "sha256": "91ec06dfccc3f08b1b93b2cd159735a13386ca665c71b0434d173bf2b043585b"
     },
     {
       "path": ".ai/ITERATIONS.md",
@@ -31,7 +31,7 @@
     },
     {
       "path": ".ai/MILESTONE.md",
-      "sha256": "14f3dd0752805f03cc0048e104a7b762858fd205e4599e96a7ff2d4d0cb22730"
+      "sha256": "4ea86f9cb2ab72034b91874e555722edc79f67ff60c04483bea1d6a66d0a2bd0"
     }
   ]
 }
