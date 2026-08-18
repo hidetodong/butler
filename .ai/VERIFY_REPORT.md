@@ -1,70 +1,59 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0111
+# VERIFY_REPORT — ITER-0112
 
 ## Verification Summary
 
-- 9/9 AC 全绿（auto·可靠），7 条 evidence record 全部 `passed`，完整 `scripts/verify-ci.sh` 退出码 0，`git diff --check` 无输出。
-- 本轮把领域模型接进了此前够不着的三条路径：评审多了一维「领域变更」并要求四项声明；CI 多了一道条目覆盖门；L0 渐进读取内核从只存在于 `Coder/README.md` 变成三处字节一致、并随部署入口流进目标项目；发布侧多了一段领域变更的升级处置判据。
-- 覆盖门写完立刻抓到两条真缺口：`four-state-machine-code` 与 `bridge-manifest-results-json` 此前完全没有任何断言或关系锚住，等于登记了却没有任何回归能抓。已补两条真断言（四态机器码枚举原文、桥输入/输出契约小节标题），不是放宽判定。
-- 顺带修掉一处会被章节顺延打断的活引用：`project-digest-schema.md` 两处 `migration-schema.md §6` 因新增小节顺延，已改为 `§7`。
+- 10/10 AC 达成：7 条 `auto·可靠`（AC1、AC3–AC8），3 条 `auto·弱`（AC2、AC9、AC10）。9 条 evidence record，8 条 `passed`、1 条 `failed` 保留为诊断。完整 `scripts/verify-ci.sh` 退出码 0。
+- 本轮删掉的是「靠 delta 折叠维护、需要回头重评旧内容」的那部分：`.ai/project/` 下 5 份文件、折叠结构契约 `project-digest-schema.md`、两个折叠 / 漂移帮手，以及两处收口仪式对折叠的强制。留下的 `invariants.md`（纯追加）与 `frontier.md`（整体覆写）一字未删。
+- 删 `capabilities.md` 前 22 个小节逐条核过，不是整文件一删了事。核查结论是 22 节全部可弃、真源在别处；唯一无真源的一条欠债已迁进 `.ai/debt.md`。
+- 执行中撞到一次 AC 自相矛盾（AC1 要求 `invariants.md` 一字不动 vs AC6 要求活文件无断指针），按 `iteration-schema.md §5.3` 走了 amend + 重新 ACK，没有绕过。
+- 有两个东西 P1 阶段没看出来、执行时才发现，都已按发现原样处理并登记：`.ai/project/workspaces.md` 是 workspace-scope 的活契约（由 PreToolUse hook 消费），跟知识文件夹机制无关，不在删除面内；`[split]` 标签不能删，历史配方 v1.6.0–v2.2.0 引用它、配方清单有一致性校验。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): `review-standard.md` 新增 `## 5. 领域变更 (Domain Change)`，列出触发范围（4 份领域文件 + 3 份 L0 载体）与四项强制声明；`review-engine.md §3.3` 多维评审列表登记该维度并指回 `review-standard.md §5`，`§7` 关系表注明口径由 review-standard 独占。两处为引用关系，无双写。这不是靠人读确认——两处都注册成了常驻断言（章节标题 + 四项声明标签 + 回指锚点），进 CI 每次跑（`domain-contract-coverage`）。
-- [x] AC2 (auto·可靠): `_validate_coverage` 已接进 `check`；6 条条目全通过（`domain-contract-coverage`）。未覆盖负例断言诊断含条目 id 与 `not covered by any assertion or relation`（`domain-contract-tests`）。补的是真断言不是放宽门——抽掉两条新断言即复现原缺口，有专门测试锁住。
-- [x] AC3 (auto·可靠): 既有 11 条负例 fixture 全部复跑通过，诊断文本未变；覆盖门是追加校验，不改动 `_validate_entries` / `_validate_relations` / `_validate_assertions` 任一行为。
-- [x] AC4 (auto·可靠): 三处 L0 正文 sha256 前缀均为 `0daab2d8`、均 656 字节。`context_budget.py` 以 `Coder/README.md` 为 `L0_SOURCE`，逐份比对 `L0_PROJECTIONS`，不等时报 `L0 projection mismatch: <file>`。三个负例分别篡改三份文件，诊断各自指名被改文件；标记缺失走 fail-closed 抛错并带文件名。
-- [x] AC5 (auto·可靠): 临时目录跑 `render-project-entrypoints.py` 生成的 `CLAUDE.md` 与 `AGENTS.md` 各含 1 对标记，正文 sha 与真源全等。`test-render-project-entrypoints.py` 8 项、`verify-dual-host.sh` 与入口矩阵全绿。L0 实测 656 字节 / 5 非空行 / 2 指针，三项均在上限（1600 / 18 / 4）内。
-- [x] AC6 (auto·可靠): `migration-schema.md` 新增 `## 5. 领域变更的升级处置`，用一张判据表区分「运行时实时读、不进目标项目」与「注入目标项目、必须重生成入口」，并额外给出术语改名要多判一层旧名是否进过 `.ai/` 产物。本次结论已落文：因 L0 进了 `templates/rule-card.md`，下个发布版必须含 `[regen-entrypoints]`，不得记 `[no-op]`。同样注册成常驻断言，章节或判据被删会被 CI 抓住。
-- [x] AC7 (auto·可靠): 新增 9 条 fixture——覆盖门 5 条（未覆盖负例 / owner 锚点 / source 锚点 / relation 锚点 / 桥条目回归锁），L0 投影 3 条（两处投影各自被改、真源被改、标记缺失 fail-closed），治理接线断言 1 条（三份文件注册齐全 + 篡改即失败）。每条负例断言具体诊断字符串，不只断言非零退出。测试总数：domain-contract 11→17，context-budget 9→12。
-- [x] AC8 (auto·可靠): 计量见下「dogfood 记录」，数字来自 `dogfood-layer-size`（`wc -c` 实测）与 `context-budget-projection`（metrics 输出）两条 record；token 数为换算值并已标注口径，不冒充实测。继续 / 缩减 / 停止的判断已写进 `.ai/MILESTONE.md §5.4`。
-- [x] AC9 (auto·可靠): `bash scripts/verify-ci.sh` 退出码 0（`verify-ci`）；`git diff --check` 无输出。
+- [x] AC1 (auto·可靠): `.ai/project/` 下只剩 `invariants.md` 与 `frontier.md`；`frontier.md` 未被本迭代触碰；`invariants.md` 只改了三行（冷启动读序第一读、一致性自检条数、全貌产物形态），`*为什么*` 理由从 39 条增到 42 条、一条未少；`.ai/debt.md` 存在，正文与迁移前一致，只多了迁出的那一条（`ac1-files`）。
+- [x] AC2 (auto·弱): 22 个小节的核查结论逐条写进 `.ai/01_CHANGELOG.md` 的 DELETE 段，机器复核了小节计数为 22、迁出条目确实落在 `.ai/debt.md`、被指为真源的 11 个文件全部存在（`ac2-ac9-ac10-proxy`）。人读部分见下「Verification Results」的抽查记录。标 `弱` 而非 `可靠`——机器查得出真源文件在不在，查不出里面写的是不是真比被删的那份更准。
+- [x] AC3 (auto·可靠): `Coder/62_Extension_Agents/` 只剩 `overview.md` / `independent-review.md` / `decision-work.md` 三份；`overview.md` 与 `Coder/README.md` 检索 `knowledge-fold` / `drift-check` 零命中（`ac3-roster`）。
+- [x] AC4 (auto·可靠): 两处收口仪式检索 `折叠` / `knowledge-fold` / `project-digest` 零命中；迭代收口改为「前三步必做、第四步自检」，里程碑收口改为「三步必做」，步骤编号连贯（`ac4-rituals`）。
+- [x] AC5 (auto·可靠): `project-digest-schema.md` 已删且 `Coder/README.md` 检索 `project-digest` 零命中；`context-persistence.md §6` 漂移自检不变量已删，余下 5 条编号连续（`ac5-schema-gone`）。
+- [x] AC6 (auto·可靠): 按归档白名单过滤后，`project-digest|knowledge-fold|drift-check|fold-state` 在活跃文件中零命中（`AC6-CLEAN`）；剩余 12 处 `.ai/project` 路径字样逐条核对去向，2 处指 `invariants.md`（真实存在）、9 处指部署项目侧的 `workspaces.md`、1 处是升级器测试的夹具路径（`ac6-scan`）。
+- [x] AC7 (auto·可靠): `bash scripts/verify-ci.sh` 退出码 0，无跳过、无单点豁免（`ac7-verify-ci`）。
+- [x] AC8 (auto·可靠): `scripts/audit-project-state.py` 802 项 OK，非 OK 行只剩 `release.worktree` 与 `release.tag` 两项发布态提示（`ac8-audit-final`，按 `iteration-schema.md §5.5 步④` 对 Butler 仓用 `--allow-unreleased` 并保留亮牌）；输出中不再有任何 fold receipt 或知识文件夹校验行。
+- [x] AC9 (auto·弱): `.ai/MILESTONE.md §5.4` 末条为「R1 收口 · 交接登记」，三处逐项写明现状与归属；机器复核了三项都在、R14 / R15 都点了名，并反查三处现状与登记描述一致（`ac2-ac9-ac10-proxy`）。标 `弱`——机器查得出登记写没写，查不出归属分得对不对。
+- [x] AC10 (auto·弱): 交付总结「已知剩余风险 / 延后事项」第一、二条分别记录两项信息损失，并写明确定性数据要等 R11（`ac2-ac9-ac10-proxy`）。标 `弱`——机器查得出段落在不在，判不了描述是否诚实，这一条终究靠自觉。
 
 ## 人测道小结
 
-- N/A（本轮无 human·待人 档 AC，人测道不适用）。
+- N/A（本轮无 `human·待人` 档 AC——AC2 / AC9 / AC10 原定人读，按 `testing-strategy.md §3`「能造出弱检查的项就不算人测残余」造了代理验证，归自动道弱档，不起交付自测桥）。
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| domain-contract-coverage | AC1,AC2,AC3,AC6 | captured | passed | `.ai/iterations/ITER-0111/evidence/domain-contract-coverage/record.json` |
-| domain-contract-tests | AC1,AC2,AC3,AC6,AC7 | captured | passed | `.ai/iterations/ITER-0111/evidence/domain-contract-tests/record.json` |
-| context-budget-projection | AC4,AC5 | captured | passed | `.ai/iterations/ITER-0111/evidence/context-budget-projection/record.json` |
-| context-budget-tests | AC4,AC7 | captured | passed | `.ai/iterations/ITER-0111/evidence/context-budget-tests/record.json` |
-| render-entrypoints-tests | AC5 | captured | passed | `.ai/iterations/ITER-0111/evidence/render-entrypoints-tests/record.json` |
-| dogfood-layer-size | AC8 | captured | passed | `.ai/iterations/ITER-0111/evidence/dogfood-layer-size/record.json` |
-| verify-ci | AC9 | captured | passed | `.ai/iterations/ITER-0111/evidence/verify-ci/record.json` |
+| ac1-files | AC1 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac1-files/record.json` |
+| ac2-ac9-ac10-proxy | AC2,AC9,AC10 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac2-ac9-ac10-proxy/record.json` |
+| ac3-roster | AC3 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac3-roster/record.json` |
+| ac4-rituals | AC4 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac4-rituals/record.json` |
+| ac5-schema-gone | AC5 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac5-schema-gone/record.json` |
+| ac6-scan | AC6 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac6-scan/record.json` |
+| ac7-verify-ci | AC7 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac7-verify-ci/record.json` |
+| ac8-audit | AC8 | captured | failed | `.ai/iterations/ITER-0112/evidence/ac8-audit/record.json` |
+| ac8-audit-final | AC8 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac8-audit-final/record.json` |
 
 ## Verification Results
 
-- **覆盖门（AC2/AC3）**：`domain_contract.py check` 退出码 0，`errors: []`。覆盖判定为「存在断言的 file 等于条目的 owner 或 source」或「条目 id 出现在任一关系的 left/right」。实现时发现一个设计副作用并已验证：同一文件上的断言会同时覆盖共享该文件的多个条目——这与计划中记录的取舍一致，测试 fixture 因此改用无断言的文件作为孤儿条目锚点。
-- **L0 投影（AC4/AC5）**：标题移出标记块后，比较范围收敛为纯规则正文，三份宿主入口各自保留自己的标题层级（`Coder/README.md` 与 `AGENTS.md` 用 `###`，`templates/rule-card.md` 用 `##`，因为它的内容注入到目标项目 `CLAUDE.md` 顶层）。L0 从 694 字节降到 656 字节。
-- **部署侧（AC5）**：`render-project-entrypoints.py` 从 `## 角色` 起截取 rule-card，L0 插在其后，因此确实进入两份部署入口。临时目录实测两份产出正文 sha 与真源全等。
-- **评审与升级（AC1/AC6）**：起初这两条只有规则正文、没有机器证据，Goal 裁决因此判 `ineligible`，拒绝按口头结论打绿。处理方式不是补一次性 grep，而是把三份文件的结构锚点注册成领域合同常驻断言——章节标题、四项声明标签、回指锚点、升级判据各自被 `must_contain` 守住，进 CI 每次跑。这也顺带说明覆盖门那套机制本身就能承载这类接线检查，不必为它再造工具。
-- **本轮自查「领域变更」四项声明（新维度首次自用）**：
-  - **唯一所有者**：L0 正文归 `Coder/README.md` 独占，另两处是受校验的字节投影；「领域变更」审计口径归 `review-standard.md §5` 独占，`review-engine.md` 只登记；领域变更的升级判据归 `migration-schema.md §5` 独占。无第二真源。
-  - **兼容影响**：`review-standard.md` 旧 §5 顺延为 §6、`migration-schema.md` 旧 §5/§6 顺延为 §6/§7；全仓检索后只有 `project-digest-schema.md` 两处活引用受影响，已同步改；其余命中均在 `.ai/iterations/` 历史归档内，按既有纪律不追改。既有工具行为、命令、路径、状态值均未变。
-  - **迁移路径**：领域正文改动对部署项目无影响（运行时实时读）；但 `templates/rule-card.md` 被改，按 `migration-schema.md §5` 判据，下个发布版必须含 `[regen-entrypoints]`。已部署项目在升级前仍是旧入口，这是已知且可接受的滞后。
-  - **负向样例**：新增 9 条 fixture + 3 条常驻断言，覆盖门、三处 L0 一致性、评审维度与升级判据各自都有能在下次改坏时立刻失败的检查；缺口是「兼容影响」与「迁移路径」这两条**声明的内容质量**无法机器断言（能查它在不在，查不出它想没想对），已记入 Remaining Risks。
-
-- **dogfood 记录（AC8）**：
-
-| 层 | 实测字节 | 字符 | 换算 token |
-|---|---|---|---|
-| L0 渐进读取内核 | 656 | 260 | ≈234 |
-| L1 `domain-model.md` | 3966 | 2072 | ≈1865 |
-| L2 `domain-glossary.md` | 5456 | 3290 | ≈2961 |
-| L2 `context-map.md` | 6163 | 3393 | ≈3054 |
-
-  - token 列是换算值，按中文约 0.9 token/字符估，不是 tokenizer 实测；字节与字符列来自 `wc -c` 与文件读取。
-  - 部署项目冷启动新增约 234 token，占 rule-card 全文 3.8%（不是 P2 阶段估的一成——当时按 1600 字节上限估，实测只用了 656）。
-  - 本迭代实际走过的路由：命中「跨模块所有权 + 新增核心检查」，按 L0 指引读 L1 定位上下文，未展开 L2 全表，只按需查了领域合同注册表与 3 份直接真源（`review-standard.md`、`migration-schema.md`、`context_budget.py`），首批 3 份预算未超，没有触发续批。
-  - 新增长期维护检查点：2 个（覆盖门 1 个判定规则、L0 三处一致 1 个判定规则），配 9 条 fixture。领域合同现有 6 条目 / 3 关系 / 10 断言。
+- **保留的那条 failed record 是什么**：`ac8-audit` 是不带 `--allow-unreleased` 的首跑，退出码 1。除两项发布态 DRIFT 外，它还报了第三项 `handoff.freshness: stale`——迭代改了一堆源文件、handoff 回执还停在旧 hash。跑 `tools/handoff/handoff.py sync` 同步后复跑即净，`ac8-audit-final` 是同步后的记录。首跑不删，留作「审计确实抓到了漂移」的痕迹。
+- **AC2 的人读抽查**：从 22 节里抽了 5 条反查真源，全部命中——「远端 required check 未启用」这条诚实声明在 `HUMAN_GUIDE.md`（3 处）/ `docs/codex-compatibility.md` / `README.md` 都在；驻留工具描述在 `Coder/README.md` 第 172–217 行比被删那份更详（每个工具都写了职责边界与「不做什么」）；工作流注册的两个真源 `workflows/registry.json` 与 `docs/workflows.md` 都在；semver 与提交规约在 `versioning-schema.md §5`；迁出的那条欠债在 `.ai/debt.md` 里。
+- **AC1 的三行修订具体改了什么**：一是冷启动读序的第一读，从「知识文件夹两态」改成 `.ai/debt.md`；二是一致性自检的条数，6 条改 5 条；三是新增一条「全貌产物不靠 delta 折叠维护（ITER-0112 起）」，把本轮的诊断结论固定下来——整体覆写和纯追加活得下来、需要回头重评旧内容的必烂。理由层没动，`*为什么*` 反而多了 3 条（新写的那条自带理由）。
+- **AC6 白名单的边界**：扫描排除 `.git/`、`.ai/iterations/`、`.ai/milestones/`、`.ai/history/`、`deliveries/`、`docs/research/`、`migrations/v1.` 与 `v2.`、`CHANGELOG.md`、工作区四件套自身与 `.ai/verification-evidence/`，另外单独放行 `migration-schema.md`（`[split]` 退役标注）与 `overview.md`（帮手退役说明）——这两处是有意留的退役标注，不是漏改。排除项都是历史归档或本轮有意保留的说明，不是为了让扫描变绿而设的豁免。
+- **两处 P1 没看出来的东西**：
+  - `.ai/project/workspaces.md` 不属于知识文件夹机制。它是 workspace-scope 的项目工作区地图，由 `templates/hooks/` 的 PreToolUse hook 实际读取来拦越界写入，有 4 份规则 + 4 份测试在消费。butler 是单包仓、本仓没有这个文件，所以扫描时它表现为「悬空指针」，其实是部署项目侧的正常路径。已在变更流里标为「保留（不属本机制）」。
+  - `[split]` 标签删不掉。`migrations/v1.6.0` 到 `v2.2.0` 五份历史配方引用了它，`migrations/manifest.json` 有标签定义与配方引用的一致性校验，删定义就红。改为在原处加退役标注（自 v4.0.0 起不再产生新实例），动作类型的正式改造交给 R14。
+- **`domain-model.md` 的断指针**：AC6 扫描抓到全仓唯一一处真断链——第 53 行「当前已知语义债务：`.ai/project/debt.md`」，`debt.md` 已迁位。已改为 `.ai/debt.md`。
 
 ## TDD Pair Status
 
-- N/A（TECH_PLAN 未声明 TDD cycle）。
+- N/A（TECH_PLAN 未声明 TDD cycle；本轮是删除与去指针，机器侧改动是拆掉夹具而非新增行为）。
 
 ## Goal Calibration
 
@@ -77,8 +66,9 @@
 
 ## Gate Coverage
 
-- 自动道：9/9 AC 由 evidence record 支撑，无 `reported` 档口头结论。
-- 机器门禁：domain-contract（含新覆盖门）、context-budget（含新投影一致性）、artifact contract、state audit、markdown 链接、双宿主与 Pi 扩展验证、全量单测，均在完整 CI 内通过。
+- 自动道：10/10 AC 由 evidence record 支撑，7 条可靠档、3 条弱档，无 `reported` 档口头结论。
+- 机器门禁：完整 `verify-ci.sh`（含 artifact contract、domain contract、context budget、markdown 链接、双宿主与 Pi 扩展验证、全量单测）退出码 0；状态审计在 AC8 记录时点 802 项 OK，收口自检复跑 811 项 OK、退出码 0，非 OK 行只剩两条 `UNRELEASED` 亮牌。
+- 拆门禁的诚实交代：本轮**减少**了机器检查——删掉了 fold receipt 审计、`test-audit-project-state.py` 的 3 项折叠测试，`context_budget.py` 的重复真源候选表少了一项。这是机制退役的必然结果，不是放宽判定；被删的检查所守护的对象已不存在。删除过程中误删过一条与折叠无关的正面测试（`test_valid_evidence_index_and_fold_receipt_pass`），已重建为 `test_valid_evidence_index_passes`，审计测试套 22 项通过。
 - 人测道：不适用。
 
 ## References Compliance
@@ -87,13 +77,14 @@
 
 ## Remaining Risks
 
-- **证明不了宿主真的按 L0 分层读了**：能证明三处字节一致、能证明 L0 进了部署入口，但没有任何运行时观测能说明某个宿主在真实会话里确实照它分层读取。这是 R5 定义里「衡量歧义减少」最实的那一半，本轮拿不到；需要运行时遥测，已划给 `butler-slim-down` 候办的 usage instrumentation。
-- **机器只能查声明在不在，查不出想没想对**：评审维度、四项声明标签、升级判据的**存在性**已由常驻断言守住；但「兼容影响」和「迁移路径」这两条写得对不对、有没有漏掉依赖方，机器判不了。门绿不等于这两条想清楚了，规则正文里写明了这一点，执行仍靠自觉。
-- **覆盖门是文件级粒度**：同一文件上的断言会同时覆盖共享该文件的多个条目。目前 `tools/delivery-selftest/README.md` 上的两条断言分别对应两个条目，是真覆盖；但将来若有条目蹭同文件的无关断言，门会误判为已覆盖。
-- **dogfood 样本只有一个迭代**：成本收益结论基于本迭代一次观察，不构成普遍结论。
-- **token 列是换算不是实测**：仓内无 tokenizer 依赖，按中文 0.9 token/字符估算，与真实 `o200k_base` 计数可能有出入。
+- **半拆状态不能拖太久**。冷启动第一读现在是过渡措辞（不再指知识文件夹、新读序还没正式定义），`.ai/project/` 只剩两个孤立文件。R2 定读序、R3 定全貌产物落点；两项若迟迟不开，这个中间态会变成事实上的常态，比拆干净或不拆都糟。这一条在 AC_LIST 的 Open Questions 里就写着，收口时仍然成立。
+- **「无证据被消费」不等于「从未被消费」**。删除决策建立在缺席证据上：半年里没有任何一次决策能追溯到读知识文件夹，也没有任何工具记录过对它的读取。但没有读取记录不等于没有读取。真正的确定性数据要等 R11 的使用监视器。
+- **折叠回执历史不可再机器验证**。`fold-state.json` 删掉后，哪些迭代参与过折叠、每次折叠的内容 hash 只剩 git 记录，没有工具能再校验。判断是这段历史唯一的读者就是已经一起删掉的漂移检查。
+- **`invariants.md` 与 `frontier.md` 现在没有维护机制**。它们过去靠折叠仪式被顺带更新，仪式没了，在 R3 定出新落点之前，这两份处在「准确但无人负责刷新」的状态。`frontier.md` 覆盖到 MILE-0015，MILE-0016 的进展不会自动进去。
+- **老项目磁盘上的空 `.ai/project/` 目录没人清**。部署侧不再生成，但存量不会自动消失，归 R15。
 
 ## Handoff / Next Step
 
-- MILE-0015 五个路线项（R1–R5）全部完成，可进入里程碑收口。
-- 下个发布版切版时必须含 `[regen-entrypoints]`（本轮改了 `templates/rule-card.md`），不得记 `[no-op]`。
+- MILE-0016 R1 完成，可开 R2（冷启动读序改造）——R1 留下的过渡措辞就在 `context-persistence.md §6`，是 R2 的直接输入。
+- R3（项目全貌产物重建）要接手 `.ai/project/` 剩下的两份文件，落点由替代品设计决定。
+- 本轮改了 `templates/AGENTS.md.template`（部署入口模板），下个发布版切版时必须含 `[regen-entrypoints]`，不得记 `[no-op]`。

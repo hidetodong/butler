@@ -1,15 +1,16 @@
 # 迭代台账
 
-> MILE-0015 R1–R5 全部收口；里程碑可进入收口仪式。
+> MILE-0015 已收口并随 v3.6.0 发布；当前 active 里程碑为 MILE-0016（Butler 瘦身与重造）。
 > ITER-0107～ITER-0109 是 2026-08-04 跨设备汇合后的正式编号；开启/收口日期保留实际完成时间 2026-07-31。
 
 ## 最近迭代
 
-ITER-0111 承接 MILE-0015 R5：领域治理接线与真实 dogfood；R5 收口后 MILE-0015 五个路线项全部完成。
+ITER-0112 承接 MILE-0016 R1：退役 `.ai/project/` 知识文件夹与折叠机制，同批解除两处收口仪式对折叠的强制。
 
 current: none
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0112 | 退役项目知识文件夹与折叠机制（MILE-0016 R1） | closed | 2026-08-18 | 2026-08-18 | MILE-0016 | deliveries/ITER-0112-retire-project-knowledge-folder.md |
 | ITER-0111 | 领域治理接线与真实 dogfood（MILE-0015 R5） | closed | 2026-08-17 | 2026-08-17 | MILE-0015 | deliveries/ITER-0111-domain-governance-wiring.md |
 | ITER-0110 | 最小可执行领域合同与双冲突试点（MILE-0015 R4） | closed | 2026-08-05 | 2026-08-13 | MILE-0015 | deliveries/ITER-0110-minimal-domain-contract.md |
 | ITER-0109 | 上下文映射与主链转换合同（MILE-0015 R3） | closed | 2026-07-31 | 2026-07-31 | MILE-0015 | deliveries/ITER-0109-main-chain-context-map.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
 | ITER-0094 | Butler 配置部署与 legacy 迁移（MILE-0013 R2·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0094-project-config-migration.md |
 | ITER-0093 | Butler 项目配置合同与统一读写内核（MILE-0013 R1·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0093-project-config-core.md |
-| ITER-0092 | TDD 配对收口接线与 pytest dogfood（MILE-0012 R2·危险模式） | closed | 2026-07-26 | 2026-07-26 | MILE-0012 | deliveries/ITER-0092-tdd-goal-gate-dogfood.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

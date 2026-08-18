@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac5-schema-gone",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "-c",
+      "test ! -f Coder/40_Context_Management/project-digest-schema.md && echo SCHEMA-DELETED && ! grep -q \"project-digest\" Coder/README.md && echo README-DEREGISTERED && grep -c \"^[0-9]\\.\" Coder/40_Context_Management/context-persistence.md"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:11:29.604Z",
+  "finished_at": "2026-08-18T07:11:29.609Z",
+  "duration_ms": 5,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 38,
+    "captured_bytes": 38,
+    "sha256": "c6b6a505ad228c7b12f6a27e09343be49e950d01c94ffd54c2c15bf5f0f1dd7e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -355,7 +355,7 @@ class StateAuditTests(unittest.TestCase):
         self.assertEqual(0, allowed_ahead.returncode, allowed_ahead.stdout + allowed_ahead.stderr)
         self.assertIn("UNRELEASED", allowed_ahead.stdout)
 
-    def test_evidence_index_requires_valid_archive_and_fold_receipt(self) -> None:
+    def test_evidence_index_requires_valid_archive(self) -> None:
         archive = self.root / ".ai" / "iterations" / "ITER-0001"
         (archive / "VERIFY_REPORT.md").write_text(
             "# Evidence Index\n\n"
@@ -366,7 +366,6 @@ class StateAuditTests(unittest.TestCase):
         result = self.invoke()
         self.assertEqual(1, result.returncode)
         self.assertIn("ITER-0001.evidence_hashes", result.stdout)
-        self.assertIn("ITER-0001.fold_receipt", result.stdout)
 
     def test_evidence_pointer_outside_index_does_not_count(self) -> None:
         archive = self.root / ".ai" / "iterations" / "ITER-0001"
@@ -380,56 +379,7 @@ class StateAuditTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertIn("Evidence Index 无 record 指针", result.stdout)
 
-    def test_fold_receipt_schema_version_is_checked(self) -> None:
-        archive = self.root / ".ai" / "iterations" / "ITER-0001"
-        (archive / "VERIFY_REPORT.md").write_text("# Evidence Index\n", encoding="utf-8")
-        project = self.root / ".ai" / "project"
-        project.mkdir()
-        (project / "fold-state.json").write_text(
-            json.dumps({"schema_version": 2, "receipts": {"ITER-0001": {}}}),
-            encoding="utf-8",
-        )
-        result = self.invoke()
-        self.assertEqual(1, result.returncode)
-        self.assertIn("fold-state schema_version 必须为 1", result.stdout)
-
-    def test_only_latest_receipt_topic_hash_tracks_current_file(self) -> None:
-        project = self.root / ".ai" / "project"
-        project.mkdir()
-        topic = project / "capabilities.md"
-        topic.write_text("# current\n", encoding="utf-8")
-        archive1 = self.root / ".ai" / "iterations" / "ITER-0001"
-        archive2 = self.root / ".ai" / "iterations" / "ITER-0002"
-        archive2.mkdir()
-        changelog1 = archive1 / "CHANGELOG.md"
-        changelog2 = archive2 / "CHANGELOG.md"
-        changelog2.write_text("# second\n", encoding="utf-8")
-        fold = {
-            "schema_version": 1,
-            "receipts": {
-                "ITER-0001": {
-                    "changelog": {"path": ".ai/iterations/ITER-0001/CHANGELOG.md", "sha256": hashlib.sha256(changelog1.read_bytes()).hexdigest()},
-                    "topics": [{"path": ".ai/project/capabilities.md", "sha256": hashlib.sha256(b"# old\n").hexdigest()}],
-                },
-                "ITER-0002": {
-                    "changelog": {"path": ".ai/iterations/ITER-0002/CHANGELOG.md", "sha256": hashlib.sha256(changelog2.read_bytes()).hexdigest()},
-                    "topics": [{"path": ".ai/project/capabilities.md", "sha256": hashlib.sha256(topic.read_bytes()).hexdigest()}],
-                },
-            },
-        }
-        (project / "fold-state.json").write_text(json.dumps(fold), encoding="utf-8")
-
-        audit = AUDIT_MODULE.Audit(self.root, False)
-        audit.audit_fold_receipt("ITER-0001", archive1)
-        self.assertTrue(audit.findings[-1].ok)
-        self.assertIn("historical-snapshot", audit.findings[-1].detail)
-
-        topic.write_text("# drift\n", encoding="utf-8")
-        audit.audit_fold_receipt("ITER-0002", archive2)
-        self.assertFalse(audit.findings[-1].ok)
-        self.assertIn("topic SHA-256 不符", audit.findings[-1].detail)
-
-    def test_valid_evidence_index_and_fold_receipt_pass(self) -> None:
+    def test_valid_evidence_index_passes(self) -> None:
         archive = self.root / ".ai" / "iterations" / "ITER-0001"
         evidence = archive / "evidence" / "proof"
         evidence.mkdir(parents=True)
@@ -462,30 +412,15 @@ class StateAuditTests(unittest.TestCase):
         )
         (diagnostic / "record.json").write_text(json.dumps(failed_record), encoding="utf-8")
         (archive / "VERIFY_REPORT.md").write_text(
-            "## AC Status\n- [x] AC1 (auto·可靠) ✓\n\n## Evidence Index\n"
+            "## AC Status\n- [x] AC1 (auto\u00b7\u53ef\u9760) \u2713\n\n## Evidence Index\n"
             "| ID | AC | Record |\n|---|---|---|\n"
             "| proof | AC1 | `.ai/iterations/ITER-0001/evidence/proof/record.json` |\n"
             "| diagnostic | AC1 | `.ai/iterations/ITER-0001/evidence/diagnostic/record.json` |\n",
             encoding="utf-8",
         )
-        project = self.root / ".ai" / "project"
-        project.mkdir()
-        topic = project / "capabilities.md"
-        topic.write_text("# capabilities\n", encoding="utf-8")
-        changelog = archive / "CHANGELOG.md"
-        fold = {
-            "schema_version": 1,
-            "receipts": {
-                "ITER-0001": {
-                    "changelog": {"path": ".ai/iterations/ITER-0001/CHANGELOG.md", "sha256": hashlib.sha256(changelog.read_bytes()).hexdigest()},
-                    "topics": [{"path": ".ai/project/capabilities.md", "sha256": hashlib.sha256(topic.read_bytes()).hexdigest()}],
-                }
-            },
-        }
-        (project / "fold-state.json").write_text(json.dumps(fold), encoding="utf-8")
         result = self.invoke()
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-        self.assertIn("保留非通过记录=['diagnostic']", result.stdout)
+        self.assertIn("\u4fdd\u7559\u975e\u901a\u8fc7\u8bb0\u5f55=['diagnostic']", result.stdout)
 
     def snapshot(self) -> dict[str, str]:
         return {

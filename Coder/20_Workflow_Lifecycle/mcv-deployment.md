@@ -60,7 +60,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `deliveries/`：完整交付后的人类可读交付总结归档目录。
 - `origin/`：**用户原始需求材料的可选收件箱**——用户自管，存放自由格式材料；AI **只读、不写不改不重命名不移动不归档不删除**。它可供 `/milestone`、后续 `/butler:inbox` 等入口读取，但不是快速路径的必经站。处理回执写 `.ai/INBOX.md`，不写回原稿；完整数据合同见 `40_Context_Management/inbox-schema.md`。
 
-部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放）。`.ai/` 下另建一个**空知识文件夹种子** `.ai/project/`（MILE-0003 R6 起）——它是**唯一在部署时即建的 `.ai/` 子目录例外**（`references/`、`iterations/`、`milestones/` 等仍按需产生），例外理由=它是项目**全貌产物之家**、空目录**标记该项目采用文件夹态**（供收口步④判"折进文件夹还是前滚单文件"），同 `origin/` 先建后投的形态。守本节"仅创建目录、不预置内容"：**只建空目录、不写 `00_INDEX` 占位**——`00_INDEX.md` + 主题文件在**首次收口前滚**时才由更新说明帮手按 `project-digest-schema.md §8` 折叠生成（部署到首收口之间无全貌可读，属与单文件项目首收口前同类暂态，冷启动键控**入口文件是否存在**而非目录存在，不误触"读不存在的 `00_INDEX`"，见 `40_Context_Management/context-persistence.md §6` 缺全貌产物倒推兜底）。
+部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放），`.ai/` 下的 `references/`、`iterations/`、`milestones/` 等子目录一律按需产生、部署时不建。
 
 `.ai/` 目录下分为两类文件：
 
@@ -69,10 +69,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `00_IDEATION.md`：Explore / Ideation 已获用户 opt-in 且项目根唯一时的可选 Decision Map 载体，只保存已确认决定、开放问题与参考依据；始终位于 P1→P5 之外，显式 promotion 后由 Iteration P1 的 `CONCEPT.md` 接管当前交付语义。
 - `01_CHANGELOG.md`：记录本迭代的**对象级变更流**（严格 ADD/EDIT/DELETE、绑 AC，格式见 `changelog-schema.md`），**作用域为当前活跃迭代**（热数据）；迭代收口时其切片随迭代归档进 `iterations/ITER-NNNN/CHANGELOG.md`，全局文件随之收敛，不跨迭代无界累积（见 `iteration-schema.md` §5.5）。
 - `02_SESSION_HANDOFF.md`：跨会话冷启动入口，内容结构参考 `40_Context_Management/handoff-spec.md`。
-- **项目全貌产物**（项目常驻全貌摘要·状态取向，冷启动**第一读**，格式参考 `40_Context_Management/project-digest-schema.md`）——**两态**（MILE-0003 R6 起）：
-  - **新项目 → `.ai/project/` 知识文件夹**（部署即带空种子，见 §2）：`00_INDEX.md` 入口 + 按主题分文件。**按需产生**——首次迭代收口前滚时由更新说明帮手按 `project-digest-schema.md §8` 折叠生成，其后每次收口按主题必做折叠（`iteration-schema.md §5.5` 步④）。
-  - **单文件 `.ai/PROJECT.md`**（遗留 / 暂态形态：R6 前部署、尚未迁移的老项目；butler 仓自身已于 ITER-0034 迁为文件夹态，不再属此类）：**按需产生**——首次迭代收口前滚时落地（部署时不预置内容，符合 §2 仅创建目录原则），其后每次收口按需前滚。
-  - **老项目迁移**：R6 前部署、已积累单文件 `.ai/PROJECT.md` 的老项目，其 `PROJECT.md → .ai/project/` 文件夹化由升级按 R6 迁移配方（`[rename]` + `[split]` + `[restamp]`，见 `migration-schema.md §4`）执行；实际配方实例在 butler 切版时产出（`versioning-schema.md §6.3` 步4，R8 切 v2.0.0 时落 `migrations/v2.0.0.md`）。从未产生过 `PROJECT.md` 的更老项目由升级补建：新建全貌产物并由 AI 据 `ITERATIONS.md` / `deliveries/` 首次回填一次。
+- `debt.md`：项目长期欠债与硬约束，冷启动**第一读**。**按需产生**——首次识别出长期欠债时落地，之后随迭代增删。面向人的项目全貌摘要（原 `.ai/project/` 知识文件夹）已于 ITER-0112 退役，新的全貌产物形态由 MILE-0016 R3 决定。
 - `03_BUG_LOG.md`：收敛闭环熔断后的 RCA 报告或高价值逻辑坑位。
 - `task-state.md`：运行时状态，按 `40_Context_Management/context-persistence.md` 维护。
 - `verification-evidence/`：完整路径 P5 首次捕获自动道证据时按需创建的**单迭代热区**；不在部署时预建。收口时整包移动到 `iterations/ITER-NNNN/evidence/`，不得与归档双存。

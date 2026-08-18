@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac8-audit-final",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/audit-project-state.py",
+      "--project-root",
+      ".",
+      "--allow-unreleased"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:18:42.353Z",
+  "finished_at": "2026-08-18T07:18:44.831Z",
+  "duration_ms": 2478,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 86997,
+    "captured_bytes": 86997,
+    "sha256": "df003fcc3fa08befc4094ad7272ebd53bfebe719b4522bd24bc33b850321d2b9",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

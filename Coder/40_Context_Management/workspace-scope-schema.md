@@ -19,7 +19,7 @@ PRD 不按工作区复制、嵌套或分家。跨三个包的需求仍只有一�
 
 ## 2. 项目工作区地图
 
-`.ai/project/workspaces.md` 是项目当前拓扑的知识主题，遵守 `.ai/project/` 的 current-truth 覆写语义。最小结构：
+`.ai/project/workspaces.md` 记录项目当前拓扑，只保当前真相、旧条目改 `retired` 不叠历史层。它与已于 ITER-0112 退役的知识文件夹机制无关，路径沿用不变；最终落点由 MILE-0016 R3 连同全貌产物一并决定。最小结构：
 
 ```md
 # Workspaces

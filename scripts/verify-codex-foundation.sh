@@ -45,7 +45,7 @@ done
 
 previous=0
 for path in \
-  ".ai/project/00_INDEX.md" \
+  ".ai/debt.md" \
   ".ai/MILESTONES.md" \
   ".ai/ITERATIONS.md" \
   ".ai/task-state.md" \

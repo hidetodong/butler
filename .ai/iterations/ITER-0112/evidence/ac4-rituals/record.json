@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac4-rituals",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "-c",
+      "! grep -nE \"折叠|knowledge-fold|project-digest\" Coder/20_Workflow_Lifecycle/iteration-schema.md Coder/20_Workflow_Lifecycle/milestone-schema.md && echo NO-FOLD-IN-RITUALS; ! grep -rn \"第五步\" Coder/20_Workflow_Lifecycle/iteration-schema.md && echo NO-STALE-STEP5"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:11:29.552Z",
+  "finished_at": "2026-08-18T07:11:29.563Z",
+  "duration_ms": 10,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 34,
+    "captured_bytes": 34,
+    "sha256": "4b1b2cecdffd6a494471744f7863de2641a04730a5eb674afd1d5b8a248f3120",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

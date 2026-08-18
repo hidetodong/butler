@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac6-scan",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC6"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0112/ac6-scan.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:15:10.166Z",
+  "finished_at": "2026-08-18T07:15:10.790Z",
+  "duration_ms": 624,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1537,
+    "captured_bytes": 1537,
+    "sha256": "a5870927ee80083469640465f8f9c498b599256d649253c4bace15a72dbdc34a",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

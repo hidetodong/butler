@@ -12,7 +12,7 @@ scope: 02_SESSION_HANDOFF.md 的唯一结构定义与字段约束
 
 `02_SESSION_HANDOFF.md` 是冷启动**入口**，不是自足包。它的目标是让新会话能**定向、开工、不踩雷**。完整 context 由状态文件承载，handoff 通过指针引用。新口径下它是由 `tools/handoff/handoff.py` 从权威状态生成的派生视图；机器新鲜度 receipt 为 `.ai/handoff-state.json`，两者都不得由 AI 直接手改。
 
-其中项目的**状态全貌**由项目全貌产物承载（两态：`.ai/project/` 知识文件夹，或未迁移暂态的单文件 `.ai/PROJECT.md`；格式见 `project-digest-schema.md`）：handoff 给"此刻断点"、全貌产物给"系统整体是什么"，二者互补不重叠，handoff 的状态指针可引用它。冷启动完整读序（含两态第一读）见 `context-persistence.md §6`。
+其中项目的**长期欠债与硬约束**由 `.ai/debt.md` 承载：handoff 给"此刻断点"、`debt.md` 给"还欠什么、哪些边界不能碰"，二者互补不重叠。面向人的项目全貌摘要已于 ITER-0112 退役，新的全貌产物由 MILE-0016 R3 定形态；冷启动完整读序见 `context-persistence.md §6`。
 
 ## 2. 约束
 

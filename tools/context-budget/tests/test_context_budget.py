@@ -29,9 +29,8 @@ class ContextBudgetTests(unittest.TestCase):
             "Coder/domain-glossary.md",
             "Coder/context-map.md",
             "Coder/architecture-overview.md",
-            ".ai/project/architecture.md",
             ".ai/project/invariants.md",
-            ".ai/project/debt.md",
+            ".ai/debt.md",
             ".ai/iterations/ITER-0107/AC_LIST.md",
             "deliveries/ITER-0107-domain-model-boundaries.md",
         ):
@@ -63,7 +62,7 @@ class ContextBudgetTests(unittest.TestCase):
         result = context_budget.check_project(self.root)
         self.assertTrue(result.ok, result.errors)
         self.assertEqual(result.metrics["contexts"], 5)
-        self.assertEqual(result.metrics["terms"], 20)
+        self.assertEqual(result.metrics["terms"], 19)
         self.assertEqual(result.metrics["routes"], 4)
         self.assertEqual(result.metrics["fact_classes"], 4)
         self.assertEqual(result.metrics["transitions"], 5)
@@ -118,11 +117,11 @@ class ContextBudgetTests(unittest.TestCase):
     def test_l2_count_empty_cell_and_bad_source_fail(self) -> None:
         glossary = self.root / "Coder/domain-glossary.md"
         lines = glossary.read_text(encoding="utf-8").splitlines()
-        row_index = next(i for i, line in enumerate(lines) if line.startswith("| Project Knowledge Folder |"))
+        row_index = next(i for i, line in enumerate(lines) if line.startswith("| Handoff |"))
         lines.pop(row_index)
         glossary.write_text("\n".join(lines) + "\n", encoding="utf-8")
         result = context_budget.check_project(self.root)
-        self.assertIn("L2 term count=19", "\n".join(result.errors))
+        self.assertIn("L2 term count=18", "\n".join(result.errors))
 
         self._replace("Coder/domain-glossary.md", "| PRD | 需求与范围 |", "| PRD |  |")
         self._replace(

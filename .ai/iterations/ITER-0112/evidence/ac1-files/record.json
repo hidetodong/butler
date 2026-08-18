@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac1-files",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC1"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "-c",
+      "ls .ai/project/ && test -f .ai/debt.md && git diff --quiet HEAD -- .ai/project/frontier.md && echo FRONTIER-UNCHANGED && git diff --stat -- .ai/project/invariants.md && grep -c 为什么 .ai/project/invariants.md"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:11:14.331Z",
+  "finished_at": "2026-08-18T07:11:14.371Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 135,
+    "captured_bytes": 135,
+    "sha256": "d928463adfbbe9bceed77af3a9a707cc165a7f7d15d44e5c455e619b9319f534",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -125,33 +125,30 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 冷启动 / clean-slate 重启时，按 状态 → 时间线 → 断点 → 代码 的顺序建立上下文：
 
-1. **项目状态全貌**（系统现在整体是什么、为何如此、长期约束与欠债），冷启动**第一读**；格式见 `project-digest-schema.md`。载体按项目形态**两态**（与收口步④ / 第 6 不变量同一套两态划分）：
-   - **采用 `.ai/project/` 知识文件夹的项目**（判据键控**入口文件 `.ai/project/00_INDEX.md` 是否存在**，而非目录是否存在——部署即建的**空种子目录**在首次收口前滚生 `00_INDEX` 前无全貌可读，此暂态按下方"缺全貌产物"倒推处理、**不去读不存在的 `00_INDEX`**，见 `mcv-deployment.md §2`）：第一读 `.ai/project/00_INDEX.md` 拿全貌与地图，再**按当前任务需要**钻相关主题文件。**digest-and-point 读纪律**：读 `00_INDEX` 拿地图 → 只钻与当前任务相关的主题（**不必一次性读全部主题**）→ 再按指针钻代码；如此冷启动预算随文件夹越补越全仍**有界**（读地图 + 定向钻取，不 slurp 整个文件夹）。写侧密度契约见 `project-digest-schema.md §5`。
-   - **仍单文件 `.ai/PROJECT.md` 的项目**（R6 前部署、尚未迁移的老项目；butler 仓自身已于 ITER-0034 迁为文件夹态，走上一分支）：第一读 `.ai/PROJECT.md`。
+1. **长期欠债与硬约束** `.ai/debt.md` —— 冷启动**第一读**：还悬着什么账、哪些是不能碰的边界。
+   > 过渡说明：面向人的项目全貌摘要（原 `.ai/project/` 知识文件夹）已于 ITER-0112 退役，新的全貌产物由 MILE-0016 R2 定读序、R3 定形态与落点。在 R3 交付前，冷启动的全貌只能靠本节其余四步加 `Coder/README.md` 建立。
 2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 只读当前与近期热时间线；需要旧身份时沿 `.ai/state-index.json` 用 state-ledger `lookup` 定向读取一个冷分片，禁止默认读取整个 history 目录。
 3. 先运行 `$BUTLER_PATH/tools/handoff/handoff.py check --project-root "$PROJECT_ROOT"`；fresh 才读 `.ai/02_SESSION_HANDOFF.md`，stale 先 sync 重建，error 先修权威状态。
 4. 当前 TECH_PLAN 的方案 verdict、task-state `Goal Calibration` 与 VERIFY `Completion Inputs` —— 恢复 Goal state/reason/next；宿主 Goal/Task 只是随后可重建的投影。
 5. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
 
-项目全貌产物与 handoff 互补：前者给"系统整体状态"（`.ai/project/` 知识文件夹或单文件 `.ai/PROJECT.md`）、后者给"此刻断点"；缺全貌产物时（无 `.ai/PROJECT.md`、或仅有部署即建的**空 `.ai/project/` 种子**而 `00_INDEX` 未生）新会话只能从一堆迭代 delta 倒推全貌（管中窥豹）。
+`debt.md` 与 handoff 互补：前者给"还欠什么、哪些边界不能碰"、后者给"此刻断点"。二者都不给"系统整体是什么"——在 R3 的全貌产物交付前，新会话只能从一堆迭代 delta 倒推全貌（管中窥豹），这是已知且有意接受的过渡代价。
 
 ### 冷启动一致性自检
 
-读完台账后、动手前，核对台账↔产物↔交付↔知识文件夹无漂移。部署项目的 hook 只在**写台账时**机械兜底（`single_active_iteration` 等），此自检覆盖全部漂移面、对所有项目（含不跑自身 hook 的 butler 仓）生效。发现漂移先暴露、不静默继续：
+读完台账后、动手前，核对台账↔产物↔交付↔证据无漂移。部署项目的 hook 只在**写台账时**机械兜底（`single_active_iteration` 等），此自检覆盖全部漂移面、对所有项目（含不跑自身 hook 的 butler 仓）生效。发现漂移先暴露、不静默继续：
 
 1. **current ↔ 状态**：`current` 指向的迭代号，其台账行须为 `active`；`current: none` 时台账无 `active` 行。
 2. **至多一个 active**：`ITERATIONS.md` 至多一行 `active`（多于一行 = 上一迭代未收口就开新）。
 3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且 `deliveries/<链接>` 文件存在。
 4. **closed 有归档**：每个 `closed` 行须有 `iterations/ITER-NNNN/` 归档快照；归档 VERIFY 含 `Evidence Index` 的新口径迭代，还须有对应 `evidence/` record，ID/日志/字节/SHA-256 全部通过只读校验。
 5. **路线项对账**：`MILESTONE.md` 拆分路线图各路线项状态与其绑定迭代的实际台账状态一致（见 `20_Workflow_Lifecycle/milestone-schema.md §5.3`）。
-6. **知识文件夹漂移自检**（条件不变量：**项目采用 `.ai/project/` 知识文件夹时适用**；仍单文件 `.ai/PROJECT.md` 的项目本条 N/A）：`.ai/project/` 内容与现实无脱节——近期各 `iterations/ITER-NNNN/CHANGELOG.md` 的 delta 都已按主题折进对应 topic 文件、无被取代结论残留、无"该建未建"的主题缺口；脱节先暴露、当场补折，不放任"陈旧的完整"（`project-digest-schema.md §2` 最大风险）。先由 state auditor 校验 `.ai/project/fold-state.json`：历史 receipt 持续核归档 changelog，最新 receipt 再核当前 topic hash；旧 topic hash 是折叠时快照，不能因后续正常更新同一 topic 而误报。再做人工 / prompt 级语义抽查——receipt 只能证明哪些文件参与折叠，不能证明内容理解正确。推荐唤 `62_Extension_Agents/drift-check.md` 帮手 fresh-context 隔离执行、起不了则主线自查并如实标注（G2）；折叠契约见 `project-digest-schema.md §6`。
 
-前 5 条是台账↔产物↔交付↔证据的对账，第 6 条是知识文件夹↔现实的对账。确定性部分先运行 `$BUTLER/scripts/audit-project-state.py --project-root "$PROJECT_ROOT"`，语义部分再按上方口径检查。这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）。
+这 5 条都是台账↔产物↔交付↔证据的对账。确定性部分先运行 `$BUTLER/scripts/audit-project-state.py --project-root "$PROJECT_ROOT"`，语义部分再按上方口径检查。这套不变量同时是收口的最后一步（见 `20_Workflow_Lifecycle/iteration-schema.md §5.5`）。
 
 ## 7. 与其他规则的关系
 
 - 本规则负责"何时写、写什么、写到哪"。
 - `handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的格式契约。
-- `project-digest-schema.md` 负责项目全貌产物（`.ai/project/` 知识文件夹契约；采用前的单文件 `.ai/PROJECT.md` 属未迁移暂态、冷启动第一读）的格式；其前滚维护在收口步以两态触发（`20_Workflow_Lifecycle/iteration-schema.md §5.5` 步④），漂移由本节第 6 不变量兜底。
 - `20_Workflow_Lifecycle/progressive-handoff.md` 负责"长链路任务何时拆分与接力"。
 - `role-switch.md` 负责角色切换时的职责边界。

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import subprocess
@@ -18,7 +17,6 @@ EVIDENCE_PATH_RE = re.compile(
     r"\.ai/iterations/(ITER-[0-9]{4,})/evidence/([a-z0-9][a-z0-9._-]{0,63})/record\.json"
 )
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
-SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.ASCII)
 SHARD_RE = re.compile(r"^(ITER|MILE)-([0-9]{6,})-([0-9]{6,})\.md$", re.ASCII)
 
 
@@ -179,7 +177,6 @@ class Audit:
             verify_path = archive / "VERIFY_REPORT.md"
             if verify_path.is_file() and "# Evidence Index" in verify_path.read_text(encoding="utf-8"):
                 self.audit_evidence(iteration, verify_path)
-                self.audit_fold_receipt(iteration, archive)
         return current, rows
 
     def audit_evidence(self, iteration: str, verify_path: Path) -> None:
@@ -235,40 +232,6 @@ class Audit:
             self.add(result.returncode == 0, f"{iteration}.evidence_hashes", detail or f"exit={result.returncode}")
         else:
             self.add(False, f"{iteration}.evidence_hashes", "证据工具或归档目录不存在")
-
-    def audit_fold_receipt(self, iteration: str, archive: Path) -> None:
-        state_path = self.root / ".ai" / "project" / "fold-state.json"
-        try:
-            state = json.loads(state_path.read_text(encoding="utf-8"))
-            if state.get("schema_version") != 1:
-                raise AuditError("fold-state schema_version 必须为 1")
-            receipts = state["receipts"]
-            if not isinstance(receipts, dict) or not receipts:
-                raise AuditError("fold-state receipts 为空")
-            receipt = receipts[iteration]
-            latest_iteration = max(receipts)
-            changelog = receipt["changelog"]
-            changelog_path = self.root / changelog["path"]
-            expected_path = archive / "CHANGELOG.md"
-            if changelog_path.resolve() != expected_path.resolve():
-                raise AuditError("receipt changelog 路径不是本迭代归档")
-            if hashlib.sha256(changelog_path.read_bytes()).hexdigest() != changelog["sha256"]:
-                raise AuditError("receipt changelog SHA-256 不符")
-            topics = receipt["topics"]
-            if not isinstance(topics, list) or not topics:
-                raise AuditError("receipt topics 为空")
-            for topic in topics:
-                path = self.root / topic["path"]
-                if path.resolve().parent != (self.root / ".ai" / "project").resolve():
-                    raise AuditError(f"topic 路径越界：{topic['path']}")
-                if not isinstance(topic.get("sha256"), str) or SHA256_RE.fullmatch(topic["sha256"]) is None:
-                    raise AuditError(f"topic SHA-256 格式非法：{topic['path']}")
-                if iteration == latest_iteration and hashlib.sha256(path.read_bytes()).hexdigest() != topic["sha256"]:
-                    raise AuditError(f"topic SHA-256 不符：{topic['path']}")
-            mode = "current" if iteration == latest_iteration else "historical-snapshot"
-            self.add(True, f"{iteration}.fold_receipt", f"topics={len(topics)}, mode={mode}")
-        except (OSError, KeyError, TypeError, json.JSONDecodeError, AuditError) as error:
-            self.add(False, f"{iteration}.fold_receipt", str(error))
 
     def audit_milestones(self, iteration_rows: dict[str, list[str]]) -> None:
         path = self.root / ".ai" / "MILESTONES.md"

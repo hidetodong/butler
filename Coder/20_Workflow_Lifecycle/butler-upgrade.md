@@ -50,7 +50,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" plan \
 `.ai/PROJECT.md → .ai/project/` 是语义重组，继续保持 opt-in：
 
 - **暂缓**：执行 `apply ... --split defer`。原单文件逐字保留，其余机械动作继续。
-- **现在迁**：先运行 `plan ... --split now`。真实待拆时程序返回 `manual-split` 且零写入；由有人场次按 `project-digest-schema.md` 完成语义路由，再重新 plan/apply。
+- **现在迁**：先运行 `plan ... --split now`。真实待拆时程序返回 `manual-split` 且零写入。**该路径自 ITER-0112 起已无目标形态**——知识文件夹机制已退役，`--split now` 只应出现在跨旧版本的历史升级链里；新项目遇到此状态应选 `defer`。
 
 目标文件夹部分成形、旧单文件与 `00_INDEX.md` 同时存在都属于冲突，程序不猜测、不覆盖。
 

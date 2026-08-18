@@ -1,0 +1,32 @@
+=== AC2 · capabilities.md 22 小节迁出核查留痕 ===
+[OK]   变更流列出 22 个小节（计 22）
+[OK]   无真源判断的迁出落点已写明
+[OK]   迁出条目确实落在 .ai/debt.md
+[OK]   被指为真源的文件存在：Coder/README.md
+[OK]   被指为真源的文件存在：workflows/registry.json
+[OK]   被指为真源的文件存在：docs/workflows.md
+[OK]   被指为真源的文件存在：docs/codex-compatibility.md
+[OK]   被指为真源的文件存在：migrations/manifest.json
+[OK]   被指为真源的文件存在：HUMAN_GUIDE.md
+[OK]   被指为真源的文件存在：README.md
+[OK]   被指为真源的文件存在：CONTRIBUTING.md
+[OK]   被指为真源的文件存在：SECURITY.md
+[OK]   被指为真源的文件存在：Coder/20_Workflow_Lifecycle/versioning-schema.md
+[OK]   被指为真源的文件存在：Coder/30_Quality_Gate/testing-strategy.md
+=== AC9 · MILESTONE §5.4 的 R14 / R15 交接登记 ===
+[OK]   §5.4 存在交接登记条目
+[OK]   登记含：`[split]` 标签
+[OK]   登记含：`--split defer|now`
+[OK]   登记含：空种子例外
+[OK]   登记点名归属 R14
+[OK]   登记点名归属 R15
+[OK]   现状核对：[split] 标签仍在 migration-schema.md
+[OK]   现状核对：--split 参数仍在 upgrade.py
+[OK]   现状核对：project-knowledge-shape-valid 前置仍在
+[OK]   现状核对：mcv-deployment.md 空种子理由已删并留退役说明
+=== AC10 · 交付总结记录两项信息损失 ===
+[OK]   损失一：折叠回执历史不可再机器验证
+[OK]   损失二：论证的是无证据被消费
+[OK]   损失二写明确定性数据要等 R11
+
+PROXY-CLEAN

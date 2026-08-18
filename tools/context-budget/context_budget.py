@@ -55,9 +55,8 @@ RECEIPT_FIELDS = {
 DUPLICATE_CANDIDATES = (
     "Coder/README.md",
     "Coder/architecture-overview.md",
-    ".ai/project/architecture.md",
     ".ai/project/invariants.md",
-    ".ai/project/debt.md",
+    ".ai/debt.md",
 )
 CONTEXT_HEADER = ("上下文", "目的", "语义所有权", "明确不负责", "首要真源")
 GLOSSARY_HEADER = (
@@ -245,8 +244,8 @@ def check_project(root: Path) -> CheckResult:
         errors.append("L1 is missing batch or no-recursion guard")
 
     glossary_rows = _table(glossary, GLOSSARY_HEADER)
-    if len(glossary_rows) != 20:
-        errors.append(f"L2 term count={len(glossary_rows)}, expected 20")
+    if len(glossary_rows) != 19:
+        errors.append(f"L2 term count={len(glossary_rows)}, expected 19")
     concepts = [row[0] for row in glossary_rows]
     if len(set(concepts)) != len(concepts):
         errors.append("L2 concepts must be unique")

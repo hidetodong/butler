@@ -8,7 +8,7 @@
 
 `.ai/` 是 Claude Code 与 Codex 共用的项目状态层。开始任务时按以下顺序恢复，不依赖对话记忆：
 
-1. 读 `.ai/project/00_INDEX.md` 拿项目地图，再按任务钻相关主题。
+1. 读 `.ai/debt.md` 拿长期欠债与硬约束。
 2. 读 `.ai/MILESTONES.md`，确认当前里程碑。
 3. 读 `.ai/ITERATIONS.md`，确认当前迭代和状态。
 4. 读 `.ai/task-state.md`，恢复当前阶段。

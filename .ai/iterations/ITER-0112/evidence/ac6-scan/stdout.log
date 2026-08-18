@@ -1,0 +1,16 @@
+非白名单命中:
+
+AC6-CLEAN
+--- .ai/project 路径引用去向 ---
+OK   Coder//README.md -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   Coder//40_Context_Management/prd-status.md -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   Coder//40_Context_Management/prd-split.md -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   Coder//40_Context_Management/workspace-scope-schema.md -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   tools//workspace-scope/tests/test_workspace_scope.py -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   tools//context-budget/tests/test_context_budget.py -> .ai/project/invariants.md
+OK   tools//context-budget/context_budget.py -> .ai/project/invariants.md
+OK   templates//hooks/tests/test_workspace_scope_contract.py -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   templates//hooks/tests/test_prd_split_status_contract.py -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   templates//hooks/tests/test_workspace_scope_gate.py -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   templates//hooks/lib/workspace_scope.py -> .ai/project/workspaces.md (部署项目侧文件, butler 单包仓无此文件)
+OK   scripts//test-butler-upgrade.py -> .ai/project/partial.md (测试夹具路径, 非真实文件)

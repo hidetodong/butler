@@ -50,6 +50,6 @@ L3 保存完整历史与冲突证据，不进入普通冷启动、单术语或�
 
 - R1 冻结范围与验收：`.ai/iterations/ITER-0107/AC_LIST.md`
 - R1 人类交付摘要：`deliveries/ITER-0107-domain-model-boundaries.md`
-- 当前已知语义债务：`.ai/project/debt.md`
+- 当前已知语义债务：`.ai/debt.md`
 
 历史证据只读；新的执行定义仍回到各上下文真源修改，不复制回本地图或术语表。

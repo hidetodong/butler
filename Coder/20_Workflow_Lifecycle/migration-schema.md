@@ -42,7 +42,7 @@ scope: 已部署项目升级时的"迁移配方"格式、台账位置、typed �
 每个迁移步骤必须以下列标签之一起头，并在 manifest 登记对应现代 action。所有标签**必须幂等**：先校验起始态，满足才动，重复执行不重复改。
 
 - `[rename]`：重命名 `.ai/` 下过时文件。判据=旧名存在才改；git 项目走 `git mv` 保血缘。
-- `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。**升级执行语义**——本标签在 `/butler:upgrade` 里是 **opt-in、非自动**（执行器先问"现在迁 / 继续单文件以后再迁"，选后者则跳过、两态并存继续支持），落地细则见 `butler-upgrade.md §6.5`；本条只定标签语义，执行落地不在此重述。
+- `[split]`：把 `.ai/` 下的**单文件产物按主题拆分为知识文件夹**（首例 `PROJECT.md → .ai/project/`：按 `40_Context_Management/project-digest-schema.md` 主题集，把单文件内容路由进 `00_INDEX.md` + 各主题文件）。判据=旧单文件存在**且**目标文件夹尚未成形（无 `00_INDEX.md`）才动；git 项目拆出的文件走 `git add`（内容重组非纯改名，`git mv` 不适用，血缘靠 commit 说明追溯）。**冲突即停**：目标文件夹已部分成形、或旧单文件已被手工改得与预期不符（目标项目漂移），**不覆盖**、停下报告差异、退回用户 ACK（同 §5 漂移即停）——绝不把用户手写内容拆丢。**升级执行语义**——本标签在 `/butler:upgrade` 里是 **opt-in、非自动**（执行器先问"现在迁 / 继续单文件以后再迁"，选后者则跳过、两态并存继续支持），落地细则见 `butler-upgrade.md §6.5`；本条只定标签语义，执行落地不在此重述。**退役标注（ITER-0112）**：知识文件夹机制已退役，本标签自 v4.0.0 起不再产生新实例；保留定义仅为让 v1.6.0–v2.2.0 的历史配方与 `manifest.json` 保持一致、不断跨版本升级链。动作类型的正式改造见 MILE-0016 R14。
 - `[add-field]`：给 `.ai/` 下 schema 文件补新增的必填字段。判据=字段缺失才补；草稿值交用户 ACK。
 - `[regen-entrypoints]`：两模板、rule-card、路径或版本契约变化时，调用 `scripts/render-project-entrypoints.py` 同时生成/更新 CLAUDE.md 与 AGENTS.md。判据=两份管理区各自 user-managed 内容逐字保留，管理区外原文不动；重复/残缺 marker 冲突即停。**漏判防线**：区间内改过 `rule-card.md`、任一入口模板或 renderer 时，配方必须含本步。
 - `[regen-claude]`：历史兼容标签。消费旧配方时不再只重建 CLAUDE.md，而是按 `[regen-entrypoints]` 执行，使老项目顺带补齐 AGENTS.md；新配方一律写 `[regen-entrypoints]`。

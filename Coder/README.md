@@ -91,7 +91,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
     role-switch.md
     handoff-spec.md
     sidework-receipt.md
-    project-digest-schema.md
     references-schema.md
     workspace-scope-schema.md
     inbox-schema.md
@@ -112,8 +111,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /62_Extension_Agents
     overview.md
     independent-review.md
-    knowledge-fold.md
-    drift-check.md
 
   /65_Extension_Dangerous
     dangerous-engine.md
@@ -134,7 +131,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）+ 供 opt-in 模式共享的定量熔断纪律（`bounded-convergence`）。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
 - `50_Extension_Ideation/`：Butler 内建但 opt-in 的 Explore / Ideation 模块；用户主动探索或接受带具体阻塞理由的建议后启用，位于 P1→P5 之外。
-- `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册四帮手：复核（`independent-review`，接 P5）、更新说明（`knowledge-fold`，收尾把 delta 折进 `.ai/project/`、只写该目录）、查过时（`drift-check`，冷启动/收口抽查说明过时、只读）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
+- `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册两帮手：复核（`independent-review`，接 P5）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
 - `65_Extension_Dangerous/`：仅在显式 `/butler:dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
 - `70_Extension_Preference/`：实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/butler:dangerous`**；只学真人选择，外置存储、与本仓库解耦。
 - `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
@@ -165,11 +162,11 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 
-冷启动 / clean-slate 重启时，先读项目**状态全貌产物**（系统现在整体是什么）建立认知——两态：采用 `.ai/project/` 知识文件夹的项目先读 `.ai/project/00_INDEX.md` 拿地图、按需钻相关主题；仍单文件的项目读 `.ai/PROJECT.md`。再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节（含两态第一读与 digest-and-point 读纪律）见 `40_Context_Management/context-persistence.md §6`。
+冷启动 / clean-slate 重启时，先读 `.ai/debt.md`（还欠什么、哪些边界不能碰）建立认知，再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节见 `40_Context_Management/context-persistence.md §6`。面向人的项目全貌摘要已于 ITER-0112 退役，新形态由 MILE-0016 R3 决定。
 
 其中：
 
-- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/`（含空 `.ai/project/` 知识文件夹种子，MILE-0003 R6 起——新项目采用文件夹态全貌产物）、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
+- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/`、`deliveries/` 与 `origin/`（人类原始概念输入收件箱，AI 只读，与 AI 处理注入的 `.ai/references/` 区分）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
 - `tools/state-ledger/` 负责 ITER/MILE 双台账的确定性热冷迁移、固定数字区间分片与定向 lookup：根热表与 `.ai/state-index.json` 都有界，index 只保存固定路由公式；`.ai/history/{iterations,milestones}/` 的每个有界冷片由同名 `.json` 独立记录范围/路径/数量/哈希。身份至少四位并按数字部分排序。
 - `tools/decision-map/` 是 Explore 的本地确定性状态 Module：每 Map 单一原子 `state.json`，依赖 DAG、派生 Frontier、Claim Lease、revision 与 operation receipt 都隐藏在 `inspect/plan/apply/verify` Interface 后；它不新增 Explore 入口，不做清晰度/大小分类，也不拥有 Milestone/Iteration promotion。
 - `tools/decision-work/` 是 Decision Map 的不可变决策工作 sidecar：一个 `inspect/plan/apply/verify` Interface 统一 research / prototype / grilling / task，只有 Research 求证可显式并行，任何 Result 都须协调器显式 absorb 才能经 Decision Map resolve；它不启动 agent、不写交付期真源。
@@ -203,7 +200,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的固定结构与派生视图契约；`tools/handoff/handoff.py` 从权威状态执行 inspect/sync/check，receipt 陈旧时冷启动先重建再读取。
 - `40_Context_Management/sidework-receipt.md` 负责用户主动发起的旁路工作回钩：旁路执行者在 `.ai/sidework/` 写一份短回执并返回路径，用户显式交给主 Agent 定向续接；不建立模型审批状态，不自动扫描，也不允许旁路执行者改主线权威状态。
-- `40_Context_Management/project-digest-schema.md` 定义 `.ai/project/` 知识文件夹（项目常驻全貌知识地图、状态取向、整体积分）的格式契约——`00_INDEX` 入口、主题边界、digest-and-point、收口折叠与 `fold-state.json` 机器 receipt；receipt 只证文件/hash 参与，不替代语义漂移复核。它是冷启动第一读。
 - `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平资料保持单文件；PRD 采用项目级需求总索引 + 日期化稳定 `prd_id` + 单需求模块索引 / 无损切片 / 独立 `.archive/vN/` 的两层集合结构。它区分全新需求、新版、重复与身份歧义，并接通多 PRD 钉版、legacy 迁移、split/status、确定性 update 与范围门禁。
 - `40_Context_Management/workspace-scope-schema.md` 定义项目工作区地图与需求级代码范围：`.ai/project/workspaces.md` 用稳定 workspace key 映射当前路径并声明共享/生成路径 owner，单需求 PRD 以 primary/supporting/read-only/excluded 四类集合声明边界；模块只能收窄，TECH_PLAN 写计划、PreToolUse 与 diff 对账共用同一钉版解析器，越界先走扩张审查。
 - `40_Context_Management/inbox-schema.md` 定义需求收件箱数据合同：`.ai/INBOX.md` 以稳定 `SRC-NNNN`、observed/processed 双 SHA-256、封闭状态和独立派生关系表追踪文件/对话/外部文档；同源变化、跨源重复和失败均 fail-closed，`origin/` 始终用户自管零写入。
@@ -214,7 +210,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `40_Context_Management/prd-update.md` 是指定 `prd_id` 的**确定性改版动作层**：语义层确认最终模块/认亲/三态处置，`tools/prd-update/` 负责零写 plan、先冻后更的整 collection 事务、持久 receipt、幂等、verify/rollback；不自动改 active/closed 工作。
 - `50_Extension_Ideation/ideation-engine.md` 是统一探索真源：显式入口和用户主动探索语义直接进入，Standard 模式只能先 suggest 并等待同意；结构化持久状态统一委托 `tools/decision-map/`，Decision Map 在探索期拥有决策状态，显式 promotion 后从 Iteration P1 接回交付并降为参考，不属于普通任务的必经主线。R5 dogfood 进一步确认 Router 选择本身零写、轻量 Ideation 不自动持久化，结果与局限见 `docs/explore-dogfood-r5.md`。
 - `60_Extension_CodeReview/review-engine.md`：P5 默认同上下文简评；多维评审含「领域变更」一维（仅命中领域治理面时生效，口径正文在 `30_Quality_Gate/review-standard.md §5`，本文件只登记）；审查证据强度明确分 `reported/captured/reproduced`，未重跑不得称复现。独立复核由 `/review` 或 project-config `independent_review=true` 触发，fresh-context 逐 AC 核对（refute 即阻断）。
-- `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `knowledge-fold.md` / `drift-check.md` / `decision-work.md` 分别是复核 / 更新说明 / 查过时 / Decision Work 四帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源、更新说明的折叠契约回指 `40_Context_Management/project-digest-schema.md §6`、查过时的漂移核对回指 `context-persistence.md` 第 6 不变量，Decision Work 的 Task/Result/absorb 机器合同回指 `tools/decision-work/README.md`。各帮手文件回指对应真源不重写，并共同遵守 overview §3。
+- `62_Extension_Agents/overview.md` 是帮手名册总述（帮手是什么 + 通用规矩 G1–G4 唯一真源 + 名册表 + 触发式加载）；`independent-review.md` / `decision-work.md` 分别是复核 / Decision Work 两帮手的完整定义。名册**触发式加载、不进冷启动读序**；复核的共享审查流程仍以 `60_Extension_CodeReview/review-engine.md` 为真源，Decision Work 的 Task/Result/absorb 机器合同回指 `tools/decision-work/README.md`。各帮手文件回指对应真源不重写，并共同遵守 overview §3。
 - `10_Domain_Stack_Profiles/` 只在识别到对应技术栈或工程形态后启用，不默认视为通用硬约束。
 
 ## 使用原则

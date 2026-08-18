@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0112 交付总结 · ITER-0112 · 退役项目知识文件夹与折叠机制（MILE-0016 R1）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0112 · 退役项目知识文件夹与折叠机制（MILE-0016 R1）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0112</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-18</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p><code>.ai/project/</code> 这个「项目知识文件夹」当初是想给新会话一份项目全貌，靠每次迭代收口时把变更「折」进去来维护。半年下来，里面有的文件一直准，有的已经烂到不能读。这一轮先把烂掉的那部分连同折叠机制一起拆掉，把因此断掉的指针全部改到自洽，并且当场登记清楚哪些活儿留给了后面的路线项。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul><li>删掉六份文件与两个帮手：<code>.ai/project/</code> 下的 <code>00_INDEX.md</code> / <code>identity.md</code> / <code>constraints.md</code> / <code>architecture.md</code> / <code>fold-state.json</code> 五份，加上定义折叠结构的 <code>Coder/40_Context_Management/project-digest-schema.md</code>；帮手侧删掉 <code>knowledge-fold.md</code>（把迭代变更折进知识文件夹）与 <code>drift-check.md</code>（查知识文件夹有没有过时），帮手名册从四个减到两个。</li><li>删 <code>capabilities.md</code>（27KB、22 个小节）前逐节核过一遍，不是整文件一删了事：22 节全部在仓里别处能找到更准的原文，核查结论逐条写进了本迭代的变更流。唯一一条别处没有的判断——「升级器从没在真实已部署项目上跑过」——已迁进 <code>.ai/debt.md</code>，没有随文件一起消失。</li><li>保留 <code>invariants.md</code> 与 <code>frontier.md</code> 原位不动，只把其中三条因本轮删除而变成假话的不变量改对。这两份一直准，留给 MILE-0016 R3 的替代品设计接手。</li><li><code>debt.md</code> 从 <code>.ai/project/</code> 迁到 <code>.ai/debt.md</code>，内容原样。</li><li>解除两处收口仪式对折叠的强制：迭代收口从四步必做变成「前三步必做、第四步自检」，里程碑收口从四步减到三步；冷启动一致性自检从 6 条不变量减到 5 条。</li><li>拆掉机器侧的知识文件夹校验与夹具：状态审计脚本里的折叠回执检查、上下文预算的重复真源候选表、Codex 基线脚本的冷启动读序断言，以及相关单元测试。</li><li>34 处活引用改到自洽，包括仓根 <code>AGENTS.md</code>、部署入口模板、<code>/butler:init</code> 命令与 skill、<code>Coder/README.md</code> 的目录结构与读取顺序。</li></ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul><li><strong>冷启动第一读换了目标</strong>：以前是 <code>.ai/project/00_INDEX.md</code>，现在是 <code>.ai/debt.md</code>（长期欠债与硬约束）。这是过渡措辞，新读序的正面定义归 R2。</li><li><strong>部署新项目不再自动建 <code>.ai/project/</code> 空目录</strong>。老项目磁盘上已经建出来的空目录本轮不清理，归 R15 的迁移配方交代。</li><li><strong>收口时少一步</strong>：不用再折叠知识文件夹，也不用再跑漂移检查。</li><li><strong><code>.ai/project/</code> 目前只剩两个文件</strong>（<code>invariants.md</code>、<code>frontier.md</code>），处在半拆状态，等 R3 给它们定新落点。</li></ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul><li>删除文件 9 个：<code>.ai/project/</code> 下 5 个、<code>Coder/62_Extension_Agents/</code> 下 2 个、<code>Coder/40_Context_Management/</code> 下 1 个、<code>.ai/project/debt.md</code> 迁位 1 个。</li><li>修改规则文件 16 份，其中 <code>iteration-schema.md</code> 与 <code>milestone-schema.md</code> 动了收口仪式步骤编号、<code>context-persistence.md</code> 动了冷启动读序与不变量清单。</li><li>修改机器侧 6 处：<code>scripts/audit-project-state.py</code> 及其测试、<code>tools/context-budget/</code> 及其测试、<code>scripts/verify-codex-foundation.sh</code>、<code>Coder/domain-glossary.md</code>（术语从 20 条减到 19 条，机器校验的精确条数同步改）。</li><li>修改入口 4 份：<code>AGENTS.md</code>、<code>templates/AGENTS.md.template</code>、<code>.claude/commands/butler/init.md</code>、<code>plugins/butler/skills/butler-init/SKILL.md</code>。</li><li><code>migration-schema.md</code> 的 <code>[split]</code> 标签<strong>没有删</strong>，只加了退役标注——历史迁移配方 v1.6.0 到 v2.2.0 引用了它，配方清单有一致性校验，删了会红。</li><li>未触碰升级器 <code>upgrade.py</code> 的动作类型表与 CLI 参数，未改双台账结构，未切版发布。</li></ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul><li>10 条验收标准全部达成：7 条有机器证据（<code>ac1-files</code> / <code>ac3-roster</code> / <code>ac4-rituals</code> / <code>ac5-schema-gone</code> / <code>ac6-scan</code> / <code>ac7-verify-ci</code> / <code>ac8-audit-final</code>，全部 passed），3 条为人读核对（迁出核查留痕、交接登记、本节两项信息损失）。</li><li>完整 <code>scripts/verify-ci.sh</code> 退出码 0；状态审计退出码 0，除「工作树有未发布改动」「tag 不指向 HEAD」这两条发布态亮牌外无漂移。</li><li>全仓检索 <code>project-digest</code> / <code>knowledge-fold</code> / <code>drift-check</code> / <code>fold-state</code> 在活跃文件中零命中，历史归档按纪律保留不追改。剩余的 <code>.ai/project</code> 路径字样逐条人读过，都指向 <code>invariants.md</code>、<code>frontier.md</code>，或部署项目侧的 <code>workspaces.md</code>（butler 是单包仓，本仓没有这个文件，属正常）。</li><li>执行中撞到一次验收标准自相矛盾并按规则 amend：原 AC1 要求 <code>invariants.md</code> 一字不动，但里面有三条不变量在删除后变成假话，留着正违背本里程碑要消灭的「陈旧的完整」。AC1 收窄为只允许改这三条，产物退回 draft 重新 ACK 后继续。</li></ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul><li><strong>折叠回执的历史不可再机器验证</strong>。<code>fold-state.json</code> 记录了哪些迭代参与过折叠、每次折叠的内容 hash，删掉之后这段历史只剩 git 记录，没有工具能再校验它。判断是这段历史本身没有消费者——它唯一的读者就是已经一起删掉的漂移检查。</li><li><strong>本轮论证的是「没有证据表明它被读过」，不是「已证明它从未被读过」</strong>。半年里没有任何一次决策能追溯到读知识文件夹，也没有任何工具记录过对它的读取——但没有读取记录不等于没有读取。真正的确定性数据要等 R11 的使用监视器上线，那之前这个判断建立在缺席证据上，请当作有一定不确定性的结论看。</li><li><strong>半拆状态不能拖太久</strong>。冷启动第一读现在处在「不再指知识文件夹、新读序还没正式定义」的过渡措辞上，<code>.ai/project/</code> 也只剩两个孤立文件。R2 定读序、R3 定全貌产物落点；这两项若迟迟不开，这个中间态会变成事实上的常态，比拆干净或者不拆都糟。</li><li><strong><code>[split]</code> 标签与 <code>--split</code> 参数仍在</strong>，指向的机制已经退役。标签扩展归 R14，v4.0.0 迁移配方归 R15，两处都已在里程碑演进记录里登记现状与归属。</li></ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul><li><code>.ai/iterations/ITER-0112/CONCEPT.md</code></li><li><code>.ai/iterations/ITER-0112/AC_LIST.md</code></li><li><code>.ai/iterations/ITER-0112/TECH_PLAN.md</code></li><li><code>.ai/iterations/ITER-0112/VERIFY_REPORT.md</code></li><li><code>.ai/iterations/ITER-0112/CHANGELOG.md</code></li><li><code>.ai/iterations/ITER-0112/evidence/</code></li></ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

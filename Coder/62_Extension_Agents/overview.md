@@ -21,11 +21,9 @@ scope: butler 派出去干活的帮手（临时子 agent）的名册、通用规
 | 帮手 | 定义文件 | 干嘛的 | 何时被叫起 | 只准碰 | 状态 |
 |---|---|---|---|---|---|
 | **复核** | `independent-review.md` | 拿验收标准挨条核对写得对不对、挑错拦收工 | 交付验证阶段（手动 `/review` 或项目设了自动） | 只看（读 + 搜），不改代码 | ✅ 本轮立 |
-| **更新说明** | `knowledge-fold.md` | 把这次改动折进项目说明文件夹（`.ai/project/`） | 每次收工、且这次动了结构 | 只改 `.ai/project/` | ✅ 本轮立 |
-| **查过时** | `drift-check.md` | 对着真实代码查项目说明有没有过时 | 冷启动 / 收工时抽查 | 只看，不改 | ✅ 本轮立 |
 | **Decision Work** | `decision-work.md` | 对显式领取的 Decision 做 research / prototype / grilling / task，并返回不可变结果 | Explore 中 prepare Task Packet 后 | 隔离工作；不写目标项目或 Map | ✅ 本轮立 |
 
-> 四帮手均有完整定义；接线见各定义——复核接 P5、更新说明接收口步④折叠、查过时接冷启动 / 收口第 6 不变量，Decision Work 只接 opt-in Explore 的显式 prepare/record/absorb 链。
+> 两帮手均有完整定义；接线见各定义——复核接 P5，Decision Work 只接 opt-in Explore 的显式 prepare/record/absorb 链。更新说明（`knowledge-fold`）与查过时（`drift-check`）随知识文件夹机制于 ITER-0112 退役。
 
 ## 3. 通用规矩（所有帮手都适用 · 唯一真源）
 

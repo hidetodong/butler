@@ -33,6 +33,5 @@ scope: L2 高风险术语的上下文限定、白话定义、语义所有者与�
 | Dangerous Mode | 宿主运行时 | 用强制自审和审计替代人工把关的持久自治外壳 | 宿主运行时 | `Coder/65_Extension_Dangerous/dangerous-engine.md` | 文件权限扩大、跳过审查、Convergence Loop 本身 |
 | Convergence Loop | 宿主运行时 | 在 P4 常驻纠错契约上显式开启的高强度纠错与定量熔断升档 | 宿主运行时 | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` | Dangerous Mode、普通 P4、harness 循环 |
 | Handoff | 知识连续性 | 从权威状态生成并可验鲜的当前会话断点入口 | 知识连续性 | `Coder/40_Context_Management/handoff-spec.md` | 权威状态、完整项目全貌、交付总结 |
-| Project Knowledge Folder | 知识连续性 | 按主题保存项目当前全貌的常驻知识地图，收口时由变更增量折叠 | 知识连续性 | `Coder/40_Context_Management/project-digest-schema.md` | 迭代历史、handoff、规则算法真源 |
 
 同名 `active` 与 `pass` 必须连同括号内命名空间使用，不能用裸词合并定义。需要完整历史、冲突证据或术语演进时，沿 `domain-model.md` 的 L3 入口分段审计。

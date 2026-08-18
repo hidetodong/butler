@@ -20,7 +20,7 @@
 
 `.ai/` 是 Butler 的宿主无关状态层。若项目已经部署 Butler，按以下顺序恢复：
 
-1. `.ai/project/00_INDEX.md`（若项目仍是旧单文件形态，则读 `.ai/PROJECT.md`）
+1. `.ai/debt.md`（长期欠债与硬约束）
 2. `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md`
 3. `.ai/task-state.md` 与 `.ai/02_SESSION_HANDOFF.md`
 4. 当前阶段需要的 `.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`、`.ai/VERIFY_REPORT.md`

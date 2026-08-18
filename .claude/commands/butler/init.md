@@ -23,7 +23,7 @@ argument-hint: "[留空=部署当前目录项目]"
 按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md` 顺序执行全部章节：
 
 1. **§1 侦察**：扫描技术栈、项目结构、命中 profile，汇报摘要。
-2. **§2 基础设施展开**：创建 `.ai/`、`deliveries/`、`origin/`，以及 `.ai/project/` 空知识文件夹种子。
+2. **§2 基础设施展开**：创建 `.ai/`、`deliveries/`、`origin/`。
 3. **§3 规则注入**：运行 `python3 "$BUTLER_PATH/scripts/render-project-entrypoints.py" --target "$PROJECT_ROOT" --butler-root "$BUTLER_PATH"` 生成 `CLAUDE.md` + `AGENTS.md`。
 4. **§4 本地化适配**：生成只含人类可读差异的 `.ai/local-constraints.md`，并用驻留 project-config 工具生成安全默认 `.ai/butler.config.json`；profile 只写 JSON。
 5. **§5 Hook 注入**：拷贝 `$BUTLER_PATH/templates/hooks/`（除 `tests/`）到 `$PROJECT_ROOT/.claude/hooks/`，并配置 `.claude/settings.json`。

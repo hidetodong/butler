@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac3-roster",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC3"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "-c",
+      "ls Coder/62_Extension_Agents/ | wc -l && ! grep -qE \"knowledge-fold\\.md|drift-check\\.md\" Coder/README.md && echo README-CLEAN && grep -c \"本轮立\" Coder/62_Extension_Agents/overview.md"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:11:29.500Z",
+  "finished_at": "2026-08-18T07:11:29.510Z",
+  "duration_ms": 10,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 24,
+    "captured_bytes": 24,
+    "sha256": "1f10b5b258137e5772c4e2affe5d680473c88af87f8b85f2455776dc24c85a30",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

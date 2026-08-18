@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac2-ac9-ac10-proxy",
+  "iteration": "ITER-0112",
+  "ac_ids": [
+    "AC2",
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0112/ac2-ac9-ac10-proxy.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-18T07:31:39.392Z",
+  "finished_at": "2026-08-18T07:31:39.432Z",
+  "duration_ms": 40,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1644,
+    "captured_bytes": 1644,
+    "sha256": "5c95dee3bbbcf7d62d19db168f8c67e3089cedcb151bed69e93c7c98fc7dc37a",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
