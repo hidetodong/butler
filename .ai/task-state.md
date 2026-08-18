@@ -1,10 +1,10 @@
 # Task State
 
 - 当前迭代：无 active
-- 当前里程碑：无 active
-- 阶段：MILE-0015 已收口并随 v3.6.0 切版发布（台账 `current: none`，收口日期 2026-08-17）
-- 状态：五个路线项（ITER-0107～ITER-0111）全部 closed，快照与版本级交付已产出；v3.6.0 聚合本区间发布，`VERSION` / `CHANGELOG.md` / `migrations/v3.6.0.md` / manifest / README badge / Codex plugin 六处版本载体对齐，完整 CI 退出码 0，状态审计无漂移。
-- 下一动作：等用户指示。可选方向——① 推送 `main` 与 `v3.6.0` tag 到远端（github / origin 两个 remote）；② 开启下一个里程碑，运行时观测方向见 `.ai/milestone-backlog/butler-slim-down.md`（R5 留下的「衡量歧义减少」缺口就在这条）。
+- 当前里程碑：MILE-0016
+- 阶段：里程碑已开启，尚未开启承接迭代
+- 状态：候办 `butler-slim-down` 已提升为正式 MILE-0016，`.ai/MILESTONE.md` 整体覆写，台账置 active、`current: MILE-0016`，待办索引与草稿已原子移除。路线图按 schema 拍平为 13 个平级路线项（止血 R1–R4 / 重造 R5–R9 / 治根 R10–R13），三段严格串行。
+- 下一动作：开启 R1 承接迭代（退役 `.ai/project/` 知识文件夹 + 两个折叠帮手 + 解除收口仪式对折叠的强制），从 P1 走起。迭代号开启时按台账分配。
 
 # Goal Calibration
 
