@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac6-ac7-cleanup",
+  "iteration": "ITER-0113",
+  "ac_ids": [
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0113/ac6-ac7-cleanup.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-19T07:37:38.480Z",
+  "finished_at": "2026-08-19T07:37:38.552Z",
+  "duration_ms": 72,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 809,
+    "captured_bytes": 809,
+    "sha256": "c3aa2d02a758bc7e5ebb39a671f4a9efa3ebbb2a4ae40c499e1b4d64dd4e6e9e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

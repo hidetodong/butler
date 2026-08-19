@@ -1,0 +1,18 @@
+=== AC8 · rule-card 与读序块分工不互抄 ===
+[OK]   规则卡「派生视图」定性仅 1 处（计 1）
+[OK]   读序块未复述「派生视图」定性
+[OK]   读序块指向规则卡
+[OK]   规则卡指向宿主入口的读序块
+[OK]   读序步骤在块内
+[OK]   规则卡未列读序步骤
+=== AC11 · [regen-entrypoints] 登记 ===
+[OK]   §5.4 存在 R2 发布处置登记
+[OK]   登记含：templates/AGENTS.md.template
+[OK]   登记含：templates/CLAUDE.md.template
+[OK]   登记含：[regen-entrypoints]
+[OK]   登记含：R15
+=== AC12 · 交付记录覆盖面变化 ===
+[OK]   交付写明不是等价替换
+[OK]   交付写明结构断言是唯一兜底
+
+PROXY-CLEAN

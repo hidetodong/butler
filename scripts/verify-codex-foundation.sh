@@ -43,28 +43,20 @@ for text in \
   require_text "$AGENTS" "$text"
 done
 
-previous=0
-for path in \
-  ".ai/debt.md" \
-  ".ai/MILESTONES.md" \
-  ".ai/ITERATIONS.md" \
-  ".ai/task-state.md" \
-  ".ai/02_SESSION_HANDOFF.md" \
-  ".ai/CONCEPT.md" \
-  ".ai/AC_LIST.md" \
-  ".ai/TECH_PLAN.md" \
-  ".ai/VERIFY_REPORT.md"; do
-  current="$(line_of "$AGENTS" "$path")"
-  [[ -n "$current" ]] || fail "AGENTS.md 冷启动读序缺少：$path"
-  (( current > previous )) || fail "AGENTS.md 冷启动读序错误：$path"
-  previous="$current"
-done
+# 读序正文不在本脚本里另抄一份：内容与四处载体的一致性由
+# tools/context-budget/context_budget.py 的 order 投影校验与结构断言负责。
+# 这里只确认 Codex 入口确实带着读序块、且最终 Coder 真源步骤在块内收尾。
+begin_line="$(line_of "$AGENTS" '<!-- butler-context-order:begin -->')"
+end_line="$(line_of "$AGENTS" '<!-- butler-context-order:end -->')"
+[[ -n "$begin_line" ]] || fail "AGENTS.md 缺少冷启动读序块起始标记"
+[[ -n "$end_line" ]] || fail "AGENTS.md 缺少冷启动读序块结束标记"
+(( end_line > begin_line )) || fail "AGENTS.md 冷启动读序块标记顺序错误"
 
-current="$(line_of "$AGENTS" '最后按文件中的指针读取 `Coder/`')"
+current="$(line_of "$AGENTS" '按前四步给出的指针钻取工作区四件套')"
 [[ -n "$current" ]] || fail "AGENTS.md 冷启动读序缺少最终 Coder 真源步骤"
-(( current > previous )) || fail "AGENTS.md 的 Coder 真源步骤不在四件套之后"
+(( current > begin_line && current < end_line )) || fail "AGENTS.md 的 Coder 真源步骤不在读序块内"
 require_text "$AGENTS" "Coder/README.md"
-require_text "$AGENTS" '不要全量读取 `.ai/iterations/`'
+require_text "$AGENTS" '不全量读取 `.ai/iterations/`'
 
 for placeholder in '{{BUTLER_VERSION}}' '{{RULE_CARD_CONTENT}}' '{{BUTLER_PATH}}'; do
   require_text "$CODEX_TEMPLATE" "$placeholder"

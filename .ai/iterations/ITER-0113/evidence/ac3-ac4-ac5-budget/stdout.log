@@ -1,0 +1,21 @@
+=== AC5 · 体量上限与 metrics 实测 ===
+[OK]   仓库真实状态 context_budget.py check 退出码 0
+[OK]   order_bytes = 1194（上限 1400）
+[OK]   order_nonempty_lines = 6（上限 9）
+[OK]   order_pointers = 7（上限 10）
+[OK]   order_projections = 4，四处投影全部纳入校验
+=== AC3 · 投影失配指名到具体文件 ===
+[OK]   篡改 AGENTS.md → 诊断指名该文件，未连坐其他三处
+[OK]   篡改 Coder/README.md → 诊断指名该文件，未连坐其他三处
+[OK]   篡改 templates/AGENTS.md.template → 诊断指名该文件，未连坐其他三处
+[OK]   篡改 templates/CLAUDE.md.template → 诊断指名该文件，未连坐其他三处
+=== AC3 · 真源被改致四处同时失配 ===
+[OK]   改真源 → 四处投影全部报失配
+=== AC3 · 标记缺失 fail-closed ===
+[OK]   AGENTS.md 缺标记 → fail-closed 且诊断带文件名
+=== AC4 · 结构断言三条负例各自指名 ===
+[OK]   编号断开 → 诊断含 `order steps must be`
+[OK]   某步无 .ai/ 路径 → 诊断含 `has no .ai/ pointer`
+[OK]   抽掉锚点 → 诊断含 `missing anchor`
+
+BUDGET-CLEAN

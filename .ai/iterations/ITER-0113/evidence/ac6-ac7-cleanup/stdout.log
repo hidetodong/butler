@@ -1,0 +1,16 @@
+=== AC6 · codex 基线脚本不再自抄读序 ===
+[OK]   verify-codex-foundation.sh 退出码 0
+[OK]   旧硬编码路径已删：.ai/MILESTONES.md
+[OK]   旧硬编码路径已删：.ai/ITERATIONS.md
+[OK]   旧硬编码路径已删：.ai/task-state.md
+[OK]   旧硬编码路径已删：.ai/CONCEPT.md
+[OK]   旧硬编码路径已删：.ai/VERIFY_REPORT.md
+[OK]   改为校验读序块起始标记
+[OK]   改为校验读序块结束标记
+=== AC7 · 过渡措辞按半清理 ===
+[OK]   Coder/40_Context_Management/context-persistence.md 无 R2 措辞
+[OK]   Coder/40_Context_Management/handoff-spec.md 无 R2 措辞
+[OK]   Coder/40_Context_Management/context-persistence.md 保留 R3（全貌产物）那半
+[OK]   Coder/40_Context_Management/handoff-spec.md 保留 R3（全貌产物）那半
+
+CLEANUP-CLEAN

@@ -42,7 +42,7 @@ P3 方案准入以 `tech-plan-schema.md` 为唯一真源：TECH_PLAN 必须检�
 
 Claude/Codex 原生 Goal/Task 只做可重建薄投影（objective/state/reason/next），项目 `.ai/` 永远优先，宿主 complete 不反写。能力不存在/失败/未知时只靠 task-state/handoff 继续，不建第二 Goal 文件、不假报同步。
 
-handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重要决定先落 task-state、阶段产物或台账；暂停、compact、交接前运行 `python3 "$BUTLER_PATH/tools/handoff/handoff.py" sync --project-root "$PROJECT_ROOT"`。冷启动先 `check`，stale 必须 sync 重建后再读，error 先修权威状态。
+handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重要决定先落 task-state、阶段产物或台账；暂停、compact、交接前运行 `python3 "$BUTLER_PATH/tools/handoff/handoff.py" sync --project-root "$PROJECT_ROOT"`。冷启动先 `check`，stale 必须 sync 重建后再读，error 先修权威状态。冷启动一共读哪些文件、按什么顺序，本卡不列——见宿主入口「会话起始：恢复项目状态」章节的读序块。
 
 ## 迭代化需求
 

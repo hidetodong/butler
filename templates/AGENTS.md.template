@@ -18,16 +18,17 @@
 
 ## 会话起始：恢复项目状态
 
-`.ai/` 是 Butler 的宿主无关状态层。若项目已经部署 Butler，按以下顺序恢复：
+`.ai/` 是 Butler 的宿主无关状态层。若项目已经部署 Butler，按下面这段恢复：
 
-1. `.ai/debt.md`（长期欠债与硬约束）
-2. `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md`
-3. `.ai/task-state.md` 与 `.ai/02_SESSION_HANDOFF.md`
-4. 当前阶段需要的 `.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`、`.ai/VERIFY_REPORT.md`
+<!-- butler-context-order:begin -->
+冷启动 / clean-slate 重启时按下列五步恢复上下文，不依赖对话记忆；每步读完即停，不顺着引用递归展开。
 
-恢复时先重算 Goal 的 plan verdict、Goal Calibration 与 completion eligibility，再按宿主当场能力决定是否更新原生 Goal 投影；原生能力不是项目真源。
-
-只按指针读取相关主题，不全量读取历史归档。
+1. **欠债与边界** —— 读 `.ai/debt.md`：还悬着什么账、哪些边界不能碰。
+2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
+3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
+4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+<!-- butler-context-order:end -->
 
 ## 完整规则参考（深度阅读）
 

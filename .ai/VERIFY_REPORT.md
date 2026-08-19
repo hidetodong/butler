@@ -1,59 +1,57 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0112
+# VERIFY_REPORT — ITER-0113
 
 ## Verification Summary
 
-- 10/10 AC 达成：7 条 `auto·可靠`（AC1、AC3–AC8），3 条 `auto·弱`（AC2、AC9、AC10）。9 条 evidence record，8 条 `passed`、1 条 `failed` 保留为诊断。完整 `scripts/verify-ci.sh` 退出码 0。
-- 本轮删掉的是「靠 delta 折叠维护、需要回头重评旧内容」的那部分：`.ai/project/` 下 5 份文件、折叠结构契约 `project-digest-schema.md`、两个折叠 / 漂移帮手，以及两处收口仪式对折叠的强制。留下的 `invariants.md`（纯追加）与 `frontier.md`（整体覆写）一字未删。
-- 删 `capabilities.md` 前 22 个小节逐条核过，不是整文件一删了事。核查结论是 22 节全部可弃、真源在别处；唯一无真源的一条欠债已迁进 `.ai/debt.md`。
-- 执行中撞到一次 AC 自相矛盾（AC1 要求 `invariants.md` 一字不动 vs AC6 要求活文件无断指针），按 `iteration-schema.md §5.3` 走了 amend + 重新 ACK，没有绕过。
-- 有两个东西 P1 阶段没看出来、执行时才发现，都已按发现原样处理并登记：`.ai/project/workspaces.md` 是 workspace-scope 的活契约（由 PreToolUse hook 消费），跟知识文件夹机制无关，不在删除面内；`[split]` 标签不能删，历史配方 v1.6.0–v2.2.0 引用它、配方清单有一致性校验。
+- 12 条验收标准全部达成。9 条机器证据（`ac1-source` / `ac2-projection-sha` / `ac3-ac4-ac5-budget` / `ac6-ac7-cleanup` / `ac8-ac11-ac12-proxy` / `ac9-tests` / `ac10-verify-ci` / `ac10-audit-final`）全部 passed；另有 1 条失败记录 `ac10-audit` 按纪律保留作诊断，失败原因是捕获时 handoff 因源文件变动转 `stale`，`sync` 后重捕即绿。
+- 置信档分布：AC1–AC7、AC9、AC10 为 auto·可靠（确定性断言，含实造负例）；AC8、AC11、AC12 为 auto·弱档——机器只查得出这几段话写没写、指针互指在不在，判不了写得对不对，最终仍靠人读。无 human·待人 档。
+- 部署路径端到端验过：实跑 `render-project-entrypoints.py` 渲染到临时目录，渲染出的 `CLAUDE.md` 与 `AGENTS.md` 中读序块与真源逐字节相同（sha256 前缀 `36c5eb971a515b03`，1194 字节）。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): `.ai/project/` 下只剩 `invariants.md` 与 `frontier.md`；`frontier.md` 未被本迭代触碰；`invariants.md` 只改了三行（冷启动读序第一读、一致性自检条数、全貌产物形态），`*为什么*` 理由从 39 条增到 42 条、一条未少；`.ai/debt.md` 存在，正文与迁移前一致，只多了迁出的那一条（`ac1-files`）。
-- [x] AC2 (auto·弱): 22 个小节的核查结论逐条写进 `.ai/01_CHANGELOG.md` 的 DELETE 段，机器复核了小节计数为 22、迁出条目确实落在 `.ai/debt.md`、被指为真源的 11 个文件全部存在（`ac2-ac9-ac10-proxy`）。人读部分见下「Verification Results」的抽查记录。标 `弱` 而非 `可靠`——机器查得出真源文件在不在，查不出里面写的是不是真比被删的那份更准。
-- [x] AC3 (auto·可靠): `Coder/62_Extension_Agents/` 只剩 `overview.md` / `independent-review.md` / `decision-work.md` 三份；`overview.md` 与 `Coder/README.md` 检索 `knowledge-fold` / `drift-check` 零命中（`ac3-roster`）。
-- [x] AC4 (auto·可靠): 两处收口仪式检索 `折叠` / `knowledge-fold` / `project-digest` 零命中；迭代收口改为「前三步必做、第四步自检」，里程碑收口改为「三步必做」，步骤编号连贯（`ac4-rituals`）。
-- [x] AC5 (auto·可靠): `project-digest-schema.md` 已删且 `Coder/README.md` 检索 `project-digest` 零命中；`context-persistence.md §6` 漂移自检不变量已删，余下 5 条编号连续（`ac5-schema-gone`）。
-- [x] AC6 (auto·可靠): 按归档白名单过滤后，`project-digest|knowledge-fold|drift-check|fold-state` 在活跃文件中零命中（`AC6-CLEAN`）；剩余 12 处 `.ai/project` 路径字样逐条核对去向，2 处指 `invariants.md`（真实存在）、9 处指部署项目侧的 `workspaces.md`、1 处是升级器测试的夹具路径（`ac6-scan`）。
-- [x] AC7 (auto·可靠): `bash scripts/verify-ci.sh` 退出码 0，无跳过、无单点豁免（`ac7-verify-ci`）。
-- [x] AC8 (auto·可靠): `scripts/audit-project-state.py` 802 项 OK，非 OK 行只剩 `release.worktree` 与 `release.tag` 两项发布态提示（`ac8-audit-final`，按 `iteration-schema.md §5.5 步④` 对 Butler 仓用 `--allow-unreleased` 并保留亮牌）；输出中不再有任何 fold receipt 或知识文件夹校验行。
-- [x] AC9 (auto·弱): `.ai/MILESTONE.md §5.4` 末条为「R1 收口 · 交接登记」，三处逐项写明现状与归属；机器复核了三项都在、R14 / R15 都点了名，并反查三处现状与登记描述一致（`ac2-ac9-ac10-proxy`）。标 `弱`——机器查得出登记写没写，查不出归属分得对不对。
-- [x] AC10 (auto·弱): 交付总结「已知剩余风险 / 延后事项」第一、二条分别记录两项信息损失，并写明确定性数据要等 R11（`ac2-ac9-ac10-proxy`）。标 `弱`——机器查得出段落在不在，判不了描述是否诚实，这一条终究靠自觉。
+- [x] AC1 (auto·可靠): 读序为五步语义阶段结构，全仓 `butler-context-order` 标记对数为 5（真源 1 + 投影 4）；三条硬约束分别落在第 2 / 3 / 4 步正文内，定向命中。证据 `ac1-source`。
+- [x] AC2 (auto·可靠): 四处投影与真源 sha256 全等；`templates/CLAUDE.md.template` 的块位于新增「会话起始：恢复项目状态」章节下；渲染后的两份部署入口同样逐字节相同。证据 `ac2-projection-sha`。
+- [x] AC3 (auto·可靠): 四处投影各自被单独篡改时报 `order projection mismatch: <文件名>` 且不连坐其他三处；改真源时四处同时报失配；`AGENTS.md` 抽掉起始标记时 fail-closed 抛错且诊断带文件名。证据 `ac3-ac4-ac5-budget`。
+- [x] AC4 (auto·可靠): 三条结构断言各造一次负例——编号断开报 `order steps must be`、某步无 `.ai/` 路径报 `has no .ai/ pointer`、抽掉锚点报 `missing anchor`，诊断均指名缺的是哪一条。证据 `ac3-ac4-ac5-budget`。
+- [x] AC5 (auto·可靠): 实测 `order_bytes` 1194 / `order_nonempty_lines` 6 / `order_pointers` 7，三项均在 1400 / 9 / 10 上限内；metrics 另含 `order_projections` = 4。证据 `ac3-ac4-ac5-budget`。
+- [x] AC6 (auto·可靠): `scripts/verify-codex-foundation.sh` 退出码 0；旧 9 项硬编码列表里的 `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` / `.ai/task-state.md` / `.ai/CONCEPT.md` / `.ai/VERIFY_REPORT.md` 全部零命中；改为校验读序块起止标记。证据 `ac6-ac7-cleanup`。
+- [x] AC7 (auto·可靠): `context-persistence.md` 与 `handoff-spec.md` 两文件 `R2` 零命中、`R3` 各至少一处，保留的是「全貌产物由 R3 定形态」那半。证据 `ac6-ac7-cleanup`。
+- [x] AC8 (auto·弱): `grep -c '派生视图' templates/rule-card.md` 为 1、读序块内为 0；读序块指向规则卡「强制工作流」，规则卡指向宿主入口的读序块；规则卡未自列读序步骤。证据 `ac8-ac11-ac12-proxy`。
+- [x] AC9 (auto·可靠): 新增 7 个用例方法覆盖 10 个负例场景（四处投影单独篡改 4 条 + 真源改致四处同时失配 + 标记缺失 fail-closed + 体量超限 + 编号断开 + 某步无 `.ai/` 路径 + 锚点挪出指定步），远超「不少于 6 条」的门槛；每条断言具体诊断字符串。全套 19 个用例通过。证据 `ac9-tests`。
+- [x] AC10 (auto·可靠): `bash scripts/verify-ci.sh` 退出码 0，无跳过无豁免（32 项 pytest 全过）；`audit-project-state.py --allow-unreleased` 退出码 0，812 项 OK，非 OK 行只剩两条 `UNRELEASED` 发布态亮牌与若干历史诊断 `INFO`。证据 `ac10-verify-ci` / `ac10-audit-final`。
+- [x] AC11 (auto·弱): `.ai/MILESTONE.md §5.4` 的 R2 发布处置登记在场，含两份模板名、`[regen-entrypoints]` 与滞后归属 R15。证据 `ac8-ac11-ac12-proxy`。
+- [x] AC12 (auto·弱): `deliveries/ITER-0113-cold-start-read-order.md` 的「已知剩余风险」首条如实写明覆盖面变化不是等价替换、结构断言是唯一兜底且兜不住语义顺序错误。证据 `ac8-ac11-ac12-proxy`。
 
 ## 人测道小结
 
-- N/A（本轮无 `human·待人` 档 AC——AC2 / AC9 / AC10 原定人读，按 `testing-strategy.md §3`「能造出弱检查的项就不算人测残余」造了代理验证，归自动道弱档，不起交付自测桥）。
+- N/A（本轮无 human·待人 档 AC，人测道不适用）。AC8 / AC11 / AC12 三条本可归人测，但都能造出弱检查（指针互指在场、登记关键词在场、交付段落在场），按 `testing-strategy.md §3` 仍归自动道弱档。
 
 ## Evidence Index
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| ac1-files | AC1 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac1-files/record.json` |
-| ac2-ac9-ac10-proxy | AC2,AC9,AC10 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac2-ac9-ac10-proxy/record.json` |
-| ac3-roster | AC3 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac3-roster/record.json` |
-| ac4-rituals | AC4 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac4-rituals/record.json` |
-| ac5-schema-gone | AC5 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac5-schema-gone/record.json` |
-| ac6-scan | AC6 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac6-scan/record.json` |
-| ac7-verify-ci | AC7 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac7-verify-ci/record.json` |
-| ac8-audit | AC8 | captured | failed | `.ai/iterations/ITER-0112/evidence/ac8-audit/record.json` |
-| ac8-audit-final | AC8 | captured | passed | `.ai/iterations/ITER-0112/evidence/ac8-audit-final/record.json` |
+| ac1-source | AC1 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac1-source/record.json` |
+| ac2-projection-sha | AC2 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac2-projection-sha/record.json` |
+| ac3-ac4-ac5-budget | AC3,AC4,AC5 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac3-ac4-ac5-budget/record.json` |
+| ac6-ac7-cleanup | AC6,AC7 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac6-ac7-cleanup/record.json` |
+| ac8-ac11-ac12-proxy | AC8,AC11,AC12 | captured | passed | `.ai/iterations/ITER-0113/evidence/ac8-ac11-ac12-proxy/record.json` |
+| ac9-tests | AC9 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac9-tests/record.json` |
+| ac10-verify-ci | AC10 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac10-verify-ci/record.json` |
+| ac10-audit | AC10 | captured | failed | `.ai/iterations/ITER-0113/evidence/ac10-audit/record.json`（诊断留存：handoff 转 stale） |
+| ac10-audit-final | AC10 | reproduced | passed | `.ai/iterations/ITER-0113/evidence/ac10-audit-final/record.json` |
 
 ## Verification Results
 
-- **保留的那条 failed record 是什么**：`ac8-audit` 是不带 `--allow-unreleased` 的首跑，退出码 1。除两项发布态 DRIFT 外，它还报了第三项 `handoff.freshness: stale`——迭代改了一堆源文件、handoff 回执还停在旧 hash。跑 `tools/handoff/handoff.py sync` 同步后复跑即净，`ac8-audit-final` 是同步后的记录。首跑不删，留作「审计确实抓到了漂移」的痕迹。
-- **AC2 的人读抽查**：从 22 节里抽了 5 条反查真源，全部命中——「远端 required check 未启用」这条诚实声明在 `HUMAN_GUIDE.md`（3 处）/ `docs/codex-compatibility.md` / `README.md` 都在；驻留工具描述在 `Coder/README.md` 第 172–217 行比被删那份更详（每个工具都写了职责边界与「不做什么」）；工作流注册的两个真源 `workflows/registry.json` 与 `docs/workflows.md` 都在；semver 与提交规约在 `versioning-schema.md §5`；迁出的那条欠债在 `.ai/debt.md` 里。
-- **AC1 的三行修订具体改了什么**：一是冷启动读序的第一读，从「知识文件夹两态」改成 `.ai/debt.md`；二是一致性自检的条数，6 条改 5 条；三是新增一条「全貌产物不靠 delta 折叠维护（ITER-0112 起）」，把本轮的诊断结论固定下来——整体覆写和纯追加活得下来、需要回头重评旧内容的必烂。理由层没动，`*为什么*` 反而多了 3 条（新写的那条自带理由）。
-- **AC6 白名单的边界**：扫描排除 `.git/`、`.ai/iterations/`、`.ai/milestones/`、`.ai/history/`、`deliveries/`、`docs/research/`、`migrations/v1.` 与 `v2.`、`CHANGELOG.md`、工作区四件套自身与 `.ai/verification-evidence/`，另外单独放行 `migration-schema.md`（`[split]` 退役标注）与 `overview.md`（帮手退役说明）——这两处是有意留的退役标注，不是漏改。排除项都是历史归档或本轮有意保留的说明，不是为了让扫描变绿而设的豁免。
-- **两处 P1 没看出来的东西**：
-  - `.ai/project/workspaces.md` 不属于知识文件夹机制。它是 workspace-scope 的项目工作区地图，由 `templates/hooks/` 的 PreToolUse hook 实际读取来拦越界写入，有 4 份规则 + 4 份测试在消费。butler 是单包仓、本仓没有这个文件，所以扫描时它表现为「悬空指针」，其实是部署项目侧的正常路径。已在变更流里标为「保留（不属本机制）」。
-  - `[split]` 标签删不掉。`migrations/v1.6.0` 到 `v2.2.0` 五份历史配方引用了它，`migrations/manifest.json` 有标签定义与配方引用的一致性校验，删定义就红。改为在原处加退役标注（自 v4.0.0 起不再产生新实例），动作类型的正式改造交给 R14。
-- **`domain-model.md` 的断指针**：AC6 扫描抓到全仓唯一一处真断链——第 53 行「当前已知语义债务：`.ai/project/debt.md`」，`debt.md` 已迁位。已改为 `.ai/debt.md`。
+- **投影一致性**：五处块正文 sha256 全等于 `36c5eb971a515b03…`，长度 1194 字节。四处投影是 `AGENTS.md`、`Coder/README.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`。
+- **负例不是走过场**：AC3 / AC4 的 8 个负例都在临时仓副本上现造，逐条断言诊断字符串，不只断言非零退出。其中「篡改单一投影」还额外断言另外三处**不**被报出，防止诊断退化成一律全报。
+- **fail-closed 路径**：任一载体缺 `butler-context-order` 标记时 `context_budget.py` 抛错并带上文件名与标记名，不静默跳过——这条是从 L0 的 `_l0_block()` 提取成通用 `_marker_block()` 时原样继承的，行为未变。
+- **CI 修复一处连带失败**：`scripts/test-goal-host-wiring.py` 原先断言 `context-persistence.md` 含 token `方案 verdict`，读序改写后正文用的是 TECH_PLAN 的真实字段名 `方案状态`。断言守护的对象没变（读序必须点名 TECH_PLAN 的方案裁决），只把 token 跟上真实字段名，已在变更流 EDIT 段记录理由。
+- **与 TECH_PLAN 的偏差如实记录**：方案里写「用例计数不少于 21」是拍脑袋的估数，实测 19 个用例方法 / 10 个负例场景。AC9 的真实门槛是「新增 fixture 不少于 6 条」，实际 10 条，达标。未回头改已 ACK 的方案。
+- **证据 ID 与方案略有并合**：方案原列 `ac6-codex` 与 `ac7-transition` 两条，实际合成 `ac6-ac7-cleanup` 一条（两者都是同类的删除后残留检索，同脚本跑更便宜）；AC 覆盖未变。
 
 ## TDD Pair Status
 
-- N/A（TECH_PLAN 未声明 TDD cycle；本轮是删除与去指针，机器侧改动是拆掉夹具而非新增行为）。
+- N/A（TECH_PLAN 未声明 TDD cycle）。
 
 ## Goal Calibration
 
@@ -66,25 +64,25 @@
 
 ## Gate Coverage
 
-- 自动道：10/10 AC 由 evidence record 支撑，7 条可靠档、3 条弱档，无 `reported` 档口头结论。
-- 机器门禁：完整 `verify-ci.sh`（含 artifact contract、domain contract、context budget、markdown 链接、双宿主与 Pi 扩展验证、全量单测）退出码 0；状态审计在 AC8 记录时点 802 项 OK，收口自检复跑 811 项 OK、退出码 0，非 OK 行只剩两条 `UNRELEASED` 亮牌。
-- 拆门禁的诚实交代：本轮**减少**了机器检查——删掉了 fold receipt 审计、`test-audit-project-state.py` 的 3 项折叠测试，`context_budget.py` 的重复真源候选表少了一项。这是机制退役的必然结果，不是放宽判定；被删的检查所守护的对象已不存在。删除过程中误删过一条与折叠无关的正面测试（`test_valid_evidence_index_and_fold_receipt_pass`），已重建为 `test_valid_evidence_index_passes`，审计测试套 22 项通过。
-- 人测道：不适用。
+- 质量门禁：`bash scripts/verify-ci.sh` 退出码 0，32 项 pytest 全过，无跳过、无单点豁免。
+- 状态审计：`python3 scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，812 项 OK。非 OK 行为两条 `UNRELEASED` 发布态亮牌（工作树有未发布改动、v3.6.0 tag 不指向 HEAD）与历史迭代的 `INFO` 诊断留存行。OK 计数随收口写盘会继续变动，此处记录的是 `ac10-audit-final` 捕获时刻的数字。
+- 产物契约：四件套与变更流均通过 `tools/artifact-pipeline/contract.py` 的章节与字段校验。
+- 上下文预算：`tools/context-budget/context_budget.py check` 退出码 0，L0 与读序两个受守护块的体量均在上限内。
 
 ## References Compliance
 
-- N/A（本迭代不消费 `.ai/references/` 下的 PRD 或外部规格）。
+- 本迭代无 `.ai/references/` 外部参考资料，无引用合规项需核（AC_LIST「External References」为 N/A）。
+- 内部规则引用一致：读序块内的指针均指向实际存在的 `.ai/` 文件与工具路径，`context_budget.py` 的 md 指针存在性校验覆盖这一点。
 
 ## Remaining Risks
 
-- **半拆状态不能拖太久**。冷启动第一读现在是过渡措辞（不再指知识文件夹、新读序还没正式定义），`.ai/project/` 只剩两个孤立文件。R2 定读序、R3 定全貌产物落点；两项若迟迟不开，这个中间态会变成事实上的常态，比拆干净或不拆都糟。这一条在 AC_LIST 的 Open Questions 里就写着，收口时仍然成立。
-- **「无证据被消费」不等于「从未被消费」**。删除决策建立在缺席证据上：半年里没有任何一次决策能追溯到读知识文件夹，也没有任何工具记录过对它的读取。但没有读取记录不等于没有读取。真正的确定性数据要等 R11 的使用监视器。
-- **折叠回执历史不可再机器验证**。`fold-state.json` 删掉后，哪些迭代参与过折叠、每次折叠的内容 hash 只剩 git 记录，没有工具能再校验。判断是这段历史唯一的读者就是已经一起删掉的漂移检查。
-- **`invariants.md` 与 `frontier.md` 现在没有维护机制**。它们过去靠折叠仪式被顺带更新，仪式没了，在 R3 定出新落点之前，这两份处在「准确但无人负责刷新」的状态。`frontier.md` 覆盖到 MILE-0015，MILE-0016 的进展不会自动进去。
-- **老项目磁盘上的空 `.ai/project/` 目录没人清**。部署侧不再生成，但存量不会自动消失，归 R15。
+- **投影校验守不住真源本身写错**（本轮最实的缺口，已写进交付）。逐字节相同只证明「没人偷偷改其中一处」，证明不了「这五步本身是对的」。三条结构断言兜住编号断开、指针缺失、锚点挪位，兜不住语义层面的顺序错误。运行时观测归 MILE-0016 R11。
+- **老项目拿不到新读序**。改的是模板，已部署项目要等带 `[regen-entrypoints]` 的发布版重新渲染入口；实际迁移配方归 R15。这段窗口期内 butler 仓自己与新部署项目有新读序、老项目没有，是已登记的已知不一致。
+- **1400 字节上限的余量是成本不是额度**。实测 1194，余 206 字节；每一字节都落在主力宿主的每次会话上。
+- **同源投影点增至七处**（L0 三处 + 读序四处）。R9 的根布局改名会同时撞上这七处，改不齐 CI 会红——机制按设计工作，但要预留返工时间。
 
 ## Handoff / Next Step
 
-- MILE-0016 R1 完成，可开 R2（冷启动读序改造）——R1 留下的过渡措辞就在 `context-persistence.md §6`，是 R2 的直接输入。
-- R3（项目全貌产物重建）要接手 `.ai/project/` 剩下的两份文件，落点由替代品设计决定。
-- 本轮改了 `templates/AGENTS.md.template`（部署入口模板），下个发布版切版时必须含 `[regen-entrypoints]`，不得记 `[no-op]`。
+- ITER-0113 收口，MILE-0016 R2 置 `closed`；`.ai/ITERATIONS.md` current 归 `none`。
+- 下一项按里程碑路线是 MILE-0016 R3（全貌产物的形态、派生源与落点），`.ai/project/` 剩下的 `invariants.md` 与 `frontier.md` 等它接手。
+- 发布侧未动：未切版、未打 tag。下个发布版的迁移配方必须含 `[regen-entrypoints]`，登记在 `.ai/MILESTONE.md §5.4`。

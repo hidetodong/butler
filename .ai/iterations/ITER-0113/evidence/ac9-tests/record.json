@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac9-tests",
+  "iteration": "ITER-0113",
+  "ac_ids": [
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/context-budget/tests",
+      "-v"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-19T07:37:52.778Z",
+  "finished_at": "2026-08-19T07:37:53.229Z",
+  "duration_ms": 450,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 2743,
+    "captured_bytes": 2743,
+    "sha256": "be2b9858c89edf9434f8fc368cabf62cbff1b31047e7e92be422c145420e13ab",
+    "truncated": false
+  }
+}

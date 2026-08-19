@@ -66,7 +66,7 @@ Butler 走到 v3.6.0，规则文件 30 多份、驻留工具 20 多个、命令 
 | 路线项 | 主题 / 范围切片 | 实际 ITER | 状态 |
 |---|---|---|---|
 | R1 | 止血·退役折叠机制与漂移产物：删 `.ai/project/` 里抄真源的四份与靠原地重评的两块 + `fold-state.json`，退役 `knowledge-fold` 与 `drift-check` 帮手，解除两处收口仪式对折叠的强制；`invariants.md` 与 `frontier.md` 留待 R3 迁移 | ITER-0112 | closed |
-| R2 | 止血·冷启动读序改造：改为 `debt.md` + handoff + 双台账，同步两份入口模板、rule-card 与 `context-persistence.md` 的漂移自检 | — | planned |
+| R2 | 止血·冷启动读序改造：改为 `debt.md` + handoff + 双台账，同步两份入口模板、rule-card 与 `context-persistence.md` 的漂移自检 | ITER-0113 | closed |
 | R3 | 止血·项目全貌产物重建：生成部分从 `registry.json` / `Coder/README.md` / 双台账 / `tools/` 派生，手写部分承接 `invariants.md` 的 38 条理由与 `frontier.md` 的覆写模式，定落点与重算命令 | — | planned |
 | R4 | 止血·砍 `/butler:progress` 全链：命令、skill、规则真源、registry 条目、`docs/workflows.md` 与 rule-card 引用 | — | planned |
 | R5 | 止血·`/butler:loop` 降级与候办清理：撤 `upgrade-convergence-engine` 候办、冻结命令演进、登记待定处置 | — | planned |
@@ -97,3 +97,4 @@ v4.0.0 的聚合切版本身走里程碑收口仪式（`milestone-schema.md §7.
 - 2026-08-18：路线项编号顺延。新 R3（项目全貌产物重建）插在冷启动读序改造之后——读序改完立刻要回答「那读什么」，隔太远会留一段全貌真空；生成所需的 `registry.json`、双台账与 `Coder/README.md` 都是现成的，usage 数据（现 R12）是后续增强而非前置。原 R3–R14 依次后移为 R4–R15，路线项总数由 14 增至 15，三段边界改为止血 R1–R5 / 重造 R6–R10 / 治根 R11–R15。**本文件此前演进记录里提到的编号按旧编号读**：其中「R8 影响面」对应现 R9、「新增 R13 承接标签扩展」对应现 R14、「原 R13 顺延为 R14」对应现 R15。
 - 2026-08-18：收窄 R1 的删除清单。`invariants.md` 与 `frontier.md` 从「删」改为「留待 R3 迁移」，落点由替代品设计决定；R1 只删抄真源的四份（`00_INDEX` / `identity` / `constraints` / `architecture` 模块地图段）、靠原地重评的两块（`architecture` 成熟度段、`capabilities.md`）与 `fold-state.json`。此条覆盖同日早前那条「`invariants` / `capabilities` 逐条核后随文件夹删除」的处置——`capabilities.md` 仍删，`invariants.md` 改留。
 - 2026-08-18（R1 收口 · 交接登记）：ITER-0112 只做去指针，以下三处的实际改造确定交给 R14 与 R15，按现行编号登记，逐项写明现状与归属。**一、`migration-schema.md §4` 的 `[split]` 标签**：现状是标签仍在文中、语义仍是「把单文件 `.ai/PROJECT.md` 拆成 `.ai/project/` 目录」，本轮只在原处加了退役标注（自 v4.0.0 起不再产生新实例），没有删除——历史配方 v1.6.0 至 v2.2.0 引用了它，`manifest.json` 的一致性校验要求标签定义与配方引用对得上，删了会红。正式的动作类型改造归 **R14**（升级器 typed 标签扩展）。**二、`upgrade.py` 的 `--split defer|now`**：现状是 `apply` 子命令的必填参数，配套 `project-knowledge-shape-valid` 前置校验仍在跑，两者都以 `.ai/project/` 存在为前提，本轮一行未动。参数降级或移除、前置校验的去留归 **R14**。**三、`mcv-deployment.md §2` 的空种子例外**：现状是该节里「部署即建 `.ai/project/` 空种子」的说明与理由已删干净，但老项目磁盘上已经建出来的空目录没人负责清——部署侧不再生成，存量不会自动消失。存量清理与老项目一次性交代归 **R15**（v4.0.0 迁移配方）。
+- 2026-08-19（R2 · 发布处置登记）：ITER-0113 改了两份部署入口模板——`templates/AGENTS.md.template` 的读序段整段换成投影块，`templates/CLAUDE.md.template` 新增「会话起始：恢复项目状态」章节并首次带上读序块。按 `migration-schema.md §5` 的领域变更判据，这两份是注入目标项目的载体，故**下个发布版必须含 `[regen-entrypoints]`，不得记 `[no-op]`**。滞后事实一并记明：已部署项目在跑 `/butler:upgrade` 重新生成入口之前，Codex 侧仍是旧的七步读序、Claude 侧仍然完全没有读序；让老项目真正拿到新入口归 **R15**（v4.0.0 迁移配方）。butler 仓自身与新部署项目即时生效，这段不一致是已知且有意接受的过渡代价。

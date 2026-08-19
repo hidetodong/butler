@@ -1,47 +1,67 @@
 <!-- butler-artifact-template: 1.0.0 artifact=concept -->
-# CONCEPT — ITER-0112 · 退役项目知识文件夹与折叠机制（MILE-0016 R1）
-
-分流: 完整 | 命中升级信号: 多文件改动、契约变更、跨模块影响、设计取舍 | 2026-08-18
+# CONCEPT — ITER-0113 · 冷启动读序正式定义与四载体对齐（MILE-0016 R2）
 
 ## Current Understanding
 
-- **一句话**：`.ai/project/` 里真正烂掉的是抄真源和需要原地重评的那几份，折叠机制只维护得住追加式内容、维护不住回头重评。本轮把烂掉的那部分连同折叠闭环一起删掉，解除两处收口仪式对折叠的强制，并把被证明有效的 `invariants.md` 与 `frontier.md` 原地留着交给 R3 的替代品设计。
-- **Goal**：让抄真源的四份、靠原地重评的两块与 `fold-state.json` 从仓库消失，`knowledge-fold` / `drift-check` 两个帮手退役，两处收口仪式第四步不再要求折叠，且删完之后全仓没有指向已删文件的活引用——本轮结束时仓库必须自洽，不能把断指针留给 R2。`invariants.md` 与 `frontier.md` 保留原位不动。
-- **现状证据（零消费已坐实）**：MILE-0014 早被评估为「概念空缺真实、当前设计不符合预期」，但 `capabilities.md` 一直挂着「已交付 R1-R5」，这条失真挂了三周没被任何读取发现。追问「过去半年有没有哪次决策因为读了知识文件夹而做出或改变」，答不出来。
-- **现状证据（目录实况比范围表大）**：`.ai/project/` 里实际有 9 个文件——`00_INDEX.md`、`identity.md`、`architecture.md`、`capabilities.md`、`invariants.md`、`constraints.md`、`debt.md`、`frontier.md`、`fold-state.json`。里程碑 In Scope 原只点名 5 个，其余 4 个的处置由 §5.4 补齐。
-- **现状证据（烂的不是全部，规律很清楚）**：按覆盖到的最新里程碑量四份主题文件——`architecture.md` 成熟度段只写到 MILE-0007，落后 9 个里程碑；`capabilities.md` 覆盖到 MILE-0015 但旧节内容失真（MILE-0014 那条）；`frontier.md` 每次收口整体覆写，当前；`invariants.md` 纯追加条目，当前，其中 38 条带 `*为什么*` 理由、别处无真源。规律是**整体覆写和纯追加都活得下来，需要回头修改旧内容的必烂**——折叠是 delta 驱动的，改了 A 只会去折 A，没有任何动作触发「回头看 B 的旧结论还准不准」。
-- **现状证据（需求本身成立）**：`context-persistence.md` 第 136 行原文写着「缺全貌产物时新会话只能从一堆迭代 delta 倒推全貌（管中窥豹）」。现有 112 个迭代、123 份交付，倒推不现实。所以本轮退役的是不匹配的机制，不是全貌观察这个需求；替代品设计归 R3。
-- **现状证据（`debt.md` 不能跟着删）**：新读序把 `debt.md` 放在第一顺位（`debt.md` + handoff + 双台账），但它现在就躺在待删目录里。它必须迁位而不是删除，落点建议 `.ai/debt.md`。其余三个是派生摘要，正文各自都写着「真源 X」——`identity.md` 指仓库根 `CLAUDE.md` / `README.md` / `HUMAN_GUIDE.md`，`constraints.md` 每条都指对应 schema，`00_INDEX.md` 是这个文件夹自己的地图，随文件夹一起消失即可。
-- **现状证据（退的是两态契约，不是一个目录）**：`project-digest-schema.md` 同时拥有「`.ai/project/` 文件夹态」和「单文件 `.ai/PROJECT.md` 老项目态」两种形态。删掉文件夹等于把这份 schema 整份退役，单文件态的 legacy 支持也一并消失。牵连到 `mcv-deployment.md §2` 的「部署即建空种子」（`.ai/project/` 是唯一一个部署就建的 `.ai/` 子目录例外）、`migration-schema.md §4` 的 `[split]` 标签，以及 `upgrade.py` 里 `--split defer|now` 这个 `apply` 的**必填参数**——后两处的动作面归 R14 / R15，本轮只做登记与去指针。
-- **现状证据（改动面）**：全仓检索 `.ai/project` / `project-digest` / `knowledge-fold` / `drift-check` / `fold-state`，除去历史归档与交付存档，命中 **37 份活跃的规则、脚本、工具与模板文件**（含升级器 `upgrade.py` 与其 README）加 **2 份候办草稿**，分布在 `Coder/20_Workflow_Lifecycle/`（6 份）、`Coder/40_Context_Management/`（7 份）、`Coder/62_Extension_Agents/`（3 份）、`Coder/README.md` 与领域两份、模板与 hook 测试（5 份）、`scripts/`（4 份）、`tools/`（4 份）、命令与 skill 入口（2 份）。
-- **现状证据（机器门禁会立刻发声）**：`scripts/audit-project-state.py` 现在把 fold receipt 当硬校验跑，`context-persistence.md §6` 第 6 条把「知识文件夹漂移自检」定为条件不变量。删文件而不同批改这两处，audit 会直接红。
-- **预期产出**：9 个文件里 6 删、1 迁、2 留；两份帮手定义删除并从名册与 `Coder/README.md` 注销；`project-digest-schema.md` 退役；两处收口仪式第四步重写；audit 与漂移自检对应校验拆除；以及把本轮未处理的升级侧缺口交接给 R14 / R15 的明确登记。
-- **项目形态**：Markdown 规则仓，附带 Python / Shell 驻留工具；未命中业务 Domain / Stack Profile，按通用 SOP 与现有仓库门禁推进。
+**R1 只改了「第一读指哪」，没改「一共几步、每步干什么」。** 退役知识文件夹时，我把各处读序的第一项从 `.ai/project/00_INDEX.md` 换成 `.ai/debt.md`，让指针不悬空就收手了——那是 R1 的边界。结果现在读序处在一个尴尬状态：指针都对，但**五处载体说的读序互不相同**，而且没有任何机器检查能发现这件事。
+
+**五处载体，五个版本。**
+
+| 载体 | 步数 | 实际内容 |
+|---|---|---|
+| `context-persistence.md §6 冷启动读序`（真源） | 5 | debt → 双台账（含 state-index 定向读冷分片）→ handoff `check` 后才读 → Goal 状态重算 → 代码 / deliveries |
+| butler 仓 `AGENTS.md` | 7 | debt → MILESTONES → ITERATIONS → task-state → handoff → 四件套 → Coder 指针 |
+| `templates/AGENTS.md.template`（部署项目 Codex 入口） | 4 | debt → 双台账 → task-state + handoff → 四件套 |
+| `Coder/README.md` 第 165 行（散文一段） | 3 | debt → ITERATIONS + handoff → 代码 |
+| `templates/CLAUDE.md.template`（部署项目 Claude 入口） | **0** | 完全没有读序 |
+
+这不是措辞差异，是实质差异：
+
+- **真源要求「先 check 再读 handoff」，四个投影没一个照做。** 真源第 3 步写明先跑 `handoff.py check`，`fresh` 才读、`stale` 先 `sync` 重建、`error` 先修权威状态。两份 AGENTS 都写成直接「读 `.ai/02_SESSION_HANDOFF.md`」。rule-card 里倒是有这句 check/sync 纪律，但它在「强制工作流」段落里、不在读序中，宿主照读序走就绕过去了。
+- **真源要求台账定向读，投影全都没提。** 真源第 2 步写明只读热表，需要旧身份时沿 `.ai/state-index.json` 用 state-ledger `lookup` 定向读**一个**冷分片，禁止默认读整个 history 目录。四个投影一处都没写这条约束。
+- **真源第 4 步的 Goal 状态重算，butler 自己的 `AGENTS.md` 里根本没有。** template 里有，但被放在读序列表**外面**的一段散文里。
+- **主力宿主的部署入口没有读序。** Claude 是主力宿主，`templates/CLAUDE.md.template` 通篇只有规则卡 + 深度阅读指针 + 项目特定约束，没有任何「会话起始怎么恢复状态」的段落。这个能力目前只有 Codex 侧有。
+
+**唯一的机器校验只盯一个载体，而且自己就是第六份真源。** `scripts/verify-codex-foundation.sh` 第 45–66 行硬编码了一张 9 项路径列表（`.ai/debt.md` → `MILESTONES` → `ITERATIONS` → `task-state` → handoff → 四件套四份），检查 butler 仓 `AGENTS.md` 里这些路径按行号递增出现。它不看 template、不看 CLAUDE 侧、也不跟 `context-persistence.md` 对账——那张列表是脚本里另抄的一份，改真源不会让它红。
+
+**这套问题 ITER-0111 已经解过一次，办法现成。** L0 渐进读取内核当时也是「一份规则、多处投影、无对账」，做法是用 `butler-context-l0:begin/end` 标记把规则正文圈成一个可投影块，投到三处载体，由 `context_budget.py` 每次 CI 逐字节比对，任一处被单独改动即报 `L0 projection mismatch: <文件>`。实测代价：L0 正文 656 字节、部署入口冷启动多约 234 token（占规则卡全文 3.8%），9 条 fixture。读序是同构问题，同一套办法可以直接搬。
+
+**R1 留的过渡措辞该由 R2 清掉一半。** 两处：`context-persistence.md §6` 第 1 步下的引用块，和 `handoff-spec.md` 第 15 行，都写着「读序由 R2 定、全貌产物形态由 R3 定」。R2 交付后，读序那半话不成立了要删；全貌产物那半留给 R3。
 
 ## Scope
 
-- **In Scope · 删文件**：删除 `00_INDEX.md`、`identity.md`、`constraints.md`、`capabilities.md`、`architecture.md`、`fold-state.json` 六份——前三份抄真源，`capabilities.md` 与 `architecture.md` 的成熟度段靠原地重评已确认失真，`architecture.md` 去掉成熟度段后只剩指向 `Coder/README.md` 的模块地图、一并删。删 `capabilities.md` 前逐条核，凡本仓别处无真源的判断先迁出。
-- **In Scope · 留待 R3**：`invariants.md`（38 条 `*为什么*` 理由、纯追加、无漂移）与 `frontier.md`（每次收口整体覆写、一直准确）原位保留、内容不动，落点由 R3 的替代品设计决定。目录因此不消失，删完加迁走 `debt.md` 后剩这 2 个文件。
-- **In Scope · 迁 `debt.md`**：`.ai/project/debt.md` 迁到 `.ai/debt.md`，内容原样保留（两条长期欠债），并把指向旧路径的引用改到新路径。
-- **In Scope · 退帮手**：删除 `Coder/62_Extension_Agents/knowledge-fold.md` 与 `drift-check.md`，从 `62_Extension_Agents/overview.md` 名册和 `Coder/README.md` 的目录结构与读取顺序注销；名册从四个帮手缩到两个（`independent-review` / `decision-work`）。
-- **In Scope · 解除收口强制**：重写 `iteration-schema.md §5.5 步④` 与 `milestone-schema.md §7.4 步④`，去掉知识文件夹折叠这一必做项及其两态分支，不留「按需前滚」的软化残留。
-- **In Scope · 退契约**：删除 `Coder/40_Context_Management/project-digest-schema.md`，并从 `Coder/README.md` 注销；`handoff-spec.md`、`references-schema.md`、`prd-split.md`、`prd-status.md`、`workspace-scope-schema.md`、`artifact-style.md`、`domain-model.md`、`domain-glossary.md` 里指向它或指向知识文件夹的句子同批改到自洽。
-- **In Scope · 拆机器校验**：`scripts/audit-project-state.py` 去掉 fold receipt 与知识文件夹相关校验（含 `test-audit-project-state.py` 对应用例）；`context-persistence.md §6` 第 6 条「知识文件夹漂移自检」不变量删除；`tools/context-budget/`、`templates/hooks/`、`tools/workspace-scope/`、`tools/mile0009-e2e/`、`scripts/verify-codex-foundation.sh` 里以 `.ai/project` 为夹具或断言的部分同批调整，`scripts/verify-ci.sh` 全绿。
-- **In Scope · 最小去指针**：`AGENTS.md`、`templates/AGENTS.md.template`、`Coder/README.md`、`.claude/commands/butler/init.md`、`plugins/butler/skills/butler-init/SKILL.md`、`mcv-deployment.md` 里已经指不到东西的句子改到自洽——**只做去指针，不做新读序的正面定义**。
-- **In Scope · 交接登记**：把本轮不动、但因删除而失去意义的升级侧机构（`migration-schema.md §4` 的 `[split]` 标签、`upgrade.py` 的 `--split` 必填参数与 `project-knowledge-shape-valid` 前置、`mcv-deployment.md §2` 的空种子例外）在 `.ai/MILESTONE.md §5.4` 登记为 R14 / R15 的确定输入。
-- **Out of Scope**：不做新冷启动读序的正面定义——「`debt.md` + handoff + 双台账」这套读序怎么写、两份入口模板怎么改，归 R2；本轮只保证旧指针不悬空。
-- **Out of Scope**：不改 `upgrade.py` 的动作类型表、路径校验与 CLI 参数，不新增删除 / 移动两类 typed 标签（R14），不写 `migrations/v4.0.0.md`（R15）。
-- **Out of Scope**：不动 `/butler:progress`（R4）、`/butler:loop`（R5）、旧 inbox 全链与 `origin/`（R8）、根布局改名与迁位（R9）。
-- **Out of Scope**：不设计新的全貌产物——生成部分怎么从 `registry.json` / 双台账 / `Coder/README.md` 派生、手写部分落到哪个文件，归 R3；本轮只负责把烂掉的删干净、把有效的留在原地。
-- **Out of Scope**：不改 `.ai/ITERATIONS.md` / `.ai/MILESTONES.md` 双台账的结构与状态值，不动 `.ai/references/` 与 PRD 子系统的自身契约（只改它们里指向知识文件夹的句子）。
-- **Out of Scope**：不切版、不发布；v4.0.0 聚合切版归里程碑收口。
+**In Scope**
+
+- 在 `context-persistence.md §6` 把冷启动读序改写成正式定义：每步写明**读什么、读之前要先做什么、读到什么程度停**，把散在真源正文里的三条硬约束（handoff 先 check、台账定向读冷分片、Goal 状态重算）收进步骤本身，而不是留在步骤外的散文里。
+- 用 `butler-context-order` 标记把读序圈成可投影块（沿用 L0 那套 `begin/end` 标记形态），真源在 `context-persistence.md`。
+- 把读序块投到四处载体并逐字节一致：butler 仓 `AGENTS.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`（**新增**，Claude 宿主首次获得读序）、`Coder/README.md`（把第 165 行那段散文换成投影块）。
+- `context_budget.py` 增读序投影一致性校验（复用 L0 的 `_l0_block()` 提取与比对路径）+ 负例 fixture：任一载体被单独改动、真源被改、标记缺失三类。
+- `scripts/verify-codex-foundation.sh` 那张硬编码列表拆掉：读序内容的正确性交给新的投影校验，该脚本只保留「Codex 入口存在且含读序块标记」这一层，不再自己抄一份路径清单。
+- 清掉属于读序的过渡措辞：`context-persistence.md §6` 第 1 步下引用块的读序那半、`handoff-spec.md` 第 15 行的读序那半；全貌产物那半原样留给 R3。
+- rule-card 与读序块的分工定死：读序块独占「按什么顺序读哪些文件」，rule-card 第 45 行的 handoff check/sync 纪律独占「handoff 是派生视图、什么时候 sync」，两边互不复述、互相指。
+
+**Out of Scope**
+
+- 不定义全貌产物的形态、派生源与落点（R3）。`.ai/project/` 剩下的 `invariants.md` 与 `frontier.md` 本轮不动。
+- 不改 `handoff-spec.md` 的 `02_SESSION_HANDOFF.md` 格式契约，不改双台账结构与 `state-index.json` 路由公式，不改 `handoff.py` / `state_ledger.py` 的行为。
+- 不改冷启动一致性自检那 5 条不变量的判定口径（它们是台账↔产物↔交付↔证据对账，与读序是两件事）。
+- 不动 `/butler:progress`（R4）、`/butler:loop`（R5）、旧 inbox 全链（R8）、根布局改名与迁位（R9）。
+- 不改升级器动作类型（R14），不写 `migrations/v4.0.0.md`（R15）；本轮只登记「改了部署入口模板、下个发布版必须含 `[regen-entrypoints]`」。
+- 不切版、不发布。
+
+**影响面清点（预估 12 份文件）**
+
+- 规则真源 3：`context-persistence.md`、`handoff-spec.md`、`Coder/README.md`
+- 入口与模板 3：`AGENTS.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`
+- 规则卡 1：`templates/rule-card.md`（只改分工指针，不放读序块——理由见下）
+- 机器侧 4：`tools/context-budget/context_budget.py` 及其测试、`scripts/verify-codex-foundation.sh`、`Coder/domain-glossary.md`（若新增术语则条数变，机器校验的精确条数同步改）
+- 台账与登记 1：`.ai/MILESTONE.md`（R2 收口与 `[regen-entrypoints]` 登记）
 
 ## Open Questions / Risks
 
-- **待确认 · R1 / R2 的边界切在哪**：路线图把「删文件夹」放 R1、「改冷启动读序」放 R2，但删完文件后 `context-persistence.md §6` 的第一读还指着 `.ai/project/00_INDEX.md`。迭代必须收口在自洽状态，不能留一整轮的断指针。倾向按上面 Scope 的切法——R1 做去指针到自洽，R2 做新读序的正面定义与模板改造。这会让 R1 比路线图字面描述略宽，需要在 `.ai/MILESTONE.md §5.4` 补一条演进记录。
-- **待确认 · 单文件 `.ai/PROJECT.md` 老项目怎么办**：`project-digest-schema.md` 一份 schema 管两态，退役它等于连 legacy 单文件态一起停支持。已部署的老项目里可能还有 `.ai/PROJECT.md`。倾向本轮直接停止支持、在 R15 的 v4.0.0 配方里给出「自行保留或删除，Butler 不再读」的一次性交代，而不是在规则里留一条只为老项目活着的分支。
-- **待确认 · `debt.md` 落到 `.ai/debt.md` 还是别处**：`.ai/` 根目前放的是四件套、双台账、handoff 与 task-state，都是流程产物；`debt.md` 是长期事实，性质不同。倾向仍放 `.ai/debt.md`（新读序第一顺位，路径要短好记），但这条会决定 R2 写读序时的措辞，越早定越好。
-- **风险 · 删除会连带删掉唯一真源**：`invariants.md` 有 19KB、`capabilities.md` 有 27KB，绝大部分是指向真源的摘要，但不排除个别条目是只在这里写过的判断。删之前必须逐条过一遍，凡是本仓别处没有的长期决策，要么找到真正的归属文件迁过去，要么明确判定为可弃。这是本轮最容易出事的一步，不能整目录一把 `rm`。
-- **风险 · 机器门禁比预想的黏**：audit、context-budget、hook 测试、workspace-scope 测试、codex 基线脚本五处都拿 `.ai/project` 当夹具或断言。改动散在测试里，容易改一半留一半，表现为 CI 局部绿、局部红。必须以 `scripts/verify-ci.sh` 一次全绿为收口判据，不接受单点跑过。
-- **风险 · 删了才发现有人在读**：本轮论证的是「没有证据证明它被消费」，不是「已证明它从未被消费」。真正的确定性数据要等 R11 的 usage instrumentation。若删除后冷启动质量明显下降，回滚成本是一次 `git revert` 加一轮读序回退——代价可接受，但要在验证阶段诚实记录冷启动体感，不能因为删了就写成没影响。
-- **风险 · 折叠历史随 `fold-state.json` 一起消失**：这份 37KB 的回执记录了历次折叠参与的文件与 hash。删掉后，历史迭代「有没有正确折叠」将无法再机器验证。判断是这本身就是自证式的账，留着也只服务于即将退役的机制；但要在交付里写明这条信息确实丢了，不装作无损。
+- **待定 · 读序块要不要进 rule-card**：rule-card 是注入到部署项目 `CLAUDE.md` 顶层的那份浓缩规则，两份入口模板都通过 `{{RULE_CARD_CONTENT}}` 引它。读序块若放进 rule-card，两份模板自动都有、无需各投一次；但 rule-card 现在 13457 字节，是**每次会话必进上下文**的东西，读序块塞进去等于给所有项目的每次会话加成本。倾向是**不放 rule-card、各模板独立投一次**——两份模板本来就各有自己的「会话起始」章节位置（Codex 侧有、Claude 侧要新建），投影校验能保证它们一致，代价是多一处投影点。这条我打算按倾向做，P3 定稿前若你有不同意见可以推翻。
+- **风险 · 读序块进 Claude 入口是净新增上下文**：这是 Claude 宿主第一次拿到读序，不是改写而是新增。L0 的实测是 656 字节 / 约 234 token，读序块步骤更多、约束更细，估计要 800–1200 字节。需要在 P3 给出明确上限并在 P5 实测，不能让它无声膨胀。参照 L0 上限是 1600 字节 / 18 非空行 / 4 个指针。
+- **风险 · 拆 `verify-codex-foundation.sh` 的列表可能拆掉真覆盖**：那张 9 项列表虽然是抄的，但它确实在守「AGENTS.md 的读序顺序没被改乱」。换成投影校验后，守的变成「四处逐字节相同」——如果真源本身被改错了，投影校验只会说「四处一致」，不会说「顺序不对」。这是覆盖面的**真实变化**，不是等价替换。P3 要明确：顺序正确性由谁守（倾向是给读序块加结构断言，比如步骤编号连续、每步必须含一个 `.ai/` 路径），不能只靠一致性。
+- **风险 · 已部署项目要重新生成入口才拿得到新读序**：改了两份模板，老项目在跑 `/butler:upgrade` 之前仍是旧入口。这是已知滞后，跟 ITER-0111 改 rule-card 时同一性质；本轮只负责登记 `[regen-entrypoints]`，实际配方归 R15。
+- **待定 · 读序真源该 5 步还是展开**：真源现在 5 步（抽象、每步一个语义阶段），butler 仓 `AGENTS.md` 是 7 步（展开、每步一个文件）。投影的消费者是 AI 宿主不是人，展开式更可直接执行；但步数一多，投影块体量就上去，跟上一条的预算风险冲突。倾向是**按语义阶段分步、每步内列具体文件**，既保住可执行性又压住步数。P3 定稿。
+- **风险 · 改读序等于改所有会话的起手式，改错的代价是全局的**：读序是每个新会话第一件事，写坏了不会当场报错，只会让后续判断都建立在错的上下文上。本轮没有运行时观测能证明宿主真按读序走了——这跟 ITER-0111「证明不了宿主真的按 L0 分层读了」是同一个缺口，确定性数据同样要等 R11 的使用监视器。验证阶段要如实记这一条，不能因为四处字节一致就写成「读序生效了」。

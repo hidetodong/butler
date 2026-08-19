@@ -5,11 +5,12 @@
 
 ## 最近迭代
 
-ITER-0112 承接 MILE-0016 R1：退役 `.ai/project/` 知识文件夹与折叠机制，同批解除两处收口仪式对折叠的强制。
+ITER-0113 已收口：冷启动读序收成 `context-persistence.md §6` 一份真源加四份逐字节投影，三条硬约束写进步骤本身，Claude 宿主入口首次带上读序；下一项为 MILE-0016 R3。
 
 current: none
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0113 | 冷启动读序正式定义与四载体对齐（MILE-0016 R2） | closed | 2026-08-18 | 2026-08-19 | MILE-0016 | deliveries/ITER-0113-cold-start-read-order.md |
 | ITER-0112 | 退役项目知识文件夹与折叠机制（MILE-0016 R1） | closed | 2026-08-18 | 2026-08-18 | MILE-0016 | deliveries/ITER-0112-retire-project-knowledge-folder.md |
 | ITER-0111 | 领域治理接线与真实 dogfood（MILE-0015 R5） | closed | 2026-08-17 | 2026-08-17 | MILE-0015 | deliveries/ITER-0111-domain-governance-wiring.md |
 | ITER-0110 | 最小可执行领域合同与双冲突试点（MILE-0015 R4） | closed | 2026-08-05 | 2026-08-13 | MILE-0015 | deliveries/ITER-0110-minimal-domain-contract.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0096 | 旁路工作回执协议（危险模式） | closed | 2026-07-29 | 2026-07-29 | — | deliveries/ITER-0096-sidework-receipt.md |
 | ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
 | ITER-0094 | Butler 配置部署与 legacy 迁移（MILE-0013 R2·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0094-project-config-migration.md |
-| ITER-0093 | Butler 项目配置合同与统一读写内核（MILE-0013 R1·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0093-project-config-core.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

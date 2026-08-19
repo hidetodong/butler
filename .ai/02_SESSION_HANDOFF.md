@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：MILE-0016；阶段：迭代间隙（ITER-0112 已于 2026-08-18 收口），等待开启 MILE-0016 R2。
-- 状态：R1 完成——`.ai/project/` 里靠 delta 折叠维护的五份文件、折叠结构契约 `project-digest-schema.md`、`knowledge-fold` 与 `drift-check` 两个帮手已删除，两处收口仪式不再强制折叠，34 处活引用改到自洽。`invariants.md` 与 `frontier.md` 原位保留、只改了三条因删除而变假的不变量，留给 R3。`debt.md` 迁到 `.ai/debt.md`。10/10 AC 达成（7 条可靠档、3 条弱档），完整 CI 退出码 0。
+- 迭代：无 active；里程碑：MILE-0016；阶段：ITER-0113 已收口（2026-08-19），等待开启下一迭代。
+- 状态：MILE-0016 R2 完成。冷启动读序收成 `Coder/40_Context_Management/context-persistence.md §6` 一份真源（`butler-context-order` 标记块，1194 字节 / 6 非空行 / 7 指针），四处载体逐字节投影并由 `context_budget.py` 守护，Claude 宿主入口首次带上读序。12 条 AC 全部达成，9 条机器证据全 passed（另留 1 条失败诊断），完整 CI 与状态审计均退出码 0。已登记：下个发布版必须含 `[regen-entrypoints]`，老项目的滞后归 R15。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：开 R2（冷启动读序改造）。R1 在 `context-persistence.md §6` 留下的过渡措辞（第一读已不指知识文件夹、新读序尚未正式定义）是 R2 的直接输入；两份入口模板的读序段落本轮未动，归 R2。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按里程碑路线开启 MILE-0016 R3（项目全貌产物重建，承接 `.ai/project/` 剩下的 `invariants.md` 与 `frontier.md`）。本地已提交、未推送，推哪个远端等用户定。
 
 ## 状态指针
 

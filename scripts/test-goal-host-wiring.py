@@ -35,7 +35,7 @@ class GoalHostWiringTests(unittest.TestCase):
 
     def test_cold_start_restores_goal_inputs(self) -> None:
         context = (ROOT / "Coder/40_Context_Management/context-persistence.md").read_text(encoding="utf-8")
-        for token in ("方案 verdict", "Goal Calibration", "Completion Inputs"):
+        for token in ("`.ai/TECH_PLAN.md` 的方案状态", "Goal Calibration", "Completion Inputs"):
             self.assertIn(token, context)
 
     def test_resident_tool_is_documented_for_target_projects(self) -> None:

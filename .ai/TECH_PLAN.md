@@ -1,112 +1,106 @@
 <!-- butler-artifact-template: 1.0.0 artifact=tech_plan -->
-# TECH_PLAN — ITER-0112
+# TECH_PLAN — ITER-0113
 
 方案状态: pass
-方案审查日期: 2026-08-18
+方案审查日期: 2026-08-19
 方案审查方式: user-ack
 
 ## Design Decisions
 
-### 总体取法
+**总体形状**：搬 ITER-0111 的 L0 投影机制，不新造轮子。真源一份、标记圈定、四处字节投影、CI 逐字节比对，外加一层 L0 没有的结构断言。分四段推进，每段结束跑一次完整 CI，不留半绿状态。
 
-按「先删物、再断规则、后拆机器校验、最后去指针」四段推进，每段结束都能通过 `verify-ci.sh`。不采用「一次性大改再统一修 CI」，因为改动散在 34 个文件里，一次性改完出错时无法二分定位。
+**第一段 · 定真源（`context-persistence.md §6`）**
 
-被放弃的方案：整目录 `rm -rf .ai/project/` 后统一补。放弃原因是 `invariants.md` / `frontier.md` 本轮要留，且部署项目的 `.ai/project/workspaces.md` 是另一套 live 契约（见下），整目录删会误伤。
+- 读序正文改写成五步语义阶段，用 `<!-- butler-context-order:begin -->` / `<!-- butler-context-order:end -->` 一对标记圈定。块内定稿正文（实测 1127 字节 / 6 非空行 / 7 个 md 指针）：
 
-### 关键发现：`.ai/project/` 里还住着一个不相干的 live 契约
+  ```
+  冷启动 / clean-slate 重启时按下列五步恢复上下文，不依赖对话记忆；每步读完即停，不顺着引用递归展开。
 
-`.ai/project/workspaces.md` 是 workspace-scope 的项目工作区地图，被 PreToolUse hook（`templates/hooks/lib/workspace_scope.py`）、`workspace-scope-schema.md`、`prd-split.md`、`prd-status.md` 与 4 份测试实际消费。它不是知识摘要，只是恰好住在这个目录里；butler 仓自身是单包项目、没有这个文件，所以前几轮盘点没看见它。
+  1. **欠债与边界** —— 读 `.ai/debt.md`：还悬着什么账、哪些边界不能碰。
+  2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 `state-ledger check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
+  3. **断点** —— 先跑 `tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态。
+  4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影，不是真源。
+  5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+  ```
 
-决策：**本轮不动 `workspaces.md` 的路径**。理由是目录本轮本来就不消失（`invariants.md` / `frontier.md` 留着），移动一个被 hook 消费的路径属于破坏性变更、要配迁移动作，成本与收益不匹配。R1 只需断掉 `workspace-scope-schema.md` 里那句「遵守 `.ai/project/` 的 current-truth 覆写语义」——它引用的是即将删除的 `project-digest-schema.md`。最终落点由 R3 连同全貌产物的家一起定。
+- **块内不放任何 butler 仓专有内容**。R1 留的过渡引用块要拆成两半：「由 MILE-0016 R2 定读序」这半直接删（R2 就是本轮，说完即失效）；「R3 定全貌产物形态与落点、在那之前只能靠这五步加 `Coder/README.md` 建立全貌」这半保留，但移到**标记块外面**、作为 §6 的一段说明。理由是块要投到部署项目的入口模板里去，里程碑路线项编号是 butler 自己的内务，不该出现在别人项目的 `CLAUDE.md` 里。
+- `handoff-spec.md` 第 15 行经核只提 R3、不提 R2，本轮不动它的正文，只确认 AC7 的 `grep 'R2'` 零命中成立。
 
-### 改动清单（34 个文件，按段分组）
+**第二段 · 投四处载体**
 
-**段一 · 删物与迁移（10 处）**
+| 载体 | 落点 | 动作 |
+|---|---|---|
+| `AGENTS.md` | `## 冷启动：先恢复 .ai/ 状态` 段内 | 现有 7 步列表整段替换为标记块 |
+| `templates/AGENTS.md.template` | `## 会话起始：恢复项目状态` 段内 | 现有 4 步列表整段替换为标记块；「恢复时先重算 Goal…」那段散文删除（内容已进块内第 4 步） |
+| `templates/CLAUDE.md.template` | `{{RULE_CARD_CONTENT}}` 之后、`## 完整规则参考（深度阅读）` 之前 | **新增** `## 会话起始：恢复项目状态` 章节并放入标记块 |
+| `Coder/README.md` | 第 165 行那段散文所在位置 | 散文整段替换为标记块，块前加一句区分 L0 与读序的过渡 |
 
-| 动作 | 目标 |
-|---|---|
-| 删 | `.ai/project/00_INDEX.md` · `identity.md` · `constraints.md` · `capabilities.md` · `architecture.md` · `fold-state.json` |
-| 删 | `Coder/62_Extension_Agents/knowledge-fold.md` · `drift-check.md` |
-| 删 | `Coder/40_Context_Management/project-digest-schema.md` |
-| 迁 | `.ai/project/debt.md` → `.ai/debt.md`（`git mv`，正文不改） |
-| 留 | `.ai/project/invariants.md` · `frontier.md` 一字不动 |
+- `Coder/README.md` 里 L0 块与读序块会相邻。过渡句写死为：L0 管「撞上领域术语时怎么分层读」，读序管「新会话从零恢复上下文的顺序」，两者是不同触发条件下的两套动作，不是一件事的两半。
+- 两份入口模板的读序块**不进 `templates/rule-card.md`**。rule-card 现在 13457 字节、每次会话必进上下文，把读序塞进去等于给所有部署项目每次会话加成本；模板各投一次多一个投影点，但由 CI 管住。rule-card 只在第 45 行末尾补一句指向读序块，反向由块内第 3 步指回 rule-card 的 handoff 纪律——两边互指、互不复述。
 
-删 `capabilities.md` 前先出迁出核查表：22 个小节逐条判「别处有真源 / 无真源需迁出 / 判定可弃」，结论写进 `.ai/01_CHANGELOG.md`。这是 AC2 的门，不能跳。
+**第三段 · 机器校验（`tools/context-budget/context_budget.py`）**
 
-**段二 · 断规则（11 份）**
+- `_l0_block(text, label)` 泛化为 `_marker_block(text, label, begin, end, name)`，保留原有的「标记各恰好出现一次」与「不得交错」两道 fail-closed 检查；`_l0_block` 改为薄包装，L0 现有行为与诊断字符串一字不变。
+- 新增常量：`ORDER_BEGIN` / `ORDER_END`、`ORDER_SOURCE = "Coder/40_Context_Management/context-persistence.md"`、`ORDER_PROJECTIONS = ("AGENTS.md", "Coder/README.md", "templates/AGENTS.md.template", "templates/CLAUDE.md.template")`、`ORDER_LIMITS = {"bytes": 1400, "nonempty_lines": 9, "pointers": 10}`。
+- 比对诊断沿用 L0 句式：`order projection mismatch: <文件路径> differs from <ORDER_SOURCE>`，一次报全部不一致的文件，不在第一处就短路。
+- 结构断言 `_order_structure_errors(block)`，三类各自独立报错、互不掩盖：
+  - **编号连续**：块内匹配 `^(\d+)\. ` 的行按序取号，必须恰为 `[1,2,3,4,5]`；否则报 `order steps must be 1..5, got <实际>`。
+  - **每步有路径**：每步正文至少含一个 `.ai/` 开头的路径；否则报 `order step <n> has no .ai/ pointer`。
+  - **锚点在位**：第 2 步含 `state-index.json`、第 3 步含 `check`、第 4 步含 `Goal`。断言的是**该锚点落在指定步骤内**，不是「块里某处有」——只查全块会被一次挪位骗过。缺失报 `order step <n> missing anchor: <锚点>`。
+- metrics 增 `order_bytes` / `order_nonempty_lines` / `order_pointers` / `order_projections` 四项。
+- **不新增领域合同条目**。读序块的回归由本节的常驻校验直接守住，再往 `domains.v1.json` 登记一条只会多一处双写；等 R3 定出全貌产物形态、读序真的成为跨上下文引用时再登记。`Coder/domain-glossary.md` 同理不动，L2 术语仍为 19 条、精确条数校验不改。
 
-- `iteration-schema.md` — §5.5 删步④整条，步⑤降为步④；顶部动作描述去掉「第四步前滚项目全貌产物」；步⑤自检从 6 条不变量改 5 条。
-- `milestone-schema.md` — §7.4 同样删步④、顶部描述同步；收口后描述里「项目全貌补漏」改为不提。
-- `context-persistence.md` — §6 删第 6 条不变量（前 5 条编号不动）；冷启动读序第 1 项去掉两态分支与知识文件夹指针；「互补」段与「指针」段同步。
-- `project-digest-schema.md` — 整份删除。
-- `handoff-spec.md` · `references-schema.md` · `prd-split.md` · `prd-status.md` · `workspace-scope-schema.md` · `artifact-style.md` · `butler-upgrade.md` — 逐句去指针。
-- `mcv-deployment.md` — §2 去掉「部署即建空 `.ai/project/` 种子」这个唯一例外；§73/75 两态段删除。
-- `migration-schema.md` — `[split]` 标签**保留但标注退役**（历史配方 v1.6.0–v2.2.0 仍引用它，删了老项目跨版本升级会断），加一句「本标签自 v4.0.0 起不再产生新实例，动作类型改造见 MILE-0016 R14」。
-- `overview.md` — 名册 4 个帮手改 2 个（`independent-review` / `decision-work`）。
-- `Coder/README.md` — 目录结构删 3 个文件名，读取顺序同步；冷启动段与 §206 / §208 说明改写。
-- `domain-model.md` · `domain-glossary.md` — 去指针。
+**第四段 · 拆 codex 脚本、去过渡措辞、登记**
 
-**段三 · 拆机器校验（7 份）**
-
-- `scripts/audit-project-state.py` — 删 `audit_fold_receipt()`（第 239–271 行）与第 182 行调用点。
-- `scripts/test-audit-project-state.py` — 删对应用例。
-- `tools/context-budget/context_budget.py` — `DUPLICATE_CANDIDATES` 去掉 `.ai/project/architecture.md`、`.ai/project/debt.md` 改 `.ai/debt.md`、`.ai/project/invariants.md` 保留。
-- `tools/context-budget/tests/test_context_budget.py` — 同步夹具。
-- `scripts/verify-codex-foundation.sh` — 第 48 行的 `.ai/project/00_INDEX.md` 从必存清单移除。
-- `scripts/test-butler-upgrade.py` — `.ai/PROJECT.md` 相关用例调整（`[split]` 标签保留，用例保留但不再断言知识文件夹形态）。
-- `tools/mile0009-e2e/tests/test_mile0009_e2e.py` — 第 83 行夹具改为不建知识文件夹。
-
-**workspace-scope 的 4 份测试不动**（它们引用的是 `workspaces.md`，与本轮无关）。
-
-**段四 · 去指针与登记（6 处）**
-
-`AGENTS.md` · `templates/AGENTS.md.template` · `.claude/commands/butler/init.md` · `plugins/butler/skills/butler-init/SKILL.md` · 2 份候办草稿（`state-transition-trust-gate.md` / `upgrade-convergence-engine.md`）；`.ai/MILESTONE.md §5.4` 补 R14 / R15 交接登记。
-
-### AC Coverage
-
-AC1 段一 · AC2 段一（迁出核查表）· AC3 段二（`overview.md` + `Coder/README.md`）· AC4 段二（两处步④）· AC5 段二（`project-digest-schema.md` + §6 不变量）· AC6 段四（全仓检索）· AC7 段三（`verify-ci.sh`）· AC8 段三（audit）· AC9 段四（§5.4）· AC10 收口时写交付。十条全有落点。
-
-### Assumptions
-
-- `[split]` 标签保留不删——历史配方 v1.6.0 / v2.0.0 / v2.1.0 / v2.2.0 引用它，`manifest.json` 校验会核配方与标签集一致。删标签会让老项目跨版本升级链断。**验证方式**：段二改完立刻跑 `verify-ci.sh`，manifest 一致性检查会直接报。
-- 删 `audit_fold_receipt` 不影响其余归档校验——它只读 `.ai/project/fold-state.json`，与 `closed 有归档` 那条独立。**验证方式**：段三改完跑 audit，`ITER-*.archive` 系列检查行数不变。
-- 不动 `workspaces.md` 不会让 workspace-scope 契约悬空——它的真源是 `workspace-scope-schema.md`，只有第 22 行那句借了 `project-digest-schema.md` 的语义。**验证方式**：4 份 workspace-scope 测试全绿。
-
-### Alternatives / Trade-offs
-
-- **整目录删 vs 选择性删**：选后者。前者更干净，但会误伤本轮要留的两份和部署项目的 `workspaces.md`。代价是 `.ai/project/` 留成一个只剩两三个文件的半拆状态，直到 R3。
-- **`[split]` 删除 vs 标注退役**：选后者。删干净更彻底，但破坏历史升级链。代价是死码多留一个版本。
-- **`workspaces.md` 现在搬 vs R3 再定**：选后者。现在搬需要配迁移动作和 hook 路径变更，属 R14 能力；本轮搬等于提前借用还不存在的 typed 标签。
-
-### Impact / Scope Challenge
-
-盘点比 P1 时多出两处：`workspaces.md` 这条 live 契约（P1 漏了，因为 butler 仓自身没这个文件），以及 `[split]` 不能删（P1 只说了它会变死码，没算历史配方的引用）。两处都已收进方案，未扩大 AC。
-
-更小可行方案：只删 `fold-state.json` 和两个帮手、保留全部主题文件。放弃——那样折叠机制的写侧没了、读侧还在，比现在更不自洽。
+- `scripts/verify-codex-foundation.sh` 第 45–66 行那张 9 项硬编码路径列表整段删除，替换为两条：`AGENTS.md` 含 `butler-context-order:begin` 与 `:end` 各一次；最终 `Coder/` 真源步骤仍在读序块之后。`require_text` 对 `Coder/README.md` 与「不全量读取 `.ai/iterations/`」两条保留——后者现在落在块内第 5 步，仍能命中。
+- `.ai/MILESTONE.md §5.4` 追加一条登记：本轮改了 `templates/CLAUDE.md.template` 与 `templates/AGENTS.md.template` 两份部署入口模板，下个发布版必须含 `[regen-entrypoints]`、不得记 `[no-op]`；老项目在跑 `/butler:upgrade` 之前 Codex 侧仍是旧读序、Claude 侧仍然没有读序，这段滞后归 R15 的 v4.0.0 配方收尾。
+- **本轮的「领域变更」四项声明**（ITER-0111 新增的评审维度，本轮命中 `Coder/README.md` 与 `AGENTS.md` 两份 L0 载体）：
+  - **唯一所有者**：读序正文归 `context-persistence.md §6` 独占，另四处是受 CI 校验的字节投影；handoff 的「派生视图、何时 sync」定性归 `templates/rule-card.md` 独占。无第二真源。
+  - **兼容影响**：`AGENTS.md` 与两份模板的章节标题不变，只换段内内容；`Coder/README.md` 换掉一段散文、不动 L0 块字节。`verify-codex-foundation.sh` 的断言口径变了（见 Failure Paths 第 6 条），这是本轮唯一的行为面变化。
+  - **迁移路径**：butler 仓自身立即生效；已部署项目须重新生成入口才拿得到，故下个发布版必须含 `[regen-entrypoints]`。
+  - **负向样例**：6 条 fixture（见 Test Strategy），覆盖四处投影各自被改、真源被改、标记缺失三类；结构断言另配 3 条。
 
 ## Failure Paths
 
-- **删 `capabilities.md` 时误判「别处有真源」**：22 个小节里若有条目实际无真源却被判可弃，信息永久丢失（虽可从 git 捞回，但无人知道要捞）。缓解：核查表逐条写明真源文件名，判定可弃的必须给出具体文件与小节，不接受「散在 `Coder/` 里」这种描述。
-- **删步④后步骤编号断裂**：`iteration-schema.md` 步⑤改步④，但正文别处若有「第五步自检」的交叉引用会指错。缓解：改完全文检索「第五步」「步⑤」「步5」。
-- **`verify-ci.sh` 局部绿**：五处机器校验分散，容易改一半。缓解：段三每改一个文件跑一次全量 CI，不攒着一起跑。
-- **`context-budget` 的重复真源检查误报**：`DUPLICATE_CANDIDATES` 少了 `architecture.md` 后，原本被这条拦住的领域概念重复可能不再被发现。缓解：改完确认 `context_budget.py check` 仍报 0 个重复，并在交付里说明这条检查的覆盖面缩小了。
-- **半拆状态被误当终态**：R1 收口后 `.ai/project/` 只剩两个孤立文件、读序在过渡措辞上。缓解：`.ai/task-state.md` 与交付里都写明这是过渡态、R2/R3 承接，不写成「已完成」。
-- **回滚路径**：任何一段出错，`git checkout -- <段内文件>` 即可退回段起点；整迭代回滚是一次 `git revert`。删除文件用 `git rm`，历史完整保留。
+1. **四处投影漏改一处** —— `context_budget.py` 报 `order projection mismatch: <文件>` 并指名；进完整 CI，每次跑。这是本轮最可能发生的失误，也是整套机制存在的理由。
+2. **标记写坏（缺一半、写两遍、两块交错）** —— `_marker_block` fail-closed 抛 `ValueError`，诊断带文件名与「markers must each occur exactly once」/「markers are malformed」。不静默跳过、不当成空块通过。
+3. **`Coder/README.md` 的 L0 块与读序块互相污染** —— 该文件同时是 L0 真源与读序投影，两对标记若嵌套或交错，`_marker_block` 的 malformed 检查会抓住。已确认两块物理不相邻嵌套，中间隔一段过渡文字。
+4. **读序块悄悄膨胀** —— 超过 `bytes 1400` / `nonempty_lines 9` / `pointers 10` 任一项即报 `order <指标>=<实际> exceeds <上限>`。定稿实测 1127 / 6 / 7，留的余量够加一步或两句，不够无节制扩写。
+5. **结构断言被一次挪位骗过** —— 若只查「块里有没有 `state-index.json`」，把它从第 2 步挪到第 5 步照样绿。故锚点断言绑定步骤号，挪位即红。
+6. **拆掉 codex 脚本那张列表 = 真实的覆盖面下降** —— 原先它守的是「读序路径在 `AGENTS.md` 里按行号递增」，换成投影校验后守的是「四处逐字节相同 + 结构断言」。**真源本身把顺序写错了，投影校验只会说四处一致**。能兜的只有结构断言那三条（编号连续、每步有路径、锚点在指定步内），兜不住语义层面的顺序错误。这不是等价替换，AC12 要求在交付里如实写明。
+7. **改了所有会话的起手式，改错不会当场报错** —— 读序是每个新会话第一件事，写坏了只会让后续判断建立在错的上下文上，没有任何机器信号。本轮拿不到运行时观测证明宿主真按读序走了，这跟 ITER-0111「证明不了宿主真按 L0 分层读」是同一个缺口，确定性数据归 R11。P5 不得因为四处字节一致就写成「读序生效了」。
+8. **老项目拿不到新读序** —— 已部署项目在升级前 Codex 侧是旧读序、Claude 侧没有读序。已知滞后，本轮只登记 `[regen-entrypoints]`，实际配方归 R15。
 
 ## Test Strategy
 
-- **AC1**：`ls .ai/project/` 恰为 `invariants.md` / `frontier.md` 两项；`git diff --quiet HEAD -- .ai/project/invariants.md .ai/project/frontier.md` 返回 0；`.ai/debt.md` 与 `git show HEAD:.ai/project/debt.md` diff 仅标题行差异。
-- **AC2**：人读 `.ai/01_CHANGELOG.md` 的 22 条核查表，抽查 5 条被判可弃的条目在指定真源文件中确实存在。
-- **AC3**：`ls Coder/62_Extension_Agents/` 计数 3；`grep 'knowledge-fold\|drift-check' Coder/62_Extension_Agents/overview.md Coder/README.md` 零命中。
-- **AC4 / AC5**：`grep '折叠\|knowledge-fold\|project-digest' Coder/20_Workflow_Lifecycle/iteration-schema.md Coder/20_Workflow_Lifecycle/milestone-schema.md` 零命中；`test ! -f Coder/40_Context_Management/project-digest-schema.md`；人读 `context-persistence.md §6` 确认 5 条编号连续；全文检索「第五步」无错指。
-- **AC6**：`grep -rEl 'project-digest|knowledge-fold|drift-check|fold-state' --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.template' .` 按归档白名单过滤后为空；剩余的 `.ai/project` 路径字样逐条人读，确认只指向 `invariants.md` / `frontier.md` / `workspaces.md` 三个实际存在的目标。
-- **AC7**：`bash scripts/verify-ci.sh` exit 0，输出进 `tools/verification-evidence/`。段三期间每改一个文件跑一次，不只在最后跑。
-- **AC8**：`python3 scripts/audit-project-state.py --project-root .` 除 `release.worktree` / `release.tag` 外全 OK，输出中无 `fold_receipt` 字样。
-- **AC9 / AC10**：人读 `.ai/MILESTONE.md §5.4` 与交付总结对应段落。
-- **机器验证盲区**：CI 能证明「没有指向已删文件的引用」和「测试没垮」，不能证明「删掉的内容确实无价值」。AC2 的迁出核查是人判，`capabilities.md` 那 22 条的判定质量没有机器兜底——这是本轮最大的验证盲区，必须在交付里明说。另外冷启动质量下降与否本轮无法测量，要等 R11 的使用监视器。
+**新增 fixture 9 条**，全部进 `tools/context-budget/tests/test_context_budget.py`，每条断言具体诊断字符串、不只断言非零退出：
+
+| # | 类型 | 造法 | 期望诊断 |
+|---|---|---|---|
+| 1–4 | 投影各自被改 | 依次篡改四处投影中的一处块内正文 | `order projection mismatch: <该文件>` 且只报这一份 |
+| 5 | 真源被改 | 改 `context-persistence.md` 块内正文 | 四处投影同时失配，报四条 |
+| 6 | 标记缺失 | 任一载体删掉 `:end` 标记 | fail-closed 抛错，含该文件名 |
+| 7 | 编号断开 | 把第 3 步改成 `4.` | `order steps must be 1..5, got [1, 2, 4, 4, 5]` |
+| 8 | 某步无路径 | 抽掉第 1 步的 `.ai/debt.md` | `order step 1 has no .ai/ pointer` |
+| 9 | 锚点挪位 | 把 `state-index.json` 从第 2 步挪到第 5 步 | `order step 2 missing anchor: state-index.json` |
+
+**回归保护**：L0 现有 12 条用例全部复跑，诊断字符串与 metrics 断言不得变化——`_l0_block` 泛化是纯重构，行为面必须零变化。`test_repository_baseline_passes` 增断言四项新 metrics 的实测值。
+
+**证据捕获**（`tools/verification-evidence/evidence.py run`）：
+- `ac1-source` (AC1)：`grep` 计标记对数为 5 + 三条硬约束定向命中
+- `ac2-projection-sha` (AC2)：脚本提取五处块正文算 sha256 断言全等
+- `ac3-ac4-ac5-budget` (AC3/AC4/AC5)：`context_budget.py check` 退出码 0 + metrics 三项实测
+- `ac6-codex` (AC6)：`verify-codex-foundation.sh` 退出码 0 + 旧列表零命中
+- `ac7-transition` (AC7)：两文件 `grep 'R2'` 零命中、`grep 'R3'` 各不小于 1
+- `ac8-ac11-ac12-proxy` (AC8/AC11/AC12)：分工不重复、`[regen-entrypoints]` 登记在场、交付段落在场的弱档代理验证
+- `ac9-tests` (AC9)：`python3 -m unittest` 跑 context-budget 测试套，用例计数不少于 21
+- `ac10-verify-ci` (AC10)：完整 `verify-ci.sh` 退出码 0
+- `ac10-audit` (AC10)：`audit-project-state.py --allow-unreleased` 退出码 0
+
+AC8 / AC11 / AC12 原定人读，按 `testing-strategy.md §3`「能造出弱检查的项就不算人测残余」归自动道弱档，不起交付自测桥。
+
+**不做 TDD 配对**：本轮机器侧改动是给既有校验器加一组同构检查，不是新造行为契约；红绿顺序按常规先写实现再补 fixture，`tech-plan-schema.md` 的 TDD cycle 不声明。
 
 ## References Compliance
 
-- 本迭代无 `.ai/references/` 外部参考资料，`External References` 为 N/A。
-- AC_LIST 无 `prd_refs`，故不产出 `Workspace Write Plan`；本迭代改动全在 butler 仓单包内，无跨 workspace 写入。
-- 未命中任何 Domain / Stack Profile，按通用 SOP 与 `Coder/30_Quality_Gate/` 的常驻底线（`implementation-discipline` 最小实现纪律、`correction-contract` 纠错契约）执行。
+- N/A（本迭代不消费 `.ai/references/` 下的 PRD 或外部规格）。

@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Deterministic checks for Butler's progressive context-loading contract."""
+"""Deterministic checks for Butler's progressive context-loading contract.
+
+Two marker-delimited blocks are guarded here. The L0 progressive-reading kernel
+lives in Coder/README.md and is projected into the host entrypoints. The
+cold-start read order lives in context-persistence.md §6 and is projected into
+four carriers; besides byte identity it must satisfy structural assertions
+(consecutive step numbers, a .ai/ pointer per step, anchors pinned to their
+step) because byte identity alone cannot catch a wrong source.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +23,19 @@ L0_END = "<!-- butler-context-l0:end -->"
 L0_SOURCE = "Coder/README.md"
 L0_PROJECTIONS = ("AGENTS.md", "templates/rule-card.md")
 L0_LIMITS = {"bytes": 1600, "nonempty_lines": 18, "pointers": 4}
+ORDER_BEGIN = "<!-- butler-context-order:begin -->"
+ORDER_END = "<!-- butler-context-order:end -->"
+ORDER_SOURCE = "Coder/40_Context_Management/context-persistence.md"
+ORDER_PROJECTIONS = (
+    "AGENTS.md",
+    "Coder/README.md",
+    "templates/AGENTS.md.template",
+    "templates/CLAUDE.md.template",
+)
+ORDER_LIMITS = {"bytes": 1400, "nonempty_lines": 9, "pointers": 10}
+ORDER_STEP_RE = re.compile(r"^(\d+)\. ", re.MULTILINE)
+ORDER_ANCHORS = {2: "state-index.json", 3: "check", 4: "Goal"}
+ORDER_STEPS = 5
 L1_LIMITS = {"bytes": 7000, "lines": 70, "pointers": 15}
 CONTEXT_MAP_LIMITS = {"bytes": 9000, "lines": 120, "pointers": 24}
 CONTEXTS = {
@@ -176,15 +197,54 @@ def _validate_source(root: Path, raw: str) -> bool:
     return resolved.is_relative_to(root) and resolved.is_file()
 
 
+def _marker_block(text: str, label: str, begin: str, end: str, name: str) -> str:
+    """Return the bytes between a marker pair, failing closed on bad markers."""
+    if text.count(begin) != 1 or text.count(end) != 1:
+        raise ValueError(f"{name} markers must each occur exactly once in {label}")
+    before, remainder = text.split(begin, 1)
+    block, after = remainder.split(end, 1)
+    if end in before or begin in after:
+        raise ValueError(f"{name} markers are malformed in {label}")
+    return block
+
+
 def _l0_block(text: str, label: str) -> str:
     """Return the bytes between the L0 markers, failing closed on bad markers."""
-    if text.count(L0_BEGIN) != 1 or text.count(L0_END) != 1:
-        raise ValueError(f"L0 markers must each occur exactly once in {label}")
-    before, remainder = text.split(L0_BEGIN, 1)
-    block, after = remainder.split(L0_END, 1)
-    if L0_END in before or L0_BEGIN in after:
-        raise ValueError(f"L0 markers are malformed in {label}")
-    return block
+    return _marker_block(text, label, L0_BEGIN, L0_END, "L0")
+
+
+def _order_block(text: str, label: str) -> str:
+    """Return the bytes between the cold-start read-order markers."""
+    return _marker_block(text, label, ORDER_BEGIN, ORDER_END, "order")
+
+
+def _order_steps(block: str) -> list[tuple[int, str]]:
+    """Split the read-order block into (step number, step body) pairs."""
+    matches = list(ORDER_STEP_RE.finditer(block))
+    steps: list[tuple[int, str]] = []
+    for index, match in enumerate(matches):
+        stop = matches[index + 1].start() if index + 1 < len(matches) else len(block)
+        steps.append((int(match.group(1)), block[match.start() : stop]))
+    return steps
+
+
+def _order_structure_errors(block: str) -> list[str]:
+    """Structural assertions the byte-identity check cannot catch."""
+    errors: list[str] = []
+    steps = _order_steps(block)
+    numbers = [number for number, _ in steps]
+    expected = list(range(1, ORDER_STEPS + 1))
+    if numbers != expected:
+        errors.append(f"order steps must be {expected}, got {numbers}")
+    for number, body in steps:
+        if ".ai/" not in body:
+            errors.append(f"order step {number} has no .ai/ pointer")
+    bodies = {number: body for number, body in steps}
+    for number, anchor in ORDER_ANCHORS.items():
+        body = bodies.get(number)
+        if body is None or anchor not in body:
+            errors.append(f"order step {number} missing anchor: {anchor}")
+    return errors
 
 def check_project(root: Path) -> CheckResult:
     root = root.resolve()
@@ -202,9 +262,22 @@ def check_project(root: Path) -> CheckResult:
                 f"L0 projection mismatch: {relative} differs from {L0_SOURCE}"
             )
 
+    order = _order_block(_read(root, ORDER_SOURCE), ORDER_SOURCE)
+    for relative in ORDER_PROJECTIONS:
+        projected = _order_block(_read(root, relative), relative)
+        if projected != order:
+            errors.append(
+                f"order projection mismatch: {relative} differs from {ORDER_SOURCE}"
+            )
+    errors.extend(_order_structure_errors(order))
+
     l0_metrics, l0_errors = _metric_errors(
         "L0", l0, L0_LIMITS, physical_lines=False
     )
+    order_metrics, order_errors = _metric_errors(
+        "order", order, ORDER_LIMITS, physical_lines=False
+    )
+    errors.extend(order_errors)
     l1_metrics, l1_errors = _metric_errors(
         "L1", l1, L1_LIMITS, physical_lines=True
     )
@@ -348,6 +421,10 @@ def check_project(root: Path) -> CheckResult:
         "l0_nonempty_lines": l0_metrics["nonempty_lines"],
         "l0_pointers": l0_metrics["pointers"],
         "l0_projections": len(L0_PROJECTIONS),
+        "order_bytes": order_metrics["bytes"],
+        "order_nonempty_lines": order_metrics["nonempty_lines"],
+        "order_pointers": order_metrics["pointers"],
+        "order_projections": len(ORDER_PROJECTIONS),
         "l1_bytes": l1_metrics["bytes"],
         "l1_lines": l1_metrics["lines"],
         "l1_pointers": l1_metrics["pointers"],

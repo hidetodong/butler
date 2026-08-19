@@ -162,7 +162,17 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 
 `40_Context_Management/` 默认不是所有任务的前置必读，但在新项目接入 / 基地车部署、明确跨会话继续、需要 checkpoint 或 handoff、多阶段多子任务推进、需要等待用户 ACK 或外部结果，或预计无法单轮闭合时，应立即激活。若开始时未命中这些条件，但执行过程中发现任务会持续积累中间状态、仅靠最终代码无法恢复进度，也应在进入下一阶段前补激活。
 
-冷启动 / clean-slate 重启时，先读 `.ai/debt.md`（还欠什么、哪些边界不能碰）建立认知，再读 `.ai/ITERATIONS.md`（变更流时间线）与 `.ai/02_SESSION_HANDOFF.md`（当前断点），最后按指针钻代码；读序细节见 `40_Context_Management/context-persistence.md §6`。面向人的项目全貌摘要已于 ITER-0112 退役，新形态由 MILE-0016 R3 决定。
+上面的 L0 管的是「撞上领域术语时怎么分层读」，下面的读序管的是「新会话从零恢复上下文的顺序」——不同触发条件下的两套动作，不是一件事的两半。读序正文是 `40_Context_Management/context-persistence.md §6` 的字节投影，改它要改真源。
+
+<!-- butler-context-order:begin -->
+冷启动 / clean-slate 重启时按下列五步恢复上下文，不依赖对话记忆；每步读完即停，不顺着引用递归展开。
+
+1. **欠债与边界** —— 读 `.ai/debt.md`：还悬着什么账、哪些边界不能碰。
+2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
+3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
+4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+<!-- butler-context-order:end -->
 
 其中：
 

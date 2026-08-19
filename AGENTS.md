@@ -6,19 +6,17 @@
 
 ## 冷启动：先恢复 `.ai/` 状态
 
-`.ai/` 是 Claude Code 与 Codex 共用的项目状态层。开始任务时按以下顺序恢复，不依赖对话记忆：
+`.ai/` 是 Claude Code 与 Codex 共用的项目状态层。下面这段是 `Coder/40_Context_Management/context-persistence.md §6` 的字节投影，改它要改真源：
 
-1. 读 `.ai/debt.md` 拿长期欠债与硬约束。
-2. 读 `.ai/MILESTONES.md`，确认当前里程碑。
-3. 读 `.ai/ITERATIONS.md`，确认当前迭代和状态。
-4. 读 `.ai/task-state.md`，恢复当前阶段。
-5. 读 `.ai/02_SESSION_HANDOFF.md`，恢复会话断点。
-6. 若存在活跃迭代，按当前阶段依次读取工作区四件套：
-   - `.ai/CONCEPT.md`
-   - `.ai/AC_LIST.md`
-   - `.ai/TECH_PLAN.md`
-   - `.ai/VERIFY_REPORT.md`
-7. 最后按文件中的指针读取 `Coder/` 真源与相关代码。不要全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+<!-- butler-context-order:begin -->
+冷启动 / clean-slate 重启时按下列五步恢复上下文，不依赖对话记忆；每步读完即停，不顺着引用递归展开。
+
+1. **欠债与边界** —— 读 `.ai/debt.md`：还悬着什么账、哪些边界不能碰。
+2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
+3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
+4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+<!-- butler-context-order:end -->
 
 ### 核心概念渐进读取（L0）
 

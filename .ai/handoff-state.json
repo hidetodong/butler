@@ -1,12 +1,12 @@
 {
-  "handoff_sha256": "b629d14b9f6b33e87b1bc13343eeb9eb5e763e3337ebf97780bc7960fab690d4",
+  "handoff_sha256": "288f31358b7abd432c9af6700272e3baeda89e94f917e0f0b2b58e5cb4029af9",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "MILE-0016",
-    "next": "开 R2（冷启动读序改造）。R1 在 `context-persistence.md §6` 留下的过渡措辞（第一读已不指知识文件夹、新读序尚未正式定义）是 R2 的直接输入；两份入口模板的读序段落本轮未动，归 R2。",
-    "phase": "迭代间隙（ITER-0112 已于 2026-08-18 收口），等待开启 MILE-0016 R2",
+    "next": "按里程碑路线开启 MILE-0016 R3（项目全貌产物重建，承接 `.ai/project/` 剩下的 `invariants.md` 与 `frontier.md`）。本地已提交、未推送，推哪个远端等用户定。",
+    "phase": "ITER-0113 已收口（2026-08-19），等待开启下一迭代",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
@@ -14,16 +14,16 @@
       ".ai/MILESTONE.md"
     ],
     "risks": [],
-    "status": "R1 完成——`.ai/project/` 里靠 delta 折叠维护的五份文件、折叠结构契约 `project-digest-schema.md`、`knowledge-fold` 与 `drift-check` 两个帮手已删除，两处收口仪式不再强制折叠，34 处活引用改到自洽。`invariants.md` 与 `frontier.md` 原位保留、只改了三条因删除而变假的不变量，留给 R3。`debt.md` 迁到 `.ai/debt.md`。10/10 AC 达成（7 条可靠档、3 条弱档），完整 CI 退出码 0。"
+    "status": "MILE-0016 R2 完成。冷启动读序收成 `Coder/40_Context_Management/context-persistence.md §6` 一份真源（`butler-context-order` 标记块，1194 字节 / 6 非空行 / 7 指针），四处载体逐字节投影并由 `context_budget.py` 守护，Claude 宿主入口首次带上读序。12 条 AC 全部达成，9 条机器证据全 passed（另留 1 条失败诊断），完整 CI 与状态审计均退出码 0。已登记：下个发布版必须含 `[regen-entrypoints]`，老项目的滞后归 R15。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "e395a5e9c526fe7fbae967c22f4ae0f77b8ac77e9be9d5b3951d67d62ae125e8"
+      "sha256": "4ecb3bdc0ea4f69aeaea6ebf5e9128d94df9c5b6564c6ddeb15d42a9af59e514"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "feb9bac9601eee102cd808bf7b95c6ee7ffc5836700e31a89356c21c484239ea"
+      "sha256": "26f8cd2ca746e4f01983df1fa3703c17fa1b6fa1b26237a8964e7136d0ba9ef3"
     },
     {
       "path": ".ai/MILESTONES.md",
@@ -31,7 +31,7 @@
     },
     {
       "path": ".ai/MILESTONE.md",
-      "sha256": "e962c7c1700a818e1b81c9b2cafc34b0292a5b60ad02f97c12d9acb85a7ceacd"
+      "sha256": "b2659b54af2dd67b2a7b49667ffd80ec401f528c54e81aa9193a0652f0481a19"
     }
   ]
 }

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac2-projection-sha",
+  "iteration": "ITER-0113",
+  "ac_ids": [
+    "AC2"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      ".ai/iterations/ITER-0113/ac2-projection-sha.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-19T07:37:37.914Z",
+  "finished_at": "2026-08-19T07:37:37.992Z",
+  "duration_ms": 78,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 528,
+    "captured_bytes": 528,
+    "sha256": "2ce96b2bf058eb0cb3d34c6aab0587601222986321ad75da4a83c73b84e0d578",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

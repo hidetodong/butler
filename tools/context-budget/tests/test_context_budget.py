@@ -25,6 +25,9 @@ class ContextBudgetTests(unittest.TestCase):
             "Coder/README.md",
             "AGENTS.md",
             "templates/rule-card.md",
+            "templates/AGENTS.md.template",
+            "templates/CLAUDE.md.template",
+            "Coder/40_Context_Management/context-persistence.md",
             "Coder/domain-model.md",
             "Coder/domain-glossary.md",
             "Coder/context-map.md",
@@ -66,6 +69,10 @@ class ContextBudgetTests(unittest.TestCase):
         self.assertEqual(result.metrics["routes"], 4)
         self.assertEqual(result.metrics["fact_classes"], 4)
         self.assertEqual(result.metrics["transitions"], 5)
+        self.assertEqual(result.metrics["order_bytes"], 1194)
+        self.assertEqual(result.metrics["order_nonempty_lines"], 6)
+        self.assertEqual(result.metrics["order_pointers"], 7)
+        self.assertEqual(result.metrics["order_projections"], 4)
 
     def test_l0_budget_and_markers_fail_closed(self) -> None:
         self._replace(
@@ -102,6 +109,65 @@ class ContextBudgetTests(unittest.TestCase):
         self._replace("AGENTS.md", context_budget.L0_END, "")
         with self.assertRaisesRegex(ValueError, "AGENTS.md"):
             context_budget.check_project(self.root)
+
+    def test_order_projection_mismatch_names_the_file(self) -> None:
+        for relative in context_budget.ORDER_PROJECTIONS:
+            with self.subTest(relative=relative):
+                self.tearDown()
+                self.setUp()
+                self._replace(relative, "还悬着什么账", "随便读点什么")
+                result = context_budget.check_project(self.root)
+                joined = "\n".join(result.errors)
+                self.assertIn("order projection mismatch", joined)
+                self.assertIn(relative, joined)
+                for other in context_budget.ORDER_PROJECTIONS:
+                    if other != relative:
+                        self.assertNotIn(f"mismatch: {other}", joined)
+
+    def test_order_source_edit_breaks_every_projection(self) -> None:
+        self._replace(context_budget.ORDER_SOURCE, "还悬着什么账", "随便读点什么")
+        result = context_budget.check_project(self.root)
+        joined = "\n".join(result.errors)
+        for relative in context_budget.ORDER_PROJECTIONS:
+            self.assertIn(relative, joined)
+
+    def test_order_missing_markers_fail_closed(self) -> None:
+        self._replace(
+            "templates/CLAUDE.md.template", context_budget.ORDER_END, ""
+        )
+        with self.assertRaisesRegex(ValueError, "CLAUDE.md.template"):
+            context_budget.check_project(self.root)
+
+    def test_order_budget_ceiling_is_enforced(self) -> None:
+        padded = ("扩写" * 200) + "\n" + context_budget.ORDER_END
+        for relative in (context_budget.ORDER_SOURCE,) + context_budget.ORDER_PROJECTIONS:
+            self._replace(relative, context_budget.ORDER_END, padded)
+        result = context_budget.check_project(self.root)
+        self.assertIn("order bytes=", "\n".join(result.errors))
+
+    def test_order_step_numbering_must_be_consecutive(self) -> None:
+        for relative in (context_budget.ORDER_SOURCE,) + context_budget.ORDER_PROJECTIONS:
+            self._replace(relative, "\n3. **断点**", "\n4. **断点**")
+        result = context_budget.check_project(self.root)
+        joined = "\n".join(result.errors)
+        self.assertIn("order steps must be [1, 2, 3, 4, 5]", joined)
+        self.assertIn("[1, 2, 4, 4, 5]", joined)
+
+    def test_order_step_without_ai_pointer_is_rejected(self) -> None:
+        for relative in (context_budget.ORDER_SOURCE,) + context_budget.ORDER_PROJECTIONS:
+            self._replace(relative, "读 `.ai/debt.md`：", "读欠债清单：")
+        result = context_budget.check_project(self.root)
+        self.assertIn("order step 1 has no .ai/ pointer", "\n".join(result.errors))
+
+    def test_order_anchor_must_stay_in_its_step(self) -> None:
+        for relative in (context_budget.ORDER_SOURCE,) + context_budget.ORDER_PROJECTIONS:
+            self._replace(
+                relative, "再沿 `.ai/state-index.json` 用", "再沿 `.ai/history/` 索引用"
+            )
+        result = context_budget.check_project(self.root)
+        self.assertIn(
+            "order step 2 missing anchor: state-index.json", "\n".join(result.errors)
+        )
 
     def test_l1_context_pointer_and_recursion_guards(self) -> None:
         self._replace("Coder/domain-model.md", "| 知识连续性 |", "| 错误上下文 |")

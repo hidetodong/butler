@@ -123,16 +123,19 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 ### 冷启动读序
 
-冷启动 / clean-slate 重启时，按 状态 → 时间线 → 断点 → 代码 的顺序建立上下文：
+<!-- butler-context-order:begin -->
+冷启动 / clean-slate 重启时按下列五步恢复上下文，不依赖对话记忆；每步读完即停，不顺着引用递归展开。
 
-1. **长期欠债与硬约束** `.ai/debt.md` —— 冷启动**第一读**：还悬着什么账、哪些是不能碰的边界。
-   > 过渡说明：面向人的项目全貌摘要（原 `.ai/project/` 知识文件夹）已于 ITER-0112 退役，新的全貌产物由 MILE-0016 R2 定读序、R3 定形态与落点。在 R3 交付前，冷启动的全貌只能靠本节其余四步加 `Coder/README.md` 建立。
-2. `.ai/ITERATIONS.md`（及 `MILESTONES.md`）—— 只读当前与近期热时间线；需要旧身份时沿 `.ai/state-index.json` 用 state-ledger `lookup` 定向读取一个冷分片，禁止默认读取整个 history 目录。
-3. 先运行 `$BUTLER_PATH/tools/handoff/handoff.py check --project-root "$PROJECT_ROOT"`；fresh 才读 `.ai/02_SESSION_HANDOFF.md`，stale 先 sync 重建，error 先修权威状态。
-4. 当前 TECH_PLAN 的方案 verdict、task-state `Goal Calibration` 与 VERIFY `Completion Inputs` —— 恢复 Goal state/reason/next；宿主 Goal/Task 只是随后可重建的投影。
-5. 代码 / `deliveries/` —— 按上面三者给的指针按需钻取。
+1. **欠债与边界** —— 读 `.ai/debt.md`：还悬着什么账、哪些边界不能碰。
+2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
+3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
+4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+<!-- butler-context-order:end -->
 
-`debt.md` 与 handoff 互补：前者给"还欠什么、哪些边界不能碰"、后者给"此刻断点"。二者都不给"系统整体是什么"——在 R3 的全貌产物交付前，新会话只能从一堆迭代 delta 倒推全貌（管中窥豹），这是已知且有意接受的过渡代价。
+> 上面这段是读序的唯一真源，另有四处受 CI 校验的字节投影：`Coder/README.md`、仓根 `AGENTS.md`、`templates/AGENTS.md.template` 与 `templates/CLAUDE.md.template`。改读序只改本节，改完跑 `tools/context-budget/context_budget.py check` 让四处同步；任一处被单独改动，CI 会指名报 `order projection mismatch`。
+
+`debt.md` 与 handoff 互补：前者给「还欠什么、哪些边界不能碰」、后者给「此刻断点」。二者都不给「系统整体是什么」——面向人的项目全貌摘要（原 `.ai/project/` 知识文件夹）已于 ITER-0112 退役，新的全貌产物形态与落点由 MILE-0016 R3 决定；在那之前新会话只能从一堆迭代 delta 倒推全貌（管中窥豹），这是已知且有意接受的过渡代价。
 
 ### 冷启动一致性自检
 

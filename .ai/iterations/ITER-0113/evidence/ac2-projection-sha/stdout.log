@@ -1,0 +1,10 @@
+[OK]   真源 Coder/40_Context_Management/context-persistence.md sha256=36c5eb971a515b03 bytes=1194
+[OK]   投影一致：AGENTS.md
+[OK]   投影一致：Coder/README.md
+[OK]   投影一致：templates/AGENTS.md.template
+[OK]   投影一致：templates/CLAUDE.md.template
+[OK]   CLAUDE 模板的读序块位于新增「会话起始：恢复项目状态」章节下
+[OK]   渲染后的部署入口 CLAUDE.md 读序块与真源逐字节相同
+[OK]   渲染后的部署入口 AGENTS.md 读序块与真源逐字节相同
+
+AC2-CLEAN
