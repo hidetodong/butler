@@ -1,64 +1,75 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-08-19
+ACK 日期: 2026-08-20
+修订记录: 2026-08-19 · ② AC12 的「零命中」口径改为「零活引用」，并剔除无法达成的裸 `frontier` 字样——Decision Map 的 `frontier`（依赖 DAG 可推进前沿）与本轮退役的知识文件同名不同物，且迁出留痕本身必须提到旧文件名。｜ 2026-08-19 · ① AC2 的驻留工具计数由「24 项」改为「与 `tools/` 实际子目录一致，当前 22」——冻结时的 24 把 `ls` 输出里的 `.` 与 `..` 数进去了；同时把硬编码数字换成对源头的引用。影响面未变。
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0113
+# AC_LIST — ITER-0114
 
 ## Goal
 
-- 让冷启动读序从「五处载体各说各的、没有任何机器检查能发现」变成「一份真源、四处受校验的字节投影」，并让真源里那三条今天被投影集体丢掉的硬约束（handoff 先 `check`、台账定向读冷分片、Goal 状态重算）进到步骤本身；同批给 Claude 宿主的部署入口补上它一直没有的读序段落，清掉 R1 留下的读序过渡措辞。
+- 把「项目整体长什么样」这件事重新变成一份可信产物，且这次按内容性质分家落地：可从机器源头派生的事实进 `.ai/OVERVIEW.md`，由一条命令生成、CI 比对，人不许手改；机器算不出来的长期决策与理由进 `.ai/invariants.md`，纯追加并补上「只写理由、指向真源、不复述机制形状」的纪律；会过期的判断进 `.ai/debt.md`，本来就有还清的路径。三份各自单一性质，`.ai/project/` 与 `frontier.md` 随之退役。
 
 ## In Scope
 
-- 改写 `context-persistence.md §6 冷启动读序`：按语义阶段分五步，每步内列具体文件，三条硬约束写进对应步骤而非留在步骤外的散文里；用 `butler-context-order:begin/end` 标记把读序正文圈成可投影块，`context-persistence.md` 为唯一真源。
-- 四处载体各投一份读序块、正文与真源逐字节相同：butler 仓 `AGENTS.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`（新增「会话起始」章节）、`Coder/README.md`（第 165 行那段散文换成投影块）。
-- `tools/context-budget/context_budget.py` 增读序投影一致性校验与体量上限（沿用 L0 那套 `_l0_block()` 提取与比对路径），配负例 fixture。
-- 读序块加结构断言：五步编号连续、每步至少含一个 `.ai/` 路径、三条硬约束各自的关键锚点必须在场。
-- `scripts/verify-codex-foundation.sh` 删掉自抄的 9 项路径列表，改为只校验 Codex 入口含读序块标记与最终 `Coder/` 真源步骤。
-- 清掉属于读序的过渡措辞：`context-persistence.md §6` 第 1 步下引用块的读序那半、`handoff-spec.md` 第 15 行的读序那半；全貌产物那半原样留给 R3。
-- `templates/rule-card.md` 第 45 行与读序块分工写死：读序块独占「按什么顺序读哪些文件」，rule-card 独占「handoff 是派生视图、什么时候 sync」，两边互指不互抄。
-- 在 `.ai/MILESTONE.md §5.4` 登记本轮改了两份部署入口模板、下个发布版必须含 `[regen-entrypoints]`。
+- 新建 `scripts/sync-project-overview.py`，`--check` / `--write` 二选一 + `--project-root` / `--butler-root`（沿用 `sync-workflow-registry.py` 的形状）。从五个现成机器源头派生：`VERSION`、双台账 `.ai/ITERATIONS.md` / `.ai/MILESTONES.md`（含 `.ai/state-index.json` 的冷片计数）、`Coder/README.md` 的目录结构与职责、`workflows/registry.json` 的 Router + 13 个业务工作流、`tools/` 目录清单。
+- 生成 `.ai/OVERVIEW.md`：全文由生成器写，页首挂「本页由 … 生成，请勿手改」，正文不含任何手写槽位；体量设上限并机器校验。
+- `--check` 模式进 `scripts/verify-ci.sh`：生成结果与磁盘不一致即非零退出，诊断指名是哪一节对不上。
+- `git mv .ai/project/invariants.md .ai/invariants.md`，内容原样迁移；同批修两条已被证伪的条目（第 47 行收口仪式五步→四步、第 42 行冷启动读序四步→R2 的五步语义阶段），并在文件头补写作纪律：只写决策与理由、指向真源、不复述机制的具体形状（步数 / 清单 / 顺序）。
+- 无真源指针的条目加棘轮：现存 16 条豁免并在文件头登记，机器校验其数量**不得增加**；新增条目必须至少带一个反引号真源指针。
+- 退役 `frontier.md`：三节逐节处置并留痕——「当前形态」「活跃战线」里可派生的并入 `OVERVIEW` 生成段，「下一个瓶颈」里仍成立的判断迁入 `.ai/debt.md`，其余逐条写明为何可弃（照 ITER-0112 删 `capabilities.md` 的逐节核查格式）。
+- 删空并移除 butler 仓自己的 `.ai/project/` 目录。
+- 读序第 5 步补一句按需指针，点名 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`；改真源一处、四处投影同步，读序块体量仍须在 1400 字节上限内。
+- `.ai/MILESTONE.md §5.4` 登记两条前提修正：`frontier.md` 实测已漂移两个迭代（整体覆写要有强制触发才活得下来）、`invariants.md` 实测有两条已假（纯追加不保证旧条目描述的东西没变）。
+- `Coder/README.md` 注册新脚本；`Coder/40_Context_Management/context-persistence.md` 写清三份产物的性质分工与重算命令。
 
 ## Out of Scope
 
-- 不定义全貌产物的形态、派生源与落点（R3）；`.ai/project/` 剩下的 `invariants.md` 与 `frontier.md` 一字不动。
-- 不改 `handoff-spec.md` 的 `02_SESSION_HANDOFF.md` 格式契约，不改双台账结构与 `state-index.json` 路由公式，不改 `handoff.py` / `state_ledger.py` 的行为。
-- 不改冷启动一致性自检那 5 条不变量的判定口径。
-- 不改 L0 渐进读取内核的正文、上限与既有三处投影。
-- 不动 `/butler:progress`（R4）、`/butler:loop`（R5）、旧 inbox 全链（R8）、根布局改名与迁位（R9）。
-- 不改升级器动作类型与 CLI 参数（R14），不写 `migrations/v4.0.0.md`（R15）。
+- 不把全貌产物接回任何 delta 折叠机制，不为它做原地重评（里程碑两条硬边界）。
+- 不新建采集：只读现有机器源头，不改 `registry.json` / 双台账 / `tools/` / `Coder/README.md` 的结构与字段。
+- 不做部署侧接线：不改 `mcv-deployment.md` 的部署种子、不动升级器动作与迁移配方；已部署项目何时拿到新产物归 R15，本轮只登记。
+- 不动 `.ai/project/workspaces.md` 这个路径规格——它是目标项目侧 PRD / 工作区机制的落点，butler 仓自己没有这个文件；该路径的去留归 R9 根布局整理。
+- 不改 R2 定的读序五步语义结构（只在第 5 步内加指针文字，不增删步骤）。
+- 不改 `.ai/debt.md` 既有条目的格式与语义，只追加。
+- 不回头补那 16 条缺指针条目的真源（棘轮只防增量）。
+- 不动 `/butler:progress`（R4）、`/butler:loop`（R5）、旧 inbox 全链（R8）、根布局改名与迁位（R9）、升级器动作类型（R14）、v4.0.0 迁移配方（R15）。
 - 不切版、不发布。
 
 ## Acceptance Checklist
 
-- [ ] AC1: `context-persistence.md §6` 的读序为五步语义阶段结构，三条硬约束在对应步骤正文内可读到——第 2 步含 `state-index.json` 定向读单个冷分片与「禁止默认读取整个 `.ai/history/`」，第 3 步含 `check` 三态处置（`fresh` 读 / `stale` 先 `sync` / `error` 先修权威状态），第 4 步含 Goal state/reason/next 重算与「宿主投影不是真源」；读序正文被 `butler-context-order:begin/end` 一对标记圈定，全仓该标记对数为 5（真源 1 + 投影 4）。
-- [ ] AC2: `AGENTS.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`、`Coder/README.md` 四处各含一份读序块，块内正文与 `context-persistence.md` 真源**逐字节相同**（sha256 全等）；`templates/CLAUDE.md.template` 的块位于新增的「会话起始：恢复项目状态」章节下。
-- [ ] AC3: `context_budget.py` 增 `ORDER_SOURCE` / `ORDER_PROJECTIONS` 与比对逻辑，任一投影与真源不一致时报 `order projection mismatch: <文件路径>`，指名是哪一份；任一载体缺标记走 fail-closed 抛错并带文件名，不静默跳过。
-- [ ] AC4: 读序块结构断言进 `context_budget.py`：步骤编号为连续 `1.`–`5.`、每步至少含一个 `.ai/` 路径、三条硬约束的锚点字符串（`state-index.json`、`check`、`Goal`）各自在场；任一条不满足时诊断指名缺的是哪一条。
-- [ ] AC5: 读序块体量在新定上限内——`bytes ≤ 1400`、`nonempty_lines ≤ 9`、md 指针 `≤ 10`；`context_budget.py` 的 metrics 输出含 `order_bytes` / `order_nonempty_lines` / `order_pointers` 三项实测值。
-- [ ] AC6: `scripts/verify-codex-foundation.sh` 不再出现 `.ai/MILESTONES.md` / `.ai/ITERATIONS.md` / `.ai/task-state.md` / 四件套那张 9 项硬编码列表；改为校验 `AGENTS.md` 含 `butler-context-order` 标记对与最终 `Coder/` 真源步骤，脚本整体退出码 0。
-- [ ] AC7: 过渡措辞按半清理——`context-persistence.md §6` 第 1 步下的引用块与 `handoff-spec.md` 第 15 行中「读序由 R2 定」那半已删，「全貌产物由 R3 定形态」那半仍在且措辞未被改动。
-- [ ] AC8: `templates/rule-card.md` 第 45 行的 handoff 纪律与读序块第 3 步不互相复述：rule-card 不列读序步骤，读序块不重复「handoff 是派生视图、不是 AI 手写真源」的定性；两处各有一句指向对方。
-- [ ] AC9: 新增 fixture 不少于 6 条，覆盖四类负例——四处投影各自被单独篡改（4 条）、真源被改致四处同时失配（1 条）、任一处标记缺失 fail-closed（1 条）；每条断言具体诊断字符串，不只断言非零退出。
-- [ ] AC10: `bash scripts/verify-ci.sh` 一次跑完全绿，无跳过、无单点豁免；`scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，非 OK 行只剩两条 `UNRELEASED` 亮牌。
-- [ ] AC11: `.ai/MILESTONE.md §5.4` 含本轮的 `[regen-entrypoints]` 登记，写明改了哪两份模板、已部署项目在升级前拿不到新读序这一滞后事实。
-- [ ] AC12: 交付总结如实记录一项覆盖面变化——`verify-codex-foundation.sh` 原先守的是「AGENTS.md 里读序路径按行号递增」，换成投影校验后守的是「四处逐字节相同 + 结构断言」，真源本身写错了投影校验抓不到，只有结构断言那几条能兜；这不是等价替换。
+- [ ] AC1: `scripts/sync-project-overview.py` 存在且 `--check` 与 `--write` 互斥、`--project-root` 与 `--butler-root` 可分别指定；五个机器源头全部实际读取——删掉任一源头文件后 `--write` 报错并指名缺的是哪一个，不静默产出残缺页。
+- [ ] AC2: `--write` 生成的 `.ai/OVERVIEW.md` 页首含「请勿手改」与生成命令原文；全文无手写标记区；内容至少覆盖五节——版本与当前活跃状态、里程碑时间线、规则体系目录与职责、工作流清单（Router + 13）、驻留工具清单（数量与 `tools/` 实际子目录一致，当前 22），每节的数字与其机器源头实测一致。
+- [ ] AC3: `--check` 在磁盘与生成结果一致时退出码 0；手工改动 `.ai/OVERVIEW.md` 任意一节后退出码非 0，且诊断指名是哪一节不一致，不只说「文件有差异」。
+- [ ] AC4: `.ai/OVERVIEW.md` 体量不超过 12000 字节，上限写死在生成器常量里并在 `--check` 时校验；超限时诊断给出实测值与上限。
+- [ ] AC5: `scripts/verify-ci.sh` 含 `sync-project-overview.py --check` 一行，位置与其他 `--check` 类检查一致；完整 CI 退出码 0。
+- [ ] AC6: `.ai/invariants.md` 存在且 `.ai/project/invariants.md` 不存在；迁移前后条目数一致（47 条），除下述两条修正外正文逐条未改（`git log --follow` 可追溯为迁位而非重写）。
+- [ ] AC7: 两条已证伪的条目改对——收口仪式那条写四步且第四步是自检（与 `iteration-schema.md §5.5` 一致，不再出现 fold receipt），冷启动读序那条写 R2 的五步语义阶段（与 `context-persistence.md §6` 一致）；两条都不再复述完整步骤清单，改为「指向真源 + 只说为什么」。
+- [ ] AC8: `.ai/invariants.md` 文件头含写作纪律三条（只写决策与理由 / 必带真源指针 / 不复述机制的具体形状）与棘轮基线数字；机器校验无指针条目数不超过基线 16，超出时诊断列出新增的是哪几条。
+- [ ] AC9: `.ai/project/frontier.md` 与 `.ai/project/` 目录均不存在；`frontier.md` 三节的处置在本迭代变更流里逐条留痕，每条注明去向（并入 OVERVIEW 生成段 / 迁入 `debt.md` / 可弃及理由），无一条无交代。
+- [ ] AC10: `.ai/debt.md` 追加了从「下一个瓶颈」迁来的仍成立条目，且追加内容不改动既有条目；迁入项写明来源是 `frontier.md` 及迁入日期。
+- [ ] AC11: 读序块第 5 步含 `.ai/OVERVIEW.md` 与 `.ai/invariants.md` 两个按需指针且措辞明确是「按需读」不是「必读」；五处载体仍逐字节相同，`context_budget.py check` 退出码 0 且 `order_bytes` 仍不超过 1400。
+- [ ] AC12: 全仓活跃文件中不再有指向 `.ai/project/invariants.md` 与 `.ai/project/frontier.md` 的**活引用**（把它们当作现存产物去读、去写或要求读取的引用）；**叙述性提及**（迁出留痕、设计理由、历史记录）允许保留，但每一处都要能举出理由、逐处白名单登记。扫描面排除历史归档（`.ai/iterations/`、`.ai/history/`、`deliveries/`）、已发布的迁移配方（`migrations/`，改了 manifest 一致性校验会红）、本迭代自己的工作区产物与第三方依赖（`.venv/`）。Decision Map 的 `frontier` 是依赖 DAG 的可推进前沿，与本轮退役的知识文件同名不同物，不在清理范围。另需：`Coder/README.md` 已注册 `sync-project-overview.py`，`context-persistence.md` 写清三份产物的性质分工与重算命令。
+- [ ] AC13: `.ai/MILESTONE.md §5.4` 含两条前提修正登记，各自写明实测证据（`frontier.md` 停更在 ITER-0111 且正文写 v3.5.1 / `invariants.md` 第 42、47 行已假）与修正后的规律表述。
+- [ ] AC14: 新增 fixture 不少于 8 条，覆盖——五个源头各自缺失时报错指名（5 条）、手改任一节被 `--check` 抓到并指名（1 条）、体量超限（1 条）、无指针条目数超基线（1 条）；每条断言具体诊断字符串，不只断言非零退出。
+- [ ] AC15: `scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，非 OK 行只剩两条 `UNRELEASED` 亮牌与历史诊断 `INFO`；交付总结如实记录一项覆盖面事实——`OVERVIEW` 的 `--check` 只能证明「生成段与机器源头一致」，证明不了「这份全貌被任何会话读过」，后者仍要等 R11 的运行时观测。
 
 ## Verification Method
 
-- AC1: 人读 `context-persistence.md §6` 全文；`grep -c 'butler-context-order:begin' -r` 全仓为 5；三条硬约束各用一次定向 `grep` 确认落在对应步骤段内。
-- AC2: 脚本提取五处标记块正文，逐一算 sha256 并断言全等；`grep -n '会话起始' templates/CLAUDE.md.template` 命中且标记块在其后。
-- AC3: `python3 tools/context-budget/context_budget.py check --project-root .` 退出码 0；四条篡改 fixture 各自断言诊断含被改文件名；标记缺失 fixture 断言抛错含文件名。
-- AC4: 结构断言的三条负例各造一次（编号断开、某步无 `.ai/` 路径、抽掉一个锚点字符串），断言诊断指名缺的是哪一条。
-- AC5: `context_budget.py` metrics 输出三项实测值并与上限比对；上限值同时写进 `context_budget.py` 常量与 AC1 描述，人读确认一致。
-- AC6: `bash scripts/verify-codex-foundation.sh` 退出码 0；`grep -c '\.ai/MILESTONES\.md' scripts/verify-codex-foundation.sh` 为 0。
-- AC7: `grep -n 'R2' Coder/40_Context_Management/context-persistence.md Coder/40_Context_Management/handoff-spec.md` 零命中；`grep -c 'R3' 同两文件` 各不小于 1，人读确认保留的是全貌产物那半。
-- AC8: 人读两处；`grep -c '派生视图' templates/rule-card.md` 为 1 且读序块内为 0。
-- AC9: `python3 -m unittest` 跑 `tools/context-budget/tests/`，新增用例计数不少于 6，全部通过。
-- AC10: `bash scripts/verify-ci.sh` 与 `scripts/audit-project-state.py --allow-unreleased`，退出码均为 0，输出留证。
-- AC11: 人读 `.ai/MILESTONE.md §5.4` 末条。
-- AC12: 人读 `deliveries/ITER-0113-*.md` 对应段落。
+- AC1: 逐个源头在临时副本上删除后跑 `--write`，断言诊断含被删文件名；`--check --write` 同传断言 argparse 报互斥。
+- AC2: 生成后逐节比对——`VERSION` 字面、双台账里程碑行数、`Coder/README.md` 目录段条数、`registry.json` 的 `workflows` 长度、`ls tools/` 计数。
+- AC3: 生成后逐节各改一处，断言 `--check` 退出码非 0 且诊断含该节标题。
+- AC4: 读生成器常量与 `wc -c` 实测；另造一份超限 fixture 断言诊断含实测值与上限。
+- AC5: `grep -c 'sync-project-overview' scripts/verify-ci.sh` 不小于 1；`bash scripts/verify-ci.sh` 退出码 0。
+- AC6: `git log --follow --oneline .ai/invariants.md` 可见迁移前历史；`grep -c '^- \*\*'` 两侧均为 47；`git show` 对 diff 人读确认只改两条。
+- AC7: 人读两条 + 定向 `grep` 断言不再含 `fold receipt` 与旧四步读序措辞。
+- AC8: 脚本按 AC8 口径统计无指针条目数并与基线比对，故意加一条无指针条目断言报错并列出它。
+- AC9: `test -e` 断言两者不存在；人读本迭代变更流的逐节处置段。
+- AC10: `git diff` 确认 `.ai/debt.md` 只有追加、无既有行改动。
+- AC11: `python3 tools/context-budget/context_budget.py check --project-root .` 退出码 0 且 metrics `order_bytes` ≤ 1400；ITER-0113 的 `ac2-projection-sha.py` 重跑仍全 OK。
+- AC12: 扫描脚本按上述排除面跑 `grep -rn`，活引用零命中；叙述性提及逐处列在脚本的白名单里并注明理由，人读核对；人读 `Coder/README.md` 与 `context-persistence.md` 对应段落。
+- AC13: 人读 `.ai/MILESTONE.md §5.4` 末两条。
+- AC14: `python3 -m unittest` 跑新增测试目录，用例计数与诊断断言逐条核。
+- AC15: 审计脚本退出码与输出留证；人读 `deliveries/ITER-0114-*.md` 对应段落。
 
 ## External References
 
@@ -66,8 +77,8 @@ ACK 日期: 2026-08-19
 
 ## Open Questions / Risks
 
-- **风险 · 投影校验守不住真源本身写错**：这是本轮最实的一个缺口，也是 AC12 要如实记的东西。四处逐字节相同只能证明「没人偷偷改其中一处」，证明不了「这五步本身是对的」。AC4 的结构断言（编号连续、每步有 `.ai/` 路径、三个锚点在场）能兜住最粗的几类错，但兜不住语义层面的顺序错误。真要守住这一层得有运行时观测，归 R11。
-- **风险 · 给主力宿主的每次会话净加约 1100 字节**：读序块进 `templates/CLAUDE.md.template` 是净新增，不是改写。按中文约 0.9 token/字符估约 626 token，占规则卡全文的比例要在 P5 实测后如实写，不能只报绝对值。上限定在 1400 字节是为了留一点后续增补空间，但这个空间本身就是成本，别当成免费额度用满。
-- **风险 · 四处投影点是四个必须同步维护的地方**：L0 现在是三处，读序再加四处，同源投影的总数变成七处。投影校验能保证它们一致，但每次改真源都要跑一遍同步，人工改漏时 CI 会红——这是有意的代价，不是缺陷；只是要清楚 MILE-0016 后面还有 R9 的根布局改名，那一轮会同时撞上这七处。
-- **待定 · `Coder/README.md` 换成投影块后，L0 块与读序块相邻**：两块都在同一份文件的同一区域，中间只隔一段说明。物理上没问题，但两块的职责边界要写清楚——L0 是「撞上领域术语时怎么分层读」，读序是「新会话从零恢复上下文的顺序」，别让读者以为是一件事的两半。P3 定两块之间那段过渡文字。
-- **待定 · 已部署项目的滞后没有兜底**：改了两份模板，老项目跑 `/butler:upgrade` 之前仍是旧入口——Codex 侧是旧读序、Claude 侧仍然没有读序。本轮只登记 `[regen-entrypoints]`，实际让老项目拿到新入口要等 R15 的 v4.0.0 配方。这段时间里，butler 仓自己和新部署的项目有读序、老项目没有，是已知的不一致。
+- **风险 · 生成器读的是 butler 仓自己的源头，部署到目标项目未必成立**。`registry.json` / `Coder/README.md` / `tools/` 是规则仓的，双台账与 `VERSION` 才是项目侧的。本轮用 `--butler-root` 与 `--project-root` 分开传参把这层区分做进接口，但只在 butler 仓自己（两者相同）验证；目标项目场景不在本轮验收范围内，也不接部署链。这是有意的分期，不是遗漏——但要清楚：**本轮交付的是「butler 仓自己有全貌产物」，不是「所有部署项目都有」**。
+- **风险 · 12000 字节上限是拍的，没有依据**。读序块的 1400 字节有依据（每次会话都付），全貌产物是按需读，没有同等的成本锚点。12000 大致是五节表格化内容的两倍余量，防的是 `capabilities.md` 那种无上限膨胀。真实合理值要等有人实际读过才知道，本轮先设一个能拦住失控的数。
+- **风险 · 棘轮只防增量，16 条缺指针的旧账留着**。这 16 条恰恰是最容易悄悄变假的那批（它们复述了机制形状却没给可核对的真源）。本轮不补是为了不让迭代膨胀，但这笔账要进 `.ai/debt.md`，否则棘轮会变成「永久豁免」的体面说法。
+- **待定 · `.ai/OVERVIEW.md` 到底进不进冷启动必读**。AC11 定的是「第 5 步按需指针」，即不必读。这么定是因为它 12KB 上限、比读序块贵一个量级。代价是「没人读」的风险坐实——生成得再准，不在必读路径上就可能永远不被打开。反过来如果进必读，每次会话成本立刻翻几倍，而且重蹈「陈旧的完整」的另一面「准确但没人要的完整」。倾向维持按需，P3 若有更省的折中（比如生成一段 300 字节的摘要进读序、全文按需）再议。
+- **待定 · `frontier.md` 的「下一个瓶颈」有几条真能迁**。当前那节 6 条里，至少「远端 required check 未启用」「hook 共存合同缺失」「危险模式与 Loop 绑定」三条是真欠债、迁 `debt.md` 顺理成章；「MILE-0009 已随 v3.0.0 发布」这类是陈述事实不是瓶颈，该弃。逐条判定放 P4 执行时做，P3 只定判定口径。

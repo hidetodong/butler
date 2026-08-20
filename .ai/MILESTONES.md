@@ -4,7 +4,7 @@ current: MILE-0016
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112 | — |
+| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112, ITER-0113, ITER-0114 | — |
 | MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | closed | 2026-07-31 | 2026-08-17 | ITER-0107, ITER-0108, ITER-0109, ITER-0110, ITER-0111 | deliveries/milestones/MILE-0015-domain-model-governance.md |
 | MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | ITER-0102, ITER-0103, ITER-0104, ITER-0105, ITER-0106 | deliveries/milestones/MILE-0014-explore-decision-map-integration.md |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |

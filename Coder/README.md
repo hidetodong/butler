@@ -131,6 +131,8 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `30_Quality_Gate/`：通用质量门禁与验证策略（自动化优先纪律 + 自动道 / 人测道分道口径 + 分级置信「可靠 / 弱 / 待人」+ 代理验证）+ P4 常驻写码底线（`correction-contract` 纠错、`implementation-discipline` 最小实现）+ 供 opt-in 模式共享的定量熔断纪律（`bounded-convergence`）。
 - `40_Context_Management/`：长任务、多阶段任务与交接场景下的上下文治理。
 - `50_Extension_Ideation/`：Butler 内建但 opt-in 的 Explore / Ideation 模块；用户主动探索或接受带具体阻塞理由的建议后启用，位于 P1→P5 之外。
+- `55_Extension_ConvergenceLoop/`：仅在 `/butler:loop` 激活时生效的 P4 高强度纠错升档；在常驻纠错契约之上叠加执行-探测-反思-修正闭环与定量熔断，熔断纪律与 `30_Quality_Gate/bounded-convergence.md` 共用。
+- `60_Extension_CodeReview/`：共享审查流程真源（多维评审 / 评级 / 闭环 / P5 同上下文简评）；把这套流程放进隔离上下文跑的复核帮手定义在 `62_Extension_Agents/independent-review.md`。
 - `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册两帮手：复核（`independent-review`，接 P5）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
 - `65_Extension_Dangerous/`：仅在显式 `/butler:dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
 - `70_Extension_Preference/`：实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/butler:dangerous`**；只学真人选择，外置存储、与本仓库解耦。
@@ -171,7 +173,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
 3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
 4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
-5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
 <!-- butler-context-order:end -->
 
 其中：
@@ -183,6 +185,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `tools/decision-promotion/` 是 Explore→Delivery 的确定性交接 Module：用户显式选择 resolved Decision slice 与 `route-reference` / `iteration-start` 目标后，工具用 closure digest、target digest、不可变 receipt 和全局写锁执行；它不做清晰度/大小判断、不创建 Milestone route、不更新 active Iteration，开工只复用 iteration-intake 从 P1 开始。
 - `tools/explore-dogfood/` 是三个 Decision Module 的内部端到端回归 harness：只在临时项目编排公开边界，另提供零写聚合 inspect 供跨会话恢复观测；不加入 workflow registry、不调度 agent、不保存派生状态。R5 观测报告在 `docs/explore-dogfood-r5.md`。
 - `tools/artifact-pipeline/` 是五件套结构的机器 SSOT：versioned manifest 唯一定义 live 产物路径、阶段、H2 顺序、固定表头/状态字段和条件段，canonical templates 与其机械对账；新标记产物 strict，legacy 归档只读不追罚。
+- `scripts/sync-project-overview.py` 是项目全貌产物 `.ai/OVERVIEW.md` 的唯一生成器：从 `VERSION`、双台账、`Coder/README.md`、`workflows/registry.json` 与 `tools/` 五个机器源头派生五节事实，`--write` 原子写盘、`--check` 逐节比 sha256 并指名漂移的节（进 `scripts/verify-ci.sh`）。全貌产物三分家：**可派生事实**归本生成物（人不许手改）、**长期决策与理由**归 `.ai/invariants.md`（纯追加）、**会过期的判断**归 `.ai/debt.md`（还掉即删）；本脚本另守 `.ai/invariants.md` 无真源指针条目数的棘轮。
 - `tools/domain-contract/` 是高风险身份/状态/引用的最小领域合同：`domains.v1.json` 只登记「身份—上下文—合同种类—唯一所有者—真源指针」+ 关系与断言，`domain_contract.py check` fail-closed 校验重复/悬空/越界/复制型载荷，并要求每条登记条目至少被一条断言或关系锚住（登记了却没有任何回归能抓，视为失败），不复制任何执行枚举或字段全集。
 - `20_Workflow_Lifecycle/mcv-update.md` 负责基地车维护文件的升级迁移协议。
 - `20_Workflow_Lifecycle/goal-contract.md` 是非极小任务 Goal 的共同合同真源：不新增 GOAL 台账，而从 milestone/CONCEPT、AC、TECH_PLAN、task-state、VERIFY/review 与收口事实派生 `active / at-risk / blocked / completion-candidate / complete / abandoned`；宿主 Goal/Task 只能做可重建投影。

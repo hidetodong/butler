@@ -1,0 +1,57 @@
+=== AC15 · 状态审计 ===
+[OK]   audit-project-state.py --allow-unreleased 退出码 0
+       —— 非 [OK] 行 ——
+       [INFO] ITER-0113.evidence_diagnostics: 保留非通过记录=['ac10-audit']
+       [INFO] ITER-0112.evidence_diagnostics: 保留非通过记录=['ac8-audit']
+       [INFO] ITER-0108.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit-active']
+       [INFO] ITER-0107.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0106.evidence_diagnostics: 保留非通过记录=['decision-modules-regression', 'decision-modules-regression-pinned', 'full-ci-r2', 'review-explore-risk', 'state-audit-active']
+       [INFO] ITER-0105.evidence_diagnostics: 保留非通过记录=['full-ci-r2']
+       [INFO] ITER-0101.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-final']
+       [INFO] ITER-0099.evidence_diagnostics: 保留非通过记录=['deployed-hook-matrix']
+       [INFO] ITER-0098.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-retry']
+       [INFO] ITER-0096.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0095.evidence_diagnostics: 保留非通过记录=['full-ci', 'project-config-tests', 'state-audit-active']
+       [INFO] ITER-0094.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0093.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0092.evidence_diagnostics: 保留非通过记录=['r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-sandbox-failure', 'tdd-goal-gate-red']
+       [INFO] ITER-0091.evidence_diagnostics: 保留非通过记录=['r1-full-ci']
+       [INFO] ITER-0085.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit-active']
+       [INFO] ITER-0084.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit', 'state-audit-after-fold']
+       [INFO] ITER-0082.evidence_diagnostics: 保留非通过记录=['state-audit-closed']
+       [INFO] ITER-0080.evidence_diagnostics: 保留非通过记录=['prd-status-tests']
+       [INFO] ITER-0078.evidence_diagnostics: 保留非通过记录=['inbox-workflow-registry']
+       [INFO] ITER-0075.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0068.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0060.evidence_diagnostics: 保留非通过记录=['plugin-contract-final', 'state-audit-closed']
+       [INFO] ITER-0059.evidence_diagnostics: 保留非通过记录=['state-audit-active']
+       [INFO] ITER-0058.evidence_diagnostics: 保留非通过记录=['remote-required-state']
+       [INFO] ITER-0057.evidence_diagnostics: 保留非通过记录=['dual-host-matrix']
+       [UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+       [UNRELEASED] release.tag: UNRELEASED：v3.6.0 不指向 HEAD
+[OK]   两条 UNRELEASED 亮牌（发布态，非漂移）
+[OK]   零 DRIFT / ERROR
+=== AC15 · 交付总结双格式在位 ===
+[OK]   deliveries/ITER-0114-project-overview-rebuild.md 在位（10537 字节）
+[OK]   deliveries/ITER-0114-project-overview-rebuild.html 在位（16479 字节）
+[OK]   HTML 占位符全部填好
+[OK]   ROADMAP 块按迭代级删除
+[OK]   HTML 单文件自包含，无外链
+=== AC15 · 覆盖面事实如实记录 ===
+[OK]   写明 --check 证不了「被读过」
+[OK]   写明 --check 只能证明生成段与源头一致
+[OK]   写明这半个证明要等 R11 的运行时观测
+[OK]   写明它不在必读路径上，可能永远不被打开
+=== AC15 · 估数与实测的差如实记下 ===
+[OK]   记下方案里的估数 9
+[OK]   记下实测 10 方法 / 11 场景
+[OK]   写明没有回头改方案
+=== AC15 · 两条 amend 如实记下 ===
+[OK]   写明 amend 走的是 iteration-schema.md §5.3
+[OK]   记下 AC2 的计数错与更正
+[OK]   记下 AC12 的口径修订
+=== AC15 · 引用只给路径、不嵌四件套全文 ===
+[OK]   引用段 10 条路径指针
+[OK]   没有嵌四件套全文
+
+AUDIT-DELIVERY-CLEAN

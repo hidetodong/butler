@@ -1,0 +1,20 @@
+=== AC5 · CI 脚本里的两行 ===
+[OK]   scripts/verify-ci.sh 含 sync-project-overview 共 2 行
+       41:UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/test-sync-project-overview.py"
+       42:UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python "$ROOT/scripts/sync-project-overview.py" --check --project-root .
+[OK]   --check 一行在场且带 --project-root .
+=== AC5 · 位置与其他 --check 类检查一致 ===
+       artifact-pipeline  测试 L37 → 校验 L38
+       context-budget     测试 L39 → 校验 L40
+       project-overview   测试 L41 → 校验 L42 ← 本轮新增
+       domain-contract    测试 L43 → 校验 L44
+[OK]   四组校验按 L38→L44 连续排列，本轮新增夹在 context-budget 与 domain-contract 之间
+=== AC5 · 完整 CI ===
+[OK]   bash scripts/verify-ci.sh 退出码 0（269 行输出）
+       .
+       ----------------------------------------------------------------------
+       Ran 1 test in 0.525s
+       
+       OK
+
+CI-CLEAN

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac9-ac10-frontier",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC9",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0114/ac9-ac10-frontier.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T03:53:38.606Z",
+  "finished_at": "2026-08-20T03:53:38.739Z",
+  "duration_ms": 133,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1560,
+    "captured_bytes": 1560,
+    "sha256": "9f79b85df7a478db6b9149ab4839e53a3da8971b51fcb63b7cce173e3c0cf8bf",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

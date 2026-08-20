@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac3-ac4-check",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC3",
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      ".ai/iterations/ITER-0114/ac3-ac4-check.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T03:53:22.159Z",
+  "finished_at": "2026-08-20T03:53:26.679Z",
+  "duration_ms": 4521,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 829,
+    "captured_bytes": 829,
+    "sha256": "ef83bd5a9ae154e2183dbcf7f3dd760b86298fb1e1fea0ffec334a9fd0ad13e1",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

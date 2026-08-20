@@ -76,7 +76,7 @@ RECEIPT_FIELDS = {
 DUPLICATE_CANDIDATES = (
     "Coder/README.md",
     "Coder/architecture-overview.md",
-    ".ai/project/invariants.md",
+    ".ai/invariants.md",
     ".ai/debt.md",
 )
 CONTEXT_HEADER = ("上下文", "目的", "语义所有权", "明确不负责", "首要真源")

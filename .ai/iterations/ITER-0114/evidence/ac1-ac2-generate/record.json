@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac1-ac2-generate",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC1",
+    "AC2"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      ".ai/iterations/ITER-0114/ac1-ac2-generate.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T03:53:18.509Z",
+  "finished_at": "2026-08-20T03:53:22.115Z",
+  "duration_ms": 3606,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1257,
+    "captured_bytes": 1257,
+    "sha256": "309734c69dcbd528d255ed306be63d6b07041798755a0862ad321daf17bda46f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

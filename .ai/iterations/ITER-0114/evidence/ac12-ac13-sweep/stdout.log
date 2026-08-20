@@ -1,0 +1,30 @@
+=== 旧路径的活引用（叙述性提及见白名单）===
+[OK]   零活引用：\.ai/project/invariants\.md
+[OK]   零活引用：\.ai/project/frontier\.md
+[OK]   workspaces.md 规格引用按 Out of Scope 保留（11 处）
+=== 白名单各处确有叙述性提及（不是白名单空转）===
+[OK]   scripts/sync-project-overview.py 保留了出处说明
+[OK]   Coder/40_Context_Management/context-persistence.md 保留了出处说明
+[OK]   .ai/debt.md 保留了出处说明
+=== 目录已移除 ===
+[OK]   .ai/project/ 不存在
+[OK]   .ai/invariants.md 在位
+[OK]   .ai/OVERVIEW.md 在位
+=== 注册与说明在场 ===
+[OK]   Coder/README.md 已注册生成器
+[OK]   context-persistence.md 写了重算命令
+[OK]   context-persistence.md 写了性质分工
+=== AC13 · MILESTONE §5.4 的两条前提修正登记 ===
+[OK]   登记一在场：frontier.md 前提修正
+[OK]     实测证据：停更在 ITER-0111 的 commit 号
+[OK]     实测证据：正文版本号与实际不符
+[OK]     修正后的规律写清楚了
+[OK]   登记二在场：invariants.md 前提修正
+[OK]     实测证据：第 47 行那条已假
+[OK]     实测证据：第 42 行那条已假
+[OK]     实测证据：16 条无指针
+[OK]     修正后的规律写清楚了
+[OK]   追记在场：R3 再动两份部署入口模板，[regen-entrypoints] 要求不变
+[OK]   追记写明 .ai/project/ 这个名字的去留归 R9
+
+SWEEP-CLEAN

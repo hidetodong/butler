@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac6-ac7-invariants",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0114/ac6-ac7-invariants.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T03:53:26.736Z",
+  "finished_at": "2026-08-20T03:53:26.814Z",
+  "duration_ms": 78,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1132,
+    "captured_bytes": 1132,
+    "sha256": "1534b0296e1e6a700c610cf3c48b3ff9683bc39a6f7fb90863e89ef2003f1530",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

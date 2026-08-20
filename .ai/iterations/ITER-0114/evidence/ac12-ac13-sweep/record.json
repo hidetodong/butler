@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac12-ac13-sweep",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC12",
+    "AC13"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0114/ac12-ac13-sweep.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T03:53:39.226Z",
+  "finished_at": "2026-08-20T03:53:40.115Z",
+  "duration_ms": 888,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1424,
+    "captured_bytes": 1424,
+    "sha256": "9baccd9a6df08399853c57579b7d689125d3e0496c3dcef9f464f8160fd50287",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

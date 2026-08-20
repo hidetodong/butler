@@ -1,0 +1,37 @@
+=== AC14 · 用例跑通 ===
+[OK]   scripts/test-sync-project-overview.py 全过（Ran 10 tests）
+=== AC14 · 负例场景计数 ===
+       测试方法 10 个（其中负例方法 7 个），五源缺失展开 5 个子例
+       负例场景合计 11 个
+[OK]   负例场景 11 ≥ AC14 要求的 8 条
+[OK]   五个源头各自缺失都有子例
+=== AC14 · AC 点名的七类各有对应用例 ===
+[OK]   五个源头各自缺失时报错指名 → test_missing_sources_are_named()
+[OK]   tools/ 整个不在 → test_missing_tools_directory_is_named()
+[OK]   手改任一节被 --check 抓到并指名 → test_check_names_the_drifting_section()
+[OK]   节标题被改 → 节集不匹配 → test_check_reports_section_set_mismatch()
+[OK]   体量超限 → test_size_ceiling_is_enforced()
+[OK]   无指针条目数超基线 → test_invariant_pointer_ratchet_blocks_new_entries()
+[OK]   目录在 Coder/README.md 无说明 → test_directory_without_description_is_rejected()
+=== AC14 · 正例三条 ===
+[OK]   正例：test_write_then_check_is_clean
+[OK]   正例：test_write_is_idempotent
+[OK]   正例：test_check_and_write_are_mutually_exclusive
+=== AC14 · 每条负例断言的是具体诊断串，不是只看退出码 ===
+[OK]   诊断串被断言：missing source: {needle}
+[OK]   诊断串被断言：missing source: tools/
+[OK]   诊断串被断言：overview section drift: {overview.SECTION_TOOLS}
+[OK]   诊断串被断言：overview section set mismatch
+[OK]   诊断串被断言：overview too large:
+[OK]   诊断串被断言：invariants without source pointer:
+[OK]   诊断串被断言：directory has no description in Coder/README.md:
+[OK]   test_missing_sources_are_named() 断言了诊断内容
+[OK]   test_missing_tools_directory_is_named() 断言了诊断内容
+[OK]   test_check_names_the_drifting_section() 断言了诊断内容
+[OK]   test_check_reports_section_set_mismatch() 断言了诊断内容
+[OK]   test_size_ceiling_is_enforced() 断言了诊断内容
+[OK]   test_invariant_pointer_ratchet_blocks_new_entries() 断言了诊断内容
+[OK]   test_directory_without_description_is_rejected() 断言了诊断内容
+[OK]   反证：断言用的是 assertIn 精确串，改一个字即失配
+
+TESTS-CLEAN

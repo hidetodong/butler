@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：MILE-0016；阶段：ITER-0113 已收口（2026-08-19），等待开启下一迭代。
-- 状态：MILE-0016 R2 完成。冷启动读序收成 `Coder/40_Context_Management/context-persistence.md §6` 一份真源（`butler-context-order` 标记块，1194 字节 / 6 非空行 / 7 指针），四处载体逐字节投影并由 `context_budget.py` 守护，Claude 宿主入口首次带上读序。12 条 AC 全部达成，9 条机器证据全 passed（另留 1 条失败诊断），完整 CI 与状态审计均退出码 0。已登记：下个发布版必须含 `[regen-entrypoints]`，老项目的滞后归 R15。
+- 迭代：无 active；里程碑：MILE-0016；阶段：ITER-0114 已收口（2026-08-20），等待开启下一迭代。
+- 状态：MILE-0016 R3 完成。项目全貌按内容性质分成三份落地——`.ai/OVERVIEW.md` 由 `scripts/sync-project-overview.py` 从五个机器源头生成（8897 / 12000 字节），`--check` 进 CI 逐节比对、诊断指名到节；`.ai/invariants.md` 从 `.ai/project/` 迁位到 `.ai/` 根（47 条原样，git 记为全等重命名），补写作纪律三条并对无真源指针条目上棘轮（基线 16，只防增量）；`.ai/debt.md` 追加 6 条（4 条从退役的 `frontier.md` 迁入）。`.ai/project/frontier.md` 三节 28 条逐条处置后退役，`.ai/project/` 目录移除。读序第 5 步加了两个按需指针，五处载体仍逐字节相同（1284 / 1400）。15 条 AC 全部达成，10 条机器证据全 passed，完整 CI 与状态审计均退出码 0。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按里程碑路线开启 MILE-0016 R3（项目全貌产物重建，承接 `.ai/project/` 剩下的 `invariants.md` 与 `frontier.md`）。本地已提交、未推送，推哪个远端等用户定。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：按里程碑路线开启 MILE-0016 R4（砍 `/butler:progress` 全链）。本地未提交/未推送状态见工作树；发布侧未动，未切版、未打 tag。
 
 ## 状态指针
 

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac5-ci",
+  "iteration": "ITER-0114",
+  "ac_ids": [
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0114/ac5-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T05:26:34.195Z",
+  "finished_at": "2026-08-20T05:26:59.258Z",
+  "duration_ms": 25064,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1033,
+    "captured_bytes": 1033,
+    "sha256": "c1bfa0ea03eaf67c562360318281e396d7edb929cb7889ed724ee4f084527b2c",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,0 +1,20 @@
+=== AC11 · 第 5 步的两个按需指针 ===
+[OK]   第 5 步含指针 `.ai/OVERVIEW.md`
+[OK]   第 5 步含指针 `.ai/invariants.md`
+[OK]   措辞是「按需读」
+[OK]   显式否掉「必读」，不给模糊空间
+=== AC11 · 五步语义结构未被改动（R2 定的边界） ===
+[OK]   读序仍是 5 步，没增删
+=== AC11 · 体量与 metrics ===
+[OK]   context_budget.py check 退出码 0
+[OK]   order_bytes = 1284（上限 1400）
+[OK]   order_nonempty_lines = 6（上限 9）
+[OK]   order_pointers = 9（上限 10）
+[OK]   order_projections = 4（真源之外四处投影）
+=== AC11 · 五处载体逐字节相同（重跑 ITER-0113 的投影校验） ===
+[OK]   ITER-0113 ac2-projection-sha.py 重跑全 OK（8 项）
+       [OK]   真源 Coder/40_Context_Management/context-persistence.md sha256=29fd7f826b14500c bytes=1284
+=== AC11 · 单测基线已跟上新体量 ===
+[OK]   context-budget 单测全过（Ran 19 test）
+
+ORDER-CLEAN

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0114 交付总结 · ITER-0114 · 项目全貌产物重建：按内容性质分家（MILE-0016 R3）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0114 · 项目全貌产物重建：按内容性质分家（MILE-0016 R3）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0114</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+        <p>「这个项目现在长什么样」这件事，butler 仓里原本靠 <code>.ai/project/frontier.md</code> 一份手写文件回答。开工前一核查，它已经停更两个迭代：正文写着版本 v3.5.1（实际 3.6.0）、写着「当前无 active 迭代」（实际 MILE-0016 与本迭代都在跑）。同一份复盘还判定 <code>.ai/project/invariants.md</code>「纯追加、一直准确」，实测也只对了一半——47 条里有两条已经假了。这一轮不是把这两份文件修一修，而是按内容性质拆成三份，各自装一种东西：机器算得出来的事实交给生成器 + CI 比对，机器算不出来的长期决策留给人写但上纪律，会过期的判断进本来就有还清路径的欠债表。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+        <ul>
+    <li>新建 <code>scripts/sync-project-overview.py</code>，从五个现成机器源头派生全貌：<code>VERSION</code>、双台账 <code>.ai/ITERATIONS.md</code> / <code>.ai/MILESTONES.md</code>（含 <code>.ai/state-index.json</code> 的冷片计数）、<code>Coder/README.md</code> 的目录结构与职责、<code>workflows/registry.json</code> 的 Router + 13 条业务工作流、<code>tools/</code> 目录清单。<code>--check</code> 与 <code>--write</code> 互斥必选，<code>--project-root</code> 与 <code>--butler-root</code> 分开传。</li>
+    <li>生成 <code>.ai/OVERVIEW.md</code>（收口时 8897 字节 / 五节 / 上限 12000）：版本与当前状态、里程碑时间线（16 行）、规则体系目录与职责（12 个目录）、工作流清单（Router + 13）、驻留工具清单（22 项）。全文由生成器写，页首挂「请勿手改」与生成命令原文，正文零手写槽位。</li>
+    <li>缺任意一个源头都在渲染前抛 <code>missing source: &lt;路径&gt;</code> 并拒绝出页——不产出残缺页比产出一份看起来完整的错页重要。<code>Coder/</code> 下的目录若在 <code>Coder/README.md</code> 里没有职责说明，同样 fail-closed；这一条当场逼出两个此前漏登记的目录（<code>55_Extension_ConvergenceLoop/</code> 与 <code>60_Extension_CodeReview/</code>），顺手补上。</li>
+    <li><code>--check</code> 逐节 sha256 比对，诊断指名 <code>overview section drift: &lt;节标题&gt;</code>，不是笼统一句「文件有差异」；另有节集不匹配、页首漂移、产物缺失三类各自的诊断。这一行进了 <code>scripts/verify-ci.sh</code>，和 artifact-pipeline、context-budget、domain-contract 三组排成同一类「先跑测试、紧跟 --check」的成对形状。</li>
+    <li><code>git mv .ai/project/invariants.md .ai/invariants.md</code>，47 条正文原样带走（git 记为 R100 全等重命名）。文件头补三条写作纪律：只写决策与理由不复述机制形状、每条至少一个反引号真源指针、还成立才留作废即删。</li>
+    <li>两条已被证伪的条目改对：「收口是原子仪式」删掉五步清单与早已作废的 <code>fold receipt</code>，改为指向 <code>iteration-schema.md §5.5</code>；「冷启动读序固定」删掉旧四步措辞，改为指向 <code>context-persistence.md §6</code> 的读序块。两条都只留「为什么」那半。</li>
+    <li>无真源指针的条目上棘轮：基线 16 写死在生成器常量里，<code>--check</code> 卡住不许再增，超基线时把全部无指针条目逐条列进诊断。基线同时以欠账形式记进 <code>.ai/debt.md</code>，防止它变成「永久豁免」的体面说法。</li>
+    <li>退役 <code>.ai/project/frontier.md</code>，三节 28 条逐条处置并写进本迭代变更流：可派生的并入 <code>OVERVIEW</code> 生成段，仍成立的判断迁进 <code>.ai/debt.md</code>（4 条），其余逐条写明为何可弃。<code>.ai/project/</code> 目录随之删空移除。</li>
+    <li>读序块第 5 步补一句按需指针，点名 <code>.ai/OVERVIEW.md</code> 与 <code>.ai/invariants.md</code>，措辞明确是「按需读，不是必读」。真源改一处、四处投影同步，五处仍逐字节相同，块体量 1284 字节（上限 1400）。</li>
+  </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+        <ul>
+    <li><strong>全貌产物从此不会烂，因为有东西强制它重写</strong>。源头一动，CI 就红并指名是哪一节对不上。这正是 <code>frontier.md</code> 缺的那半——它靠折叠仪式驱动整体覆写，MILE-0016 R1 删掉仪式，覆写随之停止，没有任何机器检查发现得了。</li>
+    <li><strong><code>.ai/OVERVIEW.md</code> 不许手改</strong>。要改内容得去改源头，然后跑 <code>python3 $BUTLER_PATH/scripts/sync-project-overview.py --write --project-root .</code> 重算。这条不是纪律劝导，是 CI 层面的硬约束。</li>
+    <li><strong>写不变量的规矩变了</strong>：往 <code>.ai/invariants.md</code> 加条目必须带一个反引号真源指针，且不许复述步数、清单、顺序。复述了形状，机制一改这条就假——实测已经这样假掉过两条。</li>
+    <li><strong><code>.ai/project/</code> 在 butler 仓自己已经没有了</strong>。但这个路径仍是目标项目侧 <code>workspaces.md</code> 的规格落点，名字已名不副实，去留归 MILE-0016 R9。</li>
+    <li><strong>冷启动每次会话多付 90 字节</strong>（读序块 1194 → 1284）。换来的是新会话知道全貌产物在哪、并且知道它是按需读不是必读。</li>
+  </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+        <ul>
+    <li>新增 3 份：<code>scripts/sync-project-overview.py</code>（生成器）、<code>scripts/test-sync-project-overview.py</code>（合成夹具单测）、<code>.ai/OVERVIEW.md</code>（生成物）。</li>
+    <li>迁位 1 份：<code>.ai/project/invariants.md</code> → <code>.ai/invariants.md</code>，另加文件头纪律与两条修正。</li>
+    <li>退役 2 项：<code>.ai/project/frontier.md</code>、<code>.ai/project/</code> 目录。</li>
+    <li>规则与注册 2 处：<code>Coder/README.md</code>（补两条缺失的目录说明 + 注册生成器）、<code>Coder/40_Context_Management/context-persistence.md</code>（三份产物的性质分工表、重算命令、<code>frontier.md</code> 的教训）。</li>
+    <li>读序五处载体同步：<code>context-persistence.md §6</code>（真源）、<code>AGENTS.md</code>、<code>Coder/README.md</code>、<code>templates/AGENTS.md.template</code>、<code>templates/CLAUDE.md.template</code>。后两份是部署入口模板，本轮再次改动，<code>[regen-entrypoints]</code> 的发布要求按 R2 已登记的不变。</li>
+    <li>机器侧 3 处：<code>scripts/verify-ci.sh</code>（新增两行）、<code>tools/context-budget/context_budget.py</code>（必读清单改路径）、其测试套（夹具路径 + 读序基线 1284 / 9 指针）。</li>
+    <li>台账 2 处：<code>.ai/debt.md</code> 追加 6 条（4 条迁入 + 2 条新记，既有 3 条零改动）、<code>.ai/MILESTONE.md §5.4</code> 登记两条前提修正与一条发布处置追记。</li>
+    <li>未触碰：<code>registry.json</code> / 双台账 / <code>tools/</code> / <code>Coder/README.md</code> 的结构与字段（只读不改）、部署种子与升级器动作、<code>.ai/project/workspaces.md</code> 这个路径规格、读序的五步语义结构。未切版、未发布。</li>
+  </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+        <ul>
+    <li>15 条验收标准全部达成，10 条机器证据全部 passed。</li>
+    <li>负例是实打实造出来的：五个源头各自删掉后 <code>--write</code> 报错指名并确认不产出残缺页；<code>.ai/OVERVIEW.md</code> 五节各改一处后 <code>--check</code> 指名该节且不连坐其他四节；节标题改名报节集不匹配；产物整个删掉报 missing；400 个合成工具目录撑爆 12000 字节上限后诊断给出实测值与上限且不写盘；加第 17 条无指针不变量被棘轮拦下并列出条目，删一条则放行——棘轮只往紧的方向走。</li>
+    <li>单测 10 个方法覆盖 11 个负例场景 + 3 个正例，每条断言的都是具体诊断串，没有一条只断言非零退出。</li>
+    <li>完整 <code>scripts/verify-ci.sh</code> 退出码 0，状态审计 <code>--allow-unreleased</code> 退出码 0。</li>
+    <li>技术方案里估的「新增 fixture 不少于 9 条」是估数，实际是 10 个测试方法覆盖 11 个负例场景；验收标准的真实门槛是「不少于 8 条」，达标。这里如实记下估数与实测的差，没有回头改方案。</li>
+    <li>两条验收标准在执行中发现有缺陷，按 <code>iteration-schema.md §5.3</code> 走了 amend 退回重 ACK，没有偷偷改冻结后的标准：AC2 的「驻留工具 24 项」是把 <code>ls</code> 输出里的 <code>.</code> 与 <code>..</code> 数了进去，实际 22；AC12 的「零命中」口径无法达成——Decision Map 的 <code>frontier</code>（依赖 DAG 的可推进前沿）与本轮退役的知识文件同名不同物，且迁出留痕本身必须提到旧文件名，故改为「零活引用 + 叙述性提及逐处白名单登记」。</li>
+    <li><strong>一项覆盖面事实</strong>：<code>--check</code> 只能证明「<code>.ai/OVERVIEW.md</code> 的生成段与机器源头一致」，证明不了「这份全貌被任何会话读过」。生成得再准，它不在冷启动必读路径上（AC11 定的是按需指针），就可能永远不被打开。这半个证明要等 MILE-0016 R11 的运行时观测。</li>
+  </ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+        <ul>
+    <li><strong>生成器读的是 butler 仓自己的源头，部署到目标项目未必成立</strong>。<code>registry.json</code> / <code>Coder/README.md</code> / <code>tools/</code> 是规则仓的，双台账与 <code>VERSION</code> 才是项目侧的。接口层面已用 <code>--butler-root</code> 与 <code>--project-root</code> 分开传参把这层区分做进去，但只在两者相同的 butler 仓自己验过。本轮交付的是「butler 仓自己有全貌产物」，不是「所有部署项目都有」——后者归 R15。</li>
+    <li><strong>12000 字节的上限是拍的</strong>。读序块的 1400 有依据（每次会话都付），全貌产物按需读，没有同等的成本锚点。12000 大致是当前内容的两倍余量，防的是无上限膨胀那类失控，真实合理值要等有人实际读过才知道。</li>
+    <li><strong>16 条无指针的旧账留着</strong>。这批恰恰是最容易悄悄变假的一类——复述了机制形状却没给可核对的真源，实测已有两条假掉。棘轮只防增量，逐条补真源的活儿没做，已记进 <code>.ai/debt.md</code>。</li>
+    <li><strong><code>iteration-schema.md §5.3</code> 与产物合同打架，本轮绕过去了</strong>。§5.3 要求 amend 时在 <code>AC_LIST.md</code> 顶部追加「修订记录」，但产物合同只允许固定七个二级标题，<code>## 修订记录</code> 加进去就 drift。本轮把它写进 frontmatter，ITER-0112 的 amend 则是直接改正文没留记录——两次绕法不一致，已记进 <code>.ai/debt.md</code>，要么放宽合同要么改 §5.3 措辞。</li>
+    <li><strong><code>.ai/project/</code> 这个名字还在目标项目侧活着</strong>。butler 仓自己删干净了，但 <code>workspace-scope-schema.md</code> 仍把 <code>.ai/project/workspaces.md</code> 当作规格落点，名不副实，归 R9 根布局整理。</li>
+  </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+        <ul>
+    <li><code>.ai/iterations/ITER-0114/CONCEPT.md</code></li>
+    <li><code>.ai/iterations/ITER-0114/AC_LIST.md</code></li>
+    <li><code>.ai/iterations/ITER-0114/TECH_PLAN.md</code></li>
+    <li><code>.ai/iterations/ITER-0114/VERIFY_REPORT.md</code></li>
+    <li><code>.ai/iterations/ITER-0114/CHANGELOG.md</code></li>
+    <li><code>.ai/iterations/ITER-0114/evidence/</code></li>
+    <li><code>.ai/OVERVIEW.md</code></li>
+    <li><code>.ai/invariants.md</code></li>
+    <li><code>.ai/debt.md</code></li>
+    <li><code>scripts/sync-project-overview.py</code></li>
+  </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

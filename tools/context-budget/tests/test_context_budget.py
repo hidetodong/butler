@@ -32,7 +32,7 @@ class ContextBudgetTests(unittest.TestCase):
             "Coder/domain-glossary.md",
             "Coder/context-map.md",
             "Coder/architecture-overview.md",
-            ".ai/project/invariants.md",
+            ".ai/invariants.md",
             ".ai/debt.md",
             ".ai/iterations/ITER-0107/AC_LIST.md",
             "deliveries/ITER-0107-domain-model-boundaries.md",
@@ -69,9 +69,9 @@ class ContextBudgetTests(unittest.TestCase):
         self.assertEqual(result.metrics["routes"], 4)
         self.assertEqual(result.metrics["fact_classes"], 4)
         self.assertEqual(result.metrics["transitions"], 5)
-        self.assertEqual(result.metrics["order_bytes"], 1194)
+        self.assertEqual(result.metrics["order_bytes"], 1284)
         self.assertEqual(result.metrics["order_nonempty_lines"], 6)
-        self.assertEqual(result.metrics["order_pointers"], 7)
+        self.assertEqual(result.metrics["order_pointers"], 9)
         self.assertEqual(result.metrics["order_projections"], 4)
 
     def test_l0_budget_and_markers_fail_closed(self) -> None:

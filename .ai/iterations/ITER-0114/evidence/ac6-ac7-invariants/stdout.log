@@ -1,0 +1,25 @@
+=== AC6 · 位置 ===
+[OK]   .ai/invariants.md 在位
+[OK]   .ai/project/invariants.md 已不存在
+=== AC6 · 条目数 47 不变 ===
+[OK]   迁移前 47 条 / 迁移后 47 条
+=== AC6 · git 认得出是迁位（R100 全等重命名） ===
+[OK]   暂存区记为 R100 重命名：R100	.ai/project/invariants.md	.ai/invariants.md（提交后 git log --follow 即可穿透）
+=== AC6 · 迁位之外只动了这两条 + 文件头纪律 ===
+[OK]   正文条目只动 4 行（两条各一删一增），另有文件头新增；改动行合计 7
+=== AC7 · 收口仪式那条 ===
+[OK]   指向真源 iteration-schema.md §5.5
+[OK]   不再出现 fold receipt
+[OK]   不再写步数
+[OK]   保留了「为什么」半句
+=== AC7 · 冷启动读序那条 ===
+[OK]   指向真源 context-persistence.md §6
+[OK]   不再出现旧四步措辞
+[OK]   保留了「为什么」半句
+=== AC7 · 全文不再复述这两套步骤清单 ===
+[OK]   全文条目零 fold receipt
+=== AC7 · 真源自身确实是四步、第四步是自检（指针指得对） ===
+[OK]   §5.5 实测 4 步
+[OK]   §5.5 第四步是收口自检
+
+INVARIANTS-CLEAN

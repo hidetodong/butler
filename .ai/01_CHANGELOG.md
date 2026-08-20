@@ -1,33 +1,41 @@
 <!-- butler-artifact-template: 1.0.0 artifact=changelog -->
-# ITER-0113 变更流
+# ITER-0114 变更流
 
-> 冷启动读序正式定义与四载体对齐（MILE-0016 R2） · closed · 2026-08-19
+> 项目全貌产物重建：按内容性质分家（MILE-0016 R3） · active · 2026-08-20
 
 ## ADD
 
-- `Coder/40_Context_Management/context-persistence.md §6`：读序正文由 `butler-context-order:begin/end` 一对标记圈定，成为唯一真源（1194 字节 / 6 非空行 / 7 个 md 指针）；块外补一段说明，写明四处投影与「改读序只改本节」的纪律 → AC1
-- `templates/CLAUDE.md.template`「会话起始：恢复项目状态」章节：Claude 宿主入口首次带上冷启动读序块 → AC2
-- `tools/context-budget/context_budget.py` `_marker_block()`：从 `_l0_block()` 提取出的通用标记块提取器，标记名可传入，两道 fail-closed 检查（各恰好一次 / 不得交错）不变 → AC3
-- `tools/context-budget/context_budget.py` `_order_block()` / `_order_steps()` / `_order_structure_errors()`：读序块提取、步骤切分与三类结构断言（编号连续 `1..5`、每步至少一个 `.ai/` 路径、锚点绑定指定步骤） → AC3/AC4
-- `tools/context-budget/context_budget.py` 常量：`ORDER_BEGIN` / `ORDER_END` / `ORDER_SOURCE` / `ORDER_PROJECTIONS`（4 处）/ `ORDER_LIMITS`（1400 字节 / 9 非空行 / 10 指针）/ `ORDER_STEP_RE` / `ORDER_ANCHORS` / `ORDER_STEPS` → AC3/AC5
-- `tools/context-budget/context_budget.py` metrics：新增 `order_bytes` / `order_nonempty_lines` / `order_pointers` / `order_projections` 四项 → AC5
-- `tools/context-budget/tests/test_context_budget.py`：新增 7 个用例方法覆盖 10 个负例场景——四处投影各自被单独篡改（subTest ×4，且断言不误报其他三处）、真源被改致四处同时失配、标记缺失 fail-closed、体量超限、编号断开、某步无 `.ai/` 路径、锚点挪出指定步 → AC9
-- `.ai/MILESTONE.md §5.4`：R2 发布处置登记，写明下个发布版必须含 `[regen-entrypoints]` 与老项目升级前的滞后事实 → AC11
+- `scripts/sync-project-overview.py`：新建全貌生成器，`--check` / `--write` 互斥必选、`--project-root` 与 `--butler-root` 分开传（沿用 `sync-workflow-registry.py` 的形状与 `atomic_write`）；五个机器源头缺任意一个都在渲染前抛 `missing source: <path>`，不产出残缺页 → AC1
+- `scripts/sync-project-overview.py` 五个渲染函数（`section_version` / `section_milestones` / `section_rules` / `section_workflows` / `section_tools`）：分别派生自 `VERSION` + 双台账 current、`.ai/MILESTONES.md` + `.ai/state-index.json` 冷片计数、`Coder/README.md` 目录段、`workflows/registry.json` 的 Router + 13 条业务工作流、`tools/` 子目录清单 → AC2
+- `scripts/sync-project-overview.py` `check()`：逐节 sha256 比对，诊断指名 `overview section drift: <节标题>`；另有 `overview section set mismatch` / `overview header drift` / `overview missing` 三类，不合并成一句「文件有差异」 → AC3
+- `scripts/sync-project-overview.py` `OVERVIEW_MAX_BYTES = 12000`：体量上限写死为常量，`--write` 与 `--check` 两侧都校验，超限诊断给出实测值与上限且不写盘 → AC4
+- `scripts/sync-project-overview.py` `invariant_pointer_errors()`：无真源指针条目的棘轮，基线常量 `INVARIANT_POINTER_EXEMPT = 16`，只拦增量；超基线时把全部无指针条目逐条列进诊断 → AC8
+- `.ai/OVERVIEW.md`：生成物本体，收口时 8897 字节 / 五节；页首两行写明由哪五个源头经哪条命令生成、请勿手改，并声明「只装可派生的事实，长期决策见 `.ai/invariants.md`，会过期的判断见 `.ai/debt.md`」；正文零手写槽位 → AC2
+- `scripts/test-sync-project-overview.py`：合成夹具单测，10 个测试方法覆盖 11 个负例场景——五个源头各自缺失（subTest ×5）、`tools/` 整个不在、逐节漂移、节集不匹配、体量超限（400 个合成工具目录）、棘轮超基线、目录在 `Coder/README.md` 无说明；外加三个正例（写后 check 干净、二次写幂等、`--check --write` 同传报互斥） → AC14
+- `.ai/invariants.md` 文件头「写作纪律」三条：只写决策与理由不复述机制形状 / 每条至少一个反引号真源指针 / 还成立才留作废即删；同段登记棘轮基线 16 并声明「16 是欠账不是允许额度」，指向 `.ai/debt.md` → AC8
+- `Coder/README.md` 目录结构段：补上此前缺说明的 `55_Extension_ConvergenceLoop/` 与 `60_Extension_CodeReview/` 两条——生成器对无说明目录 fail-closed，缺说明会直接让 `--write` 报错 → AC1/AC2
+- `Coder/README.md` 工具注册段：登记 `scripts/sync-project-overview.py` 的职责与两种模式 → AC12
+- `scripts/verify-ci.sh`：新增两行——先跑 `test-sync-project-overview.py`，再跑 `sync-project-overview.py --check --project-root .`，位置与既有 `--check` 类检查一致 → AC5
+- `.ai/debt.md`：追加 6 条——4 条从 `frontier.md`「下一个瓶颈」迁入（运行时观测缺位 / 远端 required check 未启用 / 双宿主语义入口未经真实安装人测 / 危险模式规则真源仍把 P4 与 `/butler:loop` 绑定），每条注明来源与迁入迭代；2 条本轮新记（`.ai/invariants.md` 16 条无指针的存量欠账、`iteration-schema.md §5.3` 修订记录要求与产物合同的冲突） → AC10
+- `.ai/MILESTONE.md §5.4`：登记 R3 两条前提修正与一条发布处置追记 → AC13
 
 ## EDIT
 
-- `Coder/40_Context_Management/context-persistence.md §6` 读序正文：由「按 状态 → 时间线 → 断点 → 代码」的 5 条平铺改为五步语义阶段，三条此前被投影集体丢掉的硬约束写进对应步骤——第 2 步的 `state-index.json` 定向读单个冷分片与「禁止默认读取整个 `.ai/history/`」、第 3 步的 `check` 三态处置、第 4 步的 Goal state/reason/next 重算 → AC1
-- `Coder/40_Context_Management/context-persistence.md §6` 过渡措辞：R1 留的引用块拆两半，「由 MILE-0016 R2 定读序」这半删除（本轮即 R2，说完即失效），「R3 定全貌产物形态与落点」这半移出标记块、并入块后的 `debt.md` 与 handoff 互补段 → AC7
-- `AGENTS.md`「冷启动：先恢复 `.ai/` 状态」：原 7 步列表整段替换为读序块，段首改为指向真源的一句 → AC2
-- `templates/AGENTS.md.template`「会话起始：恢复项目状态」：原 4 步列表 + 两段散文整段替换为读序块（Goal 重算内容已进块内第 4 步，不再另写） → AC2
-- `Coder/README.md`：第 165 行那段冷启动散文替换为读序块，块前加一句区分 L0（撞上领域术语时怎么分层读）与读序（新会话从零恢复上下文的顺序） → AC2
-- `templates/rule-card.md`：handoff 纪律那句末尾补反向指针「冷启动一共读哪些文件、按什么顺序，本卡不列——见宿主入口『会话起始：恢复项目状态』章节的读序块」；读序块第 3 步反向指回本卡「强制工作流」，两处互指不互抄 → AC8
-- `tools/context-budget/context_budget.py` 模块 docstring：补两个受守护标记块的职责与「字节一致查不出真源写错、故另设结构断言」的理由 → AC3
-- `tools/context-budget/tests/test_context_budget.py` `setUp()`：临时根拷贝清单补 `templates/AGENTS.md.template`、`templates/CLAUDE.md.template`、`Coder/40_Context_Management/context-persistence.md` → AC9
-- `tools/context-budget/tests/test_context_budget.py` `test_repository_baseline_passes()`：增断言四项新 metrics 实测值（1194 / 6 / 7 / 4） → AC5
-- `scripts/test-goal-host-wiring.py` `test_cold_start_restores_goal_inputs()`：断言 token 由 `方案 verdict` 改为 `` `.ai/TECH_PLAN.md` 的方案状态 ``——`方案状态` 是 TECH_PLAN 的实际字段名，读序改写后正文用的是它；断言守护的对象未变（读序必须点名 TECH_PLAN 的方案裁决），只是 token 跟上真实字段名 → AC10
+- `.ai/project/invariants.md` → `.ai/invariants.md`：`git mv` 迁位，47 条正文原样带走，git 记为 R100 全等重命名（提交后 `git log --follow` 可穿透） → AC6
+- `.ai/invariants.md`「收口是原子仪式」条：删掉五步清单与已作废的 `fold receipt`，改为「步骤、顺序与哪几步必做以 `iteration-schema.md §5.5` 为准」+ 原有的为什么。**按新纪律它不再写步数**——AC7 里「写四步」这半由指针指向的真源承担（§5.5 实测 4 步、第四步是收口自检），条目自身只留决策与理由 → AC7
+- `.ai/invariants.md`「冷启动读序固定且只有一处真源」条：删掉旧四步措辞，改为「步骤与顺序以 `context-persistence.md §6` 的读序块为准，其余载体只能是它的字节投影」+ 为什么（实测曾有五份不同版本共存） → AC7
+- `Coder/40_Context_Management/context-persistence.md` 读序块后那段：替换 R1 留的占位措辞，写清三份产物的性质分工表（`.ai/OVERVIEW.md` 机器派生 / `.ai/invariants.md` 长期决策 / `.ai/debt.md` 会过期的判断）、重算命令原文，以及 `frontier.md` 的教训——整体覆写只在有强制触发时才活得下来 → AC12
+- `Coder/40_Context_Management/context-persistence.md §6` 读序块第 5 步（真源）：句尾补「需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读」，措辞明确为按需不是必读；五步语义结构未动 → AC11
+- `AGENTS.md`、`templates/AGENTS.md.template`、`templates/CLAUDE.md.template`、`Coder/README.md` 四处读序投影：同步真源改动，五处仍逐字节相同；块体量 1284 字节（上限 1400），指针 9 个、非空行 6 行 → AC11
+- `tools/context-budget/context_budget.py` 必读文件清单：`.ai/project/invariants.md` 改为 `.ai/invariants.md` → AC6/AC12
+- `tools/context-budget/tests/test_context_budget.py`：夹具拷贝清单同步改路径，读序块基线由 1194 字节 / 7 指针改为 1284 字节 / 9 指针 → AC11
+- `.ai/ITERATIONS.md` / `.ai/MILESTONE.md`：`current` 置 ITER-0114，R3 路线行置 active 并绑本迭代 → 无对应 AC（收口台账维护）
 
 ## DELETE
 
-- `scripts/verify-codex-foundation.sh` 第 45–66 行的 9 项硬编码路径列表（`.ai/debt.md` / `MILESTONES` / `ITERATIONS` / `task-state` / handoff / 四件套四份）与其行号递增断言：该列表是脚本里另抄的第五份读序真源，改真源不会让它红；替换为「`AGENTS.md` 含读序块起止标记各一次、且最终 Coder 真源步骤落在块内」两条。`require_text` 的 `不要全量读取 .ai/iterations/` 随读序正文改写为 `不全量读取 .ai/iterations/` → AC6
-- **覆盖面变化（不是等价替换）**：删掉的那张列表守的是「读序路径在 `AGENTS.md` 里按行号递增」，接手的投影校验守的是「四处逐字节相同」。真源自己把顺序写错了，投影校验只会报四处一致；能兜的只有新增的三条结构断言，兜不住语义层面的顺序错误 → AC12
+- `.ai/project/frontier.md`：整份退役，三节 28 条逐条处置，无一条无交代 → AC9
+  - **当前形态 15 条**：版本那条并入 `OVERVIEW`「版本与当前状态」生成段；MILE-0010/0011、Explore 与 Decision Map 四条、领域模型治理、开源入口、升级器摘要口径共 9 条是里程碑完成陈述，并入「里程碑时间线」生成段（源头是双台账，不再手抄）；三宿主 / 工程化加固 / 双宿主治理 3 条里可派生的部分并入「工作流清单」与「驻留工具清单」生成段，其余成就叙述可弃——历史归 `.ai/ITERATIONS.md` 与 `deliveries/`；「语义入口」待人测那条迁入 `.ai/debt.md`；「远端保护」那条迁入 `.ai/debt.md`（与「下一个瓶颈」的远端 required check 合并成一条，原本是重复表述）
+  - **活跃战线 6 条**：MILE-0013 / MILE-0009 链路 / MILE-0014 / 危险模式与 MILE-0015 收口状态 4 条全部可从双台账派生，并入「里程碑时间线」与「版本与当前状态」生成段；真实 `WorkCode.nosync/apps` 验证那条可弃——它是 ITER 级执行记录，真源在 `deliveries/`；ITER-0098 那条前半（已关闭）并入生成段，后半 GitHub Private Vulnerability Reporting 待核验并入 `.ai/debt.md` 的远端条
+  - **下一个瓶颈 7 条**：运行时观测缺位 / 远端 required check / 危险模式与 Loop 绑定 3 条迁入 `.ai/debt.md`；语义入口人测那条已在「当前形态」计入迁入；MILE-0009 已随 v3.0.0 发布那条可弃——它陈述的是已发布事实不是瓶颈，且台账可派生；milestone backlog「当前有 11 个独立候办」可弃——`.ai/MILESTONES.md` 候办索引与 `.ai/milestone-backlog/` 是真源，这里是会过期的副本（实测已不是 11）；项目自有 hook 共存那条可弃——`.ai/debt.md` 早有同一条，属重复；`[regen-entrypoints]` 切版提醒可弃——`.ai/MILESTONE.md §5.4` 已在 R2 接手登记
+- `.ai/project/` 目录：`invariants.md` 迁出、`frontier.md` 退役后目录已空，随之移除；butler 仓自己不再有 `.ai/project/` → AC9/AC12
+- **覆盖面变化（不是等价替换）**：`frontier.md` 声称「整体覆写、一直准确」，实测停更两个迭代——因为没有任何机器检查强制它重写。接手它的 `.ai/OVERVIEW.md` 补上了这个强制触发（`--check` 进 CI，源头一动就红）；但 `--check` 只能证明「生成段与机器源头一致」，证明不了「这份全貌被任何会话读过」，后者仍要等 MILE-0016 R11 的运行时观测 → AC15

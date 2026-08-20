@@ -130,12 +130,20 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
 3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
 4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
-5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
 <!-- butler-context-order:end -->
 
 > 上面这段是读序的唯一真源，另有四处受 CI 校验的字节投影：`Coder/README.md`、仓根 `AGENTS.md`、`templates/AGENTS.md.template` 与 `templates/CLAUDE.md.template`。改读序只改本节，改完跑 `tools/context-budget/context_budget.py check` 让四处同步；任一处被单独改动，CI 会指名报 `order projection mismatch`。
 
-`debt.md` 与 handoff 互补：前者给「还欠什么、哪些边界不能碰」、后者给「此刻断点」。二者都不给「系统整体是什么」——面向人的项目全貌摘要（原 `.ai/project/` 知识文件夹）已于 ITER-0112 退役，新的全貌产物形态与落点由 MILE-0016 R3 决定；在那之前新会话只能从一堆迭代 delta 倒推全貌（管中窥豹），这是已知且有意接受的过渡代价。
+`debt.md` 与 handoff 互补：前者给「还欠什么、哪些边界不能碰」、后者给「此刻断点」。「系统整体是什么」由另外三份产物分担，**按内容性质分家，一份只装一种**——原 `.ai/project/` 知识文件夹把三种混在一起，人一次只改得动其中一半，另一半就烂在原地：
+
+| 产物 | 装什么 | 谁写 | 靠什么不烂 |
+|---|---|---|---|
+| `.ai/OVERVIEW.md` | 可从机器源头派生的事实（版本、里程碑时间线、规则目录与职责、工作流、驻留工具） | `scripts/sync-project-overview.py` 独写，**人不得手改** | `--check` 进 CI，与源头不一致即红并指名到节 |
+| `.ai/invariants.md` | 跨迭代仍成立的长期决策与理由 | 手写，纯追加 | 写作纪律（只写理由、必带真源指针、不复述机制形状）+ 无指针条目棘轮 |
+| `.ai/debt.md` | 会过期的判断与悬着的账 | 手写 | 还掉即删，天然有消解路径 |
+
+重算命令：`python3 $BUTLER_PATH/scripts/sync-project-overview.py --write --project-root .`；只想知道有没有漂移就把 `--write` 换成 `--check`。机器源头改了而没重算，CI 会红——不依赖任何「收口时记得回头改一下」的自觉。这一条是 `frontier.md` 的死因给出的教训：**整体覆写只在有东西强制触发重写时才活得下来**，ITER-0112 拆掉折叠仪式后它就停更了，两个迭代后正文已与现实矛盾。
 
 ### 冷启动一致性自检
 

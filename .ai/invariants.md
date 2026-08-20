@@ -1,6 +1,14 @@
 # invariants（关键长期决策与不变量）
 
-> 只放"跨迭代仍成立、动它就动全局"的硬决策，附一句"为什么"。一次性变更归 `ITERATIONS`、不进这里。
+> 只放「跨迭代仍成立、动它就动全局」的硬决策，附一句「为什么」。一次性变更归 `ITERATIONS`、不进这里。
+
+**写作纪律**（ITER-0114 起，违反即视为把这份文件变回会烂的那类）：
+
+1. **只写决策与理由，不复述机制的具体形状**——步数、清单、顺序都归真源。复述了形状，机制一改这条就假；实测第 42、47 两条就是这么假掉的。
+2. **每条至少带一个反引号真源指针**，让读者能当场核对。
+3. **还成立才留，作废即删**，不留历史（历史归 `ITERATIONS` 与 `deliveries`）。
+
+无真源指针的历史条目当前 16 条，由 `scripts/sync-project-overview.py --check` 卡住不许再增。**16 是欠账不是允许额度**，见 `.ai/debt.md`。
 
 - **handoff 是可验鲜派生视图**：重要决定先落权威状态，`.ai/02_SESSION_HANDOFF.md` 只由工具生成；receipt 存在时冷启动先 `check`，陈旧先重建。*为什么*：人工 handoff 会漏写，也会在状态变化后继续冒充真相。
 - **主链转换只做最小保真翻译**：PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 每段都必须声明输入、输出、保真、失效、责任方、权威关系和直接真源；只读相关块并首批展开至多 3 份真源，证据不足可续批。权威事实、受控投影、派生视图、叙述摘要只能沿声明方向流动，修复回唯一真源。*为什么*：跨上下文不能靠会话记忆粘合，也不能为完整感复制各 schema 或让摘要反写真相。
@@ -39,12 +47,12 @@
 - **需求用稳定工作区键限制代码范围**：`.ai/project/workspaces.md` 保存当前 key→path 和共享/生成路径唯一 owner，PRD 只保存 primary/supporting/read-only/excluded 键集合，模块只能收窄；TECH_PLAN 再列本迭代写路径。允许写入必须同时满足 owner 唯一、钉版 PRD 可写、Write Plan 命中；PreToolUse 逐目标拒绝，shell 由 P5 diff 对账。目录移动只改地图，越界先扩 PRD Scope、重冻 AC、重审 P3。*为什么*：路径会变，历史不能跟着重写；没有默认拒绝和计划交集，monorepo 范围会悄悄膨胀成全仓。
 - **收件箱只记回执，origin 永远用户自管**：来源用稳定 `SRC-NNNN`，内容用 observed/processed 双 SHA-256，派生走独立多对多表；确定性 scanner 只管来源事实，AI 分类必须经 standard 确认或 dangerous 自审，真正派生委托既有规则；`.ai/INBOX.md` 不复制原文，AI 不改、不移动、不归档 `origin/`。*为什么*：hash 不是来源身份，语义判断也不能冒充机械事实，处理便利更不能侵犯用户原稿所有权。
 - **hook 管项目流程，宿主管文件权限**：PreToolUse 对能归属 Butler/Git 项目的目标拦跳阶段 / 未冻结 AC / 显式非 pass / 业务扩展保护 / 双 active / 台账非法状态；真实项目外路径退出 Butler 判定，坏输入仍 fail-closed，多项目 patch 逐根 first-deny-wins。Claude/Codex 共用规则模块。*为什么*：hook 看不到可信的用户授权，不能复制宿主权限系统；正常跨目录写入也不该伪装成 bypass。
-- **冷启动读序固定**：`debt.md`（长期欠债与硬约束）→ `ITERATIONS.md`（变更流）→ handoff / task-state（断点）→ 代码。真源 `context-persistence.md §6`。*为什么*：读序固定才能保证任何会话从零接手都走同一条恢复路径，不靠对话记忆。*ITER-0112 修订*：原第一读是面向人的项目全貌产物（两态：`.ai/project/` 知识文件夹 / 单文件 `.ai/PROJECT.md`），该机制已退役，新全貌产物形态由 MILE-0016 R3 决定。
+- **冷启动读序固定且只有一处真源**：步骤与顺序以 `Coder/40_Context_Management/context-persistence.md §6` 的读序块为准，其余载体只能是它的字节投影。*为什么*：读序固定才能保证任何会话从零接手都走同一条恢复路径，不靠对话记忆；而多处各写一份必然分叉——实测曾有五份不同版本共存，没有任何机器检查能发现。
 - **自动道无证据不打绿**：完整路径的自动验证先由 `tools/verification-evidence/` 生成真实 argv/exit/log/hash record，VERIFY 按 AC 引用；失败记录保留为纠错轨迹，只有 passed record 能覆盖绿 AC。*为什么*：对话或 Markdown 中手写“已通过”仍只是模型自述。
 - **显式 TDD 只复用 evidence v1 做最小配对**：TECH_PLAN 声明 cycle 后，固定 Red/Green ID 必须证明同一 argv/cwd/AC 先 failed、后 passed；未声明时零行为。不增 sidecar、第二台账，也不把这条轻量记录夸成代码时序或有效 Red 的完整证明。*为什么*：先验证最小纪律收益，避免在真实痛点出现前建设 baseline、adapter、哈希和 diff 审计平台。
 - **本地/CI 单入口且验证依赖固定**：完整矩阵只由 `scripts/verify-ci.sh` 进入，workflow 不复制命令；Python/uv lock、Actions 完整 SHA 与 OpenAI Codex validator commit/hash/license 都必须显式固定，缺失或漂移 fail-closed。workflow 提供 check 不等于远端 required 已启用。*为什么*：否则同一提交会因时间、HOME 或操作者不同得到不同覆盖，还可能把未配置的远端保护口头打绿。
 - **升级以机器 manifest + 程序为真源**：`migrations/manifest.json` 决定连续版本/action 链，`tools/butler-upgrade/upgrade.py` 决定计划与事务；Markdown recipe 只给人读。项目动作、split 决策、HOME 安装分域，默认先零写入 plan，冲突首写前停、失败只恢复本次触及文件。*为什么*：模型解释散文不可复现，把外部动作塞进项目事务会产生覆盖与假成功。
-- **收口是原子仪式**：`iteration-schema §5.5` 五步——①校验并整包归档 evidence，再归档四件套 + changelog 切片 ②交付 md+html ③翻台账 + 收编 01_CHANGELOG ④前滚项目全貌并写 fold receipt（**文件夹态按主题必做折叠** / 单文件态按需前滚）⑤先跑 state auditor 再查语义漂移；前三必做、缺一不可。
+- **收口是原子仪式**：步骤、顺序与哪几步必做以 `Coder/20_Workflow_Lifecycle/iteration-schema.md §5.5` 为准。*为什么*：收口若可以挑着做，台账、交付、证据与归档就会各自停在不同时点，冷启动再也拼不回一致的事实。
 - **一致性自检 5 不变量**：冷启动读序末 + 收口末步各跑一遍——current↔状态一致 / 至多一个 active 迭代 / closed 有交付且文件在 / closed 有归档 / 里程碑路线项对账。*为什么*：这五条是台账↔产物↔交付↔证据的机器可判对账，漂移必须在动手前暴露、不留到冷启动才发现。*ITER-0112 修订*：原第 6 条「知识文件夹漂移」随该机制退役删除，由 6 条减为 5 条。
 - **每迭代对象级变更流**：`01_CHANGELOG.md` 记本迭代 ADD/EDIT/DELETE（绑 AC、文件 + 章节级），收口归档 `iterations/ITER-NNNN/CHANGELOG.md`。Review / 自评的 Should Fix 归 `VERIFY_REPORT.md` 的 Remaining Risks，不入 changelog。
 - **帮手是中立 worker 定义，不等于一律起子 agent**：总述 `62_Extension_Agents/overview.md` 是名册 + 通用规矩 G1–G4 的唯一真源；检查类必须 fresh-context，Decision Work 按 research/serial/HITL 合同执行并如实回传实际模式，定义本身不下发到项目。*为什么*：隔离要求应服务于角色，不能为统一术语伪造宿主能力或把真人问答后台化。

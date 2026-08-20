@@ -1,0 +1,24 @@
+=== AC1 · CLI 形状 ===
+[OK]   --check / --write 缺一必报错
+[OK]   --check 与 --write 互斥
+=== AC1 · 五个源头真的在读，缺一即拒绝出页 ===
+[OK]   删 VERSION → 指名报错且未产出残缺页
+[OK]   删 .ai/ITERATIONS.md → 指名报错且未产出残缺页
+[OK]   删 .ai/MILESTONES.md → 指名报错且未产出残缺页
+[OK]   删 Coder/README.md → 指名报错且未产出残缺页
+[OK]   删 workflows/registry.json → 指名报错且未产出残缺页
+[OK]   删 tools/ → 指名报错
+=== AC2 · 页首与结构 ===
+[OK]   页首含「请勿手改」
+[OK]   页首含「scripts/sync-project-overview.py --write」
+[OK]   全文无手写槽位与占位符
+[OK]   五节齐全且有序：['版本与当前状态', '里程碑时间线', '规则体系目录与职责', '工作流清单', '驻留工具清单']
+=== AC2 · 每节数字与机器源头实测一致 ===
+[OK]   版本号与 VERSION 一致（3.6.0）
+[OK]   里程碑行数与台账一致（台账 16 / 页面 16）
+[OK]   工作流行数与 registry 一致（registry 13 / 页面 13）
+[OK]   驻留工具清单与 tools/ 一致（22 项）
+[OK]   规则目录清单与 Coder/ 一致（12 个）
+[OK]   各目录规则文件数实测一致
+
+GENERATE-CLEAN
