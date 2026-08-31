@@ -1,0 +1,6 @@
+{"status": "ok", "overview": ".ai/OVERVIEW.md"}
+[OK] --check 退出码 0
+[OK] 驻留工具清单新增 tools/intake/ 且说明非破折号
+[OK] 40_Context_Management 规则文件数 12 → 13
+[OK] 工作流清单仍 12 行
+[OK] inbox 行的规则真源已改指新动作层

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac13-registration",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC13"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac13-registration.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:21:47.987Z",
+  "finished_at": "2026-08-20T07:21:48.007Z",
+  "duration_ms": 21,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1077,
+    "captured_bytes": 1077,
+    "sha256": "f623c712ef0b3a684a78a7793c101bac36c8fb7471dc5a6eac0b69e216b00054",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

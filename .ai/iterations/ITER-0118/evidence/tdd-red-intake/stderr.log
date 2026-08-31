@@ -1,0 +1,20 @@
+======================================================================
+[31mERROR[0m[1;31m: tools.intake.tests.test_intake (unittest.loader._FailedTest.tools.intake.tests.test_intake)[0m
+----------------------------------------------------------------------
+[1;35mImportError[0m: [35mFailed to import test module: tools.intake.tests.test_intake
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/cyborgno2/Documents/WorkCode.nosync/butler/tools/intake/tests/test_intake.py", line 19, in <module>
+    from tools.intake import intake  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ImportError: cannot import name 'intake' from 'tools.intake' (/Users/cyborgno2/Documents/WorkCode.nosync/butler/tools/intake/__init__.py)
+[0m
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+[1;31mFAILED[0m ([1;31merrors=1[0m)

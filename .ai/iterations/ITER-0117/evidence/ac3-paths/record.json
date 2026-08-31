@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac3-paths",
+  "iteration": "ITER-0117",
+  "ac_ids": [
+    "AC3"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0117/ac3-paths.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T09:25:12.786Z",
+  "finished_at": "2026-08-20T09:25:12.796Z",
+  "duration_ms": 11,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 519,
+    "captured_bytes": 519,
+    "sha256": "fe931ad23efb51489a5f7a30609853677494684b08fec0d3a1c66e595868b40f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac10-ac11-invariant-and-regression",
+  "iteration": "ITER-0119",
+  "ac_ids": [
+    "AC10",
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0119/ac10-ac11-invariant-and-regression.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-21T08:11:02.071Z",
+  "finished_at": "2026-08-21T08:11:02.365Z",
+  "duration_ms": 294,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1207,
+    "captured_bytes": 1207,
+    "sha256": "53b09af40a557da8ab70e5b2e001a5b5041d1907d1267b3026d9f2ddf94998a8",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

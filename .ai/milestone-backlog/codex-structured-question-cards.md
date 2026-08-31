@@ -2,6 +2,7 @@
 
 候办键: codex-structured-question-cards
 候办状态: deferred
+规模: milestone
 
 ## 范围评估
 

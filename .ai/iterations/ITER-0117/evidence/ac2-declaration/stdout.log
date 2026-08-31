@@ -1,0 +1,12 @@
+== 声明在 H1 底下的引用块 ==
+5
+== 三要素 ==
+生效时点声明             2
+两份规则真源             1
+零写入                      1
+一律以 `inbox-schema.md` 为准 1
+没有任何机器检查兜底 1
+== 旧两文件逐字节未改 ==
+unchanged: Coder/40_Context_Management/inbox-schema.md
+unchanged: Coder/40_Context_Management/inbox-workflow.md
+AC2 PASS

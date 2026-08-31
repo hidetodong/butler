@@ -10,7 +10,7 @@ scope: 把一份首次进入项目的独立权威 PRD，经身份四态判定、
 
 ## 1. 入口先判身份，零写盘
 
-拿到 PRD 后，先按 `references-schema §5` 的证据顺序检查项目级索引、INBOX/迁移/更新回执及稳定来源锚点，产出且只产出以下四态之一：
+拿到 PRD 后，先按 `references-schema §5` 的证据顺序检查项目级索引、迁移/更新回执及稳定来源锚点，产出且只产出以下四态之一：
 
 | 结果 | 本动作的处置 |
 |---|---|
@@ -25,10 +25,10 @@ scope: 把一份首次进入项目的独立权威 PRD，经身份四态判定、
 
 只有 `new-requirement` 可提议新身份。`prd_id` 必须是 `YYYY-MM-DD-<requirement-slug>`，并同时满足：
 
-- 日期来自可审计的“此独立需求首次进入当前项目 Butler 体系”的证据；已有 INBOX 首见回执优先，其次是用户明确给出的项目本地日期。
+- 日期来自可审计的“此独立需求首次进入当前项目 Butler 体系”的证据；闪念口 `.ai/INBOX.md` 里去向指向本需求的那条闪念，它的「记于」日期优先；其次是用户明确给出的项目本地日期。
 - 不得用当前日期、文件 mtime、PRD 发布日、改版日或模型推断替代。证据不足就停止并索要日期。
 - slug 表达整份需求语义，不用 module slug、版本号、随机串或纯序号；语法、合法日期和同日冲突按 `references-schema §4` 校验。
-- 项目级索引、目录、INBOX/来源关系出现身份冲突时 fail-closed；登记后标题变化不改 ID。
+- 项目级索引、目录与来源关系出现身份冲突时 fail-closed；登记后标题变化不改 ID。
 
 ## 3. 模块边界与无损切片
 
@@ -74,7 +74,7 @@ Workspace key 必须来自 `.ai/project/workspaces.md` 的 active 行，四类�
 → prd: <prd_id>#<module_slug>
 ```
 
-单需求入口只回指 owning milestone，不重复模块到路线的映射。非 milestone 首切省略该回指。调用方若来自 INBOX，成功后将派生产物路径和同一 `prd_id` 交回 inbox 工作流记录；本动作不直接改 origin。
+单需求入口只回指 owning milestone，不重复模块到路线的映射。非 milestone 首切省略该回指。本动作对用户原件只读，不改 `.ai/references/raw/` 里的任何文件。
 
 ## 7. 非回归与动作边界
 

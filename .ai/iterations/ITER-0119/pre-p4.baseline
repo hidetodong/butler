@@ -1,0 +1,23 @@
+# ITER-0119 开工前基线（P4 动手之前记录）
+
+## 旧链文件 SHA-256（这些将被整份删除）
+12956b882d6a303add96d036906f87da2173166459c71ca08b6136ec86a0221f  Coder/40_Context_Management/inbox-schema.md
+9da35d41628ce9ffadf5a3d01f217731984d1a1c2f15bd57a549a6fb41472f66  Coder/40_Context_Management/inbox-workflow.md
+4da1b63c94af78c12d36c0c9b4e3728ba37e8de86fbc36dec3af1cc73098cd8a  templates/hooks/tests/test_inbox_contract.py
+5d173fc29723aca4cafd4baf4502581c26935a0397d5438801ae9a151c478abd  tools/inbox/README.md
+71fe8ef3c18ac7320a04d3b20b8525c6a51ec846704bfabe25f172548011b591  tools/inbox/__init__.py
+3684f951da2a86e787e38170b8091b9d4aaaaaa8cd1453cc1862ab8455cde5b4  tools/inbox/inbox.py
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  tools/inbox/tests/__init__.py
+70a23af8b79176b157cc45c43ba6fbe069914008971c287f1550163c57b655d0  tools/inbox/tests/test_inbox.py
+
+## 要改但需逐字节比对的文件 SHA-256
+686251801c2cee840c777d9e5119f281a2c55a3aea53a6af52bd11b446ad37d6  templates/hooks/tests/test_inbox_workflow.py
+b27e04da72db4f6b00f89b4a0181fba54315d486256b0ec5903fc61a8ffd027e  .ai/INBOX.md
+aee222c83ade09df79c759a3bd03c726b025dd27ec24caf88fc5e44f9041b1d9  .ai/invariants.md
+
+## hook 树摘要（本轮必须保持不变）
+hook_tree_digest = bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d
+
+## 候办与规则计数
+40_Context_Management 规则文件数 = 13
+OVERVIEW 记的计数行: | `40_Context_Management/` | 13 | 长任务、多阶段任务与交接场景下的上下文治理。 |

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac10-overview",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac10-overview.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:13:43.919Z",
+  "finished_at": "2026-08-20T07:13:44.046Z",
+  "duration_ms": 127,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 602,
+    "captured_bytes": 602,
+    "sha256": "0b3990ddcc7bd350aa4aa9b2b24626e086df0de157611e9d355dea47b303af4f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

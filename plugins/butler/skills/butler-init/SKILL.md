@@ -12,7 +12,7 @@ description: Deploy Butler base infrastructure into a new project. Use when the 
    - **Absent** → continue.
 4. Read and execute `Coder/20_Workflow_Lifecycle/mcv-deployment.md` in full, section order:
    - **§1 Scout**: identify tech stack, project structure, matching profiles.
-   - **§2 Scaffold**: create `.ai/`, `deliveries/`, `origin/`.
+   - **§2 Scaffold**: create `.ai/` and `deliveries/`.
    - **§3 Rule injection**: run `render-project-entrypoints.py` to generate `CLAUDE.md` + `AGENTS.md`.
    - **§4 Local adaptation**: generate human-readable `.ai/local-constraints.md` plus safe-default `.ai/butler.config.json` through the resident project-config tool; store profiles only in JSON.
    - **§5 Hook injection**: copy hooks from `templates/hooks/` and configure `.claude/settings.json`.

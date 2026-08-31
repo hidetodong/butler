@@ -2,6 +2,7 @@
 
 候办键: state-transition-trust-gate
 候办状态: deferred
+规模: milestone
 
 ## 范围评估
 

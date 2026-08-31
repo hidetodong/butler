@@ -1,0 +1,15 @@
+[OK] 闪念口文件已由工具建出
+[OK] 表头逐字符合契约
+[OK] 闪念行在场且键为日期化形态
+[OK] 状态 incubated 且去向指向草稿
+[OK] 草稿文件存在
+[OK] 草稿头部标明候办键
+[OK] 草稿头部标明候办状态
+[OK] 草稿头部标明规模档
+[OK] iteration 档两段齐备
+[OK] 占位标记已被真内容替换
+[OK] 待办区索引行在场
+[OK] 待办区由 9 增为 10
+[OK] 草稿文件恰 10 份，与索引集合相等
+  收口态复读（工具只读路径）：
+{"backlog":[],"inbox":[{"date":"2026-08-20","key":"2026-08-20-ship-delivery-renderer","scale":null,"state":"incubated","target":".ai/milestone-backlog/delivery-renderer-in-repo.md","text":"交付页渲染器只活在会话临时目录里，换个会话就没了"}]}

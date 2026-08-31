@@ -53,7 +53,7 @@ class PrdCollectionContractTests(unittest.TestCase):
     def test_non_prd_paths_remain_optional(self) -> None:
         self.assertIn("PRD 需求集合是可选加层", self.text)
         self.assertIn("扁平资料流不变", self.text)
-        self.assertIn("`origin/` 用户原稿不因 PRD 集合而被改写、移动或删除", self.text)
+        self.assertIn("`.ai/references/raw/` 用户原稿不因 PRD 集合而被改写、移动或删除", self.text)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Butler Progress"
-  short_description: "Show structured project progress at a glance"
-  default_prompt: "Use $butler-progress to see the current project progress."
-policy:
-  allow_implicit_invocation: true

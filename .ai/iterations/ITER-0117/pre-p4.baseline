@@ -1,0 +1,13 @@
+# ITER-0117 P4 前基线（记于 P3 末，P4 尚未落任何编辑）
+dd8846afaa81d251c4275622dc95570a85be466e80a126d3afcef775d1990cf4  .ai/MILESTONES.md
+d14797ba7a6cd92389d2576b0357c6deb76c3554ab11a7602d398ef80902f142  Coder/20_Workflow_Lifecycle/milestone-schema.md
+e178a772b0400e16278f918f726feb19f200248ebe799957a7fa9bccb0c18345  Coder/README.md
+859863649235d83f7347b0af666f8b6387077c0b3ac785439074e9f27e949715  .ai/milestone-backlog/ai-user-experience-driven-iteration.md
+e12cb72de4fab571a89b70e5799cf088e3aa76cd13bc7b213f1e4bbca9693195  .ai/milestone-backlog/codex-structured-question-cards.md
+17ed8071ba1bf53fb43121bdf9f37ead670cc7129f292d3efa11280a059141eb  .ai/milestone-backlog/multi-active-iteration-runtime.md
+27bc5cb62ce3d38216c5a31730048746339e503233161acb101a7b517a0d2c9f  .ai/milestone-backlog/parallel-p4-execution-slots.md
+bb84d5bc0a32c9492dbd897020d8f346a1f54384af3eddbb074203659788572c  .ai/milestone-backlog/prd-evidence-check.md
+6697b33c22531a956c6ff78543ea0e9ca60a64860569f0fa6ee004bb3621e6c3  .ai/milestone-backlog/prd-future-route-fulfillment.md
+95d1c7cfbdce4603362ee2f5eae67500ea3b66aa2f414e3f071d66db706edee2  .ai/milestone-backlog/prd-impact-reconciliation.md
+41590156029716737ad352e079337259c2d7081c2a4d26d2403f639f962f784b  .ai/milestone-backlog/state-transition-trust-gate.md
+098e0d3cfc493a7dfca4c84de1d3391b1a8e6585605e9e05be3eb00de11f437d  .ai/milestone-backlog/tdd-evidence-hardening.md

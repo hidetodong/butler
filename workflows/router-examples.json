@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "examples": [
-    {"request": "处理 origin 里的需求收件箱", "expected_status": "routed", "expected_primary": "inbox", "expected_state_writes": false},
+    {"request": "先把这个想法记进闪念口，回头再说", "expected_status": "routed", "expected_primary": "inbox", "expected_state_writes": false},
     {"request": "把这份产品需求文档拆成独立 PRD", "expected_status": "routed", "expected_primary": "prd", "expected_state_writes": false},
     {"request": "复核当前改动是否满足验收项", "expected_status": "routed", "expected_primary": "review", "expected_state_writes": false},
     {"request": "把这个 roadmap 拆成多个迭代的里程碑", "expected_status": "routed", "expected_primary": "milestone", "expected_state_writes": false},
@@ -19,7 +19,7 @@
     {"request": "这是明确的大版本，直接开 Milestone 拆路线", "expected_status": "routed", "expected_primary": "milestone", "expected_state_writes": false},
     {"request": "只做轻量脑暴，不需要持久化 Decision Map", "expected_status": "routed", "expected_primary": "ideation", "expected_state_writes": false},
     {"request": "帮我看看这个需求", "expected_status": "ambiguous", "expected_primary": null, "expected_state_writes": false},
-    {"request": "现在项目进度怎么样", "expected_status": "routed", "expected_primary": "progress", "expected_state_writes": false},
+    {"request": "现在项目进度怎么样", "expected_status": "not-butler", "expected_primary": null, "expected_state_writes": false},
     {"request": "让 Butler 自动死磕到通过", "expected_status": "explicit-required", "expected_primary": "loop", "expected_state_writes": false},
     {"request": "打开 Butler 无人值守危险模式", "expected_status": "explicit-required", "expected_primary": "dangerous", "expected_state_writes": false},
     {"request": "只总结当前会话，不要创建或修改文件", "expected_status": "not-butler", "expected_primary": null, "expected_state_writes": false},

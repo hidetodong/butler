@@ -1,0 +1,23 @@
+[OK] workflow registry projections: workflows=12 projections=53
+[OK] 注册表投影 --check 退出码 0
+[OK] rule_source 指向新动作层，业务工作流仍 12 个
+[OK] .claude/commands/butler/inbox.md 无旧来源目录字样
+[OK] .claude/commands/butler/inbox.md 无旧动作层字样
+[OK] .claude/commands/butler/inbox.md 调新工具
+[OK] .claude/commands/butler/inbox.md 读新契约
+[OK] plugins/butler/skills/butler-inbox/SKILL.md 无旧来源目录字样
+[OK] plugins/butler/skills/butler-inbox/SKILL.md 无旧动作层字样
+[OK] plugins/butler/skills/butler-inbox/SKILL.md 调新工具
+[OK] plugins/butler/skills/butler-inbox/SKILL.md 读新契约
+[OK] 旧链未动：Coder/40_Context_Management/inbox-schema.md
+[OK] 旧链未动：Coder/40_Context_Management/inbox-workflow.md
+[OK] 旧链未动：templates/hooks/tests/test_inbox_contract.py
+[OK] 旧链未动：tools/inbox/README.md
+[OK] 旧链未动：tools/inbox/__init__.py
+[OK] 旧链未动：tools/inbox/inbox.py
+[OK] 旧链未动：tools/inbox/tests/__init__.py
+[OK] 旧链未动：tools/inbox/tests/test_inbox.py
+[OK] 注册断言改指新动作层
+[OK] 薄壳断言改指新工具
+[OK] 旧规则用例原样保留（仍断言旧文件）
+  该测试文件对 HEAD 的净改动行数：12

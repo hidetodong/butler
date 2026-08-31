@@ -1,0 +1,16 @@
+== CI ==
+verify-ci exit=0
+Ran 1 test in 0.501s
+
+OK
+== 审计 ==
+audit exit=0
+OK lines = 848
+UNRELEASED = 2
+no drift
+== 两组扫描 ==
+note: A1 扫描文本文件 507 份，覆盖 10 个活跃目录 + 根级 *.md
+note: B1 旧 inbox 链核对 13 份，全部未变
+
+PASS  A 组零命中 · B 组零缺席（扫描 507 份文本文件）
+AC12 PASS

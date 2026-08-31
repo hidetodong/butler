@@ -1,0 +1,32 @@
+
+=== 出口一 · promote（提升为里程碑）===
+{"exit":"promote","id":"MILE-0002","next_step":"按 milestone-schema.md §5 把四段内容补实，再开第一个迭代","removed":[".ai/milestone-backlog/sandbox-direction.md"],"title":"沙箱方向","written":[".ai/MILESTONE.md",".ai/MILESTONES.md"]}
+[OK] promote 退出码为 0
+[OK] 领到 MILE-0002
+[OK] current 指向新号
+[OK] 正式表出现 active 行
+[OK] 待办区索引行已删
+[OK] 草稿文件已删
+[OK] 活工作区四段齐备并按 §5 重新编号
+[OK] 活工作区标题带上新号
+
+=== 出口二 · iterate（开为迭代）===
+{"exit":"iterate","id":"ITER-0002","next_step":"按 iteration-schema.md §5.1 覆盖式重写四件套，从 P1 的 .ai/CONCEPT.md 开始","removed":[".ai/milestone-backlog/sandbox-direction.md"],"title":"沙箱方向","written":[".ai/ITERATIONS.md",".ai/MILESTONES.md"]}
+[OK] iterate 退出码为 0
+[OK] 领到 ITER-0002
+[OK] 回执给出下一步而不是代劳四件套
+[OK] current 指向新号
+[OK] 台账出现 active 行
+[OK] 四件套未被代写
+[OK] 待办区索引行已删
+[OK] 草稿文件已删
+
+=== 对照 · current 非 none 时两条出口都被拦下 ===
+[OK] promote 被 current 拦下
+[OK] promote 拦下时草稿仍在
+  {"error":"里程碑台账的 current 是 MILE-0001，单 active 约束下不能再提升一个；先收口它"}
+[OK] iterate 被 current 拦下
+[OK] iterate 拦下时草稿仍在
+  {"error":"迭代台账的 current 是 ITER-0001，先收口它再开新的"}
+
+SANDBOX DOGFOOD PASS

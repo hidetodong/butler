@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac11-ac12-sweep-final",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC11",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      ".ai/iterations/ITER-0115/ac11-ac12-sweep.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:14:34.120Z",
+  "finished_at": "2026-08-20T07:14:34.468Z",
+  "duration_ms": 348,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 190,
+    "captured_bytes": 190,
+    "sha256": "8516dbc5eefc5263ded472f376d2c547b158e7b7c12859c6c39ba3872bf74cfa",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

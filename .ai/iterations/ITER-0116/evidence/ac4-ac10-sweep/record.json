@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac4-ac10-sweep",
+  "iteration": "ITER-0116",
+  "ac_ids": [
+    "AC4",
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      ".ai/iterations/ITER-0116/ac4-ac10-sweep.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T08:20:58.345Z",
+  "finished_at": "2026-08-20T08:20:58.746Z",
+  "duration_ms": 401,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 170,
+    "captured_bytes": 170,
+    "sha256": "94c63878578b29301b571d21e92d2742b1c8edd5ba911737522cc2ec28c203f4",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

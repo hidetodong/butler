@@ -1,0 +1,25 @@
+=== AC6 · verify-codex-workflows.sh ===
+[OK]   退出码 0
+       [OK] Codex workflow/plugin checks passed (Router + 12 workflow skills)
+[OK]   结尾文案报 12 个 workflow skills
+[OK]   两处 names 名单已去 progress
+=== AC6 · test-workflow-registry.py ===
+[OK]   数量断言已是 12
+[OK]   全部用例通过
+       Ran 13 tests in 0.720s
+       OK
+=== AC6 · project-config 消费者契约 ===
+[OK]   pytest 全绿
+       [32m[32m[1m31 passed[0m[32m in 2.23s[0m[0m
+[OK]   test_consumers.py 零 progress 路径
+[OK]   progress 专属测试方法已删除
+[OK]   仍覆盖 dangerous 消费者（没有误删同元组的邻居）
+[OK]   仍覆盖 preference 消费者（没有误删同元组的邻居）
+[OK]   仍覆盖 review 消费者（没有误删同元组的邻居）
+=== AC7 · plugin 清单 ===
+[OK]   longDescription 已去 progress
+[OK]   name 未动（butler）
+[OK]   skills 未动（./skills/）
+[OK]   固定版 plugin/skill validator 全部通过（含实体数量断言 13）
+
+ASSERTIONS-CLEAN

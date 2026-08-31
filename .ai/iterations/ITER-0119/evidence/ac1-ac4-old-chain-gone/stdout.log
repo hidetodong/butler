@@ -1,0 +1,21 @@
+== AC1 · 两份旧规则真源已删，Coder/README.md 已注销 ==
+  已删除: Coder/40_Context_Management/inbox-schema.md
+  已删除: Coder/40_Context_Management/inbox-workflow.md
+  Coder/README.md 里 inbox-schema / inbox-workflow 命中数: 0
+== AC2 · tools/inbox/ 整目录已删，CI 里那行调用已摘 ==
+  已删除: tools/inbox/
+  scripts/verify-ci.sh 里 inbox 命中数: 0
+== AC3 · 合同测试已删，剩余用例只剩两个活接线，hook 树摘要未变 ==
+  已删除: test_inbox_contract.py
+def test_inbox_is_registered_for_both_hosts() -> None:
+def test_host_entries_are_thin_and_resolve_project_root() -> None:
+  hook 树: 19 份文件, 摘要 = bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d
+  开工前基线      = bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d
+  ✓ 逐字节相同
+== AC4 · e2e 摘掉头段后，余下四个工具的链条仍然跑通 ==
+  test_mile0009_e2e.py 里 INBOX / origin 命中数: 0
+15
+----------------------------------------------------------------------
+Ran 1 test in 0.561s
+
+OK

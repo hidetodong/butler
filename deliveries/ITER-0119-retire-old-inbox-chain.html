@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0119 交付总结 · ITER-0119 · 退役旧 inbox 全链（MILE-0016 R8）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0119 · 退役旧 inbox 全链（MILE-0016 R8）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0119</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-21</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把上一代的需求收件箱整套拆掉，让仓里只剩一套录入机制；同时把散在项目根的 <code>origin/</code> 目录收进 <code>.ai/references/raw/</code>，让「外部资料」这件事只有一个家。</p>
+      <p>上一轮（R7）已经把新的三层录入接上电，活接线全部改指新链，旧链只剩它自己的测试守着。本轮做的是把旧链彻底端掉：两份规则真源、一个 348 行的确定性扫描器、一份合同测试、CI 里那行调用、两处测试夹具，一次删干净。</p>
+      <p><code>origin/</code> 这件事比想象中重。它不是旧链的私产，而是部署协议规定必建的三个目录之一，在活跃面上有 33 处提及——部署协议、里程碑 brief 的材料通道、两个命令薄壳、一个 skill、规则卡、两份人读手册、三份测试夹具。<strong>退役它要改的是「部署时建什么目录」「里程碑的想法从哪来」「怎么教用户投材料」，不只是删个目录名。</strong></p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul><li><strong>旧链八份实体一次删净</strong>：数据契约 <code>inbox-schema.md</code>（<code>SRC-NNNN</code> 稳定来源身份、observed/processed 双 SHA-256、七态处理状态机、多对多派生关系表）、动作层 <code>inbox-workflow.md</code>（扫描 → 语义分类 → 确认 → 委托路由）、<code>tools/inbox/</code> 全目录、合同测试 <code>test_inbox_contract.py</code>、CI 里那行调用，以及两处测试里引用旧工具的片段。</li><li><strong><code>origin/</code> 退出全部活跃面，原件改放 <code>.ai/references/raw/</code></strong>。33 处提及分三类分开处理：部署协议类（不再创建这个目录）、材料通道类（改指新位置）、只读纪律类（<strong>纪律逐字保留，只换主语</strong>）。</li><li><strong><code>.ai/references/</code> 的定位被迫扩写</strong>。它原本写的是「外部权威资料的落盘区」，里面清一色是 AI 派生的受控投影；现在要容纳一类 AI 一个字都不许动的原件，所以在契约里点破了一件要紧事：<strong>「引用了 <code>.ai/references/</code> 里的东西」不再等于「引用了权威投影」</strong>——<code>raw/</code> 下面那份可能是你三个月前随手扔进来、早就过时的草稿，凡是验收要对账的引用，指针必须落在 <code>raw/</code> 之外。</li><li><strong>新增旧格式的回归防线</strong>：四个用例锁住「拿一份旧格式 <code>.ai/INBOX.md</code> 喂给三个子命令，一律报错退出、一个字节都不写」。旧工具删掉之后没有降级读法，唯一能守的就是宁可停下也不写坏。</li><li><strong>台账清账</strong>：<code>.ai/MILESTONE.md</code> 范围演进记录补 5 条，<code>.ai/debt.md</code> 由 14 条变 15 条（删 1 改 1 增 2），<code>.ai/OVERVIEW.md</code> 重算（规则文件 13 → 11、驻留工具清单少一个）。</li></ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul><li><strong><code>origin/</code> 这个目录没有了</strong>。以后原始需求材料放 <code>.ai/references/raw/</code>——自由格式、随便几份、你自己管，AI 只读、不写不改不重命名不移动不归档不删除。这条规矩一个字没变，只是换了地方。</li><li><strong>为什么是目录不是文件名前缀</strong>：路径前缀能被工具和门禁机械判定，文件名约定只能靠人自觉。</li><li><strong>新部署只建两个目录</strong>：<code>.ai/</code> 与 <code>deliveries/</code>。<code>references/</code>（含 <code>raw/</code>）跟其它子目录一样按需产生，用到了才建。</li><li><strong>对话粘贴仍然完全合法</strong>。<code>raw/</code> 是可选投放点，不是必经站——直接在对话里贴一段材料跟丢文件进去等价。</li><li><strong><code>/milestone</code> 和 <code>/butler:prd</code> 的文件通道改指新位置</strong>，用法不变，只是路径换了。</li></ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul><li>删除：规则文件 2 份、驻留工具 1 个（含其测试）、合同测试 1 份、测试用例 1 个、CI 1 行。</li><li>改动：规则与文档 11 份、命令与 skill 3 份、测试与脚本 4 份、台账与派生产物 4 份。</li><li>新增：回归用例 1 组（4 条）、可重跑验收扫描 1 份、取证脚本 7 份。</li><li><strong>完全没碰的</strong>：<code>templates/hooks/</code> 下进摘要的 19 份文件一个字节没动，摘要与开工前逐字相同（本轮只删了 <code>tests/</code> 下一份文件，而摘要口径本来就把 <code>tests</code> 排除在外）。<code>.ai/INBOX.md</code> 里那条真闪念行也逐字节未动。</li><li>目标项目侧：改了 <code>templates/rule-card.md</code>，所以下次切版的迁移配方<strong>必须含入口重生成</strong>；hook 树零改动，<strong>不需要 hook 同步</strong>。</li></ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>16 条验收全部通过，7 份可重跑证据全绿。CI 退出码 0，状态审计退出码 0（872 条 OK、0 漂移，仅两条未发布标记）。可重跑扫描两组共 33 项断言：A 组 8 项查残留、B 组 25 项查在场，全部通过。</p>
+      <p><strong>只查「残留」是不够的，所以扫描分两组。</strong> 这轮最容易做错的地方是：删目录时顺手把只读纪律一起删掉，扫描会显示零命中、看起来非常干净，实际上把一条真规矩弄丢了。所以 B 组反过来逐条钉住「该活下来的东西还在不在」——纪律的两处出处、部署两目录的四处说法、剩余测试用例、hook 树摘要、那条真闪念行的字节。</p>
+      <p><strong>只读纪律的红绿现场演过一次。</strong> 规则正文那句话和合同测试里一条逐字断言是配对的。演示过程：现状 6 个用例全过 → 把规则正文那句纪律删掉 → 立刻变成 1 失败 5 通过 → 还原 → 重新全过。这证明配对是活的，不是摆设。</p>
+      <p><strong>「两个存活用例逐字节未动」是用重建法证的。</strong> 那份测试文件在上一轮就改过、改动还没提交，直接跟 git 比会把上一轮的改动也算进来。改用重建法：拿当前文件，把已知的两处本轮改动原样倒回去，算出的哈希与开工前基线完全一致——这就证明本轮对它只做了那两件事，没有第三处暗改。</p>
+      <p>三件如实记明的事：</p>
+      <p><strong>一、本轮没有 TDD 配对，因为没有真实的红。</strong> 原本打算把回归防线写成「先红后绿」：拿旧格式文件喂三个子命令，期望先看到工具把文件写坏或误读，再修成拒绝。实测三个子命令<strong>都已经是正确行为</strong>——都以退出码 1 停下、都报「表头必须逐字是……」、都零字节写入。行为本来就对，写出来就是绿的。硬造一个红（比如先把校验删掉再加回来）是伪造配对证据，比不做更坏。所以降级为回归防线：断言这个行为存在并锁死。</p>
+      <p><strong>二、原件只读这条纪律，仍然只是散文。</strong> 查证发现它<strong>从来就没有过机器兜底</strong>——整个 hook 目录对 <code>origin</code> 零命中，唯一一处是某个注释里的英文单词 original。所以搬家不弄丢任何保护（本来就没有），但也等于把「写了没人执行」这个毛病换个地方再犯一遍。本轮原计划顺手加一条门禁，实测撞死在切版顺序上：有一条 CI 断言要求工作区 hook 树的摘要等于当前版本号对应 tag 的摘要，而那个 tag 已经打过了，加任何非测试的 hook 文件都会让 CI 红；抬版本号反而让失败变多。<strong>恢复条件写死：下次切版之后的任意一轮。</strong> 这笔账记了两条——一条记纪律无兜底，一条记那条断言把「未发布的 hook 改动」误判成了「白名单不可信」，这两件事不是一回事。</p>
+      <p><strong>三、已部署项目里的残留搬不走。</strong> butler 从此不再创建、不再读、不再教 <code>origin/</code>，但别人硬盘上已经存在的那个目录只能留在原地——升级器的动作类型只有重命名、拆分、加字段、重生成入口、同步 hook、重打戳、无操作这七种，<strong>既没有删除也没有移动</strong>，这轮想搬也表达不出来。好消息是它本来就是用户自管、AI 零写入，留着不构成漂移。同批还有旧格式的收件箱文件：本轮之后仓里连一个认识旧格式的工具都没有，没有降级读法可退，兜底只有「碰到就报错停下、零字节写入」。真正的迁移配方归后续两条路线。</p>
+      <p>顺带修掉三处指向已退役东西的说法：一张还拿旧的项目知识文件夹做参照的对照表、一处同样的比喻、以及四处把「旧收件箱回执」当身份证据的说法（新的闪念口没有来源锚点绑定这回事）。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul><li><strong>原件只读仍无机器兜底</strong>，唯一防线是那条逐字断言——它保证规则正文不会被悄悄删掉，但拦不住任何实际写入。恢复条件已写死为「下次切版之后的任意一轮」。</li><li><strong>hook 树一改就必须跟切版绑在一起</strong>。那条断言守的是真问题（白名单对账），但判据把未发布的 hook 改动也判成了不可信，等于给 hook 演进硬绑了「必须和切版同批」的约束。已记账，改判据要重新想清楚「什么叫可信的对账基线」，不该在一个正在拆东西的迭代里顺手动。</li><li><strong>已部署项目侧留了两样东西在原地</strong>：残留的 <code>origin/</code> 目录（等升级器补上删除与移动动作）、旧格式的收件箱文件（等迁移配方）。分别指向后续两条路线。</li><li><strong>人读文档改完读不读得通，只有人眼过</strong>。扫描按字面串匹配，改成同义但不同字面的说法就会漏网。四份人读文档的改动行都逐行看过，但这类检查没有机器兜底。</li><li><strong><code>README.md</code> 目录树里还有一处与本轮无关的陈旧说法</strong>（项目长期知识那一行，那个角色早已退役）。本轮只做了跟 <code>origin/</code> 相关的最小改动，没有顺手翻修整棵树——那是另一个缺陷类，超出本轮范围。</li><li>本轮不切版、不打 tag、不提交。工作树里同时躺着 ITER-0112 起多轮的未发布改动。</li></ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul><li>四件套：<code>.ai/iterations/ITER-0119/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li><li>变更流：<code>.ai/iterations/ITER-0119/CHANGELOG.md</code></li><li>证据：<code>.ai/iterations/ITER-0119/evidence/</code>（10 条记录）</li><li>可重跑验收扫描：<code>.ai/iterations/ITER-0119/ac-sweep.py</code></li><li>开工前基线：<code>.ai/iterations/ITER-0119/pre-p4.baseline</code></li><li>资料契约真源：<code>Coder/40_Context_Management/references-schema.md</code></li><li>录入契约真源：<code>Coder/40_Context_Management/intake-schema.md</code></li></ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -223,7 +223,7 @@ class WorkflowRegistryTests(unittest.TestCase):
             self.assertIn(token, decision_work)
         for token in ("route-reference", "iteration-start", "不判断需求是否清晰", "不创建 Milestone route"):
             self.assertIn(token, decision_promotion)
-        self.assertEqual(13, len(data["workflows"]))
+        self.assertEqual(12, len(data["workflows"]))
 
         forbidden_engine_contracts = (
             "作为 P2 阶段的标准输入",

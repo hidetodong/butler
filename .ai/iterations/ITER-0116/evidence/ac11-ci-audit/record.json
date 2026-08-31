@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac11-ci-audit",
+  "iteration": "ITER-0116",
+  "ac_ids": [
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0116/ac11-ci-audit.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T08:20:58.792Z",
+  "finished_at": "2026-08-20T08:21:27.493Z",
+  "duration_ms": 28701,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 946,
+    "captured_bytes": 946,
+    "sha256": "32e7be4e173421cc78a43aaf88d3eb3ea582e452c6ef9f1be70f3696efd5c306",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

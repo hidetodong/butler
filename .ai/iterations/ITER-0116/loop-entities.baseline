@@ -1,0 +1,13 @@
+# ITER-0116 P4 前的 loop 六处实体基线（sha256）
+# 说明：registry.json 与 docs/workflows.md 带着 ITER-0115 的未提交改动，
+#       对 HEAD 做 git diff 会假红，故对这六处一律用 P4 前的内容哈希做基线。
+fbfe5ec440793abaa97181a1d8a08dbb6b71f4968cb2266e073b3b65aed18454  .claude/commands/butler/loop.md
+b005627c328aceff4fa871cfec626ac75fe2edb59973138c2a636c51bf22850b  plugins/butler/skills/butler-loop/SKILL.md
+f9a382825db8966674428d6ea772b70c2ffb294b05817ee023238ac0107ee7be  plugins/butler/skills/butler-loop/agents/openai.yaml
+bcb6f1e349f9de0ceb7ae6644e9a2a28a66e132021379f2a837f6db0212004ce  workflows/registry.json
+207033256cc73935a36ee4c898dc13fa3034f336fc6169c21611181603d212a4  docs/workflows.md
+../../plugins/butler/skills/butler-loop  .agents/skills/butler-loop -> (symlink target)
+# 补记（P4 进行中追加）：plugin.json 的基线哈希是在 T7 之后才录的。
+# 它在 T1–T7 里从未被打开过，且对 HEAD 的全部差异只有 ITER-0115 那一处
+# longDescription 删词（先于本轮 P4 发生），故此值即 P4 前的值。
+0479b39b8851fcc355e710c69e3fa76a2cbcde61d496910ae4fa801a66b93daf  plugins/butler/.codex-plugin/plugin.json

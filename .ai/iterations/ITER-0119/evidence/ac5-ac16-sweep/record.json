@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac5-ac16-sweep",
+  "iteration": "ITER-0119",
+  "ac_ids": [
+    "AC5",
+    "AC16"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0119/ac5-ac16-sweep.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-21T08:10:50.764Z",
+  "finished_at": "2026-08-21T08:10:51.435Z",
+  "duration_ms": 668,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 2450,
+    "captured_bytes": 2450,
+    "sha256": "16738524b7b3c2977bd998e0b9a7602afb63355b599c7658c88541d7d1215cd7",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

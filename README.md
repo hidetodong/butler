@@ -287,7 +287,6 @@ Decision Map 只记录“为什么这样选”的理由、证据和历史，不�
 |---|---|---|
 | 原始需求来自多处，需要先扫描和分类 | 需求收件箱 | `/butler:inbox` · `$butler-inbox` |
 | 一份产品文档需要拆成可独立版本化的需求 | PRD 管理 | `/butler:prd` · `$butler-prd` |
-| 想看当前 Milestone、Iteration、验收和风险 | 进度总览 | `/butler:progress` · `$butler-progress` |
 | 需要复核代码、方案或验收覆盖 | Review | `/butler:review` · `$butler-review` |
 | 另一个 Agent 已完成旁路工作，需要接回主线 | Sidework receipt | 提供 `.ai/sidework/` 回执路径 |
 | 希望在明确同意后学习真人取舍 | 偏好学习 | `/butler:preference` · `$butler-preference` |
@@ -311,9 +310,9 @@ project/
 │   ├── ITERATIONS.md           # 迭代台账
 │   ├── task-state.md           # 当前运行状态
 │   ├── project/                # 项目长期知识
+│   ├── references/             # 外部资料：raw/ 放用户自己的原件（AI 只读），其余是 AI 派生的受控投影
 │   └── iterations/             # 已收口迭代快照
-├── deliveries/                 # 给人阅读的 .md / .html 交付总结
-└── origin/                     # 可选的原始需求收件箱，AI 只读
+└── deliveries/                 # 给人阅读的 .md / .html 交付总结
 ```
 
 完整布局、旁路 Agent 回执、PRD 管理和版本升级说明见 [使用指南](HUMAN_GUIDE.md)。

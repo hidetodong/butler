@@ -16,7 +16,7 @@
   "interface": {
     "displayName": "Butler",
     "shortDescription": "Auditable engineering workflows for Codex",
-    "longDescription": "Route natural-language requests across Butler's auditable workflows, including session-to-iteration intake, inbox, PRD, milestone, review, ideation, preference, progress, convergence, dangerous, setup, initialization, and upgrade, while keeping the Butler rule repository as the single source of truth.",
+    "longDescription": "Route natural-language requests across Butler's auditable workflows, including session-to-iteration intake, inbox, PRD, milestone, review, ideation, preference, convergence, dangerous, setup, initialization, and upgrade, while keeping the Butler rule repository as the single source of truth.",
     "developerName": "Butler maintainers",
     "category": "Productivity",
     "capabilities": [

@@ -18,7 +18,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 0.1 施工项目根解析 (Project Root Resolution)
 
-**会话启动目录不等于施工项目根。** 在读写任何项目级 `.ai/`、`deliveries/`、`origin/`、`CLAUDE.md` 或 `AGENTS.md` 前，AI 必须先解析唯一的 `$PROJECT_ROOT`、向用户回声绝对路径与证据，后续所有项目级路径都以它为基准。`cwd` 只是发现起点，不单独构成写入授权。
+**会话启动目录不等于施工项目根。** 在读写任何项目级 `.ai/`、`deliveries/`、`CLAUDE.md` 或 `AGENTS.md` 前，AI 必须先解析唯一的 `$PROJECT_ROOT`、向用户回声绝对路径与证据，后续所有项目级路径都以它为基准。`cwd` 只是发现起点，不单独构成写入授权。
 
 调用 `$BUTLER/scripts/resolve-project-root.py`，按以下优先级命中即停：
 
@@ -54,13 +54,14 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 
 ## 2. 基础设施展开 (Scaffold)
 
-在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/`、`deliveries/` 与 `origin/` 三类基础目录，并分别承担不同职责：
+在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/` 与 `deliveries/` 两类基础目录，并分别承担不同职责：
 
 - `.ai/`：AI 工作空间，包含运行态文件与阶段产物两类内容。
 - `deliveries/`：完整交付后的人类可读交付总结归档目录。
-- `origin/`：**用户原始需求材料的可选收件箱**——用户自管，存放自由格式材料；AI **只读、不写不改不重命名不移动不归档不删除**。它可供 `/milestone`、后续 `/butler:inbox` 等入口读取，但不是快速路径的必经站。处理回执写 `.ai/INBOX.md`，不写回原稿；完整数据合同见 `40_Context_Management/inbox-schema.md`。
 
-部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/`、`deliveries/`、`origin/` 三个目录在部署时即创建（其中 `origin/` 为空收件箱待用户投放），`.ai/` 下的 `references/`、`iterations/`、`milestones/` 等子目录一律按需产生、部署时不建。
+用户的原始需求材料放 `.ai/references/raw/`：**用户自管的可选投放点**，存放自由格式材料；AI **只读、不写不改不重命名不移动不归档不删除**。它可供 `/milestone`、`/butler:prd` 等入口读取，但不是快速路径的必经站——直接在对话里粘贴同样合法。它与 `.ai/references/` 下 AI 派生的受控投影同住一个父目录但权威性不同，边界见 `40_Context_Management/references-schema.md §1`。
+
+部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/` 与 `deliveries/` 两个目录在部署时即创建，`.ai/` 下的 `references/`（含 `references/raw/`）、`iterations/`、`milestones/` 等子目录一律按需产生、部署时不建。
 
 `.ai/` 目录下分为两类文件：
 
@@ -76,7 +77,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `ITERATIONS.md`：迭代台账，记录 `current` 指针与全部迭代的号/标题/状态/所属 milestone/交付链接，字段参考 `iteration-schema.md`。
 - `MILESTONES.md`：里程碑看板，正式表记录 `current` 与已开启里程碑的号/状态/归属/交付，文件末可带未编号待办索引，字段参考 `milestone-schema.md`；首次开启或暂缓里程碑草稿时按需产生。
 - `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
-- `INBOX.md`：需求材料的来源、双指纹、处理状态与派生关系回执；首次运行收件箱动作时按需产生，不复制原文，格式见 `40_Context_Management/inbox-schema.md`。
+- `INBOX.md`：闪念口——随手记下的一句话、记录日期、四态封闭的处理状态与去向指针；首次运行录入动作时按需产生，不复制原文，格式见 `40_Context_Management/intake-schema.md`，唯一写入者是 `tools/intake/intake.py`。
 - `milestone-backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。多个可独立启动方向必须一方向一文件，并与 `MILESTONES.md` 待办区逐块一一对账；候办不参与 `current`、Goal 或迭代自动归属。
 
 **阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：

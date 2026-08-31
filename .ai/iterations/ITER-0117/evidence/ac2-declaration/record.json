@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac2-declaration",
+  "iteration": "ITER-0117",
+  "ac_ids": [
+    "AC2"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0117/ac2-declaration.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T09:25:12.666Z",
+  "finished_at": "2026-08-20T09:25:12.740Z",
+  "duration_ms": 74,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 380,
+    "captured_bytes": 380,
+    "sha256": "fb068c7d7bea8d2a9d363b81e442f718dce2b60c3c9b3834dbaec0b3e5676a00",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,0 +1,10 @@
+[OK] verify-ci.sh 退出码 0
+[OK] 新工具的 28 条测试确实在 CI 里跑过
+[OK] 审计退出码 0
+[OK] UNRELEASED 恰 2 条
+[OK] DRIFT 0 条
+  审计 OK 行数：862
+[OK] 两组扫描全通过
+
+共 38 项检查
+SWEEP PASS

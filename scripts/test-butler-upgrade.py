@@ -395,7 +395,7 @@ class UpgradeTests(unittest.TestCase):
             action for migration in data["migrations"] for action in migration["actions"]
             if action["type"] == "add_field"
         )
-        add["path"] = "origin/owner.md"
+        add["path"] = ".ai/references/raw/owner.md"
         with self.assertRaisesRegex(UPGRADE.UpgradeError, "not owned"):
             UPGRADE.validate_manifest(data, ROOT)
         data = self.manifest()

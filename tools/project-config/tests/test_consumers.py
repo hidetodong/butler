@@ -14,10 +14,8 @@ READERS = (
     "Coder/70_Extension_Preference/preference-probe-engine.md",
     ".claude/commands/butler/dangerous.md",
     ".claude/commands/butler/preference.md",
-    ".claude/commands/butler/progress.md",
     "plugins/butler/skills/butler-dangerous/SKILL.md",
     "plugins/butler/skills/butler-preference/SKILL.md",
-    "plugins/butler/skills/butler-progress/SKILL.md",
     "plugins/butler/skills/butler-review/SKILL.md",
     "templates/rule-card.md",
 )
@@ -58,7 +56,6 @@ class ConsumerContractTests(unittest.TestCase):
         for relative in (
             ".claude/commands/butler/dangerous.md",
             ".claude/commands/butler/preference.md",
-            ".claude/commands/butler/progress.md",
         ):
             with self.subTest(relative=relative):
                 text = self.text(relative)
@@ -73,17 +70,6 @@ class ConsumerContractTests(unittest.TestCase):
                 self.assertIn("source=legacy", text)
                 self.assertIn("source=missing", text)
                 self.assertIn("不得直接改 Markdown", text)
-
-    def test_progress_version_does_not_come_from_project_config(self):
-        for relative in (
-            ".claude/commands/butler/progress.md",
-            "plugins/butler/skills/butler-progress/SKILL.md",
-        ):
-            with self.subTest(relative=relative):
-                text = self.text(relative)
-                self.assertIn("AGENTS.md", text)
-                self.assertIn("VERSION", text)
-                self.assertNotIn("version from `.ai/local-constraints.md`", text)
 
     def test_current_repository_is_migrated_without_changing_switch_values(self):
         config = self.text(".ai/butler.config.json")

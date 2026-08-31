@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac3-ac5-freeze",
+  "iteration": "ITER-0116",
+  "ac_ids": [
+    "AC3",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0116/ac3-ac5-freeze.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T08:20:50.291Z",
+  "finished_at": "2026-08-20T08:20:50.422Z",
+  "duration_ms": 131,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 4172,
+    "captured_bytes": 4172,
+    "sha256": "a110b09d11cb502bf960ab8c0627d2ad9c2f83135037fb516eff5ee302387d91",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

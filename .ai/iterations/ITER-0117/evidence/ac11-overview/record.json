@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac11-overview",
+  "iteration": "ITER-0117",
+  "ac_ids": [
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0117/ac11-overview.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T09:25:13.617Z",
+  "finished_at": "2026-08-20T09:25:13.694Z",
+  "duration_ms": 77,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 315,
+    "captured_bytes": 315,
+    "sha256": "bad5f1098c1699a6c506f576519191a0b08101a15949c6b32ed40228e03c1994",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

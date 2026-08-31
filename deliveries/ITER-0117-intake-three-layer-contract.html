@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0117 交付总结 · ITER-0117 · inbox 三层数据契约与真源（MILE-0016 R6）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0117 · inbox 三层数据契约与真源（MILE-0016 R6）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0117</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把「随手记一句 → 想清楚值不值得做 → 真的开工」这三层各自长什么样，定死在一份新的规则真源里。只定数据形态，不写任何命令实现——命令归下一条路线项 R7。</p>
+      <p>为什么要重造：现在的需求收件箱那套契约太重。它给每条来源发一个全局递增编号、存两个 SHA-256 指纹来认「这条是不是变过」、跑七态状态机、还维护一张独立的派生关系表。结果是没人用得起来。新契约把这些全砍掉，一条闪念就是一句话加一个去向。</p>
+      <p>开工前核查暴露了四件事，都在正文里当前提处理了：孵化区其实早就存在（<code>.ai/milestone-backlog/</code>，9 份草稿），但只装得下里程碑那一档；<code>.ai/INBOX.md</code> 这条路径被旧契约占着，而删旧契约排在 R8；路线图里给孵化区写的是它 R9 改名之后的新路径，那个路径现在还不存在；旧契约被大约 100 行 CI 断言钉着，动不了。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>新建 <code>Coder/40_Context_Management/intake-schema.md</code>（184 行）</strong>，三层各自定死：<br><span class="sub"><strong>闪念口</strong>：<code>.ai/INBOX.md</code> 一张表，列是「闪念键 / 记于 / 一句话 / 状态 / 去向」。闪念键用日期加短句（<code>2026-08-20-inbox-too-heavy</code>），不设递增号池、不做内容指纹认亲。状态四态封闭（<code>new</code> / <code>incubated</code> / <code>done</code> / <code>dropped</code>），合法转移穷举四条，终态不回头——同一件事又想起来就是一条新闪念。终态行可以整行删掉不留墓碑，但 <code>new</code> 行只许转移不许删。</span><br><span class="sub"><strong>孵化区</strong>：草稿头部由两行加到三行，多一个 <code>规模: milestone|iteration|undecided</code>。结构按档分——<code>milestone</code> 维持现有四段，<code>iteration</code> 只要两段（因为迭代一开工就 P1 重写 CONCEPT，写多了会被覆盖），<code>undecided</code> 两段且「卡在哪」强制、必须点名一个具体缺口。</span><br><span class="sub"><strong>执行分流</strong>：三条封闭出口（提升为里程碑 / 开为迭代 / 撤回），各有前置条件，<code>undecided</code> 不能直接出区。每条出口删草稿和删索引行两侧原子，由审计里现成的「索引集合 == 文件集合」断言兜底。另明写一句 ideation 是孵化手段不是出口。</span></li>
+        <li><strong>新旧契约并存靠一段声明分工</strong>：新契约 H1 底下一段引用块写明三件事——两份规则真源同时指着 <code>.ai/INBOX.md</code>、新契约在 R7 前对该路径零写入、遇到格式分歧一律以旧的 <code>inbox-schema.md</code> 为准。声明里如实写了这条没有机器兜底。</li>
+        <li><strong>9 份存量候办草稿回填 <code>规模: milestone</code></strong>，每份恰 1 增 0 删，其余内容逐字未改。</li>
+        <li><strong><code>milestone-schema.md §4.5</code> 改两条</strong>：草稿头部必标记号由两项扩为三项，「沿用 §5 的四段结构」改为按档并指向新契约。改动集中在一行，索引表模板与 §5 正文零改动。</li>
+        <li><strong><code>Coder/README.md</code> 两处注册</strong>新规则文件；<code>.ai/MILESTONE.md §5.4</code> 登记三条定序处置；<code>.ai/debt.md</code> 由 10 条增为 12 条。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>你现在还用不上它</strong>。新契约到 R7 把 <code>/butler:inbox</code> 的新命令做出来之前只是一份定义，不写任何盘。收件箱当前的行为一字未变。</li>
+        <li>候办草稿多了一行 <code>规模:</code>。9 份存量的都填 <code>milestone</code>，跟以前的行为一致；将来记一条只够一个迭代的方向，可以标 <code>iteration</code> 少写两段。</li>
+        <li>待办区那张索引表<strong>一个字没动</strong>——规模只写在草稿里，索引不重复存一份。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增规则文件一份，落 <code>Coder/40_Context_Management/</code>。</li>
+        <li>改动规则文件两份：<code>milestone-schema.md</code>（§4.5 一行拆两条）、<code>Coder/README.md</code>（两处注册）。</li>
+        <li>状态台账：9 份候办草稿、里程碑范围演进记录、欠账清单、项目全貌产物。</li>
+        <li><strong>完全没碰的</strong>：旧 inbox 全链 13 份文件——<code>inbox-schema.md</code>、<code>inbox-workflow.md</code>、两份 hook 测试、<code>tools/inbox/</code> 全 5 份、inbox 命令与 Codex skill、注册表的 inbox 块，逐字节相同有哈希为证。业务工作流仍是 12 个。<code>.ai/MILESTONES.md</code> 逐字节未改。</li>
+        <li>目标项目侧无受管文件形态变化，不触发入口重生成，也不需要新的迁移动作。</li>
+      </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>十二条验收全部通过，11 份可重跑证据覆盖 AC1–AC12 无遗漏。CI 退出码 0，状态审计退出码 0（857 条 OK，仅两条未发布标记）。</p>
+      <p>三处封闭枚举不是靠 grep 字样在场证的——脚本把表格解析成列表再断言集合与顺序相等，多一行少一行都会红。另有一条反向断言：全文不得出现「等等」「视情况而定」这类给枚举留开口的话。两组扫描实扫 508 份文本文件，A 组查越界零命中、B 组查在场零缺席。</p>
+      <p><strong>P3 期间撤回了一条已经 ACK 的验收标准</strong>，按迭代规则走了正式修订。原本写的是「给待办区索引也加一列规模」，查完代码后改判为不加：明面成本是审计脚本把候办表写死成 5 列、要动 3 处代码加 11 行测试夹具；真正劝退的是规模会同时躺在草稿头部和索引行、造出第二个真源，而防漂移得再加一条一致性断言——恰是本轮明确不做的。</p>
+      <p>如实记在验证报告里的还有三处。<strong>一处写法取舍</strong>：验收标准要求新契约不出现旧契约的编号前缀，但正文需要说清「旧的用的是哪种方案、我们为什么不用」，最后改成描述性写法并给出指针，代价是具体性下降了一点。<strong>一处工具动作</strong>：收口前跑台账迁移工具时它改写了待办区索引文件，逐字节比对确认写回的内容与基线完全相同，所以「索引未改」这条成立的是内容字节相同、不是文件从未被写过。<strong>三处自查</strong>：两个证据脚本自身的缺陷在干跑时被自己抓出来——一个正则跟契约里的写法对不上、解析出空列表，一个读注册表时取了不存在的键名；另外扫描器在收口阶段拦下一处真命中——这份交付总结的初稿把那条 R9 才存在的路径字面写进了正文，而交付目录正在扫描范围内，改掉字面后回到零命中。三处都是断言自己失败，不是悄悄放过。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>新契约在 R7 之前没有任何使用者</strong>。三层结构写得对不对、<code>undecided</code> 档的出区压力管不管用，机器只能证字样在场。要等真跑一条闪念走到执行才知道。</li>
+        <li><strong>两份 inbox 规则真源要并存三个迭代</strong>，分工只能单向声明——从旧契约那边读进来的人看不到这段分工。已记入欠账，R8 删掉旧契约时自然消解。</li>
+        <li><strong><code>Coder/README.md</code> 的文件级注册机器不查</strong>。目录有没有说明会校验，文件有没有指针不会。本轮靠逐处 grep 自证。</li>
+        <li><strong>已部署项目里旧格式收件箱的迁移义务没人认领</strong>。新旧格式不兼容，本轮既没写迁移配方也没写降级读法，已记入欠账归 R15。</li>
+        <li>孵化区目录到 R9 才改名，新契约按现实路径写并预告了改名，但这条靠 R9 执行时记得回来改，没有机器提醒。</li>
+        <li>本轮不切版、不打 tag、不提交。工作树里同时躺着 ITER-0115、ITER-0116、ITER-0117 三轮的未发布改动。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0117/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0117/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0117/evidence/</code>（11 条记录）</li>
+        <li>新规则真源：<code>Coder/40_Context_Management/intake-schema.md</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

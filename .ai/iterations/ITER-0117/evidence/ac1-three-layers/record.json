@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac1-three-layers",
+  "iteration": "ITER-0117",
+  "ac_ids": [
+    "AC1"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0117/ac1-three-layers.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T09:25:12.548Z",
+  "finished_at": "2026-08-20T09:25:12.621Z",
+  "duration_ms": 73,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 842,
+    "captured_bytes": 842,
+    "sha256": "df1cf76221685cc92c1547e7e7270c6a8eb91750ce378e7414bae875c6a2fdae",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

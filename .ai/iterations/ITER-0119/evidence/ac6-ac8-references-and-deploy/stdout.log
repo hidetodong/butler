@@ -1,0 +1,43 @@
+== AC6 · references-schema.md §1/§2 重写 ==
+## 1. 定位
+
+`.ai/references/` 是**外部资料的落盘区**：项目之外的东西，不管是用户丢进来的原件还是 AI 处理过的投影，都住这里，供后续阶段按指针引用。
+
+它下面并存两类东西，**保真度和权威性都不同，靠目录分开**：
+
+| 子区 | 存什么 | 谁写 | 权威性 |
+|---|---|---|---|
+| `raw/` | 用户自己的原始材料，自由格式、任意命名 | **只有用户**。AI 只读、不写不改不重命名不移动不归档不删除 | **非权威**。是输入，不是规格；用户随时可以清理 |
+| 其余（扁平资料与 `prd/`） | AI 处理后的受控投影 | AI 派生并维护版本历史 | **权威**。P2 / P3 / P5 按指针引用对账 |
+
+这条区分要记住：**「引用了 `.ai/references/` 里的东西」不等于「引用了权威投影」**。`raw/` 下面那份可能是用户三个月前随手扔进来、早就过时的草稿；它的价值是「这是人当初真正说的话」，不是「这是现在算数的规格」。凡是验收要对账的引用，指针必须落在 `raw/` 之外。
+
+`raw/` 与 `references/` 的其余子目录一样按需产生，部署时不建。
+
+## 2. 三类资料
+
+- **用户原件**：`.ai/references/raw/`。用户自己投放的原始材料，自由格式、任意命名与数量。**不受本文件后续的任何约束**——不用 `prd_id`、不进版本历史、不被 `prd-split` 消费、不参与非回归门以外的任何机制。它唯一的规矩是那条只读纪律（见 §1 表与 §10）。
+- **扁平资料**：`api-<name>.md`、`design-<name>.md`、`insight-<name>.md` 等小型或已消化资料。一个文件装下，不建 PRD 索引，不受本文件后续的 `prd_id` 约束。
+- **PRD 需求集合**：`.ai/references/prd/`。项目内每份独立需求各占一个稳定目录；大 PRD 可切多个模块，小 PRD 也进入自己的需求目录，只是模块数为 1。
+
+三类可以并存。原件是可选投放点，对话里直接粘贴同样合法；PRD 能力是可选加层：不用 PRD 的项目、直接对话的小任务和既有扁平资料流程继续合法。
+
+## 3. 两层目录与索引
+  §1 是否还拿已退役的 .ai/project/ 做对照（应为 0）: 0
+== AC7 · 部署只建两个目录，四处说法一致 ==
+Coder/20_Workflow_Lifecycle/mcv-deployment.md:57:在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/` 与 `deliveries/` 两类基础目录，并分别承担不同职责：
+Coder/20_Workflow_Lifecycle/mcv-deployment.md:64:部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/` 与 `deliveries/` 两个目录在部署时即创建，`.ai/` 下的 `references/`（含 `references/raw/`）、`iterations/`、`milestones/` 等子目录一律按需产生、部署时不建。
+Coder/README.md:181:- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/` 与 `deliveries/` 两个目录；用户的原始需求材料放 `.ai/references/raw/`（AI 只读、按需产生，与 AI 派生的受控投影同住 `.ai/references/` 但权威性不同，见 `40_Context_Management/references-schema.md §1`）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
+.claude/commands/butler/init.md:26:2. **§2 基础设施展开**：创建 `.ai/` 与 `deliveries/` 两个目录。
+15:   - **§2 Scaffold**: create `.ai/` and `deliveries/`.
+== AC8 · brief 与 PRD 的文件通道 ==
+Coder/20_Workflow_Lifecycle/milestone-schema.md:201:| 文件 | 用户把原始概念文件投放到 `.ai/references/raw/`（自由格式、任意命名/数量），由模型读取。 |
+Coder/20_Workflow_Lifecycle/milestone-schema.md:206:- `.ai/references/raw/` 里的文件由用户自管，AI **只读、不写不改不重塑不归档**（与同目录下 AI 派生投影的区分见 `40_Context_Management/references-schema.md §1`）。
+Coder/20_Workflow_Lifecycle/milestone-schema.md:208:- **若 brief 材料本身是大 PRD**（逐字权威规格）：它**同时喂两个海拔**——作 brief 合成 `.ai/MILESTONE.md` 路线图（方向层、有损压缩），并经 `40_Context_Management/prd-split.md` 派生 `.ai/references/prd/` 切片（细节层、逐字无损，见下 §6.4 合成协议步 6）。注意两者身份不同：`.ai/references/raw/` 里那份 PRD 仍是用户自管的**非权威原始输入**（AI 只读不归档、可清理）；`.ai/references/prd/` 切片才是 AI 派生、供 P2/P3/P5 引用对账的**权威投影**、独立生命周期跨迭代常驻——别把两者混为一谈（身份区分同 `40_Context_Management/references-schema.md §1`）。
+Coder/20_Workflow_Lifecycle/milestone-schema.md:212:> **合成前必过 · PRD 分类闸（不可跳）**：收集到 brief 后、动手合成三段之前，**先判这份 brief 的内容是不是大 PRD**（逐字权威规格，判据回指 `40_Context_Management/references-schema.md §2`——大、结构化、逐字为准）。判**是** → 本次是"PRD 派生里程碑"，除合成路线图外还要经 `40_Context_Management/prd-split.md` 切 `.ai/references/prd/`（详见下方步 6 并进细则），切分方案与路线图方向**合并为一次呈交**确认；判**否** → 普通 brief，走常规合成到步 5 即止。**这道闸是必过判定、不是可跳的 opt-in 附录**——外部结构化文档（含经 MCP 直读的 Confluence / 需求平台 PRD）当 brief 时尤其不可略过：不判就合成，正是"MILESTONE 建了、`references/prd/` 没切"的漏切老毛病。判据只看**内容**是不是逐字权威规格，与 brief 从哪来（对话 / `.ai/references/raw/` / MCP）无关。
+Coder/20_Workflow_Lifecycle/milestone-schema.md:214:1. **收集输入**：读取对话意图，或 `.ai/references/raw/` 中用户指明的概念文件；多份未指明时汇总相关文件并回述确认范围，不擅自取舍。
+Coder/20_Workflow_Lifecycle/milestone-schema.md:233:| `/milestone`（可带意图文本或指向 `.ai/references/raw/` 下的文件） | 录入/开启里程碑：按 §6.1 判定、按 §6.4 合成；只有指令或上下文已明确要“现在推进”才按 §7.1 领号，否则按 §7.6 进未编号待办区。 |
+.claude/commands/butler/prd.md:19:　└ 若 `$ARGUMENTS` 为空且对话里也没有 PRD 材料 → 先问用户 PRD 从哪来（粘贴 / 文件路径 / `.ai/references/raw/`），拿到材料再切。
+HUMAN_GUIDE.md:247:- **文件**：把原始概念/想法写成文件丢进 `.ai/references/raw/`（自由格式、随便几份），然后输 `/milestone` 让模型读它合成。
+HUMAN_GUIDE.md:255:| `/milestone` | 开启 / 录入里程碑（从对话或 `.ai/references/raw/` 下的文件取你的想法合成概述） |
+HUMAN_GUIDE.md:258:收口、废弃、调整方向仍用自然语言说即可（不强制走命令）。`.ai/references/raw/` 里的文件是你的原材料、归你管，合成后真源以 `.ai/MILESTONE.md` 为准。

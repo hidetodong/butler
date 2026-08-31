@@ -1,0 +1,15 @@
+scanned 414 text files under /Users/cyborgno2/Documents/WorkCode.nosync/butler
+
+[A · retired chain (live refs)] patterns=4 hits=8
+  .ai/verification-evidence/ac1-ac2-entities/stdout.log:2: [OK]   .claude/commands/butler/progress.md 已消失
+  .ai/verification-evidence/ac1-ac2-entities/stdout.log:3: [OK]   plugins/butler/skills/butler-progress 已消失
+  .ai/verification-evidence/ac1-ac2-entities/stdout.log:4: [OK]   .agents/skills/butler-progress 已消失
+  .ai/verification-evidence/ac10-overview/stdout.log:9: -| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+  .ai/verification-evidence/ac10-overview/stdout.log:9: -| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+  .ai/verification-evidence/ac10-overview/stdout.log:9: -| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+  .ai/verification-evidence/ac10-overview/stdout.log:9: -| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+  .ai/verification-evidence/ac8-ac9-docs/stdout.log:2: [OK]   README 无 /butler:progress
+
+[B · stale prose counts] patterns=4 hits=0
+
+RESULT: FAIL

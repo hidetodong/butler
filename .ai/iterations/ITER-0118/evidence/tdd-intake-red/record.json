@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "tdd-intake-red",
+  "iteration": "ITER-0118",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/intake/tests",
+      "-t",
+      "."
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T13:11:00.287Z",
+  "finished_at": "2026-08-20T13:11:00.337Z",
+  "duration_ms": 49,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1279,
+    "captured_bytes": 1279,
+    "sha256": "71281bc43fde52e1790382efd43764e3c8f49acefac46c90a6c556e4ee2d5e0f",
+    "truncated": false
+  }
+}

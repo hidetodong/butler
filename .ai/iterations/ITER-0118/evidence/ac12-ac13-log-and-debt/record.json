@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac12-ac13-log-and-debt",
+  "iteration": "ITER-0118",
+  "ac_ids": [
+    "AC12",
+    "AC13"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0118/ac12-ac13-log-and-debt.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T10:46:09.470Z",
+  "finished_at": "2026-08-20T10:46:09.511Z",
+  "duration_ms": 41,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 859,
+    "captured_bytes": 859,
+    "sha256": "f1e1bb6fcc73176d408bcc80b126143e5b05a4adb439dcbe0ebf5347f5b5269c",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

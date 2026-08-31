@@ -1,0 +1,22 @@
+== --check 退出码 ==
+{"status": "ok", "overview": ".ai/OVERVIEW.md"}
+exit=0
+
+== 体量 ==
+    8798 .ai/OVERVIEW.md
+
+== 工作流清单行数（应 12） ==
+count=12
+
+== loop 行在场 ==
+66:| loop | `/butler:loop` | `$butler-loop` | high | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
+
+== 相对 HEAD 只应有台账跟随行 + ITER-0115 的 progress 删除 ==
+-- 当前 active 迭代：none
+-- 累计里程碑 16 个、迭代 114 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
++- 当前 active 迭代：ITER-0116
++- 累计里程碑 16 个、迭代 116 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
+-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 3 |
++| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 5 |
+-| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+AC9-OK

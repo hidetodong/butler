@@ -1,0 +1,26 @@
+== 条目数（AC7 先减为 9、AC8 再补回 10；收口态应为 10） ==
+count=10
+
+== AC7 · 已还清的旧账已删（关键字应零命中） ==
+'自动绑定' count=0
+
+== AC8 · 新欠账在场且三要素齐备 ==
+14:- **`/butler:loop` 的演进冻结没有机器兜底**：冻结声明写在规则真源 `Coder/55
+OK   含 '没有任何检查能拦住'
+OK   含 '本轮有意不加检查'
+OK   含 'R13 对 loop 做最终处置'
+
+== 其余 9 条首句逐条仍在 ==
+OK   butler 仓自身不 dogfood 运行自己的 hook
+OK   项目自有 hook 与 Butler 受管目录不能共存
+OK   `/butler:upgrade` 从未在真实已部署项目上跑过
+OK   运行时观测缺位
+OK   远端 required check 未启用
+OK   双宿主语义入口未经真实安装人测
+OK   `.ai/invariants.md` 有 16 条不带真源指针
+OK   `iteration-schema.md §5.3` 的修订记录要求与产物合同冲突
+OK   人读文档里的工作流计数没有机器兜底
+
+== 改动范围 ==
+2	1	.ai/debt.md
+AC7-AC8-OK

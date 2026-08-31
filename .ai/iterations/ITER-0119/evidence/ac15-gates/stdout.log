@@ -1,0 +1,11 @@
+== CI ==
+  verify-ci.sh 退出码 = 0
+----------------------------------------------------------------------
+Ran 1 test in 0.620s
+
+OK
+== 状态审计 ==
+  audit 退出码 = 0
+  OK=872  DRIFT=0  FAIL=0  UNRELEASED=2
+[UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+[UNRELEASED] release.tag: UNRELEASED：v3.6.0 不指向 HEAD

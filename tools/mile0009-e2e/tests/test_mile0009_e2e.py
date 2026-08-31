@@ -9,7 +9,6 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[3]
-INBOX = REPO / "tools/inbox/inbox.py"
 MIGRATE = REPO / "tools/prd-migrate/prd_migrate.py"
 STATUS = REPO / "tools/prd-status/prd_status.py"
 UPDATE = REPO / "tools/prd-update/prd_update.py"
@@ -43,9 +42,6 @@ class Mile0009E2E(unittest.TestCase):
             prd = root / ".ai/references/prd"
             archive = prd / ".archive/v1.0"
             archive.mkdir(parents=True)
-            (root / "origin").mkdir()
-            source = root / "origin/login-requirement.md"
-            source.write_bytes(b"incoming requirement\r\n")
             (prd / "00_INDEX.md").write_text("# Login\n\n当前版本: v1.1\n", encoding="utf-8")
             (prd / "login-flow.md").write_bytes(b"live v1.1\r\n")
             (archive / "00_INDEX.md").write_text("当前版本: v1.0\n", encoding="utf-8")
@@ -58,14 +54,6 @@ class Mile0009E2E(unittest.TestCase):
                 encoding="utf-8",
             )
             (root / ".ai/MILESTONE.md").write_text("| R1 | Login → prd: login-flow | — | planned |\n", encoding="utf-8")
-
-            first = run_json(INBOX, "scan", "--project-root", str(root), "--apply")
-            inbox_bytes = (root / ".ai/INBOX.md").read_bytes()
-            second = run_json(INBOX, "scan", "--project-root", str(root), "--apply")
-            self.assertTrue(first["changed"])
-            self.assertFalse(second["changed"])
-            self.assertEqual(inbox_bytes, (root / ".ai/INBOX.md").read_bytes())
-            self.assertEqual(b"incoming requirement\r\n", source.read_bytes())
 
             before = run_json(MIGRATE, "resolve", "--project-root", str(root), "--ac-file", ".ai/iterations/ITER-0001/AC_LIST.md", "--ref", "prd/login-flow.md")
             self.assertEqual(".ai/references/prd/.archive/v1.0/login-flow.md", before["path"])

@@ -1,0 +1,7 @@
+== .ai/MILESTONES.md 与 P4 前基线逐字节比对 ==
+baseline=dd8846afaa81d251c4275622dc95570a85be466e80a126d3afcef775d1990cf4
+current =dd8846afaa81d251c4275622dc95570a85be466e80a126d3afcef775d1990cf4
+== 表头仍 5 列 · 待办区仍 9 行 ==
+26:| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
+backlog rows=9
+AC5 PASS

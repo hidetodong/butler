@@ -1,0 +1,35 @@
+[A 组] inbox_schema 零命中（扫了 311 份活跃文件）
+[A 组] inbox_workflow 零命中（扫了 311 份活跃文件）
+[A 组] tools_inbox 零命中（扫了 311 份活跃文件）
+[A 组] dotted_inbox 零命中（扫了 311 份活跃文件）
+[A 组] origin_dir 零命中（扫了 311 份活跃文件）
+[A 组] src_id 零命中（扫了 311 份活跃文件）
+[A 组] observed 零命中（扫了 311 份活跃文件）
+[A 组] processed 零命中（扫了 311 份活跃文件）
+[B 组] 旧链实体已删 ✓ Coder/40_Context_Management/inbox-schema.md 已不存在
+[B 组] 旧链实体已删 ✓ Coder/40_Context_Management/inbox-workflow.md 已不存在
+[B 组] 旧链实体已删 ✓ templates/hooks/tests/test_inbox_contract.py 已不存在
+[B 组] 旧链实体已删 ✓ tools/inbox 已不存在
+[B 组] 注册表 inbox 条目指新契约 ✓ workflows/registry.json
+[B 组] Claude 薄壳指新工具 ✓ .claude/commands/butler/inbox.md
+[B 组] Codex skill 指新工具 ✓ plugins/butler/skills/butler-inbox/SKILL.md
+[B 组] 非回归门那条纪律（逐字，与合同测试配对） ✓ Coder/40_Context_Management/references-schema.md
+[B 组] 合同测试那条逐字断言 ✓ templates/hooks/tests/test_prd_collection_contract.py
+[B 组] 部署协议里的只读纪律 ✓ Coder/20_Workflow_Lifecycle/mcv-deployment.md
+[B 组] 不变量第 48 条已改写、纪律未丢 ✓ .ai/invariants.md
+[B 组] 部署协议：两个目录 ✓ Coder/20_Workflow_Lifecycle/mcv-deployment.md
+[B 组] Coder/README：两个目录 ✓ Coder/README.md
+[B 组] init 命令：两个目录 ✓ .claude/commands/butler/init.md
+[B 组] init skill：两个目录 ✓ plugins/butler/skills/butler-init/SKILL.md
+[B 组] 规则卡：两个目录 ✓ templates/rule-card.md
+[B 组] test_inbox_workflow.py 只剩两个活接线用例 ✓
+[B 组] 旧格式回归防线 ✓ tools/intake/tests/test_intake.py
+[B 组] 夹具仍含旧受管区块标记 ✓ tools/intake/tests/test_intake.py
+[B 组] 夹具仍含旧的递增来源号 ✓ tools/intake/tests/test_intake.py
+[B 组] 夹具仍含旧的双指纹字段 ✓ tools/intake/tests/test_intake.py
+[B 组] hook 树摘要与开工前相同 ✓ bd92a614f958…
+[B 组] .ai/INBOX.md 逐字节未动 ✓
+[B 组] 40_Context_Management 规则文件数 13 → 11 ✓
+[B 组] OVERVIEW 计数已重算 ✓ .ai/OVERVIEW.md
+
+AC-SWEEP PASS · A 组 8 项零命中 / B 组 25 项在场（扫描面 311 份文件）。

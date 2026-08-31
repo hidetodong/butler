@@ -1,0 +1,16 @@
+== 三层骨架 ==
+19:## 1. 第一层 · 闪念口 `.ai/INBOX.md`
+82:## 2. 第二层 · 孵化区 `.ai/milestone-backlog/`
+127:## 3. 第三层 · 执行分流
+== 第一层：字段清单 / 稳定键形态 ==
+32:| 闪念键 | 记于 | 一句话 | 状态 | 去向 |
+43:| 闪念键 | `YYYY-MM-DD-<kebab 短句>` | 全文件唯一；同日撞名在尾部接 `-2`、`-3` |
+== 第一层：状态封闭四态 + 转移四条 ==
+states = ['new', 'incubated', 'done', 'dropped']
+transitions = [('new', 'incubated'), ('new', 'done'), ('new', 'dropped'), ('incubated', 'dropped')]
+== 第二层：规模三档 + 按档结构 ==
+tiers = ['milestone', 'iteration', 'undecided'] | 三档段落集齐备
+== 第三层：三条出口 + 前置条件 ==
+exits = ['提升为里程碑', '开为迭代', '撤回'] | 前置条件在场
+== 无开口措辞 ==
+AC1 PASS

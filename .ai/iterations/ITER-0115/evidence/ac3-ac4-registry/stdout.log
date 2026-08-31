@@ -1,0 +1,16 @@
+=== AC3 · EXPECTED_IDS ===
+[OK]   EXPECTED_IDS 共 12 项且不含 progress
+[OK]   registry 数量校验改为从 EXPECTED_IDS 派生，不再硬编码
+=== AC3 · registry 与全部投影对账 ===
+[OK] workflow registry projections: workflows=12 projections=53
+[OK]   --check 退出码 0
+=== AC4 · docs/workflows.md 重算结果 ===
+[OK]   工作流表 12 行
+[OK]   无 progress 行
+[OK]   安全段文案已重算为「其余 10 项」（按 TECH_PLAN D4，中文数字换阿拉伯数字并改为派生）
+[OK]   分发状态表计数已重算为 12
+[OK]   页首「请勿手改」声明保留
+=== AC4 · 生成投影幂等 ===
+[OK]   再跑一次 --write 逐字节不变（幂等）
+
+REGISTRY-CLEAN

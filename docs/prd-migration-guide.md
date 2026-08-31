@@ -93,7 +93,7 @@ python3 "$BUTLER_PATH/tools/prd-migrate/prd_migrate.py" apply \
 .ai/references/.prd-migration-backups/<migration_id>/...
 ```
 
-`origin/`、MILESTONE、当前四件套和 `.ai/iterations/` 不在写集。
+用户原件 `.ai/references/raw/`、MILESTONE、当前四件套和 `.ai/iterations/` 不在写集。
 
 ## 6. 迁移后验证
 

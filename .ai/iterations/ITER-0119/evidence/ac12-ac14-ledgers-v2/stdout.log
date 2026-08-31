@@ -1,0 +1,31 @@
+== AC12 · .ai/MILESTONE.md §5.4 本轮新增五条 ==
+- 2026-08-21（R8 · `origin/` 退役后原件放哪，为什么是目录不是文件名前缀）：开工时的方案是「用户点名任意路径」，用户当
+- 2026-08-21（R8 · 原件只读的 hook 门禁撤出本轮，条件写死）：查证发现「AI 只读用户原件」这条纪律**从来没有机器兜底*
+- 2026-08-21（R8 · 按 `migration-schema.md §5` 的迁移判定，四条结论逐条落地）：①改了 `templa
+- 2026-08-21（R8 · 已部署项目侧做不干净的部分，明确指向 R14 / R15）：本轮对别人硬盘上的项目，最多只能做到「butle
+- 2026-08-21（R8 · 本轮没有 TDD 配对，理由说在前面）：AC11 原定写成「先红后绿」的配对——拿旧格式 `.ai/INBO
+== AC13 · .ai/debt.md 清账 ==
+  条目数（开工前 14，删 1 改 1 增 2）: 15
+  已删除的条目（两份 inbox 规则真源并存）命中数: 0
+- **butler 仓自身不 dogfood 运行自己的 hook**
+- **项目自有 hook 与 Butler 受管目录不能共存**
+- **`/butler:upgrade` 从未在真实已部署项目上跑过**
+- **运行时观测缺位**
+- **远端 required check 未启用**
+- **双宿主语义入口未经真实安装人测**
+- **`.ai/invariants.md` 有 16 条不带真源指针**
+- **`iteration-schema.md §5.3` 的修订记录要求与产物合同冲突**
+- **人读文档里的工作流计数没有机器兜底**
+- **`/butler:loop` 的演进冻结没有机器兜底**
+- **已部署项目里旧格式 `.ai/INBOX.md` 与残留 `origin/` 都没人搬**
+- **跨文件写盘的回滚本身失败时仍会留半截态**
+- **`/butler:inbox` 六条动作路径里只有两条被真实用过**
+- **「AI 只读用户原件」这条纪律从来没有机器兜底**
+- **hook 树一改就必须跟切版绑在一起**
+== AC14 · OVERVIEW 重算 ==
+42:| `40_Context_Management/` | 11 | 长任务、多阶段任务与交接场景下的上下文治理。 |
+57:| inbox | `/butler:inbox` | `$butler-inbox` | normal | `Coder/40_Context_Management/intake-workflow.md` |
+58:| prd | `/butler:prd` | `$butler-prd` | normal | `Coder/40_Context_Management/references-schema.md` |
+  驻留工具清单里 tools/inbox 命中数: 0
+  工作流清单行数（应为 12）: 12
+{"status": "ok", "overview": ".ai/OVERVIEW.md"}

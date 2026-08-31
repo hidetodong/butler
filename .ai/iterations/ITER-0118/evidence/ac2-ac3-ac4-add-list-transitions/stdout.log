@@ -1,0 +1,6 @@
+[OK] TestAdd 全通过
+[OK] TestList 全通过
+[OK] TestTransitions 全通过
+[OK] list 跑完 INBOX.md 哈希不变
+[OK] list 跑完孵化区文件数不变
+[OK] 工具的合法转移集合恰是契约穷举的 4 条

@@ -76,7 +76,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 2. 在 `~/.claude/CLAUDE.md` 中写入全局配置，让 Claude Code 在所有项目中都能自动发现 butler
 3. 把 butler 的 slash 命令（`.claude/commands/butler/` 命名空间目录，如 `/butler:prd`）整个**软链**到 `~/.claude/commands/butler`，让它们在**所有项目**里都能用——不再只有编辑 butler 仓时才能敲。用软链而非拷贝：butler 仓一加/改命令，全局立即生效、无需重装
 4. 在 `~/.claude/CLAUDE.md` 的全局配置里 `@import` 一行**沟通风格正本**（`communication-style.md`），规定 AI 该怎么跟你说话（语气、详略、说人话）。它跟着 butler 仓走、每个会话常开、跨机器同步；想调说话风格，改这个文件即可
-5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（Router + 13 个业务 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
+5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（Router + 12 个业务 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
 
 执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用，AI 也按你的沟通风格说话。
 
@@ -94,7 +94,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；现在也可用 `/butler:setup` / `$butler-setup` 显式调用同一脚本。基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 当前包含 Router + 13 个业务 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
+v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；现在也可用 `/butler:setup` / `$butler-setup` 显式调用同一脚本。基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 当前包含 Router + 12 个业务 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
 
 兼容边界：
 
@@ -112,7 +112,7 @@ v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能
 bash scripts/verify-ci.sh
 ```
 
-入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 Router + 13 个业务 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
+入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 Router + 12 个业务 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
 
 GitHub Actions 在 Linux 与 macOS 上运行同一入口，最终汇总 check 名固定为 **`Butler required checks`**。仓库管理员应先让 workflow 至少运行一次，再到 `main` 的 Ruleset/Branch protection 中把这个精确名称设为 required，并从设置页或只读 GitHub API 复核。
 
@@ -166,15 +166,15 @@ AI 会自动走完整个链路：
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
 │   ├── sidework/            # 旁路工作短回执（第一次使用时按需创建）
-│   └── references/          # 外部参考资料（按需创建）
-├── deliveries/              # 交付总结归档（每份 .md 另有同名 .html 固定格式阅读视图）
-│   ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
-│   ├── ITER-NNNN-<slug>.html #  └ 同名固定格式阅读视图，双击即可浏览器打开
-│   └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md(+.html)
-└── origin/                  # 可选原始需求收件箱（你自管，AI 只读且不移动/归档/删除）
+│   └── references/          # 外部资料（按需创建）
+│       └── raw/             #   └ 你自己的原始材料：自由格式、你自管，AI 只读且不移动/归档/删除
+└── deliveries/              # 交付总结归档（每份 .md 另有同名 .html 固定格式阅读视图）
+    ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
+    ├── ITER-NNNN-<slug>.html #  └ 同名固定格式阅读视图，双击即可浏览器打开
+    └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md(+.html)
 ```
 
-> `origin/` 与 `.ai/references/` 别混：`origin/` 放**你的原始需求材料**（可选，AI 只读）；`.ai/INBOX.md` 只记处理回执和派生指针、不复制原文；`references/` 放供验收引用的外部规格投影。完整收件箱数据合同见 `Coder/40_Context_Management/inbox-schema.md`。
+> `references/` 底下两类东西别混：`raw/` 放**你自己的原始材料**（可选投放点，AI 只读，随时可自己清理）；同目录下其余的是 AI 从这些材料派生出来、供验收引用的受控投影。两者边界见 `Coder/40_Context_Management/references-schema.md §1`。
 
 ### 把旁路 Agent 的成果钩回主线
 
@@ -244,7 +244,7 @@ butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶
 你不用零散地边聊边拼。想推进一个大版本时，**在一处把想法一次性讲清**，模型据此生成里程碑概述（范围/理解/路线图）并拆出迭代承接规划。两条录入通道任选：
 
 - **对话**：直接说，或输 `/milestone <你想做的大版本是什么>`。
-- **文件**：把原始概念/想法写成文件丢进项目根的 `origin/` 收件箱（自由格式、随便几份），然后输 `/milestone` 让模型读它合成。
+- **文件**：把原始概念/想法写成文件丢进 `.ai/references/raw/`（自由格式、随便几份），然后输 `/milestone` 让模型读它合成。
 
 模型会把你的意图落成 `.ai/MILESTONE.md` 三段（范围评估 / 理解阐释 / 拆分路线图），信息不够的地方会显式标"待澄清"而不是替你瞎编，产出后跟你 soft 对齐（认方向即可，不用逐条 ACK）。拆分路线图按主题切片排序、标"预计 ITER 跨度"，但**不预先把迭代号钉死**——真号在每个迭代开启时才分配（避免中途插任务/改计划就失真）。
 
@@ -252,10 +252,10 @@ butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶
 
 | 命令 | 作用 |
 |---|---|
-| `/milestone` | 开启 / 录入里程碑（从对话或 `origin/` 文件取你的想法合成概述） |
+| `/milestone` | 开启 / 录入里程碑（从对话或 `.ai/references/raw/` 下的文件取你的想法合成概述） |
 | `/milestone status` | 只读看板：当前里程碑范围、路线图进度、已含哪些迭代、下一个该开的迭代——一眼看清进度，不改任何东西 |
 
-收口、废弃、调整方向仍用自然语言说即可（不强制走命令）。`origin/` 里的文件是你的原材料、归你管，合成后真源以 `.ai/MILESTONE.md` 为准。
+收口、废弃、调整方向仍用自然语言说即可（不强制走命令）。`.ai/references/raw/` 里的文件是你的原材料、归你管，合成后真源以 `.ai/MILESTONE.md` 为准。
 
 ### PRD 先行（大规格版本化）
 

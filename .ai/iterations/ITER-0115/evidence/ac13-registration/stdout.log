@@ -1,0 +1,16 @@
+=== 登记一 · 路线图点名两项在 progress 上不存在 ===
+[OK]   标题行在场
+[OK]   写明 registry 的 rule_source 指回命令文件自身
+[OK]   写明 rule-card 全文未提 progress
+[OK]   表态：不适用，不假装完成
+=== 登记二 · 发布处置 ===
+[OK]   标题行在场
+[OK]   写明 Claude 侧是软链、删即生效
+[OK]   写明 Codex 侧需要 [global-install]
+[OK]   写明本轮不触发 [regen-entrypoints]
+[OK]   写明归 R15
+       —— §5.4 末两条原文 ——
+       19:- 2026-08-20（R4 · 路线图点名两项不存在）：路线项 R4 写的是「命令、skill、规则真源、registry 条目、`docs/workflows.md` 与 rule-card 引用」六项，实测只有四项存在。**规则真源**：`workflows/registry.json` 里 progre
+       20:- 2026-08-20（R4 · 发布处置登记）：ITER-0115 删了 `/butler:progress` 与 `$butler-progress` 两个宿主入口，两侧生效方式不同，必须分开记。**Claude 侧**：全局命令是 `scripts/setup.sh` 建的软链，指向本仓 `.claude
+
+REGISTRATION-CLEAN

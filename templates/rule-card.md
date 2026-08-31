@@ -48,7 +48,7 @@ handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重�
 
 每个迭代有至少四位、自然增长的迭代号 `ITER-NNNN`。未分片项目从 `.ai/ITERATIONS.md` 取最大号；存在 `.ai/state-index.json` 时须先运行 `state-ledger check`，从 index 的数字 `max_used` 分配，不能只扫有界热表。根 ITER/MILE 台账只保留 current、近期行与待办；旧行由 state-ledger 写入固定数字区间冷分片，追溯时用 `lookup` 只读命中的一片。工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md`（并按 `delivery-summary.md §9` 固定模板填槽产同名 `.html` 阅读视图）+ 台账置 closed。迭代状态是**封闭枚举**，仅 `active`/`closed`/`abandoned` 三态（`planned` 属里程碑路线项、不入迭代台账；部署项目由 hook 机械拦截越界值）。
 
-迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号时，先合成范围与路线图并 soft 对齐。**讨论不等于开工**：暂不做的内容放 `.ai/MILESTONES.md` 未编号待办区，多个可独立启动方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/milestone-backlog/<slug>.md`；不改 `current`、不占 `MILE-NNNN`。用户明确推进时才领取正式表最大号 +1，再写 `.ai/MILESTONE.md`。只有最新、零迭代/归档/交付的误开里程碑可退回候办；已有历史引用的号永不回收。期间开启的迭代自动归属之。录入可用对话或项目根 `origin/`；`/milestone start <候办键>` 提升候办，`/milestone status` 只读汇报正式进度与待办区。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（并产同名 `.html`）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
+迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号时，先合成范围与路线图并 soft 对齐。**讨论不等于开工**：暂不做的内容放 `.ai/MILESTONES.md` 未编号待办区，多个可独立启动方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/milestone-backlog/<slug>.md`；不改 `current`、不占 `MILE-NNNN`。用户明确推进时才领取正式表最大号 +1，再写 `.ai/MILESTONE.md`。只有最新、零迭代/归档/交付的误开里程碑可退回候办；已有历史引用的号永不回收。期间开启的迭代自动归属之。录入可用对话或 `.ai/references/raw/` 下的文件；`/milestone start <候办键>` 提升候办，`/milestone status` 只读汇报正式进度与待办区。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（并产同名 `.html`）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
 
 ## 回退规则
 
@@ -60,7 +60,7 @@ handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重�
 
 1. **先解施工项目根**：会话启动目录不等于项目根。用户点名路径优先；否则按 `mcv-deployment.md §0.1` 用最近已部署 Butler 根 / Git 根证明。目标不唯一就停下询问，仅凭 `cwd` 不得展开。
 2. 向用户回声解析后的绝对项目根，再以它为唯一边界侦察技术栈和目录结构。
-3. 只在该项目根创建 `.ai/`、`deliveries/`、`origin/` 与双宿主入口。
+3. 只在该项目根创建 `.ai/`、`deliveries/` 与双宿主入口。
 4. 生成 `.ai/local-constraints.md`（只写人类可读本地约束）与 `.ai/butler.config.json`（项目级机器配置，使用驻留 project-config 工具初始化）。
 
 ## 项目级功能开关（持久配置）

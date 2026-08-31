@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0116 交付总结 · ITER-0116 · /butler:loop 降级与候办清理（MILE-0016 R5）</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0116 · /butler:loop 降级与候办清理（MILE-0016 R5）</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0116</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-08-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>一次迭代做两件互不相干的清理。</p>
+      <p>第一件是撤掉 <code>upgrade-convergence-engine</code> 这份候办。它规划的是 <code>/butler:upgrade</code> 升级器的三迭代重写，但升级器<strong>从来没在任何真实已部署的项目上跑过</strong>——给一个还没被真实用过的工具规划重写，正是本里程碑在砍的那类过度设计。重启条件是 R15 做完真实老项目升级回归、有了数据之后。</p>
+      <p>第二件是冻结 <code>/butler:loop</code> 的演进。代码路径与行为一字不动、命令照常可用，停的只是继续往里加东西；最终去留由 R13 依真实使用数据决定。</p>
+      <p>要说清楚的是：路线项的措辞把这两件事捆在了一起，读起来像那份候办属于 loop。<strong>实测是名字撞车</strong>——一个讲升级器，一个讲 P4 的高强度纠错升档，唯一的共同点是名字里都有「收敛」，全部 10 份候办里没有任何一份是关于 loop 的。所以本轮按两件独立清理执行，各有各的理由，不互相当依据。</p>
+      <p>顺手处理了开工前核查暴露的三件事：<code>logic-protocol.md</code> 里有一句让模型自己判断复杂度、再向用户兜售 loop 的话，跟冻结的方向正相反；<code>dangerous-engine.md</code> 对 loop 的规则文件还留着一条纸面依赖；<code>.ai/debt.md</code> 里有一条早在 ITER-0110 就还清了的账。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>候办两侧删净</strong>：删掉草稿文件与索引行，候办由 10 份减为 9 份。这里有现成的机器兜底——状态审计断言「索引行集合 == 实际文件集合」，只删一边立刻红。</li>
+        <li><strong>冻结声明落在规则真源正文顶部</strong>：写在 H1 之后、<code>## 1. 身份</code> 之前，三要素齐备——冻结含义（正文原样保留、命令照常可用，冻结的是演进）、冻结起始（ITER-0116 / MILE-0016 R5）、解冻条件（R13 依真实使用数据做最终处置）。末段明写它没有机器兜底。</li>
+        <li><strong>模型自己发起 loop 的两处镜像一起删掉</strong>：<code>logic-protocol.md</code> 结尾那句主动询问，和规则真源 §2 激活清单第三条「Butler 检测到极高复杂度任务，并经用户确认后开启」。删完激活条件由 3 条减为 2 条，只剩显式点名命令和显式语义两种。两处都不补替代话术。</li>
+        <li><strong>拆掉 dangerous 的最后一条纸面依赖</strong>：<code>dangerous-engine.md §8</code> 的 RCA 指针由 <code>convergence-loop-engine.md §7</code> 改为直指 <code>bounded-convergence.md §3</code>。§9「两者是并列模式」那条保留——它陈述的是关系事实，不是依赖。</li>
+        <li><strong><code>.ai/debt.md</code> 一删一增</strong>：删掉已还清的那条，新增「loop 冻结没有机器兜底」，净额仍是 10 条。</li>
+        <li><strong><code>.ai/MILESTONE.md §5.4</code> 登记三条</strong>：名字撞车的事实与撤候办的真实理由、debt 那条已假的根因与还清出处、冻结的载体选择与无兜底事实。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong><code>/butler:loop</code> 的行为一字未改</strong>，你去点它跟昨天完全一样。变的是它不会再被模型主动推销——以前模型判断「这任务挺复杂」就会问你要不要开，现在只有你点名才开。</li>
+        <li>冻结是<strong>停投入</strong>，不是弃用。文档里不会出现「已废弃」「不推荐使用」这类话。</li>
+        <li>候办清单少了一项，从 10 份变 9 份。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>规则文件三份：<code>Coder/00_System_Prompt/logic-protocol.md</code>（删 2 行、零新增）、<code>Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md</code>（加冻结块、删激活第三条）、<code>Coder/65_Extension_Dangerous/dangerous-engine.md</code>（1 增 1 删）。</li>
+        <li>状态台账：候办索引、debt、里程碑范围演进记录、项目全貌产物。</li>
+        <li><strong>完全没碰的</strong>：<code>/butler:loop</code> 的命令、Codex skill、软链、注册表条目、人读工作流清单、插件清单——六处逐字节相同，有哈希比对为证。业务工作流仍是 12 个。</li>
+        <li>目标项目侧无受管文件形态变化，不触发入口重生成，也不需要新的迁移动作。</li>
+      </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>十一条验收全部通过，8 条证据记录覆盖 AC1–AC11 无遗漏。完整 CI 退出码 0，状态审计退出码 0（836 条 OK，仅两条未发布标记）。</p>
+      <p>扫描器这轮守两个方向。上一轮是纯删除，只需查「不该有的还在不在」；<strong>本轮是改而不删，最大的风险反过来是误伤</strong>，所以另加一组在场断言：loop 的六处实体哈希、软链能不能解析、注册表还是不是 12 条、冻结声明的三要素与落点、§2 激活恰 2 条、模式清单仍 8 条、候办两侧集合一致、debt 一删一增、§5.4 三条登记——任一缺失即红。实扫 392 份文本，两组均零命中零失败。</p>
+      <p>三处如实记在验证报告里：AC3 写的「删除行恰为 1 行」实际是 2 行，第 2 行是把新末条的句末分号改成句号（删掉末项后分号收尾会成为 <code>Coder/</code> 全仓首例）；AC7 写的「条目数由 10 减为 9」在收口态观测不到，因为删一条加一条同批完成；插件清单的零改动基线是 P4 开始后才补录的，补录理由写在基线文件里。另有两个证据脚本自身的缺陷被自查出来并修掉，其中一个会让 diff 日志悄悄吞掉最该留证的那几行。写完报告后还发现交付页的渲染脚本有一处缺陷——跨代码段的粗体会断成两半、把星号漏到页面上，<strong>回查发现 ITER-0115 的交付页也有两处</strong>，上一轮的浏览器实测没查这一项。已修好并把两份 HTML 重新渲染、真实浏览器复验；两份正文一字未改，只重出阅读视图。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong>冻结靠自觉，没有机器能拦</strong>。真正的强制只有删除，而删除正是本轮明确不做的。已记入 <code>.ai/debt.md</code>，随 R13 的最终处置自然消解。</li>
+        <li><strong>R13 判 loop 去留要的使用数据仍然不存在</strong>。本轮堵住了模型自己制造使用数据的口子，但采集本身归 R11，还没落地。</li>
+        <li><code>dangerous-engine.md §8</code> 里「收敛闭环熔断」这个措辞跟同文件其他地方的「有界收敛纪律」不统一，只影响阅读一致性，等后续动那份文件时一并收。</li>
+        <li>本轮不切版、不打 tag、不提交。工作树里同时躺着 ITER-0115 与 ITER-0116 两轮的未发布改动。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0116/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0116/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0116/evidence/</code>（8 条记录）</li>
+        <li>扫描器与基线：<code>.ai/iterations/ITER-0116/ac4-ac10-sweep.py</code>、<code>loop-entities.baseline</code></li>
+        <li>里程碑范围演进记录：<code>.ai/MILESTONE.md §5.4</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

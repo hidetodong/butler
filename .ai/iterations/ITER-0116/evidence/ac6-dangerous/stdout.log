@@ -1,0 +1,14 @@
+== 全文引用 loop 规则文件（应为 0） ==
+count=0
+
+== §8 的新 RCA 指针在场 ==
+164:- **P4 熔断交还**：某迭代 P4 触发收敛闭环熔断（连续 5 轮未过 / 死锁 / 环境阻塞）时，停止该迭代自治，按 `30_Quality_Gate/bounded-convergence.md` §3 写 RCA 
+
+== §9 并列陈述保留 ==
+174:- **与收敛闭环 (`/butler:loop`)**：两者是并列模式，P4 共用 `30_Quality_Gate/bounded-convergence.md` 的有界收敛纪律，但互不激活、互不读写对方状态；危险模�
+
+== 改动范围：应为 1 增 1 删 ==
+1	1	Coder/65_Extension_Dangerous/dangerous-engine.md
+-- **P4 熔断交还**：某迭代 P4 触发收敛闭环熔断（连续 5 轮未过 / 死锁 / 环境阻塞）时，停止该迭代自治，按 `convergence-loop-engine.md` §7 写 RCA 到 `.ai/03_BUG_LOG.md`，并写一
++- **P4 熔断交还**：某迭代 P4 触发收敛闭环熔断（连续 5 轮未过 / 死锁 / 环境阻塞）时，停止该迭代自治，按 `30_Quality_Gate/bounded-convergence.md` §3 写 RCA 到 `.ai/03_BUG_LOG.md`
+AC6-OK

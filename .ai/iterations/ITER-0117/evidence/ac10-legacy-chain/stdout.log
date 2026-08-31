@@ -1,0 +1,18 @@
+== 旧 inbox 全链逐份哈希比对 ==
+unchanged  Coder/40_Context_Management/inbox-schema.md
+unchanged  Coder/40_Context_Management/inbox-workflow.md
+unchanged  templates/hooks/tests/test_inbox_contract.py
+unchanged  templates/hooks/tests/test_inbox_workflow.py
+unchanged  .claude/commands/butler/inbox.md
+unchanged  plugins/butler/skills/butler-inbox/SKILL.md
+unchanged  plugins/butler/skills/butler-inbox/agents/openai.yaml
+unchanged  workflows/registry.json
+unchanged  tools/inbox/README.md
+unchanged  tools/inbox/__init__.py
+unchanged  tools/inbox/inbox.py
+unchanged  tools/inbox/tests/__init__.py
+unchanged  tools/inbox/tests/test_inbox.py
+checked=13
+== registry 的 inbox 条目仍在 ==
+inbox entry: inbox {'name': '/butler:inbox', 'path': '.claude/commands/butler/inbox.md', 'description': '扫描需求收件箱，逐项分类并安全路由到 PRD、ideation、milestone backlog 或仅记录', 'default_prompt': 'Use /butler:inbox for this Butler workflow.'} | rule_source: Coder/40_Context_Management/inbox-workflow.md | workflows total: 12
+AC10 PASS

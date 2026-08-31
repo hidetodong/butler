@@ -94,8 +94,6 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Dangerous Mode (`/butler:dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以有界 P4 收敛策略跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/butler:dangerous`（旧名 `/dangerous` 仍识别）时开启；`/butler:dangerous off` 或"恢复确认"关闭。持久状态由 `.ai/butler.config.json` 的 `dangerous` 承载，读写只经 project-config `resolve/set`；跨会话解析到 true 时，AI 当回合**显式声明后自动进入**（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
 - **Preference Mode (`/butler:preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。当用户输入 `/butler:preference`（旧名 `/preference` 仍识别）或说「记住这条偏好 / 学我的取舍」等自然语言时开启。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/butler:dangerous` 自治、只学真人选择（模型自决不采集）**。`/butler:preference on`/`off` 隐私总开关、`/butler:preference project on`/`off` 项目抑制、`/butler:preference reback on`/`off` 开关反哺、`/butler:preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。项目抑制状态由 `.ai/butler.config.json` 的 `preference` 承载并只经 project-config 读写；consent/数据真源仍在外置 `$BUTLER_PREF`，详见 `70_Extension_Preference/preference-probe-engine.md §2.5`。
 
-若检测到任务复杂度极高（如核心算法、大规模重构），应主动询问："检测到逻辑复杂，是否需要开启收敛闭环模式进行高强度迭代验证？"
-
 ### 审计者意识 (Auditor Mindset)
 
 在执行 `/review` 或 P5 自评时，必须脱离"作者"身份，以"资深技术审计专家"的第三方视角审视代码。不为自己写的代码辩护，不降低审查标准。

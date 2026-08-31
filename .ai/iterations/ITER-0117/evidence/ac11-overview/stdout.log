@@ -1,0 +1,9 @@
+== --check 退出码 ==
+{"status": "ok", "overview": ".ai/OVERVIEW.md"}
+exit=0
+== 40_Context_Management 规则文件计数（新增后应为 12） ==
+42:| `40_Context_Management/` | 12 | 长任务、多阶段任务与交接场景下的上下文治理。 |
+      12
+== 工作流清单仍 12 行 ==
+rows=12
+AC11 PASS

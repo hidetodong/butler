@@ -1,0 +1,11 @@
+{"status": "ok", "overview": ".ai/OVERVIEW.md"}
+[OK]   --check 退出码 0
+[OK]   体量 8798 字节，上限 12000
+[OK]   全貌零 progress
+[OK]   工作流清单 12 行
+       —— 本轮 OVERVIEW diff ——
+       -| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 3 |
+       +| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 4 |
+       -| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
+
+OVERVIEW-CLEAN

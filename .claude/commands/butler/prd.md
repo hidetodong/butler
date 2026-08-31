@@ -16,7 +16,7 @@ argument-hint: "[status [prd_id] [--workspace key] | update <prd_id> <新版材�
 
 **分支 A ─ 以 `split` 开头、留空，或给了一段 PRD 文本 / 文件路径 → 身份判断与首切**
 读 `Coder/40_Context_Management/prd-split.md`。先判 `new-requirement/new-version/duplicate/ambiguous`；只有全新需求才用有证据的首次进入日期提议 `prd_id`，并把身份、模块边界和 Workspace Scope 一次 soft 对齐后写到 `<prd_id>/`。`--first-seen YYYY-MM-DD` 是显式日期证据，不等于跳过身份闸；未给且项目证据不足就停问，不能拿当前日期补。
-　└ 若 `$ARGUMENTS` 为空且对话里也没有 PRD 材料 → 先问用户 PRD 从哪来（粘贴 / 文件路径 / `origin/`），拿到材料再切。
+　└ 若 `$ARGUMENTS` 为空且对话里也没有 PRD 材料 → 先问用户 PRD 从哪来（粘贴 / 文件路径 / `.ai/references/raw/`），拿到材料再切。
 
 **分支 B ─ 以 `update` 开头 → 指定需求改版**
 `update` 后必须给唯一 `prd_id` 与新版材料；省略或 identity 不匹配就停止。读 `Coder/40_Context_Management/prd-update.md`，先完成 diff/认亲/影响处置 soft 对齐并生成 update spec，再调用 `$BUTLER_PATH/tools/prd-update/prd_update.py plan`；只有 `apply_ready` 才调用 apply。不得在宿主侧手工覆盖 live 或伪造 receipt。

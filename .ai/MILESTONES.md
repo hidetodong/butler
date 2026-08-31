@@ -4,7 +4,7 @@ current: MILE-0016
 
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112, ITER-0113, ITER-0114 | — |
+| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112, ITER-0113, ITER-0114, ITER-0115, ITER-0116, ITER-0117, ITER-0118, ITER-0119 | — |
 | MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | closed | 2026-07-31 | 2026-08-17 | ITER-0107, ITER-0108, ITER-0109, ITER-0110, ITER-0111 | deliveries/milestones/MILE-0015-domain-model-governance.md |
 | MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | ITER-0102, ITER-0103, ITER-0104, ITER-0105, ITER-0106 | deliveries/milestones/MILE-0014-explore-decision-map-integration.md |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | ITER-0093, ITER-0094, ITER-0095 | deliveries/milestones/MILE-0013-project-config-structure.md |
@@ -26,7 +26,6 @@ current: MILE-0016
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
 | prd-impact-reconciliation | PRD 改版的实现面对账：从切片变化推到代码落点，并证明没有漏 | 2026-08-06 | .ai/milestone-backlog/prd-impact-reconciliation.md | 由 signal-assistant 一次真实漏项收敛而来；当前 MILE-0015 仍 active，按单 active 约束先入待办。首版只做枚举、四态判定与双向覆盖，静态分析和自动改码明确留待以后。 |
-| upgrade-convergence-engine | Butler 升级收敛引擎：文件所有权、确定性迁移与可恢复诊断 | 2026-08-04 | .ai/milestone-backlog/upgrade-convergence-engine.md | 方向已完成 ideation；当前 MILE-0015 仍 active，按单 active 约束先入待办，待现里程碑处理完后再独立提升。 |
 | prd-evidence-check | PRD 原文疑问检索：基于当前版本给出带证据的四态判断 | 2026-08-04 | .ai/milestone-backlog/prd-evidence-check.md | 方向已完成 ideation；本轮只入候办、不开工，历史版本查询与版本对比明确留待以后。 |
 | codex-structured-question-cards | Codex 结构化提问卡片：让 Butler 的有限选项确认可点击，并在宿主不支持时可靠降级 | 2026-08-01 | .ai/milestone-backlog/codex-structured-question-cards.md | Codex 当前原生能力受运行模式和单选限制，且卡片由宿主而非 skill 控制；先建立能力合同、文字降级和真实使用证据，再决定是否值得建设自定义 UI。 |
 | ai-user-experience-driven-iteration | AI 用户体验驱动迭代：从结果目标到黑盒体验、修复与复验 | 2026-07-30 | .ai/milestone-backlog/ai-user-experience-driven-iteration.md | 方向价值高但 AI 小白代表性、自评偏差与真实改善尚未验证；先用现有能力完成真实 dogfood，再决定是否产品化。 |
@@ -35,3 +34,4 @@ current: MILE-0016
 | prd-future-route-fulfillment | PRD 改版到未启动里程碑路线项的确定性兑现闭环 | 2026-07-23 | .ai/milestone-backlog/prd-future-route-fulfillment.md | 先保留方向：当前只识别并记录 future disposition，路线项启动时尚无机械消费与兑现门禁。 |
 | state-transition-trust-gate | 关键节点状态可信闭环：防止 AI 宣称已更新但落档仍陈旧 | 2026-07-24 | .ai/milestone-backlog/state-transition-trust-gate.md | 先保留方向：现有审计能验证结构与哈希，但会放过节点后权威记录、摘要和真实环境之间的确定性矛盾。 |
 | tdd-evidence-hardening | TDD 证据增强：防测试改弱、有效 Red、跨语言 Adapter 与实际改动对账 | 2026-07-24 | .ai/milestone-backlog/tdd-evidence-hardening.md | V1 先验证轻量 Red→Green 配对的实际价值；更强的过程证明等真实使用暴露需要后再推进。 |
+| delivery-renderer-in-repo | 把交付页渲染器搬进仓库并在 delivery-summary 里指明位置 | 2026-08-20 | .ai/milestone-backlog/delivery-renderer-in-repo.md | 当前 MILE-0016 与 ITER-0118 都 active，按单 active 约束先入孵化区；本轮只记录不开工 |

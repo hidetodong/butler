@@ -1,0 +1,19 @@
+===== bash scripts/verify-ci.sh =====
+verify-ci exit=0
+warning: in the working copy of '.ai/references/.prd-update-backups/UPD-1d3cbd566663/2026-07-22-login/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.ai/references/prd/2026-07-22-login/.archive/v1.1/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'origin/login-requirement.md', CRLF will be replaced by LF the next time Git touches it
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.517s
+
+OK
+
+===== audit-project-state.py --allow-unreleased =====
+audit exit=0
+[OK] 行数 = 838
+--- 非 OK / 非 INFO 行 ---
+[UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+[UNRELEASED] release.tag: UNRELEASED：v3.6.0 不指向 HEAD
+UNRELEASED 标记数=2（预期恰为 2：工作树未发布 + tag 不指向 HEAD）
+AC11-OK

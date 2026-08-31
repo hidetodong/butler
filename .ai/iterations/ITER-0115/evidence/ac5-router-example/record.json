@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac5-router-example",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac5-router-example.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:13:32.539Z",
+  "finished_at": "2026-08-20T07:13:32.680Z",
+  "duration_ms": 141,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 290,
+    "captured_bytes": 290,
+    "sha256": "b86f8f606936fe5c52e5a3d1dcfffedbc98cfa04c3b3c804597fad541f13c4ab",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

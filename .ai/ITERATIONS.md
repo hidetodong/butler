@@ -5,11 +5,16 @@
 
 ## 最近迭代
 
-ITER-0114 已收口：全貌产物按内容性质分成三份——`.ai/OVERVIEW.md` 由 `scripts/sync-project-overview.py` 从五个机器源头生成并进 CI 比对，`.ai/invariants.md` 迁位到 `.ai/` 根并上写作纪律与无指针条目棘轮，`.ai/debt.md` 接收会过期的判断；`.ai/project/frontier.md` 与 `.ai/project/` 目录退役。
+ITER-0117 已收口：新建 `Coder/40_Context_Management/intake-schema.md`，把「随手记一句 → 想清楚值不值得做 → 真的开工」三层的数据形态定死——闪念口一张表加日期化闪念键（不用递增号池、不做内容指纹认亲），状态四态封闭、转移穷举四条、终态不回头；孵化区草稿头部加 `规模` 三档并按档定段落，`undecided` 必须点名「卡在哪」；执行分流三条封闭出口、两侧原子。只定数据形态不写命令（归 R7）。新旧两份契约共占 `.ai/INBOX.md`，靠新契约顶部一段生效时点声明单向分工，旧链 13 份文件逐字节未动。P3 撤回了一条已 ACK 的验收标准（待办区索引不加规模列，避免造出第二个真源），按 §5.3 走了正式修订。
 
 current: none
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0119 | 退役旧 inbox 全链（MILE-0016 R8） | closed | 2026-08-21 | 2026-08-21 | MILE-0016 | deliveries/ITER-0119-retire-old-inbox-chain.md |
+| ITER-0118 | /butler:inbox 命令与工具实现（MILE-0016 R7） | closed | 2026-08-20 | 2026-08-20 | MILE-0016 | deliveries/ITER-0118-inbox-command-and-tool.md |
+| ITER-0117 | inbox 三层数据契约与真源（MILE-0016 R6） | closed | 2026-08-20 | 2026-08-20 | MILE-0016 | deliveries/ITER-0117-intake-three-layer-contract.md |
+| ITER-0116 | /butler:loop 降级与候办清理（MILE-0016 R5） | closed | 2026-08-20 | 2026-08-20 | MILE-0016 | deliveries/ITER-0116-loop-freeze-backlog-withdrawal.md |
+| ITER-0115 | 砍 /butler:progress 全链（MILE-0016 R4） | closed | 2026-08-20 | 2026-08-20 | MILE-0016 | deliveries/ITER-0115-retire-butler-progress.md |
 | ITER-0114 | 项目全貌产物重建（MILE-0016 R3） | closed | 2026-08-19 | 2026-08-20 | MILE-0016 | deliveries/ITER-0114-project-overview-rebuild.md |
 | ITER-0113 | 冷启动读序正式定义与四载体对齐（MILE-0016 R2） | closed | 2026-08-18 | 2026-08-19 | MILE-0016 | deliveries/ITER-0113-cold-start-read-order.md |
 | ITER-0112 | 退役项目知识文件夹与折叠机制（MILE-0016 R1） | closed | 2026-08-18 | 2026-08-18 | MILE-0016 | deliveries/ITER-0112-retire-project-knowledge-folder.md |
@@ -25,10 +30,5 @@ current: none
 | ITER-0102 | Explore 与 Decision Map 边界合同（MILE-0014 R1） | closed | 2026-08-01 | 2026-08-01 | MILE-0014 | deliveries/ITER-0102-explore-decision-map-boundary.md |
 | ITER-0101 | 修复 Butler 插件刷新运行时与错误码回声 | closed | 2026-08-01 | 2026-08-01 | — | deliveries/ITER-0101-plugin-refresh-runtime-fix.md |
 | ITER-0100 | Butler 统一语义 Router 与会话转迭代入口 | closed | 2026-08-01 | 2026-08-01 | — | deliveries/ITER-0100-semantic-router-session-intake.md |
-| ITER-0099 | 升级器 hook 树摘要与部署文件集对齐：修复 sync_hooks 失配 | closed | 2026-08-01 | 2026-08-01 | — | deliveries/ITER-0099-hook-tree-digest-alignment.md |
-| ITER-0098 | 开源就绪：README、许可证与社区协作入口 | closed | 2026-07-31 | 2026-07-31 | — | deliveries/ITER-0098-open-source-readiness.md |
-| ITER-0097 | 沟通风格正本瘦身：砍冗余留例子，守 artifact-style 四条对齐 | closed | 2026-07-30 | 2026-07-30 | — | deliveries/ITER-0097-communication-style-slim.md |
-| ITER-0096 | 旁路工作回执协议（危险模式） | closed | 2026-07-29 | 2026-07-29 | — | deliveries/ITER-0096-sidework-receipt.md |
-| ITER-0095 | Butler 配置全链路接线与 3.3.0 发布准备（MILE-0013 R3·危险模式） | closed | 2026-07-28 | 2026-07-28 | MILE-0013 | deliveries/ITER-0095-project-config-consumers.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

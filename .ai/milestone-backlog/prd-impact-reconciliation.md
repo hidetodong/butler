@@ -2,6 +2,7 @@
 
 候办键: prd-impact-reconciliation
 候办状态: deferred
+规模: milestone
 
 ## 触发这个方向的真实漏项（2026-08-06）
 

@@ -109,7 +109,8 @@ current: MILE-0002
 - `候办键` 是稳定、可读的 kebab-case slug，不是新的数字时间线；不得使用 `MILE-NNNN` 或伪装成正式号。
 - `草稿` 必须精确等于 `.ai/milestone-backlog/<候办键>.md`，路径不得越出该目录。
 - **一方向一文件**：每个候办块必须恰好对应一个候办键、一行索引和一份 `.ai/milestone-backlog/<候办键>.md`；不同候办块禁止共用草稿，也不得在一个文件里声明多个候办键。
-- 候办草稿沿用 §5 的四段结构，但顶部必须恰好标明一次 `候办键: <文件名 slug>` 和一次 `候办状态: deferred`，不写 `MILE-NNNN`。
+- 候办草稿顶部必须恰好标明一次 `候办键: <文件名 slug>`、一次 `候办状态: deferred` 和一次 `规模: milestone|iteration|undecided`，不写 `MILE-NNNN`。
+- 草稿的段落结构**按 `规模` 分档**：`milestone` 档沿用 §5 的四段结构；`iteration` 与 `undecided` 档各有自己的轻量段落集，取值含义与按档要求见 `40_Context_Management/intake-schema.md §2`。
 - 候办项不是 `active / closed / abandoned` 中的任何一态，不参与 `current`、Goal 推导、迭代自动归属、版本收口或发布。
 
 ## 5. 里程碑工作区 `.ai/MILESTONE.md`
@@ -197,20 +198,20 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 | 通道 | 用法 |
 |---|---|
 | 对话 | 用户在对话里直接讲清大版本意图（可配合 §6.5 的 `/milestone` 命令）。 |
-| 文件 | 用户把原始概念文件投放到项目根 `origin/` 收件箱（自由格式、任意命名/数量），由模型读取。 |
+| 文件 | 用户把原始概念文件投放到 `.ai/references/raw/`（自由格式、任意命名/数量），由模型读取。 |
 
 **Brief 定位**：
 
 - **可选、非权威、一次性输入**：brief 只是合成里程碑草稿的原材料，**不属 §3 候办/正式落盘结构、不归档、不跨里程碑纵向堆积**。
-- `origin/` 文件由用户自管，AI **只读、不写不改不重塑不归档**（与 `.ai/references/` 的区分见 `mcv-deployment.md` §2）。
-- 合成后的唯一详情真源随阶段切换：暂缓时是 `.ai/milestone-backlog/<slug>.md`，正式开启后是 `.ai/MILESTONE.md`。origin 文件用户可保留作溯源或自行清理，不影响里程碑产物。
-- **若 brief 材料本身是大 PRD**（逐字权威规格）：它**同时喂两个海拔**——作 brief 合成 `.ai/MILESTONE.md` 路线图（方向层、有损压缩），并经 `40_Context_Management/prd-split.md` 派生 `.ai/references/prd/` 切片（细节层、逐字无损，见下 §6.4 合成协议步 6）。注意两者身份不同：`origin/` 里那份 PRD 仍是用户自管的**非权威原始输入**（AI 只读不归档、可清理）；`.ai/references/prd/` 切片才是 AI 派生、供 P2/P3/P5 引用对账的**权威投影**、独立生命周期跨迭代常驻——别把两者混为一谈（身份区分同 `40_Context_Management/references-schema.md §1`）。
+- `.ai/references/raw/` 里的文件由用户自管，AI **只读、不写不改不重塑不归档**（与同目录下 AI 派生投影的区分见 `40_Context_Management/references-schema.md §1`）。
+- 合成后的唯一详情真源随阶段切换：暂缓时是 `.ai/milestone-backlog/<slug>.md`，正式开启后是 `.ai/MILESTONE.md`。原件用户可保留作溯源或自行清理，不影响里程碑产物。
+- **若 brief 材料本身是大 PRD**（逐字权威规格）：它**同时喂两个海拔**——作 brief 合成 `.ai/MILESTONE.md` 路线图（方向层、有损压缩），并经 `40_Context_Management/prd-split.md` 派生 `.ai/references/prd/` 切片（细节层、逐字无损，见下 §6.4 合成协议步 6）。注意两者身份不同：`.ai/references/raw/` 里那份 PRD 仍是用户自管的**非权威原始输入**（AI 只读不归档、可清理）；`.ai/references/prd/` 切片才是 AI 派生、供 P2/P3/P5 引用对账的**权威投影**、独立生命周期跨迭代常驻——别把两者混为一谈（身份区分同 `40_Context_Management/references-schema.md §1`）。
 
 **合成协议（brief → `.ai/MILESTONE.md`）**：
 
-> **合成前必过 · PRD 分类闸（不可跳）**：收集到 brief 后、动手合成三段之前，**先判这份 brief 的内容是不是大 PRD**（逐字权威规格，判据回指 `40_Context_Management/references-schema.md §2`——大、结构化、逐字为准）。判**是** → 本次是"PRD 派生里程碑"，除合成路线图外还要经 `40_Context_Management/prd-split.md` 切 `.ai/references/prd/`（详见下方步 6 并进细则），切分方案与路线图方向**合并为一次呈交**确认；判**否** → 普通 brief，走常规合成到步 5 即止。**这道闸是必过判定、不是可跳的 opt-in 附录**——外部结构化文档（含经 MCP 直读的 Confluence / 需求平台 PRD）当 brief 时尤其不可略过：不判就合成，正是"MILESTONE 建了、`references/prd/` 没切"的漏切老毛病。判据只看**内容**是不是逐字权威规格，与 brief 从哪来（对话 / `origin/` / MCP）无关。
+> **合成前必过 · PRD 分类闸（不可跳）**：收集到 brief 后、动手合成三段之前，**先判这份 brief 的内容是不是大 PRD**（逐字权威规格，判据回指 `40_Context_Management/references-schema.md §2`——大、结构化、逐字为准）。判**是** → 本次是"PRD 派生里程碑"，除合成路线图外还要经 `40_Context_Management/prd-split.md` 切 `.ai/references/prd/`（详见下方步 6 并进细则），切分方案与路线图方向**合并为一次呈交**确认；判**否** → 普通 brief，走常规合成到步 5 即止。**这道闸是必过判定、不是可跳的 opt-in 附录**——外部结构化文档（含经 MCP 直读的 Confluence / 需求平台 PRD）当 brief 时尤其不可略过：不判就合成，正是"MILESTONE 建了、`references/prd/` 没切"的漏切老毛病。判据只看**内容**是不是逐字权威规格，与 brief 从哪来（对话 / `.ai/references/raw/` / MCP）无关。
 
-1. **收集输入**：读取对话意图，或 `origin/` 中用户指明的概念文件；多份未指明时汇总相关文件并回述确认范围，不擅自取舍。
+1. **收集输入**：读取对话意图，或 `.ai/references/raw/` 中用户指明的概念文件；多份未指明时汇总相关文件并回述确认范围，不擅自取舍。
 2. **解析落三段**：把意图映射到 §5 的范围评估（In/Out Scope + 关键交付目标）、理解阐释（核心问题/背景价值/系统影响）、拆分路线图（按主题切片排序 R1/R2…）。
 3. **缺口显式化**：brief 信息不足处，在相应段落显式标"待澄清"，**不臆造范围或目标**。
 4. **拆分路线图沿用 §5.3 不预先占号**：路线项给主题切片 + 段首「预计跨度 ITER-NNNN ~ ITER-NNNN」，「实际 ITER」列**留空**待各迭代开启时绑真号。这是"拆分规划"而非"硬占全局号"，与 §5.3 一致。
@@ -229,7 +230,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 | 命令 | 语义 |
 |---|---|
-| `/milestone`（可带意图文本或指向 `origin/` 文件） | 录入/开启里程碑：按 §6.1 判定、按 §6.4 合成；只有指令或上下文已明确要“现在推进”才按 §7.1 领号，否则按 §7.6 进未编号待办区。 |
+| `/milestone`（可带意图文本或指向 `.ai/references/raw/` 下的文件） | 录入/开启里程碑：按 §6.1 判定、按 §6.4 合成；只有指令或上下文已明确要“现在推进”才按 §7.1 领号，否则按 §7.6 进未编号待办区。 |
 | `/milestone start <候办键>` | 从待办区提升：读指定草稿，确认无 active 里程碑后按 §7.1 领号，再原子移除待办索引与草稿。 |
 | `/milestone status` | **只读看板**：汇报当前正式里程碑的范围/路线/迭代进度，并附待办区标题、暂缓日期与原因；**不写任何文件、不改状态**。 |
 
@@ -278,9 +279,12 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 1. 先按 §4.5 判断输入含几个可独立启动的方向；有 N 个方向就切成 N 个平级候办块，不把多个方向揉成一份草稿。
 2. 为每个方向分别选一个稳定 kebab-case `候办键`，不含 `MILE-NNNN`。
-3. 每块各自把已合成的 §5 内容写入 `.ai/milestone-backlog/<候办键>.md`，顶部标明唯一候办键和 `候办状态: deferred`。
-4. 每块在 `.ai/MILESTONES.md` 待办区各追加一行索引。若台账尚不存在，创建 `current: none` + 空正式表 + 待办区。
-5. 不写 `.ai/MILESTONE.md`，不改 `current`，不产生 Goal 或迭代归属；各块后续可被分别修改、删除或按键提升。
+3. 每块的结构性落盘全部经 `tools/intake/intake.py`，**不得**手工编辑草稿的头部标记、段落骨架或待办区索引——这些要几处一起改才有意义，手工改必然出现只改一处的半截态。每块两次调用：
+   - 这个方向还没进闪念口时，先 `add --project-root <PROJECT_ROOT> --text "<一句话>" [--slug <短英文键>]` 记一条闪念，拿到闪念键。
+   - 再 `handle --project-root <PROJECT_ROOT> --inbox <闪念键> --to incubated --slug <候办键> --scale <规模> --title <标题> --reason <暂缓原因>`。工具一次原子写三处：回写闪念行、写 `.ai/milestone-backlog/<候办键>.md`、在待办区追加索引行，要么全成要么全不成。
+
+   工具按 `规模` 生成草稿的段落骨架并在每段留一行占位标记，把已合成的 §5 内容补进去是你的活。`规模` 三档与按档段落见 `40_Context_Management/intake-schema.md §2`，三个动作各自「工具决定 / 必须问用户」的分界见 `intake-workflow.md`。台账尚不存在时先建出 `current: none` + 空正式表 + 待办区，工具不代建。
+4. 不写 `.ai/MILESTONE.md`，不改 `current`，不产生 Goal 或迭代归属；各块后续可被分别修改、删除或按键提升。
 
 **误开后退回**（已有 active 正式行）只有同时满足下列条件才允许：
 

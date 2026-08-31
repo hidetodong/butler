@@ -37,30 +37,31 @@
   "workflows": [
     {
       "id": "inbox",
-      "rule_source": "Coder/40_Context_Management/inbox-workflow.md",
+      "rule_source": "Coder/40_Context_Management/intake-workflow.md",
       "risk": "normal",
       "allow_implicit_invocation": true,
       "semantic_triggers": [
         "requirement inbox",
         "需求收件箱",
-        "scan origin",
-        "处理 origin",
-        "classify requirements"
+        "记一条闪念",
+        "闪念口",
+        "孵化区候办",
+        "capture an idea"
       ],
       "legacy_aliases": [],
       "claude": {
         "name": "/butler:inbox",
         "path": ".claude/commands/butler/inbox.md",
-        "description": "扫描需求收件箱，逐项分类并安全路由到 PRD、ideation、milestone backlog 或仅记录",
+        "description": "记闪念、看闪念口与孵化区、执行一次已经定好的处置（孵化 / 做掉 / 不做 / 提升 / 开迭代 / 撤回）",
         "default_prompt": "Use /butler:inbox for this Butler workflow."
       },
       "codex": {
         "name": "$butler-inbox",
         "path": "plugins/butler/skills/butler-inbox/SKILL.md",
-        "description": "Scan Butler requirement sources, classify pending items, and safely route them to PRD, ideation, milestone backlog, references, or record-only outcomes. Use when the user asks to inspect, import, classify, or process an origin/ requirement inbox.",
+        "description": "Capture a one-line idea into the Butler inbox, list the inbox and incubation layers read-only, or carry out an already-decided disposition (incubate, done, dropped, promote, iterate, withdraw). Use when the user wants to jot something down for later, review what is pending, or move an item one step along.",
         "display_name": "Butler Inbox",
-        "short_description": "Classify and route requirement sources safely",
-        "default_prompt": "Use $butler-inbox to scan and process this requirement inbox safely."
+        "short_description": "Capture, review and dispose of requirement intake items",
+        "default_prompt": "Use $butler-inbox to capture or dispose of a Butler intake item."
       },
       "routing": {
         "priority": 60,
@@ -145,10 +146,7 @@
       },
       "routing": {
         "priority": 50,
-        "negative_triggers": [
-          "project status",
-          "项目进度"
-        ],
+        "negative_triggers": [],
         "conflicts_with": [],
         "prerequisites": []
       }
@@ -468,44 +466,6 @@
       "routing": {
         "priority": 100,
         "negative_triggers": [],
-        "conflicts_with": [],
-        "prerequisites": []
-      }
-    },
-    {
-      "id": "progress",
-      "rule_source": ".claude/commands/butler/progress.md",
-      "risk": "normal",
-      "allow_implicit_invocation": true,
-      "semantic_triggers": [
-        "progress",
-        "进度",
-        "项目进度",
-        "current status",
-        "当前状态",
-        "how is it going"
-      ],
-      "legacy_aliases": [],
-      "claude": {
-        "name": "/butler:progress",
-        "path": ".claude/commands/butler/progress.md",
-        "description": "只读聚合当前项目的 Butler 进度——里程碑、迭代、Goal、验收、执行、验证、风险一页看完",
-        "default_prompt": "Use /butler:progress for this Butler workflow."
-      },
-      "codex": {
-        "name": "$butler-progress",
-        "path": "plugins/butler/skills/butler-progress/SKILL.md",
-        "description": "Show structured progress for the current Butler-enabled project — milestone, iteration, goal, acceptance, execution, verification, risks. Use when the user asks for project progress, status overview, current state, or how things are going in a Butler project.",
-        "display_name": "Butler Progress",
-        "short_description": "Show structured project progress at a glance",
-        "default_prompt": "Use $butler-progress to see the current project progress."
-      },
-      "routing": {
-        "priority": 50,
-        "negative_triggers": [
-          "review changes",
-          "代码复核"
-        ],
         "conflicts_with": [],
         "prerequisites": []
       }

@@ -1,0 +1,26 @@
+=== AC8 · README 能力表那行是删除、不是替换 ===
+[OK]   README 无 /butler:progress
+[OK]   没补任何替代说法
+       README 本轮 diff：+0 / -1
+[OK]   纯删一行
+=== AC8 · 三份散文计数收敛 ===
+[OK]   HUMAN_GUIDE.md：旧表述零命中
+[OK]   HUMAN_GUIDE.md：新表述 3 处（期望 3）
+[OK]   Coder/README.md：旧表述零命中
+[OK]   Coder/README.md：新表述 1 处（期望 1）
+[OK]   docs/codex-compatibility.md：旧表述零命中
+[OK]   docs/codex-compatibility.md：新表述 1 处（期望 1）
+=== AC9 · 不变量条目数与去数字化 ===
+[OK]   条目总数仍为 47
+[OK]   Codex skill 单一实体源 已去数字化
+[OK]   Codex skill 单一实体源 带真源指针
+[OK]   Codex skill 单一实体源 保留了原有的为什么
+[OK]   工作流元数据单一注册源 已去数字化
+[OK]   工作流元数据单一注册源 带真源指针
+[OK]   工作流元数据单一注册源 保留了原有的为什么
+       invariants.md 本轮 diff（增/删行）：2/2
+[OK]   只动了那两条
+=== AC9 · 无指针条目棘轮 ===
+[OK]   sync-project-overview --check 通过（内含无指针条目棘轮）
+
+DOCS-CLEAN

@@ -1,0 +1,59 @@
+=== AC13 · MILESTONE.md §5.4 两条登记 ===
+[OK]   登记一：路线图点名两项不存在
+[OK]   登记一写明 registry 的 rule_source 指回命令自身
+[OK]   登记一写明 rule-card 全文未提
+[OK]   登记一表态：不适用，不假装完成
+[OK]   登记二：发布处置
+[OK]   登记二写明 Codex 侧需要 [global-install]
+[OK]   登记二写明本轮不触发 [regen-entrypoints]
+[OK]   登记二写明归 R15
+=== AC14 · 完整 CI ===
+[OK]   bash scripts/verify-ci.sh 退出码 0
+       —— CI 末 12 行 ——
+       Ran 10 tests in 1.563s
+       
+       OK
+       warning: in the working copy of '.ai/references/.prd-migration-backups/MIG-8c17dd979296/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+       warning: in the working copy of '.ai/references/.prd-update-backups/UPD-1d3cbd566663/2026-07-22-login/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+       warning: in the working copy of '.ai/references/prd/2026-07-22-login/.archive/v1.1/login-flow.md', CRLF will be replaced by LF the next time Git touches it
+       warning: in the working copy of 'origin/login-requirement.md', CRLF will be replaced by LF the next time Git touches it
+       .
+       ----------------------------------------------------------------------
+       Ran 1 test in 0.521s
+       
+       OK
+=== AC14 · 状态审计 ===
+[OK]   audit-project-state.py --allow-unreleased 退出码 0
+       —— 非 [OK] 行 ——
+       [INFO] ITER-0113.evidence_diagnostics: 保留非通过记录=['ac10-audit']
+       [INFO] ITER-0112.evidence_diagnostics: 保留非通过记录=['ac8-audit']
+       [INFO] ITER-0108.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit-active']
+       [INFO] ITER-0107.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0106.evidence_diagnostics: 保留非通过记录=['decision-modules-regression', 'decision-modules-regression-pinned', 'full-ci-r2', 'review-explore-risk', 'state-audit-active']
+       [INFO] ITER-0105.evidence_diagnostics: 保留非通过记录=['full-ci-r2']
+       [INFO] ITER-0101.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-final']
+       [INFO] ITER-0099.evidence_diagnostics: 保留非通过记录=['deployed-hook-matrix']
+       [INFO] ITER-0098.evidence_diagnostics: 保留非通过记录=['full-ci', 'full-ci-retry']
+       [INFO] ITER-0096.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0095.evidence_diagnostics: 保留非通过记录=['full-ci', 'project-config-tests', 'state-audit-active']
+       [INFO] ITER-0094.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0093.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0092.evidence_diagnostics: 保留非通过记录=['r2-full-ci', 'r2-full-ci-reproduced', 'r2-green-sandbox-failure', 'tdd-goal-gate-red']
+       [INFO] ITER-0091.evidence_diagnostics: 保留非通过记录=['r1-full-ci']
+       [INFO] ITER-0085.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit-active']
+       [INFO] ITER-0084.evidence_diagnostics: 保留非通过记录=['full-ci', 'state-audit', 'state-audit-after-fold']
+       [INFO] ITER-0082.evidence_diagnostics: 保留非通过记录=['state-audit-closed']
+       [INFO] ITER-0080.evidence_diagnostics: 保留非通过记录=['prd-status-tests']
+       [INFO] ITER-0078.evidence_diagnostics: 保留非通过记录=['inbox-workflow-registry']
+       [INFO] ITER-0075.evidence_diagnostics: 保留非通过记录=['final-full-ci', 'full-ci']
+       [INFO] ITER-0068.evidence_diagnostics: 保留非通过记录=['full-ci']
+       [INFO] ITER-0060.evidence_diagnostics: 保留非通过记录=['plugin-contract-final', 'state-audit-closed']
+       [INFO] ITER-0059.evidence_diagnostics: 保留非通过记录=['state-audit-active']
+       [INFO] ITER-0058.evidence_diagnostics: 保留非通过记录=['remote-required-state']
+       [INFO] ITER-0057.evidence_diagnostics: 保留非通过记录=['dual-host-matrix']
+       [UNRELEASED] release.worktree: UNRELEASED：工作树有未发布改动
+       [UNRELEASED] release.tag: UNRELEASED：v3.6.0 不指向 HEAD
+[OK]   两条 UNRELEASED 亮牌（发布态，非漂移）
+[OK]   零 DRIFT / ERROR
+
+CI-AUDIT-CLEAN

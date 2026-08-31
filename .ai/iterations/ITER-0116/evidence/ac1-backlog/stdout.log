@@ -1,0 +1,29 @@
+== 候办草稿文件应不存在 ==
+OK: .ai/milestone-backlog/upgrade-convergence-engine.md 不存在
+
+== 索引行应零命中 ==
+grep -c 'upgrade-convergence-engine' .ai/MILESTONES.md = 0
+
+== 待办区索引行数与实际文件数（应同为 9） ==
+索引行=9  实际文件=9
+
+== 其余 9 行逐字未动（对 HEAD 只应少掉那一行） ==
+1	2	.ai/MILESTONES.md
+added=1 removed=2
+-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112, ITER-0113, ITER-0114 | — |
++| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | ITER-0112, ITER-0113, ITER-0114, ITER-011
+-| upgrade-convergence-engine | Butler 升级收敛引擎：文件所有权、确定性迁移与可恢复诊断 | 2026-08-04 | .ai/milestone-backlog/upgrade-con
+
+== 审计的候办一致性检查 ==
+[OK] backlog.prd-impact-reconciliation.markers: unique identity
+[OK] backlog.prd-evidence-check.markers: unique identity
+[OK] backlog.codex-structured-question-cards.markers: unique identity
+[OK] backlog.ai-user-experience-driven-iteration.markers: unique identity
+[OK] backlog.parallel-p4-execution-slots.markers: unique identity
+[OK] backlog.multi-active-iteration-runtime.markers: unique identity
+[OK] backlog.prd-future-route-fulfillment.markers: unique identity
+[OK] backlog.state-transition-trust-gate.markers: unique identity
+[OK] backlog.tdd-evidence-hardening.markers: unique identity
+[OK] milestones.backlog_set: index=['.ai/milestone-backlog/ai-user-experience-driven-iteration.md', '.ai/milestone-backlog/codex-structured-question-cards.md', '.ai/milestone-backlog/multi-active-iteration-runtime.md', '.ai/milestone-backlog/parallel-p4-execution-slots.md', '.ai/milestone-backlog/prd-evidence-check.md', '.ai/milestone-backlog/prd-future-route-fulfillment.md', '.ai/milestone-backlog/prd-impact-reconciliation.md', '.ai/milestone-backlog/state-transition-trust-gate.md', '.ai/milestone-backlog/tdd-evidence-hardening.md'], actual=['.ai/milestone-backlog/ai-user-experience-driven-iteration.md', '.ai/milestone-backlog/codex-structured-question-cards.md', '.ai/milestone-backlog/multi-active-iteration-runtime.md', '.ai/milestone-backlog/parallel-p4-execution-slots.md', '.ai/milestone-backlog/prd-evidence-check.md', '.ai/milestone-backlog/prd-future-route-fulfillment.md', '.ai/milestone-backlog/prd-impact-reconciliation.md', '.ai/milestone-backlog/state-transition-trust-gate.md', '.ai/milestone-backlog/tdd-evidence-hardening.md']
+audit exit=0
+AC1-OK

@@ -1,0 +1,16 @@
+== AC10 · .ai/invariants.md 第 48 条 ==
+48:- **录入分三层，闪念口只记去向，用户原稿永远用户自管**：需求从产生到开工过三层——闪念口 `.ai/INBOX.md`、孵化区 `.ai/milestone-backlog/`、执行分流；三层的结构、状态与合法转移只有一份真源 `Coder/40_Context_Management/intake-schema.md`，写盘者只有 `tools/intake/intake.py` 一家。闪念用 `YYYY-MM-DD-<kebab 短句>` 作键（不设递增号池、不做内容指纹认亲），状态是 `new` / `incubated` / `done` / `dropped` 四态封闭枚举。闪念口是转运站不是仓库——只记一句话摘要、状态与去向指针，不复制原文，真正的落地委托既有规则；`.ai/references/raw/` 里的材料归用户，AI 只读、不写不改不重命名不移动不归档不删除。*为什么*：复制原文就多出一份会跟原件分叉的真源；递增号池和内容认亲要有人维护「下一个号是几」和「这条是不是变过」，为一句随口记下的话建这套账本，正是 MILE-0016 在砍的那类过度设计；而处理便利不能侵犯用户原稿所有权。
+  invariants 总条目数: 47
+== AC11 · 旧格式回归防线 ==
+test_handle_refuses_and_writes_nothing (tools.intake.tests.test_intake.TestLegacyInboxIsRefusedNotRewritten.test_handle_refuses_and_writes_nothing) ... ok
+test_legacy_markers_and_source_ids_survive_byte_identical (tools.intake.tests.test_intake.TestLegacyInboxIsRefusedNotRewritten.test_legacy_markers_and_source_ids_survive_byte_identical) ... ok
+test_list_refuses_and_writes_nothing (tools.intake.tests.test_intake.TestLegacyInboxIsRefusedNotRewritten.test_list_refuses_and_writes_nothing) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.009s
+
+OK
+  全量 intake 测试：
+Ran 32 tests in 0.193s
+
+OK

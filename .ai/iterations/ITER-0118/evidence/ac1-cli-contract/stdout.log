@@ -1,0 +1,13 @@
+[OK] 工具入口存在
+[OK] 自带测试目录
+[OK] add 收 --project-root
+[OK] list 收 --project-root
+[OK] handle 收 --project-root
+[OK] add 输出可解析 JSON
+[OK] list 输出可解析 JSON
+[OK] 校验不过时退出码非零（1）
+[OK] 校验不过时整次不落盘
+Ran 3 tests in 0.143s
+
+[32mOK[0m
+[OK] 端到端 CLI 用例通过

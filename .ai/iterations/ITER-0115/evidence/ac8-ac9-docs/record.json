@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac8-ac9-docs",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC8",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac8-ac9-docs.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:13:43.741Z",
+  "finished_at": "2026-08-20T07:13:43.871Z",
+  "duration_ms": 130,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 1177,
+    "captured_bytes": 1177,
+    "sha256": "f3f8e10e97cae3d7ff924c5654c249bc5207c5a0873dc71924b3ca803aed08a6",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

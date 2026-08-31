@@ -1,6 +1,6 @@
 interface:
   display_name: "Butler Inbox"
-  short_description: "Classify and route requirement sources safely"
-  default_prompt: "Use $butler-inbox to scan and process this requirement inbox safely."
+  short_description: "Capture, review and dispose of requirement intake items"
+  default_prompt: "Use $butler-inbox to capture or dispose of a Butler intake item."
 policy:
   allow_implicit_invocation: true

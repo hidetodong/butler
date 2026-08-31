@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "preference", "loop", "dangerous", "progress", "iteration"}
+EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "preference", "loop", "dangerous", "iteration"}
 HIGH_RISK = {"loop", "dangerous"}
 TOP_KEYS = {"schema_version", "plugin", "router", "workflows"}
 PLUGIN_KEYS = {"name", "root", "manifest", "hooks", "personal_installer", "setup_entrypoint", "marketplace_mode", "team_distribution"}
@@ -115,8 +115,8 @@ def validate_registry(data: Any, root: Path) -> None:
                 nonempty(value, f"router.{host}.{key}")
 
     workflows = data["workflows"]
-    if not isinstance(workflows, list) or len(workflows) != 13:
-        raise RegistryError("registry must contain exactly 13 business workflows")
+    if not isinstance(workflows, list) or len(workflows) != len(EXPECTED_IDS):
+        raise RegistryError(f"registry must contain exactly {len(EXPECTED_IDS)} business workflows")
     ids: set[str] = set()
     names: set[str] = set()
     aliases: set[str] = set()
@@ -351,6 +351,8 @@ def openai_yaml(item: dict[str, Any]) -> bytes:
 
 
 def docs_table(data: dict[str, Any]) -> bytes:
+    total = len(data["workflows"])
+    implicit = sum(1 for item in data["workflows"] if item["allow_implicit_invocation"])
     rows = []
     for item in data["workflows"]:
         aliases = "<br>".join(f"`{a['name']}` ({a['status']})" for a in item["legacy_aliases"])
@@ -370,7 +372,7 @@ def docs_table(data: dict[str, Any]) -> bytes:
 ## 安全与兼容
 
 - `loop` / `dangerous` 是 high risk，Codex `allow_implicit_invocation=false`；只能由用户显式点名 Butler 模式。旧 `/loop` 与 Claude harness 自带循环撞名，绝不生成旧实体命令。
-- 其余十一项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
+- 其余 {implicit} 项显式 `allow_implicit_invocation=true`，仍须按各自 SKILL description 的语义边界触发；setup 即使被语义触发也须按规则真源确认机器级写入。
 - legacy alias 是识别/弃用元数据，不代表仓库重新创建同名入口。
 
 ## 发现与分发状态
@@ -378,7 +380,7 @@ def docs_table(data: dict[str, Any]) -> bytes:
 | 层 | 当前状态 | 真源 / 边界 |
 |---|---|---|
 | Claude 全局命令 | available via setup symlinks | `.claude/commands/butler.md` 与 `.claude/commands/butler/` → `scripts/setup.sh` |
-| Codex repo discovery | available | `.agents/skills/` 的 Router + 13 个业务 Skill 相对软链，实体在 `plugins/butler/skills/` |
+| Codex repo discovery | available | `.agents/skills/` 的 Router + {total} 个业务 Skill 相对软链，实体在 `plugins/butler/skills/` |
 | Codex personal plugin | available via explicit installer | `scripts/install-codex-plugin.sh` + personal marketplace；安装副本单独 cachebuster |
 | Plugin hooks | declared via standard auto-discovery | `plugins/butler/hooks/hooks.json`；不向 `plugin.json` 塞不受支持字段 |
 | Team/public distribution | **not configured** | 没有团队 marketplace / 公共发布；个人已安装不等于团队可用 |

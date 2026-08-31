@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac15-gates",
+  "iteration": "ITER-0119",
+  "ac_ids": [
+    "AC15"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0119/ac15-gates.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-21T08:11:02.531Z",
+  "finished_at": "2026-08-21T08:11:32.702Z",
+  "duration_ms": 30171,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 348,
+    "captured_bytes": 348,
+    "sha256": "45d6dcf631a2fc79067a8dc343e654375ab79873731bbb2554e98c5f3653e62e",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

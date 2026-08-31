@@ -8,13 +8,13 @@
 - 规则源版本：**3.6.0**
 - 当前 active 里程碑：MILE-0016
 - 当前 active 迭代：none
-- 累计里程碑 16 个、迭代 114 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
+- 累计里程碑 16 个、迭代 119 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
 
 ## 里程碑时间线
 
 | 里程碑 | 标题 | 状态 | 起 | 止 | 含迭代 |
 |---|---|---|---|---|---|
-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 3 |
+| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 8 |
 | MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | closed | 2026-07-31 | 2026-08-17 | 5 |
 | MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | 5 |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | 3 |
@@ -54,7 +54,7 @@
 
 | ID | Claude | Codex | 风险 | 规则真源 |
 |---|---|---|---|---|
-| inbox | `/butler:inbox` | `$butler-inbox` | normal | `Coder/40_Context_Management/inbox-workflow.md` |
+| inbox | `/butler:inbox` | `$butler-inbox` | normal | `Coder/40_Context_Management/intake-workflow.md` |
 | prd | `/butler:prd` | `$butler-prd` | normal | `Coder/40_Context_Management/references-schema.md` |
 | review | `/butler:review` | `$butler-review` | normal | `Coder/60_Extension_CodeReview/review-engine.md` |
 | milestone | `/butler:milestone` | `$butler-milestone` | normal | `Coder/20_Workflow_Lifecycle/milestone-schema.md` |
@@ -65,7 +65,6 @@
 | preference | `/butler:preference` | `$butler-preference` | normal | `Coder/70_Extension_Preference/preference-probe-engine.md` |
 | loop | `/butler:loop` | `$butler-loop` | high | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
 | dangerous | `/butler:dangerous` | `$butler-dangerous` | high | `Coder/65_Extension_Dangerous/dangerous-engine.md` |
-| progress | `/butler:progress` | `$butler-progress` | normal | `.claude/commands/butler/progress.md` |
 | iteration | `/butler:iteration` | `$butler-iteration` | normal | `Coder/20_Workflow_Lifecycle/iteration-intake.md` |
 
 ## 驻留工具清单
@@ -84,7 +83,7 @@
 | `tools/explore-dogfood/` | explore-dogfood |
 | `tools/goal-assurance/` | Goal Assurance |
 | `tools/handoff/` | Handoff Tool |
-| `tools/inbox/` | Butler Inbox Scanner |
+| `tools/intake/` | intake — 三层录入契约的写盘者 |
 | `tools/iteration-intake/` | — |
 | `tools/mile0009-e2e/` | MILE-0009 End-to-End |
 | `tools/prd-migrate/` | PRD Migration Tool |

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac1-ac2-entities",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC1",
+    "AC2"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac1-ac2-entities.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:13:23.234Z",
+  "finished_at": "2026-08-20T07:13:23.314Z",
+  "duration_ms": 79,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 731,
+    "captured_bytes": 731,
+    "sha256": "e62a925ed8cd41323e21a9522574c921f30dce781fcdff7110172d580634fe99",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

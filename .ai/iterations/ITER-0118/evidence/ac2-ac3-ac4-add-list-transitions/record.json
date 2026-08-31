@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac2-ac3-ac4-add-list-transitions",
+  "iteration": "ITER-0118",
+  "ac_ids": [
+    "AC2",
+    "AC3",
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0118/ac2-ac3-ac4-add-list-transitions.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T10:46:07.992Z",
+  "finished_at": "2026-08-20T10:46:08.344Z",
+  "duration_ms": 353,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 218,
+    "captured_bytes": 218,
+    "sha256": "0834c4bc99b5a848e6a91f35bc47bb69f8dd502be9609d0d37c1e8a817ede33c",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,0 +1,8 @@
+[OK]   请求文字保留：现在项目进度怎么样
+[OK]   expected_status = not-butler
+[OK]   expected_primary = null
+[OK]   expected_state_writes = false
+[OK]   样例文件全文零 progress 字样
+[OK]   样例集覆盖全部 12 个工作流 ID，无缺无余
+
+ROUTER-EXAMPLE-CLEAN

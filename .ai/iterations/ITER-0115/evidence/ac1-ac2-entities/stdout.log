@@ -1,0 +1,15 @@
+=== AC1 · 三个实体不存在 ===
+[OK]   .claude/commands/butler/progress.md 已消失
+[OK]   plugins/butler/skills/butler-progress 已消失
+[OK]   .agents/skills/butler-progress 已消失
+=== AC1 · 软链数与完整性 ===
+[OK]   软链 13 条（Router + 12 业务）
+[OK]   13 条软链全部指向存在的 SKILL.md
+[OK]   skill 实体目录 13 个
+=== AC2 · registry 摘除结果 ===
+[OK]   workflows 长度 12
+[OK]   无 progress：['inbox', 'prd', 'review', 'milestone', 'upgrade', 'init', 'setup', 'ideation', 'preference', 'loop', 'dangerous', 'iteration']
+[OK]   review negative_triggers = []（原有的两条消歧触发词已随 progress 一并退役）
+[OK]   registry 全文零 progress 字样
+
+ENTITIES-CLEAN

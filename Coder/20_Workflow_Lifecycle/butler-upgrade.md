@@ -73,7 +73,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply \
 
 项目 action 有限且 schema 化：双入口重生成/重戳、hook + settings 同步、显式 rename/add-field、项目配置迁移 `migrate_config`、no-op。`migrate_config` 复用 `tools/project-config/` 的纯迁移计划，并由本升级器把 JSON 创建和 Markdown 收窄纳入同一 backup/restore/journal。历史 `[regen-claude]` 归一为双入口动作。未知 action/字段/domain 立即失败。
 
-入口外原文和 CLAUDE.md/AGENTS.md 各自 `<!-- user-managed -->` 区逐字保留；`origin/`、`deliveries/`、历史 `.ai/iterations/` / `.ai/milestones/` 不在可写集合。
+入口外原文和 CLAUDE.md/AGENTS.md 各自 `<!-- user-managed -->` 区逐字保留；`.ai/references/`（含用户原件 `raw/`）、`deliveries/`、历史 `.ai/iterations/` / `.ai/milestones/` 不在可写集合。
 
 ## 6. 机器级动作分域
 
@@ -112,7 +112,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" global-install \
 
 ## 8. 边界
 
-- 不改 `origin/`、`deliveries/`、任务四件套、历史归档或 CHANGELOG/BUG_LOG 内容。
+- 不改 `.ai/references/`、`deliveries/`、任务四件套、历史归档或 CHANGELOG/BUG_LOG 内容。
 - 不自动理解任意知识文本，不提供通用 shell action。
 - Butler 仓自身的发布仍走 `versioning-schema.md`，不走本升级器。
 - 版本 gap 决定迁移区间，内容/hash/marker/所有权校验决定是否安全写入；版本号不替代漂移检查。

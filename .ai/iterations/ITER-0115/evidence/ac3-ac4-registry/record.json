@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac3-ac4-registry",
+  "iteration": "ITER-0115",
+  "ac_ids": [
+    "AC3",
+    "AC4"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      ".ai/iterations/ITER-0115/ac3-ac4-registry.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-08-20T07:13:23.912Z",
+  "finished_at": "2026-08-20T07:13:32.112Z",
+  "duration_ms": 8202,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 705,
+    "captured_bytes": 705,
+    "sha256": "b12554e98b2c3eea3f4b782eee2c742dfd0993ce5820b7343345ac22672cf6d0",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}
