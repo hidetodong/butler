@@ -51,7 +51,7 @@ def make_root(
     root = pathlib.Path(tmpdir)
     ai = root / ".ai"
     ai.mkdir(parents=True, exist_ok=True)
-    (ai / "milestone-backlog").mkdir(exist_ok=True)
+    (ai / "backlog").mkdir(exist_ok=True)
     (ai / "MILESTONES.md").write_text(
         MILESTONES_TMPL.format(
             current=milestones_current,
@@ -77,6 +77,6 @@ def snapshot(root):
     root = pathlib.Path(root)
     out = {}
     for p in sorted((root / ".ai").rglob("*")):
-        if p.is_file():
+        if p.is_file() and p.name != ".usage.json":
             out[str(p.relative_to(root))] = p.read_bytes()
     return out

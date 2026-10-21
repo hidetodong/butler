@@ -1,7 +1,7 @@
 # MILE-0014 R5 · Butler Explore dogfood
 
 > 日期：2026-08-02
-> 样本：`.ai/milestone-backlog/codex-structured-question-cards.md`
+> 样本：`.ai/backlog/codex-structured-question-cards.md`
 > live Map：`DMAP-0001`
 > 结论口径：只报告本地单仓观测，不外推多人、跨机器或所有宿主体验。
 

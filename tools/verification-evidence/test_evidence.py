@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import subprocess
 import sys
@@ -434,6 +435,51 @@ class EvidenceCliTests(unittest.TestCase):
         result = self.check_tdd("archive")
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         self.assertIn("[OK] sample", result.stdout)
+
+
+class EvidenceNarrowingTests(unittest.TestCase):
+    def test_subcommands_stay_exactly_five(self) -> None:
+        spec = importlib.util.spec_from_file_location("evidence_under_test", TOOL)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        parser = module.build_parser()
+        sub = next(action for action in parser._subparsers._actions if getattr(action, "dest", None) == "subcommand")
+        self.assertEqual({"run", "verify", "check-tdd", "archive", "reopen"}, set(sub.choices))
+
+    def test_only_allowed_product_files_read_record_json(self) -> None:
+        root = TOOL.parents[2]
+        allowed = {
+            "tools/verification-evidence/evidence.py",
+            "tools/goal-assurance/goal.py",
+            "scripts/audit-project-state.py",
+        }
+        offenders: list[str] = []
+        for path in root.rglob("*.py"):
+            if any(part.startswith(".") or part in {"__pycache__", "tests"} for part in path.parts):
+                continue
+            if path.name.startswith(("test_", "test-")):
+                continue
+            relative = path.relative_to(root).as_posix()
+            if relative in allowed:
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except (OSError, UnicodeError):
+                continue
+            if "record.json" in text:
+                offenders.append(relative)
+        self.assertEqual([], offenders)
+
+    def test_readme_has_no_human_summary_or_dashboard(self) -> None:
+        text = TOOL.with_name("README.md").read_text(encoding="utf-8")
+        self.assertNotIn("人读摘要", text)
+        self.assertNotIn("看板", text)
+
+    def test_goal_still_reads_only_the_hot_zone(self) -> None:
+        goal = (TOOL.parents[2] / "tools" / "goal-assurance" / "goal.py").read_text(encoding="utf-8")
+        self.assertIn('evidence_root = root / ".ai" / "verification-evidence"', goal)
 
 
 if __name__ == "__main__":

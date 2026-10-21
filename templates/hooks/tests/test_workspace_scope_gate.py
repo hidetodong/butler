@@ -84,6 +84,15 @@ def test_read_only_and_unplanned_paths_fail_closed(tmp_path):
     assert unplanned.returncode == 2 and "workspace" in unplanned.stderr
 
 
+def test_root_meta_allowed_when_current_none_but_api_still_denied(tmp_path):
+    root = scoped_project(tmp_path)
+    (root / ".ai" / "ITERATIONS.md").write_text("current: none\n", encoding="utf-8")
+    assert run_gate(edit_payload(root, "README.md"), root).returncode == 0
+    assert run_gate(edit_payload(root, "CHANGELOG.md"), root).returncode == 0
+    denied = run_gate(edit_payload(root, "packages/api/src/client.ts"), root)
+    assert denied.returncode == 2 and "workspace_scope" in denied.stderr
+
+
 def test_apply_patch_checks_every_target_and_reports_denied_path(tmp_path):
     root = scoped_project(tmp_path)
     command = """*** Begin Patch

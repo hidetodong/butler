@@ -6,17 +6,13 @@
 
 ```bash
 python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" inspect --project-root "$PROJECT_ROOT"
-python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" plan --project-root "$PROJECT_ROOT" --split defer
-python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply --project-root "$PROJECT_ROOT" --split defer
+python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" plan --project-root "$PROJECT_ROOT"
+python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply --project-root "$PROJECT_ROOT"
 ```
 
 加 `--json` 可获得稳定字段：`status`、版本区间、逐 action、文件变化、冲突、机器级待办和 run ID。`inspect` 与 `plan` 零写入；`apply` 才修改项目。
 
-`[split]` 跨版本时：
-
-- 不传决定：返回 `needs-decision`，零写入。
-- `--split defer`：保留 `.ai/PROJECT.md`，继续机械升级。
-- `--split now`：真实单文件待拆时返回 `manual-split`，交给有人语义迁移，零写入。
+`--split defer` 和 `--split now` 仍可传入，不是必填，也不再让计划停下来问要不要拆知识文件夹。历史 `[split]` 的定义留在 `migration-schema.md`。旧格式收件箱或仓根 `origin/` 会让计划在写入前停下。
 
 机器级安装不属于项目事务。只有显式执行下列命令才会修改 HOME：
 
@@ -31,7 +27,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" global-install \
 |---|---|
 | 0 | ready/applied/already-current；机器级待办会另列，不冒充已执行 |
 | 2 | 输入、版本、marker、路径、所有权或漂移冲突 |
-| 3 | 需要 split/bootstrap/global confirmation |
+| 3 | 需要首次部署或机器安装确认 |
 | 4 | apply lock 存在，禁止并发或覆盖未决运行 |
 | 5 | apply 失败，项目文件已恢复；journal 保留诊断 |
 | 6 | 独立 global install 失败 |
@@ -55,7 +51,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" global-install \
 
 `migrations/manifest.json` 为执行数据真源。每个发布区间有严格连续的 source/target、人读 recipe 指针和有限 action；action ID 全局唯一，domain 只能由类型决定：
 
-- `project`：入口、hook/settings、rename/add-field、`migrate_config`、restamp/no-op。`migrate_config` 只复用 `tools/project-config/` 的纯迁移计划，双文件提交仍走本工具既有事务。
+- `project`：入口、hook/settings、rename/add-field、delete/move、`migrate_config`、restamp/no-op。`migrate_config` 只复用 `tools/project-config/` 的纯迁移计划，双文件提交仍走本工具既有事务。
 - `decision`：`split`。
 - `machine`：`global_install`。
 

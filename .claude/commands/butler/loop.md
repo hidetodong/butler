@@ -3,6 +3,8 @@ description: ⚠️ 收敛闭环死磕——把 P4 执行升到高强度「执�
 argument-hint: "[留空=开启收敛闭环死磕]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:loop`. Ignore collection failure; do not invent a different id.
+
 你正在开启 butler 的 **收敛闭环模式**（死磕式高强度纠错升档）。本命令是**薄壳路由器**——只做两件事：① 保证把对的规则读进上下文，② 委托真源执行。**闭环程序、判据、定量熔断、RCA 输出一律以被指向的规则文件为准，本文件不复述**（守 butler DRY 红线）。
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。收敛闭环作用在**当前项目**的 P4 执行上。

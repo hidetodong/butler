@@ -1,0 +1,36 @@
+{
+  "title": "usage 采集：CLI 入口记下最后调用时间",
+  "summary": "MILE-0016 R11：每个 CLI 入口把最后一次调用时间写到项目本地，不进 git。本轮只采集，不做 90 天报告（那是 R12）。写失败不能把正经工具弄挂。",
+  "confirmed_decisions": [
+    "用户在 ITER-0121 收口后说继续，按 MILE-0016 路线开 R11",
+    "本地状态、进 gitignore、不进共享仓",
+    "只记最后调用时间戳，本轮不做 usage report / 分档",
+    "本轮不切版"
+  ],
+  "model_recommendations": [
+    "落点用项目根 `.ai/.usage.json`，跟拦截日志同一类：本机摩擦数据，gitignore",
+    "入口身份封闭：`workflow:<registry id>` 加 `tool:<驻留工具目录名>`，从 registry 和 tools 清单派生，不让调用方随口造 id",
+    "驻留工具的 Python CLI `main` 机械打点；工作流薄壳加一条调用 `usage.py record`，slash 命令本身没有进程钩，不能假装自动记到",
+    "采集失败 fail-open：打点出错不影响原命令退出码"
+  ],
+  "open_questions": [
+    "vendored 的 `tools/codex-validators/` 和一次性 dogfood 脚本（`mile0009-e2e` / `explore-dogfood`）算不算本轮要打点的 CLI（建议：不算，只打产品驻留工具）"
+  ],
+  "in_scope": [
+    "tools/usage/ 读写 `.ai/.usage.json`：record / 只读查询，schema 锁死",
+    "gitignore 加上 `.ai/.usage.json`",
+    "产品驻留工具 CLI 在 main 入口打点",
+    "工作流薄壳写明调用 record；提供 CLI 给薄壳用",
+    "测试覆盖写入、覆盖更新、gitignore、fail-open、未知 id 拒绝",
+    "debt.md 运行时观测缺位那条改成「采集已有、报告归 R12」或删掉采集半句"
+  ],
+  "out_of_scope": [
+    "不做 tools/usage-report/，不做 usage report --since 90d，不做 A/B/C/D 分档（R12）",
+    "不做自动淘汰、不改 preference、不降维 evidence（R13）",
+    "不切 VERSION、不写 v4.0.0 配方",
+    "不给 slash 命令做宿主级自动拦截（没有可靠进程钩）",
+    "不采集 hook 每次放行/拦截（拦截日志已经在 R10）",
+    "不把调用次数、参数、路径写进 usage 文件"
+  ],
+  "milestone_route": "R11"
+}

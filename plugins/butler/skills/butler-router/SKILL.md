@@ -3,6 +3,8 @@ name: butler-router
 description: Route an unqualified natural-language Butler request to exactly one registered workflow while preserving explicit-only safety boundaries.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:router`. Ignore collection failure; do not invent a different id.
+
 # Butler Router
 
 Resolve the trusted Butler checkout as `BUTLER_PATH`; if it is ambiguous, stop without writing.

@@ -3,6 +3,8 @@ name: butler-ideation
 description: Explore and refine a product or engineering idea with Butler outside P1–P5. Use when the user explicitly requests brainstorming or accepts an Explore suggestion; promotion into delivery always restarts at Iteration P1.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:ideation`. Ignore collection failure; do not invent a different id.
+
 # Butler Ideation
 
 1. Resolve `BUTLER_PATH`; require `Coder/README.md`, otherwise stop with setup guidance.

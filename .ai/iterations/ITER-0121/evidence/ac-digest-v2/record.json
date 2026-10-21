@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-digest-v2",
+  "iteration": "ITER-0121",
+  "ac_ids": [
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "/usr/bin/env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "scripts/test-butler-upgrade.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-14T04:16:28.159Z",
+  "finished_at": "2026-09-14T04:16:29.094Z",
+  "duration_ms": 934,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 121,
+    "captured_bytes": 121,
+    "sha256": "ed088c61d6b53b95460636c424c36b1e304f0ce063ad04fd64754c8313cd61b1",
+    "truncated": false
+  }
+}

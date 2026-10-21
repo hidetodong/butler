@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-archive",
+  "iteration": "ITER-0124",
+  "ac_ids": [
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "tools/verification-evidence/evidence.py",
+      "verify",
+      "--project-root",
+      ".",
+      "--iteration",
+      "ITER-0123",
+      "--source",
+      "archive"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-20T07:29:17.266Z",
+  "finished_at": "2026-10-20T07:29:17.344Z",
+  "duration_ms": 78,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 95,
+    "captured_bytes": 95,
+    "sha256": "23dc30cbcf3088b4e59b75c8dda08b74096dc281e41f44c3208c6cf93f87e354",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

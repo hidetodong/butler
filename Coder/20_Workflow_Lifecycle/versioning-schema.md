@@ -29,7 +29,7 @@ butler 规则仓库引入硬版本概念，让"当前规则源是哪一版"成�
 两侧各自单一真源，互不复述：
 
 - **`.ai/ITERATIONS.md`（ITER 台账）**：颗粒级开发真源，每个迭代一行（号 / 标题 / 状态 / 开启收口 / 交付链接）。
-- **`CHANGELOG.md`（发布史）**：发布级聚合，每个版本一条，聚合自上次 tag 以来收口的若干 ITER。条目**只引用** `deliveries/` 与 ITER 台账链接，**不复述**迭代细节。
+- **`CHANGELOG.md`（发布史）**：发布级聚合，每个版本一条，聚合自上次 tag 以来收口的若干 ITER。条目**只引用** `.ai/deliveries/` 与 ITER 台账链接，**不复述**迭代细节。
 
 CHANGELOG 格式：位于仓库根；条目按版本倒序；每条以 `## [MAJOR.MINOR.PATCH] - YYYY-MM-DD` 起头；顶部声明版本号遵循本协议并指向 `VERSION`。
 
@@ -56,7 +56,7 @@ Co-Authored-By: <署名> <邮箱>
 - **scope**（可选但鼓励）：本次改动的规则模块或区域名，小写，取文件 / 目录语义名——如 `hook`、`lifecycle`、`versioning`、`handoff`、`readme`、`release`、`preference`。
 - **中文描述**：一句话说清这次干了什么，动词开头，句末不加句号。
 - **`(ITER-NNNN)` 尾注**：把提交绑回迭代号；一次提交聚合多个迭代时并列 `(ITER-A, ITER-B, ITER-C)`。无对应迭代的杂务提交（如仓库脚手架）可省尾注。
-- **body**（可选）：bullet 列关键改动或收口结论；**引用** `deliveries/ITER-*.md` 与 `.ai/ITERATIONS.md`，**不复述**迭代细节（与 `changelog-schema.md §4` 同一分工——细粒度对象级变更在 `01_CHANGELOG.md`、人读高层在 delivery、commit body 只做索引式概述）。
+- **body**（可选）：bullet 列关键改动或收口结论；**引用** `.ai/deliveries/ITER-*.md` 与 `.ai/ITERATIONS.md`，**不复述**迭代细节（与 `changelog-schema.md §4` 同一分工——细粒度对象级变更在 `01_CHANGELOG.md`、人读高层在 delivery、commit body 只做索引式概述）。
 - **署名 trailer**：末行附 `Co-Authored-By:` 署名（本仓历史提交全带），为标准尾注。
 
 ### 5.2 发布专用形态

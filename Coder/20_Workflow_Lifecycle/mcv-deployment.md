@@ -18,7 +18,7 @@ scope: 新项目接入或显式部署指令下的 .ai 基础设施侦察、展�
 
 ## 0.1 施工项目根解析 (Project Root Resolution)
 
-**会话启动目录不等于施工项目根。** 在读写任何项目级 `.ai/`、`deliveries/`、`CLAUDE.md` 或 `AGENTS.md` 前，AI 必须先解析唯一的 `$PROJECT_ROOT`、向用户回声绝对路径与证据，后续所有项目级路径都以它为基准。`cwd` 只是发现起点，不单独构成写入授权。
+**会话启动目录不等于施工项目根。** 在读写任何项目级 `.ai/`、`CLAUDE.md` 或 `AGENTS.md` 前，AI 必须先解析唯一的 `$PROJECT_ROOT`、向用户回声绝对路径与证据，后续所有项目级路径都以它为基准。`cwd` 只是发现起点，不单独构成写入授权。
 
 调用 `$BUTLER/scripts/resolve-project-root.py`，按以下优先级命中即停：
 
@@ -54,14 +54,13 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 
 ## 2. 基础设施展开 (Scaffold)
 
-在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/` 与 `deliveries/` 两类基础目录，并分别承担不同职责：
+在已解析的 `$PROJECT_ROOT` 下强制创建 `.ai/` 这一个基础目录。交付总结归档在 `.ai/deliveries/`，与候办草稿 `.ai/backlog/` 一样按需产生，部署时不建。
 
-- `.ai/`：AI 工作空间，包含运行态文件与阶段产物两类内容。
-- `deliveries/`：完整交付后的人类可读交付总结归档目录。
+- `.ai/`：AI 工作空间，包含运行态文件、阶段产物，以及按需产生的交付归档。
 
 用户的原始需求材料放 `.ai/references/raw/`：**用户自管的可选投放点**，存放自由格式材料；AI **只读、不写不改不重命名不移动不归档不删除**。它可供 `/milestone`、`/butler:prd` 等入口读取，但不是快速路径的必经站——直接在对话里粘贴同样合法。它与 `.ai/references/` 下 AI 派生的受控投影同住一个父目录但权威性不同，边界见 `40_Context_Management/references-schema.md §1`。
 
-部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。`.ai/` 与 `deliveries/` 两个目录在部署时即创建，`.ai/` 下的 `references/`（含 `references/raw/`）、`iterations/`、`milestones/` 等子目录一律按需产生、部署时不建。
+部署阶段**仅创建目录**，不预置任何 `.md` 文件内容；具体文件在任务推进到对应阶段或触发对应条件时按需产生。部署时只建 `.ai/`；`.ai/` 下的 `references/`（含 `references/raw/`）、`iterations/`、`milestones/`、`backlog/`、`deliveries/` 等子目录一律按需产生、部署时不建。
 
 `.ai/` 目录下分为两类文件：
 
@@ -78,7 +77,8 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 - `MILESTONES.md`：里程碑看板，正式表记录 `current` 与已开启里程碑的号/状态/归属/交付，文件末可带未编号待办索引，字段参考 `milestone-schema.md`；首次开启或暂缓里程碑草稿时按需产生。
 - `MILESTONE.md`：当前活跃里程碑工作区，承载范围评估 / 理解阐释 / 拆分路线图 / 范围演进记录，字段参考 `milestone-schema.md`；松耦合可选、方向性不冻结，不被 hook 拦截。首次开启里程碑时按需产生。
 - `INBOX.md`：闪念口——随手记下的一句话、记录日期、四态封闭的处理状态与去向指针；首次运行录入动作时按需产生，不复制原文，格式见 `40_Context_Management/intake-schema.md`，唯一写入者是 `tools/intake/intake.py`。
-- `milestone-backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。多个可独立启动方向必须一方向一文件，并与 `MILESTONES.md` 待办区逐块一一对账；候办不参与 `current`、Goal 或迭代自动归属。
+- `backlog/<slug>.md`：未编号候办草稿，保留讨论好但尚未开工的范围和路线图；首次暂缓入库时按需建目录，不在部署时预建。多个可独立启动方向必须一方向一文件，并与 `MILESTONES.md` 待办区逐块一一对账；候办不参与 `current`、Goal 或迭代自动归属。
+- `deliveries/`：人类可读交付总结归档（迭代交付平铺，里程碑交付在 `deliveries/milestones/` 子目录）。首次迭代或里程碑收口时按需产生，不在部署时预建。落点与命名见 `delivery-summary.md`。
 
 **阶段产物 / 当前迭代工作区**（任务推进时按需产生，决策记录，可复盘可审计）：
 
@@ -100,7 +100,7 @@ PROJECT_ROOT="$(python3 "$BUTLER/scripts/resolve-project-root.py" \
 
 - `milestones/MILE-NNNN/MILESTONE.md`：里程碑收口时 `.ai/MILESTONE.md` 的冻结快照，供复盘审计。归档机制以 `milestone-schema.md` 为准。
 - `milestones/` 目录不在部署时创建，而是在首次里程碑收口时按需产生。
-- 里程碑级人类交付落在项目根 `deliveries/milestones/MILE-NNNN-<slug>.md`，该子目录同样在首次里程碑收口时按需产生（迭代级交付仍平铺在 `deliveries/` 根，见 `delivery-summary.md` §3）。
+- 里程碑级人类交付落在 `.ai/deliveries/milestones/MILE-NNNN-<slug>.md`，该子目录同样在首次里程碑收口时按需产生（迭代级交付仍平铺在 `.ai/deliveries/` 根，见 `delivery-summary.md` §3）。
 
 **外部参考资料**（用户提供时按需处理并存入）：
 
@@ -136,7 +136,7 @@ python3 "$BUTLER/scripts/render-project-entrypoints.py" \
 - 生成 `.ai/local-constraints.md`，只记录 Project Type、Local Constraints、Scope Exceptions、External References 等需要人解释的项目差异；字段定义与最小模板参考 `local-constraints-schema.md`。
 - 生成 `.ai/butler.config.json` 作为机器配置唯一真源。先运行 `python3 "$BUTLER/tools/project-config/config.py" init --project-root "$PROJECT_ROOT"` 写入安全默认；若侦察命中 profile，再用同工具 `set profiles '<JSON 数组>'` 写入。不得手工拼 JSON 或把 profile 双写回 Markdown。
 - **逻辑：** 不要复制通用规则，而是通过”指针”引用。例如：”本项目遵循通用需求开发 SOP，并启用 TypeScript profile；针对 `/legacy` 目录下的旧代码，允许局部放宽类型检查。”
-- JSON 默认值固定为 `dangerous=false`、`independent_review=false`、`preference=true`、`profiles=[]`。配置存在即必须完整合法；缺字段、未知字段/版本或错误类型均 fail-closed，不从 Markdown 静默覆盖。
+- JSON 默认值固定为 `dangerous=false`、`independent_review=false`、`profiles=[]`。配置存在即必须完整合法；缺字段、未知字段/版本或错误类型均 fail-closed，不从 Markdown 静默覆盖。读取时若仍带着已退役的 `preference` 布尔，返回值里丢掉这一键，不改文件；要等升级写回，磁盘上才少这一键。
 - 旧项目仍可由兼容读取器回退旧 Markdown；升级时通过 `butler-upgrade` 的 `migrate_config` action 把 JSON 创建与 Markdown 收窄放进同一事务。新部署不得继续生成 legacy 机器段。
 
 ## 5. Hook 注入 (Hook Injection)

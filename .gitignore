@@ -9,6 +9,12 @@
 .ai/.decision-map-locks/
 .ai/.decision-work-locks/
 
+# PreToolUse 拦截日志（本机摩擦追溯，不进共享仓）
+.ai/.hook-blocks.log
+
+# CLI 最后调用时间（本机采集，不进共享仓）
+.ai/.usage.json
+
 # Python 字节码缓存（hook 体系 pytest 运行时产生）
 __pycache__/
 *.py[cod]

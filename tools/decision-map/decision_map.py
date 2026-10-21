@@ -67,6 +67,19 @@ def emit(value: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
+    try:
         args = parser().parse_args(argv)
         if args.action == "inspect":
             result = inspect(args.project_root, args.map_id, args.now)

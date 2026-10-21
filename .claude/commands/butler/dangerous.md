@@ -3,6 +3,8 @@ description: ⚠️ 无人值守长程自治（实验性）——留空开启（
 argument-hint: "[留空=开启（走引擎风险闸）| off 关闭 | status 只读看状态]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:dangerous`. Ignore collection failure; do not invent a different id.
+
 你正在操作 butler 的 **危险模式开关**（无人值守长程自治）。本命令是**薄壳路由器**——只做三件事：① 保证把对的规则读进上下文，② 按参数分派到对的开关动作，③ 委托真源执行并回声状态。**自治闭环、自主 ACK 自审门、安全护栏（审计 / checkpoint / P5 强制完整审查）、终止与交还一律以被指向的规则文件为准，本文件不复述**（守 butler DRY 红线）。
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量）解析。危险模式状态落**当前项目**的 `.ai/butler.config.json` `dangerous` 字段（持久、跨会话），只通过驻留 project-config 工具读写。

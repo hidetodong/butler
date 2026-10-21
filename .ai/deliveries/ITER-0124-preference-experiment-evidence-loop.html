@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0124 交付总结 · ITER-0124 · preference 实验、evidence 降维与 loop 处置</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0124 · preference 实验、evidence 降维与 loop 处置</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0124</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-10-20</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>用一条可重跑的实验判定 preference 反哺会不会改变提案排序，并按结果处置。evidence 不新增人读出口。loop 保持冻结。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新建 <code>tools/preference-experiment/</code>。仓库内夹具上连续两次 stdout 相同，<code>ranking_changed</code> 为 false。</li>
+        <li>preference 的机器入口已退役：registry 条目、规则、命令、skill 和软链都删了。实验工具留下。项目配置里的布尔还在，不再启动采集。</li>
+        <li>三份人读文档里的业务工作流个数改成 11，和 registry 一致。</li>
+        <li>loop 的最终处置写成保持冻结。欠债里等 R13 的那句删了。命令和引擎正文没改。</li>
+        <li>证据工具的子命令和读者用测试锁住。上一轮归档仍能校验。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><code>python3 tools/preference-experiment/experiment.py --project-root .</code> 打出排序没有变化。</li>
+        <li><code>/butler:preference</code> 不再提供。<code>/butler:loop</code> 仍可用，只是不再演进。</li>
+        <li>证据记录仍给完成裁决和收口审计用，没有新增人读摘要或看板。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>tools/preference-experiment/</code>。</li>
+        <li>删除：preference 的规则真源、Claude 命令、Codex skill 和软链。</li>
+        <li>改动：registry、三份人读文档的个数、loop 冻结段、<code>debt.md</code>、证据测试。</li>
+        <li>不算：不新写排序器，不改 <code>goal.py</code> 和证据记录格式，不扩展升级器，不写 <code>migrations/v4.0.0.md</code>，不切版。</li>
+      </ul>
+    </section>
+
+    
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>9 条验收全部通过。实验测试 7 passed，目标与证据测试 44 passed，registry 校验为 11 条业务工作流。ITER-0123 归档校验退出码 0。持续集成退出码 0。收口前完成裁决 <code>eligible</code>。独立复核未开。</p>
+      <p>审计退出码 0，0 条 DRIFT，2 条未发布。本机系统 Python 没有 pytest，目标与证据测试用的是持续集成同一套锁定解释器。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>仓库外已经采集的偏好数据没有迁移。已部署项目里的旧命令要等 R15。</li>
+        <li>preference 布尔还在，但不启动采集。<code>templates/preference/</code> 骨架还在，已标明退役。</li>
+        <li>loop 的冻结没有机器门禁。没有最后调用时间不能当成已经证实没人用。</li>
+        <li>给人读的文档里，工作流个数仍然没有永久扫描器。</li>
+        <li>实验没有用一场真实模型对话证明排序变过。<code>ranking_changed</code> 是 false。</li>
+        <li>本轮不切版、不提交。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0124/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0124/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0124/evidence/</code>（6 条记录）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

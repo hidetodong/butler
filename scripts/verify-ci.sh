@@ -50,4 +50,7 @@ UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest disc
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/prd-status/tests
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/prd-update/tests
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/workspace-scope/tests
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m pytest tools/usage/tests -q
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m pytest tools/usage-report/tests -q
+UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m pytest tools/preference-experiment/tests -q
 UV_NO_SYNC=1 uv run --locked --python "$EXPECTED_PYTHON" python -m unittest discover -s tools/mile0009-e2e/tests

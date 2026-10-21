@@ -3,6 +3,8 @@ name: butler-dangerous
 description: Explicitly control Butler's experimental unattended autonomy mode. Invoke only when the user names $butler-dangerous or clearly requests Butler dangerous mode; never infer autonomous authority from an ordinary request.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:dangerous`. Ignore collection failure; do not invent a different id.
+
 # Butler Dangerous Mode
 
 1. Warn that this experimental mode grants long-running autonomous authority and is safest on an isolated, reversible branch or worktree. Do not enable it without explicit invocation.

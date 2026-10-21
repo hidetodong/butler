@@ -20,7 +20,7 @@ scope: .ai/01_CHANGELOG.md 的定位、ADD/EDIT/DELETE 格式、粒度与噪声�
 | 产物 | 轴 | 写什么 | 粒度 |
 |---|---|---|---|
 | `01_CHANGELOG.md` | 变更（delta） | 本迭代 ADD/EDIT/DELETE 了哪些对象 | 文件 + 章节级、绑 AC |
-| `deliveries/ITER-*.md` | 交付（人读） | 这次交付目标 / 价值 / 影响的散文总结 | 高层、面向人 |
+| `.ai/deliveries/ITER-*.md` | 交付（人读） | 这次交付目标 / 价值 / 影响的散文总结 | 高层、面向人 |
 | `ITERATIONS.md` | 索引 | 迭代号 / 标题 / 状态 / 交付链接 | 一行一迭代 |
 | `PROJECT.md` | 状态（积分） | 系统现在整体是什么、长期约束与欠债 | 全貌、常驻 |
 
@@ -56,7 +56,7 @@ scope: .ai/01_CHANGELOG.md 的定位、ADD/EDIT/DELETE 格式、粒度与噪声�
 
 ## 4. 与交付总结的分工
 
-`01_CHANGELOG.md` 与 `deliveries/ITER-*.md` **并存不替代**：
+`01_CHANGELOG.md` 与 `.ai/deliveries/ITER-*.md` **并存不替代**：
 
 - delivery 写**高层人话**（目标 / 价值 / 用户可感知变化），面向人；
 - changelog 写**细粒度对象级** ADD/EDIT/DELETE，面向追溯；

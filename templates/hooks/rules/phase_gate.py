@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from lib.io import Context, Decision, UNKNOWN_TARGET, is_gated
+from lib.iteration_state import meta_escape_applies
 
 RULE_ID = "phase_gate"
 
@@ -33,6 +34,9 @@ def evaluate(ctx: Context) -> Decision:
             reason="写入目标无法解析，不能判断 Butler 项目边界",
             remediation="请提供非空、可解析的目标文件路径",
         )
+
+    if meta_escape_applies(ctx.cwd, ctx.target_path):
+        return Decision(verdict="allow", rule_id=RULE_ID)
 
     if not is_gated(ctx.target_path):
         return Decision(verdict="allow", rule_id=RULE_ID)

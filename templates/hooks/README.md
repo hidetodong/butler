@@ -44,8 +44,10 @@ tests/                   # 本目录的测试（不分发到目标项目）
    - 真实项目外路径：Butler abstain，交宿主权限处理。
    - 缺失 / 空白 / 无法解析：按坏输入 fail-closed。
 2. Dispatcher 顺序执行 `RULE_MODULES`（`protected_paths → phase_gate → ledger_status → single_active_iteration → artifact_chain`），任一 `deny` 即终止。`ledger_status` 与 `single_active_iteration` 仅在目标为 `.ai/ITERATIONS.md` 时生效：前者校验「状态」列只取封闭枚举 active/closed/abandoned（见 `iteration-schema.md §4.2`）；后者还原写入后全表，拦截 ≥2 个 active 行（等价于 iteration-schema §5.1「上一迭代未收口不得开新」，Edit/MultiEdit 无法可靠还原时按 allow-on-uncertainty 放行）。
-3. `deny` 后走 `lib/bypass.py`：若 `BUTLER_BYPASS=1` 且 `.ai/bypass-reason.md` 非空，追加 `.ai/RUN_LOG.md` 后放行；否则 `exit 2` + stderr 给 AI 可读的违规摘要。
+3. `deny` 后走 `lib/bypass.py`：若 `BUTLER_BYPASS=1` 且 `.ai/bypass-reason.md` 非空，追加 `.ai/RUN_LOG.md` 后放行；否则先往 `.ai/.hook-blocks.log` 追加一行（拦截日志，进 gitignore、上限 256KB），再 `exit 2` + stderr 给 AI 可读的违规摘要。写拦截日志失败仍 deny。
 4. 任何未捕获异常由 dispatcher 顶层 catch，`exit 2`（**fail-closed**）。
+
+没有 active 迭代时（`.ai/ITERATIONS.md` 的 `current` 为 `none`，或没有这份台账），仓根 `README.md` / `CHANGELOG.md` / `.gitignore` / `VERSION` / `LICENSE` 不被 `phase_gate` 与 `workspace_scope` 拦截。有 active 迭代时这五份仍走原门禁。目标项目应把 `.ai/.hook-blocks.log` 写入 `.gitignore`，不要提交拦截日志。
 
 ### PostToolUse 提醒（butler_advisor.py）
 
@@ -72,6 +74,7 @@ BUTLER_BYPASS=1 claude ...     # 或直接在该 shell 里用 Claude Code
 
 - `bypass-reason.md` **不会**被 hook 自动清理；同一会话内多次 bypass 会复用同一 reason 并在 `RUN_LOG.md` 留多条记录。
 - 绕过 **会被 git 看见**（RUN_LOG 是追加历史），review 时可追问。
+- 真拦住的那次记在 `.ai/.hook-blocks.log`，这份文件进 gitignore，不进共享仓。
 
 ## Fail-closed 与应急流程
 

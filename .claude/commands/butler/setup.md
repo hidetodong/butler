@@ -3,6 +3,8 @@ description: 安装或刷新 Butler 机器级能力——统一配置 Claude 全
 argument-hint: "[可选：Butler 仓绝对路径]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:setup`. Ignore collection failure; do not invent a different id.
+
 你正在执行 Butler 机器级安装。完整语义以 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/butler-setup.md` 为真源，机械执行只允许调用 `$BUTLER_PATH/scripts/setup.sh`。
 
 1. 按规则真源 §2 解析并回声唯一 `BUTLER_PATH`；路径不唯一或合同文件不全时零写退出。

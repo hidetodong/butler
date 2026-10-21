@@ -12,7 +12,6 @@
     {"request": "用 Explore 建一张 Decision Map，跨会话比较这些方向", "expected_status": "routed", "expected_primary": "ideation", "expected_state_writes": false},
     {"request": "按 Wayfinder 的方式探索这个架构决策", "expected_status": "routed", "expected_primary": "ideation", "expected_state_writes": false},
     {"request": "我接受刚才的 Explore 建议，继续探索", "expected_status": "routed", "expected_primary": "ideation", "expected_state_writes": false},
-    {"request": "查看 Butler 偏好学习是否开启", "expected_status": "routed", "expected_primary": "preference", "expected_state_writes": false},
     {"request": "总结当前 session 的确认内容，然后领一个迭代做", "expected_status": "routed", "expected_primary": "iteration", "expected_state_writes": false},
     {"request": "这是一个明确的小修复，直接按普通流程处理", "expected_status": "not-butler", "expected_primary": null, "expected_state_writes": false},
     {"request": "需求已经明确，领一个迭代做这些内容", "expected_status": "routed", "expected_primary": "iteration", "expected_state_writes": false},

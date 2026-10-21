@@ -65,7 +65,7 @@ class Scenario:
             "# 迭代台账\n\ncurrent: none\n\n"
             "| 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |\n"
             "|---|---|---|---|---|---|---|\n"
-            "| ITER-0001 | previous | closed | 2026-08-01 | 2026-08-01 | — | deliveries/previous.md |\n",
+            "| ITER-0001 | previous | closed | 2026-08-01 | 2026-08-01 | — | .ai/deliveries/previous.md |\n",
             encoding="utf-8",
         )
         (self.ai / "MILESTONES.md").write_text(
@@ -414,7 +414,7 @@ def verify_persisted(
     if actual_modes != ["serial", "serial"] or fresh_context != [False, False]:
         errors.append("live execution mode is not the recorded serial/non-fresh result")
 
-    backlog = ai / "milestone-backlog" / "codex-structured-question-cards.md"
+    backlog = ai / "backlog" / "codex-structured-question-cards.md"
     if not backlog.is_file() or "候办状态: deferred" not in backlog.read_text(encoding="utf-8"):
         errors.append("dogfood source backlog is not deferred")
     milestone = ai / "MILESTONE.md"

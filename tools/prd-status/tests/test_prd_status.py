@@ -17,6 +17,8 @@ CLI = REPO / "tools" / "prd-status" / "prd_status.py"
 def tree_hash(root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
+        if path.name == ".usage.json":
+            continue
         rel = path.relative_to(root).as_posix().encode()
         digest.update(rel)
         if path.is_symlink():

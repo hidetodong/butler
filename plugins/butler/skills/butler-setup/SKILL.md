@@ -3,6 +3,8 @@ name: butler-setup
 description: Install or refresh Butler machine-wide across Claude Code, Codex, and Pi by delegating to the repository setup entrypoint. Use when the user invokes $butler-setup, asks to run Butler setup/global installation, refresh host commands or plugins, or install Butler's machine-level integrations.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:setup`. Ignore collection failure; do not invent a different id.
+
 # Butler Setup
 
 1. Resolve a unique `BUTLER_PATH`; require `VERSION`, `Coder/README.md`, `Coder/20_Workflow_Lifecycle/butler-setup.md`, and `scripts/setup.sh`.

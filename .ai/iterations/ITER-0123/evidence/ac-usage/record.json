@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-usage",
+  "iteration": "ITER-0123",
+  "ac_ids": [
+    "AC6",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "pytest",
+      "tools/usage/tests",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-19T09:05:47.246Z",
+  "finished_at": "2026-10-19T09:05:47.964Z",
+  "duration_ms": 718,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "7862e3e2f519df663d4f8d010e2b25ffd60fd52e8ea7bd5f1e40a5e19c619593",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "hook 拦截日志与仓根 meta 逃生舱",
+  "summary": "MILE-0016 R10：拦下来的 hook 要能事后翻到原因（`.ai/.hook-blocks.log`，追加、进 gitignore、有上限）；README / CHANGELOG / .gitignore / VERSION / LICENSE 在没有 active 迭代时也能写，不再被 phase_gate 和 workspace-scope 拦住。要改 hook 源文件，必须先解开「hook 树摘要必须等于当前 VERSION 对应 tag」这条 CI，否则改完立刻红。",
+  "confirmed_decisions": [
+    "用户在 ITER-0120 收口后说继续，按 MILE-0016 路线开 R10",
+    "拦截日志落 `.ai/.hook-blocks.log`：追加式、进 gitignore、有限大小",
+    "仓根 meta 逃生舱覆盖 README、CHANGELOG、.gitignore、VERSION、LICENSE，条件是没有 active 迭代",
+    "本轮不切版、不写 v4.0.0 配方"
+  ],
+  "model_recommendations": [
+    "只记最终 deny（真拦住的那次）；bypass 成功仍走现有 RUN_LOG，两份日志不混",
+    "解开 hook 树摘要 CI：工作区摘要等于当前 tag，或已登记进 known_hook_tree_digests。不抬 VERSION。这是本轮能改 hook 的前提，不是另开一条路线",
+    "不顺手加 `.ai/references/raw/` 只读门禁（那条欠账写明等切版之后）"
+  ],
+  "open_questions": [
+    "日志体积上限取多少（建议 256KB，超了丢掉最旧的行）",
+    "逃生舱名单要不要扩到 CLAUDE.md / AGENTS.md（里程碑只点了五份，默认不扩）"
+  ],
+  "in_scope": [
+    "dispatcher 在最终 deny 时追加 `.ai/.hook-blocks.log`，失败仍 deny（fail-closed）",
+    "日志进 gitignore，体积有上限",
+    "无 active 迭代时，五份仓根 meta 文件不被 phase_gate 和 workspace-scope 拦",
+    "改 CI：hook 树摘要允许登记未发布摘要，本轮 hook 改动能过",
+    "测试覆盖拦截日志、逃生舱、摘要登记；hook README 与部署说明同步",
+    "范围演进记录写明 v4.0.0 需要 [sync-hooks]"
+  ],
+  "out_of_scope": [
+    "不切 VERSION、不写 migrations/v4.0.0.md、不跑真实升级器",
+    "不加 usage instrumentation（R11）",
+    "不给升级器补删除/移动动作（R14）",
+    "不加 `.ai/references/raw/` 只读 PreToolUse 规则",
+    "不改 bypass / RUN_LOG 现有语义",
+    "不把 CLAUDE.md / AGENTS.md 扩进逃生舱，除非 P1 改口",
+    "不记录 allow，不做拦截看板或人读摘要"
+  ],
+  "milestone_route": "R10"
+}

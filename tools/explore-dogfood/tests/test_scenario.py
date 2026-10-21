@@ -82,7 +82,7 @@ class ExploreDogfoodScenarioTests(unittest.TestCase):
                 "| R5 | Router dogfood | ITER-0106 | active |\n",
                 encoding="utf-8",
             )
-            backlog = root / ".ai/milestone-backlog/codex-structured-question-cards.md"
+            backlog = root / ".ai/backlog/codex-structured-question-cards.md"
             backlog.parent.mkdir(parents=True)
             backlog.write_text("候办状态: deferred\n", encoding="utf-8")
             report = scenario.verify_persisted(root, "DMAP-0001", "MILE-0014", "R5")
@@ -104,7 +104,7 @@ class ExploreDogfoodScenarioTests(unittest.TestCase):
             for field in ("### 口径", "### 原始观测", "### 结论", "### 局限"):
                 self.assertIn(field, section)
         self.assertEqual(1, report.count("最终裁决: `defer`"))
-        backlog = (root / ".ai/milestone-backlog/codex-structured-question-cards.md").read_text(encoding="utf-8")
+        backlog = (root / ".ai/backlog/codex-structured-question-cards.md").read_text(encoding="utf-8")
         self.assertIn("候办状态: deferred", backlog)
 
 

@@ -212,6 +212,41 @@ class TestDenyPaths:
         assert "CONCEPT.md" in r.stderr
 
 
+class TestBlockLog:
+    def test_final_deny_appends_hook_blocks_log(self, tmp_project):
+        proj = tmp_project("empty-project")
+        r = run_gate(edit_payload(proj, "src/auth.ts"), proj)
+        assert r.returncode == 2
+        log = (proj / ".ai" / ".hook-blocks.log").read_text(encoding="utf-8")
+        assert log.count("\n") == 1
+        assert "phase_gate" in log
+        assert "src/auth.ts" in log
+        assert not (proj / ".ai" / "RUN_LOG.md").exists()
+
+    def test_allow_does_not_create_hook_blocks_log(self, tmp_project):
+        proj = tmp_project("full-artifacts")
+        r = run_gate(edit_payload(proj, "src/auth.ts"), proj)
+        assert r.returncode == 0
+        assert not (proj / ".ai" / ".hook-blocks.log").exists()
+
+    def test_bypass_success_writes_run_log_not_block_log(self, tmp_project):
+        proj = tmp_project("with-bypass-reason")
+        r = run_gate(
+            edit_payload(proj, "99_Business_Extension/policy.md"),
+            proj,
+            env_extra={"BUTLER_BYPASS": "1"},
+        )
+        assert r.returncode == 0, r.stderr
+        assert (proj / ".ai" / "RUN_LOG.md").is_file()
+        assert not (proj / ".ai" / ".hook-blocks.log").exists()
+
+    def test_log_write_failure_still_denies(self, tmp_project):
+        proj = tmp_project("empty-project")
+        (proj / ".ai" / ".hook-blocks.log").mkdir()
+        r = run_gate(edit_payload(proj, "src/auth.ts"), proj)
+        assert r.returncode == 2
+
+
 class TestBypassFlow:
     def test_bypass_without_reason_still_denies(self, tmp_project):
         proj = tmp_project("empty-project")

@@ -11,7 +11,8 @@
     "08d9b0504356f8f50e594150ae0bd035e61c406459e3c910c384cafe823038d1",
     "a26658896eaa0a5affdf147bc5ade0180a578dfe188e1e73f751144c6827b8ea",
     "da4567ab2a28ce843cd3e93b6b1d5d26ec650629d035cfd18b7283b10ff2b3b7",
-    "bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d"
+    "bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d",
+    "6005f4d5a4090f39acd5637420df27f0e5cebdda5bc08816e2562dee9f0fe2a4"
   ],
   "migrations": [
     {
@@ -943,6 +944,83 @@
         },
         {
           "id": "3.6.0/03-restamp",
+          "type": "restamp",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "3.6.0",
+      "target": "4.0.0",
+      "recipe": "v4.0.0.md",
+      "actions": [
+        {
+          "id": "4.0.0/01-global-install",
+          "type": "global_install",
+          "domain": "machine",
+          "preconditions": [
+            "explicit-machine-confirmation"
+          ]
+        },
+        {
+          "id": "4.0.0/02-delete-project-dir",
+          "type": "delete",
+          "domain": "project",
+          "preconditions": [
+            "delete-path-allowed"
+          ],
+          "path": ".ai/project"
+        },
+        {
+          "id": "4.0.0/03-delete-project-md",
+          "type": "delete",
+          "domain": "project",
+          "preconditions": [
+            "delete-path-allowed"
+          ],
+          "path": ".ai/PROJECT.md"
+        },
+        {
+          "id": "4.0.0/04-move-deliveries",
+          "type": "move",
+          "domain": "project",
+          "preconditions": [
+            "move-path-allowed"
+          ],
+          "from": "deliveries",
+          "to": ".ai/deliveries"
+        },
+        {
+          "id": "4.0.0/05-migrate-config",
+          "type": "migrate_config",
+          "domain": "project",
+          "preconditions": [
+            "legacy-config-readable",
+            "target-path-owned"
+          ]
+        },
+        {
+          "id": "4.0.0/06-regen-entrypoints",
+          "type": "regen_entrypoints",
+          "domain": "project",
+          "preconditions": [
+            "entrypoint-markers-valid"
+          ]
+        },
+        {
+          "id": "4.0.0/07-sync-hooks",
+          "type": "sync_hooks",
+          "domain": "project",
+          "preconditions": [
+            "hook-tree-recognized-or-absent",
+            "settings-shape-valid"
+          ]
+        },
+        {
+          "id": "4.0.0/08-restamp",
           "type": "restamp",
           "domain": "project",
           "preconditions": [

@@ -1,18 +1,15 @@
 # 偏好探针存储骨架
 
-本目录是 `70_Extension_Preference/preference-probe-engine.md` 定义的**外置偏好存储**的初始骨架。
+> **引擎已在 ITER-0124 退役。** 本目录只留下旧数据的形状，不再是活合同，也不要按它去调用已经删除的探针。
 
-偏好数据**不存在 butler 仓库内**，而是落在仓库之外的 `$BUTLER_PREF`（默认 `~/.butler/preferences/`，路径发现见引擎 §4.1）。**取得一次性同意后首次采集时，引擎会惰性把本目录文件拷贝到该路径作为起点**（无需先跑 `/preference on` 或脚本；也可手动跑 `preference-init.sh` 显式初始化）：
+下面这些文件曾经是外置偏好目录的初始骨架。已经写在仓库外的旧数据留在原处，不迁移，也不再由脚本拷贝出去。
 
 ```
 $BUTLER_PREF/
-├── signals/                 # 证据真源（append-only，按项目分片）；参考 signals.example.md
-├── profile.md               # 派生产物（通识层 + 情境限定区）
-└── config.md                # 可调参数
+├── signals/                 # 旧证据分片
+├── profile.md               # 旧的通识层
+└── config.md                # 旧的参数
 ```
 
-- `config.md`：记**同意状态(consent)** + 可调参数；缺失时引擎按其内默认值运行（见引擎 §6.4、§2.4）。
-- `profile.md`：首次蒸馏前两区为空，达标后由引擎写入。
-- `signals.example.md`：单条信号的格式示例，仅供参考，不拷入 `signals/`。
-
-字段定义以 `preference-probe-engine.md` §4 为准，本骨架不重复定义、只给可落地的起点。
+- `config.md`、`profile.md`、`signals.example.md` 只保留原来的字段形状，方便对照已经存在的旧文件。
+- 字段不再指向已删除的引擎文件。

@@ -147,7 +147,7 @@
       "resolution": {
         "at": "2026-08-02T06:10:00Z",
         "evidence": [
-          "repo:.ai/milestone-backlog/codex-structured-question-cards.md",
+          "repo:.ai/backlog/codex-structured-question-cards.md",
           "repo:Coder/20_Workflow_Lifecycle/acceptance-schema.md",
           "repo:Coder/20_Workflow_Lifecycle/tech-plan-schema.md",
           "decision-work:.ai/decision-work/DMAP-0001/DEC-0001/ATT-0001/result.json#sha256:989f4975db90f3bed3261a64182c4d8febcc1a9f945f06a1397b8986a6839804"

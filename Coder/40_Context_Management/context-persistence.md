@@ -130,7 +130,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
 3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
 4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
-5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `.ai/deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
 <!-- butler-context-order:end -->
 
 > 上面这段是读序的唯一真源，另有四处受 CI 校验的字节投影：`Coder/README.md`、仓根 `AGENTS.md`、`templates/AGENTS.md.template` 与 `templates/CLAUDE.md.template`。改读序只改本节，改完跑 `tools/context-budget/context_budget.py check` 让四处同步；任一处被单独改动，CI 会指名报 `order projection mismatch`。
@@ -151,7 +151,7 @@ scope: 长任务中的状态外化、阶段结晶与冷启动蒸馏的统一规�
 
 1. **current ↔ 状态**：`current` 指向的迭代号，其台账行须为 `active`；`current: none` 时台账无 `active` 行。
 2. **至多一个 active**：`ITERATIONS.md` 至多一行 `active`（多于一行 = 上一迭代未收口就开新）。
-3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且 `deliveries/<链接>` 文件存在。
+3. **closed 有交付**：每个 `closed` 行须有收口日期 + 交付链接，且该链接作为相对项目根的路径指向真实文件（现行落点 `.ai/deliveries/…`）。
 4. **closed 有归档**：每个 `closed` 行须有 `iterations/ITER-NNNN/` 归档快照；归档 VERIFY 含 `Evidence Index` 的新口径迭代，还须有对应 `evidence/` record，ID/日志/字节/SHA-256 全部通过只读校验。
 5. **路线项对账**：`MILESTONE.md` 拆分路线图各路线项状态与其绑定迭代的实际台账状态一致（见 `20_Workflow_Lifecycle/milestone-schema.md §5.3`）。
 

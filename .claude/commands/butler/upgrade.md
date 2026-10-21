@@ -3,6 +3,8 @@ description: 安全升级已部署 Butler 项目——先由仓库升级器 dry-
 argument-hint: "[留空=计划并升级当前项目]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:upgrade`. Ignore collection failure; do not invent a different id.
+
 你正在执行 Butler 主动升级。本命令是薄壳路由器，执行真源是 `$BUTLER_PATH/tools/butler-upgrade/upgrade.py`；动作台账是 `migrations/manifest.json`。不要自行解析 `migrations/v*.md` 后手工写项目。
 
 1. 按 `$BUTLER_PATH/Coder/20_Workflow_Lifecycle/mcv-deployment.md §0.1` 解析并回声唯一 `PROJECT_ROOT`。用户点名优先；歧义、未部署或目标是 Butler 仓自身时停止。

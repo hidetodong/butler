@@ -30,7 +30,7 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `../AGENTS.md`：Codex 编辑 Butler 仓时的自动发现入口与 `.ai/` 冷启动读序。
 - `../docs/codex-compatibility.md`：Claude Code / Codex 共同内核、适配层边界与分阶段支持状态的真源。
 - `../docs/workflows.md`：由机器注册表生成的双宿主入口、风险、触发与旧名兼容人读表。
-- `../plugins/butler/`：Codex plugin 发布包、1 个 Router skill 与 12 个业务工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
+- `../plugins/butler/`：Codex plugin 发布包、1 个 Router skill 与 11 个业务工作流 skill 的实体真源；`../.agents/skills/` 只以软链提供仓库发现。
 - `../plugins/butler-pi/`：Pi TypeScript 扩展（`tool_call` / `tool_result` 事件拦截 + Python 门禁调用），安装到 `~/.pi/agent/extensions/`。
 
 宿主入口只负责发现和路由：Claude Code 读根 `CLAUDE.md` 和 `.claude/commands/`，Codex 读根 `AGENTS.md` 与 `plugins/butler/` skills，Pi 读根 `AGENTS.md` 与 `plugins/butler-pi/` 扩展；规则算法仍以本目录为真源。目标项目两模板共同从 `templates/rule-card.md` 注入强制规则，由 `scripts/render-project-entrypoints.py` 在首次部署/升级时幂等维护。完整兼容边界不在本文件复述，统一见 `docs/codex-compatibility.md`。
@@ -115,9 +115,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
   /65_Extension_Dangerous
     dangerous-engine.md
 
-  /70_Extension_Preference
-    preference-probe-engine.md
-
   /99_Business_Extension
     .gitkeep
 ```
@@ -135,7 +132,6 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `60_Extension_CodeReview/`：共享审查流程真源（多维评审 / 评级 / 闭环 / P5 同上下文简评）；把这套流程放进隔离上下文跑的复核帮手定义在 `62_Extension_Agents/independent-review.md`。
 - `62_Extension_Agents/`：butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册两帮手：复核（`independent-review`，接 P5）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。
 - `65_Extension_Dangerous/`：仅在显式 `/butler:dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。
-- `70_Extension_Preference/`：实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/butler:dangerous`**；只学真人选择，外置存储、与本仓库解耦。
 - `10_Domain_Stack_Profiles/`：按项目类型选择的 Domain / Stack Profiles，不作为默认前置必读。
 - `99_Business_Extension/`：业务侧最高优先级约束目录。
 
@@ -173,12 +169,12 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 2. **时间线** —— 只读 `.ai/MILESTONES.md` 与 `.ai/ITERATIONS.md` 的热表；需要旧身份时先跑 state-ledger `check`，再沿 `.ai/state-index.json` 用 `lookup` 定向读命中的那一个冷分片，禁止默认读取整个 `.ai/history/`。
 3. **断点** —— 先跑 `$BUTLER_PATH/tools/handoff/handoff.py check`：`fresh` 才读 `.ai/02_SESSION_HANDOFF.md`，`stale` 先 `sync` 重建后再读，`error` 先修权威状态；handoff 的性质与 sync 时机见规则卡「强制工作流」。
 4. **Goal 状态** —— 读 `.ai/task-state.md` 的 Goal Calibration、当前 `.ai/TECH_PLAN.md` 的方案状态与 `.ai/VERIFY_REPORT.md` 的 Completion Inputs，重算 state / reason / next；宿主原生 Goal 只是可重建投影。
-5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
+5. **产物与代码** —— 按前四步给出的指针钻取工作区四件套、`Coder/` 真源与代码；不全量读取 `.ai/iterations/`、`.ai/milestones/` 或 `.ai/deliveries/` 历史归档；需要项目全貌时按需读 `.ai/OVERVIEW.md` 与 `.ai/invariants.md`，不是必读。
 <!-- butler-context-order:end -->
 
 其中：
 
-- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/` 与 `deliveries/` 两个目录；用户的原始需求材料放 `.ai/references/raw/`（AI 只读、按需产生，与 AI 派生的受控投影同住 `.ai/references/` 但权威性不同，见 `40_Context_Management/references-schema.md §1`）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
+- `20_Workflow_Lifecycle/mcv-deployment.md` 负责基地车部署协议；§0.1 先用 `scripts/resolve-project-root.py` 区分会话启动目录与实际施工项目根，用户点名路径优先、歧义时零写入。部署时只在已解析项目根创建 `.ai/` 目录；用户的原始需求材料放 `.ai/references/raw/`（AI 只读、按需产生，与 AI 派生的受控投影同住 `.ai/references/` 但权威性不同，见 `40_Context_Management/references-schema.md §1`）。§6 另定义 **butler 驻留工具调用**（工具不拷进目标项目、按 `$BUTLER` 调用）：自动道证据 `tools/verification-evidence/` + 人测回传桥 `tools/delivery-selftest/`。
 - `tools/state-ledger/` 负责 ITER/MILE 双台账的确定性热冷迁移、固定数字区间分片与定向 lookup：根热表与 `.ai/state-index.json` 都有界，index 只保存固定路由公式；`.ai/history/{iterations,milestones}/` 的每个有界冷片由同名 `.json` 独立记录范围/路径/数量/哈希。身份至少四位并按数字部分排序。
 - `tools/decision-map/` 是 Explore 的本地确定性状态 Module：每 Map 单一原子 `state.json`，依赖 DAG、派生 Frontier、Claim Lease、revision 与 operation receipt 都隐藏在 `inspect/plan/apply/verify` Interface 后；它不新增 Explore 入口，不做清晰度/大小分类，也不拥有 Milestone/Iteration promotion。
 - `tools/decision-work/` 是 Decision Map 的不可变决策工作 sidecar：一个 `inspect/plan/apply/verify` Interface 统一 research / prototype / grilling / task，只有 Research 求证可显式并行，任何 Result 都须协调器显式 absorb 才能经 Decision Map resolve；它不启动 agent、不写交付期真源。
@@ -200,22 +196,21 @@ scope: Coder 子系统的目录导航、读取顺序与规则分工总览
 - `30_Quality_Gate/implementation-discipline.md`（最小实现纪律）是与纠错契约并列的 P4 常驻底线——写新码爬「最小实现阶梯」（YAGNI→复用→标准库→平台原生→已装依赖→一行→最小新代码）、有意简化用 `butler-min:` 注释标天花板 + 升级路径、修 bug 挖根因不打症状补丁；但信任边界校验 / 安全 / 无障碍 / 用户明确要求不得砍、绝不对理解问题偷懒。无需触发、每次迭代生效；随 `30_Quality_Gate/` 常规读、不单列冷启动必读。
 - `55_Extension_ConvergenceLoop/convergence-loop-engine.md` 只在显式 `/butler:loop` 指令或语义触发下启用，是 P4 纠错的高强度升档（叠在常驻纠错收口契约之上），负责死磕式闭环与定量熔断规则。
 - `65_Extension_Dangerous/dangerous-engine.md` 只在显式 `/butler:dangerous` 指令或语义触发下启用，是实验性无人值守长程自治外壳：自主拆迭代连续推进、P2/P3 用户 ACK 由自审门替代、P4 复用有界 P4 收敛策略，附审计、回滚与 P5 强制完整审查护栏；无人值守下人测残余按 §7.4 依赖感知准入闸处置（不阻塞入账 / 弱验证顶 / 卡下游不硬闯 / 绝不假绿）。
-- `70_Extension_Preference/preference-probe-engine.md` 是实验性偏好探针：**采集 + 蒸馏经一次性同意后默认常驻**、**反哺 opt-in 仅作用于有监督工作（P2/P3 提案 / 选项排序）、绝不参与 `/butler:dangerous`**；只学真人选择（模型自决不采集）；数据外置（`$BUTLER_PREF`，与本仓库解耦）、先验非权威、绝不侵入迭代数据流。命令：`/butler:preference on`/`off`（隐私总开关）、`reback on`/`off`（反哺）、`distill`（手动蒸馏）。
 - `20_Workflow_Lifecycle/concept-schema.md` / `acceptance-schema.md` / `tech-plan-schema.md` / `verify-schema.md` 分别定义 P1 / P2 / P3 / P5 的必须产物、必填字段与交付模板；VERIFY 含 Evidence Index、Goal Calibration 和 Completion Inputs。完整路径先由 verification evidence 生成 record，再由 `tools/goal-assurance/goal.py` 只读裁决 close eligibility；无证据或任一 blocker 不打绿。
 - `20_Workflow_Lifecycle/human-test-bridge.md` 定义 P5 人测道残余的**等待-回收-续跑闭环**：有人场次触发条件 → 生成 manifest → `run_in_background` 起 butler 驻留「交付自测桥」（`tools/delivery-selftest/`）→ 阻塞等待桥进程自退 → 读 `results.json` → **四态路由**（通过=收口 / 未通过=进 `correction-contract` 纠错 / 延后=入账不阻塞 / 跳过=N/A）；无人值守（`/butler:dangerous`）不起桥、改走 `65_Extension_Dangerous/dangerous-engine.md §7.4` 准入闸。桥体输入 / 输出契约以 `tools/delivery-selftest/README.md` 为真源，本协议只接下游消费、不重抄字段。
 - `20_Workflow_Lifecycle/artifact-style.md` 定义**所有面向人落地文档**（四件套 + 交付总结 + 知识文件夹 + handoff 等，四件套只是其一）的书写口径，并是**说人话四条硬标准**（术语先解释 / 比喻要落地 / 别让英文·变量裸奔 / 说中文不写翻译腔，跨对话与文档的通则）的单一真源（讲人话、反啰嗦、分层渐进展开——顶部一句话意图、一行一意、精度单独成层，同时对人和 AI 友好）；与四个 schema 分工：schema 管填哪些字段、本文件管字段里的话怎么写；四个 schema 的编写规则均指针引用它（单一来源），`presentation-protocol` 对话层引用其四条、rule-card 同步收录紧凑口径。
 - `20_Workflow_Lifecycle/iteration-schema.md` 定义迭代号分配、`.ai/ITERATIONS.md` 台账字段、工作区/归档/交付三层落盘关系与"固定需求"锁定纪律。
 - `20_Workflow_Lifecycle/changelog-schema.md` 定义 `.ai/01_CHANGELOG.md` 的格式契约：每迭代严格 ADD/EDIT/DELETE 对象级变更流（绑 AC、文件+章节级粒度、完整路径收口必产并归档），并厘清与 delivery / ITERATIONS / PROJECT 四产物分工。
-- `20_Workflow_Lifecycle/milestone-schema.md` 定义里程碑号分配、未编号待办区、`.ai/MILESTONES.md` 看板字段、`.ai/MILESTONE.md` 范围/路线图产物、启动与版本级交付纪律。讨论好但尚未开工的多个独立方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/milestone-backlog/<slug>.md`，均不占 `MILE-NNNN`；明确推进某块时才从正式表领下一个连续号。录入支持对话与文件两通道（文件通道读 `.ai/references/raw/` 下用户点名的原件）；`/milestone`、`/milestone start <候办键>` 与 `/milestone status` 分别负责录入/开启、候办提升和只读看板（§6.4–§6.5）。
+- `20_Workflow_Lifecycle/milestone-schema.md` 定义里程碑号分配、未编号待办区、`.ai/MILESTONES.md` 看板字段、`.ai/MILESTONE.md` 范围/路线图产物、启动与版本级交付纪律。讨论好但尚未开工的多个独立方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/backlog/<slug>.md`，均不占 `MILE-NNNN`；明确推进某块时才从正式表领下一个连续号。录入支持对话与文件两通道（文件通道读 `.ai/references/raw/` 下用户点名的原件）；`/milestone`、`/milestone start <候办键>` 与 `/milestone status` 分别负责录入/开启、候办提升和只读看板（§6.4–§6.5）。
 - `20_Workflow_Lifecycle/versioning-schema.md` 定义 butler 规则仓库的**提交规约与硬版本概念**：提交 message 格式（`type(scope): 中文描述 (ITER-NNNN)`、发布用 `chore(release)`、非 hook 门禁、`Co-Authored-By` 署名 trailer）、仓库根 `VERSION` 为版本号机器 SSOT（`MAJOR.MINOR.PATCH`）、规则仓口径的 semver 语义（MAJOR 破坏性 / MINOR 兼容新增 / PATCH 澄清修订）、`CHANGELOG.md` 发布史与 ITER 台账的分工（发布聚合迭代、只引用不复述）、切版 git 仪式（切版前预检 → 定 bump / 改 VERSION / 加 CHANGELOG / 写 migration → `chore(release)` commit + tag + push → 切版后自检）与 git tag `vX.Y.Z` 约定、部署版本戳（`{{BUTLER_VERSION}}`）与升级版本 gap（版本号为辅、内容差异为主）。
-- `20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式：每个发布版一份 `migrations/vX.Y.Z.md`，用 typed 步骤（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版要做的幂等动作；切版时产出（`versioning-schema.md §5` 必做步），升级时由 `butler-upgrade.md` 按版本区间收集执行。配方落仓库根 `migrations/`（与 `deliveries/`、`CHANGELOG.md` 同级的发布元数据）。
+- `20_Workflow_Lifecycle/migration-schema.md` 定义"迁移配方"格式：每个发布版一份 `migrations/vX.Y.Z.md`，用 typed 步骤（`[rename]` / `[add-field]` / `[regen-claude]` / `[sync-hooks]` / `[restamp]` / `[no-op]`）列出已部署项目升级到该版要做的幂等动作；切版时产出（`versioning-schema.md §5` 必做步），升级时由 `butler-upgrade.md` 按版本区间收集执行。配方落仓库根 `migrations/`（与 `CHANGELOG.md` 同级的发布元数据；交付总结在 `.ai/deliveries/`）。
 - `20_Workflow_Lifecycle/local-constraints-schema.md` 定义 `.ai/local-constraints.md` 的人类可读字段与 legacy 兼容边界；新部署的机器配置改由 `.ai/butler.config.json` 承载，schema/严格读写/legacy 投影以 `tools/project-config/` 为真源。旧 Markdown 机器段只在 JSON 缺失时回退，升级由 `migrate_config` action 事务迁移并收窄本文件职责。
 - `20_Workflow_Lifecycle/delivery-summary.md` 负责完整交付后的人类可读交付总结规范，含 §9「固定格式 HTML 阅读视图」（收口时与 `.md` 并列产出同名 `.html`，模板 SSOT 为 `templates/delivery.html.template`）。
 - `40_Context_Management/handoff-spec.md` 负责 `02_SESSION_HANDOFF.md` 的固定结构与派生视图契约；`tools/handoff/handoff.py` 从权威状态执行 inspect/sync/check，receipt 陈旧时冷启动先重建再读取。
 - `40_Context_Management/sidework-receipt.md` 负责用户主动发起的旁路工作回钩：旁路执行者在 `.ai/sidework/` 写一份短回执并返回路径，用户显式交给主 Agent 定向续接；不建立模型审批状态，不自动扫描，也不允许旁路执行者改主线权威状态。
 - `40_Context_Management/references-schema.md` 定义 `.ai/references/` 参考资料子系统的结构契约——扁平资料保持单文件；PRD 采用项目级需求总索引 + 日期化稳定 `prd_id` + 单需求模块索引 / 无损切片 / 独立 `.archive/vN/` 的两层集合结构。它区分全新需求、新版、重复与身份歧义，并接通多 PRD 钉版、legacy 迁移、split/status、确定性 update 与范围门禁。
 - `40_Context_Management/workspace-scope-schema.md` 定义项目工作区地图与需求级代码范围：`.ai/project/workspaces.md` 用稳定 workspace key 映射当前路径并声明共享/生成路径 owner，单需求 PRD 以 primary/supporting/read-only/excluded 四类集合声明边界；模块只能收窄，TECH_PLAN 写计划、PreToolUse 与 diff 对账共用同一钉版解析器，越界先走扩张审查。
-- `40_Context_Management/intake-schema.md` 定义**需求录入三层契约**——从「随手记一句」到「真的开工」之间的数据形态：闪念口 `.ai/INBOX.md` 用一张表加日期化闪念键（不用递增号池、不做内容指纹认亲），状态是 `new` / `incubated` / `done` / `dropped` 四态封闭、转移穷举四条且终态不回头；孵化区在 `.ai/milestone-backlog/` 的草稿顶部加 `规模` 三档（`milestone` / `iteration` / `undecided`）并按档定段落，`undecided` 必须点名「卡在哪」作为出区压力；执行分流只有提升为里程碑、开为迭代、撤回三条封闭出口，删草稿与删索引行两侧原子，由审计的候办集合相等兜底，ideation 是孵化手段不是出口。`.ai/INBOX.md`、`.ai/milestone-backlog/` 与待办区索引的写入者是 `tools/intake/intake.py` 一家，遇到格式分歧一律以本文件为准。
+- `40_Context_Management/intake-schema.md` 定义**需求录入三层契约**——从「随手记一句」到「真的开工」之间的数据形态：闪念口 `.ai/INBOX.md` 用一张表加日期化闪念键（不用递增号池、不做内容指纹认亲），状态是 `new` / `incubated` / `done` / `dropped` 四态封闭、转移穷举四条且终态不回头；孵化区在 `.ai/backlog/` 的草稿顶部加 `规模` 三档（`milestone` / `iteration` / `undecided`）并按档定段落，`undecided` 必须点名「卡在哪」作为出区压力；执行分流只有提升为里程碑、开为迭代、撤回三条封闭出口，删草稿与删索引行两侧原子，由审计的候办集合相等兜底，ideation 是孵化手段不是出口。`.ai/INBOX.md`、`.ai/backlog/` 与待办区索引的写入者是 `tools/intake/intake.py` 一家，遇到格式分歧一律以本文件为准。
 - `40_Context_Management/intake-workflow.md` 是**需求录入动作层**：把 `/butler:inbox` 的 add / list / handle 三个动作里「工具确定性决定什么、必须先问用户什么」的分界写死。结构归工具、正文归模型：`tools/intake/intake.py` 是这三层结构的唯一写盘者（闪念行、索引行、草稿头部标记与段落骨架），AI 只用编辑器补孵化区草稿的正文；处置的**决定**（孵化还是丢、规模哪一档、为什么缓）必须先问用户，工具只接受已经定好的目标态。文件里也写清了跨文件写盘做的是「先算后写、失败即回滚」而不是数据库那种事务——回滚本身失败仍可能留半截态。
 - `../docs/prd-migration-guide.md` 是 legacy 单 PRD → 需求集合的人类操作指南：日期身份取证、零写 plan、事务 apply、历史引用解析、verify/rollback 与 backup 清理；执行真源是 `tools/prd-migrate/prd_migrate.py`。
 - `40_Context_Management/prd-split.md` 是 PRD **首切动作层**：身份四态和日期证据先于写盘，按原文边界切模块，并把 `prd_id`、Workspace Scope 与切片方案一次 soft 对齐后写入独立需求目录。

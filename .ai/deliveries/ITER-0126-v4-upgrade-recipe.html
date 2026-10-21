@@ -1,0 +1,169 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0126 交付总结 · ITER-0126 · 写好 v4.0.0 升级配方</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0126 · 写好 v4.0.0 升级配方</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0126</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-10-21</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把 3.6.0 之后欠下的迁移写成配方，并在临时项目上证明它跑得通。旧收件箱和仓根 <code>origin/</code> 遇到就停下，不默默删。版本号保持 <code>3.6.0</code>。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li>新增 <code>migrations/v4.0.0.md</code>，清单末尾加上 3.6.0 到 4.0.0 那一节。</li>
+        <li>临时项目上会删掉 <code>.ai/project/</code> 和 <code>.ai/PROJECT.md</code>，并把仓根 <code>deliveries/</code> 挪到 <code>.ai/deliveries/</code>。</li>
+        <li>旧收件箱或仓根 <code>origin/</code> 会在写任何文件之前停下。现行闪念口不会单凭自己把升级拦住。</li>
+        <li><code>apply</code> 不再强制 <code>--split</code>。知识文件夹形状检查去掉。历史 <code>[split]</code> 定义留着。</li>
+        <li>项目配置不再把 <code>preference</code> 当活字段。升级写回时只去掉这一键。</li>
+        <li><code>.ai/debt.md</code> 里已经不真的句子改掉了。人还得处理旧文件，以及从未在真实项目上跑过，这两句留着。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>配方写在仓库里，但本仓库版本仍是 <code>3.6.0</code>，所以现在对这个仓库做升级计划，不会选中 4.0.0 的动作。</li>
+        <li>等版本切到 4.0.0 之后，老项目升级才会真正执行这些删除和搬家。</li>
+        <li>带旧收件箱或仓根 <code>origin/</code> 的项目升不上去，要人先处理这两处。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>改动：配方、清单、升级器、项目配置契约、相关人读说明、升级回归、<code>.ai/debt.md</code>。</li>
+        <li>不算：不改 <code>VERSION</code>，不写发布说明，不打标签，不提交，不收口 MILE-0016，不在真实已部署项目上跑升级，不升级 butler 仓自己。</li>
+      </ul>
+    </section>
+
+    
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>9 条验收全部通过。升级器测试 36 passed。持续集成退出码 0，其中 pytest 211 passed。收口前完成裁决 <code>eligible</code>。独立复核未开。</p>
+      <p>审计退出码 0，0 条 DRIFT，2 条未发布。未发布是工作树有未提交改动，以及标签 <code>v3.6.0</code> 不在当前 HEAD。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>从未在真实已部署项目上跑过。旧收件箱和 <code>origin/</code> 仍要人自己处理。</li>
+        <li>仓根 <code>deliveries/</code> 和 <code>.ai/deliveries/</code> 都不存在时，整次升级会停。已经只有 <code>.ai/deliveries/</code> 的项目可以过。</li>
+        <li>本仓库配置文件里的 <code>preference</code> 还在，要等切版之后的升级才会从磁盘去掉。</li>
+        <li>幂等移动不比较目标现有内容。</li>
+        <li>本轮不切版、不提交。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0126/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0126/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0126/evidence/</code>（3 条记录）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -357,44 +357,6 @@
       }
     },
     {
-      "id": "preference",
-      "rule_source": "Coder/70_Extension_Preference/preference-probe-engine.md",
-      "risk": "normal",
-      "allow_implicit_invocation": true,
-      "semantic_triggers": [
-        "preference",
-        "偏好探针",
-        "reback",
-        "distill preference"
-      ],
-      "legacy_aliases": [
-        {
-          "name": "/preference",
-          "status": "natural-language-compat"
-        }
-      ],
-      "claude": {
-        "name": "/butler:preference",
-        "path": ".claude/commands/butler/preference.md",
-        "description": "偏好探针开关——留空看状态；on/off 隐私总开关；project on/off 项目抑制；reback on/off 反哺；distill 手动蒸馏",
-        "default_prompt": "Use /butler:preference for this Butler workflow."
-      },
-      "codex": {
-        "name": "$butler-preference",
-        "path": "plugins/butler/skills/butler-preference/SKILL.md",
-        "description": "Inspect or change Butler's preference-learning controls. Use when the user asks about preference consent, collection, reback, distillation, project suppression, or the status of Butler preference learning.",
-        "display_name": "Butler Preference",
-        "short_description": "Run the Butler preference workflow safely",
-        "default_prompt": "Use $butler-preference to inspect Butler preference-learning status."
-      },
-      "routing": {
-        "priority": 40,
-        "negative_triggers": [],
-        "conflicts_with": [],
-        "prerequisites": []
-      }
-    },
-    {
       "id": "loop",
       "rule_source": "Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md",
       "risk": "high",

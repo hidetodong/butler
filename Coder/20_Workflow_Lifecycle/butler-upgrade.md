@@ -41,18 +41,16 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" plan \
 
 - `ready` / `ready-with-external-pending`：呈报清单，标准模式等 ACK；危险模式按自审门决定。
 - `already-current`：无项目动作，回报当前版。
-- `needs-decision`：队列经过 `[split]`，进入 §4。
 - `manual-bootstrap`：无版本戳，不能确定配方链起点；走 `mcv-deployment.md` 首次部署/有人迁移，不默认覆盖。
 - `conflict` / `locked`：停机，报告诊断；不得删除 marker、用户文件或锁来换绿。
 
-## 4. `[split]` 人工决定
+## 4. 历史 `[split]`
 
-`.ai/PROJECT.md → .ai/project/` 是语义重组，继续保持 opt-in：
+`migration-schema.md` 仍保留 `[split]` 的定义，供旧配方和清单对得上。`apply` 不再要求 `--split`。`defer` 和 `now` 仍是合法取值，带上也不再改变停下或继续。
 
-- **暂缓**：执行 `apply ... --split defer`。原单文件逐字保留，其余机械动作继续。
-- **现在迁**：先运行 `plan ... --split now`。真实待拆时程序返回 `manual-split` 且零写入。**该路径自 ITER-0112 起已无目标形态**——知识文件夹机制已退役，`--split now` 只应出现在跨旧版本的历史升级链里；新项目遇到此状态应选 `defer`。
+知识文件夹的形状检查已去掉。只有半成形的 `.ai/project/`、没有 `00_INDEX.md`、也没有 `.ai/PROJECT.md` 时，升级不因此停下。从还含历史 `[split]` 的老版本升上来，并且 `.ai/PROJECT.md` 还在时，也不再停下来问拆不拆。历史 split 仍排在 v4 删除前面，这个动作本身不写文件。队列包含 4.0.0 时，后面的删除会删掉 `.ai/PROJECT.md` 和 `.ai/project/`。
 
-目标文件夹部分成形、旧单文件与 `00_INDEX.md` 同时存在都属于冲突，程序不猜测、不覆盖。
+旧收件箱（`.ai/INBOX.md` 含 `butler-inbox:managed`）或仓根 `origin/` 会让整次计划在写入前停下。这是为了不删用户自己的文件。符号链接不跟随。
 
 ## 5. 项目内 apply
 
@@ -60,8 +58,10 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" plan \
 
 ```bash
 python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply \
-  --project-root "$PROJECT_ROOT" --split defer --json
+  --project-root "$PROJECT_ROOT" --json
 ```
+
+`--split defer` 或 `--split now` 可以附带，不是必填。
 
 程序按以下顺序工作：
 
@@ -73,7 +73,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" apply \
 
 项目 action 有限且 schema 化：双入口重生成/重戳、hook + settings 同步、显式 rename/add-field、项目配置迁移 `migrate_config`、no-op。`migrate_config` 复用 `tools/project-config/` 的纯迁移计划，并由本升级器把 JSON 创建和 Markdown 收窄纳入同一 backup/restore/journal。历史 `[regen-claude]` 归一为双入口动作。未知 action/字段/domain 立即失败。
 
-入口外原文和 CLAUDE.md/AGENTS.md 各自 `<!-- user-managed -->` 区逐字保留；`.ai/references/`（含用户原件 `raw/`）、`deliveries/`、历史 `.ai/iterations/` / `.ai/milestones/` 不在可写集合。
+入口外原文和 CLAUDE.md/AGENTS.md 各自 `<!-- user-managed -->` 区逐字保留；`.ai/references/`（含用户原件 `raw/`）、`.ai/deliveries/`、历史 `.ai/iterations/` / `.ai/milestones/` 不在可写集合。
 
 ## 6. 机器级动作分域
 
@@ -112,7 +112,7 @@ python3 "$BUTLER_PATH/tools/butler-upgrade/upgrade.py" global-install \
 
 ## 8. 边界
 
-- 不改 `.ai/references/`、`deliveries/`、任务四件套、历史归档或 CHANGELOG/BUG_LOG 内容。
+- 不改 `.ai/references/`、`.ai/deliveries/`、任务四件套、历史归档或 CHANGELOG/BUG_LOG 内容。
 - 不自动理解任意知识文本，不提供通用 shell action。
 - Butler 仓自身的发布仍走 `versioning-schema.md`，不走本升级器。
 - 版本 gap 决定迁移区间，内容/hash/marker/所有权校验决定是否安全写入；版本号不替代漂移检查。

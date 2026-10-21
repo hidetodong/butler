@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0120 交付总结 · ITER-0120 · 根布局整理：backlog 与 deliveries 迁入 .ai</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0120 · 根布局整理：backlog 与 deliveries 迁入 .ai</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0120</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-09-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>把两件还露在「项目根 / 带里程碑专名」里的东西收进 <code>.ai/</code>：候办草稿目录从 <code>.ai/milestone-backlog/</code> 改成 <code>.ai/backlog/</code>，仓根 <code>deliveries/</code> 整树搬进 <code>.ai/deliveries/</code>。活着的规则、工具、测试、台账都指新路径；冻结快照不改写。不留兼容软链。Butler 仓自己一次搬干净，已部署项目的搬家只登记给后续升级器补动作和配方。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>候办目录改名</strong>：<code>.ai/milestone-backlog/</code> → <code>.ai/backlog/</code>，10 份草稿文件名不变。闪念口去向、待办区草稿列、<code>tools/intake/</code> 常量和测试夹具一起改。</li>
+        <li><strong>交付树搬家</strong>：仓根 <code>deliveries/</code> → <code>.ai/deliveries/</code>，272 个文件，迭代交付仍平铺、里程碑交付仍在 <code>milestones/</code> 子目录。用 <code>git mv</code> 保血缘，不建仓根软链。</li>
+        <li><strong>活指针改、历史记述不改</strong>：规则、工具、测试、台账交付列（热表 + 两片冷分片）、CHANGELOG 里「去哪找文件」的链接、冷启动读序投影改到新路径。收口快照、已发布配方、交付正文内部的「当时写到 deliveries/」不改。</li>
+        <li><strong>部署只建 <code>.ai/</code></strong>：init / 部署协议 / 规则卡不再在仓根建 <code>deliveries/</code>。<code>.ai/backlog/</code> 与 <code>.ai/deliveries/</code> 按需产生。</li>
+        <li><strong>hook 黑名单故意不动</strong>：进摘要的 hook 文件零字节改动，给还没升级的项目留着仓根 <code>deliveries/</code> 豁免。</li>
+        <li><strong>范围演进登记</strong>：v4.0.0 必须含入口重生成；不需要 hook 同步；候办改名可走现有改名动作；仓根交付搬家等升级器补「移动」动作。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li><strong>以后找交付总结，去 <code>.ai/deliveries/</code></strong>，不再去项目根。</li>
+        <li><strong>以后找候办草稿，去 <code>.ai/backlog/</code></strong>。这个目录已经不只装里程碑那一档，名字不再带 milestone。</li>
+        <li><strong>新部署的项目根更干净</strong>：只建 <code>.ai/</code>，不再多一个仓根 <code>deliveries/</code>。</li>
+        <li><strong>老项目这轮不会被自动搬走</strong>。别人硬盘上仓根的 <code>deliveries/</code> 和旧候办目录还在，等升级器能表达「移动」之后再写配方。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>搬家：候办草稿 10 份、交付文件 272 个。</li>
+        <li>改动：录入工具与测试、状态审计、冷启动读序真源和四处投影、部署与收口规则、台账热表与冷分片、CHANGELOG 找文件的链接。</li>
+        <li>新增：本轮路径扫描 <code>.ai/iterations/ITER-0120/ac-sweep.py</code>。</li>
+        <li><strong>完全没碰的</strong>：hook 源文件 19 份、历史快照目录、已发布迁移配方、<code>docs/research/</code>、<code>docs/superpowers/</code>。</li>
+        <li>目标项目侧：改了规则卡和两份入口模板，下次切版的迁移配方必须含入口重生成。</li>
+      </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>12 条验收全部通过。9 份自动道证据全绿，其中一份是收口前简评复跑。CI 退出码 0，状态审计 0 漂移、2 条未发布标记（本轮不切版，预期内）。路径扫描 A 组 0 命中、B 组全在场。</p>
+      <p>收口前完成裁决 <code>eligible</code>。P5 简评复跑了 intake 测试、审计测试、路径扫描、冷启动读序投影、领域合同，没有 Must Fix。独立复核未跑。</p>
+      <p><code>git log --follow</code> 在未提交前追不到新路径，这是 git 的正常行为；index 里 ITER-0119 那份交付是 <code>R100</code>，提交之后 follow 才能跨过这次改名。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li><strong><code>git log --follow</code> 要等这次改名进提交之后才能跨路径追历史。</strong></li>
+        <li><strong>已部署项目仓根的 <code>deliveries/</code> 和旧候办目录本轮没搬</strong>，等 R14 补移动动作、R15 写进 v4.0.0 配方。</li>
+        <li><strong>hook 黑名单里的 <code>deliveries/</code> 豁免故意留着</strong>，给还没升级的项目用。</li>
+        <li>本轮不切版、不打 tag、不提交。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0120/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0120/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0120/evidence/</code>（9 条记录）</li>
+        <li>可重跑验收扫描：<code>.ai/iterations/ITER-0120/ac-sweep.py</code></li>
+        <li>开工前基线：<code>.ai/iterations/ITER-0120/pre-p4.baseline.json</code></li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

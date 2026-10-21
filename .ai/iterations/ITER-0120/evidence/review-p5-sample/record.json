@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "review-p5-sample",
+  "iteration": "ITER-0120",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC7",
+    "AC12"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "\nimport subprocess, sys\ncmds = [\n    [sys.executable, \"-m\", \"unittest\", \"discover\", \"-s\", \"tools/intake/tests\", \"-t\", \".\", \"-q\"],\n    [sys.executable, \"scripts/test-audit-project-state.py\", \"-q\"],\n    [sys.executable, \".ai/iterations/ITER-0120/ac-sweep.py\"],\n    [sys.executable, \"tools/context-budget/context_budget.py\", \"check\", \"--project-root\", \".\"],\n    [sys.executable, \"tools/domain-contract/domain_contract.py\", \"check\", \"--project-root\", \".\"],\n]\nfor cmd in cmds:\n    result = subprocess.run(cmd)\n    if result.returncode != 0:\n        sys.exit(result.returncode)\n"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-14T02:45:35.163Z",
+  "finished_at": "2026-09-14T02:45:37.282Z",
+  "duration_ms": 2119,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 574,
+    "captured_bytes": 574,
+    "sha256": "665b275044c4245f7295447ea157af1257433a79dc727e5dd6579fe76fb4ca76",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 196,
+    "captured_bytes": 196,
+    "sha256": "8808607057e67ff4873c278dddd2323ae5a2f64c52e48e370e59438567972da1",
+    "truncated": false
+  }
+}

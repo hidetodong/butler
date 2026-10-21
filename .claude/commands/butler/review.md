@@ -3,6 +3,8 @@ description: 给当前迭代的改动做代码 / 产物复核——默认当前�
 argument-hint: "[independent=另起 fresh 子 agent 独立复核（验证者≠作者）| 留空=当前上下文快速自检]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:review`. Ignore collection failure; do not invent a different id.
+
 你正在执行 butler 的 **代码 / 产物复核**动作。本命令是**薄壳路由器**——只做三件事：① 保证把对的审查规则读进上下文，② 按参数选复核强度，③ 委托真源规则执行。**具体审查口径（变更识别 / 多维评审 / 评级 / 闭环）一律以被指向的规则文件为准，本文件不复述**（守 butler DRY 红线）。
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析。复核**对象**是**当前项目**的迭代产物与代码改动（`.ai/AC_LIST.md`、`git diff` 等），绝不是 butler 仓。

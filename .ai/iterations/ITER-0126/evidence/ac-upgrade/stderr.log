@@ -1,0 +1,14 @@
+........butler-upgrade: unsafe project-relative path: ../outside
+butler-upgrade: unsafe project-relative path: /tmp/outside
+butler-upgrade: delete path targets protected project state: .ai
+butler-upgrade: delete path targets protected project state: .ai/iterations
+butler-upgrade: delete path targets protected project state: .ai/butler-upgrade/run
+...............butler-upgrade: move conflict: both origin and .ai/origin exist
+butler-upgrade: move conflict: neither origin nor .ai/origin exists
+.....butler-upgrade: refusing to follow symlink: origin
+butler-upgrade: refusing to follow symlink: origin/link
+........
+----------------------------------------------------------------------
+Ran 36 tests in 3.001s
+
+OK

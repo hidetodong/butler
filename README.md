@@ -126,7 +126,7 @@ flowchart LR
 1. 在 P2 确认“这些验收标准是否真的代表完成”。
 2. 在 P3 确认“方案、范围和风险是否可以接受”。
 
-之后 Butler 实现、验证并收口：冻结产物进入 `.ai/iterations/ITER-NNNN/`，同时在 `deliveries/` 生成 Markdown、HTML 两种交付总结。新会话恢复时读的是这些项目状态与证据，而不是猜测上一段对话。
+之后 Butler 实现、验证并收口：冻结产物进入 `.ai/iterations/ITER-NNNN/`，同时在 `.ai/deliveries/` 生成 Markdown、HTML 两种交付总结。新会话恢复时读的是这些项目状态与证据，而不是猜测上一段对话。
 
 极小、低风险的改动可以按既有规则简化，但普通任务仍从同一个入口开始，不需要用户预先分类。
 
@@ -289,11 +289,10 @@ Decision Map 只记录“为什么这样选”的理由、证据和历史，不�
 | 一份产品文档需要拆成可独立版本化的需求 | PRD 管理 | `/butler:prd` · `$butler-prd` |
 | 需要复核代码、方案或验收覆盖 | Review | `/butler:review` · `$butler-review` |
 | 另一个 Agent 已完成旁路工作，需要接回主线 | Sidework receipt | 提供 `.ai/sidework/` 回执路径 |
-| 希望在明确同意后学习真人取舍 | 偏好学习 | `/butler:preference` · `$butler-preference` |
 | 常规纠错不足，需要有上限的持续探测和修正 | Loop | `/butler:loop` · `$butler-loop` |
 | 明确接受更高自治和风险，希望无人值守推进 | Dangerous | `/butler:dangerous` · `$butler-dangerous` |
 
-Loop 与 Dangerous 都必须显式开启，彼此独立，也不会因普通任务自动启用。全部入口、触发条件和兼容旧名见机器注册表生成的 [工作流清单](docs/workflows.md)。
+Loop 与 Dangerous 都必须显式开启，彼此独立，也不会因普通任务自动启用。偏好学习的机器入口已在 ITER-0124 退役，不再提供。全部入口、触发条件和兼容旧名见机器注册表生成的 [工作流清单](docs/workflows.md)。
 
 ## 项目里会留下什么
 
@@ -311,8 +310,8 @@ project/
 │   ├── task-state.md           # 当前运行状态
 │   ├── project/                # 项目长期知识
 │   ├── references/             # 外部资料：raw/ 放用户自己的原件（AI 只读），其余是 AI 派生的受控投影
-│   └── iterations/             # 已收口迭代快照
-└── deliveries/                 # 给人阅读的 .md / .html 交付总结
+│   ├── iterations/             # 已收口迭代快照
+│   └── deliveries/             # 给人阅读的 .md / .html 交付总结
 ```
 
 完整布局、旁路 Agent 回执、PRD 管理和版本升级说明见 [使用指南](HUMAN_GUIDE.md)。
@@ -341,7 +340,7 @@ butler/
 ├── workflows/              # 双宿主工作流机器注册表
 ├── migrations/             # 已部署项目的版本迁移配方
 ├── docs/                   # 兼容边界和专项说明
-└── deliveries/             # Butler 自身的迭代与里程碑交付历史
+└── .ai/deliveries/         # Butler 自身的迭代与里程碑交付历史
 ```
 
 修改 Butler 后运行与 CI 相同的完整入口：

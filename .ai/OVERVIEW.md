@@ -8,13 +8,13 @@
 - 规则源版本：**3.6.0**
 - 当前 active 里程碑：MILE-0016
 - 当前 active 迭代：none
-- 累计里程碑 16 个、迭代 119 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
+- 累计里程碑 16 个、迭代 126 个（台账热表各留 16 / 20 行，其余在 `.ai/history/` 冷分片）
 
 ## 里程碑时间线
 
 | 里程碑 | 标题 | 状态 | 起 | 止 | 含迭代 |
 |---|---|---|---|---|---|
-| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 8 |
+| MILE-0016 | Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器 | active | 2026-08-18 | — | 15 |
 | MILE-0015 | Butler 领域模型治理：统一语言、限界上下文与可执行边界 | closed | 2026-07-31 | 2026-08-17 | 5 |
 | MILE-0014 | Butler Explore 决策地图接入：把持久化决策探索衔接到 Milestone 与 Iteration | closed | 2026-08-01 | 2026-08-02 | 5 |
 | MILE-0013 | 项目级 Butler 配置结构化：从本地约束中拆出扁平 JSON 配置 | closed | 2026-07-28 | 2026-07-28 | 3 |
@@ -45,7 +45,6 @@
 | `60_Extension_CodeReview/` | 1 | 共享审查流程真源（多维评审 / 评级 / 闭环 / P5 同上下文简评）；把这套流程放进隔离上下文跑的复核帮手定义在 `62_Extension_Agents/independent-review.md`。 |
 | `62_Extension_Agents/` | 3 | butler 专门 worker 的名册 + 通用规矩（唯一真源）+ 各帮手完整定义。**触发式加载、不进冷启动必读**；帮手是一份中立定义资料，用时按合同选择 fresh-context、串行或 HITL 执行，不把定义下发到项目。当前住册两帮手：复核（`independent-review`，接 P5）、Decision Work（`decision-work`，Explore 中处理已显式领取的 Decision、零项目写）；执行形态和接线以名册为准。 |
 | `65_Extension_Dangerous/` | 1 | 仅在显式 `/butler:dangerous` 指令或对应语义下启用的实验性无人值守长程自治模块。 |
-| `70_Extension_Preference/` | 1 | 实验性偏好探针模块。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**，**影响回路（反哺）opt-in 且仅作用于有监督工作、绝不参与 `/butler:dangerous`**；只学真人选择，外置存储、与本仓库解耦。 |
 | `99_Business_Extension/` | 0 | 业务侧最高优先级约束目录。 |
 
 ## 工作流清单
@@ -62,7 +61,6 @@
 | init | `/butler:init` | `$butler-init` | normal | `Coder/20_Workflow_Lifecycle/mcv-deployment.md` |
 | setup | `/butler:setup` | `$butler-setup` | normal | `Coder/20_Workflow_Lifecycle/butler-setup.md` |
 | ideation | `/butler:ideation` | `$butler-ideation` | normal | `Coder/50_Extension_Ideation/ideation-engine.md` |
-| preference | `/butler:preference` | `$butler-preference` | normal | `Coder/70_Extension_Preference/preference-probe-engine.md` |
 | loop | `/butler:loop` | `$butler-loop` | high | `Coder/55_Extension_ConvergenceLoop/convergence-loop-engine.md` |
 | dangerous | `/butler:dangerous` | `$butler-dangerous` | high | `Coder/65_Extension_Dangerous/dangerous-engine.md` |
 | iteration | `/butler:iteration` | `$butler-iteration` | normal | `Coder/20_Workflow_Lifecycle/iteration-intake.md` |
@@ -89,7 +87,10 @@
 | `tools/prd-migrate/` | PRD Migration Tool |
 | `tools/prd-status/` | prd-status |
 | `tools/prd-update/` | prd-update |
+| `tools/preference-experiment/` | preference-experiment |
 | `tools/project-config/` | project-config |
 | `tools/state-ledger/` | state-ledger |
+| `tools/usage/` | usage |
+| `tools/usage-report/` | usage-report |
 | `tools/verification-evidence/` | Verification Evidence |
 | `tools/workspace-scope/` | Workspace Scope Tool |

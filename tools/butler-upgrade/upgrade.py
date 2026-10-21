@@ -33,6 +33,8 @@ ACTION_DOMAINS = {
     "regen_entrypoints": "project",
     "sync_hooks": "project",
     "rename": "project",
+    "delete": "project",
+    "move": "project",
     "add_field": "project",
     "restamp": "project",
     "no_op": "project",
@@ -44,6 +46,8 @@ ACTION_KEYS = {
     "regen_entrypoints": set(),
     "sync_hooks": set(),
     "rename": {"from", "to"},
+    "delete": {"path"},
+    "move": {"from", "to"},
     "add_field": {"path", "section", "key", "value"},
     "restamp": set(),
     "no_op": set(),
@@ -55,6 +59,8 @@ ACTION_PRECONDITIONS = {
     "regen_entrypoints": ["entrypoint-markers-valid"],
     "sync_hooks": ["hook-tree-recognized-or-absent", "settings-shape-valid"],
     "rename": ["source-destination-shape-valid", "target-path-owned"],
+    "delete": ["delete-path-allowed"],
+    "move": ["move-path-allowed"],
     "add_field": ["target-path-owned", "field-shape-valid"],
     "restamp": ["entrypoint-markers-valid"],
     "no_op": [],
@@ -154,6 +160,10 @@ def validate_manifest(data: Any, butler_root: Path) -> dict[str, Any]:
             if action_type in {"rename", "add_field"}:
                 for field in ({"from", "to"} if action_type == "rename" else {"path"}):
                     validate_owned_action_path(action_type, safe_relative(action[field]))
+            elif action_type == "delete":
+                validate_delete_path(safe_relative(action["path"]))
+            elif action_type == "move":
+                validate_move_pair(safe_relative(action["from"]), safe_relative(action["to"]))
             ids.add(action_id)
         recipes.add(recipe)
         expected_source = target
@@ -176,15 +186,81 @@ def safe_relative(value: str) -> Path:
     return path
 
 
+PROTECTED_AI_CHILDREN = {"iterations", "milestones", "references", "verification-evidence", "butler-upgrade"}
+OPERATION_RANK = {"ensure-dir": 0, "write": 1, "delete": 2, "remove-dir": 3}
+
+
 def validate_owned_action_path(action_type: str, path: Path) -> None:
     if action_type == "add_field" and path != Path(".ai/local-constraints.md"):
         raise UpgradeError(f"add_field path is not owned by the upgrader: {path}")
     if action_type == "rename":
         if not path.parts or path.parts[0] != ".ai":
             raise UpgradeError(f"rename path must stay under .ai/: {path}")
-        protected = {"iterations", "milestones", "references", "verification-evidence", "butler-upgrade"}
-        if len(path.parts) > 1 and path.parts[1] in protected:
+        if len(path.parts) > 1 and path.parts[1] in PROTECTED_AI_CHILDREN:
             raise UpgradeError(f"rename path targets protected project state: {path}")
+
+
+def path_is_protected(path: Path) -> bool:
+    return path == Path(".ai") or (
+        bool(path.parts) and path.parts[0] == ".ai" and len(path.parts) > 1 and path.parts[1] in PROTECTED_AI_CHILDREN
+    )
+
+
+def validate_delete_path(path: Path) -> None:
+    if path_is_protected(path):
+        raise UpgradeError(f"delete path targets protected project state: {path}")
+
+
+def validate_move_destination(path: Path) -> None:
+    if not path.parts or path.parts[0] != ".ai" or path_is_protected(path):
+        raise UpgradeError(f"move destination must stay under an unprotected .ai/ path: {path}")
+
+
+def validate_move_pair(source: Path, dest: Path) -> None:
+    validate_delete_path(source)
+    validate_move_destination(dest)
+    if source == dest:
+        raise UpgradeError(f"move source and destination are the same: {source}")
+    if source in dest.parents or dest in source.parents:
+        raise UpgradeError(f"move destination overlaps source: {source} -> {dest}")
+
+
+def node_sha256(path: Path) -> str | None:
+    if path.is_symlink():
+        raise UpgradeError(f"symlink target is not writable by upgrader: {path}")
+    if not path.exists():
+        return None
+    if path.is_dir():
+        return sha256(b"directory")
+    return sha256(path.read_bytes())
+
+
+def refuse_retired_user_trees(project: Path) -> None:
+    """Stop before writes when a legacy inbox or repo-root origin is present.
+
+    The marker is the legacy format. A current inbox uses the same path and is left untouched.
+    """
+    inbox = project / ".ai" / "INBOX.md"
+    origin = project / "origin"
+    if inbox.is_symlink():
+        raise UpgradeError("refusing to follow symlink: .ai/INBOX.md")
+    if origin.is_symlink():
+        raise UpgradeError("refusing to follow symlink: origin")
+    if inbox.is_file() and b"butler-inbox:managed" in inbox.read_bytes():
+        raise UpgradeError("legacy inbox is present: .ai/INBOX.md")
+    if origin.exists():
+        raise UpgradeError("origin is present at the project root")
+
+
+def ordered_changes(changes: dict[Path, Change]) -> list[tuple[Path, Change]]:
+    # 目录删除必须落在文件删除之后。恢复按反序走，才能先建回目录再写回文件。
+    def sort_key(item: tuple[Path, Change]) -> tuple[int, int, str]:
+        rel, change = item
+        rank = OPERATION_RANK[change.operation]
+        depth = -len(rel.parts) if change.operation == "remove-dir" else 0
+        return (rank, depth, rel.as_posix())
+
+    return sorted(changes.items(), key=sort_key)
 
 
 def load_renderer(butler_root: Path):
@@ -467,22 +543,10 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
         result["status"] = "already-current"
         return result
 
-    has_split = any(action["type"] == "split" for action in actions)
-    old_project = project / ".ai" / "PROJECT.md"
-    index = project / ".ai" / "project" / "00_INDEX.md"
-    project_dir = project / ".ai" / "project"
-    partial = project_dir.exists() and any(project_dir.iterdir()) and not index.exists()
-    if partial or (old_project.exists() and index.exists()):
-        raise UpgradeError("split target is partially formed or conflicts with .ai/PROJECT.md")
-    if has_split and old_project.exists() and not index.exists():
-        if split_choice is None:
-            result["status"] = "needs-decision"
-            result["conflicts"].append("split decision required: choose defer or now")
-            return result
-        if split_choice == "now":
-            result["status"] = "manual-split"
-            result["conflicts"].append("semantic split requires a supervised handoff; project remains unchanged")
-            return result
+    # --split stays accepted by the CLI. It no longer stops the plan.
+    del split_choice
+    if any(action.get("migration") == "4.0.0" for action in actions):
+        refuse_retired_user_trees(project)
 
     changes: dict[Path, Change] = {}
     def plan_write(rel: Path, content: bytes, mode: int = 0o644) -> None:
@@ -494,6 +558,109 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
         path = contained_target(project, rel)
         if path.exists():
             changes[rel] = Change(path, "delete")
+
+    def plan_ensure_dir(rel: Path, mode: int = 0o755) -> None:
+        for ancestor in reversed(rel.parents):
+            if ancestor == Path(".") or ancestor in changes:
+                continue
+            ancestor_path = project / ancestor
+            if ancestor_path.is_symlink():
+                raise UpgradeError(f"refusing to follow symlink: {ancestor}")
+            if ancestor_path.exists():
+                continue
+            changes[ancestor] = Change(contained_target(project, ancestor), "ensure-dir", mode=0o755)
+        path = project / rel
+        if path.is_symlink():
+            raise UpgradeError(f"refusing to follow symlink: {rel}")
+        if path.exists():
+            return
+        changes[rel] = Change(contained_target(project, rel), "ensure-dir", mode=mode)
+
+    def plan_remove_dir(rel: Path) -> None:
+        path = contained_target(project, rel)
+        if path.exists():
+            changes[rel] = Change(path, "remove-dir", mode=path.stat().st_mode & 0o777)
+
+    def refuse_tree_symlinks(path: Path) -> None:
+        if path.is_symlink():
+            raise UpgradeError(f"refusing to follow symlink: {path.relative_to(project)}")
+        if not path.is_dir():
+            return
+        for child in path.rglob("*"):
+            if child.is_symlink():
+                raise UpgradeError(f"refusing to follow symlink: {child.relative_to(project)}")
+
+    def classify_tree(path: Path) -> tuple[list[Path], list[Path]]:
+        files: list[Path] = []
+        dirs: list[Path] = []
+        for child in path.rglob("*"):
+            child_rel = child.relative_to(project)
+            if child.is_symlink():
+                raise UpgradeError(f"refusing to follow symlink: {child_rel}")
+            if child.is_dir():
+                dirs.append(child_rel)
+            elif child.is_file():
+                files.append(child_rel)
+            else:
+                raise UpgradeError(f"refusing special file: {child_rel}")
+        return files, dirs
+
+    def plan_delete_tree(rel: Path) -> None:
+        validate_delete_path(rel)
+        raw = project / rel
+        if raw.is_symlink():
+            raise UpgradeError(f"refusing to follow symlink: {rel}")
+        path = contained_target(project, rel)
+        if not path.exists():
+            return
+        refuse_tree_symlinks(path)
+        if not path.is_dir():
+            plan_delete(rel)
+            return
+        files, dirs = classify_tree(path)
+        for file_rel in files:
+            plan_delete(file_rel)
+        plan_remove_dir(rel)
+        for dir_rel in dirs:
+            plan_remove_dir(dir_rel)
+
+    def plan_move_tree(src_rel: Path, dst_rel: Path) -> None:
+        validate_move_pair(src_rel, dst_rel)
+        src_raw = project / src_rel
+        dst_raw = project / dst_rel
+        if src_raw.is_symlink() or dst_raw.is_symlink():
+            which = src_rel if src_raw.is_symlink() else dst_rel
+            raise UpgradeError(f"refusing to follow symlink: {which}")
+        src = contained_target(project, src_rel)
+        dst = contained_target(project, dst_rel)
+        src_exists = src.exists()
+        dst_exists = dst.exists()
+        if src_exists and dst_exists:
+            raise UpgradeError(f"move conflict: both {src_rel} and {dst_rel} exist")
+        if not src_exists and not dst_exists:
+            raise UpgradeError(f"move conflict: neither {src_rel} nor {dst_rel} exists")
+        if not src_exists:
+            return
+        refuse_tree_symlinks(src)
+        if src.is_dir():
+            files, dirs = classify_tree(src)
+            plan_ensure_dir(dst_rel, src.stat().st_mode & 0o777)
+            for dir_rel in dirs:
+                mapped = dst_rel / dir_rel.relative_to(src_rel)
+                plan_ensure_dir(mapped, (project / dir_rel).stat().st_mode & 0o777)
+            for file_rel in files:
+                mapped = dst_rel / file_rel.relative_to(src_rel)
+                file_path = project / file_rel
+                plan_write(mapped, file_path.read_bytes(), file_path.stat().st_mode & 0o777)
+                plan_delete(file_rel)
+            plan_remove_dir(src_rel)
+            for dir_rel in dirs:
+                plan_remove_dir(dir_rel)
+            return
+        if dst_rel.parent != Path("."):
+            plan_ensure_dir(dst_rel.parent)
+        plan_write(dst_rel, src.read_bytes(), src.stat().st_mode & 0o777)
+        plan_delete(src_rel)
 
     if any(action["type"] in {"regen_entrypoints", "restamp"} for action in actions):
         renderer = load_renderer(butler_root)
@@ -519,7 +686,9 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
         elif action["type"] == "migrate_config":
             config_tool = load_project_config(butler_root)
             try:
-                migration_changes = config_tool.plan_migration(project)
+                migration_changes = dict(config_tool.plan_migration(project))
+                if action.get("migration") == "4.0.0":
+                    migration_changes.update(config_tool.plan_retired_preference_removal(project))
             except config_tool.ConfigError as error:
                 raise UpgradeError(f"cannot migrate project configuration: {error.message}") from error
             for rel, content in migration_changes.items():
@@ -529,6 +698,10 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
                     content,
                     (target.stat().st_mode & 0o777) if target.exists() else 0o644,
                 )
+        elif action["type"] == "delete":
+            plan_delete_tree(safe_relative(action["path"]))
+        elif action["type"] == "move":
+            plan_move_tree(safe_relative(action["from"]), safe_relative(action["to"]))
 
     if any(action["type"] == "sync_hooks" for action in actions):
         source = hook_source_files(butler_root)
@@ -550,13 +723,13 @@ def build_plan(project: Path, butler_root: Path, split_choice: str | None) -> di
 
     external = [action["id"] for action in actions if action["domain"] == "machine"]
     result["external_pending"] = external
-    ordered = sorted(changes.items(), key=lambda item: item[0].as_posix())
+    ordered = ordered_changes(changes)
     result["_planned"] = [change for _, change in ordered]
     result["changes"] = [
         {
             "path": rel.as_posix(),
             "operation": change.operation,
-            "before_sha256": sha256(change.path.read_bytes()) if change.path.exists() else None,
+            "before_sha256": node_sha256(change.path),
             "after_sha256": sha256(change.content) if change.content is not None else None,
         }
         for rel, change in ordered
@@ -595,8 +768,7 @@ def apply_plan(result: dict[str, Any], project: Path) -> dict[str, Any]:
     expected = {item["path"]: item["before_sha256"] for item in result["changes"]}
     for change in changes:
         rel = change.path.relative_to(project).as_posix()
-        actual = sha256(change.path.read_bytes()) if change.path.exists() else None
-        if actual != expected[rel]:
+        if node_sha256(change.path) != expected[rel]:
             raise UpgradeError(f"target changed after planning: {rel}")
     state_root = project / ".ai" / "butler-upgrade"
     lock = state_root / "apply.lock"
@@ -619,16 +791,23 @@ def apply_plan(result: dict[str, Any], project: Path) -> dict[str, Any]:
         run_dir.mkdir(parents=True)
         for change in changes:
             rel = change.path.relative_to(project)
+            if change.path.is_symlink():
+                raise UpgradeError(f"symlink target is not writable by upgrader: {rel}")
             existed = change.path.exists()
-            before = change.path.read_bytes() if existed else None
             mode = (change.path.stat().st_mode & 0o777) if existed else None
-            if existed:
+            directory_op = change.operation in {"ensure-dir", "remove-dir"}
+            if not directory_op and existed:
+                before = change.path.read_bytes()
                 backup = backup_dir / rel
                 backup.parent.mkdir(parents=True, exist_ok=True)
-                atomic_write(backup, before or b"", mode or 0o644)
+                atomic_write(backup, before, mode or 0o644)
+                before_sha = sha256(before)
+            else:
+                before_sha = node_sha256(change.path)
             restore.append({
                 "path": rel.as_posix(), "existed": existed, "mode": mode,
-                "before_sha256": sha256(before) if before is not None else None,
+                "operation": change.operation,
+                "before_sha256": before_sha,
                 "after_sha256": sha256(change.content) if change.content is not None else None,
             })
         atomic_write(run_dir / "restore.json", (json.dumps(restore, indent=2) + "\n").encode(), 0o600)
@@ -650,8 +829,15 @@ def apply_plan(result: dict[str, Any], project: Path) -> dict[str, Any]:
         for change in changes:
             if change.operation == "write":
                 atomic_write(change.path, change.content or b"", change.mode)
-            else:
+            elif change.operation == "delete":
                 change.path.unlink()
+            elif change.operation == "ensure-dir":
+                change.path.mkdir()
+                os.chmod(change.path, change.mode)
+            elif change.operation == "remove-dir":
+                change.path.rmdir()
+            else:
+                raise UpgradeError(f"unknown change operation: {change.operation}")
             touched += 1
             if fail_after and touched >= fail_after:
                 raise OSError(f"injected failure after {touched} changes")
@@ -665,8 +851,19 @@ def apply_plan(result: dict[str, Any], project: Path) -> dict[str, Any]:
         restore_errors: list[str] = []
         for item in reversed(restore[:touched]):
             path = contained_target(project, Path(item["path"]))
+            operation = item["operation"]
             try:
-                if item["existed"]:
+                if operation == "ensure-dir":
+                    if not item["existed"] and path.exists():
+                        path.rmdir()
+                elif operation == "remove-dir":
+                    if item["existed"]:
+                        path.mkdir()
+                        if item["mode"] is not None:
+                            os.chmod(path, item["mode"])
+                    elif path.exists():
+                        path.rmdir()
+                elif item["existed"]:
                     backup = backup_dir / item["path"]
                     atomic_write(path, backup.read_bytes(), item["mode"] or 0o644)
                 elif path.exists():
@@ -717,6 +914,19 @@ def emit(result: dict[str, Any], as_json: bool) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--butler-root", type=Path, default=Path(__file__).resolve().parents[2])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -725,7 +935,7 @@ def main(argv: list[str] | None = None) -> int:
         child.add_argument("--project-root", required=True)
         child.add_argument("--json", action="store_true")
         if name in {"plan", "apply"}:
-            child.add_argument("--split", choices=("defer", "now"), required=name == "apply")
+            child.add_argument("--split", choices=("defer", "now"))
     external = sub.add_parser("global-install")
     external.add_argument("--project-root", required=True)
     external.add_argument("--confirm", action="store_true")

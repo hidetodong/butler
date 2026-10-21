@@ -22,6 +22,8 @@ NOW = "2026-07-22T12:00:00+08:00"
 def tree_digest(root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*")):
+        if path.name == ".usage.json":
+            continue
         digest.update(path.relative_to(root).as_posix().encode())
         if path.is_symlink(): digest.update(b"L" + str(path.readlink()).encode())
         elif path.is_file(): digest.update(b"F" + path.read_bytes())

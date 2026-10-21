@@ -19,6 +19,7 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
+from lib.block_log import append_block_log
 from lib.bypass import evaluate_bypass
 from lib.io import Context, Decision, contexts_from_payload, parse_stdin
 from rules import (
@@ -58,6 +59,7 @@ def main() -> int:
                     final = evaluate_bypass(ctx, decision)
                     if final.verdict == "allow":
                         continue
+                    append_block_log(ctx, final)
                     _print_denial(ctx, final)
                     return 2
         return 0

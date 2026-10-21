@@ -44,19 +44,19 @@ Milestone (大可交付版本, MILE-NNNN)
 | 层 | 位置 | 角色 |
 |---|---|---|
 | 候办索引 | `.ai/MILESTONES.md` 的“待办区” | 只列未编号的稳定 slug、标题、暂缓日期、草稿路径和原因；不参与 `current` 或正式号分配 |
-| 候办草稿 | `.ai/milestone-backlog/<slug>.md` | 保留已合成的范围、理解、路线图和演进记录；候办期间的唯一详情真源 |
+| 候办草稿 | `.ai/backlog/<slug>.md` | 保留已合成的范围、理解、路线图和演进记录；候办期间的唯一详情真源 |
 | 里程碑台账 | `.ai/MILESTONES.md` + `.ai/state-index.json` + `.ai/history/milestones/*.{md,json}` | 复合真源：根表保存 `current`、近期正式行和未编号待办；有界 index 保存固定路由公式，每个冷片由同名 `.json` 独立校验 |
 | 当前里程碑工作区 | `.ai/MILESTONE.md` | active 里程碑的活产物：范围评估 + 理解阐释 + 拆分路线图 + 范围演进记录 |
 | 里程碑归档 | `.ai/milestones/MILE-NNNN/MILESTONE.md` | 里程碑收口时工作区的冻结快照，只读，供复盘审计 |
-| 人类交付 | `deliveries/milestones/MILE-NNNN-<slug>.md` | 收口后给人看的版本级交付总结，**只链接**其下各迭代交付，不全文嵌入 |
+| 人类交付 | `.ai/deliveries/milestones/MILE-NNNN-<slug>.md` | 收口后给人看的版本级交付总结，**只链接**其下各迭代交付，不全文嵌入 |
 
 约束：
 
 - 里程碑工作区路径固定为 `.ai/MILESTONE.md`，**不得**改成按号分目录。
 - `.ai/milestones/` 与各 `MILE-NNNN/` 子目录不在基地车部署时创建，而是在**首次里程碑收口**时按需产生。
-- `.ai/milestone-backlog/` 不在部署时预建，首次把讨论稿暂缓入库时按需创建。一个 slug 必须恰好对应待办区一行和一份同名 `.md`，禁止孤立索引或孤立草稿。
-- `deliveries/milestones/` 目录不在部署时创建，而是在**首次里程碑收口**写版本级交付时按需产生。
-- 迭代交付文档仍平铺在 `deliveries/ITER-NNNN-<slug>.md`，**不随里程碑归属移动**，以保证迭代历史在 `deliveries/` 文件树中始终是一条按号连续的时间线。
+- `.ai/backlog/` 不在部署时预建，首次把讨论稿暂缓入库时按需创建。一个 slug 必须恰好对应待办区一行和一份同名 `.md`，禁止孤立索引或孤立草稿。
+- `.ai/deliveries/milestones/` 目录不在部署时创建，而是在**首次里程碑收口**写版本级交付时按需产生。
+- 迭代交付文档仍平铺在 `.ai/deliveries/ITER-NNNN-<slug>.md`，**不随里程碑归属移动**，以保证迭代历史在 `.ai/deliveries/` 文件树中始终是一条按号连续的时间线。
 
 ## 4. 里程碑台账 `.ai/MILESTONES.md`
 
@@ -81,7 +81,7 @@ current: MILE-0002
 | 里程碑号 | 标题 | 状态 | 开启 | 收口 | 含迭代 | 交付 |
 |---|---|---|---|---|---|---|
 | MILE-0002 | <本里程碑标题> | active | YYYY-MM-DD | — | ITER-0004, ITER-0005 | — |
-| MILE-0001 | <上一里程碑标题> | closed | YYYY-MM-DD | YYYY-MM-DD | ITER-0001~0003 | deliveries/milestones/MILE-0001-<slug>.md |
+| MILE-0001 | <上一里程碑标题> | closed | YYYY-MM-DD | YYYY-MM-DD | ITER-0001~0003 | .ai/deliveries/milestones/MILE-0001-<slug>.md |
 ```
 
 ### 4.4 编写规则
@@ -103,12 +103,12 @@ current: MILE-0002
 
 | 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |
 |---|---|---|---|---|
-| goal-cleanup | <候办标题> | YYYY-MM-DD | .ai/milestone-backlog/goal-cleanup.md | <一句话原因> |
+| goal-cleanup | <候办标题> | YYYY-MM-DD | .ai/backlog/goal-cleanup.md | <一句话原因> |
 ```
 
 - `候办键` 是稳定、可读的 kebab-case slug，不是新的数字时间线；不得使用 `MILE-NNNN` 或伪装成正式号。
-- `草稿` 必须精确等于 `.ai/milestone-backlog/<候办键>.md`，路径不得越出该目录。
-- **一方向一文件**：每个候办块必须恰好对应一个候办键、一行索引和一份 `.ai/milestone-backlog/<候办键>.md`；不同候办块禁止共用草稿，也不得在一个文件里声明多个候办键。
+- `草稿` 必须精确等于 `.ai/backlog/<候办键>.md`，路径不得越出该目录。
+- **一方向一文件**：每个候办块必须恰好对应一个候办键、一行索引和一份 `.ai/backlog/<候办键>.md`；不同候办块禁止共用草稿，也不得在一个文件里声明多个候办键。
 - 候办草稿顶部必须恰好标明一次 `候办键: <文件名 slug>`、一次 `候办状态: deferred` 和一次 `规模: milestone|iteration|undecided`，不写 `MILE-NNNN`。
 - 草稿的段落结构**按 `规模` 分档**：`milestone` 档沿用 §5 的四段结构；`iteration` 与 `undecided` 档各有自己的轻量段落集，取值含义与按档要求见 `40_Context_Management/intake-schema.md §2`。
 - 候办项不是 `active / closed / abandoned` 中的任何一态，不参与 `current`、Goal 推导、迭代自动归属、版本收口或发布。
@@ -204,7 +204,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 - **可选、非权威、一次性输入**：brief 只是合成里程碑草稿的原材料，**不属 §3 候办/正式落盘结构、不归档、不跨里程碑纵向堆积**。
 - `.ai/references/raw/` 里的文件由用户自管，AI **只读、不写不改不重塑不归档**（与同目录下 AI 派生投影的区分见 `40_Context_Management/references-schema.md §1`）。
-- 合成后的唯一详情真源随阶段切换：暂缓时是 `.ai/milestone-backlog/<slug>.md`，正式开启后是 `.ai/MILESTONE.md`。原件用户可保留作溯源或自行清理，不影响里程碑产物。
+- 合成后的唯一详情真源随阶段切换：暂缓时是 `.ai/backlog/<slug>.md`，正式开启后是 `.ai/MILESTONE.md`。原件用户可保留作溯源或自行清理，不影响里程碑产物。
 - **若 brief 材料本身是大 PRD**（逐字权威规格）：它**同时喂两个海拔**——作 brief 合成 `.ai/MILESTONE.md` 路线图（方向层、有损压缩），并经 `40_Context_Management/prd-split.md` 派生 `.ai/references/prd/` 切片（细节层、逐字无损，见下 §6.4 合成协议步 6）。注意两者身份不同：`.ai/references/raw/` 里那份 PRD 仍是用户自管的**非权威原始输入**（AI 只读不归档、可清理）；`.ai/references/prd/` 切片才是 AI 派生、供 P2/P3/P5 引用对账的**权威投影**、独立生命周期跨迭代常驻——别把两者混为一谈（身份区分同 `40_Context_Management/references-schema.md §1`）。
 
 **合成协议（brief → `.ai/MILESTONE.md`）**：
@@ -249,7 +249,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 ### 7.2 推进 (Advance)
 
 - 里程碑处于 `active` 期间开启的每个迭代**一律自动归属**之（无需逐次征求确认）。每开一个承接迭代：① 在该迭代的 `.ai/ITERATIONS.md` 行「所属 milestone」列填 `current` 里程碑号；② 在 `.ai/MILESTONES.md`「含迭代」列追加其号；③ 把它绑定到 `.ai/MILESTONE.md` 拆分路线图对应路线项的「实际 ITER」列。归属判定只认台账 `current`：`current = 本里程碑号` 即归属。
-- 每个承接迭代各自走完整 `P1 -> P5` 并各自收口、各自交付（小版本交付落在 `deliveries/ITER-NNNN-<slug>.md`），迭代收口纪律以 `iteration-schema.md` §5 为准。
+- 每个承接迭代各自走完整 `P1 -> P5` 并各自收口、各自交付（小版本交付落在 `.ai/deliveries/ITER-NNNN-<slug>.md`），迭代收口纪律以 `iteration-schema.md` §5 为准。
 
 ### 7.3 演进 (Evolve)
 
@@ -262,7 +262,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 - 时机：版本范围达成、其下迭代均已 `closed`（或显式 `abandoned`）、确认大版本可交付时。
 - 动作（三步必做、缺一不可）：
   1. 把 `.ai/MILESTONE.md` 快照复制到 `.ai/milestones/MILE-NNNN/MILESTONE.md`。
-  2. 生成版本级交付总结 `deliveries/milestones/MILE-NNNN-<slug>.md`，聚合其下各迭代交付，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/milestones/MILE-NNNN-<slug>.html` 阅读视图（含里程碑专用「拆分路线图回填」段）；结构与触发参考 `delivery-summary.md`（聚合口径见其 §4.8）；`.md` 与 `.html` 均**只链接各迭代交付路径与里程碑产物路径，不得全文嵌入**（见 `delivery-summary.md §4.7` 与本规范 §9）。
+  2. 生成版本级交付总结 `.ai/deliveries/milestones/MILE-NNNN-<slug>.md`，聚合其下各迭代交付，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `.ai/deliveries/milestones/MILE-NNNN-<slug>.html` 阅读视图（含里程碑专用「拆分路线图回填」段）；结构与触发参考 `delivery-summary.md`（聚合口径见其 §4.8）；`.md` 与 `.html` 均**只链接各迭代交付路径与里程碑产物路径，不得全文嵌入**（见 `delivery-summary.md §4.7` 与本规范 §9）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`。
 - 版本级整体验收：收口前必须确认拆分路线图各路线项均 `closed`/`abandoned`、其下迭代验收闭环；存在 `planned`/`active` 路线项时不得收口（除非显式废弃该路线项）。
 - 完成归档、交付与台账后，运行 `$BUTLER/scripts/audit-project-state.py --project-root "$PROJECT_ROOT"`；Butler 规则仓处于提交/发布前时可加 `--allow-unreleased`，但必须保留 `UNRELEASED` 亮牌；后续切版仍按 `versioning-schema.md` 在干净工作树无豁免复核。确定性漂移未清零不得宣告里程碑收口。
@@ -281,7 +281,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 2. 为每个方向分别选一个稳定 kebab-case `候办键`，不含 `MILE-NNNN`。
 3. 每块的结构性落盘全部经 `tools/intake/intake.py`，**不得**手工编辑草稿的头部标记、段落骨架或待办区索引——这些要几处一起改才有意义，手工改必然出现只改一处的半截态。每块两次调用：
    - 这个方向还没进闪念口时，先 `add --project-root <PROJECT_ROOT> --text "<一句话>" [--slug <短英文键>]` 记一条闪念，拿到闪念键。
-   - 再 `handle --project-root <PROJECT_ROOT> --inbox <闪念键> --to incubated --slug <候办键> --scale <规模> --title <标题> --reason <暂缓原因>`。工具一次原子写三处：回写闪念行、写 `.ai/milestone-backlog/<候办键>.md`、在待办区追加索引行，要么全成要么全不成。
+   - 再 `handle --project-root <PROJECT_ROOT> --inbox <闪念键> --to incubated --slug <候办键> --scale <规模> --title <标题> --reason <暂缓原因>`。工具一次原子写三处：回写闪念行、写 `.ai/backlog/<候办键>.md`、在待办区追加索引行，要么全成要么全不成。
 
    工具按 `规模` 生成草稿的段落骨架并在每段留一行占位标记，把已合成的 §5 内容补进去是你的活。`规模` 三档与按档段落见 `40_Context_Management/intake-schema.md §2`，三个动作各自「工具决定 / 必须问用户」的分界见 `intake-workflow.md`。台账尚不存在时先建出 `current: none` + 空正式表 + 待办区，工具不代建。
 4. 不写 `.ai/MILESTONE.md`，不改 `current`，不产生 Goal 或迭代归属；各块后续可被分别修改、删除或按键提升。
@@ -290,7 +290,7 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 - 它是正式表最大号，删掉后不会留下中间缺号。
 - 「含迭代」为 `—`，且 `.ai/ITERATIONS.md` 没有任何行的「所属 milestone」指向它。
-- `.ai/milestones/MILE-NNNN/` 不存在，交付列为 `—`，`deliveries/milestones/` 也没有它的交付。
+- `.ai/milestones/MILE-NNNN/` 不存在，交付列为 `—`，`.ai/deliveries/milestones/` 也没有它的交付。
 
 通过后，先把 `.ai/MILESTONE.md` 写入候办草稿并补索引，再从正式表删除临时行、置 `current: none`，最后删除 `.ai/MILESTONE.md` 活工作区。任一预检不通过，都不得回收号码，改走 §7.4/§7.5。
 
@@ -304,10 +304,10 @@ active 里程碑的活产物，承载下列四段。它是**方向性产物**：
 
 ## 9. 交付文档结构
 
-`deliveries/` 同时承载迭代交付与里程碑交付，布局如下：
+`.ai/deliveries/` 同时承载迭代交付与里程碑交付，布局如下：
 
 ```txt
-deliveries/
+.ai/deliveries/
   ITER-0001-<slug>.md          # 迭代交付（小版本），平铺按号即时间线
   ITER-0002-<slug>.md
   ...
@@ -318,6 +318,6 @@ deliveries/
 ```
 
 - 每份交付（迭代级与里程碑级）都另有一份**同目录、同 slug、仅扩展名为 `.html`** 的固定格式阅读视图（如 `ITER-0001-<slug>.html`、`milestones/MILE-0001-<slug>.html`）；`.md` 为引用真源，`.html` 生成协议见 `delivery-summary.md` §9。上图省略 `.html` 兄弟文件以保持时间线清晰。
-- 迭代交付平铺在 `deliveries/` 根，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条连续时间线。
-- 里程碑交付集中在 `deliveries/milestones/`，不污染迭代时间线。
+- 迭代交付平铺在 `.ai/deliveries/` 根，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条连续时间线。
+- 里程碑交付集中在 `.ai/deliveries/milestones/`，不污染迭代时间线。
 - 版本级交付的结构、聚合口径与对话层风格以 `delivery-summary.md` 为准。

@@ -19,7 +19,6 @@ DEFAULT = {
     "schema_version": 1,
     "dangerous": False,
     "independent_review": False,
-    "preference": True,
     "profiles": [],
 }
 
@@ -183,7 +182,7 @@ def test_set_rejects_bad_value_without_modifying_file(tmp_path: Path) -> None:
     assert run("init", "--project-root", str(root)).returncode == 0
     path = root / ".ai" / "butler.config.json"
     before = path.read_bytes()
-    result = run("set", "preference", "yes", "--project-root", str(root))
+    result = run("set", "dangerous", "yes", "--project-root", str(root))
     assert result.returncode == 2
     assert payload(result)["code"] == "invalid_value"
     assert path.read_bytes() == before
@@ -201,6 +200,10 @@ def test_set_rejects_missing_config_and_unknown_field(tmp_path: Path) -> None:
     unknown = run("set", "schema_version", "1", "--project-root", str(root))
     assert unknown.returncode == 2
     assert payload(unknown)["code"] == "invalid_field"
+    assert path.read_bytes() == before
+    retired = run("set", "preference", "true", "--project-root", str(root))
+    assert retired.returncode == 2
+    assert payload(retired)["code"] == "invalid_field"
     assert path.read_bytes() == before
 
 
@@ -282,7 +285,6 @@ def test_legacy_resolve_and_migration_plan_preserve_human_sections(tmp_path: Pat
         **DEFAULT,
         "dangerous": True,
         "independent_review": True,
-        "preference": False,
         "profiles": ["typescript-rules", "build-tooling"],
     }
     assert not (root / ".ai" / "butler.config.json").exists()
@@ -313,7 +315,6 @@ def test_json_is_authoritative_and_reports_legacy_conflicts(tmp_path: Path) -> N
     assert payload(resolved)["legacy_conflicts"] == [
         "dangerous",
         "independent_review",
-        "preference",
     ]
 
 
@@ -354,7 +355,6 @@ def test_migration_rejects_conflict_and_accepts_matching_json(tmp_path: Path) ->
         **DEFAULT,
         "dangerous": True,
         "independent_review": True,
-        "preference": False,
     }
     (root / ".ai" / "butler.config.json").write_text(
         json.dumps(config, indent=2) + "\n", encoding="utf-8"
@@ -386,3 +386,47 @@ def test_new_deployment_contract_uses_json_without_markdown_double_write() -> No
     assert "机器配置不双写" in local_schema
     assert ".ai/butler.config.json" in rule_card
     assert "JSON 存在即为唯一真源" in rule_card
+    assert "不再有这个字段" in rule_card
+
+
+def test_retired_preference_is_dropped_on_read_and_removed_only_when_asked(tmp_path: Path) -> None:
+    module = load_tool()
+    root = project(tmp_path)
+    path = root / ".ai" / "butler.config.json"
+    stored = {
+        **DEFAULT,
+        "dangerous": True,
+        "preference": False,
+        "profiles": ["typescript-rules"],
+    }
+    path.write_text(json.dumps(stored, indent=2) + "\n", encoding="utf-8")
+    before = path.read_bytes()
+
+    config, source, _ = module.read(root)
+    assert source == "config"
+    assert "preference" not in config
+    assert config["dangerous"] is True
+    assert config["independent_review"] is False
+    assert config["profiles"] == ["typescript-rules"]
+    assert path.read_bytes() == before
+    assert module.plan_migration(root) == {}
+
+    changes = module.plan_retired_preference_removal(root)
+    assert set(changes) == {Path(".ai/butler.config.json")}
+    written = json.loads(changes[Path(".ai/butler.config.json")])
+    assert "preference" not in written
+    assert written["dangerous"] is True
+    assert written["independent_review"] is False
+    assert written["profiles"] == ["typescript-rules"]
+
+    path.write_text(json.dumps(DEFAULT, indent=2) + "\n", encoding="utf-8")
+    assert module.plan_retired_preference_removal(root) == {}
+    assert module.read(root)[0] == DEFAULT
+
+    path.write_text(
+        json.dumps({**DEFAULT, "preference": "yes"}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(module.ConfigError) as raised:
+        module.read(root)
+    assert raised.value.code == "invalid_type"

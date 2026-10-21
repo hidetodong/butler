@@ -171,7 +171,7 @@ scope: 已部署 `.ai/` 维护设施后的升级迁移
 - **首次部署：** 继续由 `mcv-deployment.md` 定义。
 - **写入频率与批处理策略：** 继续由 `maintenance-boundaries.md` 定义。
 - **`02_SESSION_HANDOFF.md` 的结构规范：** 继续由 `40_Context_Management/handoff-spec.md` 定义。
-- **`deliveries/` 下的人类交付总结：** 不属于 `.ai` 升级体系，继续由 `delivery-summary.md` 与交付收尾规则约束。
+- **`.ai/deliveries/` 下的人类交付总结：** 不属于升级器可写集合，继续由 `delivery-summary.md` 与交付收尾规则约束。
 
 因此：
 

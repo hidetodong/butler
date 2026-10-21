@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-gates",
+  "iteration": "ITER-0120",
+  "ac_ids": [
+    "AC11"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/audit-project-state.py",
+      "--project-root",
+      ".",
+      "--allow-unreleased"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-11T03:33:34.921Z",
+  "finished_at": "2026-09-11T03:33:37.625Z",
+  "duration_ms": 2704,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99935,
+    "captured_bytes": 99935,
+    "sha256": "3c6b2035edcebd407c81ba3664e020ea5ee507c79b0468146896f46cf2cd2911",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

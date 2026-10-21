@@ -21,7 +21,7 @@ INBOX_REL = ".ai/INBOX.md"
 MILESTONES_REL = ".ai/MILESTONES.md"
 ITERATIONS_REL = ".ai/ITERATIONS.md"
 MILESTONE_REL = ".ai/MILESTONE.md"
-BACKLOG_REL = ".ai/milestone-backlog"
+BACKLOG_REL = ".ai/backlog"
 
 INBOX_HEADER = "| 闪念键 | 记于 | 一句话 | 状态 | 去向 |"
 INBOX_SEP = "|---|---|---|---|---|"
@@ -230,7 +230,7 @@ class Inbox:
 
 
 # ---------------------------------------------------------------------------
-# 第二层 · 孵化区（索引在 MILESTONES.md 待办区，草稿在 milestone-backlog/）
+# 第二层 · 孵化区（索引在 MILESTONES.md 待办区，草稿在 backlog/）
 # ---------------------------------------------------------------------------
 class Milestones:
     def __init__(self, path: pathlib.Path):
@@ -747,6 +747,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv=None) -> int:
+    try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
     args = build_parser().parse_args(argv)
     root = pathlib.Path(args.project_root).resolve()
     handlers = {"add": cmd_add, "list": cmd_list, "handle": cmd_handle}

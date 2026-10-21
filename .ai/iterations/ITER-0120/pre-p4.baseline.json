@@ -1,0 +1,38 @@
+{
+  "hook_file_count": 19,
+  "hook_digest": "bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d",
+  "hook_files": [
+    "README.md",
+    "butler_advisor.py",
+    "butler_gate.py",
+    "lib/__init__.py",
+    "lib/bypass.py",
+    "lib/codex_patch.py",
+    "lib/io.py",
+    "lib/project_root.py",
+    "lib/workspace_scope.py",
+    "rules/__init__.py",
+    "rules/artifact_chain.py",
+    "rules/artifact_structure.py",
+    "rules/handoff_freshness.py",
+    "rules/ledger_status.py",
+    "rules/phase_gate.py",
+    "rules/prd_split_reminder.py",
+    "rules/protected_paths.py",
+    "rules/single_active_iteration.py",
+    "rules/workspace_scope.py"
+  ],
+  "backlog": [
+    "ai-user-experience-driven-iteration.md",
+    "codex-structured-question-cards.md",
+    "delivery-renderer-in-repo.md",
+    "multi-active-iteration-runtime.md",
+    "parallel-p4-execution-slots.md",
+    "prd-evidence-check.md",
+    "prd-future-route-fulfillment.md",
+    "prd-impact-reconciliation.md",
+    "state-transition-trust-gate.md",
+    "tdd-evidence-hardening.md"
+  ],
+  "deliveries_count": 272
+}

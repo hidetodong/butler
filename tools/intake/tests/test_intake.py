@@ -146,7 +146,7 @@ class TestList(TempRootCase):
         _, out, _ = run(root, "list", "--layer", "backlog")
         self.assertTrue(out["backlog"][0]["incomplete"])
 
-        draft = root / ".ai" / "milestone-backlog" / "alpha.md"
+        draft = root / ".ai" / "backlog" / "alpha.md"
         filled = "\n".join(
             line for line in draft.read_text(encoding="utf-8").splitlines()
             if PLACEHOLDER not in line
@@ -248,13 +248,13 @@ class TestIncubateWritesThreePlaces(TempRootCase):
         self.assertEqual(sorted(out["written"]), sorted([
             ".ai/INBOX.md",
             ".ai/MILESTONES.md",
-            ".ai/milestone-backlog/ship-renderer.md",
+            ".ai/backlog/ship-renderer.md",
         ]))
 
         inbox = (root / ".ai" / "INBOX.md").read_text(encoding="utf-8")
-        self.assertIn("| incubated | .ai/milestone-backlog/ship-renderer.md |", inbox)
+        self.assertIn("| incubated | .ai/backlog/ship-renderer.md |", inbox)
 
-        draft = (root / ".ai" / "milestone-backlog" / "ship-renderer.md").read_text(encoding="utf-8")
+        draft = (root / ".ai" / "backlog" / "ship-renderer.md").read_text(encoding="utf-8")
         self.assertIn("候办键: ship-renderer", draft)
         self.assertIn("候办状态: deferred", draft)
         self.assertIn("规模: iteration", draft)
@@ -265,7 +265,7 @@ class TestIncubateWritesThreePlaces(TempRootCase):
         ledger = (root / ".ai" / "MILESTONES.md").read_text(encoding="utf-8")
         self.assertIn(
             "| ship-renderer | 把渲染器搬进仓库 | 2026-08-20 | "
-            ".ai/milestone-backlog/ship-renderer.md | 当前 active 占着，先入孵化区 |",
+            ".ai/backlog/ship-renderer.md | 当前 active 占着，先入孵化区 |",
             ledger,
         )
 
@@ -274,7 +274,7 @@ class TestIncubateWritesThreePlaces(TempRootCase):
         run(root, "handle", "--inbox", "2026-08-20-ship-the-renderer", "--to", "incubated",
             "--slug", "big", "--scale", "milestone", "--title", "大方向", "--reason", "R",
             "--date", "2026-08-20")
-        draft = (root / ".ai" / "milestone-backlog" / "big.md").read_text(encoding="utf-8")
+        draft = (root / ".ai" / "backlog" / "big.md").read_text(encoding="utf-8")
         for section in ("## 范围评估", "## 理解阐释", "## 拆分路线图", "## 范围演进记录"):
             self.assertIn(section, draft)
 
@@ -283,7 +283,7 @@ class TestIncubateWritesThreePlaces(TempRootCase):
         run(root, "handle", "--inbox", "2026-08-20-ship-the-renderer", "--to", "incubated",
             "--slug", "maybe", "--scale", "undecided", "--title", "还不确定", "--reason", "R",
             "--date", "2026-08-20")
-        draft = (root / ".ai" / "milestone-backlog" / "maybe.md").read_text(encoding="utf-8")
+        draft = (root / ".ai" / "backlog" / "maybe.md").read_text(encoding="utf-8")
         self.assertIn("## 想做什么", draft)
         self.assertIn("## 卡在哪", draft)
 
@@ -337,7 +337,7 @@ class TestRollback(TempRootCase):
             intake._write_file = original
         self.assertNotEqual(code, 0)
         self.assertEqual(snapshot(root), before)
-        self.assertFalse((root / ".ai" / "milestone-backlog" / "probe.md").exists())
+        self.assertFalse((root / ".ai" / "backlog" / "probe.md").exists())
 
     def test_failure_on_third_write_rolls_everything_back(self):
         root = self._seed()
@@ -358,7 +358,7 @@ class TestRollback(TempRootCase):
 class TestExits(TempRootCase):
     def _root_with_draft(self, scale, *, milestones_current="none", iterations_current="none"):
         row = (
-            "| d1 | 夹具方向 | 2026-08-20 | .ai/milestone-backlog/d1.md | 先缓着 |"
+            "| d1 | 夹具方向 | 2026-08-20 | .ai/backlog/d1.md | 先缓着 |"
         )
         root = make_root(
             self.tmp,
@@ -377,14 +377,14 @@ class TestExits(TempRootCase):
                          "## 拆分路线图\n\n真内容。\n\n## 范围演进记录\n\n真内容。\n",
             "iteration": "## 要解决什么\n\n真内容。\n\n## 暂缓原因\n\n真内容。\n",
         }[scale]
-        (root / ".ai" / "milestone-backlog" / "d1.md").write_text(
+        (root / ".ai" / "backlog" / "d1.md").write_text(
             f"# 夹具方向\n\n候办键: d1\n候办状态: deferred\n规模: {scale}\n\n{sections}",
             encoding="utf-8",
         )
         inbox = (
             "# INBOX — 闪念口\n\n## 闪念\n\n"
             f"{INBOX_HEADER}\n|---|---|---|---|---|\n"
-            "| 2026-08-01-seed | 2026-08-01 | 种子闪念 | incubated | .ai/milestone-backlog/d1.md |\n"
+            "| 2026-08-01-seed | 2026-08-01 | 种子闪念 | incubated | .ai/backlog/d1.md |\n"
         )
         (root / ".ai" / "INBOX.md").write_text(inbox, encoding="utf-8")
         return root
@@ -406,7 +406,7 @@ class TestExits(TempRootCase):
         self.assertIn("current: MILE-0002", ledger)
         self.assertIn("| MILE-0002 | 夹具方向 | active | 2026-08-20 | — | — | — |", ledger)
         self.assertNotIn("| d1 |", ledger)
-        self.assertFalse((root / ".ai" / "milestone-backlog" / "d1.md").exists())
+        self.assertFalse((root / ".ai" / "backlog" / "d1.md").exists())
         body = (root / ".ai" / "MILESTONE.md").read_text(encoding="utf-8")
         self.assertIn("## 5.3 拆分路线图", body)
 
@@ -427,7 +427,7 @@ class TestExits(TempRootCase):
         self.assertIn("current: ITER-0002", ledger)
         self.assertIn("| ITER-0002 | 夹具方向 | active | 2026-08-20 | — |", ledger)
         self.assertNotIn("| d1 |", (root / ".ai" / "MILESTONES.md").read_text(encoding="utf-8"))
-        self.assertFalse((root / ".ai" / "milestone-backlog" / "d1.md").exists())
+        self.assertFalse((root / ".ai" / "backlog" / "d1.md").exists())
 
     def test_iterate_requires_no_active_iteration(self):
         root = self._root_with_draft("iteration", iterations_current="ITER-0001")
@@ -441,7 +441,7 @@ class TestExits(TempRootCase):
         code, out, _ = run(root, "handle", "--backlog", "d1", "--exit", "withdraw",
                            "--reason", "想清楚了不值得做", "--date", "2026-08-20")
         self.assertEqual(code, 0)
-        self.assertFalse((root / ".ai" / "milestone-backlog" / "d1.md").exists())
+        self.assertFalse((root / ".ai" / "backlog" / "d1.md").exists())
         self.assertNotIn("| d1 |", (root / ".ai" / "MILESTONES.md").read_text(encoding="utf-8"))
         inbox = (root / ".ai" / "INBOX.md").read_text(encoding="utf-8")
         self.assertIn("| 2026-08-01-seed | 2026-08-01 | 种子闪念 | dropped |", inbox)

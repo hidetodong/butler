@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0121 交付总结 · ITER-0121 · hook 拦截日志与仓根 meta 逃生舱</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0121 · hook 拦截日志与仓根 meta 逃生舱</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0121</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-09-14</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>拦下来的 hook 事后能翻到原因；没有进行中的迭代时，仓根那几份说明书能直接改，不用先开一轮迭代凑齐四件套。改 hook 源文件不再因为「摘要必须等于当前版本 tag」让 CI 立刻红。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+        <li><strong>拦截日志</strong>：最终 deny 往 <code>.ai/.hook-blocks.log</code> 追加一行。bypass 成功仍只写 <code>.ai/RUN_LOG.md</code>。写日志失败继续 deny。文件进 gitignore，上限 256KB，超了丢最旧的完整行。</li>
+        <li><strong>逃生舱</strong>：没有 active 迭代时，<code>README.md</code> / <code>CHANGELOG.md</code> / <code>.gitignore</code> / <code>VERSION</code> / <code>LICENSE</code> 不被 <code>phase_gate</code> 和 <code>workspace_scope</code> 拦。有迭代时仍走原门禁。不扩到入口文件。</li>
+        <li><strong>摘要 CI</strong>：工作区 hook 树摘要等于当前 tag，或已登记进 <code>known_hook_tree_digests</code>。本轮新摘要已登记。历史 tag 仍必须在白名单里。</li>
+        <li><strong>欠账</strong>：删掉「hook 树一改就必须跟切版绑在一起」。v4.0.0 必须含 hook 同步。</li>
+      </ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+        <li>被门禁拦住之后，项目里会多一份本地拦截日志，能看出是哪条规则、拦了哪个文件。这份日志不进 git。</li>
+        <li>没有进行中的迭代时，改 README、CHANGELOG、版本号这类仓根文件不再被「先写四件套」拦住。</li>
+        <li>以后改 hook 不必跟切版绑在同一批，把新树摘要登记进白名单即可。</li>
+      </ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+        <li>新增：<code>templates/hooks/lib/block_log.py</code>、<code>templates/hooks/lib/iteration_state.py</code>。</li>
+        <li>改动：dispatcher、<code>phase_gate</code>、<code>workspace_scope</code>、升级器摘要测试、<code>migrations/manifest.json</code>、hook README、本仓 <code>.gitignore</code>。</li>
+        <li>台账：里程碑范围演进记录、欠账清单。</li>
+        <li>目标项目侧：下次切版同步 hook 才会拿到新 dispatcher；应忽略 <code>.ai/.hook-blocks.log</code>。</li>
+      </ul>
+    </section>
+
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>10 条验收全部通过。hook pytest 211 passed，升级器测试 22 passed，CI 退出码 0。状态审计 0 漂移、2 条未发布标记。收口前完成裁决 <code>eligible</code>。独立复核未跑。</p>
+      <p>前三次取证把环境变量当成了命令，重录后绿。审计第一次失败是交接文件陈旧，同步后再录通过。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+        <li>butler 仓自己不跑 live hook，行为只在测试里锁着。</li>
+        <li>已部署项目要等到 v4.0.0 同步 hook 才拿得到新 dispatcher。</li>
+        <li>用户原件只读这条纪律仍没有机器兜底。</li>
+        <li>本轮不切版、不提交。</li>
+      </ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+        <li>四件套：<code>.ai/iterations/ITER-0121/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+        <li>变更流：<code>.ai/iterations/ITER-0121/CHANGELOG.md</code></li>
+        <li>证据：<code>.ai/iterations/ITER-0121/evidence/</code>（10 条记录）</li>
+      </ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

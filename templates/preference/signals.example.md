@@ -1,8 +1,6 @@
 # 原始信号示例（仅参考，勿拷入 signals/）
 
-> 真实信号按项目落在 `$BUTLER_PREF/signals/<project-slug>.md`，append-only。
-> 字段定义见 `preference-probe-engine.md` §4.3。每条信号必须带情境标签，
-> 否则算不出「跨几个项目背书」，通识无从晋级。
+> **引擎已在 ITER-0124 退役。** 本文件只保留旧信号的字段形状，不再写入新信号。
 
 ## 单条格式
 
@@ -29,7 +27,7 @@
   情境: butler 规则仓库 / 交付结构
   决策类型: AskUserQuestion 选择
   选择 vs 否决: 选「扁平时间线 + milestones 子目录」；否决「版本目录包」
-  上下文: deliveries/ 布局
+  上下文: .ai/deliveries/ 布局
   为什么: 迭代历史要保持一条连续可读时间线
 
 - 时间: 2026-06-09

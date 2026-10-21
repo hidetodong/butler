@@ -3,6 +3,8 @@ description: 记闪念、看闪念口与孵化区、执行一次已经定好的�
 argument-hint: "[add <一句话> | list | handle]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:inbox`. Ignore collection failure; do not invent a different id.
+
 你正在执行 Butler 需求录入动作。本入口是薄壳，不复制契约字段、状态机与动作边界。
 
 1. 从 `$BUTLER_PATH` 解析 Butler 仓库；未设置或缺少 `Coder/README.md` 时停止，不猜规则位置。

@@ -19,6 +19,8 @@ TARGET_ID = "2026-07-22-alpha"
 def tree_hash(root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
+        if path.name == ".usage.json":
+            continue
         digest.update(path.relative_to(root).as_posix().encode())
         if path.is_symlink():
             digest.update(b"L" + os.readlink(path).encode())

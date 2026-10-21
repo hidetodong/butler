@@ -3,6 +3,8 @@ description: 用户主动脑暴或接受 Explore 建议时，在 P1→P5 之外�
 argument-hint: "[贴一段模糊需求 / 想法，或留空=进入脑暴对话]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:ideation`. Ignore collection failure; do not invent a different id.
+
 你正在执行 Butler 的 **Explore / Ideation** 动作。本命令是薄壳路由器：只加载规则真源并委托执行；激活、探索、Decision Map、真源优先级与 promotion 口径一律以被指向的规则文件为准，本文件不复制算法。
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 Butler 仓）**：下文引用的 `Coder/…` 是 Butler 规则仓库里的文件，相对 `$BUTLER_PATH` 解析。探索可以只留在对话中；需要持久化 Decision Map 或 promotion 时才解析目标项目根，绝不把产物写进 Butler 规则仓。

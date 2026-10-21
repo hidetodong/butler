@@ -3,6 +3,8 @@ name: butler-review
 description: Review code, documents, plans, or current changes with Butler's review protocol. Use for quick self-review, acceptance-criteria verification, full review, or an explicitly requested independent review.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:review`. Ignore collection failure; do not invent a different id.
+
 # Butler Review
 
 1. Resolve `BUTLER_PATH`; require `Coder/README.md`, otherwise stop with setup guidance.

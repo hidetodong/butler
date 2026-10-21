@@ -3,6 +3,8 @@ description: 录入或开一个里程碑；多个暂缓方向一方向一文件�
 argument-hint: "[start <候办键> | status | 贴里程碑 brief 或路径 | 留空=录入]"
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:milestone`. Ignore collection failure; do not invent a different id.
+
 你正在执行 butler 的 **里程碑录入 / 看板**动作。本命令是**薄壳路由器**——只做三件事：① 保证把对的规则读进上下文，② 按参数分派，③ 委托真源规则执行。**候办/正式落盘、里程碑号分配、录入协议和看板口径一律以被指向的规则文件为准，本文件不重写算法**（守 butler DRY 红线）。
 
 > **路径约定（本命令可在任意项目里运行，当前目录不一定是 butler 仓）**：下文引用的 `Coder/…` 都是 **butler 规则仓库**里的文件，一律相对 `$BUTLER_PATH`（`setup.sh` 全局安装时写入的环境变量；编辑 butler 仓本身时就是仓库根）解析。产出（`.ai/MILESTONE.md`、`.ai/MILESTONES.md`、`.ai/references/prd/…` 等）一律落**当前项目**，绝不落 butler 仓。
@@ -17,7 +19,7 @@ argument-hint: "[start <候办键> | status | 贴里程碑 brief 或路径 | 留
 ## 按 `$ARGUMENTS` 路由
 
 **分支 A ─ 留空，或给了一段里程碑方向说明 / brief 文件路径 → 录入**
-读 `Coder/20_Workflow_Lifecycle/milestone-schema.md`——先按 **§6.1 启动信号** 判断这是不是该开里程碑，再按 **§6.4 录入（Brief）** 合成范围、理解和路线图。**soft 对齐只确认内容，不默认代表开工**：用户本轮已明确要立即推进，才按 **§7.1** 把内容写入 `.ai/MILESTONE.md`、从正式表最大号 +1 领 `MILE-NNNN`；用户暂缓或只是讨论，则按 **§4.5/§7.6** 先把可独立启动的多个方向拆成多个平级候办块，严格一方向一个候办键、一行索引、一份 `.ai/milestone-backlog/<slug>.md`，不改 `current`、不占号。
+读 `Coder/20_Workflow_Lifecycle/milestone-schema.md`——先按 **§6.1 启动信号** 判断这是不是该开里程碑，再按 **§6.4 录入（Brief）** 合成范围、理解和路线图。**soft 对齐只确认内容，不默认代表开工**：用户本轮已明确要立即推进，才按 **§7.1** 把内容写入 `.ai/MILESTONE.md`、从正式表最大号 +1 领 `MILE-NNNN`；用户暂缓或只是讨论，则按 **§4.5/§7.6** 先把可独立启动的多个方向拆成多个平级候办块，严格一方向一个候办键、一行索引、一份 `.ai/backlog/<slug>.md`，不改 `current`、不占号。
 　└ **若 brief 材料本身是大 PRD**（逐字权威规格）：按 §6.4 合成协议**并进**触发 `Coder/40_Context_Management/prd-split.md` 切成 `.ai/references/prd/`——一份输入同喂方向层路线图 + 细节层切片（见 §5.3 路线项↔slug 交叉指针）。
 
 **分支 B ─ 以 `start <候办键>` 开头 → 候办提升**

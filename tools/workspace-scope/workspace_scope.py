@@ -100,7 +100,11 @@ def run(args: argparse.Namespace) -> int:
         _emit(action, True, zero_write=True, **result)
         return 0
     if action == "check-diff":
-        paths = git_changed_paths(root, args.base, args.head, args.include_untracked)
+        paths = [
+            path
+            for path in git_changed_paths(root, args.base, args.head, args.include_untracked)
+            if Path(path).name != ".usage.json"
+        ]
         result = authorize_paths(root, paths)
         _emit(action, True, git={"base": args.base, "head": args.head, "include_untracked": args.include_untracked}, zero_write=True, **result)
         return 0
@@ -108,6 +112,19 @@ def run(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
     action = "unknown"
     try:
         args = build_parser().parse_args(argv)

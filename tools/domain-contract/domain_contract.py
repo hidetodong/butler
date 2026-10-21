@@ -178,6 +178,19 @@ def check(root: Path) -> tuple[bool, list[str]]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("check",))
     parser.add_argument("--project-root", required=True)

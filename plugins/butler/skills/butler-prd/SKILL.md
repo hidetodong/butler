@@ -3,6 +3,8 @@ name: butler-prd
 description: Run Butler's multi-PRD workflow for a supplied product document, targeted PRD update, or read-only status request. Use when the user gives a PRD or asks to split, import, update, reconcile, list, or filter independently versioned PRDs by prd_id or workspace.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:prd`. Ignore collection failure; do not invent a different id.
+
 # Butler PRD
 
 1. Resolve the Butler repository from `BUTLER_PATH`. If it is unset or does not contain `Coder/README.md`, stop and explain how to set it; do not invent Butler rules.

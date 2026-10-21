@@ -4,7 +4,7 @@
   "decision_id": "DEC-0001",
   "details": {
     "evidence": [
-      "repo:.ai/milestone-backlog/codex-structured-question-cards.md",
+      "repo:.ai/backlog/codex-structured-question-cards.md",
       "repo:Coder/20_Workflow_Lifecycle/acceptance-schema.md",
       "repo:Coder/20_Workflow_Lifecycle/tech-plan-schema.md"
     ],
@@ -14,7 +14,7 @@
         "Use native cards only for bounded mutually exclusive confirmations; preserve text or HITL for open and true multi-select questions"
       ],
       "sources": [
-        ".ai/milestone-backlog/codex-structured-question-cards.md",
+        ".ai/backlog/codex-structured-question-cards.md",
         "Coder/20_Workflow_Lifecycle/acceptance-schema.md",
         "Coder/20_Workflow_Lifecycle/tech-plan-schema.md"
       ],

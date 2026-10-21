@@ -15,9 +15,9 @@ HEADER = (
 ) + SEP
 
 ROW_ACTIVE_1 = "| ITER-0001 | t | active | 2026-01-01 | — | — | — |"
-ROW_CLOSED_1 = "| ITER-0001 | t | closed | 2026-01-01 | 2026-01-02 | — | deliveries/ITER-0001-x.md |"
+ROW_CLOSED_1 = "| ITER-0001 | t | closed | 2026-01-01 | 2026-01-02 | — | .ai/deliveries/ITER-0001-x.md |"
 ROW_ACTIVE_2 = "| ITER-0002 | t | active | 2026-01-03 | — | — | — |"
-ROW_CLOSED_2 = "| ITER-0002 | t | closed | 2026-01-03 | 2026-01-04 | — | deliveries/ITER-0002-x.md |"
+ROW_CLOSED_2 = "| ITER-0002 | t | closed | 2026-01-03 | 2026-01-04 | — | .ai/deliveries/ITER-0002-x.md |"
 ROW_ACTIVE_3 = "| ITER-0003 | t | active | 2026-01-05 | — | — | — |"
 
 

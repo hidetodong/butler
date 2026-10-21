@@ -1,83 +1,137 @@
 <!-- butler-artifact-template: 1.0.0 artifact=tech_plan -->
-# TECH_PLAN — ITER-0119
+# TECH_PLAN — ITER-0126
 
 方案状态: pass
+方案审查日期: 2026-10-21
+方案审查方式: user-ack
 
 ## Design Decisions
 
-### D1 · 原件落 `.ai/references/raw/`，用目录承载身份
+- 本轮把 3.6.0 之后欠下的迁移写成 `migrations/v4.0.0.md`，并在临时项目上证明它跑得通。对应已冻结的 AC1 到 AC9。
+- `VERSION` 保持 `3.6.0`。升级器只执行目标版本不高于 `VERSION` 的步骤，所以这条配方写进清单之后，对着本仓库做计划不会选中 `4.0.0/` 开头的动作。切版、发布说明、标签、提交和 MILE-0016 收口都不在本轮。
+- 不新造动作类型。旧收件箱和仓根 `origin/` 的停，做在计划阶段的一道门里。`preference` 沿用已有的 `migrate_config`，只在目标是 4.0.0 的那一次写回里去掉。
 
-`.ai/references/` 下并存两类保真度，靠**目录**区分而不是文件名前缀：`raw/` 之下是用户原件（自管、AI 只读、非权威），其余（扁平资料与 `prd/` 集合）是 AI 派生的受控投影。选目录的理由是路径前缀能被工具与 hook 机械判定，而文件名前缀写错一个字就静默丢掉保护。`raw/` 与 `references/` 其余子目录一样按需产生，部署时不建——部署只建 `.ai/` 与 `deliveries/` 两个目录。
+### D1 · 清单和配方
 
-`references-schema.md` 的改写落在两处：§1 把「外部真源的落盘区」这句保留，下面那张对照表重做——现在的表拿 `.ai/references/` 对比 `.ai/project/`，而 `.ai/project/` 在 R1（ITER-0112）已退役，对比对象本身不存在了。新表改为在 `.ai/references/` **内部**对比两类保真度，列是「子区 / 存什么 / 谁写 / 权威性」，把「引用 references 里的东西不再自动等于引用权威投影」这件事写在最显眼处。§2「两类资料」扩为三类，原件一类明写不受 `prd_id` 约束、不进版本历史、不被 `prd-split` 消费。
+在 `migrations/manifest.json` 末尾加一节：`source` 为 `3.6.0`，`target` 为 `4.0.0`，`recipe` 为 `v4.0.0.md`。动作编号都以 `4.0.0/` 开头，目标版本严格递增，配方文件和清单互相覆盖。`validate_manifest` 必须通过。
 
-### D2 · `origin/` 的改写按「纪律搬家、目录退役」两件事分开做
+`migrations/v4.0.0.md` 按 `v3.6.0.md` 的写法说明影响、步骤、要人处理的部分，以及这次不做什么。已发布的历史配方一个字不改。`migration-schema.md` 里 `[split]` 整段原样留下，包含知识文件夹和退役说明。
 
-18 份文件里提到 `origin/` 的语句分三种，改法不同：
+这一节的动作，按这个顺序：
 
-| 语句类型 | 出现处 | 改法 |
-|---|---|---|
-| 部署要建这个目录 | `mcv-deployment.md §2`、`/butler:init` 步 2、`butler-init` skill、`rule-card.md` 第 63 行 | 目录集由三个减为两个 |
-| 材料从这里来 | `milestone-schema.md`（输入表 / §6.4 步 1 / §7 命令表 / 第 208、212 行）、`/butler:prd` 第 19 行、`HUMAN_GUIDE.md` 第 247、255、258 行、`rule-card.md` 第 51 行 | 路径改指 `.ai/references/raw/` |
-| AI 不许动用户原稿 | `mcv-deployment.md §0.1 / §2`、`references-schema.md §10`、`butler-upgrade.md` 第 76、115 行、`README.md` 第 315 行、`HUMAN_GUIDE.md` 第 174、177 行 | 纪律逐字保留，主语从 `origin/` 换成 `.ai/references/raw/` |
+1. `4.0.0/01-global-install`，类型 `global_install`。域是机器。`apply` 只把它记成待外部确认，不调用 `scripts/setup.sh`，也不改本机插件。
+2. `4.0.0/02-delete-project-dir`，删除 `.ai/project`。目录连同里面的文件一起删。已经不在则视为完成。
+3. `4.0.0/03-delete-project-md`，删除 `.ai/PROJECT.md`。已经不在则视为完成。
+4. `4.0.0/04-move-deliveries`，把仓根 `deliveries` 移到 `.ai/deliveries`。源在且目标不在才搬，字节不变，源消失。两边都在则整次计划停下，不覆盖。源已经不在且目标已经在，再次执行视为完成，不另造一份，也不比较目标里的字节。
+5. `4.0.0/05-migrate-config`，类型 `migrate_config`。卸掉 `preference` 这一键，见 D4。
+6. `4.0.0/06-regen-entrypoints`。
+7. `4.0.0/07-sync-hooks`。
+8. `4.0.0/08-restamp`。版本戳写成临时 butler 根里的 `4.0.0`。本仓库的 `VERSION` 文件不改成这个数。
 
-第三类是本轮最容易做错的地方：删目录时顺手把纪律一起删掉，扫描会显示零命中、看起来很干净，实际上把一条真规矩弄丢了。防线是 AC9——`references-schema.md §10` 那条非回归门与 `test_prd_collection_contract.py` 第 56 行的逐字断言配对，改完要现场演一次「把规则正文那句删掉、测试必须红」。
+删除和移动用 R14 已经落地的路径规则。正好点到 `.ai`、点到受保护子目录、符号链接、两边路径重叠，都拒绝。本轮不改那些规则。
 
-`mcv-deployment.md` 另有两处连带：第 61 行整段重写（`origin/` 的职责段搬进 `.ai/` 的说明里），第 79 行 `INBOX.md` 的描述还在说「双指纹、派生关系回执」并指向 `inbox-schema.md`，那是旧契约的形状，改指 `intake-schema.md` 并改成闪念口的描述。
+### D2 · 旧收件箱和 origin 先停
 
-### D3 · 删除的执行顺序：先摘引用，后删文件
+门写在 `build_plan` 里，只有选中的队列包含目标 `4.0.0` 时才走。版本号还是 `3.6.0` 时队列里没有这一节，这道门不生效，已有的旧版本升级保持原样。
 
-顺序是「改所有引用方 → 删被引用的文件 → 跑扫描」。反过来先删文件会让中间态出现一堆指向不存在文件的死引用，若中途中断就留下比开工前更烂的现场。具体批次：
+停下的判据：
 
-1. **B1 引用改写**：`Coder/README.md`（目录树第 96–97 行、职责段第 220–221 行）、`mcv-deployment.md`、`HUMAN_GUIDE.md`、`intake-schema.md`（第 10 行生效时点声明整块、第 49、182 行两处旧契约引用）、`intake-workflow.md` §6「与旧链的关系」整节、`.ai/invariants.md` 第 48 条。
-2. **B2 `origin/` 改写**：按 D2 那张表逐份改。
-3. **B3 删除**：`inbox-schema.md`、`inbox-workflow.md`、`tools/inbox/` 整目录、`templates/hooks/tests/test_inbox_contract.py`。
-4. **B4 测试面**：`test_inbox_workflow.py` 删一个用例、`test_mile0009_e2e.py` 摘 inbox 段、`test_prd_collection_contract.py` 改断言、`scripts/test-butler-upgrade.py` 第 398 行夹具改路径、`tools/intake/tests/` 加回归用例、`verify-ci.sh` 删一行。
-5. **B5 台账与派生**：`.ai/debt.md`、`.ai/MILESTONE.md §5.4`、`.ai/OVERVIEW.md --write`。
+- `.ai/INBOX.md` 是符号链接，或者仓根 `origin` 是符号链接：退出码 2，不跟随，零写入。
+- `.ai/INBOX.md` 是普通文件，且正文里有 `butler-inbox:managed`：退出码 2，零写入。这个标记是旧格式的识别点。不靠表头用词，因为新旧表头有共用的字。
+- 仓根 `origin` 作为真实文件或目录存在：退出码 2，零写入。不看里面有什么，避免把用户自己的文件删掉。
 
-`intake-schema.md` 与 `intake-workflow.md` 里那些「旧链还在、R8 删」的过渡性表述本轮必须一起清掉，否则删完之后新契约自己在说假话——这是 AC1 与 AC16 A 组会抓到的。
+这三处任一命中，`.ai/project/`、`.ai/PROJECT.md`、`deliveries/` 也不动。没有「有冲突也继续删别的」这条路。
 
-### D4 · hook 树一个字节都不动
+新格式闪念口仍是 `.ai/INBOX.md`，标题是 `## 闪念`。文件里没有那个旧标记时，不因为它停下，也不改它的字节。两个条件都不存在时，升级继续。
 
-原 AC10 撤回的实测依据：`scripts/test-butler-upgrade.py` 的 `test_whitelist_holds_only_recomputable_history_digests` 末尾有一条断言，要求工作区 `templates/hooks/` 的树摘要等于 `VERSION` 对应 git tag 的摘要。`VERSION` 是 `3.6.0`、`v3.6.0` 已打 tag，所以任何非测试 hook 文件的改动都会让它红（探针实测 `bd92a614…` != `84a3c089…`）。把 `VERSION` 抬到 `3.7.0` 想绕开，结果是 1 失败变成 1 失败 + 4 错误。
+不新增动作类型。现有前置条件必须和动作表逐字匹配，没有「在则冲突」这种类型可以挂。
 
-好消息是 `skip_hook_file()` 明确排除 `tests` / `__pycache__` / `.pytest_cache` 三类路径，摘要只含 19 个文件（`README.md`、两个入口、`lib/` 5 份、`rules/` 9 份）。本轮要动的三份测试全在 `tests/` 下，不进摘要。AC3 与 AC16 B 组各有一条断言用 `upgrade.py` 的 `hook_source_files` + `tree_digest` 现场复算，确认摘要与开工前逐字相同——这既是「没越界」的证明，也是「删测试是安全的」的证明。
+### D3 · --split 不再必填，形状检查去掉
 
-### D5 · `test_mile0009_e2e.py` 只摘头段，不整份删
+`apply` 的 `--split` 改为可带可不带。取值仍只有 `defer` 和 `now`。不带时不再因为缺参数被拒绝。
 
-那份 e2e 是 MILE-0009 的资产，链条是 inbox scan → prd-migrate → prd-status → prd-update → workspace-scope 五段。inbox 那一段（第 12 行常量、第 45–47 行 `origin/` 夹具、第 63–68 行三条断言）随旧工具消失，余下四段与 MILE-0009 的其它能力有关、仍然有效，整份删会连带丢掉四个工具的端到端覆盖。文件名与类名不改。
+删掉 `build_plan` 里形状检查那一整段。现在它做两件事：项目只有 `.ai/project/`、没有 `00_INDEX.md` 时直接报错；`.ai/PROJECT.md` 还在、索引不在时返回 `needs-decision` 或 `manual-split`。两段都去掉，不留半段。
 
-### D6 · `SRC-` 字样分两类处理
+由此接受的结果：从还含历史 `[split]` 的老版本升上来，并且 `.ai/PROJECT.md` 还在时，不再停下来问拆不拆。历史 split 仍按版本排在 v4 删除前面，但这个动作本身不写文件。队列一旦包含 4.0.0，后面的删除会删掉这个单文件。本轮不把这道停加回去。
 
-`SRC-NNNN` 作为**旧收件箱的来源身份**要清干净（`inbox-schema.md`、`tools/inbox/`、`test_inbox_contract.py` 随文件一起删；`.ai/invariants.md` 第 48 条改写）。但 `tools/prd-status/tests/`、`tools/prd-update/tests/`、`tools/mile0009-e2e/tests/` 里的 `SRC-1` / `SRC-2` 是 PRD 集合表「来源线索」列的**任意字符串夹具**——`references-schema.md` 第 66 行对那一列的定义是「可用于认回同一需求的稳定源标识或回执指针」，不绑定任何编号体系。这些夹具改成不带 `SRC-` 的值（如 `paste-1`），避免扫描误报，也避免读代码的人以为那列还锁着已退役的编号规则。这是 AC16 A 组必须能区分的两类，扫描脚本的模式串要精确到「`SRC-` 后跟四位数字」而不是裸 `SRC-`。
+对着本仓库做计划时版本号仍是 `3.6.0`，4.0.0 的删除不会入队。所以一个停在 1.7.0、带着 `.ai/PROJECT.md` 的临时项目，在本仓库上计划时文件还在，只是不再被旧检查拦住。要看到删除，得用版本写成 `4.0.0` 的临时 butler 根。
 
-### D7 · `.ai/invariants.md` 第 48 条改写而不是删除
+人读入口改成和这个行为一致：`tools/butler-upgrade/README.md`、`plugins/butler/skills/butler-upgrade/SKILL.md`、`Coder/20_Workflow_Lifecycle/butler-upgrade.md`。这三处现在写着 apply 必须带 `--split`，形状不对就停。改它们是让说明跟上已冻结的行为，不加新行为。`migration-schema.md` 的 `[split]` 定义不动。
 
-那条不变量记的是「需求录入这件事的形状」，形状变了，条目该跟着变而不是消失——删掉等于让不变量清单少一条真规矩。改写后描述现行三层契约：三层结构、日期化闪念键（不用递增号池、不做内容指纹认亲）、四态封闭状态机、`tools/intake/intake.py` 是唯一写盘者，`*为什么*` 段保留原有理由里仍成立的部分（语义判断不能冒充机械事实、处理便利不能侵犯用户原稿所有权），并补真源指针 `intake-schema.md`。条目总数不减是 AC10 的硬断言。
+### D4 · preference 从契约里卸掉
+
+活字段只留 `schema_version`、`dangerous`、`independent_review`、`profiles`。默认值里不再有 `preference`。`tools/project-config/butler-config.schema.json` 的必填列表和属性一起拿掉这一键。
+
+读的时候：文件里如果还有这一键，并且值是布尔，从返回值里丢掉，不报未知字段，也不改文件。值不是布尔则拒绝。别的未知字段仍然拒绝。这样版本号还是 `3.6.0` 时，已在当前版本的项目不会因为文件里留着旧键就被判成配置漂移。`plan_migration` 对已经存在的合法配置仍不主动重写。
+
+写回只发生在目标为 `4.0.0` 的 `migrate_config` 上。那一次读原始 JSON，去掉 `preference`，其余三个字段的值保持原样，再按现有编码写回。文件里本来没有这一键，就不为它多写一次。没有配置文件时，沿用现在的 `plan_migration`：要创建才写成不含这一键的默认配置。
+
+旧 Markdown 里的 `preference: on|off` 视为退役行：跳过，不抄进 JSON，也不把整份旧文件判成无法读取。别的无法识别的开关仍然拒绝。机器段的整段删除保持现在的做法。
+
+`set` 如果重写这份 JSON，编码结果里也不会再有这一键。验收锁的是升级那一次。本轮不做「重写时故意把退役键留在磁盘上」。
+
+人读文档不再写这个布尔还在。改这几处现在仍这么写的正文：`templates/rule-card.md`、`HUMAN_GUIDE.md`、`Coder/00_System_Prompt/logic-protocol.md`、`Coder/20_Workflow_Lifecycle/local-constraints-schema.md`、`Coder/20_Workflow_Lifecycle/mcv-deployment.md`、`tools/project-config/README.md`。`tools/project-config/tests/` 里把这一键当成活字段的断言跟着改。
+
+不删 `tools/preference-experiment/`，不删 `templates/preference/`，不碰仓库外的偏好数据。全仓不得出现 `reorder_options` 或 `reorder_by_profile`。历史 `CHANGELOG.md` 和已发布配方里的旧句子不动。
+
+### D5 · 临时回归怎么搭
+
+行为测试仍用临时目录。证明 v4 配方时，临时 butler 根从本仓库拷出升级器真正会读的部分：`migrations/`、`templates/`、`scripts/render-project-entrypoints.py`、`tools/project-config/config.py`，再把这个根里的 `VERSION` 写成 `4.0.0`。动作使用这份拷贝里的真实清单，不另手写一套替代动作。执行的是本仓库的 `upgrade.py`，`--butler-root` 指向拷贝。
+
+临时项目和这个根并排放，不能放进根里面，否则会触发「拒绝升级 butler 自己」。项目戳在 `3.6.0`，入口带用户区原文。有带文件的 `.ai/project/`、有 `.ai/PROJECT.md`、仓根有 `deliveries/`。快乐路径没有旧收件箱，也没有 `origin/`。
+
+跑完之后：那两个路径消失，`deliveries/` 的内容在 `.ai/deliveries/` 且字节不变，源路径消失，用户区原文还在，版本戳是 `4.0.0`，hook 与这份临时根的配方来源一致。再跑一次，退出码 0，不另造一份。断言没有调用 `scripts/setup.sh`。本机插件目录不作为写入目标；需要家目录时用临时家目录。
+
+`scripts/test-butler-upgrade.py` 里这两条改写，不删掉测试文件：`test_release_has_no_v4_recipe` 改成锁住配方内容和「对本仓库做计划时没有 `4.0.0/` 动作」。`test_apply_without_split_is_still_refused` 改成缺参数不再被拒绝，`defer` 和 `now` 仍被接受。形状检查的旧断言改成不再因为部分成形的 `.ai/project/` 停下。历史 split 加 `.ai/PROJECT.md` 的那条，改成锁住 D3 里接受的结果，不把旧的 `needs-decision` 加回去。
+
+### D6 · debt.md 只改被还清的句子
+
+`.ai/debt.md` 里旧收件箱和 `origin/` 那一条：删掉「还没有 `migrations/v4.0.0.md`」，也删掉「升级不会碰这两处」。留下人还得自己处理它们，因为配方是停下，不是删掉。
+
+「从未在真实已部署项目上跑过」留下。这一条里「R15 计划补这次回归」改成仍欠着，本轮只在临时项目上证明配方。不把这条账删掉。其余长期约束不动。不处理收件箱里那两条旧缺陷。
+
+### 执行顺序
+
+- [ ] T1 写入 `migrations/v4.0.0.md` 和清单里 3.6.0 到 4.0.0 那一节，动作顺序按 D1。不改 `VERSION`，不改已发布配方，不动 `[split]` 定义 → AC1 AC2
+- [ ] T2 在 `build_plan` 加上 D2 的门，并删掉形状检查整段。`--split` 改为可带可不带。三处人读入口改成和这个行为一致 → AC4 AC5 AC6
+- [ ] T3 从字段表、默认值、schema、规则卡和 D4 点名的人读文档卸掉 `preference`。`migrate_config` 只在目标 4.0.0 时写回去掉这一键。旧 Markdown 的退役行跳过 → AC7
+- [ ] T4 按 D6 改 `.ai/debt.md` → AC8
+- [ ] T5 在 `scripts/test-butler-upgrade.py` 和 `tools/project-config/tests/` 补上临时回归，并改写会挡住新行为的旧断言 → AC1 AC3 AC4 AC5 AC6 AC7
+- [ ] T6 跑 `python3 scripts/test-butler-upgrade.py`。完整的持续集成和审计留到验收阶段核对 AC9 → AC9
+
+### Plan Admission
+
+- **AC Coverage**：AC1 由 T1 和 T5 覆盖。AC2 由 T1 覆盖。AC3、AC4、AC5、AC6 由 T2 和 T5 覆盖。AC7 由 T3 和 T5 覆盖。AC8 由 T4 覆盖。AC9 由 T6 和验收阶段的三条命令覆盖。
+- **Assumptions**：临时拷贝足以让渲染器、hook 来源和配置工具从 `--butler-root` 读到真实文件。`apply` 不会调用 `global_install`，所以不跑 `scripts/setup.sh` 就能满足 AC3 的机器侧观察。现有删除和移动的起始态足以表达 deliveries 两边都在时停下。
+- **Alternatives / Trade-offs**：放弃新造「在则冲突」动作类型，因为前置条件必须和动作表逐字匹配，而这道门是整次计划停、不是一条文件变更。放弃在 `plan_migration` 里无条件重写旧键，因为版本号还是 `3.6.0` 时，那会把已在当前版本的项目判成配置漂移。放弃保留形状检查的一半，因为用户冻结时没有要求留下「有待拆单文件就停」。
+- **Failure Modes**：旧收件箱或 `origin/` 命中时退出码 2，零写入。deliveries 两边都在时退出码 2，两边都不改。符号链接不跟随。`preference` 的值不是布尔时拒绝，不写出半份配置。
+- **Impact / Scope Challenge**：不改 `VERSION`，不写发布说明，不打标签，不提交，不收口里程碑。不在未点名的真实项目上执行升级，也不升级 butler 仓自己。不改 loop，不加排序器，不删仓库外偏好数据和 `templates/preference/` 骨架。不重开 ITER-0123、ITER-0124、ITER-0125。
+- **Verification Blind Spots**：幂等的移动不核对目标里的字节是否等于当初搬过去的内容。临时回归还清不了「从未在真实已部署项目上跑过」。历史 split 排在删除前面且不再拦截，是这次接受的结果，不是另一套拆分行为。
+- **Verdict**：pass。用户在 2026-10-21 说「开始把」。没有必须先改的设计缺陷。
 
 ## Failure Paths
 
-- **改引用时漏掉一处，扫描抓不到**：扫描按字面串匹配，改成同义但不同字面的说法（例如把「`origin/`」写成「原始材料目录」）就会漏网。防线是 AC16 A 组扫完之后人眼过一遍 `git diff` 的全部改动行，重点看四份人读文档（`README.md`、`HUMAN_GUIDE.md`、`docs/prd-migration-guide.md`、`rule-card.md`）读起来是否还通顺、有没有指向不存在目录的句子。
-- **纪律被顺手删掉**：见 D2。取证方式是把 `references-schema.md §10` 那句临时删掉、跑 `test_prd_collection_contract.py`、确认红、再恢复；完整输出入证据。若那条测试改完之后删掉规则正文仍然绿，说明断言已经被架空，必须重写断言而不是接受。
-- **删文件时误删还在用的东西**：`tools/inbox/` 与 `tools/intake/` 名字只差两个字母，删错整轮报废。执行时用 `git status` 逐条确认删除清单，删完立刻跑 `python -m unittest discover -s tools/intake/tests -t .`，绿了才继续。
-- **中途中断留下半截态**：B1–B5 五个批次里，B3（删文件）之前的任何中断都可以 `git checkout -- .` 干净退回；B3 之后中断会留下「文件已删、引用未清」或反过来的现场。缓解是 B3 放在 B1、B2 之后执行，且 B3 一次做完不拆散。最坏情况整轮 `git checkout` 退回，代价是 `.ai/` 下本轮新写的台账与产物一起丢，要手工重开迭代——这一点已写进 AC 的风险段。
-- **`OVERVIEW.md` 计数对不上**：`sync-project-overview.py` 从目录实际内容重算，删两份规则文件后 `40_Context_Management/` 应由 13 变 11。若 `--check` 仍红，先查是不是有残留的 `__pycache__` 或空目录被计入，不要改脚本迁就。
-- **审计的 `[UNRELEASED]` 条数变化**：本轮不切版不提交，审计应仍是恰 2 条（未提交改动 + tag 不在 HEAD）。若变成 3 条或 0 条，说明有非预期的版本面改动，停下查清再继续。
+- 清单链断、配方文件缺失、动作编号或前置条件不对：校验失败，不执行。
+- 用本仓库当 butler 根、项目戳在 `3.6.0`：计划里没有 `4.0.0/` 动作。这条配方不跑。
+- 旧收件箱带 `butler-inbox:managed`，或仓根 `origin/` 存在，或这两处是符号链接：退出码 2，相关路径和另外三处都不改。
+- 新格式闪念口没有旧标记：升级不停，该文件字节不变。
+- 仓根 `deliveries/` 和 `.ai/deliveries/` 都在：退出码 2，两边都不改，不覆盖。整次计划在写入前停下。
+- `.ai/project/` 或 `.ai/PROJECT.md` 已经不在：删除视为完成。源已经不在且 `.ai/deliveries/` 已经在：移动视为完成，不另造一份。
+- `preference` 不是布尔，或配置里有别的未知字段：拒绝，不写回。没有这一键的配置仍能读。
+- `apply` 不带 `--split`：不因为缺参数被拒绝。带 `defer` 或 `now`：参数仍被接受。只有半成形的 `.ai/project/` 时，不因为形状检查停下。
 
 ## Test Strategy
 
-本轮**不声明 TDD cycle**。理由如实写在这里：AC11 那道旧格式回归防线所锁的行为在本轮之前已经正确——实测 `add`、`list`、`handle` 三个子命令在旧格式 `.ai/INBOX.md`（`SRC-NNNN` 表头 + managed marker）上全都以退出码 1 报错、输出可读错误、且目标文件字节前后完全相同。测试写出来即绿，没有真实的红。硬造红只能把 `intake.py` 临时挪走演一遍，那是重演不是 TDD，不值得为凑一份配对证据去做。本轮其余改动是删除与文字改写，本身也没有可先红后绿的实现面。
+本轮不声明 TDD cycle。没有先失败再通过的配对。
 
-实际的验证手段：
+`scripts/test-butler-upgrade.py` 用临时目录覆盖 AC1、AC3、AC4、AC5、AC6。临时 butler 根的版本写成 `4.0.0`，动作用清单里那一节真实动作。项目与这个根并排。断言用户区原文、搬家后的字节、第二次退出码 0，以及没有调用 `scripts/setup.sh`。对本仓库的计划断言没有 `4.0.0/` 动作，`VERSION` 仍是 `3.6.0`。
 
-- **回归防线（AC11）**：`tools/intake/tests/test_intake.py` 新增一个测试类，用现有 `helpers.make_root()` 造项目根后覆写 `.ai/INBOX.md` 为旧格式，对三个子命令各断言退出码非零、`{"error": ...}` 在 stdout、`read_bytes()` 前后相等。
-- **既有测试面不退化**：`templates/hooks/tests/` 全套、`tools/intake/tests/`、`tools/mile0009-e2e/tests/`、`scripts/test-butler-upgrade.py` 各自单跑取退出码，最后 `bash scripts/verify-ci.sh` 整跑取退出码。
-- **删除的完整性**：`.ai/iterations/ITER-0119/ac-sweep.py` 两组扫描，模式串一律用变量拼接（`"inbox" + "-schema"`、`"SR" + "C-"` 加四位数字正则、`"ori" + "gin/"`）避免脚本自命中；排除面写死在脚本里并在 VERIFY_REPORT 逐份列明理由。
-- **hook 树未变**：用 `tools/butler-upgrade/upgrade.py` 的 `hook_source_files` + `tree_digest` 现场复算，断言等于开工前记录的 `bd92a614f9582451ec3150d2c1113a2262bb874b97fd085adf6ad0ce7c91e56d`。
-- **开工前基线**：B1 动手之前先把旧链 4 份文件与 `templates/hooks/tests/test_inbox_workflow.py` 的 SHA-256 存进 `.ai/iterations/ITER-0119/pre-p4.baseline`，供 AC3 的逐字节比对使用。
+AC7 同时覆盖配置测试和这条临时升级：升级后 JSON 只少 `preference`，另外三个字段值不变；没有这一键的配置仍能读；实验工具目录还在；全仓检索不到 `reorder_options` 和 `reorder_by_profile`。
+
+AC8 读 `.ai/debt.md`，确认那两句假话不在，人还得处理旧收件箱和 `origin/` 的句子还在，真实项目那条账还在。
+
+验收阶段另跑 `bash scripts/verify-ci.sh` 和 `python3 scripts/audit-project-state.py --project-root . --allow-unreleased`，后者输出里不得有 `[DRIFT]`。
 
 ## References Compliance
 
-- 本迭代无 `.ai/references/` 外部参考资料，不涉及 PRD 切片对账。
-- 本轮**改写** `Coder/40_Context_Management/references-schema.md` 的 §1 与 §2（定位与资料分类），属于该契约自身的演进而非对它的消费。按其 §10 非回归门自查：不用 PRD 的对话驱动流不变；`api-` / `design-` / `insight-` 扁平资料流不变；「用户原稿不被改写、移动或删除」这条纪律逐字保留、只换主语（这是 AC9 的硬断言）；已冻结与已收口产物不被回写。§10 的最后一条要求「有意修改既有 PRD 消费者时必须列出原因与兼容策略」——本轮不改任何 PRD 消费者（`prd-split` / `prd-status` / `prd-update` / `prd-migrate` 的行为面零改动，只动测试夹具里的无语义字符串）。
-- 按 `migration-schema.md §5` 判定对已部署项目的影响：改了 `templates/rule-card.md` → 切版配方**必须含 `[regen-entrypoints]`**；`templates/hooks/` 零改动 → **不需要 `[sync-hooks]`**；`.ai/` 下产物结构无新增必填字段 → 不需要 `[add-field]`；`origin/` 目录的删除与内容搬迁**无对应 typed 动作可用**（升级器只有 rename / split / add-field / regen-entrypoints / sync-hooks / restamp / no-op），归 R14 新增删除与移动两类标签之后才能表达。这四条结论要原样登记进 `.ai/MILESTONE.md §5.4`。
+- N/A

@@ -236,9 +236,9 @@ class GoalAdjudicatorTests(unittest.TestCase):
         self.assertEqual("eligible", json.loads(result.stdout)["verdict"])
 
     def test_read_only(self) -> None:
-        before = {p.relative_to(self.root): hashlib.sha256(p.read_bytes()).hexdigest() for p in self.root.rglob("*") if p.is_file()}
+        before = {p.relative_to(self.root): hashlib.sha256(p.read_bytes()).hexdigest() for p in self.root.rglob("*") if p.is_file() and p.name != ".usage.json"}
         goal.evaluate(self.root)
-        after = {p.relative_to(self.root): hashlib.sha256(p.read_bytes()).hexdigest() for p in self.root.rglob("*") if p.is_file()}
+        after = {p.relative_to(self.root): hashlib.sha256(p.read_bytes()).hexdigest() for p in self.root.rglob("*") if p.is_file() and p.name != ".usage.json"}
         self.assertEqual(before, after)
 
     def test_fixture_matches_real_evidence_v1_shape(self) -> None:

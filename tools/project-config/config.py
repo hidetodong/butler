@@ -20,15 +20,13 @@ FIELDS = (
     "schema_version",
     "dangerous",
     "independent_review",
-    "preference",
     "profiles",
 )
-BOOLEAN_FIELDS = ("dangerous", "independent_review", "preference")
+BOOLEAN_FIELDS = ("dangerous", "independent_review")
 DEFAULT_CONFIG: dict[str, Any] = {
     "schema_version": SCHEMA_VERSION,
     "dangerous": False,
     "independent_review": False,
-    "preference": True,
     "profiles": [],
 }
 LEGACY_HEADINGS = (
@@ -60,7 +58,6 @@ def default_config() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "dangerous": False,
         "independent_review": False,
-        "preference": True,
         "profiles": [],
     }
 
@@ -151,8 +148,10 @@ def _parse_switches(values: list[str], heading: str) -> dict[str, bool]:
     if heading == "Review Policy":
         allowed = {"independent_review"}
     for value in values:
+        if re.fullmatch(r"preference\s*:\s*(on|off)(?:\s+#.*)?", value):
+            continue
         match = re.fullmatch(
-            r"(dangerous|independent_review|preference)\s*:\s*(on|off)(?:\s+#.*)?",
+            r"(dangerous|independent_review)\s*:\s*(on|off)(?:\s+#.*)?",
             value,
         )
         if not match or match.group(1) not in allowed:
@@ -258,6 +257,42 @@ def plan_migration(project_root: str | Path) -> dict[Path, bytes]:
     return changes
 
 
+def _drop_retired_preference(parsed: Any) -> Any:
+    if not isinstance(parsed, dict) or "preference" not in parsed:
+        return parsed
+    if type(parsed["preference"]) is not bool:
+        _fail("invalid_type", "retired preference field must be a boolean")
+    return {key: value for key, value in parsed.items() if key != "preference"}
+
+
+def plan_retired_preference_removal(project_root: str | Path) -> dict[Path, bytes]:
+    """Plan a write that drops only the retired preference key.
+
+    Reading tolerates the key and does not rewrite. Callers decide when the file changes.
+    """
+    _, path = resolve_paths(project_root)
+    if path.is_symlink():
+        _fail("unsafe_config_path", f"configuration must not be a symlink: {path}")
+    if not path.exists():
+        return {}
+    if not path.is_file():
+        _fail("unsafe_config_path", f"configuration must be a regular file: {path}")
+    try:
+        raw = path.read_bytes()
+        parsed = json.loads(raw.decode("utf-8"))
+    except UnicodeDecodeError:
+        _fail("invalid_encoding", "configuration must be UTF-8")
+    except json.JSONDecodeError as exc:
+        _fail("invalid_json", f"invalid JSON at line {exc.lineno}, column {exc.colno}")
+    if not isinstance(parsed, dict) or "preference" not in parsed:
+        return {}
+    stripped = _drop_retired_preference(parsed)
+    encoded = _encoded(stripped)
+    if encoded == raw:
+        return {}
+    return {CONFIG_RELATIVE_PATH: encoded}
+
+
 def validate(config: Any) -> dict[str, Any]:
     if not isinstance(config, dict):
         _fail("invalid_type", "configuration root must be an object")
@@ -306,7 +341,7 @@ def read(project_root: str | Path) -> tuple[dict[str, Any], str, Path]:
         _fail("invalid_encoding", "configuration must be UTF-8")
     except json.JSONDecodeError as exc:
         _fail("invalid_json", f"invalid JSON at line {exc.lineno}, column {exc.colno}")
-    return validate(parsed), "config", path
+    return validate(_drop_retired_preference(parsed)), "config", path
 
 
 def _encoded(config: dict[str, Any]) -> bytes:
@@ -418,6 +453,19 @@ def emit(value: dict[str, Any]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:
+        import importlib.util as _ilu
+        from pathlib import Path as _P
+        _spec = _ilu.spec_from_file_location(
+            "_butler_usage",
+            _P(__file__).resolve().parents[1] / "usage" / "usage.py",
+        )
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _mod.stamp_tool(__file__, argv)
+    except Exception:
+        pass
+
     try:
         args = parser().parse_args(argv)
         if args.action == "inspect":

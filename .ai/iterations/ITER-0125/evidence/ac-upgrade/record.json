@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-upgrade",
+  "iteration": "ITER-0125",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "scripts/test-butler-upgrade.py"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-21T03:02:33.892Z",
+  "finished_at": "2026-10-21T03:02:35.121Z",
+  "duration_ms": 1229,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 710,
+    "captured_bytes": 710,
+    "sha256": "9a6a0d2758b74ef4b5bde508bc08d43c3fe01b021f70a2588cb6984d6749068f",
+    "truncated": false
+  }
+}

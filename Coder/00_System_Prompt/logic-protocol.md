@@ -56,8 +56,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 
 - `dangerous=true` → 按 §4 Dangerous Mode 跨会话语义处理：**当回合显式声明后**自动进入危险模式（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
 - `independent_review=true` → 每次 P5 收口自动起独立复核。
-- `preference=false` → **本项目抑制偏好探针**（不采集/蒸馏/反哺）；默认配置为 true（不抑制，仍受全局同意约束）。preference 低风险、无需 announce，读到即遵循。
-- `profiles` 决定本项目启用的 Domain Profiles；空数组表示无。
+- `profiles` 决定本项目启用的 Domain Profiles；空数组表示无。项目配置不再读取 `preference`。机器入口已退役，不再启动采集、蒸馏或反哺。
 - 命令非零、`status != ok`、输出不可解析或配置损坏时必须 fail-closed：不得开启 dangerous/independent review，不得运行偏好探针，并向用户报告诊断。`legacy_conflicts` 非空必须显式亮牌；兼容期仍以 JSON 为真源。
 - 字段语义、读写口径与 legacy 兼容以 `20_Workflow_Lifecycle/local-constraints-schema.md` 和 `tools/project-config/README.md` 为准。
 
@@ -69,7 +68,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - 先识别影响范围，再提交改动。
 - 先识别项目类型与适用 profile，再套用领域执行细则。
 - 长任务应把关键状态从对话迁移到外部状态载体，而不是只依赖历史上下文。
-- 涉及基地车部署时，先侦察项目环境，再决定是否创建 `.ai/`、`deliveries/` 及其对应目录内容。
+- 涉及基地车部署时，先侦察项目环境，再决定是否创建 `.ai/` 及其对应目录内容。
 
 ## 3. AI 协作约束
 
@@ -92,7 +91,7 @@ AI 不要求准确预知上下文一定会压缩，而应基于启发式信号�
 - **Butler Upgrade (`/butler:upgrade`)**: 激活 `20_Workflow_Lifecycle/butler-upgrade.md`，把已部署项目的 `CLAUDE.md` 与 `.ai/` 结构同步到当前 butler 仓库最新版。当用户提到"升级 butler"、"同步到新版"、"同步 butler 规则"或输入 `/butler:upgrade`（旧名 `/butler-upgrade`）时开启。非持久 Mode，执行一次后返回 Standard Mode。
 - **Butler Setup (`/butler:setup`)**: 激活 `20_Workflow_Lifecycle/butler-setup.md`，安装或刷新 Claude/Codex/Pi 的机器级 Butler 能力。显式命令或明确要求“现在安装”才构成本次执行确认；咨询语义只说明影响并等待确认。非持久 Mode，不初始化或升级当前项目。
 - **Dangerous Mode (`/butler:dangerous`，实验性)**: 激活 `65_Extension_Dangerous/dangerous-engine.md`，进入无人值守长程自治：一次发布需求后，模型自主拆迭代、以有界 P4 收敛策略跑完整生命周期、连续推进至整体交付，P2/P3 的用户 ACK 被自审门 + 审计 + 回滚 + P5 完整审查替代。当用户提到"放手做"、"自己跑完"、"无人值守做完"、"别等我确认"、"长时间自己编程"或输入 `/butler:dangerous`（旧名 `/dangerous` 仍识别）时开启；`/butler:dangerous off` 或"恢复确认"关闭。持久状态由 `.ai/butler.config.json` 的 `dangerous` 承载，读写只经 project-config `resolve/set`；跨会话解析到 true 时，AI 当回合**显式声明后自动进入**（announce-on-read，绝不静默），细则见 `65_Extension_Dangerous/dangerous-engine.md §3`。
-- **Preference Mode (`/butler:preference`，实验性)**: 激活 `70_Extension_Preference/preference-probe-engine.md`。当用户输入 `/butler:preference`（旧名 `/preference` 仍识别）或说「记住这条偏好 / 学我的取舍」等自然语言时开启。**数据回路（采集 + 蒸馏）经一次性同意后默认常驻**——观察用户高信号决策、蒸馏为跨项目通识；**影响回路（反哺）opt-in 且仅作用于有监督工作**（P2/P3 提案 / 选项排序），**绝不参与 `/butler:dangerous` 自治、只学真人选择（模型自决不采集）**。`/butler:preference on`/`off` 隐私总开关、`/butler:preference project on`/`off` 项目抑制、`/butler:preference reback on`/`off` 开关反哺、`/butler:preference distill` 手动蒸馏。数据外置（`$BUTLER_PREF`，与本仓库解耦），先验非权威、绝不覆盖当前指令、绝不侵入迭代数据流。项目抑制状态由 `.ai/butler.config.json` 的 `preference` 承载并只经 project-config 读写；consent/数据真源仍在外置 `$BUTLER_PREF`，详见 `70_Extension_Preference/preference-probe-engine.md §2.5`。
+- **Preference**：机器入口已在 ITER-0124 退役。仓库里没有读画像后重排选项的函数，实验结论是排序没有变化，所以不再提供 `/butler:preference`。项目配置里不再有 `preference`。已有的外置偏好数据留在原处，不迁移。
 
 ### 审计者意识 (Auditor Mindset)
 

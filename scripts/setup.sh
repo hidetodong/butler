@@ -76,5 +76,4 @@ echo "  slash 命令（如 /butler:prd）已全局安装，在所有项目里都
 echo "  检测到 Codex CLI 时，Butler plugin 也会安装/刷新；新会话首次启用 hook 请审阅并信任。"
 echo "  检测到 Pi CLI 时，Butler 扩展也会安装/刷新；新会话自动生效。"
 echo ""
-echo "可选（实验性）：偏好探针 /preference 默认关、数据外置。"
-echo "  如需启用，运行一次：./scripts/preference-init.sh"
+echo "偏好探针已在 ITER-0124 退役。preference-init.sh 不再初始化外置目录。"

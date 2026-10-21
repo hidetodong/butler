@@ -35,7 +35,7 @@ scope: 迭代号分配、迭代台账字段、工作区/归档/交付三层落�
 | 迭代台账 | `.ai/ITERATIONS.md` + `.ai/state-index.json` + `.ai/history/iterations/*.{md,json}` | 复合真源：根文件保存 `current` 与近期热行，有界 index 保存最大号、计数和固定路由公式；固定区间 `.md` 保存旧行，同名 `.json` 保存该片范围、数量与哈希 |
 | 当前迭代工作区 | `.ai/CONCEPT.md` / `AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` | 固定路径的活产物，始终对应 `current` 指向的活跃迭代；hook 机械校验的就是这组路径 |
 | 迭代归档 | `.ai/iterations/ITER-NNNN/` | 迭代收口时四件套的冻结快照，只读，供复盘审计 |
-| 人类交付 | `deliveries/ITER-NNNN-<slug>.md` + 同名 `.html` | 迭代收口后给人看的交付总结：`.md` 为引用真源，同名 `.html` 为固定格式阅读视图（`delivery-summary.md` §9）；结构与触发参考 `delivery-summary.md` |
+| 人类交付 | `.ai/deliveries/ITER-NNNN-<slug>.md` + 同名 `.html` | 迭代收口后给人看的交付总结：`.md` 为引用真源，同名 `.html` 为固定格式阅读视图（`delivery-summary.md` §9）；结构与触发参考 `delivery-summary.md` |
 
 约束：
 
@@ -74,7 +74,7 @@ current: ITER-0002
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
 | ITER-0002 | <本迭代标题> | active | YYYY-MM-DD | — | MILE-0001 | — |
-| ITER-0001 | <上一迭代标题> | closed | YYYY-MM-DD | YYYY-MM-DD | MILE-0001 | deliveries/ITER-0001-<slug>.md |
+| ITER-0001 | <上一迭代标题> | closed | YYYY-MM-DD | YYYY-MM-DD | MILE-0001 | .ai/deliveries/ITER-0001-<slug>.md |
 ```
 
 不归属任何里程碑的独立迭代，「所属 milestone」列填 `—`。
@@ -119,7 +119,7 @@ current: ITER-0002
 - 时机：P5 达到可交付、可验收的闭环状态。
 - 动作（收口原子仪式，按序执行；前三步必做、缺一不可，第四步自检）：
   1. 完整路径先用 `tools/verification-evidence/evidence.py verify --source hot` 校验证据热区，再用 `archive` 把整包原子移动到 `.ai/iterations/ITER-NNNN/evidence/` 并以 `verify --source archive` 复核；然后把工作区四件套快照复制到 `.ai/iterations/ITER-NNNN/`。完整路径迭代**必产** `01_CHANGELOG.md`（严格 ADD/EDIT/DELETE，格式见 `changelog-schema.md`），其当前迭代切片一并归档为 `iterations/ITER-NNNN/CHANGELOG.md`（简化路径可省）。后续收口失败需退回 P4 时用 `reopen` 整包移回，禁止 hot/archive 双真源。
-  2. 生成人类交付总结 `deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
+  2. 生成人类交付总结 `.ai/deliveries/ITER-NNNN-<slug>.md`，并按 `delivery-summary.md` §9 用固定模板填槽并列产出同名 `.ai/deliveries/ITER-NNNN-<slug>.html` 阅读视图；结构与触发参考 `delivery-summary.md`；`.md` 与 `.html` 均只引用产物路径，**不得全文嵌入**四件套内容（见 `delivery-summary.md §4.7`）。
   3. 台账该行置 `closed`、填收口日期与交付链接，`current` 置 `none`；全局 `01_CHANGELOG.md` 收敛为只含开放迭代热数据（已归档切片不再留在全局文件）。
   4. **收口自检**（原子仪式最后一步）：先运行 `$BUTLER/scripts/audit-project-state.py --project-root "$PROJECT_ROOT"` 机械核对确定性状态；若 `PROJECT_ROOT` 就是 Butler 规则仓且尚处提交/发布前，改用 `--allow-unreleased` 并保留其 `UNRELEASED` 亮牌，不能把它复述成已发布。再跑 `40_Context_Management/context-persistence.md` §冷启动一致性自检的 5 条不变量（current↔状态 / 至多一个 active / closed 有交付 / closed 有归档〔含新口径 Evidence Index ↔ evidence record〕/ 路线项对账），确认台账↔产物↔交付↔证据无漂移；有漂移当场修正，不留待冷启动才发现。
 - 收口后工作区四件套保留原位（作为最近一迭代的只读残影），直到下一迭代开启时被 §5.1 整体覆写；其权威副本以 `iterations/ITER-NNNN/` 为准。

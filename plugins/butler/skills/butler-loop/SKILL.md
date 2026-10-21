@@ -3,6 +3,8 @@ name: butler-loop
 description: Explicitly run Butler's high-intensity convergence loop for a current P4 implementation. Invoke only when the user names $butler-loop or explicitly asks for Butler's convergence loop; never infer this high-cost mode from a routine request.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:loop`. Ignore collection failure; do not invent a different id.
+
 # Butler Convergence Loop
 
 1. State that this is a high-intensity, potentially long-running and costly mode. Do not proceed if the user did not explicitly invoke this skill.

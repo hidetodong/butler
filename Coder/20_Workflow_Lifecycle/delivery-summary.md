@@ -33,13 +33,13 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 
 ## 3. 存放位置与命名
 
-- 存放位置：项目根目录 `deliveries/`
-- 迭代级（小版本）命名：`deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）。迭代交付**一律平铺在 `deliveries/` 根**，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条按号连续的时间线。
-- 里程碑级（大版本）命名：`deliveries/milestones/MILE-NNNN-<slug>.md`（里程碑收口时，里程碑号取自 `.ai/MILESTONES.md`）。版本级交付集中在 `deliveries/milestones/` 子目录，不污染迭代时间线。
-- 未开迭代号的简化路径任务，可沿用 `deliveries/YYYY-MM-DD-<task-slug>.md`
-- **固定格式 HTML 阅读视图（同名兄弟文件）**：每份迭代/里程碑交付总结，除 `.md` 外，收口时**必须并列产出一份同目录、同 slug、仅扩展名不同的 `.html`**——迭代级 `deliveries/ITER-NNNN-<slug>.html`、里程碑级 `deliveries/milestones/MILE-NNNN-<slug>.html`。`.md` 是引用真源，`.html` 是其固定格式的人类阅读投影；生成协议与硬约束见 §9。
+- 存放位置：`.ai/deliveries/`
+- 迭代级（小版本）命名：`.ai/deliveries/ITER-NNNN-<task-slug>.md`（迭代收口时，迭代号取自 `.ai/ITERATIONS.md`）。迭代交付**一律平铺在 `.ai/deliveries/` 根**，无论是否归属里程碑都不移动，保证迭代历史在文件树中是一条按号连续的时间线。
+- 里程碑级（大版本）命名：`.ai/deliveries/milestones/MILE-NNNN-<slug>.md`（里程碑收口时，里程碑号取自 `.ai/MILESTONES.md`）。版本级交付集中在 `.ai/deliveries/milestones/` 子目录，不污染迭代时间线。
+- 未开迭代号的简化路径任务，可沿用 `.ai/deliveries/YYYY-MM-DD-<task-slug>.md`
+- **固定格式 HTML 阅读视图（同名兄弟文件）**：每份迭代/里程碑交付总结，除 `.md` 外，收口时**必须并列产出一份同目录、同 slug、仅扩展名不同的 `.html`**——迭代级 `.ai/deliveries/ITER-NNNN-<slug>.html`、里程碑级 `.ai/deliveries/milestones/MILE-NNNN-<slug>.html`。`.md` 是引用真源，`.html` 是其固定格式的人类阅读投影；生成协议与硬约束见 §9。
 
-`deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份迭代级 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准；一份里程碑级 Delivery Summary 对应一次里程碑收口，里程碑号与版本级聚合机制以 `milestone-schema.md` 为准。
+`.ai/deliveries/` 用于归档已经完成的、人类可阅读的交付总结，不放运行态状态文件。一份迭代级 Delivery Summary 对应一次迭代收口，迭代号与归档机制以 `iteration-schema.md` 为准；一份里程碑级 Delivery Summary 对应一次里程碑收口，里程碑号与版本级聚合机制以 `milestone-schema.md` 为准。
 
 ## 4. 最小结构
 
@@ -89,7 +89,7 @@ scope: 完整交付后的人类可读总结文档的触发时机、目录约定�
 里程碑级 Delivery Summary 是**版本级聚合**，在其下各迭代均已收口、里程碑收口时生成（触发与机制以 `milestone-schema.md` §7.4 为准）。它在 §4.1–§4.7 通用结构之上额外遵守：
 
 - **目标 / 已完成内容**：以大版本视角汇总，对应 `.ai/MILESTONE.md` 的范围评估与关键交付目标，而非复述单个迭代细节。
-- **聚合而非嵌入（硬约束）**：必须**只链接**其下各迭代交付（`deliveries/ITER-NNNN-<slug>.md`）与里程碑产物（`.ai/milestones/MILE-NNNN/MILESTONE.md`），**不得把迭代交付或四件套全文嵌入**。版本级交付是迭代交付之上的索引与总览，体量恒定。
+- **聚合而非嵌入（硬约束）**：必须**只链接**其下各迭代交付（`.ai/deliveries/ITER-NNNN-<slug>.md`）与里程碑产物（`.ai/milestones/MILE-NNNN/MILESTONE.md`），**不得把迭代交付或四件套全文嵌入**。版本级交付是迭代交付之上的索引与总览，体量恒定。
 - **拆分路线图回填**：应对照 `.ai/MILESTONE.md` 拆分路线图，逐路线项说明落到哪个迭代、是否达成，让读者一眼看清大版本拆成了哪些小版本、各自结果如何。
 - **版本级剩余风险**：在迭代级风险之上，补充跨迭代、整体版本层面尚未关闭的风险或延后事项。
 
@@ -154,20 +154,20 @@ Delivery Summary 不负责以下内容：
 对话摘要最后必须单独一行，按以下固定格式引用正式版文件：
 
 ```
-正式版：deliveries/ITER-NNNN-<slug>.md
+正式版：.ai/deliveries/ITER-NNNN-<slug>.md
 ```
 
-路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `deliveries/YYYY-MM-DD-<slug>.md`。里程碑收口时，引用行指向版本级交付，格式为 `正式版：deliveries/milestones/MILE-NNNN-<slug>.md`。
+路径应指向本轮实际写入的 Delivery Summary 文件，不得省略、不得改写格式。未开迭代号的简化任务沿用 `.ai/deliveries/YYYY-MM-DD-<slug>.md`。里程碑收口时，引用行指向版本级交付，格式为 `正式版：.ai/deliveries/milestones/MILE-NNNN-<slug>.md`。
 
 **引用行恒指 `.md`**：`.md` 是引用真源，本行格式不变；同名 `.html` 固定格式阅读视图（§9）是它的兄弟文件，不在本行重复列出（读者从同目录同名 `.html` 自取）。
 
 ### 8.5 与 §4 的关系
 
-- §4 定义 `deliveries/` 文件的书面结构（文件层）。
+- §4 定义 `.ai/deliveries/` 文件的书面结构（文件层）。
 - §8 定义对话框内的收尾表达（对话层）。
 - 两者同源、同触发，但风格分层：文件正式、对话口语。
 - 不得用文件结构覆盖对话风格，也不得用对话口吻替代文件结构。
-- 结论真源以 `deliveries/` 文件为准，对话摘要只是其口语化投影。
+- 结论真源以 `.ai/deliveries/` 文件为准，对话摘要只是其口语化投影。
 - 与 `00_System_Prompt/presentation-protocol.md` 分工：本节（§8）管 **P5 最终交付摘要**（散文、禁编号小节）；**过程中**的方案 / 选项 / 分析呈现走 presentation-protocol（结论先行、统一标号、表格）。即"过程结构化、交付散文化"，两者按场景分工、互不覆盖。
 
 ## 9. 固定格式 HTML 阅读视图
@@ -188,7 +188,7 @@ Delivery Summary 不负责以下内容：
 
 ### 9.3 硬约束
 
-- **单文件自包含**：HTML 必须内联全部样式、**禁止**引入外部 CSS / JS / 字体 / 图片链接，保证双击可离线打开、可随 `deliveries/` 一起拷贝归档。
+- **单文件自包含**：HTML 必须内联全部样式、**禁止**引入外部 CSS / JS / 字体 / 图片链接，保证双击可离线打开、可随 `.ai/deliveries/` 一起拷贝归档。
 - **只引用不嵌入、体量恒定**：`{{REFERENCES}}` 槽**只放路径指针**（`AC_LIST.md` / `TECH_PLAN.md` / `VERIFY_REPORT.md` 等的路径或链接），**不得把四件套全文嵌进 HTML**。HTML 与 `.md` 同守 §4.7 硬约束，体量随 §4 摘要恒定、不随迭代膨胀。
 - **内容对齐 `.md`**：HTML 各段内容必须与同名 `.md` 一致，不在 HTML 里新增或删改结论；`.md` 更新时 `.html` 同步重生成。
 

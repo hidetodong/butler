@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-report",
+  "iteration": "ITER-0123",
+  "ac_ids": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-m",
+      "pytest",
+      "tools/usage-report/tests",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-19T09:05:46.508Z",
+  "finished_at": "2026-10-19T09:05:47.172Z",
+  "duration_ms": 663,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "0ce88768a9473be1e7b8becbb63962f3be004760e3e27bda4664d1d0167f549a",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

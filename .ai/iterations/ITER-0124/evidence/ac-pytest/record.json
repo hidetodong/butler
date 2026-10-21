@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-pytest",
+  "iteration": "ITER-0124",
+  "ac_ids": [
+    "AC7",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "tools/goal-assurance/test_goal.py",
+      "tools/verification-evidence/test_evidence.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-20T07:29:17.266Z",
+  "finished_at": "2026-10-20T07:29:21.606Z",
+  "duration_ms": 4340,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 99,
+    "captured_bytes": 99,
+    "sha256": "8f272d90a38567404d6d138a60d1a884e9be5943cc5441a6d4dd7bda3fc2de02",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

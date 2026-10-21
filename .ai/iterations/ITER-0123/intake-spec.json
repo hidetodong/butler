@@ -1,0 +1,32 @@
+{
+  "title": "usage 报告：90 天分档替代手工回忆",
+  "summary": "MILE-0016 R12：读 R11 采到的最后调用时间，按 --since 窗口把全部入口分成 A/B/C/D 四档打出来。只呈现数据，不自动淘汰。",
+  "confirmed_decisions": [
+    "用户在 ITER-0122 收口后说继续，按 MILE-0016 路线开 R12",
+    "报告只呈现数据，是否淘汰仍由人判断",
+    "本轮不切版"
+  ],
+  "model_recommendations": [
+    "CLI 为 python3 tools/usage-report/usage_report.py report --project-root . --since 90d，stdout JSON",
+    "四档只靠 last_used 和封闭名单：A 窗口内用过、B 用过但早于窗口、C 名单里从未记下、D 文件里有但名单已没有（退役残留）",
+    "名单复用 tools/usage 的 allowed_ids，不另造一份入口表",
+    "usage-report 自己登记进产品工具名单并打点，避免 R11 的目录对账红掉"
+  ],
+  "open_questions": [
+    "--since 是否只支持 Nd 这种天数（建议：只支持整数天，默认 90）"
+  ],
+  "in_scope": [
+    "tools/usage-report/ 只读 .ai/.usage.json 和 usage 名单，生成分档报告",
+    "缺文件或坏文件时仍能出报告：全部入口落 C，D 为空，不崩溃",
+    "测试锁住四档判定、默认 90d、JSON 形状",
+    "debt.md 观测缺位那条若报告落地就删或改成只剩人测/真实使用缺口",
+    "CI 接入 usage-report 测试；OVERVIEW 随 tools/ 重算"
+  ],
+  "out_of_scope": [
+    "不自动降级、不自动砍命令、不改 preference（R13）",
+    "不采集次数/参数，不改 .usage.json schema",
+    "不给 slash 命令补进程钩",
+    "不切 VERSION、不写 v4.0.0 配方"
+  ],
+  "milestone_route": "R12"
+}

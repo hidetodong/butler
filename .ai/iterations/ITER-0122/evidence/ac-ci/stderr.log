@@ -1,0 +1,39 @@
+Resolved 8 packages in 19ms
+Audited 6 packages in 2ms
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.012s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.065s
+
+OK
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.018s
+
+OK
+.F....................
+======================================================================
+FAIL: test_cli_json_plan_is_zero_write_for_project_home_and_butler_inputs (__main__.UpgradeTests.test_cli_json_plan_is_zero_write_for_project_home_and_butler_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/cyborgno2/Documents/WorkCode.nosync/butler/scripts/test-butler-upgrade.py", line 152, in test_cli_json_plan_is_zero_write_for_project_home_and_butler_inputs
+    self.assertEqual(before, (digest_tree(project), digest_tree(home), inputs_digest()))
+AssertionError: Tuples differ: ('4ad0016db98357fd113d8c421e70085ae65c0c95e[156 chars]070') != ('710a325713a8575a0f932a5fe3ce852c7aeedcaee[156 chars]070')
+
+First differing element 0:
+'4ad0016db98357fd113d8c421e70085ae65c0c95e403abc6f2c2922676c736d9'
+'710a325713a8575a0f932a5fe3ce852c7aeedcaee38e5938834b743afedd4476'
+
+- ('4ad0016db98357fd113d8c421e70085ae65c0c95e403abc6f2c2922676c736d9',
++ ('710a325713a8575a0f932a5fe3ce852c7aeedcaee38e5938834b743afedd4476',
+   'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+   'd3c46b29e69baccaf5ceb9f174ed6cbecbbfd7f32732f2ecea5e6750fd3cc070')
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.792s
+
+FAILED (failures=1)

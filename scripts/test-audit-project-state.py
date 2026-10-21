@@ -34,7 +34,7 @@ class StateAuditTests(unittest.TestCase):
             "| 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |\n"
             "|---|---|---|---|---|---|---|\n"
             "| ITER-0002 | current | active | 2026-01-02 | — | MILE-0001 | — |\n"
-            "| ITER-0001 | old | closed | 2026-01-01 | 2026-01-01 | MILE-0001 | deliveries/ITER-0001-old.md |\n",
+            "| ITER-0001 | old | closed | 2026-01-01 | 2026-01-01 | MILE-0001 | .ai/deliveries/ITER-0001-old.md |\n",
             encoding="utf-8",
         )
         (self.root / ".ai" / "MILESTONES.md").write_text(
@@ -55,7 +55,7 @@ class StateAuditTests(unittest.TestCase):
         archive.mkdir(parents=True)
         for name in ("CONCEPT.md", "AC_LIST.md", "TECH_PLAN.md", "VERIFY_REPORT.md", "CHANGELOG.md"):
             (archive / name).write_text(f"# {name}\n", encoding="utf-8")
-        deliveries = self.root / "deliveries"
+        deliveries = self.root / ".ai" / "deliveries"
         deliveries.mkdir()
         (deliveries / "ITER-0001-old.md").write_text("# delivery\n", encoding="utf-8")
 
@@ -78,7 +78,7 @@ class StateAuditTests(unittest.TestCase):
     def test_v2_index_routes_audit_across_cold_shards(self) -> None:
         hot = self.root / ".ai" / "ITERATIONS.md"
         text = hot.read_text(encoding="utf-8")
-        old_row = "| ITER-0001 | old | closed | 2026-01-01 | 2026-01-01 | MILE-0001 | deliveries/ITER-0001-old.md |"
+        old_row = "| ITER-0001 | old | closed | 2026-01-01 | 2026-01-01 | MILE-0001 | .ai/deliveries/ITER-0001-old.md |"
         hot.write_text(text.replace(old_row + "\n", ""), encoding="utf-8")
         shard = self.root / ".ai/history/iterations/ITER-000001-000050.md"
         shard.parent.mkdir(parents=True)
@@ -147,7 +147,7 @@ class StateAuditTests(unittest.TestCase):
         self.assertIn("iterations.current", result.stdout)
 
     def test_missing_closed_delivery_and_archive_are_reported(self) -> None:
-        (self.root / "deliveries" / "ITER-0001-old.md").unlink()
+        (self.root / ".ai" / "deliveries" / "ITER-0001-old.md").unlink()
         (self.root / ".ai" / "iterations" / "ITER-0001" / "AC_LIST.md").unlink()
         result = self.invoke()
         self.assertEqual(1, result.returncode)
@@ -191,10 +191,10 @@ class StateAuditTests(unittest.TestCase):
             + "\n## 待办区（未编号）\n\n"
             + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
             + "|---|---|---|---|---|\n"
-            + "| future-goal | later | 2026-01-02 | .ai/milestone-backlog/future-goal.md | defer |\n",
+            + "| future-goal | later | 2026-01-02 | .ai/backlog/future-goal.md | defer |\n",
             encoding="utf-8",
         )
-        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog = self.root / ".ai" / "backlog"
         backlog.mkdir()
         (backlog / "future-goal.md").write_text(
             "---\n候办键: future-goal\n候办状态: deferred\n---\n", encoding="utf-8"
@@ -209,11 +209,11 @@ class StateAuditTests(unittest.TestCase):
             + "\n## 待办区（未编号）\n\n"
             + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
             + "|---|---|---|---|---|\n"
-            + "| search-redesign | search | 2026-01-02 | .ai/milestone-backlog/search-redesign.md | defer |\n"
-            + "| billing-cleanup | billing | 2026-01-02 | .ai/milestone-backlog/billing-cleanup.md | defer |\n",
+            + "| search-redesign | search | 2026-01-02 | .ai/backlog/search-redesign.md | defer |\n"
+            + "| billing-cleanup | billing | 2026-01-02 | .ai/backlog/billing-cleanup.md | defer |\n",
             encoding="utf-8",
         )
-        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog = self.root / ".ai" / "backlog"
         backlog.mkdir()
         for slug in ("search-redesign", "billing-cleanup"):
             (backlog / f"{slug}.md").write_text(
@@ -229,10 +229,10 @@ class StateAuditTests(unittest.TestCase):
             + "\n## 待办区（未编号）\n\n"
             + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
             + "|---|---|---|---|---|\n"
-            + "| search-redesign | search | 2026-01-02 | .ai/milestone-backlog/search-redesign.md | defer |\n",
+            + "| search-redesign | search | 2026-01-02 | .ai/backlog/search-redesign.md | defer |\n",
             encoding="utf-8",
         )
-        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog = self.root / ".ai" / "backlog"
         backlog.mkdir()
         draft = backlog / "search-redesign.md"
         invalid_bodies = (
@@ -254,10 +254,10 @@ class StateAuditTests(unittest.TestCase):
             + "\n## 待办区（未编号）\n\n"
             + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
             + "|---|---|---|---|---|\n"
-            + "| missing | later | 2026-01-02 | .ai/milestone-backlog/missing.md | defer |\n",
+            + "| missing | later | 2026-01-02 | .ai/backlog/missing.md | defer |\n",
             encoding="utf-8",
         )
-        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog = self.root / ".ai" / "backlog"
         backlog.mkdir()
         (backlog / "orphan.md").write_text("---\n候办键: orphan\n候办状态: deferred\n---\n", encoding="utf-8")
         result = self.invoke()
@@ -272,10 +272,10 @@ class StateAuditTests(unittest.TestCase):
             + "\n## 待办区（未编号）\n\n"
             + "| 候办键 | 标题 | 暂缓日期 | 草稿 | 暂缓原因 |\n"
             + "|---|---|---|---|---|\n"
-            + "| mile-0002 | later | 2026-01-02 | .ai/milestone-backlog/mile-0002.md | defer |\n",
+            + "| mile-0002 | later | 2026-01-02 | .ai/backlog/mile-0002.md | defer |\n",
             encoding="utf-8",
         )
-        backlog = self.root / ".ai" / "milestone-backlog"
+        backlog = self.root / ".ai" / "backlog"
         backlog.mkdir()
         (backlog / "mile-0002.md").write_text(
             "---\n候办键: mile-0002\n候办状态: deferred\n---\n", encoding="utf-8"
@@ -290,7 +290,7 @@ class StateAuditTests(unittest.TestCase):
         command = (repo / ".claude/commands/butler/milestone.md").read_text(encoding="utf-8")
         skill = (repo / "plugins/butler/skills/butler-milestone/SKILL.md").read_text(encoding="utf-8")
         for text in (schema, command, skill):
-            self.assertIn(".ai/milestone-backlog/", text)
+            self.assertIn(".ai/backlog/", text)
             self.assertIn("start <候办键>", text)
         self.assertIn("一方向一文件", schema)
         self.assertIn("一方向一个候办键", command)

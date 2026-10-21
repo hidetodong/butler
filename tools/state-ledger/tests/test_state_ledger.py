@@ -29,7 +29,7 @@ class StateLedgerTests(unittest.TestCase):
             iteration_lines.append(
                 f"| ITER-{value:04d} | item {value} | {state} | d | "
                 f"{'—' if state == 'active' else 'd'} | MILE-{milestones:04d} | "
-                f"{'—' if state == 'active' else f'deliveries/ITER-{value:04d}.md'} |"
+                f"{'—' if state == 'active' else f'.ai/deliveries/ITER-{value:04d}.md'} |"
             )
         milestone_lines = [
             "# 里程碑台账",
@@ -44,7 +44,7 @@ class StateLedgerTests(unittest.TestCase):
             milestone_lines.append(
                 f"| MILE-{value:04d} | mile {value} | {state} | d | "
                 f"{'—' if state == 'active' else 'd'} | ITER-{iterations:04d} | "
-                f"{'—' if state == 'active' else f'deliveries/MILE-{value:04d}.md'} |"
+                f"{'—' if state == 'active' else f'.ai/deliveries/MILE-{value:04d}.md'} |"
             )
         (root / ".ai/ITERATIONS.md").write_text("\n".join(iteration_lines) + "\n", encoding="utf-8")
         (root / ".ai/MILESTONES.md").write_text("\n".join(milestone_lines) + "\n", encoding="utf-8")

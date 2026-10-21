@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-ci",
+  "iteration": "ITER-0122",
+  "ac_ids": [
+    "AC10"
+  ],
+  "command": {
+    "argv": [
+      "bash",
+      "scripts/verify-ci.sh"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-14T07:52:17.265Z",
+  "finished_at": "2026-09-14T07:52:18.466Z",
+  "duration_ms": 1201,
+  "process_exit_code": 1,
+  "outcome": "failed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 72,
+    "captured_bytes": 72,
+    "sha256": "547dcbdb86590d19d210bdb72adc25234527295edf9d980355e4af8505b19168",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 1725,
+    "captured_bytes": 1725,
+    "sha256": "b6f2e2fd18c4c9b2e0bf16db131382d4f013ac0eb2ca8d87c5f5951ef19c692f",
+    "truncated": false
+  }
+}

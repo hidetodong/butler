@@ -3,6 +3,8 @@ name: butler-init
 description: Deploy Butler base infrastructure into a new project. Use when the user asks to initialize Butler, set up Butler in a project, deploy the base car, or bootstrap a project with Butler.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:init`. Ignore collection failure; do not invent a different id.
+
 # Butler Init
 
 1. Resolve `BUTLER_PATH` through `Coder/20_Workflow_Lifecycle/mcv-deployment.md §0`; require `VERSION`, `scripts/render-project-entrypoints.py`, and `Coder/README.md`.
@@ -12,7 +14,7 @@ description: Deploy Butler base infrastructure into a new project. Use when the 
    - **Absent** → continue.
 4. Read and execute `Coder/20_Workflow_Lifecycle/mcv-deployment.md` in full, section order:
    - **§1 Scout**: identify tech stack, project structure, matching profiles.
-   - **§2 Scaffold**: create `.ai/` and `deliveries/`.
+   - **§2 Scaffold**: create `.ai/` only; `.ai/deliveries/` and `.ai/backlog/` are created on demand.
    - **§3 Rule injection**: run `render-project-entrypoints.py` to generate `CLAUDE.md` + `AGENTS.md`.
    - **§4 Local adaptation**: generate human-readable `.ai/local-constraints.md` plus safe-default `.ai/butler.config.json` through the resident project-config tool; store profiles only in JSON.
    - **§5 Hook injection**: copy hooks from `templates/hooks/` and configure `.claude/settings.json`.

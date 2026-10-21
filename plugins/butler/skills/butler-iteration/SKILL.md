@@ -3,6 +3,8 @@ name: butler-iteration
 description: Summarize the durable decisions from the current session and start one auditable Butler iteration. Use when the user asks to recap the discussion and claim or start an iteration for it; keep summary-only requests read-only.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:iteration`. Ignore collection failure; do not invent a different id.
+
 # Butler Iteration
 
 Resolve the trusted Butler checkout as `BUTLER_PATH` and the target project as `PROJECT_ROOT`; ambiguity is zero-write.

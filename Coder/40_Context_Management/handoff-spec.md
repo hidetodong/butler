@@ -85,4 +85,4 @@ AI 不再临场拼接 handoff。重要决定先结晶到 task-state、当前阶�
 - 不得写思考过程、失败尝试与已废弃方案
 - 不得复制大段代码、终端日志或文件 diff
 - 不得罗列"已完成清单"——属于 `task-state.md` 的阶段结晶职责
-- 不得把 handoff 写成对人交付总结——属于 `delivery-summary.md` 与 `deliveries/` 的职责
+- 不得把 handoff 写成对人交付总结——属于 `delivery-summary.md` 与 `.ai/deliveries/` 的职责

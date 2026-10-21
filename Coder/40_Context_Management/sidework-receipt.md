@@ -23,7 +23,7 @@ scope: 用户主动发起的旁路工作如何用一份短回执跨上下文交�
 | `.ai/02_SESSION_HANDOFF.md` | 当前主线跨会话恢复入口 | 它由权威主线状态派生，不能混入另一条执行线的结果 |
 | `.ai/task-state.md` | 当前活跃迭代的运行状态 | 旁路执行者不是主线状态的共同写者 |
 | `.ai/references/` | 项目外部权威资料的受控投影 | 旁路回执记录项目内部执行事实；其中的长调研报告可以另存 references，再由回执指向 |
-| `deliveries/` | 已完成迭代或里程碑的人类交付 | 旁路工作不自动成为已验收、已收口的迭代交付 |
+| `.ai/deliveries/` | 已完成迭代或里程碑的人类交付 | 旁路工作不自动成为已验收、已收口的迭代交付 |
 
 旁路执行者不得修改当前主线的 `.ai/CONCEPT.md`、`.ai/AC_LIST.md`、`.ai/TECH_PLAN.md`、`.ai/VERIFY_REPORT.md`、`.ai/task-state.md`、ITER/MILE 台账或 `.ai/02_SESSION_HANDOFF.md`。若旁路任务本身就是一个正式 Butler 迭代，则走正常 P1–P5，不使用本协议冒充迭代产物。
 

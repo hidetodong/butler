@@ -281,12 +281,12 @@ class Audit:
                 self.add(route_status == actual, f"route.{values[0]}", f"{iteration}: route={route_status}, ledger={actual}")
 
         backlog_rows = self.milestone_backlog_rows(hot_text)
-        backlog_root = self.root / ".ai" / "milestone-backlog"
+        backlog_root = self.root / ".ai" / "backlog"
         indexed_paths: set[str] = set()
         for slug, row in backlog_rows.items():
             valid_slug = MILESTONE_BACKLOG_SLUG_RE.fullmatch(slug) is not None and not slug.startswith("mile-")
             self.add(valid_slug, f"backlog.{slug}.slug", "kebab-case" if valid_slug else "候办键非法或伪装成正式里程碑号")
-            expected_path = f".ai/milestone-backlog/{slug}.md"
+            expected_path = f".ai/backlog/{slug}.md"
             valid_path = row[3] == expected_path
             self.add(valid_path, f"backlog.{slug}.path", f"actual={row[3]}, expected={expected_path}")
             if not valid_path:

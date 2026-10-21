@@ -3,6 +3,8 @@ name: butler-inbox
 description: Capture a one-line idea into the Butler inbox, list the inbox and incubation layers read-only, or carry out an already-decided disposition (incubate, done, dropped, promote, iterate, withdraw). Use when the user wants to jot something down for later, review what is pending, or move an item one step along.
 ---
 
+After `PROJECT_ROOT` is known, record usage with `python3 $BUTLER_PATH/tools/usage/usage.py record --project-root $PROJECT_ROOT --id workflow:inbox`. Ignore collection failure; do not invent a different id.
+
 # Butler Inbox
 
 1. Resolve the Butler repository from `BUTLER_PATH`. If it is unset or does not contain `Coder/README.md`, stop; do not invent Butler rules.

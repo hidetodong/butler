@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-docs",
+  "iteration": "ITER-0121",
+  "ac_ids": [
+    "AC2",
+    "AC9"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "\nfrom pathlib import Path\nroot = Path(\".\")\ngi = (root / \".gitignore\").read_text()\nassert \".ai/.hook-blocks.log\" in gi\nreadme = (root / \"templates/hooks/README.md\").read_text()\nassert \".hook-blocks.log\" in readme\nassert \"gitignore\" in readme.lower() or \"忽略\" in readme\nmile = (root / \".ai/MILESTONE.md\").read_text()\nassert \"[sync-hooks]\" in mile\nassert \"2026-09-14（R10\" in mile\ndebt = (root / \".ai/debt.md\").read_text()\nassert \"hook 树一改就必须跟切版绑在一起\" not in debt\nprint(\"docs ok\")\n"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-14T04:16:04.343Z",
+  "finished_at": "2026-09-14T04:16:04.381Z",
+  "duration_ms": 38,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 8,
+    "captured_bytes": 8,
+    "sha256": "8d300be4d220daf7dd7dda3c7bb35cf19443437043556749e9afaa7584648e5f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

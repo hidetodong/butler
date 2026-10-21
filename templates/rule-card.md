@@ -46,9 +46,9 @@ handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重�
 
 ## 迭代化需求
 
-每个迭代有至少四位、自然增长的迭代号 `ITER-NNNN`。未分片项目从 `.ai/ITERATIONS.md` 取最大号；存在 `.ai/state-index.json` 时须先运行 `state-ledger check`，从 index 的数字 `max_used` 分配，不能只扫有界热表。根 ITER/MILE 台账只保留 current、近期行与待办；旧行由 state-ledger 写入固定数字区间冷分片，追溯时用 `lookup` 只读命中的一片。工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `deliveries/ITER-NNNN-<slug>.md`（并按 `delivery-summary.md §9` 固定模板填槽产同名 `.html` 阅读视图）+ 台账置 closed。迭代状态是**封闭枚举**，仅 `active`/`closed`/`abandoned` 三态（`planned` 属里程碑路线项、不入迭代台账；部署项目由 hook 机械拦截越界值）。
+每个迭代有至少四位、自然增长的迭代号 `ITER-NNNN`。未分片项目从 `.ai/ITERATIONS.md` 取最大号；存在 `.ai/state-index.json` 时须先运行 `state-ledger check`，从 index 的数字 `max_used` 分配，不能只扫有界热表。根 ITER/MILE 台账只保留 current、近期行与待办；旧行由 state-ledger 写入固定数字区间冷分片，追溯时用 `lookup` 只读命中的一片。工作区四件套即当前迭代活产物。`AC_LIST.md` 置 `状态: ack-frozen` 即冻结需求：迭代内小幅修订须把状态退回 `draft` 重新 ACK，影响面扩大须开新迭代号。迭代收口三步：四件套快照进 `.ai/iterations/ITER-NNNN/` + 写 `.ai/deliveries/ITER-NNNN-<slug>.md`（并按 `delivery-summary.md §9` 固定模板填槽产同名 `.html` 阅读视图）+ 台账置 closed。迭代状态是**封闭枚举**，仅 `active`/`closed`/`abandoned` 三态（`planned` 属里程碑路线项、不入迭代台账；部署项目由 hook 机械拦截越界值）。
 
-迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号时，先合成范围与路线图并 soft 对齐。**讨论不等于开工**：暂不做的内容放 `.ai/MILESTONES.md` 未编号待办区，多个可独立启动方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/milestone-backlog/<slug>.md`；不改 `current`、不占 `MILE-NNNN`。用户明确推进时才领取正式表最大号 +1，再写 `.ai/MILESTONE.md`。只有最新、零迭代/归档/交付的误开里程碑可退回候办；已有历史引用的号永不回收。期间开启的迭代自动归属之。录入可用对话或 `.ai/references/raw/` 下的文件；`/milestone start <候办键>` 提升候办，`/milestone status` 只读汇报正式进度与待办区。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `deliveries/milestones/MILE-NNNN-<slug>.md`（并产同名 `.html`）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
+迭代之上可套一层**里程碑** `MILE-NNNN`（大可交付版本，松耦合可选、方向性不冻结）。命中启动信号时，先合成范围与路线图并 soft 对齐。**讨论不等于开工**：暂不做的内容放 `.ai/MILESTONES.md` 未编号待办区，多个可独立启动方向必须拆成平级候办块，一方向一个键、一行索引、一份 `.ai/backlog/<slug>.md`；不改 `current`、不占 `MILE-NNNN`。用户明确推进时才领取正式表最大号 +1，再写 `.ai/MILESTONE.md`。只有最新、零迭代/归档/交付的误开里程碑可退回候办；已有历史引用的号永不回收。期间开启的迭代自动归属之。录入可用对话或 `.ai/references/raw/` 下的文件；`/milestone start <候办键>` 提升候办，`/milestone status` 只读汇报正式进度与待办区。收口三步：`.ai/MILESTONE.md` 快照进 `.ai/milestones/MILE-NNNN/` + 写 `.ai/deliveries/milestones/MILE-NNNN-<slug>.md`（并产同名 `.html`）+ 台账置 closed。机制以 `milestone-schema.md` 为准。
 
 ## 回退规则
 
@@ -60,12 +60,12 @@ handoff 是从权威状态生成的派生视图，不是 AI 手写真源。重�
 
 1. **先解施工项目根**：会话启动目录不等于项目根。用户点名路径优先；否则按 `mcv-deployment.md §0.1` 用最近已部署 Butler 根 / Git 根证明。目标不唯一就停下询问，仅凭 `cwd` 不得展开。
 2. 向用户回声解析后的绝对项目根，再以它为唯一边界侦察技术栈和目录结构。
-3. 只在该项目根创建 `.ai/`、`deliveries/` 与双宿主入口。
+3. 只在该项目根创建 `.ai/` 与双宿主入口。`.ai/deliveries/` 与 `.ai/backlog/` 按需产生。
 4. 生成 `.ai/local-constraints.md`（只写人类可读本地约束）与 `.ai/butler.config.json`（项目级机器配置，使用驻留 project-config 工具初始化）。
 
 ## 项目级功能开关（持久配置）
 
-butler 持久模式与 Active Profiles 统一持久在 `.ai/butler.config.json`：`dangerous` / `independent_review` 默认 false，`preference` 默认 true。**会话起始必须通过驻留 `tools/project-config/config.py resolve --project-root "$PROJECT_ROOT"` 读取并据此执行**；JSON 存在即为唯一真源，损坏时 fail-closed，缺失时才兼容回退旧 `.ai/local-constraints.md` 机器段。冲突必须亮牌。回写只用 project-config `set` 且只写 JSON；`source=legacy/missing` 时先 upgrade/init，不改 Markdown。`dangerous=true` 跨会话生效，AI 每会话起始读到即**显式声明后才进入**（announce-on-read，绝不静默进无人值守）。`preference` 只作本项目偏好探针抑制开关；consent/数据真源仍在外置 `$BUTLER_PREF`，不双写。
+butler 持久模式与 Active Profiles 统一持久在 `.ai/butler.config.json`：`dangerous` / `independent_review` 默认 false。**会话起始必须通过驻留 `tools/project-config/config.py resolve --project-root "$PROJECT_ROOT"` 读取并据此执行**；JSON 存在即为唯一真源，损坏时 fail-closed，缺失时才兼容回退旧 `.ai/local-constraints.md` 机器段。冲突必须亮牌。回写只用 project-config `set` 且只写 JSON；`source=legacy/missing` 时先 upgrade/init，不改 Markdown。`dangerous=true` 跨会话生效，AI 每会话起始读到即**显式声明后才进入**（announce-on-read，绝不静默进无人值守）。偏好探针的机器入口已在 ITER-0124 退役，项目配置里不再有这个字段，也不双写外置数据。
 
 危险模式不扩大文件权限：每次无人任务启动时回声并冻结宿主已预授权的写入上限（默认当前项目，可由用户预授权额外项目或工作区父目录）；上限内可动态追加施工项目，上限外继续不依赖部分并记阻塞，关键链路受阻则诚实交还。模型不得自行扩权、改宿主权限或用 `BUTLER_BYPASS` 硬闯。Butler hook 只管能归属项目的流程门禁；真实项目外路径交宿主权限，坏输入仍 fail-closed。
 
@@ -86,6 +86,6 @@ butler 持久模式与 Active Profiles 统一持久在 `.ai/butler.config.json`�
 - 执行中发现实现偏差、假设失效、范围漂移、验证失败、审查问题或外部阻塞，按 `goal-calibration.md` 记 task-state 活投影并回正确的 P1–P5 / 诚实停；open/blocked 信号不能被 tasks done、风险备注或危险模式覆盖
 - 会话结束前若任务未完成，必须生成 `.ai/02_SESSION_HANDOFF.md`
 
-## 偏好采集（实验性·默认开·经同意）
+## 偏好采集
 
-经一次性同意后，默认在后台把你的**决策倾向抽象**（不含业务数据/密钥）记到外置存储以学习风格，`/preference off` 随时全关；反哺默认关、`/preference reback on` 才开且仅作用于有监督工作。详见 `70_Extension_Preference/preference-probe-engine.md`。
+偏好探针的机器入口已在 ITER-0124 退役。不再采集、蒸馏或反哺。项目配置里不再有这个字段。仓库外已有的偏好数据留在原处。

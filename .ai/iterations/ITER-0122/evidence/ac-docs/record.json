@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-docs",
+  "iteration": "ITER-0122",
+  "ac_ids": [
+    "AC1",
+    "AC8"
+  ],
+  "command": {
+    "argv": [
+      "python3",
+      "-c",
+      "\nfrom pathlib import Path\nroot = Path(\".\")\nassert \".ai/.usage.json\" in (root / \".gitignore\").read_text()\ndebt = (root / \".ai/debt.md\").read_text()\nassert \"每个入口记录最后调用时间戳\" not in debt or \"已由 ITER-0122\" in debt\nassert \"R12\" in debt\nprint(\"docs ok\")\n"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-09-14T07:52:17.169Z",
+  "finished_at": "2026-09-14T07:52:17.208Z",
+  "duration_ms": 39,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 8,
+    "captured_bytes": 8,
+    "sha256": "8d300be4d220daf7dd7dda3c7bb35cf19443437043556749e9afaa7584648e5f",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

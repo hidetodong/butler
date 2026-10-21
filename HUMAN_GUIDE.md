@@ -59,7 +59,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 每一轮 P1-P5 是一个**迭代**，有一个确定的迭代号 `ITER-NNNN`（至少四位、单调递增）。近期行在 `.ai/ITERATIONS.md`，旧行按固定数字区间放进 `.ai/history/iterations/`，`.ai/state-index.json` 负责导航；查旧号时工具只读命中的一个分片。它的意义是把"这一轮固定了哪些需求、产出了哪套文档"钉死，方便回溯：
 
 - **固定需求**：你在 P2 ACK 验收清单后，这一迭代的范围就**冻结**了。之后小幅改动可以重新 ACK（记一条修订记录）；但影响面明显扩大时，AI 会开**下一个迭代号**承接，而不是把范围悄悄塞进当前迭代。
-- **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `deliveries/ITER-NNNN-<slug>.md` 交付总结，外加一份同名 `.html` 固定格式阅读视图（双击即可在浏览器里读）。
+- **落对应文档**：当前迭代的四件套（CONCEPT / AC_LIST / TECH_PLAN / VERIFY_REPORT）始终在 `.ai/` 固定路径；迭代收口时它们会被快照进 `.ai/iterations/ITER-NNNN/` 冻结归档，并落一份 `.ai/deliveries/ITER-NNNN-<slug>.md` 交付总结，外加一份同名 `.html` 固定格式阅读视图（双击即可在浏览器里读）。
 - **你的杠杆**：想开新一轮需求时，直接说"这算新迭代"；想确认当前进度时，让 AI 读 `.ai/ITERATIONS.md` 台账即可。
 
 ## 3. 安装（一次性）
@@ -76,7 +76,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 2. 在 `~/.claude/CLAUDE.md` 中写入全局配置，让 Claude Code 在所有项目中都能自动发现 butler
 3. 把 butler 的 slash 命令（`.claude/commands/butler/` 命名空间目录，如 `/butler:prd`）整个**软链**到 `~/.claude/commands/butler`，让它们在**所有项目**里都能用——不再只有编辑 butler 仓时才能敲。用软链而非拷贝：butler 仓一加/改命令，全局立即生效、无需重装
 4. 在 `~/.claude/CLAUDE.md` 的全局配置里 `@import` 一行**沟通风格正本**（`communication-style.md`），规定 AI 该怎么跟你说话（语气、详略、说人话）。它跟着 butler 仓走、每个会话常开、跨机器同步；想调说话风格，改这个文件即可
-5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（Router + 12 个业务 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
+5. 若检测到 Codex CLI，安装或刷新个人 Butler plugin（Router + 11 个业务 skills + hooks）；未安装 Codex 时明确跳过，不影响前四项
 
 执行完后重启终端（或 `source ~/.zshrc`）。之后你**不需要再告诉 AI butler 在哪**，`/butler-*` 命令也随处可用，AI 也按你的沟通风格说话。
 
@@ -94,7 +94,7 @@ P1 Analysis → P2 Acceptance → P3 Design → P4 Execute → P5 Verify
 
 ### Codex 支持状态
 
-v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；现在也可用 `/butler:setup` / `$butler-setup` 显式调用同一脚本。基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 当前包含 Router + 12 个业务 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
+v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能力；现在也可用 `/butler:setup` / `$butler-setup` 显式调用同一脚本。基地车首次部署和 `/butler:upgrade` 会用同一渲染器维护项目根的 `CLAUDE.md` + `AGENTS.md`，两份项目特定约束各自保留。`plugins/butler/` 当前包含 Router + 11 个业务 skills、PreToolUse 门禁与 PostToolUse 提醒；安装后新开 Codex 会话，并在首次启用时审阅、信任 hook。
 
 兼容边界：
 
@@ -112,7 +112,7 @@ v2.15.0 起，`./scripts/setup.sh` 同时安装 Claude 与 Codex 的机器级能
 bash scripts/verify-ci.sh
 ```
 
-入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 Router + 12 个业务 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
+入口会拒绝不匹配的 uv 版本，并使用仓库提交的 Python 版本与 `uv.lock`，不会在每次测试时临时解析 pytest/PyYAML 最新版。Codex plugin 和 Router + 11 个业务 skills 使用 `tools/codex-validators/` 中按 OpenAI Codex commit、SHA-256 与 Apache-2.0 许可证固定的官方 validator 快照，因此空 HOME 的 CI 也不会漏掉校验。
 
 GitHub Actions 在 Linux 与 macOS 上运行同一入口，最终汇总 check 名固定为 **`Butler required checks`**。仓库管理员应先让 workflow 至少运行一次，再到 `main` 的 Ruleset/Branch protection 中把这个精确名称设为 required，并从设置页或只读 GitHub API 复核。
 
@@ -166,12 +166,11 @@ AI 会自动走完整个链路：
 │   ├── 03_BUG_LOG.md        # RCA 报告
 │   ├── task-state.md        # 运行时状态
 │   ├── sidework/            # 旁路工作短回执（第一次使用时按需创建）
-│   └── references/          # 外部资料（按需创建）
-│       └── raw/             #   └ 你自己的原始材料：自由格式、你自管，AI 只读且不移动/归档/删除
-└── deliveries/              # 交付总结归档（每份 .md 另有同名 .html 固定格式阅读视图）
-    ├── ITER-NNNN-<slug>.md  #   迭代交付（小版本），平铺即时间线
-    ├── ITER-NNNN-<slug>.html #  └ 同名固定格式阅读视图，双击即可浏览器打开
-    └── milestones/          #   里程碑交付（大版本），MILE-NNNN-<slug>.md(+.html)
+│   ├── references/          # 外部资料（按需创建）
+│   │   └── raw/             #   └ 你自己的原始材料：自由格式、你自管，AI 只读且不移动/归档/删除
+│   └── deliveries/          # 交付总结归档（按需产生；每份 .md 另有同名 .html 阅读视图）
+│       ├── ITER-NNNN-<slug>.md
+│       └── milestones/      #   里程碑交付
 ```
 
 > `references/` 底下两类东西别混：`raw/` 放**你自己的原始材料**（可选投放点，AI 只读，随时可自己清理）；同目录下其余的是 AI 从这些材料派生出来、供验收引用的受控投影。两者边界见 `Coder/40_Context_Management/references-schema.md §1`。
@@ -200,7 +199,7 @@ Butler 规则仓库本身有**硬版本号**，遵循语义化版本 `MAJOR.MINO
 - **三级含义**：MAJOR = 破坏性变更（文件重命名/删除、契约或命令语义不兼容，升级可能要手工迁移）；MINOR = 向后兼容的能力新增（新 schema/命令/模式）；PATCH = 措辞澄清与不改行为的修订。
 - **部署会留下版本戳**：CLAUDE.md 与 AGENTS.md 顶部都会标注"规则源：butler vX.Y.Z"；升级会先对账两者，再共同重戳。
 - **升级先计划再写**：输 `/butler:upgrade` 或使用 `$butler-upgrade` 时，两宿主都会调用同一 `tools/butler-upgrade/upgrade.py`。它从 `migrations/manifest.json` 算版本队列，dry-run 回报逐文件变化、冲突、`[split]` 决定和机器级待办；显式放行后才事务 apply。失败会从项目内 backup 恢复，不靠模型解释 Markdown 或 `git reset`。
-- **人工/机器边界不假绿**：`[split]` 可明确暂缓；选择现在迁时仍由有人做语义路由。`[global-install]` 会改 HOME，必须单独确认，项目升级不会暗中执行。版本 gap 只决定队列，marker/hash/所有权检查决定能否安全写。
+- **人工/机器边界不假绿**：`[global-install]` 会改 HOME，必须单独确认，项目升级不会暗中执行。`apply` 不再强制 `--split`。旧格式收件箱或仓根 `origin/` 会让升级在写入前停下，不删用户自己的文件。版本 gap 只决定队列，marker/hash/所有权检查决定能否安全写。
 
 ## 5. 扩展模式
 
@@ -212,30 +211,29 @@ Butler 提供若干可选扩展模式，通过指令或语义触发，默认不�
 | **收敛闭环** | `/butler:loop` 或 "死磕"、"必须变绿" | 高强度纠错升档（死磕到绿 + 定量熔断）；底线由常驻纠错收口契约保证 |
 | **Review** | `/review` 或 "看看写得怎么样"、"代码审查" | 代码审计：P5 默认同上下文轻量自评；**独立复核**（fresh-context 第三方 agent）手动 `/review` 或项目配置开启，详见下方 |
 | **Dangerous** ⚠️ | `/butler:dangerous` 或 "放手做"、"自己跑完"、"别等我确认" | 实验性无人值守长程自治：自动拆迭代连续推进、P2/P3 ACK 由自审门替代，附审计/回滚/P5 强制审查护栏。仅在可隔离、可回滚环境用 |
-| **Preference** ⚠️ | `/butler:preference on`/`off`(隐私总关) · `reback on`/`off` · `distill` | 实验性偏好探针：采集你的设计取舍、蒸馏跨项目通识，在**有监督**工作里改进提议。采集经一次同意默认开、反哺 opt-in，详见下方 |
+| **Preference** | 已退役（ITER-0124） | 机器入口已去掉。项目配置里不再有这个字段。仓库外的旧偏好数据留在原处 |
 
 ### 项目级功能开关（持久配置）
 
-butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶层扁平 JSON，部署时即建好；`dangerous` 和 `independent_review` 默认 false，`preference` 默认 true，`profiles` 默认空数组：
+butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶层扁平 JSON，部署时即建好；`dangerous` 和 `independent_review` 默认 false，`profiles` 默认空数组：
 
 | 开关 | 含义 |
 |---|---|
 | `dangerous: true\|false` | 无人值守长程自治模式 |
 | `independent_review: true\|false` | 每次 P5 收口自动起独立复核 |
-| `preference: true\|false` | 本项目偏好探针采集开关（false = 本项目不采集/蒸馏/反哺） |
 | `profiles: []` | 当前项目启用的领域 profile 列表 |
 
-**两种改法，等价**：① 对话里用自然语言/命令说（如 `/butler:dangerous`、`/butler:preference project off`、"以后这个项目都开严格复核"），AI 通过驻留 project-config 工具回写；② 你直接手改合法 JSON。AI **每个会话开始都会用同一个 `resolve` 接口读它**。坏 JSON 会 fail-closed，而不是猜值或静默覆盖。
+**两种改法，等价**：① 对话里用自然语言/命令说（如 `/butler:dangerous`、"以后这个项目都开严格复核"），AI 通过驻留 project-config 工具回写；② 你直接手改合法 JSON。AI **每个会话开始都会用同一个 `resolve` 接口读它**。坏 JSON 会 fail-closed，而不是猜值或静默覆盖。
 
 旧项目在升级前仍可从 `.ai/local-constraints.md` 兼容只读；一旦 JSON 存在，它就是唯一真源，冲突会明确报告。回写不会继续改旧 Markdown：先运行 `/butler:upgrade` 完成事务迁移。
 
 **⚠️ 危险模式跨会话**：`dangerous: true` 会**跨会话保留**。新会话一开，AI resolve 到它会**先显式声明**"危险模式当前 ON、本会话将无人值守执行，要关说 `/butler:dangerous off`"，**声明后才自动进入**——绝不静默。代价是：你若忘了关，下次进来它声明完就自己跑。所以只在可隔离、可回滚的环境（独立分支/worktree）里留着 true。
 
-**关于 `preference`**：偏好探针的总开关、同意状态与数据是**跨项目**的（外置 `$BUTLER_PREF`），但**本项目可用 `preference: false` 或 `/butler:preference project off` 单独抑制**——它只关掉这一个项目的采集，不影响全局同意和别的项目。注意 true ≠ 强制采集：没给过全局同意时仍不会采。consent/数据真源始终在外置存储，这个字段只是本项目的采集闸。
+**关于偏好数据**：项目配置里不再有 `preference`。升级写回时只去掉这一键，另外三个字段保持原值。已经写在仓库外的旧偏好数据留在原处，不迁移。
 
 ### 里程碑（大版本）
 
-迭代之上还可套一层**里程碑** `MILE-NNNN`，作为"大可交付版本"。当一批需求跨多个迭代、需要先整体圈定范围再拆分推进时，AI 会提议开里程碑：先写一份范围评估 + 理解阐释 + 拆分路线图（`.ai/MILESTONE.md`），与你 soft 对齐后，期间开启的迭代自动归属它；大版本收口时聚合各迭代产出一份版本级交付（`deliveries/milestones/MILE-NNNN-<slug>.md`，同样附一份同名 `.html` 固定格式阅读视图）。里程碑是可选、松耦合的：不影响你按迭代推进的习惯，迭代历史在 `deliveries/` 根仍是一条连续时间线。
+迭代之上还可套一层**里程碑** `MILE-NNNN`，作为"大可交付版本"。当一批需求跨多个迭代、需要先整体圈定范围再拆分推进时，AI 会提议开里程碑：先写一份范围评估 + 理解阐释 + 拆分路线图（`.ai/MILESTONE.md`），与你 soft 对齐后，期间开启的迭代自动归属它；大版本收口时聚合各迭代产出一份版本级交付（`.ai/deliveries/milestones/MILE-NNNN-<slug>.md`，同样附一份同名 `.html` 固定格式阅读视图）。里程碑是可选、松耦合的：不影响你按迭代推进的习惯，迭代历史在 `.ai/deliveries/` 根仍是一条连续时间线。
 
 **自动归属的边界**：里程碑还**开着**的期间，你新提的迭代都**自动并进**这个里程碑、不用每次确认；一旦它**收口**，之后再开的迭代就是**独立**的，不会再塞进这个已关闭的里程碑（除非你显式开新里程碑或回挂到另一个进行中的里程碑）。
 
@@ -281,23 +279,9 @@ butler 的项目级机器配置统一记在 `.ai/butler.config.json`。它是顶
 - **牙齿**：独立复核 refute 掉一条"已满足"的 AC，或发现 Must Fix，就**阻断收口**，退回去修（修到真过、不许降级蒙混）。
 - **诚实边界**：如果运行环境起不了子 agent，AI **不会**偷偷用自评冒充独立复核，而是如实标"独立复核未执行"，让你自己决定要不要另起 agent 复核。
 
-### `/butler:preference` 偏好探针（实验性）
+### 偏好探针已退役
 
-让 AI 在长期协作中**学习你的设计风格**，并在你**在场**时用它给出更合你意的提议。
-
-**它怎么工作**
-
-1. **采集**（经一次同意后默认开）：AI 在你做关键决策时（选项选择、打回方案、直接纠正）把你的**取舍倾向**记成信号。首次会问你一次是否同意，答应后就默认在 butler 项目里自动攒，随时可 `/butler:preference off` 全关。
-2. **蒸馏**（默认开）：在迭代/里程碑收口或你说 `/butler:preference distill` 时，把信号归纳成偏好。**一条偏好要在 ≥2 个不同项目里一致出现，才会晋级为"跨项目通识"**——单项目重复不算，避免把局部口味当普适。
-3. **反哺**（默认关，`/butler:preference reback on` 才开）：开启后，AI 只在**有监督**工作里（P2/P3 提案、选项排序）参考你的风格，把你常选的前置或设默认——你随时能否决。
-
-**关键边界**
-
-- **只学你亲手的选择，不学模型自己的**。`/butler:dangerous` 无人值守模式**完全不碰偏好**：既不参考、也不把模型的自主决策记成你的偏好。偏好是"人在回路"的东西，模型自己跑的时候用不上它。
-- **反哺只是参考，不是命令**。偏好永远压不过你当下的明确指令；你这次怎么说就怎么来，AI 还会把这次"偏好让位于指令"记下来修正自己。
-- **数据存在 butler 仓库之外**（默认 `~/.butler/preferences/`，可用 `BUTLER_PREF` 指定），跨项目共用、与规则仓库解耦。只记决策倾向的抽象，**不记业务数据或敏感内容**。
-- **不碰你的迭代**。探针是旁路观察者，从不写 `.ai/`、不卡流程，坏了也不影响迭代。
-- 想看它学到了什么，让 AI 读 `~/.butler/preferences/profile.md` 的"通识层"即可。（首次采集会自动初始化外置存储；也可手动跑 `./scripts/preference-init.sh`。）
+ITER-0124 的实验没有找到「读画像后重排选项」的代码，排序没有变化，所以不再提供这条命令。项目配置里不再有 `preference`，不再启动采集。已经写在仓库外的旧偏好数据留在原处，不迁移。
 
 ### 自动测试证据（无证据不算通过）
 
@@ -409,6 +393,5 @@ Coder/
 ├── 55_Extension_ConvergenceLoop/ # 收敛闭环扩展（/butler:loop 升档）
 ├── 60_Extension_CodeReview/   # 代码审查扩展
 ├── 65_Extension_Dangerous/    # 无人值守长程自治扩展（实验性）
-├── 70_Extension_Preference/   # 偏好探针扩展（实验性，外置存储）
 └── 99_Business_Extension/     # 业务约束（最高优先级）
 ```

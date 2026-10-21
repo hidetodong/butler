@@ -35,7 +35,7 @@ class ContextBudgetTests(unittest.TestCase):
             ".ai/invariants.md",
             ".ai/debt.md",
             ".ai/iterations/ITER-0107/AC_LIST.md",
-            "deliveries/ITER-0107-domain-model-boundaries.md",
+            ".ai/deliveries/ITER-0107-domain-model-boundaries.md",
         ):
             source = ROOT / relative
             target = self.root / relative
@@ -69,7 +69,7 @@ class ContextBudgetTests(unittest.TestCase):
         self.assertEqual(result.metrics["routes"], 4)
         self.assertEqual(result.metrics["fact_classes"], 4)
         self.assertEqual(result.metrics["transitions"], 5)
-        self.assertEqual(result.metrics["order_bytes"], 1284)
+        self.assertEqual(result.metrics["order_bytes"], 1288)
         self.assertEqual(result.metrics["order_nonempty_lines"], 6)
         self.assertEqual(result.metrics["order_pointers"], 9)
         self.assertEqual(result.metrics["order_projections"], 4)

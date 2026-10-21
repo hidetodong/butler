@@ -10,7 +10,7 @@ scope: .ai/local-constraints.md 的人类可读字段定义、编写口径与 le
 
 用于记录当前项目相对于 butler 通用 SOP 的**人类可读本地化适配**：项目类型、项目特有的放宽或收紧、范围例外和外部资源指针。
 
-项目级机器配置已拆到 `.ai/butler.config.json`：Active Profiles 与 `dangerous` / `independent_review` / `preference` 不再写进本文件。旧项目的 Markdown 机器段只作为兼容输入，由 `tools/project-config/` 读取并经 `butler-upgrade` 事务迁移；新 JSON 存在时它是唯一真源。
+项目级机器配置已拆到 `.ai/butler.config.json`：Active Profiles 与 `dangerous` / `independent_review` 不再写进本文件。旧项目的 Markdown 机器段只作为兼容输入，由 `tools/project-config/` 读取并经 `butler-upgrade` 事务迁移；新 JSON 存在时它是唯一真源。
 
 ## 2. 交付约定
 
@@ -51,7 +51,7 @@ scope: .ai/local-constraints.md 的人类可读字段定义、编写口径与 le
 
 ### 4.1 机器配置与 legacy 兼容
 
-- **新项目**：机器配置只写 `.ai/butler.config.json`。安全默认是 `dangerous=false`、`independent_review=false`、`preference=true`、`profiles=[]`；字段合同与命令见 `tools/project-config/README.md`。
+- **新项目**：机器配置只写 `.ai/butler.config.json`。安全默认是 `dangerous=false`、`independent_review=false`、`profiles=[]`；字段合同与命令见 `tools/project-config/README.md`。
 - **兼容读取**：JSON 存在时必须完整合法并作为唯一真源；旧 Markdown 段仍在时逐字段比较并显式报告冲突，不用旧值覆盖 JSON。JSON 缺失时才回退旧 `Active Profiles`、「Butler 功能开关」和 `Review Policy`。
 - **迁移**：`butler-upgrade` 的 `migrate_config` action 复用 project-config 纯迁移计划，在同一事务内创建 JSON，并从本文件删除上述机器段；其他段和原始字节保持不变。模糊 profile、非法值、重复段、冲突/损坏 JSON 或 symlink 首写前拒绝。
 - **兼容期不双写**：迁移完成后命令只回写 JSON；旧 Markdown 回退只为尚未迁移项目保留，不长期维护两份状态。

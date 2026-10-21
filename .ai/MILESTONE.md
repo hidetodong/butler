@@ -73,13 +73,13 @@ Butler 走到 v3.6.0，规则文件 30 多份、驻留工具 20 多个、命令 
 | R6 | 重造·inbox 三层数据契约与真源：闪念口、孵化区规模字段、执行分流的结构与状态定义 | ITER-0117 | closed |
 | R7 | 重造·`/butler:inbox add \| list \| handle` 命令与工具实现，含真实 dogfood 跑通一条闪念到执行 | ITER-0118 | closed |
 | R8 | 重造·退役旧 inbox 全链：`tools/inbox/`、SRC-NNNN、双 SHA-256 认亲、scanner 与 `origin/` 目录 | ITER-0119 | closed |
-| R9 | 重造·根布局整理：`.ai/milestone-backlog/` 改名 `.ai/backlog/`、`deliveries/` 迁入 `.ai/deliveries/`、全仓引用一次性更新 | — | planned |
-| R10 | 重造·hook 拦截审计日志与仓根 meta 逃生舱：`.ai/.hook-blocks.log` 落地 + 白名单文件免 phase_gate 与 workspace-scope | — | planned |
-| R11 | 治根·usage instrumentation：全 CLI 入口记录最后调用时间戳，本地状态不进共享仓 | — | planned |
-| R12 | 治根·`tools/usage-report/` 与 `usage report --since 90d`：A/B/C/D 分档由数据生成，替代手工回忆 | — | planned |
-| R13 | 治根·preference 反哺断言实验与处置，evidence 消费链降维，`/butler:loop` 依数据最终处置 | — | planned |
-| R14 | 治根·升级器动作类型扩展：新增删除与移动两类 typed 标签，改 `migration-schema.md §4` 与 `upgrade.py` 三张表及路径校验，补幂等、冲突即停与回滚 | — | planned |
-| R15 | 治根·`migrations/v4.0.0.md` 完整配方与已部署项目升级回归，audit 欠债清账，`debt.md` 收尾 | — | planned |
+| R9 | 重造·根布局整理：`.ai/milestone-backlog/` 改名 `.ai/backlog/`、`deliveries/` 迁入 `.ai/deliveries/`、全仓引用一次性更新 | ITER-0120 | closed |
+| R10 | 重造·hook 拦截审计日志与仓根 meta 逃生舱：`.ai/.hook-blocks.log` 落地 + 白名单文件免 phase_gate 与 workspace-scope | ITER-0121 | closed |
+| R11 | 治根·usage instrumentation：全 CLI 入口记录最后调用时间戳，本地状态不进共享仓 | ITER-0122 | closed |
+| R12 | 治根·`tools/usage-report/` 与 `usage report --since 90d`：A/B/C/D 分档由数据生成，替代手工回忆 | ITER-0123 | closed |
+| R13 | 治根·preference 反哺断言实验与处置，evidence 消费链降维，`/butler:loop` 依数据最终处置 | ITER-0124 | closed |
+| R14 | 治根·升级器动作类型扩展：新增删除与移动两类 typed 标签，改 `migration-schema.md §4` 与 `upgrade.py` 三张表及路径校验，补幂等、冲突即停与回滚 | ITER-0125 | closed |
+| R15 | 治根·`migrations/v4.0.0.md` 完整配方与已部署项目升级回归，audit 欠债清账，`debt.md` 收尾 | ITER-0126 | closed |
 
 v4.0.0 的聚合切版本身走里程碑收口仪式（`milestone-schema.md §7.4` + `versioning-schema.md §6.3`），不单独占路线项。
 
@@ -133,3 +133,15 @@ v4.0.0 的聚合切版本身走里程碑收口仪式（`milestone-schema.md §7.
 - 2026-08-21（R8 · 已部署项目侧做不干净的部分，明确指向 R14 / R15）：本轮对别人硬盘上的项目，最多只能做到「butler 不再创建、不再读、不再教」。两样东西留在原地：**残留的 `origin/` 目录**（升级器没有删除与移动动作，归 R14；好在它本来就是用户自管、AI 零写入，留着不构成漂移）和**旧格式 `.ai/INBOX.md`**（R8 删掉上一代契约与 `tools/inbox/` 之后，仓里连一个认识旧格式的工具都没有，**没有降级读法可退**）。后者的兜底是 fail-closed：新工具碰到旧格式直接报错停下、一个字节都不写，本轮新加的 `TestLegacyInboxIsRefusedNotRewritten` 四个用例把这个行为锁死。真正的迁移配方归 R15 的 `migrations/v4.0.0.md`。这两笔都在 `.ai/debt.md` 有账，不靠「以后都用新地方」了事。
 
 - 2026-08-21（R8 · 本轮没有 TDD 配对，理由说在前面）：AC11 原定写成「先红后绿」的配对——拿旧格式 `.ai/INBOX.md` 喂 `add` / `list` / `handle`，期望先看到工具把旧文件写坏或误读，再修成拒绝。**P3 探针实测三个子命令都已经是正确行为**：都以退出码 1 停下、都报「表头必须逐字是 `| 闪念键 | 记于 | 一句话 | 状态 | 去向 |`」、都零字节写入。行为本来就对，写出来就是绿的，**没有真实的红**。硬造一个红（比如先把校验删掉再加回来）是伪造配对证据，比不做更坏。所以降级为回归防线：断言这个行为存在并锁死，`.ai/TECH_PLAN.md` 里明写本轮不声称 TDD 配对。
+
+- 2026-09-11（R9 · 活指针跟着搬家走，冻结快照不改写）：ITER-0120 把 `.ai/milestone-backlog/` 改名为 `.ai/backlog/`，仓根 `deliveries/` 整树搬进 `.ai/deliveries/`，内部仍是迭代平铺 + `milestones/` 子目录，不留兼容软链。历史归档（`.ai/iterations/`、`.ai/milestones/`、已发布 `migrations/`、`docs/research/`、`docs/superpowers/`、交付正文内部叙述）保持原貌；会 404 的活指针（规则、工具、测试、台账交付列含冷分片、闪念口去向、待办区索引、CHANGELOG 里「去哪找文件」的链接、冷启动读序）改到新路径。
+
+- 2026-09-11（R9 · hook 黑名单故意不动）：`templates/hooks/lib/io.py` 的 `GATED_BLACKLIST` 仍保留 `deliveries/`，给 R15 之前仓根还有该目录的已部署项目用。新路径 `.ai/deliveries/` 已被 `.ai/` 前缀豁免。进摘要的 hook 文件本轮零字节改动，不触发「树摘要必须等于当前 VERSION 对应 tag」那条 CI。
+
+- 2026-09-11（R9 · 按 `migration-schema.md §5` 的迁移判定）：①改了 `templates/rule-card.md` 与两份入口模板的冷启动读序投影 → v4.0.0 配方**必须含 `[regen-entrypoints]`**；②未改 hook 树 → **不需要 `[sync-hooks]`**；③候办改名在 `.ai/` 内部，现有 `[rename]` 能表达；④仓根 `deliveries/` 搬进 `.ai/` 跨出了 `[rename]` 的硬校验（源路径第一段必须是 `.ai/`），等 R14 补移动动作，配方正文归 R15。部署协议改为只建 `.ai/`，`.ai/backlog/` 与 `.ai/deliveries/` 按需产生。
+
+- 2026-09-14（R10 · hook 树有改动）：ITER-0121 给 dispatcher 加了拦截日志、给 `phase_gate` / `workspace_scope` 加了仓根 meta 逃生舱。进摘要的 hook 源文件有改动。按 `migration-schema.md §5`，v4.0.0 配方**必须含 `[sync-hooks]`**。本轮不切版、不写配方。摘要对账改为「等于当前 tag，或已登记进 `known_hook_tree_digests`」，未发布的 hook 改动可以先登记再合入。
+- 2026-10-19（R12 收口）：ITER-0123 交付 `tools/usage-report/`。默认 90 天，A/B/C/D 只按最后调用时间。不自动淘汰，不切版。
+- 2026-10-20（R13 收口）：ITER-0124 的实验判定排序没有变化，preference 机器入口退役，项目配置布尔保留。loop 保持冻结，因为没有最后调用时间不能当成已经证实没人用。evidence 不改命令和记录。不切版。R14 未开工。
+- 2026-10-21（R14 收口）：ITER-0125 给升级器补上 `delete` 和 `move`。动作写得出来了。`migrations/v4.0.0.md` 和已部署项目的真实清理仍在 R15。不切版。
+- 2026-10-21（R15 收口）：ITER-0126 写了 `migrations/v4.0.0.md`。临时项目上证明能删 `.ai/project/` 和 `.ai/PROJECT.md`，并把仓根 `deliveries/` 挪进 `.ai/deliveries/`。旧收件箱和仓根 `origin/` 遇到就停，不删。`VERSION` 仍是 `3.6.0`。真实已部署项目的升级没有跑。切版留在里程碑收口。

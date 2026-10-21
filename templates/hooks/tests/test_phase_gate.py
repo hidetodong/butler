@@ -167,3 +167,25 @@ class TestPlanAdmissionGate:
     def test_legacy_no_status_field_allows(self, tmp_path):
         self._seed_full_ai(tmp_path, "# Goal\n旧版方案，无准入字段")
         assert phase_gate.evaluate(make_ctx(tmp_path, "src/x.ts")).verdict == "allow"
+
+
+class TestMetaEscapeHatch:
+    def test_readme_allowed_without_artifacts_when_no_iteration(self, tmp_path):
+        d = phase_gate.evaluate(make_ctx(tmp_path, "README.md"))
+        assert d.verdict == "allow"
+
+    def test_nested_readme_still_gated(self, tmp_path):
+        d = phase_gate.evaluate(make_ctx(tmp_path, "docs/README.md"))
+        assert d.verdict == "deny"
+
+    def test_readme_denied_when_iteration_active_and_artifacts_missing(self, tmp_path):
+        ledger = tmp_path / ".ai" / "ITERATIONS.md"
+        ledger.parent.mkdir()
+        ledger.write_text("current: ITER-0001\n", encoding="utf-8")
+        d = phase_gate.evaluate(make_ctx(tmp_path, "README.md"))
+        assert d.verdict == "deny"
+        assert "CONCEPT.md" in d.reason
+
+    def test_source_still_denied_when_no_iteration(self, tmp_path):
+        d = phase_gate.evaluate(make_ctx(tmp_path, "src/auth.ts"))
+        assert d.verdict == "deny"

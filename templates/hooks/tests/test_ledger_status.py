@@ -47,7 +47,7 @@ class TestLedgerStatus:
     def test_valid_states_allow(self):
         content = _table(
             "| ITER-0002 | t | active | 2026-01-01 | — | — | — |",
-            "| ITER-0001 | t | closed | 2026-01-01 | 2026-01-02 | — | deliveries/ITER-0001-x.md |",
+            "| ITER-0001 | t | closed | 2026-01-01 | 2026-01-02 | — | .ai/deliveries/ITER-0001-x.md |",
         )
         d = ledger_status.evaluate(make_ctx(LEDGER, content))
         assert d.verdict == "allow"

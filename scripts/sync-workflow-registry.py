@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "preference", "loop", "dangerous", "iteration"}
+EXPECTED_IDS = {"inbox", "prd", "review", "milestone", "upgrade", "init", "setup", "ideation", "loop", "dangerous", "iteration"}
 HIGH_RISK = {"loop", "dangerous"}
 TOP_KEYS = {"schema_version", "plugin", "router", "workflows"}
 PLUGIN_KEYS = {"name", "root", "manifest", "hooks", "personal_installer", "setup_entrypoint", "marketplace_mode", "team_distribution"}

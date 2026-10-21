@@ -19,6 +19,8 @@ PRD_B = "2026-07-23-beta"
 def tree_hash(root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
+        if path.name == ".usage.json":
+            continue
         relative = path.relative_to(root).as_posix()
         digest.update(relative.encode())
         if path.is_symlink():
