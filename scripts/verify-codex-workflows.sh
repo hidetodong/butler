@@ -9,13 +9,13 @@ skill_validator="$validator_root/skill-creator/quick_validate.py"
 names=(router inbox prd review milestone upgrade init setup ideation iteration loop dangerous)
 
 fail() { echo "[FAIL] $*" >&2; exit 1; }
-require_text() { rg -q --fixed-strings "$2" "$1" || fail "$1 missing: $2"; }
+require_text() { grep -F -q -- "$2" "$1" || fail "$1 missing: $2"; }
 
 [[ -f "$plugin/.codex-plugin/plugin.json" ]] || fail "missing plugin manifest"
 python3 -m json.tool "$plugin/.codex-plugin/plugin.json" >/dev/null
 require_text "$plugin/.codex-plugin/plugin.json" '"name": "butler"'
 require_text "$plugin/.codex-plugin/plugin.json" '"skills": "./skills/"'
-if rg -q '"(hooks|mcpServers|apps)"' "$plugin/.codex-plugin/plugin.json"; then
+if grep -E -q '"(hooks|mcpServers|apps)"' "$plugin/.codex-plugin/plugin.json"; then
   fail "R2 manifest must not declare hooks, MCP, or apps"
 fi
 
@@ -54,12 +54,12 @@ for name in loop dangerous; do
   require_text "$plugin/skills/butler-$name/agents/openai.yaml" 'allow_implicit_invocation: false'
 done
 for name in router inbox prd review milestone upgrade init setup ideation iteration; do
-  if rg -q 'allow_implicit_invocation: false' "$plugin/skills/butler-$name/agents/openai.yaml"; then
+  if grep -F -q -- 'allow_implicit_invocation: false' "$plugin/skills/butler-$name/agents/openai.yaml"; then
     fail "$name must remain eligible for implicit invocation"
   fi
 done
 
-if rg -q '\[TODO:|TODO:' "$plugin"; then
+if grep -R -E -q -- '\[TODO:|TODO:' "$plugin"; then
   fail "plugin contains TODO placeholders"
 fi
 
