@@ -6,7 +6,18 @@ source_plugin="$repo_root/plugins/butler"
 personal_root="$HOME/.agents/plugins"
 marketplace="$personal_root/marketplace.json"
 target_parent="$HOME/plugins"
-creator_root="${BUTLER_PLUGIN_CREATOR_DIR:-${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator}"
+vendored_creator="$repo_root/tools/codex-validators/plugin-creator"
+live_creator="${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator"
+# An explicit directory is fail-closed. Otherwise prefer the installed Codex
+# skill, and fall back to the pinned snapshot when that skill is absent.
+if [[ -n "${BUTLER_PLUGIN_CREATOR_DIR:-}" ]]; then
+  creator_root="$BUTLER_PLUGIN_CREATOR_DIR"
+elif [[ -f "$live_creator/scripts/create_basic_plugin.py" ]]; then
+  creator_root="$live_creator"
+else
+  creator_root="$vendored_creator"
+fi
+pinned_validator="$vendored_creator/validate_plugin.py"
 validator_python="${BUTLER_PLUGIN_VALIDATOR_PYTHON:-$repo_root/.venv/bin/python}"
 skip_add=false
 
@@ -53,17 +64,20 @@ cp -R "$source_plugin" "$target_plugin"
 
 python3 "$creator_root/scripts/update_plugin_cachebuster.py" "$target_plugin"
 
-if [[ -f "$creator_root/scripts/validate_plugin.py" ]]; then
-  if command -v uv >/dev/null 2>&1; then
-    uv run --with pyyaml python "$creator_root/scripts/validate_plugin.py" "$target_plugin"
-  elif [[ -x "$validator_python" ]] && "$validator_python" -c 'import yaml' >/dev/null 2>&1; then
-    "$validator_python" "$creator_root/scripts/validate_plugin.py" "$target_plugin"
-  elif python3 -c 'import yaml' >/dev/null 2>&1; then
-    python3 "$creator_root/scripts/validate_plugin.py" "$target_plugin"
-  else
-    echo "plugin validation requires uv or a Python runtime with PyYAML; checked: $validator_python and python3" >&2
-    exit 2
-  fi
+validator="$creator_root/scripts/validate_plugin.py"
+if [[ ! -f "$validator" ]]; then
+  validator="$pinned_validator"
+fi
+[[ -f "$validator" ]] || { echo "missing required file: $pinned_validator" >&2; exit 1; }
+if command -v uv >/dev/null 2>&1; then
+  uv run --with pyyaml python "$validator" "$target_plugin"
+elif [[ -x "$validator_python" ]] && "$validator_python" -c 'import yaml' >/dev/null 2>&1; then
+  "$validator_python" "$validator" "$target_plugin"
+elif python3 -c 'import yaml' >/dev/null 2>&1; then
+  python3 "$validator" "$target_plugin"
+else
+  echo "plugin validation requires uv or a Python runtime with PyYAML; checked: $validator_python and python3" >&2
+  exit 2
 fi
 
 marketplace_name="$(python3 "$creator_root/scripts/read_marketplace_name.py" --marketplace-path "$marketplace")"

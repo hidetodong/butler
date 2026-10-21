@@ -12,6 +12,21 @@
       "sha256": "ebda00d55d7518b127f675f062fb5c6e7a1ffdc0a99df1a55ac594400d7d3228"
     },
     {
+      "path": "plugin-creator/scripts/create_basic_plugin.py",
+      "upstream_path": "codex-rs/skills/src/assets/samples/plugin-creator/scripts/create_basic_plugin.py",
+      "sha256": "b5aa34f7f9dcec4bb007a66d65cff0c5c77a67042ae6c4de57d8ab7f4ef737d2"
+    },
+    {
+      "path": "plugin-creator/scripts/update_plugin_cachebuster.py",
+      "upstream_path": "codex-rs/skills/src/assets/samples/plugin-creator/scripts/update_plugin_cachebuster.py",
+      "sha256": "4fe3c5a49212f6e30a2306e245c460e01aaf5e36bc8ad3dd2852c199257eff89"
+    },
+    {
+      "path": "plugin-creator/scripts/read_marketplace_name.py",
+      "upstream_path": "codex-rs/skills/src/assets/samples/plugin-creator/scripts/read_marketplace_name.py",
+      "sha256": "7659216759152f83087020b4d2971b4ad3cc13851e2614efc30fc2317ad59d96"
+    },
+    {
       "path": "skill-creator/quick_validate.py",
       "upstream_path": "codex-rs/skills/src/assets/samples/skill-creator/scripts/quick_validate.py",
       "sha256": "6cc9dc3199c935916cf6f73fcbbbb0e3bb1b58c8f5109fefa499978908164f51"

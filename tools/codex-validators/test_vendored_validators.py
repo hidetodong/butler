@@ -18,6 +18,13 @@ ROOT = Path(__file__).resolve().parents[2]
 VALIDATORS = ROOT / "tools" / "codex-validators"
 PROVENANCE = VALIDATORS / "PROVENANCE.json"
 PLUGIN = ROOT / "plugins" / "butler"
+EXPECTED_PATHS = {
+    "plugin-creator/validate_plugin.py",
+    "plugin-creator/scripts/create_basic_plugin.py",
+    "plugin-creator/scripts/update_plugin_cachebuster.py",
+    "plugin-creator/scripts/read_marketplace_name.py",
+    "skill-creator/quick_validate.py",
+}
 
 
 def sha256(path: Path) -> str:
@@ -40,8 +47,9 @@ def load_and_verify_provenance(root: Path = VALIDATORS) -> dict[str, object]:
     if not isinstance(commit, str) or len(commit) != 40:
         raise ValueError("source commit must be a full SHA")
     entries = payload.get("files")
-    if not isinstance(entries, list) or len(entries) != 2:
-        raise ValueError("provenance must list exactly two validators")
+    if not isinstance(entries, list):
+        raise ValueError("provenance files must be a list")
+    seen: list[str] = []
     for entry in entries:
         if not isinstance(entry, dict):
             raise ValueError("invalid provenance file entry")
@@ -55,6 +63,9 @@ def load_and_verify_provenance(root: Path = VALIDATORS) -> dict[str, object]:
         actual = sha256(path)
         if actual != expected:
             raise ValueError(f"validator hash mismatch: {relative}: {actual}")
+        seen.append(relative)
+    if set(seen) != EXPECTED_PATHS or len(seen) != len(EXPECTED_PATHS):
+        raise ValueError(f"provenance file set drifted: {seen}")
     license_path = root / "LICENSE"
     if not license_path.is_file() or "Apache License" not in license_path.read_text(encoding="utf-8"):
         raise ValueError("missing upstream Apache license")

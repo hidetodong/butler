@@ -65,7 +65,7 @@ Pi 的门禁层用 TypeScript 扩展（`plugins/butler-pi/`）实现 `tool_call`
 - 项目部署：先用 `scripts/resolve-project-root.py` 确定唯一项目根，再由 `scripts/render-project-entrypoints.py` 从同一 rule-card 幂等维护 CLAUDE.md + AGENTS.md。
 - 项目升级：Claude `/butler:upgrade` 与 Codex `$butler-upgrade` 都只路由 `tools/butler-upgrade/upgrade.py`；执行器从 `migrations/manifest.json` 生成零写入计划，再做带 lock/backup/journal/失败恢复的项目事务。管理区外原文与两份 user-managed 区各自保留；split 人工语义和 global HOME 安装不会伪装成项目内自动动作。
 - 结构回归：`bash scripts/verify-codex-workflows.sh`。
-- 固定校验来源：CI/local 使用 `tools/codex-validators/` 中按 OpenAI Codex commit 与 SHA-256 固定的官方 validator 快照；来源和许可证见同目录 `PROVENANCE.json` / `LICENSE`。验证不得依赖用户 `$HOME/.codex/skills/.system` 是否存在。
+- 固定校验来源：CI/local 使用 `tools/codex-validators/` 中按 OpenAI Codex commit 与 SHA-256 固定的官方 validator 快照，以及安装器需要的三份 plugin-creator 脚本；来源和许可证见同目录 `PROVENANCE.json` / `LICENSE`。验证不得依赖用户 `$HOME/.codex/skills/.system` 是否存在。本机已有这份 skill 时，真实 `codex plugin add` 仍用本机脚本。
 - 不创建 custom prompts；官方已把它们标为弃用路线。
 
 ## 6. Hook / 事件拦截实现与边界
@@ -125,6 +125,6 @@ python3 -m pytest templates/hooks/tests -q
 
 `.github/workflows/ci.yml` 的稳定汇总 check 名是 `Butler required checks`。workflow 入仓只能证明 check 已提供；只有仓库的 Ruleset/Branch protection 远端状态明确要求该名称，才能声称 required 已启用。未查询或未配置时统一写 `pending external configuration`。
 
-更新 `tools/codex-validators/` 时必须选定新的 OpenAI Codex 完整 commit，审查 validator diff，同时更新两个快照、`PROVENANCE.json` 摘要和上游 LICENSE；禁止在验证期间从浮动 `main` 下载代码。
+更新 `tools/codex-validators/` 时必须选定新的 OpenAI Codex 完整 commit，审查上游 diff，同时更新 `PROVENANCE.json` 列出的每一个快照、摘要和上游 LICENSE；禁止在验证期间从浮动 `main` 下载代码。
 
 两个宿主出现差异时，先判断它属于“规则算法”还是“宿主协议”。前者回共同内核，后者留在对应适配层；不要用复制正文解决协议差异。

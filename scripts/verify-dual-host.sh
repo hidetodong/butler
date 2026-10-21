@@ -4,7 +4,8 @@ export LC_ALL=C
 export LANG=C
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PLUGIN_CREATOR_ROOT="${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator"
+# CI runners have no Codex home. Use the pinned creator snapshot, not ~/.codex.
+PLUGIN_CREATOR_ROOT="$ROOT/tools/codex-validators/plugin-creator"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/butler-dual-host.XXXXXX")"
 trap 'rm -rf "$WORK"' EXIT HUP INT TERM
 
