@@ -57,7 +57,7 @@ class UpgradeTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def project(self, version: str, *, agents: bool = True, user: str = "owner bytes") -> Path:
+    def project(self, version: str, *, agents: bool = True, user: str = "owner bytes", deliveries: bool = True) -> Path:
         project = self.base / f"project-{version.replace('.', '-')}-{len(list(self.base.iterdir()))}"
         project.mkdir()
         (project / ".ai").mkdir()
@@ -70,6 +70,8 @@ class UpgradeTests(unittest.TestCase):
             path.write_text(text)
         if not agents:
             (project / "AGENTS.md").unlink()
+        if deliveries:
+            (project / ".ai" / "deliveries").mkdir()
         return project
 
     def manifest(self):
@@ -182,7 +184,7 @@ class UpgradeTests(unittest.TestCase):
         before = digest_tree(project)
         undecided = UPGRADE.build_plan(project, ROOT, None)
         self.assertNotIn(undecided["status"], {"needs-decision", "manual-split"})
-        self.assertFalse(any(action["id"].startswith("4.0.0/") for action in undecided["actions"]))
+        self.assertTrue(any(action["id"].startswith("4.0.0/") for action in undecided["actions"]))
         self.assertEqual(before, digest_tree(project))
         self.assertEqual("# Knowledge\nprivate prose\n", (project / ".ai/PROJECT.md").read_text())
         deferred = UPGRADE.build_plan(project, ROOT, "defer")
@@ -219,7 +221,7 @@ class UpgradeTests(unittest.TestCase):
         planned = UPGRADE.build_plan(split, ROOT, None)
         self.assertNotIn(planned["status"], {"needs-decision", "manual-split"})
         self.assertTrue((split / ".ai/project/partial.md").is_file())
-        self.assertFalse(any(action["id"].startswith("4.0.0/") for action in planned["actions"]))
+        self.assertTrue(any(action["id"].startswith("4.0.0/") for action in planned["actions"]))
 
     def test_symlink_escape_and_self_target_are_rejected(self):
         project = self.project("2.15.0")
@@ -573,9 +575,9 @@ class UpgradeTests(unittest.TestCase):
         readme = (ROOT / "tools/butler-upgrade/README.md").read_text()
         self.assertIn("rename/add-field、delete/move、", readme)
 
-    def test_v4_recipe_is_linked_and_not_selected_before_version_cut(self):
+    def test_v4_recipe_is_linked_and_selected_for_older_stamps(self):
         self.assertTrue((ROOT / "migrations" / "v4.0.0.md").is_file())
-        self.assertEqual("3.6.0", (ROOT / "VERSION").read_text().strip())
+        self.assertEqual("4.0.0", (ROOT / "VERSION").read_text().strip())
         data = self.manifest()
         UPGRADE.validate_manifest(data, ROOT)
         section = next(item for item in data["migrations"] if item["target"] == "4.0.0")
@@ -607,7 +609,7 @@ class UpgradeTests(unittest.TestCase):
             encoding="utf-8",
         )
         plan = UPGRADE.build_plan(project, ROOT, None)
-        self.assertFalse(any(action["id"].startswith("4.0.0/") for action in plan["actions"]))
+        self.assertTrue(any(action["id"].startswith("4.0.0/") for action in plan["actions"]))
 
     def test_manifest_accepts_delete_and_move_and_rejects_illegal_paths(self):
         data = self.manifest()
@@ -975,7 +977,7 @@ class UpgradeTests(unittest.TestCase):
 
     def test_v4_recipe_cleans_a_temp_project_and_is_idempotent(self):
         butler = self.v4_butler_root()
-        project = self.project("3.6.0", user="precious")
+        project = self.project("3.6.0", user="precious", deliveries=False)
         self.assertFalse(butler in project.parents or project in butler.parents)
         nested = project / ".ai" / "project" / "notes"
         nested.mkdir(parents=True)
@@ -1059,7 +1061,7 @@ class UpgradeTests(unittest.TestCase):
         project = self.project("3.6.0")
         (project / "deliveries").mkdir()
         (project / "deliveries" / "src.txt").write_bytes(b"src")
-        (project / ".ai" / "deliveries").mkdir()
+        (project / ".ai" / "deliveries").mkdir(exist_ok=True)
         (project / ".ai" / "deliveries" / "dst.txt").write_bytes(b"dst")
         before = digest_tree(project)
         with self.assertRaisesRegex(UPGRADE.UpgradeError, "move conflict"):
@@ -1072,7 +1074,7 @@ class UpgradeTests(unittest.TestCase):
         butler = self.v4_butler_root()
         project = self.project("1.7.0")
         (project / ".ai" / "PROJECT.md").write_text("# Knowledge\nprivate prose\n")
-        (project / ".ai" / "deliveries").mkdir()
+        (project / ".ai" / "deliveries").mkdir(exist_ok=True)
         (project / ".ai" / "deliveries" / "kept.txt").write_bytes(b"kept")
         queued = UPGRADE.build_plan(project, butler, None)
         self.assertNotIn(queued["status"], {"needs-decision", "manual-split"})

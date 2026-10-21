@@ -19,7 +19,7 @@
     "milestones": {
       "cold_count": 0,
       "hot_count": 16,
-      "hot_sha256": "f8526fc0b463e3d7778c1b492629b10c3a5ae13b6d2b767d23c628ad2e53ab84",
+      "hot_sha256": "81ca9e4329a9cd208b34424656c62793aeabbda4cfbbf12232a7dbbdd603dbba",
       "max_used": 16,
       "routing": {
         "directory": ".ai/history/milestones",

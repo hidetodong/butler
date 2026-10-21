@@ -1,25 +1,24 @@
 {
-  "handoff_sha256": "05fa2275615093f1020897504eb182a50c41cdb8ad56b4c55d16d76688a09d62",
+  "handoff_sha256": "66b3b7dc400f6f7cfc153593db47f273b6100a6f32c9bcf18f36f81d9cbf407e",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
-    "milestone": "MILE-0016",
-    "next": "切版留在里程碑收口。",
+    "milestone": "none",
+    "next": "交付即止。真实已部署项目的升级仍未跑。",
     "phase": "无 active",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
-      ".ai/MILESTONES.md",
-      ".ai/MILESTONE.md"
+      ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "ITER-0126 已于 2026-10-21 收口。版本号仍是 3.6.0。MILE-0016 仍开着。"
+    "status": "MILE-0016 已于 2026-10-21 收口，版本号切到 4.0.0。没有推送。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "4bc32b9c9c794e8e39685847ffcb3855a6b086b82831b2415a056c2d4b5afe72"
+      "sha256": "15c4b65883bb1499333718de096e50417b4b6507e48b9a9b6291827ea86e5f02"
     },
     {
       "path": ".ai/ITERATIONS.md",
@@ -27,11 +26,7 @@
     },
     {
       "path": ".ai/MILESTONES.md",
-      "sha256": "f8526fc0b463e3d7778c1b492629b10c3a5ae13b6d2b767d23c628ad2e53ab84"
-    },
-    {
-      "path": ".ai/MILESTONE.md",
-      "sha256": "f6f914c1e42e905badc34e139e1a52f91d9dba479a76cdadd323b83daaac0027"
+      "sha256": "81ca9e4329a9cd208b34424656c62793aeabbda4cfbbf12232a7dbbdd603dbba"
     }
   ]
 }

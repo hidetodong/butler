@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILE-0016 交付总结 · Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>Butler 瘦身与重造：砍 fold 与死码、重造 inbox、装监视器</h1>
+      <div class="meta">
+        <span class="chip id">MILE-0016</span>
+        <span class="chip level">里程碑交付（大版本）</span>
+        <span class="chip date">收口 2026-10-21</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>Butler 到 v3.6.0 时，规则、工具和命令只加不减。知识文件夹靠折叠自转，项目全貌会悄悄过期，闪念没有一个三秒能记下来的入口，也没有使用记录能说明哪条命令真的被用过。</p>
+<p>这一版做三件事：先拆掉已经证明维护不住的机构，再补上闪念口、拦截日志和仓根文件逃生舱，最后装上本地使用记录，让以后的淘汰有数可查。收口时把版本切到 4.0.0。这是破坏性版本：已部署项目要走 <code>migrations/v4.0.0.md</code>，没有兼容期软链。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+<li>**止血**（R1–R5）：删掉 <code>.ai/project/</code> 里靠折叠维护的产物、<code>fold-state.json</code>、knowledge-fold 与 drift-check；冷启动改读欠债、交接和双台账；项目全貌改为可重算的 <code>.ai/OVERVIEW.md</code>，不变量和欠债分开存放；<code>/butler:progress</code> 整条链删除；<code>/butler:loop</code> 保留可用，但停止演进。</li>
+<li>**重造**（R6–R10）：闪念口、孵化区和执行分流定成新契约；<code>/butler:inbox</code> 能记下一条闪念并孵化；旧 inbox 扫描链和 <code>origin/</code> 的工具支持退役；候办目录改名为 <code>.ai/backlog/</code>，交付从仓库根挪进 <code>.ai/deliveries/</code>；hook 拦截写入 <code>.ai/.hook-blocks.log</code>，仓库根的说明文件在没有进行中的迭代时也可以直接改。</li>
+<li>**治根**（R11–R15）：命令行入口记下最后调用时间；90 天报告按调用时间分档，不自动淘汰；偏好反哺实验判定排序没有变化，机器入口退役，本机偏好目录和模板骨架保留；升级器新增删除和移动；<code>migrations/v4.0.0.md</code> 写好，并在临时项目上跑通。</li>
+<li>**切版**：<code>VERSION</code>、更新日志、README 版本徽章和 Codex 插件版本对齐到 4.0.0。没有推送。</li>
+</ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+<li>冷启动不再读项目知识文件夹。人要看的全貌在 <code>.ai/OVERVIEW.md</code>，欠着的账在 <code>.ai/debt.md</code>。</li>
+<li><code>/butler:progress</code> 没有了。<code>/butler:preference</code> 的机器入口没有了。<code>/butler:loop</code> 还在，但是冻结的，没有最后调用时间，不能当成已经证实没人用。</li>
+<li>记一句话走 <code>/butler:inbox</code>。旧格式收件箱和仓库根的 <code>origin/</code> 不会被升级器删掉；升到 4.0.0 时遇到它们会在写入前停下。</li>
+<li>给人看的交付总结改在 <code>.ai/deliveries/</code>。仓库根不再放 <code>deliveries/</code>。</li>
+<li>一个 3.6.0 的项目拿本仓库做升级计划时，会选中 4.0.0 的删除、搬家、配置、入口、hook 和版本戳。本仓库自己没有对自己执行这次升级。</li>
+</ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+<li>冷启动读序、迭代与里程碑收口仪式、命令注册表、hook、<code>.ai/</code> 布局、升级器动作和 v4.0.0 配方。</li>
+<li>没动的：P1 到 P5 的阶段顺序，MILE-0014 的决策地图，MILE-0015 的领域合同工具。</li>
+<li>仓库里的 <code>.ai/butler.config.json</code> 仍保留 <code>preference: true</code>。读取时会丢掉这一键，写回要等一次真正的 4.0.0 升级。这次收口没有改那个文件。</li>
+</ul>
+    </section>
+
+    <!-- ROADMAP:START　里程碑级填写；迭代级把本注释块（含 section）整段删除 -->
+    <section class="block roadmap">
+      <h2>拆分路线图回填</h2>
+      <table>
+<thead><tr><th>路线</th><th>交付切片</th><th>承接迭代</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>R1</td><td>退役折叠机制和靠它维护的知识文件夹产物</td><td><a href="../ITER-0112-retire-project-knowledge-folder.md">ITER-0112</a></td><td>closed</td></tr>
+<tr><td>R2</td><td>冷启动改读欠债、交接和双台账</td><td><a href="../ITER-0113-cold-start-read-order.md">ITER-0113</a></td><td>closed</td></tr>
+<tr><td>R3</td><td>项目全貌改为生成加手写理由，不再靠折叠重评</td><td><a href="../ITER-0114-project-overview-rebuild.md">ITER-0114</a></td><td>closed</td></tr>
+<tr><td>R4</td><td>删除 <code>/butler:progress</code> 整条链</td><td><a href="../ITER-0115-retire-butler-progress.md">ITER-0115</a></td><td>closed</td></tr>
+<tr><td>R5</td><td><code>/butler:loop</code> 冻结，并撤掉升级器重写候办</td><td><a href="../ITER-0116-loop-freeze-backlog-withdrawal.md">ITER-0116</a></td><td>closed</td></tr>
+<tr><td>R6</td><td>闪念、孵化、执行三层契约</td><td><a href="../ITER-0117-intake-three-layer-contract.md">ITER-0117</a></td><td>closed</td></tr>
+<tr><td>R7</td><td><code>/butler:inbox</code> 命令和工具，并跑通记一条闪念</td><td><a href="../ITER-0118-inbox-command-and-tool.md">ITER-0118</a></td><td>closed</td></tr>
+<tr><td>R8</td><td>退役旧 inbox 扫描链</td><td><a href="../ITER-0119-retire-old-inbox-chain.md">ITER-0119</a></td><td>closed</td></tr>
+<tr><td>R9</td><td>候办改名，交付挪进 <code>.ai/deliveries/</code></td><td><a href="../ITER-0120-layout-backlog-deliveries.md">ITER-0120</a></td><td>closed</td></tr>
+<tr><td>R10</td><td>hook 拦截日志和仓根文件逃生舱</td><td><a href="../ITER-0121-hook-block-log-meta-escape.md">ITER-0121</a></td><td>closed</td></tr>
+<tr><td>R11</td><td>命令行入口记录最后调用时间</td><td><a href="../ITER-0122-usage-cli-last-used.md">ITER-0122</a></td><td>closed</td></tr>
+<tr><td>R12</td><td>90 天使用报告，只分档，不自动淘汰</td><td><a href="../ITER-0123-usage-report-90d.md">ITER-0123</a></td><td>closed</td></tr>
+<tr><td>R13</td><td>偏好反哺实验：排序没变，机器入口退役，loop 继续冻结</td><td><a href="../ITER-0124-preference-experiment-evidence-loop.md">ITER-0124</a></td><td>closed</td></tr>
+<tr><td>R14</td><td>升级器新增删除和移动</td><td><a href="../ITER-0125-upgrade-delete-move.md">ITER-0125</a></td><td>closed</td></tr>
+<tr><td>R15</td><td>写出 v4.0.0 配方，并在临时项目上跑通</td><td><a href="../ITER-0126-v4-upgrade-recipe.md">ITER-0126</a></td><td>closed</td></tr>
+</tbody></table>
+    </section>
+    <!-- ROADMAP:END -->
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <ul>
+<li>十五条路线全部 closed。各迭代的归档、交付和证据留在 <code>.ai/iterations/ITER-NNNN/</code> 与 <code>.ai/deliveries/</code>，这里不嵌原文。ITER-0126 的证据在 <code>.ai/iterations/ITER-0126/evidence/</code>。</li>
+<li>切版提交前，<code>python3 scripts/test-butler-upgrade.py</code> 36 项通过；<code>bash scripts/verify-ci.sh</code> 退出码 0，其中 pytest 211 项通过。Pi 扩展的类型声明警告是原有的，这轮 CI 仍以退出码 0 结束。</li>
+<li>没有做换上下文的独立复核。</li>
+</ul>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+<li>**真实已部署项目的升级一次都没跑过。** v4.0.0 配方只在临时项目上证明过。已部署项目磁盘上的旧收件箱、仓库根 <code>origin/</code>、空知识目录，都还在原地。这次收口没有把它们清掉。</li>
+<li>**旧收件箱和仓库根 <code>origin/</code> 会让整次升级在写入前停下。** 配方不删这两处，要人自己处理。</li>
+<li>**仓库根 <code>deliveries/</code> 和 <code>.ai/deliveries/</code> 都不存在时，整次 4.0.0 升级会停下，包括前面的删除。** 只有 <code>.ai/deliveries/</code> 时，搬家这一步视为已经完成。两边都在则停下，不覆盖。</li>
+<li>**本仓库的配置文件仍写着 <code>preference: true</code>。** 不在这次收口里改写。<code>templates/preference/</code> 和本机 <code>~/.butler/preferences/</code> 也保留。</li>
+<li>**<code>/butler:inbox</code> 的提升和开迭代两条出口，在本仓库当时有进行中的里程碑，只在临时项目上跑过。** 真实使用还没发生。</li>
+<li>**使用报告只按最后调用时间分档。** 没有调用记录不等于已经证实没人用，所以 loop 不删。</li>
+<li>收件箱里 2026-10-10 的两条缺陷没有在这次收口里处理：没有里程碑行时领不了第一个迭代；证据工具多次传入验收编号时只保留最后一个。</li>
+</ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+<li><code>.ai/milestones/MILE-0016/MILESTONE.md</code></li>
+<li><code>.ai/deliveries/ITER-0112-retire-project-knowledge-folder.md</code></li>
+<li><code>.ai/deliveries/ITER-0113-cold-start-read-order.md</code></li>
+<li><code>.ai/deliveries/ITER-0114-project-overview-rebuild.md</code></li>
+<li><code>.ai/deliveries/ITER-0115-retire-butler-progress.md</code></li>
+<li><code>.ai/deliveries/ITER-0116-loop-freeze-backlog-withdrawal.md</code></li>
+<li><code>.ai/deliveries/ITER-0117-intake-three-layer-contract.md</code></li>
+<li><code>.ai/deliveries/ITER-0118-inbox-command-and-tool.md</code></li>
+<li><code>.ai/deliveries/ITER-0119-retire-old-inbox-chain.md</code></li>
+<li><code>.ai/deliveries/ITER-0120-layout-backlog-deliveries.md</code></li>
+<li><code>.ai/deliveries/ITER-0121-hook-block-log-meta-escape.md</code></li>
+<li><code>.ai/deliveries/ITER-0122-usage-cli-last-used.md</code></li>
+<li><code>.ai/deliveries/ITER-0123-usage-report-90d.md</code></li>
+<li><code>.ai/deliveries/ITER-0124-preference-experiment-evidence-loop.md</code></li>
+<li><code>.ai/deliveries/ITER-0125-upgrade-delete-move.md</code></li>
+<li><code>.ai/deliveries/ITER-0126-v4-upgrade-recipe.md</code></li>
+<li><code>migrations/v4.0.0.md</code></li>
+</ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：MILE-0016；阶段：无 active。
-- 状态：ITER-0126 已于 2026-10-21 收口。版本号仍是 3.6.0。MILE-0016 仍开着。
+- 迭代：无 active；里程碑：无 active；阶段：无 active。
+- 状态：MILE-0016 已于 2026-10-21 收口，版本号切到 4.0.0。没有推送。
 
 ## 关键决策摘要
 
@@ -19,11 +19,10 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：切版留在里程碑收口。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：交付即止。真实已部署项目的升级仍未跑。
 
 ## 状态指针
 
 - `.ai/task-state.md`
 - `.ai/ITERATIONS.md`
 - `.ai/MILESTONES.md`
-- `.ai/MILESTONE.md`

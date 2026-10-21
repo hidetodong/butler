@@ -4,6 +4,10 @@
 
 每个版本聚合自上次发布以来收口的若干迭代（ITER），**只引用** `.ai/ITERATIONS.md` 与 `.ai/deliveries/`，不复述迭代细节。版本号机器真源是仓库根 `VERSION` 文件。
 
+## [4.0.0] - 2026-10-21
+
+不兼容的瘦身与重造版本（MAJOR），聚合 MILE-0016 的 ITER-0112–ITER-0126。删掉项目知识文件夹与折叠机制、`/butler:progress`，重做闪念口，把候办与交付挪进 `.ai/`，并给升级器补上删除和移动。偏好学习的机器入口退役。`/butler:loop` 仍保留。版本级交付见 `.ai/deliveries/milestones/MILE-0016-butler-slim-down.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v4.0.0.md`。
+
 ## [3.6.0] - 2026-08-17
 
 向后兼容的领域模型治理能力新增版，聚合 MILE-0015 的 ITER-0107–ITER-0111：为 Butler 已有概念划定五个限界上下文与统一语言，把领域知识改成 L0 路由到 L3 归档的分层按需加载，为 PRD→AC→TECH_PLAN→Evidence→Goal→Handoff 主链定下五段转换合同，新增最小领域合同与上下文预算两个确定性工具，并把领域变更接入评审、CI、双宿主入口投影与升级判据。同时解除 Dangerous Mode 与 Convergence Loop 的错误包含关系，统一 VERIFY「人测道小结」的结构所有权。版本级交付见 `.ai/deliveries/milestones/MILE-0015-domain-model-governance.md`，迭代时间线见 `.ai/ITERATIONS.md`，升级动作见 `migrations/v3.6.0.md`。
