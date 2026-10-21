@@ -48,6 +48,7 @@ target_plugin="$target_parent/butler"
 
 # Use the official creator to seed/update only Butler's marketplace entry while
 # preserving other entries and top-level marketplace metadata.
+echo "install: scaffold $creator_root" >&2
 python3 "$creator_root/scripts/create_basic_plugin.py" butler \
   --path "$target_parent" \
   --with-skills \
@@ -59,9 +60,11 @@ python3 "$creator_root/scripts/create_basic_plugin.py" butler \
   echo "refusing unsafe target path: $target_plugin" >&2
   exit 1
 }
+echo "install: copy $target_plugin" >&2
 rm -rf "$target_plugin"
 cp -R "$source_plugin" "$target_plugin"
 
+echo "install: cachebuster" >&2
 python3 "$creator_root/scripts/update_plugin_cachebuster.py" "$target_plugin"
 
 validator="$creator_root/scripts/validate_plugin.py"
@@ -69,12 +72,17 @@ if [[ ! -f "$validator" ]]; then
   validator="$pinned_validator"
 fi
 [[ -f "$validator" ]] || { echo "missing required file: $pinned_validator" >&2; exit 1; }
-if command -v uv >/dev/null 2>&1; then
-  uv run --with pyyaml python "$validator" "$target_plugin"
-elif [[ -x "$validator_python" ]] && "$validator_python" -c 'import yaml' >/dev/null 2>&1; then
+# Prefer an interpreter that already has PyYAML. `uv run --with` downloads a
+# package and, inside a parent `uv run`, waits on the project lock.
+if [[ -x "$validator_python" ]] && "$validator_python" -c 'import yaml' >/dev/null 2>&1; then
+  echo "install: validate with $validator_python" >&2
   "$validator_python" "$validator" "$target_plugin"
 elif python3 -c 'import yaml' >/dev/null 2>&1; then
+  echo "install: validate with python3" >&2
   python3 "$validator" "$target_plugin"
+elif command -v uv >/dev/null 2>&1; then
+  echo "install: validate with uv" >&2
+  uv run --with pyyaml python "$validator" "$target_plugin"
 else
   echo "plugin validation requires uv or a Python runtime with PyYAML; checked: $validator_python and python3" >&2
   exit 2

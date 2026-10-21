@@ -26,18 +26,54 @@ python3 "$ROOT/scripts/test-check-markdown-links.py"
 python3 "$ROOT/scripts/check-markdown-links.py" --root "$ROOT"
 python3 "$ROOT/scripts/test-ci-contract.py"
 
-run_setup() {
+prepare_home() {
   local home="$1"
-  shift
   mkdir -p "$home"
   [[ -e "$home/.zshrc" ]] || : > "$home/.zshrc"
-  HOME="$home" "$@" bash "$ROOT/scripts/setup.sh"
+}
+
+# GNU/BSD 都不保证有 timeout(1)。挂死时杀掉整组，避免 CI 空转到 30 分钟。
+bound() {
+  local secs="$1"
+  shift
+  python3 - "$secs" "$@" <<'PY'
+import os, signal, subprocess, sys
+secs = int(sys.argv[1])
+cmd = sys.argv[2:]
+env = os.environ.copy()
+env["PYTHONFAULTHANDLER"] = "1"
+proc = subprocess.Popen(
+    cmd,
+    start_new_session=True,
+    stdin=subprocess.DEVNULL,
+    env=env,
+)
+try:
+    raise SystemExit(proc.wait(timeout=secs))
+except subprocess.TimeoutExpired:
+    try:
+        os.killpg(proc.pid, signal.SIGABRT)
+    except ProcessLookupError:
+        pass
+    try:
+        proc.wait(timeout=2)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        proc.wait()
+    print(f"[dual-host] timed out after {secs}s: {' '.join(cmd)}", file=sys.stderr)
+    raise SystemExit(124)
+PY
 }
 
 # Codex 不可用：Claude 安装仍成功且幂等。
 NO_CODEX_HOME="$WORK/no-codex-home"
-run_setup "$NO_CODEX_HOME" env BUTLER_CODEX_COMMAND=butler-codex-missing > "$WORK/no-codex-1.log"
-run_setup "$NO_CODEX_HOME" env BUTLER_CODEX_COMMAND=butler-codex-missing > "$WORK/no-codex-2.log"
+echo "[dual-host] setup without Codex" >&2
+prepare_home "$NO_CODEX_HOME"
+bound 90 env HOME="$NO_CODEX_HOME" BUTLER_CODEX_COMMAND=butler-codex-missing bash "$ROOT/scripts/setup.sh" > "$WORK/no-codex-1.log"
+bound 90 env HOME="$NO_CODEX_HOME" BUTLER_CODEX_COMMAND=butler-codex-missing bash "$ROOT/scripts/setup.sh" > "$WORK/no-codex-2.log"
 grep -q '未找到 Codex CLI' "$WORK/no-codex-2.log"
 [[ "$(grep -Fc '<!-- butler-global-config -->' "$NO_CODEX_HOME/.claude/CLAUDE.md")" -eq 2 ]]
 [[ -L "$NO_CODEX_HOME/.claude/commands/butler" ]]
@@ -52,7 +88,9 @@ printf '%s\n' 'owner-before' '<!-- butler-global-config -->' 'owner-after' > "$C
 conflict_shell_before="$(shasum "$CONFLICT_HOME/.zshrc")"
 conflict_claude_before="$(shasum "$CONFLICT_HOME/.claude/CLAUDE.md")"
 set +e
-run_setup "$CONFLICT_HOME" env BUTLER_CODEX_COMMAND=butler-codex-missing > "$WORK/conflict.log" 2>&1
+echo "[dual-host] setup rejects a broken shell marker" >&2
+prepare_home "$CONFLICT_HOME"
+bound 90 env HOME="$CONFLICT_HOME" BUTLER_CODEX_COMMAND=butler-codex-missing bash "$ROOT/scripts/setup.sh" > "$WORK/conflict.log" 2>&1
 conflict_rc=$?
 set -e
 [[ "$conflict_rc" -eq 2 ]]
@@ -70,7 +108,9 @@ printf '#!/bin/sh\nexit 0\n' > "$BIN/fake-codex"
 printf '#!/bin/sh\nexit 0\n' > "$BIN/fake-pi"
 printf '#!/bin/sh\nprintf "%%s" "$BUTLER_PATH" > "$HOME/plugin-installed"\n' > "$BIN/fake-installer"
 chmod +x "$BIN/fake-codex" "$BIN/fake-pi" "$BIN/fake-installer"
-run_setup "$WITH_CODEX_HOME" env LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/fake-installer" BUTLER_PI_COMMAND=fake-pi > "$WORK/with-codex.log"
+echo "[dual-host] setup with fake Codex" >&2
+prepare_home "$WITH_CODEX_HOME"
+bound 90 env HOME="$WITH_CODEX_HOME" LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/fake-installer" BUTLER_PI_COMMAND=fake-pi bash "$ROOT/scripts/setup.sh" > "$WORK/with-codex.log"
 grep -q 'Codex Butler plugin 已安装/刷新' "$WORK/with-codex.log"
 [[ "$(cat "$WITH_CODEX_HOME/plugin-installed")" == "$ROOT" ]]
 [[ -L "$WITH_CODEX_HOME/.pi/agent/extensions/butler-pi" ]]
@@ -81,7 +121,9 @@ FAILED_CODEX_HOME="$WORK/failed-codex-home"
 printf '#!/bin/sh\nexit 7\n' > "$BIN/failing-installer"
 chmod +x "$BIN/failing-installer"
 set +e
-run_setup "$FAILED_CODEX_HOME" env LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/failing-installer" > "$WORK/failed-codex.log" 2>&1
+echo "[dual-host] setup keeps Claude config when Codex install fails" >&2
+prepare_home "$FAILED_CODEX_HOME"
+bound 90 env HOME="$FAILED_CODEX_HOME" LC_ALL=C.UTF-8 LANG=C.UTF-8 PATH="$BIN:$PATH" BUTLER_CODEX_COMMAND=fake-codex BUTLER_CODEX_INSTALLER="$BIN/failing-installer" bash "$ROOT/scripts/setup.sh" > "$WORK/failed-codex.log" 2>&1
 failed_codex_rc=$?
 set -e
 [[ "$failed_codex_rc" -eq 7 ]]
@@ -101,7 +143,8 @@ done
 ln -s "$(command -v python3)" "$NO_UV_BIN/python3"
 VALIDATOR_HOME="$WORK/validator-home"
 mkdir -p "$VALIDATOR_HOME"
-HOME="$VALIDATOR_HOME" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
+echo "[dual-host] installer without uv on PATH" >&2
+bound 90 env HOME="$VALIDATOR_HOME" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
   bash "$ROOT/scripts/install-codex-plugin.sh" --no-add > "$WORK/validator-venv.log"
 grep -q 'Plugin validation passed' "$WORK/validator-venv.log"
 grep -q 'install skipped' "$WORK/validator-venv.log"
@@ -110,7 +153,8 @@ rm "$NO_UV_BIN/python3"
 printf '%s\n' '#!/bin/sh' 'if [ "$1" = "-c" ] && [ "$2" = "import yaml" ]; then exit 1; fi' 'exec "$BUTLER_TEST_REAL_PYTHON" "$@"' > "$NO_UV_BIN/python3"
 chmod +x "$NO_UV_BIN/python3"
 set +e
-HOME="$WORK/validator-missing-home" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
+echo "[dual-host] installer fails closed without PyYAML" >&2
+bound 90 env HOME="$WORK/validator-missing-home" PATH="$NO_UV_BIN" BUTLER_PLUGIN_CREATOR_DIR="$PLUGIN_CREATOR_ROOT" \
   BUTLER_PLUGIN_VALIDATOR_PYTHON="$WORK/missing-python" BUTLER_TEST_REAL_PYTHON="$(command -v python3)" \
   bash "$ROOT/scripts/install-codex-plugin.sh" --no-add > "$WORK/validator-missing.log" 2>&1
 validator_missing_rc=$?
