@@ -5,11 +5,12 @@
 
 ## 最近迭代
 
-ITER-0126 收口：v4.0.0 配方已经写好，临时项目上跑通。版本号仍是 3.6.0。MILE-0016 仍开着，切版留在里程碑收口。
+ITER-0127 收口：Grok 接成正式宿主。技能用软链安装，写文件仍走现有门禁。版本号仍是 4.0.0，没有提交。
 
 current: none
 | 迭代号 | 标题 | 状态 | 开启 | 收口 | 所属 milestone | 交付 |
 |---|---|---|---|---|---|---|
+| ITER-0127 | 把 Grok CLI 做成正式宿主 | closed | 2026-10-21 | 2026-10-24 | — | .ai/deliveries/ITER-0127-grok-cli-host.md |
 | ITER-0126 | 写好 v4.0.0 升级配方 | closed | 2026-10-21 | 2026-10-21 | MILE-0016 | .ai/deliveries/ITER-0126-v4-upgrade-recipe.md |
 | ITER-0125 | 升级器补上删除与移动 | closed | 2026-10-20 | 2026-10-21 | MILE-0016 | .ai/deliveries/ITER-0125-upgrade-delete-move.md |
 | ITER-0124 | preference 实验、evidence 降维与 loop 处置 | closed | 2026-10-19 | 2026-10-20 | MILE-0016 | .ai/deliveries/ITER-0124-preference-experiment-evidence-loop.md |
@@ -29,6 +30,5 @@ current: none
 | ITER-0110 | 最小可执行领域合同与双冲突试点（MILE-0015 R4） | closed | 2026-08-05 | 2026-08-13 | MILE-0015 | .ai/deliveries/ITER-0110-minimal-domain-contract.md |
 | ITER-0109 | 上下文映射与主链转换合同（MILE-0015 R3） | closed | 2026-07-31 | 2026-07-31 | MILE-0015 | .ai/deliveries/ITER-0109-main-chain-context-map.md |
 | ITER-0108 | 上下文预算与渐进注入（MILE-0015 R2） | closed | 2026-07-31 | 2026-07-31 | MILE-0015 | .ai/deliveries/ITER-0108-progressive-context-loading.md |
-| ITER-0107 | 领域地图与语言审计（MILE-0015 R1·危险模式） | closed | 2026-07-31 | 2026-07-31 | MILE-0015 | .ai/deliveries/ITER-0107-domain-model-boundaries.md |
 
 > 备注：ITER-0001 是迭代机制上线前完成的任务，回溯补号；其交付文件沿用上线前的日期命名，不回溯重命名。迭代机制自 ITER-0002 起正式生效。

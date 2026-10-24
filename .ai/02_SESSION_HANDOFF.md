@@ -2,8 +2,8 @@
 
 ## 任务断点
 
-- 迭代：无 active；里程碑：无 active；阶段：无 active。
-- 状态：MILE-0016 已于 2026-10-21 收口，版本号切到 4.0.0。没有推送。
+- 迭代：无 active；里程碑：无 active；阶段：已收口。
+- 状态：Grok 已接成正式宿主。技能软链、门禁翻译、三份文档和本机会话都有通过证据。不提交，不切版。
 
 ## 关键决策摘要
 
@@ -19,7 +19,7 @@
 
 ## 唤醒指令
 
-- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：交付即止。真实已部署项目的升级仍未跑。
+- 先运行 `python3 tools/handoff/handoff.py check --project-root .`；若 stale，运行同工具 `sync` 后再读 `.ai/task-state.md`。下一动作：无。要提交或推送时另说。
 
 ## 状态指针
 

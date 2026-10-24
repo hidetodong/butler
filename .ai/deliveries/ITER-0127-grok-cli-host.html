@@ -1,0 +1,167 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ITER-0127 交付总结 · ITER-0127 · 把 Grok CLI 做成正式宿主</title>
+  <style>
+    :root {
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --border: #d1d9e0;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .sheet { max-width: 820px; margin: 0 auto; }
+    header.delivery-head {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+    header.delivery-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.35;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .chip.level { background: #eef1f5; color: var(--fg-muted); }
+    .chip.date  { background: #eef1f5; color: var(--fg-muted); }
+    section.block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.75rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    section.block > h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section.block :is(p, ul, ol) { margin: 0.5rem 0; }
+    section.block ul, section.block ol { padding-left: 1.3rem; }
+    section.block li { margin: 0.25rem 0; }
+    section.block code { font-family: var(--mono); font-size: 0.88em;
+      background: #eef1f5; padding: 0.05rem 0.35rem; border-radius: 5px; }
+    section.risks { background: var(--warn-soft); border-color: #eed888; }
+    section.risks > h2 { border-bottom-color: #eed888; }
+    section.references { font-size: 0.92rem; }
+    section.references a { color: var(--accent); }
+    section.references code { background: #eef1f5; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.92rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eef1f5; }
+    footer.delivery-foot {
+      margin-top: 1.5rem; text-align: center;
+      color: var(--fg-muted); font-size: 0.8rem;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      section.block, header.delivery-head { border-color: #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="delivery-head">
+      <h1>ITER-0127 · 把 Grok CLI 做成正式宿主</h1>
+      <div class="meta">
+        <span class="chip id">ITER-0127</span>
+        <span class="chip level">迭代交付（小版本）</span>
+        <span class="chip date">收口 2026-10-24</span>
+      </div>
+    </header>
+
+    <section class="block goal">
+      <h2>本次交付目标</h2>
+      <p>机器上只有 Grok 时，别的项目也能用 Butler。写文件仍走现有门禁。找不到 Grok 时，原来三家宿主的安装保持原样。</p>
+    </section>
+
+    <section class="block completed">
+      <h2>已完成内容</h2>
+      <ul>
+<li>安装脚本发现 Grok 时，把技能目录软链到 <code>~/.grok/skills/</code>。找不到就跳过，不创建这个目录。同名位置如果已是真实文件或目录，就停下，不删除。</li>
+<li>门禁把 Grok 的 <code>write</code> 和 <code>search_replace</code> 译成现有的 <code>Write</code> 和 <code>Edit</code>。终端命令不进入这套判断。</li>
+<li>README、使用指南和兼容说明写明 Grok 是宿主，并写明软链安装、找不到就跳过、两份入口都会被读到。</li>
+<li>本机另开的会话能从用户技能目录调用 <code>butler-inbox</code>。该拒绝的写入没有改掉文件。</li>
+</ul>
+    </section>
+
+    <section class="block changes">
+      <h2>关键变更 / 用户可感知变化</h2>
+      <ul>
+<li>重跑安装脚本之后，新的 Grok 会话可以在别的项目里看到 Butler 技能。</li>
+<li>项目如果部署了现有钩子，并且目录已被信任，Grok 的写文件会碰到同一套拒绝。</li>
+<li>没有 Grok 的机器，安装结果和以前一样。</li>
+<li>版本号仍是 4.0.0。发布标签没有移动。</li>
+</ul>
+    </section>
+
+    <section class="block impact">
+      <h2>高层影响范围</h2>
+      <ul>
+<li>改动：安装脚本、双宿主测试、门禁入口、一份新的门禁测试、三份宿主说明、钩子树白名单里追加的一条摘要。</li>
+<li>不算：不新写规则，不加第三份规则卡，不拦截终端命令，不切版，不提交，不推送，不处理升级和收件箱。</li>
+</ul>
+    </section>
+
+    
+
+    <section class="block verification">
+      <h2>验证方式与结果摘要</h2>
+      <p>五条验收都有通过记录，见 <code>.ai/iterations/ITER-0127/evidence/</code>。工具名测试 4 项通过。持续集成退出码 0。本机会话重跑通过。第一次会话核对因为多要求了一个空格而失败，那条记录留着，不拿来勾验收。收口前完成裁决是 eligible。独立复核没开。</p>
+    </section>
+
+    <section class="block risks">
+      <h2>已知剩余风险 / 延后事项</h2>
+      <ul>
+<li>两份规则卡都会被读进去。目录要先信任，钩子才会跑。兼容开关关掉时，项目钩子会被跳过。</li>
+<li>终端命令里的写文件仍然不拦。持续集成里没有真的 Grok 程序。</li>
+<li>本轮不切版、不提交。工作区是脏的，标签 <code>v4.0.0</code> 不在当前 HEAD。</li>
+<li>本机用户技能目录里已经有这 12 条软链。原来的 <code>ego-browser</code> 还在。</li>
+</ul>
+    </section>
+
+    <section class="block references">
+      <h2>引用（只引用路径，不嵌全文）</h2>
+      <ul>
+<li>四件套：<code>.ai/iterations/ITER-0127/CONCEPT.md</code>、<code>AC_LIST.md</code>、<code>TECH_PLAN.md</code>、<code>VERIFY_REPORT.md</code></li>
+<li>变更流：<code>.ai/iterations/ITER-0127/CHANGELOG.md</code></li>
+<li>证据：<code>.ai/iterations/ITER-0127/evidence/</code>（4 条记录，其中 1 条失败留档）</li>
+</ul>
+    </section>
+
+    <footer class="delivery-foot">
+      固定格式阅读视图 · 引用真源以同名 .md 为准 · butler delivery-summary §9
+    </footer>
+  </main>
+</body>
+</html>

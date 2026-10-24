@@ -1,28 +1,28 @@
 {
-  "handoff_sha256": "66b3b7dc400f6f7cfc153593db47f273b6100a6f32c9bcf18f36f81d9cbf407e",
+  "handoff_sha256": "5389d47203a69443dc197b4d35c9388dbbc1c26db556395f28ff437c18e1a5fd",
   "schema_version": 1,
   "snapshot": {
     "decisions": [],
     "iteration": "none",
     "milestone": "none",
-    "next": "交付即止。真实已部署项目的升级仍未跑。",
-    "phase": "无 active",
+    "next": "无。要提交或推送时另说。",
+    "phase": "已收口",
     "pointers": [
       ".ai/task-state.md",
       ".ai/ITERATIONS.md",
       ".ai/MILESTONES.md"
     ],
     "risks": [],
-    "status": "MILE-0016 已于 2026-10-21 收口，版本号切到 4.0.0。没有推送。"
+    "status": "Grok 已接成正式宿主。技能软链、门禁翻译、三份文档和本机会话都有通过证据。不提交，不切版。"
   },
   "sources": [
     {
       "path": ".ai/task-state.md",
-      "sha256": "15c4b65883bb1499333718de096e50417b4b6507e48b9a9b6291827ea86e5f02"
+      "sha256": "5b20c1445779adf82cb5f2fb73a79fa32f49fbcb33a26aae14d57f02d389d897"
     },
     {
       "path": ".ai/ITERATIONS.md",
-      "sha256": "9b6cea29a7ae4f40d8a4228b2ec5f38c2bb97640e82cdb3e3547fc02574e4924"
+      "sha256": "10804652cac9a03599b8f51b4fff540c9eb1df74f2ad82899f8fcfa6c3f1a847"
     },
     {
       "path": ".ai/MILESTONES.md",

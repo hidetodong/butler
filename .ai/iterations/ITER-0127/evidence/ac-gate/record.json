@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "ac-gate",
+  "iteration": "ITER-0127",
+  "ac_ids": [
+    "AC2",
+    "AC5"
+  ],
+  "command": {
+    "argv": [
+      "env",
+      "UV_NO_SYNC=1",
+      "uv",
+      "run",
+      "--locked",
+      "--python",
+      "3.12.12",
+      "python",
+      "-m",
+      "pytest",
+      "templates/hooks/tests/test_grok_tool_names.py",
+      "-q"
+    ],
+    "cwd": "."
+  },
+  "started_at": "2026-10-24T13:36:36.054Z",
+  "finished_at": "2026-10-24T13:36:36.930Z",
+  "duration_ms": 876,
+  "process_exit_code": 0,
+  "outcome": "passed",
+  "stdout": {
+    "path": "stdout.log",
+    "bytes": 98,
+    "captured_bytes": 98,
+    "sha256": "fd18a4da724fec169567e0bb4f48b9b6b70de87b21fe3e66c44b6d74cdeab98c",
+    "truncated": false
+  },
+  "stderr": {
+    "path": "stderr.log",
+    "bytes": 0,
+    "captured_bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  }
+}

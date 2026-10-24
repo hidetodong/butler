@@ -4,6 +4,8 @@ export LC_ALL=C
 export LANG=C
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# 现有安装用例不探测本机 Grok。下面的专测会卸掉这个变量。
+export BUTLER_GROK_COMMAND="${BUTLER_GROK_COMMAND:-butler-grok-missing}"
 # CI runners have no Codex home. Use the pinned creator snapshot, not ~/.codex.
 PLUGIN_CREATOR_ROOT="$ROOT/tools/codex-validators/plugin-creator"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/butler-dual-host.XXXXXX")"
@@ -79,6 +81,7 @@ grep -q '未找到 Codex CLI' "$WORK/no-codex-2.log"
 [[ -L "$NO_CODEX_HOME/.claude/commands/butler" ]]
 [[ -L "$NO_CODEX_HOME/.claude/commands/butler.md" ]]
 [[ "$(grep -c '^export BUTLER_PATH=' "$NO_CODEX_HOME/.zshrc")" -eq 1 ]]
+[[ ! -e "$NO_CODEX_HOME/.grok/skills" ]]
 
 # 用户配置异常：全量预检失败，shell/Claude/commands 都不产生部分写入。
 CONFLICT_HOME="$WORK/conflict-home"
@@ -115,6 +118,7 @@ grep -q 'Codex Butler plugin 已安装/刷新' "$WORK/with-codex.log"
 [[ "$(cat "$WITH_CODEX_HOME/plugin-installed")" == "$ROOT" ]]
 [[ -L "$WITH_CODEX_HOME/.pi/agent/extensions/butler-pi" ]]
 grep -q 'Pi Butler 扩展已安装到' "$WORK/with-codex.log"
+[[ ! -e "$WITH_CODEX_HOME/.grok/skills" ]]
 
 # Codex 是独立组件：它失败时保留已完成的安全配置，但不得输出总成功。
 FAILED_CODEX_HOME="$WORK/failed-codex-home"
@@ -133,6 +137,81 @@ grep -q '部分完成.*Codex plugin 安装失败' "$WORK/failed-codex.log"
 [[ -L "$FAILED_CODEX_HOME/.claude/commands/butler" ]]
 [[ -L "$FAILED_CODEX_HOME/.claude/commands/butler.md" ]]
 [[ "$(grep -c '^export BUTLER_PATH=' "$FAILED_CODEX_HOME/.zshrc")" -eq 1 ]]
+
+# Grok 可用：技能目录软链到仓库原目录，再跑一次不产生第二份。
+GROK_BIN="$WORK/grok-bin"
+mkdir -p "$GROK_BIN"
+printf '#!/bin/sh\nexit 0\n' > "$GROK_BIN/grok"
+chmod +x "$GROK_BIN/grok"
+ln -s "$(command -v python3)" "$GROK_BIN/python3"
+GROK_HOME="$WORK/grok-home"
+echo "[dual-host] setup links Grok skills" >&2
+prepare_home "$GROK_HOME"
+bound 90 env -u BUTLER_GROK_COMMAND HOME="$GROK_HOME" PATH="$GROK_BIN:/bin:/usr/bin" \
+  BUTLER_CODEX_COMMAND=butler-codex-missing BUTLER_PI_COMMAND=butler-pi-missing \
+  bash "$ROOT/scripts/setup.sh" > "$WORK/grok-1.log"
+grep -q 'Grok Butler 技能已软链到' "$WORK/grok-1.log"
+skill_count=0
+for skill_src in "$ROOT/plugins/butler/skills"/*/; do
+  skill_name="$(basename "$skill_src")"
+  skill_link="$GROK_HOME/.grok/skills/$skill_name"
+  [[ -L "$skill_link" ]]
+  [[ "$(readlink "$skill_link")" == "${skill_src%/}" ]]
+  skill_count=$((skill_count + 1))
+done
+[[ "$skill_count" -ge 1 ]]
+bound 90 env -u BUTLER_GROK_COMMAND HOME="$GROK_HOME" PATH="$GROK_BIN:/bin:/usr/bin" \
+  BUTLER_CODEX_COMMAND=butler-codex-missing BUTLER_PI_COMMAND=butler-pi-missing \
+  bash "$ROOT/scripts/setup.sh" > "$WORK/grok-2.log"
+second_count=0
+for skill_link in "$GROK_HOME/.grok/skills"/*; do
+  [[ -L "$skill_link" ]]
+  second_count=$((second_count + 1))
+done
+[[ "$second_count" -eq "$skill_count" ]]
+rm "$GROK_HOME/.grok/skills/butler-inbox"
+ln -s "$WORK/wrong-grok-target" "$GROK_HOME/.grok/skills/butler-inbox"
+bound 90 env -u BUTLER_GROK_COMMAND HOME="$GROK_HOME" PATH="$GROK_BIN:/bin:/usr/bin" \
+  BUTLER_CODEX_COMMAND=butler-codex-missing BUTLER_PI_COMMAND=butler-pi-missing \
+  bash "$ROOT/scripts/setup.sh" > "$WORK/grok-retarget.log"
+[[ "$(readlink "$GROK_HOME/.grok/skills/butler-inbox")" == "$ROOT/plugins/butler/skills/butler-inbox" ]]
+
+# 找不到名为 grok 的可执行文件：不创建技能目录，Claude 安装仍完成。
+NO_GROK_BIN="$WORK/no-grok-bin"
+mkdir -p "$NO_GROK_BIN"
+ln -s "$(command -v python3)" "$NO_GROK_BIN/python3"
+NO_GROK_PATH="$NO_GROK_BIN:/bin:/usr/bin"
+if env PATH="$NO_GROK_PATH" command -v grok >/dev/null 2>&1; then
+  echo "[dual-host] negative PATH still contains grok" >&2
+  exit 1
+fi
+NO_GROK_HOME="$WORK/no-grok-home"
+echo "[dual-host] setup skips Grok when the command is absent" >&2
+prepare_home "$NO_GROK_HOME"
+bound 90 env -u BUTLER_GROK_COMMAND HOME="$NO_GROK_HOME" PATH="$NO_GROK_PATH" \
+  BUTLER_CODEX_COMMAND=butler-codex-missing BUTLER_PI_COMMAND=butler-pi-missing \
+  bash "$ROOT/scripts/setup.sh" > "$WORK/no-grok.log"
+grep -q '未找到 Grok CLI' "$WORK/no-grok.log"
+[[ ! -e "$NO_GROK_HOME/.grok/skills" ]]
+[[ ! -e "$NO_GROK_HOME/.grok" ]]
+[[ -L "$NO_GROK_HOME/.claude/commands/butler" ]]
+
+# 同名真实目录：退出码 2，不删除用户内容。
+GROK_CONFLICT_HOME="$WORK/grok-conflict-home"
+echo "[dual-host] setup refuses to replace a real Grok skill directory" >&2
+prepare_home "$GROK_CONFLICT_HOME"
+mkdir -p "$GROK_CONFLICT_HOME/.grok/skills/butler-inbox/keep"
+printf 'keep\n' > "$GROK_CONFLICT_HOME/.grok/skills/butler-inbox/keep/marker"
+set +e
+bound 90 env -u BUTLER_GROK_COMMAND HOME="$GROK_CONFLICT_HOME" PATH="$GROK_BIN:/bin:/usr/bin" \
+  BUTLER_CODEX_COMMAND=butler-codex-missing BUTLER_PI_COMMAND=butler-pi-missing \
+  bash "$ROOT/scripts/setup.sh" > "$WORK/grok-conflict.log" 2>&1
+grok_conflict_rc=$?
+set -e
+[[ "$grok_conflict_rc" -eq 2 ]]
+grep -q '不会删除' "$WORK/grok-conflict.log"
+[[ ! -L "$GROK_CONFLICT_HOME/.grok/skills/butler-inbox" ]]
+[[ "$(cat "$GROK_CONFLICT_HOME/.grok/skills/butler-inbox/keep/marker")" == "keep" ]]
 
 # 无全局 uv/PyYAML 时，installer 复用仓库锁定 venv；所有 validator runtime 都不可用则明确失败。
 NO_UV_BIN="$WORK/no-uv-bin"
@@ -186,6 +265,28 @@ grep -Fq '`reported`' "$ROOT/Coder/60_Extension_CodeReview/review-engine.md"
 grep -Fq '`captured`' "$ROOT/Coder/60_Extension_CodeReview/review-engine.md"
 grep -Fq '`reproduced`' "$ROOT/Coder/60_Extension_CodeReview/review-engine.md"
 grep -Fq 'review-*' "$ROOT/Coder/62_Extension_Agents/independent-review.md"
+grok_fact='Grok 的技能用软链安装到 ~/.grok/skills/，找不到 Grok 就跳过。Grok 会同时读到 CLAUDE.md 和 AGENTS.md。'
+for grok_doc in README.md HUMAN_GUIDE.md docs/codex-compatibility.md; do
+  grep -Fq "$grok_fact" "$ROOT/$grok_doc"
+done
+python3 - "$ROOT" <<'PY'
+import pathlib
+import sys
+
+root = pathlib.Path(sys.argv[1])
+text = (root / "scripts/render-project-entrypoints.py").read_text(encoding="utf-8")
+start = text.index("for filename, template_name in (")
+end = text.index("):", start)
+block = text[start:end]
+if block.count(".template") != 2 or "CLAUDE.md.template" not in block or "AGENTS.md.template" not in block:
+    raise SystemExit(f"renderer entry files drifted: {block}")
+if "GROK.md" in text:
+    raise SystemExit("renderer gained a Grok rule card")
+PY
+if grep -q 'grok' "$ROOT/.github/workflows/ci.yml" || grep -q 'grok' "$ROOT/scripts/verify-ci.sh"; then
+  echo "[dual-host] CI entry must not reference grok" >&2
+  exit 1
+fi
 
 bash "$ROOT/scripts/verify-codex-foundation.sh"
 bash "$ROOT/scripts/verify-codex-workflows.sh"

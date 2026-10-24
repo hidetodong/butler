@@ -9,7 +9,7 @@
 [![CI](https://github.com/hidetodong/butler/actions/workflows/ci.yml/badge.svg)](https://github.com/hidetodong/butler/actions/workflows/ci.yml)
 [![version](https://img.shields.io/badge/version-4.0.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
-[![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi-brightgreen)](#三宿主如何共享同一套规则)
+[![hosts](https://img.shields.io/badge/hosts-Claude%20Code%20%7C%20Codex%20%7C%20Pi%20%7C%20Grok-brightgreen)](#各宿主如何共享同一套规则)
 
 </div>
 
@@ -34,7 +34,7 @@ Butler 采用渐进式使用：**先只学会完成一个普通任务，遇到�
 - [第三级：用 Explore 解决阻塞决策](#第三级用-explore-解决阻塞决策)
 - [其他能力按问题启用](#其他能力按问题启用)
 - [项目里会留下什么](#项目里会留下什么)
-- [三宿主如何共享同一套规则](#三宿主如何共享同一套规则)
+- [各宿主如何共享同一套规则](#各宿主如何共享同一套规则)
 - [维护者入口](#维护者入口)
 - [继续阅读](#继续阅读)
 - [支持与维护](#支持与维护)
@@ -48,7 +48,7 @@ Butler 采用渐进式使用：**先只学会完成一个普通任务，遇到�
 
 ### 1. 准备环境
 
-需要 Git、Bash、Python 3，以及 Claude Code、Codex 或 Pi 中至少一个宿主。未安装的宿主会被跳过。
+需要 Git、Bash、Python 3，以及 Claude Code、Codex、Pi 或 Grok 中至少一个宿主。未安装的宿主会被跳过。
 
 Butler 当前在 macOS 14 和 Ubuntu 24.04 上通过 CI 验证；Windows 原生环境尚未纳入验证矩阵。
 
@@ -66,6 +66,7 @@ bash scripts/setup.sh
 - 更新 `~/.claude/CLAUDE.md` 并维护 Butler 命令软链。
 - 检测到 Codex CLI 时安装或刷新 Butler plugin。
 - 检测到 Pi CLI 时安装 Butler 扩展。
+- 检测到 Grok CLI 时，把 Butler 技能软链到 `~/.grok/skills/`。找不到 Grok 就跳过，不创建该目录。
 
 它只安装机器级能力，不会初始化业务项目。安装器会先检查冲突，再以可重复运行的方式更新已认领内容；首次启用 Hook 或 plugin 时仍应审阅并确认信任。完整写入边界和故障处理见 [使用指南](HUMAN_GUIDE.md#3-安装一次性)。
 
@@ -87,6 +88,7 @@ test -n "$BUTLER_PATH" && test -f "$BUTLER_PATH/Coder/README.md" && echo "Butler
 | Claude Code | `/butler:init` |
 | Codex | `$butler-init` |
 | Pi | 直接说“用 Butler 初始化当前项目” |
+| Grok | 调用已软链的 `butler-init` 技能 |
 
 也可以直接给出任务并点名项目路径。AI 发现项目尚无 `.ai/` 时，会按同一协议完成初始化；如果当前目录包含多个项目，它会要求你明确目标，不会猜测施工位置。
 
@@ -316,15 +318,18 @@ project/
 
 完整布局、旁路 Agent 回执、PRD 管理和版本升级说明见 [使用指南](HUMAN_GUIDE.md)。
 
-## 三宿主如何共享同一套规则
+## 各宿主如何共享同一套规则
 
 | 宿主 | 项目发现入口 | 适配方式 |
 |---|---|---|
 | Claude Code | `CLAUDE.md` | `/butler:*` 命令与 Python Hooks |
 | Codex | `AGENTS.md` | `plugins/butler/` skills 与 Python Hooks |
 | Pi | `AGENTS.md` | `plugins/butler-pi/` TypeScript 扩展 |
+| Grok | `CLAUDE.md` 与 `AGENTS.md` | `~/.grok/skills/` 软链；找不到 Grok 就跳过 |
 
-规则算法只维护在 `Coder/`，宿主入口只负责发现和适配，不各自复制一套流程。Hook 是流程门禁，不是操作系统 sandbox；首次启用时仍应审阅并确认信任。双宿主边界和验证矩阵见 [Codex 兼容说明](docs/codex-compatibility.md)。
+Grok 的技能用软链安装到 ~/.grok/skills/，找不到 Grok 就跳过。Grok 会同时读到 CLAUDE.md 和 AGENTS.md。
+
+规则算法只维护在 `Coder/`，宿主入口只负责发现和适配，不各自复制一套流程。Hook 是流程门禁，不是操作系统 sandbox；首次启用时仍应审阅并确认信任。宿主边界和验证矩阵见 [Codex 兼容说明](docs/codex-compatibility.md)。
 
 ## 维护者入口
 

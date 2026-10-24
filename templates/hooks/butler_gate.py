@@ -33,6 +33,13 @@ from rules import (
 
 GATED_TOOLS = frozenset({"Edit", "Write", "MultiEdit", "apply_patch"})
 
+# Grok reports write / search_replace. Fold those two onto the existing rules.
+# Shell commands stay out of this table and keep the early allow.
+GROK_TOOL_NAMES = {
+    "write": "Write",
+    "search_replace": "Edit",
+}
+
 # Registered in evaluation order. First deny wins; more specific rules first.
 # single_active_iteration 紧随 ledger_status（同为 .ai/ITERATIONS.md 台账规则）。
 RULE_MODULES = [
@@ -45,9 +52,21 @@ RULE_MODULES = [
 ]
 
 
+def _normalize_grok_payload(payload: dict) -> dict:
+    """Accept Grok's camelCase aliases, then map the two write-tool names."""
+    if not payload.get("tool_name") and payload.get("toolName"):
+        payload["tool_name"] = payload["toolName"]
+    if not payload.get("tool_input") and isinstance(payload.get("toolInput"), dict):
+        payload["tool_input"] = payload["toolInput"]
+    mapped = GROK_TOOL_NAMES.get(payload.get("tool_name", ""))
+    if mapped:
+        payload["tool_name"] = mapped
+    return payload
+
+
 def main() -> int:
     try:
-        payload = parse_stdin()
+        payload = _normalize_grok_payload(parse_stdin())
         tool_name = payload.get("tool_name", "")
         if tool_name not in GATED_TOOLS:
             return 0

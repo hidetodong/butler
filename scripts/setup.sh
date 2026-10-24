@@ -66,6 +66,41 @@ else
   echo "[跳过] 未找到 Pi CLI；Claude Code 与 Codex 安装已完成。安装 Pi 后重跑 setup.sh 即可补装扩展。"
 fi
 
+# --- 4. Grok skills（目录软链；找不到 Grok 时跳过，不创建技能目录） ---
+
+GROK_COMMAND="${BUTLER_GROK_COMMAND:-grok}"
+GROK_SKILLS_DIR="$HOME/.grok/skills"
+GROK_SKILLS_SRC="$BUTLER_DIR/plugins/butler/skills"
+if command -v "$GROK_COMMAND" >/dev/null 2>&1; then
+  mkdir -p "$GROK_SKILLS_DIR"
+  linked=0
+  shopt -s nullglob
+  for skill_src in "$GROK_SKILLS_SRC"/*/; do
+    skill_src="${skill_src%/}"
+    skill_name="$(basename "$skill_src")"
+    skill_link="$GROK_SKILLS_DIR/$skill_name"
+    if [[ -L "$skill_link" ]]; then
+      if [[ "$(readlink "$skill_link")" != "$skill_src" ]]; then
+        ln -sfn "$skill_src" "$skill_link"
+      fi
+    elif [[ -e "$skill_link" ]]; then
+      echo "[错误] ${skill_link} 已是真实文件或目录，Butler 不会删除它。请改名后再重跑 setup.sh。" >&2
+      exit 2
+    else
+      ln -s "$skill_src" "$skill_link"
+    fi
+    linked=$((linked + 1))
+  done
+  shopt -u nullglob
+  if [[ "$linked" -eq 0 ]]; then
+    echo "[错误] ${GROK_SKILLS_SRC} 下没有可软链的技能目录。" >&2
+    exit 2
+  fi
+  echo "[安装] Grok Butler 技能已软链到 ${GROK_SKILLS_DIR}（请新开 Grok 会话生效）"
+else
+  echo "[跳过] 未找到 Grok CLI；不创建 ~/.grok/skills。安装 Grok 后重跑 setup.sh 即可补装技能。"
+fi
+
 echo ""
 echo "安装完成。请重启终端，或 source 你当前使用的 shell 配置文件，使环境变量生效。"
 echo ""
@@ -75,5 +110,6 @@ echo "  AI 会自动从入口文件读取规则，新项目会自动触发基地
 echo "  slash 命令（如 /butler:prd）已全局安装，在所有项目里都能用。"
 echo "  检测到 Codex CLI 时，Butler plugin 也会安装/刷新；新会话首次启用 hook 请审阅并信任。"
 echo "  检测到 Pi CLI 时，Butler 扩展也会安装/刷新；新会话自动生效。"
+echo "  检测到 Grok CLI 时，Butler 技能会软链到 ~/.grok/skills；未检测到则跳过，不创建该目录。"
 echo ""
 echo "偏好探针已在 ITER-0124 退役。preference-init.sh 不再初始化外置目录。"

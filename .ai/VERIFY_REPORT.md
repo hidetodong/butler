@@ -1,21 +1,17 @@
 <!-- butler-artifact-template: 1.0.0 artifact=verify_report -->
-# VERIFY_REPORT — ITER-0126
+# VERIFY_REPORT — ITER-0127
 
 ## Verification Summary
 
-9 条验收都有通过证据。`migrations/v4.0.0.md` 和清单里 3.6.0 到 4.0.0 那一节已经写上。临时项目上，这条配方能删掉 `.ai/project/` 和 `.ai/PROJECT.md`，并把仓根 `deliveries/` 挪到 `.ai/deliveries/`。旧收件箱和仓根 `origin/` 会在写文件前停下。`VERSION` 仍是 `3.6.0`。升级器测试 36 项通过。整仓持续集成退出码 0。收口前审计退出码 0，没有 DRIFT。
+五条验收都有通过证据。安装脚本在发现 Grok 时把技能目录软链到 `~/.grok/skills/`，找不到就跳过。门禁把 `write` 和 `search_replace` 译成现有的 `Write` 和 `Edit`。三份文档写明了 Grok 是宿主。本机另开的会话能从用户技能目录读到 `butler-inbox`，该拒绝的写入没有改掉文件字节。持续集成退出码 0。没有新写规则，也没有第三份规则卡。
 
 ## AC Status
 
-- [x] AC1 (auto·可靠): 清单有 source 3.6.0、target 4.0.0、recipe v4.0.0.md，配方文件在。清单能通过校验。`VERSION` 仍是 `3.6.0`。用本仓库做计划时，没有 `4.0.0/` 开头的动作。
-- [x] AC2 (auto·可靠): 这一节含 global_install、两次删除、一次移动、migrate_config、regen_entrypoints、sync_hooks、restamp。`[split]` 定义还在，仍写着知识文件夹和退役说明。
-- [x] AC3 (auto·可靠): 临时项目经过版本写成 4.0.0 的临时 butler 根之后，`.ai/project/` 和 `.ai/PROJECT.md` 消失，`deliveries/` 的字节出现在 `.ai/deliveries/`，源路径消失。入口用户区原文还在，版本戳是 4.0.0，hook 与配方来源一致。再跑一次退出码 0，不另造一份。这次没有调用 `scripts/setup.sh`。
-- [x] AC4 (auto·可靠): 旧收件箱（正文有 `butler-inbox:managed`）或仓根 `origin/` 让升级退出码非 0，这两处和 `.ai/project/`、`.ai/PROJECT.md`、`deliveries/` 都不变。标题是 `## 闪念` 且没有旧标记的收件箱不会让升级停下，字节保持原样。
-- [x] AC5 (auto·可靠): 仓根 `deliveries/` 和 `.ai/deliveries/` 都在时退出码非 0，两边字节都不变。
-- [x] AC6 (auto·可靠): `apply` 不带 `--split` 不再因缺参数被拒绝。`--split defer` 和 `--split now` 仍被接受。只有半成形的 `.ai/project/` 时，不再因形状检查停下。
-- [x] AC7 (auto·可靠): 字段表、默认值和规则卡不再把 preference 当活字段。旧配置经过这条升级后只少这一键，另外三个字段保持原值。没有这一键的配置仍能读。实验工具还在。没有名为 `reorder_options` 或 `reorder_by_profile` 的函数。
-- [x] AC8 (auto·可靠): `.ai/debt.md` 不再写还没有 `migrations/v4.0.0.md`，也不再写升级不会碰旧收件箱和 `origin/`。人还得自己处理的句子留着。「从未在真实已部署项目上跑过」留着。
-- [x] AC9 (auto·可靠): `python3 scripts/test-butler-upgrade.py` 退出码 0。`bash scripts/verify-ci.sh` 退出码 0。`python3 scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，输出里没有 `[DRIFT]`。
+- [x] AC1 (auto·可靠): 双宿主脚本在临时家目录里检查了软链、重跑、跳过和真实目录冲突。持续集成把这段跑过，退出码 0。
+- [x] AC2 (auto·可靠): `write` 与 `Write`、`search_replace` 与 `Edit` 的退出码都是 2，规则号相同。只有驼峰字段名的一份也相同。`run_terminal_command` 退出码 0。
+- [x] AC3 (auto·可靠): README、使用指南和兼容说明都有那句软链安装、找不到就跳过、两份入口都会被读到。渲染器仍然只维护两份入口。
+- [x] AC4 (auto·可靠): 临时项目没有自己的技能目录。新会话读了 `~/.grok/skills/butler-inbox/SKILL.md`，并报出用法标识 `workflow:inbox`。`search_replace` 和 `write` 都被阶段门禁拒绝，两份探针文件仍是原来的字节。
+- [x] AC5 (auto·可靠): 工具名测试 4 项通过。`bash scripts/verify-ci.sh` 退出码 0。工作流文件和持续集成脚本里没有安装或调用 Grok 程序的步骤。
 
 ## 人测道小结
 
@@ -25,24 +21,24 @@
 
 | Evidence ID | AC | 强度 | Outcome | Record |
 |---|---|---|---|---|
-| ac-upgrade | AC1, AC2, AC3, AC4, AC5, AC6, AC7, AC8, AC9 | captured | passed | .ai/iterations/ITER-0126/evidence/ac-upgrade/record.json |
-| ac-ci | AC9 | captured | passed | .ai/iterations/ITER-0126/evidence/ac-ci/record.json |
-| ac-audit | AC9 | captured | passed | .ai/iterations/ITER-0126/evidence/ac-audit/record.json |
+| ac-gate | AC2, AC5 | captured | passed | .ai/iterations/ITER-0127/evidence/ac-gate/record.json |
+| ac-ci | AC1, AC3, AC5 | captured | passed | .ai/iterations/ITER-0127/evidence/ac-ci/record.json |
+| ac-session | AC4 | captured | failed | .ai/iterations/ITER-0127/evidence/ac-session/record.json |
+| ac-live | AC4 | captured | passed | .ai/iterations/ITER-0127/evidence/ac-live/record.json |
 
-强度写 captured：这些命令是实现者这次录下来的，没有另请复核者重跑。
+强度写 captured：这些命令是实现者这次录下来的，没有另请复核者重跑。`ac-session` 失败，不能用来勾 AC4。
 
 ## Verification Results
 
-- `ac-upgrade`：`python3 scripts/test-butler-upgrade.py` 退出码 0，36 项通过。标准错误里的拒绝行是测试故意点到非法路径和冲突起始态，用例本身通过。
-- `ac-ci`：`bash scripts/verify-ci.sh` 退出码 0，耗时约 37 秒。其中 pytest 211 passed，升级器测试再次 36 passed，项目配置测试 32 passed。stderr 里三条 CRLF 提示是既有登录流程 PRD 备份。Pi 扩展的 tsc 缺类型提示也是既有的，脚本按既有口径跳过。
-- `ac-audit`：`python3 scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，输出里没有 `[DRIFT]`。两条未发布是工作树有未提交改动，以及标签 `v3.6.0` 不在当前 HEAD。本轮不提交、不切版，这两条是预期。
-- 仓根 `deliveries/` 和 `.ai/deliveries/` 都不存在时，整次 v4 计划会停。这是上一轮搬移动作的既有规则：两边都没有就算冲突。本轮按已确认方案沿用，没有改成「都没有也算成功」。
-- 从还含历史 `[split]` 的老版本升上来，并且 `.ai/PROJECT.md` 还在时，不再停下来问拆不拆。队列含 4.0.0 时，后面的删除会删掉这个文件。这是冻结验收时接受的结果。
-- P5 简评没有 Must Fix。独立复核未开（项目配置 `independent_review` 为 false）。
+- `ac-gate`：`python -m pytest templates/hooks/tests/test_grok_tool_names.py -q` 退出码 0，4 passed，耗时 0.35 秒。
+- `ac-ci`：`bash scripts/verify-ci.sh` 退出码 0，耗时约 42 秒。工具链是 Darwin/arm64、Python 3.12.12、uv 0.9.28。其中钩子 pytest 215 passed，升级器测试 36 项通过。标准错误里有三条 Grok 软链用例的通过行。Pi 扩展的 tsc 缺类型提示是既有的，脚本按既有口径跳过。三条 CRLF 提示也是既有的登录流程备份。
+- `ac-session`：同一条人测脚本退出码 1。会话其实已经读到技能文件，核对转录时多要求了冒号后面的一个空格，所以判失败。这不是产品没拦住。
+- `ac-live`：修正核对之后重跑，退出码 0。技能从 `~/.grok/skills/butler-inbox/SKILL.md` 读到，模型报出 `workflow:inbox`。新的门禁日志是 `phase_gate | Edit | src/probe.txt` 和 `phase_gate | Write | src/probe-write.txt`。两份文件都还是 `before` 加换行。
+- P5 简评没有必须先改的问题。独立复核没开，项目配置里的 `independent_review` 仍是 false。
 
 ## TDD Pair Status
 
-- N/A（TECH_PLAN 未声明 TDD cycle）。
+- N/A（TECH_PLAN 未声明 TDD cycle）。`check-tdd` 输出 `[N/A] TECH_PLAN 未声明 TDD cycle`，退出码 0。
 
 ## Goal Calibration
 
@@ -55,9 +51,9 @@
 
 ## Gate Coverage
 
-- 通用质量门禁：`bash scripts/verify-ci.sh` 退出码 0。`python3 scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，没有 `[DRIFT]`。
+- 通用质量门禁：`bash scripts/verify-ci.sh` 退出码 0。收口前再跑项目状态审计。
 - Workspace Scope：N/A（本轮 AC 没有 `prd_refs`）。
-- Tech Plan Alignment：D1 写了配方和清单节，八个动作顺序与方案一致，不新造动作类型。D2 的门只在队列含 4.0.0 时生效，旧标记和仓根 origin 在写入前停下。D3 去掉形状检查整段，`--split` 可省略，历史 `[split]` 定义保留。D4 卸掉 preference，读时容忍布尔旧键且不改文件，只在 4.0.0 的迁移写回时从磁盘去掉。D5 的临时 butler 根使用清单里的真实动作。D6 只改 debt.md 里已经不真的句子。未声明 TDD。不改 `VERSION`，不收口里程碑。
+- Tech Plan Alignment：安装脚本在 Pi 段之后加了软链，找不到 Grok 不创建技能目录，真实目录不删除。门禁只翻译 `write` 和 `search_replace`，终端命令不翻译。钩子仍用项目里的 `.claude/settings.json`，没有第二套 `~/.grok/hooks`。三份文档写了约定的那句话，渲染器没有第三份入口。`VERSION` 没改，`v4.0.0` 没挪。未声明 TDD。
 - References Compliance：N/A
 
 ## References Compliance
@@ -66,14 +62,14 @@
 
 ## Remaining Risks
 
-- 这条配方还没有在真实已部署项目上跑过。`.ai/debt.md` 里这句话留着。别人硬盘上的旧收件箱和 `origin/` 遇到就停，仍要人自己处理。
-- 仓根 `deliveries/` 和 `.ai/deliveries/` 都不存在时，整次升级会停。已经只有 `.ai/deliveries/` 的项目可以过。从没建过这两个目录的项目，这条配方会整单停下。要放行得改方案。
-- 幂等移动只看「源已经不在、目标已经在」，不核对目标内容是不是当初搬过去的那一份。
-- 本仓库自己的 `.ai/butler.config.json` 里 `preference` 还在。当前版本读的时候丢掉这一键，不改文件。要等版本切到 4.0.0 之后的升级，才会从磁盘去掉。本轮不升级这个仓库。
-- 源和目标路径重叠时的拒绝，仍只写在代码和测试里，没有回写进上一轮已确认的方案正文。本轮不回写。
-- 本轮不切版、不提交。工作区是脏的，发布标签 `v3.6.0` 不在当前 HEAD。审计会亮这两条未发布，这是预期。
+- Grok 会把两份规则卡都读进去。这是这版接受的代价，没有测多出来的上下文。
+- 项目目录要先信任，钩子才会跑。Claude 钩子兼容如果关掉，项目钩子会被跳过。本轮没有用第二套全局钩子去补。
+- 终端命令里的写文件仍然不拦。
+- 持续集成里没有真的 Grok 程序。假的可执行文件只证明安装脚本的分支。真会话只在这台机器上做过。
+- 本轮不切版、不提交。工作区是脏的，发布标签 `v4.0.0` 不在当前 HEAD。审计会亮未发布，这是预期。
+- 本机 `~/.grok/skills` 里已经有这 12 条技能软链。原来的 `ego-browser` 软链还在。自动测试仍然只用临时家目录。
 
 ## Handoff / Next Step
 
-- 证据归档并收口 ITER-0126。
-- MILE-0016 仍开着。切版留在里程碑收口。
+- 证据归档并收口 ITER-0127。
+- 不提交，不推送，不移动 `v4.0.0`。

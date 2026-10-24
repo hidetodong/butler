@@ -1,53 +1,47 @@
 ---
 状态: ack-frozen
-ACK 日期: 2026-10-21
+ACK 日期: 2026-10-22
 ---
 <!-- butler-artifact-template: 1.0.0 artifact=acceptance -->
-# AC_LIST — ITER-0126
+# AC_LIST — ITER-0127
 
 ## Goal
 
-- 把 3.6.0 之后欠下的迁移写成 `migrations/v4.0.0.md`，并在临时项目上证明它跑得通。
-- 旧收件箱和 `origin/` 遇到就停下，不默默删。
-- 版本号保持 `3.6.0`。切版留到里程碑收口。
+- 机器上只有 Grok 时，别的项目也能用 Butler。
+- 写文件仍走现有判断，不新写一套规则。
+- 找不到 Grok 时，原来三家宿主的安装保持原样。
 
 ## In Scope
 
-- `migrations/v4.0.0.md`，以及 `migrations/manifest.json` 里从 3.6.0 到 4.0.0 的那一节。
-- 临时项目上的升级回归。临时 butler 根的版本写成 4.0.0，好让这条配方被选中。
-- `apply` 不再强制 `--split`。知识文件夹形状检查去掉。历史 `[split]` 定义保留。
-- 项目配置的 `preference` 布尔从契约里卸掉。旧配置只去掉这一键。
-- `.ai/debt.md` 里被这条配方还清的句子。
+- 安装脚本发现 Grok 时，把 `plugins/butler/skills/` 里的技能软链到 `~/.grok/skills/`。找不到 Grok 就跳过这一支。
+- 把门禁接到 Grok 的 `write` 和 `search_replace`。同一路径若用现有的 `Write` 或 `Edit` 会被拒绝，这两个名字也必须被拒绝，而且规则号相同。
+- README、使用指南和 `docs/codex-compatibility.md` 写明 Grok 是宿主，并写明软链安装、找不到就跳过、两份入口都会被读到。
+- 契约测试锁住安装和门禁。CI 不安装 Grok 程序。
+- 在另一个没有 Butler 技能目录的项目里做人测。
 
 ## Out of Scope
 
-- 不改 `VERSION`，不写 `CHANGELOG.md` 的发布条，不打标签，不提交，不收口 MILE-0016。
-- 不在未点名的真实项目上执行升级，也不升级 butler 仓自己。
-- 不改已发布的历史配方。
-- 不处理收件箱里那两条旧缺陷，不改 loop，不加排序器。
-- 不删仓库外已有的偏好数据，不删 `templates/preference/` 骨架。
-- 不重开 ITER-0123、ITER-0124、ITER-0125。
+- 不新写规则算法，不加第三份规则卡，不改入口渲染来消掉双份注入。
+- 不做 Grok 插件市场，不照 Pi 再写一套扩展。
+- 不拦截 `run_terminal_command` 里的写文件。
+- 不移动 `v4.0.0` 标签，不推 GitLab。
+- 不处理真实老项目升级、收件箱缺陷和其他候办。
 
 ## Acceptance Checklist
 
-- [ ] AC1: `migrations/manifest.json` 有一节 `source` 为 `3.6.0`、`target` 为 `4.0.0`、`recipe` 为 `v4.0.0.md`，并且该文件存在。整份清单仍能通过校验。`VERSION` 仍是 `3.6.0`。用本仓库当 butler 根、项目戳在 3.6.0 时做计划，选中的动作里没有 `4.0.0/` 开头的动作。
-- [ ] AC2: 这一节动作包含 `global_install`、`regen_entrypoints`、`sync_hooks`、`restamp`，以及删除 `.ai/project`、删除 `.ai/PROJECT.md`、把仓根 `deliveries` 移到 `.ai/deliveries`。`migration-schema.md` 里 `[split]` 的定义还在，仍写着知识文件夹和退役说明。
-- [ ] AC3: 临时项目戳在 3.6.0，里面有带文件的 `.ai/project/`、有 `.ai/PROJECT.md`、仓根有 `deliveries/`，且没有旧收件箱、没有 `origin/`。用版本为 4.0.0 的临时 butler 根执行这条真实配方后：`.ai/project/` 和 `.ai/PROJECT.md` 消失，`deliveries/` 的内容出现在 `.ai/deliveries/` 且字节不变，源路径消失；两个入口的用户区原文还在，版本戳变成 4.0.0；hook 与配方来源一致。再执行一次，退出码 0，不另造一份。这次执行没有调用 `scripts/setup.sh`，也没有改本机插件。
-- [ ] AC4: 同一套临时升级里，项目若带有旧收件箱（文件里有 `butler-inbox:managed`）或仓根 `origin/`，退出码非 0，这两处字节和目录都不变，`.ai/project/`、`.ai/PROJECT.md`、`deliveries/` 也不变。新格式闪念口（标题是 `## 闪念`）不会单凭自己让升级停住，文件字节保持原样。
-- [ ] AC5: 仓根 `deliveries/` 和 `.ai/deliveries/` 都已经存在时，退出码非 0，两边都不变。
-- [ ] AC6: `apply` 不带 `--split` 不再因为缺参数被拒绝。带 `--split defer` 或 `--split now` 仍被接受。项目只有 `.ai/project/`、没有 `00_INDEX.md`、也没有 `.ai/PROJECT.md` 时，不再因为形状检查而停。
-- [ ] AC7: 项目配置的字段表、默认值和规则卡不再把 `preference` 当作活字段。人读文档不再写这个布尔还在。旧的 `.ai/butler.config.json` 经过这条升级后只少 `preference` 这一键，`dangerous`、`independent_review`、`profiles` 保持原值。没有这一键的配置仍能读。实验工具还在。没有名为 `reorder_options` 或 `reorder_by_profile` 的函数。
-- [ ] AC8: `.ai/debt.md` 不再写「还没有 `migrations/v4.0.0.md`」，也不再写升级不会碰旧收件箱和 `origin/`。旧收件箱和 `origin/` 仍要人处理的那条账留着。「从未在真实已部署项目上跑过」留着。
-- [ ] AC9: `python3 scripts/test-butler-upgrade.py` 退出码 0。`bash scripts/verify-ci.sh` 退出码 0。`python3 scripts/audit-project-state.py --project-root . --allow-unreleased` 退出码 0，输出里没有 `[DRIFT]`。
+- [ ] AC1: 临时 HOME 里，PATH 上有一个名为 `grok` 的可执行文件时，安装脚本把 `plugins/butler/skills/` 下每个技能目录软链进 `$HOME/.grok/skills/`，链到仓库里的原目录，不复制技能正文。再跑一次，软链还在，不产生第二份。PATH 上没有 `grok` 时，不创建这些软链，Claude、Codex、Pi 原有的安装结果不变。测试不改本机真实的 `~/.grok` 和 `~/.codex`。
+- [ ] AC2: 用现有门禁读一份标准输入。`tool_name` 为 `write` 或 `search_replace`，`tool_input.file_path` 指向的路径若改成 `Write` 或 `Edit` 会以退出码 2 拒绝，这两个名字也以退出码 2 拒绝，规则号与对应的 `Write` 或 `Edit` 相同。`tool_name` 为 `run_terminal_command` 时仍直接退出码 0，不进入这套写文件判断。
+- [ ] AC3: README 的宿主表、使用指南的安装说明、`docs/codex-compatibility.md` 都写了 Grok。三处都写明技能用软链安装、找不到 Grok 就跳过，以及 Grok 会同时读到 `CLAUDE.md` 和 `AGENTS.md`。仓库里没有第三份规则卡模板，入口渲染仍然只维护这两份。
+- [ ] AC4: 在本机另建一个没有 `.agents/skills/`、也没有 `.grok/skills/` 的临时项目。安装完成后新开 Grok 会话，能调用一个 Butler 技能。再对一次现有门禁应拒绝的文件写入，文件内容保持拒绝前的字节。这次人测不作为 CI 的一步。
+- [ ] AC5: 新增的安装和门禁测试通过。`bash scripts/verify-ci.sh` 退出码 0。CI 日志里没有安装或调用 Grok 程序。
 
 ## Verification Method
 
-- AC1: 读清单和 `VERSION`，并对着本仓库跑一次计划，确认 4.0.0 的动作没被选中。
-- AC2: 读清单动作和 `migration-schema.md` 的 `[split]` 段。
-- AC3–AC6: 在 `scripts/test-butler-upgrade.py` 里用临时目录跑。临时 butler 根使用清单里那一节真实动作。不碰本仓库的 `.ai/`，不调用 `scripts/setup.sh`。
-- AC7: 读配置契约、规则卡和人读文档；用临时项目跑掉键和读取。全仓检索那两个重排函数名。
-- AC8: 读 `.ai/debt.md`。
-- AC9: 跑升级器测试、持续集成和审计，审计输出里检索 `[DRIFT]`。
+- AC1: 在临时 HOME 和临时 PATH 下跑安装脚本，检查软链目标和跳过行为。
+- AC2: 用临时项目构造两份只差工具名的门禁输入，比对退出码和规则号。
+- AC3: 读这三份文档和入口渲染脚本，确认没有新增规则卡模板。
+- AC4: 人在本机 Grok 里做。项目先信任钩子，否则门禁不会跑，这次失败不能算产品没拦住。
+- AC5: 跑对应测试和 `bash scripts/verify-ci.sh`，并在 CI 脚本里确认没有 Grok 安装步骤。
 
 ## External References
 
@@ -55,6 +49,6 @@ ACK 日期: 2026-10-21
 
 ## Open Questions / Risks
 
-- 从还含历史 `[split]` 的老版本一路升上来，并且 `.ai/PROJECT.md` 还在时，形状检查去掉之后，不再用原来的检查拦住。历史 split 仍排在 v4 删除之前。冻结前若要保住「有待拆单文件就停」，说一声，我改 AC6。
-- 临时回归还清不了「从未在真实已部署项目上跑过」。那条账留着。
-- `preference` 卸掉之后，已经写在仓库外的旧偏好数据留在原处。
+- Grok 会把两份规则卡都读进去，常驻上下文会重复。这是这版接受的代价。
+- 项目钩子要先信任该目录才会执行。人测必须在已信任的项目里做。
+- 人测依赖这台机器上的 Grok，CI 绿了也不等于 AC4 已经做过。

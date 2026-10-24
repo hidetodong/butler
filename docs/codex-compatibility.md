@@ -1,12 +1,12 @@
 ---
 title: Codex 双宿主兼容架构
 audience: AI / 开发者
-scope: Butler 共同内核、Claude Code/Codex 适配层、分阶段支持状态与维护边界
+scope: Butler 共同内核、Claude Code/Codex/Pi/Grok 适配层、分阶段支持状态与维护边界
 ---
 
 # 多宿主兼容架构
 
-Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个共同内核，再为 Claude Code、Codex 和 Pi 分别提供薄入口与运行协议适配。
+Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个共同内核，再为 Claude Code、Codex、Pi 和 Grok 分别提供薄入口与运行协议适配。
 
 ## 1. 三层结构
 
@@ -16,6 +16,9 @@ Butler 不为任何单一宿主重写一套规则。兼容方式是保留一个�
 | Claude Code 适配层 | `CLAUDE.md`、`.claude/commands/`、部署后的 `.claude/hooks/` 与 settings | 保留现有行为，不为其他宿主改写 |
 | Codex 适配层 | `AGENTS.md`、`.agents/skills/`、`plugins/butler/`（含 plugin hooks） | 只负责发现、路由、输入输出转换 |
 | Pi 适配层 | `AGENTS.md`（共用）、`.agents/skills/`（共用）、`plugins/butler-pi/`（TypeScript 扩展） | 只负责事件拦截与 Python 门禁调用 |
+| Grok 适配层 | 同时读取 `CLAUDE.md` 与 `AGENTS.md`；技能从 `~/.grok/skills/` 软链发现 | 只翻译 `write` 与 `search_replace` 两个工具名，不新写规则，不另做第三份规则卡。找不到 Grok 就跳过安装 |
+
+Grok 的技能用软链安装到 ~/.grok/skills/，找不到 Grok 就跳过。Grok 会同时读到 CLAUDE.md 和 AGENTS.md。
 
 `.ai/` 不属于任何单一宿主。它保存当前目标、验收、方案、验证、台账和跨会话断点；Claude Code 与 Codex 必须读写同一份状态，不能各建副本。
 
@@ -56,6 +59,8 @@ Claude Code 读取仓库级 `CLAUDE.md`；Codex 和 Pi 都读取仓库级 `AGENT
 Codex 官方把可重复工作流放在 skills 中，再用 plugin 做可安装分发；Pi 同样遵循 Agent Skills 标准，通过 `.agents/skills/` 发现。Butler 的 skills 发布真源是 `plugins/butler/skills/`；`.agents/skills/` 的相对软链让 Codex 和 Pi 都能发现同一批 skill。
 
 Pi 的门禁层用 TypeScript 扩展（`plugins/butler-pi/`）实现 `tool_call` / `tool_result` 事件拦截，复用 Python 判断模块。安装通过 `scripts/setup.sh` 幂等软链到 `~/.pi/agent/extensions/`。
+
+Grok 不另建插件市场。`scripts/setup.sh` 在发现 Grok CLI 时，把 `plugins/butler/skills/` 下每个技能目录软链到 `~/.grok/skills/`。找不到 Grok 就跳过，不创建该目录。项目门禁继续走已经部署的 Claude 钩子配置，不另写一份 `~/.grok/hooks`。
 
 入口、双宿主名称、风险、语义触发、冲突/前置关系和旧名兼容只在注册表维护，人读表见 [`workflows.md`](workflows.md)。Claude 可用 `/butler <自然语言>`，Codex / ChatGPT 可隐式选择 `$butler-router`；显式 `/butler:*` 或 `$butler-*` 始终绕过 Router。高风险入口在各宿主分别禁止隐式调用；所有入口都从 `BUTLER_PATH` 读取 `Coder/` 真源。
 

@@ -1,0 +1,7 @@
+OK skill symlink /Users/cyborgno2/.grok/skills/butler-inbox
+OK project has no .agents/skills
+OK project has no .grok/skills
+OK AC still draft
+OK plan still draft
+grok skill exit=0 seconds=18.4
+FAIL session read ~/.grok/skills/butler-inbox/SKILL.md
