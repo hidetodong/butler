@@ -35,3 +35,4 @@ current: none
 | state-transition-trust-gate | 关键节点状态可信闭环：防止 AI 宣称已更新但落档仍陈旧 | 2026-07-24 | .ai/backlog/state-transition-trust-gate.md | 先保留方向：现有审计能验证结构与哈希，但会放过节点后权威记录、摘要和真实环境之间的确定性矛盾。 |
 | tdd-evidence-hardening | TDD 证据增强：防测试改弱、有效 Red、跨语言 Adapter 与实际改动对账 | 2026-07-24 | .ai/backlog/tdd-evidence-hardening.md | V1 先验证轻量 Red→Green 配对的实际价值；更强的过程证明等真实使用暴露需要后再推进。 |
 | delivery-renderer-in-repo | 把交付页渲染器搬进仓库并在 delivery-summary 里指明位置 | 2026-08-20 | .ai/backlog/delivery-renderer-in-repo.md | 当前 MILE-0016 与 ITER-0118 都 active，按单 active 约束先入孵化区；本轮只记录不开工 |
+| upgrade-convergence-engine | Butler 升级收敛引擎：文件所有权、确定性迁移与可恢复诊断 | 2026-08-04 | .ai/backlog/upgrade-convergence-engine.md | 方向已完成 ideation；当时 MILE-0014 仍 active，按单 active 约束先入待办。原草稿路径不存在。MILE-0014 与 MILE-0016 现已收口，本条仍未开工。 |
